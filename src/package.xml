@@ -281,6 +281,7 @@
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
+        <members>STG_PanelCustomizableRollup_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -414,6 +415,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_Setup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
@@ -439,6 +441,7 @@
         <members>STG_PanelContactRoles</members>
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
+        <members>STG_PanelCustomizableRollup</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -493,6 +496,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+    	<members>CRLP_RollupApp</members>
+    	<members>CRLP_RollupsContainer</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
