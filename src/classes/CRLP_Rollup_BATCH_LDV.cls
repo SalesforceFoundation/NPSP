@@ -73,6 +73,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     */
     public database.Querylocator start(Database.BatchableContext bc) {
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+        String query;
 
         try {
             // Build a query string for the specified Summary object.
@@ -82,28 +83,48 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
             if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
                 detailObjectType = Allocation__c.SObjectType;
                 keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+
             } else if (this.summaryObjectType == Account.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.AccountId.getName();
+
             } else if (this.summaryObjectType == Contact.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+
+            } else if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
+                detailObjectType = OpportunityContactRole.SObjectType;
+                // Can be filtered to ContactId
+                // TODO Support filtering for AccountId
+                keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
             }
-            String query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
+            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
 
             // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
-            if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
-                query += ' ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null ';
-            } else if (detailObjectType == Opportunity.SObjectType) {
+            if (detailObjectType == Opportunity.SObjectType) {
                 query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode';
             }
             if (this.recordIds != null && this.recordIds.size() > 0) {
-                query += ' AND ' + keyField + ' IN :recordIds';
+                query += (query.endsWith(' WHERE ') ? '' : ' AND ') + keyField + ' IN :recordIds';
             }
-            query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
+            if (query.endsWith(' WHERE ')) {
+                query = query.removeEnd(' WHERE ');
+            }
 
+            /*if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
+                // If OCR is the primary object, filter out primary contacts and set the sort order to Account, Contact, Opp
+                query += ' AND IsPrimary = False ';
+                query += ' ORDER BY Contact.AccountId, ContactId, OpportunityId ';
+            } else {*/
+                query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
+//            }
+
+            // TODO Technically a Summary object of PartialSoftCredit isn't quite accurate.
+            // The summary object is BOTH Account and Contact, and the Detail Object is PartialSoftCredit
+            // If pass in a group of Id's, then by default we're not doing the Soft Credit rollups because
+            // that will automatically default to standard rollups
             if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
                 // If there are no active rollups for the object type, then force the query to return zero records.
                 // This is needed because can't return null as a valid iterator.
@@ -146,8 +167,18 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
             String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
             List<SObject> summaryRecords = database.query(soql);
 
+            // For the GAU object, strip out any detail records where the key field is NULL. This is better
+            // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
+            List<SObject> updatedDetailRecords = new List<SObject>();
+            String allocKeyField = SObjectType.Allocation__c.fields.Opportunity__c.getName();
+            for (SObject s : detailRecords) {
+                if (summaryObjectType != General_Accounting_Unit__c.SObjectType || s.get(allocKeyField) != null) {
+                    updatedDetailRecords.add(s);
+                }
+            }
+
             // Call the method to do the actual rollups. This returns only records that require updating
-            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, options);
+            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
             this.currentParentRecordId = CRLP_RollupProcessor_SVC.getLastProcesssedParentId();
