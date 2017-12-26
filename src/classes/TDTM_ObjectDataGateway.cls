@@ -67,7 +67,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
         string strAction = action.Name();
         string currUserName = UserInfo.getUserName();
-        List<SObject> listClasses = new list<Sobject>();
+        List<SObject> listClasses = new List<Sobject>();
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
                     new Set<String>(th.Usernames_to_Exclude__c.split(';')) : new Set<String>());
@@ -91,9 +91,36 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      */
     public static list<Trigger_Handler__c> listTH {
         get {
+            Boolean useAdv = false;
+            String apiNpspClass = '';
+
+            //Check if Advancement is installed and enabled.
+            try {
+                List<SObject> advSettings = Database.query('select Use_Advancement__c, API_NPSP_Class__c from Advancement_Setting__mdt');
+                useAdv = (Boolean)advSettings[0].get('Use_Advancement__c');
+                apiNpspClass = (String)advSettings[0].get('API_NPSP_Class__c');
+            } catch(Exception e) {
+                // Advancement not installed. Nothing to do. If the custom setting Adv_Settings doesn't exist, we'll use
+                // HEDA's TDTM config.
+            }
+
             if (listTH == null) {
-                listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c, 
-                    Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
+                if (useAdv) {
+                    //Using Adv config.
+                    Type classType = Type.forName(apiNpspClass);
+                    if (classType != null) {
+                        Object classInstance = classType.newInstance();
+                        if (classInstance instanceof TDTM_Adapter) {
+                            TDTM_Adapter API_NPSP = (TDTM_Adapter) classInstance;
+                            //We already have the configuration as tokens, so no need for any transformation.
+                            listTH = API_NPSP.getDefaultTdtmConfigNpspRecords();
+                        }
+                    }
+                } else {
+                    //Not Using Adv config.
+                    listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
+                            Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
+                }
             }
             return listTH;
         }
