@@ -2303,7 +2303,6 @@
         <members>Rollup.Account_Membership_Join_Date</members>
         <members>Rollup.Account_Number_of_Memberships</members>
         <members>Rollup.Account_Smallest_Gift_Amount</members>
-        <members>Rollup.Account_Soft_Credit_Total</members>
         <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
         <members>Rollup.Account_Total_Gifts_Last_Year</members>
         <members>Rollup.Account_Total_Gifts_This_Year</members>
