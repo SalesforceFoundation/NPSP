@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>GAU: Total Allocations All Time</label>
-    <protected>true</protected>
+    <label>Account: Total Gifts Last Year</label>
+    <protected>false</protected>
     <values>
         <field>Active__c</field>
         <value xsi:type="xsd:boolean">true</value>
     </values>
     <values>
         <field>Amount_Field__c</field>
-        <value xsi:type="xsd:string">Amount__c</value>
+        <value xsi:type="xsd:string">Amount</value>
     </values>
     <values>
         <field>Amount_Object__c</field>
-        <value xsi:type="xsd:string">Allocation__c</value>
+        <value xsi:type="xsd:string">Opportunity</value>
     </values>
     <values>
         <field>Date_Field__c</field>
@@ -28,11 +28,11 @@
     </values>
     <values>
         <field>Detail_Field__c</field>
-        <value xsi:type="xsd:string">Amount__c</value>
+        <value xsi:type="xsd:string">Amount</value>
     </values>
     <values>
         <field>Detail_Object__c</field>
-        <value xsi:type="xsd:string">Allocation__c</value>
+        <value xsi:type="xsd:string">Opportunity</value>
     </values>
     <values>
         <field>Filter_Group__c</field>
@@ -40,7 +40,7 @@
     </values>
     <values>
         <field>Integer__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:double">1.0</value>
     </values>
     <values>
         <field>Operation__c</field>
@@ -48,11 +48,11 @@
     </values>
     <values>
         <field>Summary_Field__c</field>
-        <value xsi:type="xsd:string">Total_Allocations__c</value>
+        <value xsi:type="xsd:string">npo02__OppAmountLastYear__c</value>
     </values>
     <values>
         <field>Summary_Object__c</field>
-        <value xsi:type="xsd:string">General_Accounting_Unit__c</value>
+        <value xsi:type="xsd:string">Account</value>
     </values>
     <values>
         <field>Use_Fiscal_Year__c</field>
@@ -60,6 +60,6 @@
     </values>
     <values>
         <field>Yearly_Operation_Type__c</field>
-        <value xsi:type="xsd:string">All_Time</value>
+        <value xsi:type="xsd:string">Years_Ago</value>
     </values>
 </CustomMetadata>

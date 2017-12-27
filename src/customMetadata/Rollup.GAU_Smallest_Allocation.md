@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>GAU: Total Allocations All Time</label>
+    <label>GAU: Smallest Allocation</label>
     <protected>true</protected>
     <values>
         <field>Active__c</field>
@@ -44,11 +44,11 @@
     </values>
     <values>
         <field>Operation__c</field>
-        <value xsi:type="xsd:string">Sum</value>
+        <value xsi:type="xsd:string">Smallest</value>
     </values>
     <values>
         <field>Summary_Field__c</field>
-        <value xsi:type="xsd:string">Total_Allocations__c</value>
+        <value xsi:type="xsd:string">Smallest_Allocation__c</value>
     </values>
     <values>
         <field>Summary_Object__c</field>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <label>GAU: Total Number of Allocations</label>
+    <label>Account: Soft Credit - Total</label>
     <protected>true</protected>
     <values>
         <field>Active__c</field>
-        <value xsi:type="xsd:boolean">true</value>
+        <value xsi:type="xsd:boolean">false</value>
     </values>
     <values>
         <field>Amount_Field__c</field>
@@ -12,7 +12,7 @@
     </values>
     <values>
         <field>Amount_Object__c</field>
-        <value xsi:type="xsd:string">Allocation__c</value>
+        <value xsi:type="xsd:string">Partial_Soft_Credit__c</value>
     </values>
     <values>
         <field>Date_Field__c</field>
@@ -24,7 +24,7 @@
     </values>
     <values>
         <field>Description__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">All Soft Credit Rollups are based on the PartialSoftCredit object even if PSC&apos;s aren&apos;t technically in use. This is because OCR isn&apos;t available as an object to select from. The rollups engine will merge the OCR and PSC data into a single &apos;detail&apos; object source for the rollups</value>
     </values>
     <values>
         <field>Detail_Field__c</field>
@@ -32,7 +32,7 @@
     </values>
     <values>
         <field>Detail_Object__c</field>
-        <value xsi:type="xsd:string">Allocation__c</value>
+        <value xsi:type="xsd:string">Partial_Soft_Credit__c</value>
     </values>
     <values>
         <field>Filter_Group__c</field>
@@ -44,15 +44,15 @@
     </values>
     <values>
         <field>Operation__c</field>
-        <value xsi:type="xsd:string">Count</value>
+        <value xsi:type="xsd:string">Sum</value>
     </values>
     <values>
         <field>Summary_Field__c</field>
-        <value xsi:type="xsd:string">Total_Number_of_Allocations__c</value>
+        <value xsi:type="xsd:string">Soft_Credit_Total__c</value>
     </values>
     <values>
         <field>Summary_Object__c</field>
-        <value xsi:type="xsd:string">General_Accounting_Unit__c</value>
+        <value xsi:type="xsd:string">Account</value>
     </values>
     <values>
         <field>Use_Fiscal_Year__c</field>
