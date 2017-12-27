@@ -2,11 +2,14 @@
  - Created by randi.wilson on 12/20/17.
  -->
 
-<aura:component description="CRLP_RollupGrid" implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL">
+<aura:component description="CRLP_RollupGrid" implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupsUI_SVC">
+    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.TableItem[]"/>
+    <aura:attribute name="columns" type="List"/>
 
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <div class="slds-grid_vertical-stretch">
-        <div class="slds-container--large">
-            <div class="slds-p-around--large">
+
+            <div class="slds-p-horizontal--large slds-p-top--large">
                 <lightning:breadcrumbs>
                     <!--TODO: Update this to be more dynamic check with weird formatting-->
                     <!--<a href="/apex/STG_SettingsManager"><lightning:icon size="x-small" class="slds-icon" iconName="utility:back" alternativeText="Back"/></a>-->
@@ -18,7 +21,7 @@
                 <h1 class="slds-page-header__title" title="Customizable Summary Rollups">Customizable Summary Rollups</h1>
             </div>
 
-            <div class="slds-p-around--large">
+            <div class="slds-p-horizontal--large slds-p-bottom--large">
                 <!--TODO:add onChange function + fix padding-->
                 <lightning:layout horizontalAlign="spread">
                     <lightning:layoutItem flexibility="auto">
@@ -40,5 +43,12 @@
             </div>
 
         </div>
-    </div>
+        <div class="slds-p-horizontal--large slds-p-bottom--large">
+            <lightning:datatable data="{!v.rollupList}"
+                                     columns="{!v.columns}"
+                                     keyField="id"
+                                     hideCheckboxColumn="true"
+            />
+        </div>
+
 </aura:component>

@@ -51,7 +51,7 @@ public class CRLP_Rollup_SEL {
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
-                                Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
+                                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label, Summary_Object__r.QualifiedApiName
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c];
             }
