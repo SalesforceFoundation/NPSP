@@ -49,7 +49,7 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
     private Id currentContactRecordId;
     private Boolean hasAccountSoftCreditRollups = false;
     private Boolean hasContactSoftCreditRollups = false;
-    private List<Id> recordIds;
+    private List<Id> recordIds;     // Specified list of Summary (Account or Contact) Id's to roll up
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
@@ -177,7 +177,7 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
 
                 // Save Rollups collection and the last parent record id processed in stateful vars
-                this.currentContactRecordId = CRLP_RollupProcessor_SVC.getLastProcesssedParentId();
+                this.currentContactRecordId = options.lastParentIdProcessed;
                 this.cntctStatefulRollups = options.rollups;
 
                 // Handle dml on the records to be updated
@@ -203,7 +203,7 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
                 Set<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'Contact.AccountId');
                 if (this.currentAccountRecordId != null) {
                     parentIds.add(this.currentAccountRecordId);
-                    CRLP_RollupProcessor_SVC.setProcessedOppIds(this.acctStatefulOppIds);
+                    options.setOfProcessedOppIds = this.acctStatefulOppIds;
                 }
 
                 // Get the Summary (target) records for the current set of Detail Records
@@ -214,9 +214,9 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
 
                 // Save Rollups collection and the last parent record id processed in stateful vars
-                this.currentAccountRecordId = CRLP_RollupProcessor_SVC.getLastProcesssedParentId();
+                this.currentAccountRecordId = options.lastParentIdProcessed;
                 this.acctStatefulRollups = options.rollups;
-                this.acctStatefulOppIds = CRLP_RollupProcessor_SVC.getProcessedOppIds();
+                this.acctStatefulOppIds = options.setOfProcessedOppIds;
 
                 // Handle dml on the records to be updated
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
@@ -305,11 +305,13 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
         options.detailObjType = Partial_Soft_Credit__c.SObjectType;
 
         if (objType == Account.SObjectType) {
+            options.lastParentIdProcessed = this.currentAccountRecordId;
             options.rollups = this.acctStatefulRollups;
             options.preventDupeOppsInRollup = true;
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') +
                     '.' + SObjectType.Contact.fields.AccountId.getName();
         } else {
+            options.lastParentIdProcessed = this.currentContactRecordId;
             options.rollups = this.cntctStatefulRollups;
             options.preventDupeOppsInRollup = false;
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();

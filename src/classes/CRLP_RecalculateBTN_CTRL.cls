@@ -91,6 +91,12 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ recordId }), batchSize);
             }
 
+            // Execute Contact or Account Soft Credit roll-ups
+            if (this.objType == Account.SObjectType || this.objType == Contact.SObjectType) {
+                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
+                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(new List<Id>{ recordId }), batchSize);
+            }
+
         } else {
             // Legacy Roll-Ups - async action
             if (this.objType == Contact.SObjectType) {

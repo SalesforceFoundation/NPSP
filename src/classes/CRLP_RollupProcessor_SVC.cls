@@ -46,48 +46,28 @@ public class CRLP_RollupProcessor_SVC {
      */
     public class ProcessingOptions {
         public ProcessingMode mode = ProcessingMode.NonLDV;  // default to non-ldv mode
-        public SObjectType parentObjType;
-        public SObjectType detailObjType;   // Needed when working with Soft Credits to have a way to know what the detail object is
-        public String parentKeyField;       // Needed
-        public List<CRLP_Rollup> rollups;   // Stateful rollups collection for LDV Mode
+        public SObjectType parentObjType;   // Summary object (Account, Contact, GAU)
+        public SObjectType detailObjType;   // Used when working with Soft Credits to have a way to know what the detail object is
+        public String parentKeyField;       // Used to know how to get the Id of the Parent record from the supplied detail record
         public Boolean preventDupeOppsInRollup = false; // Used with Account Soft Credit rollups
-    }
 
-    /**
-     * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
-     * The value is saved as a stateful var in the calling batch process
-     */
-    private static Id lastParentIdProcessed;
+        /**
+         * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
+         * The value is saved as a stateful var in the calling batch process
+         */
+        public Id lastParentIdProcessed;
 
-    /** @description In LDV processing mode, the calling batch class needs to 'remember' the last parent Id processed
-     * in the group to know where it left off in the next batch iteration
-     * @return Id last processed
-     */
-    public static Id getLastProcesssedParentId() {
-        return lastParentIdProcessed;
-    }
+        /** @description Stateful rollups collection for LDV Mode. Needs to stay in ProcessingOptions to allow for passing
+        * between various service methods with the rest of the processing options
+        */
+        public List<CRLP_Rollup> rollups = new List<CRLP_Rollup>();
 
-    /**
-     * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
-     * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
-     * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
-     */
-    private static Set<Id> setOfProcessedOppIds = new Set<Id>();
-
-    /** @description Returns the list of Opp Id's processed for the last Account record. Only used with Soft Credits
-     * to Account
-     * @return Set of Opp Id's processed
-     */
-    public static Set<Id> getProcessedOppIds() {
-        return setOfProcessedOppIds;
-    }
-
-    /** @description Sets the list of Opp Id's processed for the last Account record. Only used with Soft Credits
-     * to Account
-     * @param Set of Opp Id's processed
-     */
-    public static void setProcessedOppIds(Set<Id> oppIds) {
-        setOfProcessedOppIds = oppIds;
+        /**
+         * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
+         * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
+         * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
+         */
+        public Set<Id> setOfProcessedOppIds = new Set<Id>();
     }
 
     /**
@@ -137,10 +117,10 @@ public class CRLP_RollupProcessor_SVC {
             Id parentId = (Id) parent.get('Id');
 
             // Clear the list of stateful rollups any time the parent Id changes
-            if (options.mode == ProcessingMode.LDV && lastParentIdProcessed != parentId) {
+            if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != parentId) {
                 options.rollups.clear();
-                lastParentIdProcessed = parentId;
-                setOfProcessedOppIds.clear();
+                options.lastParentIdProcessed = parentId;
+                options.setOfProcessedOppIds.clear();
             }
 
             List<SObject> detailsForParent = mapOfDetailsByParentId.get(parentId);
@@ -152,9 +132,9 @@ public class CRLP_RollupProcessor_SVC {
                 List<SObject> prunedOpps = new List<SObject>();
                 for (SObject s : detailRecords) {
                     Id dtlId = (Id)s.get(Partial_Soft_Credit__c.Opportunity__c);
-                    if (!setOfProcessedOppIds.contains(dtlId)) {
+                    if (!options.setOfProcessedOppIds.contains(dtlId)) {
                         prunedOpps.add(s);
-                        setOfProcessedOppIds.add(dtlId);
+                        options.setOfProcessedOppIds.add(dtlId);
                     }
                 }
                 detailsForParent = prunedOpps;
@@ -171,8 +151,8 @@ public class CRLP_RollupProcessor_SVC {
         // This is necessary to handle the situation when a single Parent record may have thousands of detail records
         // passed through multiple batch iterations. The 'final' record will be handled by the finish() method of
         // the LDV Batch job.
-        if (options.mode == ProcessingMode.LDV && lastParentIdProcessed != null) {
-            recordsToUpdate.remove(lastParentIdProcessed);
+        if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != null) {
+            recordsToUpdate.remove(options.lastParentIdProcessed);
         }
 
         return recordsToUpdate.values();

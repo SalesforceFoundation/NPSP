@@ -65,8 +65,8 @@ public class CRLP_Rollup {
     // Vars to handle using a different field for the summary. For example, might have Largest as the Operation
     // against the Opportunity.Amount, but the ResultField might pull in Opportunity.Id or any field from the
     // Opportunity object.
-    // Using Two-dimensional array to store first/last values for all the various data types. For example,
-    // might have a rollup of "Id of the first donation", "Amount of the last donation",
+    // Using Four-dimensional array to store first/last/largest/smallest values for all the various data types.
+    // For example, might have a rollup of "Id of the first donation", "Amount of the last donation",
     // or "{some text field} from first donation"
     public String[] textValue;
     public Decimal[] numValue;
@@ -120,9 +120,9 @@ public class CRLP_Rollup {
         this.sumByYear = new Map<String, Double>();
         this.countByYear = new Map<String, Integer>();
 
-        this.textValue = new List<String>{ null, null };
-        this.numValue = new List<Decimal>{ 0, 0 };
-        this.idValue = new List<Id>{ null, null };
+        this.textValue = new List<String>{ null, null, null, null };
+        this.numValue = new List<Decimal>{ 0, 0, 0, 0 };
+        this.idValue = new List<Id>{ null, null, null, null };
     }
 
     /**
@@ -257,11 +257,11 @@ public class CRLP_Rollup {
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
             if (fldType == SoapType.DOUBLE) {
-                resultValue = numValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = numValue[CRLP_Operation.operationTypeToArrayPosition(operation)];
             } else if (fldType == SoapType.ID) {
-                resultValue = idValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = idValue[CRLP_Operation.operationTypeToArrayPosition(operation)];
             } else {
-                resultValue = textValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = textValue[CRLP_Operation.operationTypeToArrayPosition(operation)];
             }
         }
 

@@ -44,6 +44,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     */
     public List<CRLP_Rollup> statefulRollups;
     public Id currentParentRecordId;
+    public Integer batchIteration = 0;
     private SObjectType summaryObjectType;
     private List<Id> recordIds;
 
@@ -93,12 +94,6 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-            } else if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
-                detailObjectType = OpportunityContactRole.SObjectType;
-                // Can be filtered to ContactId
-                // TODO Support filtering for AccountId
-                keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
             }
             query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
 
@@ -112,19 +107,8 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
             if (query.endsWith(' WHERE ')) {
                 query = query.removeEnd(' WHERE ');
             }
+            query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
 
-            /*if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
-                // If OCR is the primary object, filter out primary contacts and set the sort order to Account, Contact, Opp
-                query += ' AND IsPrimary = False ';
-                query += ' ORDER BY Contact.AccountId, ContactId, OpportunityId ';
-            } else {*/
-                query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
-//            }
-
-            // TODO Technically a Summary object of PartialSoftCredit isn't quite accurate.
-            // The summary object is BOTH Account and Contact, and the Detail Object is PartialSoftCredit
-            // If pass in a group of Id's, then by default we're not doing the Soft Credit rollups because
-            // that will automatically default to standard rollups
             if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
                 // If there are no active rollups for the object type, then force the query to return zero records.
                 // This is needed because can't return null as a valid iterator.
@@ -152,6 +136,8 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
     * @param scope List of Detail (Allocation or Opportunity) records
     */
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
+
+        this.batchIteration++;
 
         try {
             // Build the processing options instance
@@ -181,7 +167,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
-            this.currentParentRecordId = CRLP_RollupProcessor_SVC.getLastProcesssedParentId();
+            this.currentParentRecordId = options.lastParentIdProcessed;
             this.statefulRollups = options.rollups;
 
             // Handle dml on the records to be updated
@@ -236,6 +222,10 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.LDV;
         options.parentObjType = this.summaryObjectType;
         options.detailObjType = Opportunity.SObjectType;
+
+        options.rollups = this.statefulRollups;
+        options.lastParentIdProcessed = this.currentParentRecordId;
+
         if (this.summaryObjectType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
         } else if (this.summaryObjectType == Contact.SObjectType) {
@@ -243,11 +233,7 @@ public class CRLP_Rollup_BATCH_LDV implements Database.Batchable<SObject>, Datab
         } else if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             options.detailObjType = Allocation__c.SObjectType;
-        /*} else if (this.summaryObjectType == OpportunityContactRole.SObjectType) {
-            options.parentKeyField = SObjectType.OpportunityContactRole.fields.OpportunityId.getName();
-            options.detailObjType = Partial_Soft_Credit__c.SObjectType;*/
         }
-        options.rollups = this.statefulRollups;
         return options;
     }
 }

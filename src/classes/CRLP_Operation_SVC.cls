@@ -75,7 +75,7 @@ instance until ready to be written to the Sobject.
         if (rollup.dateObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
             dateSObject = oppSObject;
         }
-        if (dateSObject.get(dateField) != null) {
+        if (dateField != null && dateSObject.get(dateField) != null) {
             dateValue = (Date) dateSObject.get(dateField);
         }
 
@@ -94,7 +94,7 @@ instance until ready to be written to the Sobject.
         if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
             amtSObject = oppSObject;
         }
-        if (amtSObject.get(amtField) != null) {
+        if (amtField != null && amtSObject.get(amtField) != null) {
             amountValue = (Double) amtSObject.get(amtField);
         }
 
@@ -200,11 +200,11 @@ instance until ready to be written to the Sobject.
         } else if (resultFieldType == SoapType.DATETIME) {
             rollup.dateTimeValue = (DateTime) resultVal;
         } else if (resultFieldType == SoapType.ID) {
-            rollup.idValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = (Id) resultVal;
+            rollup.idValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
-            rollup.numValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = Double.valueOf(resultVal);
+            rollup.numValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = Double.valueOf(resultVal);
         } else {
-            rollup.textValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)] = String.valueOf(resultVal);
+            rollup.textValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = String.valueOf(resultVal);
         }
     }
 }

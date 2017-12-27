@@ -125,7 +125,8 @@ private class CRLP_RecalculateBTN_TEST {
 
         Test.stopTest();
 
-        system.assertEquals(2, [SELECT Count() FROM AsyncApexJob], 'Two Queueable jobs should been executed');
+        // validate that both the standard and the partial soft credit jobs were submitted
+        system.assertEquals(4, [SELECT Count() FROM AsyncApexJob], 'Four Queueable jobs should been executed');
     }
 
 }

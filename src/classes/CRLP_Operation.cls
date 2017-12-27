@@ -85,6 +85,19 @@ public class CRLP_Operation {
     private static Map<String, CRLP_Operation.RollupType> rollupOperationTypesByName;
 
     /**
+     * @description Convert an operation (FIRST, LAST, LARGEST, SMALLEST) to an Integer value that is used to point
+     * to a specific element within the CRLP_Rollup.textValue, numValue and idValue[] arrays.
+     * @param rlpType CRLP_Operation.RollupType
+     * @return Integer value of 0 to 3.
+     */
+    public static Integer operationTypeToArrayPosition(CRLP_Operation.RollupType rlpType) {
+        return (rlpType == RollupType.FIRST ? 0 :
+                rlpType == RollupType.LAST ? 1 :
+                rlpType == RollupType.LARGEST ? 2 :
+                rlpType == RollupType.SMALLEST ? 3 : -1);
+    }
+
+    /**
      * @description Yearly Operations for YearsBack and DaysAgo are only supported for the Count, Sum,
      * Largest and Smallest rollup operations. All others support AllTime only.
      * @param CRLP_Operation.RollupType
