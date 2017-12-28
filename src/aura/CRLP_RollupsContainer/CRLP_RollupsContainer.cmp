@@ -1,28 +1,23 @@
-<!--
- - Created by randi.wilson on 12/20/17.
- -->
+<aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupsUI_SVC">
+    <!-- public attributes -->
+    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.TableItem[]" access="public"/>
+    <!-- private attributes -->
+    <aura:attribute name="columns" type="List" access="private"/>
+    <aura:attribute name="labels" type="Map" access="private"/>
 
-<aura:component description="CRLP_RollupGrid" implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupsUI_SVC">
-    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.TableItem[]"/>
-    <aura:attribute name="columns" type="List"/>
-
+    <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- markup follows -->
     <div class="slds-grid_vertical-stretch">
-
             <div class="slds-p-horizontal--large slds-p-top--large">
-                <lightning:breadcrumbs>
-                    <!--TODO: Update this to be more dynamic check with weird formatting-->
-                    <!--<a href="/apex/STG_SettingsManager"><lightning:icon size="x-small" class="slds-icon" iconName="utility:back" alternativeText="Back"/></a>-->
-                    <lightning:breadcrumb label="Back to NPSP Settings" href="/apex/STG_SettingsManager"/>
-                </lightning:breadcrumbs>
+                <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
             </div>
-            <!--TODO: add custom label + -->
             <div class="slds-p-around--large">
-                <h1 class="slds-page-header__title" title="Customizable Summary Rollups">Customizable Summary Rollups</h1>
+                <h1 class="slds-page-header__title" title="Customizable Summary Rollups">{!v.labels.rollupSummaryTitle}</h1>
             </div>
-
             <div class="slds-p-horizontal--large slds-p-bottom--large">
-                <!--TODO:add onChange function + fix padding-->
+                <!--TODO:add onChange function-->
                 <lightning:layout horizontalAlign="spread">
                     <lightning:layoutItem flexibility="auto">
                         <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
@@ -34,20 +29,21 @@
                     </lightning:layoutItem>
                     <lightning:layoutItem flexibility="auto">
                         <lightning:buttonGroup >
-                            <lightning:button label="New Rollup"/>
-                            <lightning:button label="View Filter Groups"/>
+                            <lightning:button label="{!v.labels.rollupNew}"/>
+                            <lightning:button label="{!v.labels.filterGroupsView}"/>
                         </lightning:buttonGroup>
                     </lightning:layoutItem>
                 </lightning:layout>
-
             </div>
-
         </div>
-        <div class="slds-p-horizontal--large slds-p-bottom--large">
+        <!--Rollup Table-->
+        <div class="slds-p-horizontal--large slds-p-bottom--large" style="height: 300px;">
+            <!--TODO: this will probably need to be custom components to accommodate the buttons-->
             <lightning:datatable data="{!v.rollupList}"
                                      columns="{!v.columns}"
                                      keyField="id"
                                      hideCheckboxColumn="true"
+
             />
         </div>
 

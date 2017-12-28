@@ -1,33 +1,25 @@
-/**
- * Created by randi.wilson on 12/27/17.
- */
 ({
     doInit: function (cmp, event, helper) {
         //better to move to Helper
-        var action = cmp.get("c.getRollupDefinitions");
+        var action = cmp.get("c.setupRollups");
         console.log("in the init function");
 
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                // Alert the user with the value returned
-                // from the server
-
-                cmp.set("v.rollupList", response.getReturnValue());
+                var model = response.getReturnValue();
+                cmp.set("v.rollupList", model.items);
                 cmp.set('v.columns', [
-                    //Rollup Type, Rollup Name, Target Field, Operation, Filter Group Name, Status
-                    //Description doesn't exist
+                    //these can't be translated; another reason for a custom table component
                     {label: 'Rollup Type', fieldName: 'rollupType', type: 'text'},
                     {label: 'Name', fieldName: 'rollupName', type: 'text'},
                     {label: 'Target Field', fieldName: 'targetField', type: 'text'},
                     {label: 'Operation', fieldName: 'operation', type: 'text'},
                     {label: 'Filter Group Name', fieldName: 'filterGroupName', type: 'text'},
                     {label: 'Active', fieldName: 'active', type: 'text'}
+                    //{label: 'Actions', fieldName: '', type:'text'}
                 ]);
-                console.log(response.getReturnValue());
-            }
-            else if (state === "INCOMPLETE") {
-                // do something
+                cmp.set("v.labels", model.labels);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
