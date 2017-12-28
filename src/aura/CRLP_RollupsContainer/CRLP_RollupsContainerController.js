@@ -1,6 +1,6 @@
 ({
     doInit: function (cmp, event, helper) {
-        //better to move to Helper
+        //could be better to move to Helper
         var action = cmp.get("c.setupRollups");
         console.log("in the init function");
 
