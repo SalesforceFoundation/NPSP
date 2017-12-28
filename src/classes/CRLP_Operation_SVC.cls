@@ -193,18 +193,19 @@ instance until ready to be written to the Sobject.
      * @param rollup CRLP_Rollup instance
      */
     private static void setResultFieldValue(SoapType resultFieldType, Object resultVal, CRLP_Rollup rollup, CRLP_Operation.RollupType operation) {
+        Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
         if (resultVal == null) {
             // do nothing
         } else if (resultFieldType == SoapType.DATE) {
-            rollup.dateValue = (Date) resultVal;
+            rollup.dateValue[arrayPosition] = (Date) resultVal;
         } else if (resultFieldType == SoapType.DATETIME) {
-            rollup.dateTimeValue = (DateTime) resultVal;
+            rollup.dateTimeValue[arrayPosition] = (DateTime) resultVal;
         } else if (resultFieldType == SoapType.ID) {
-            rollup.idValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = (Id) resultVal;
+            rollup.idValue[arrayPosition] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
-            rollup.numValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = Double.valueOf(resultVal);
+            rollup.numValue[arrayPosition] = Double.valueOf(resultVal);
         } else {
-            rollup.textValue[CRLP_Operation.operationTypeToArrayPosition(operation)] = String.valueOf(resultVal);
+            rollup.textValue[arrayPosition] = String.valueOf(resultVal);
         }
     }
 }
