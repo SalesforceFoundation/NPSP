@@ -16,23 +16,28 @@ public with sharing class CRLP_RollupsUI_SVC {
 
     public class RollupModel{
         @AuraEnabled public List<TableItem> items;
-        //TODO: should the labels live in an enum or elsewhere to be easily accesible for other pages?
+        //TODO: should the labels live in an enum or elsewhere to be easily accessible for other pages?
         @AuraEnabled public Map<String, String> labels = new Map<String,String>{
-            'return' => Label.CRLP_Return,
-            'rollupSummaryTitle' => Label.CRLP_RollupSummary,
-            'filterGroupsTitle' => Label.CRLP_FilterGroups,
-            'clone' => Label.stgBtnClone,
-            'filterGroupsView' => Label.CRLP_FilterView,
-            'rollupNew' => Label.CRLP_RollupNew,
-            'rollupCreate' => Label.CRLP_RollupCreate,
-            'filterCreate' => Label.CRLP_FilterCreate,
-            'filterNew' => Label.CRLP_FilterNew,
-            'edit' => Label.stgBtnEdit,
-            'save' => Label.stgBtnSave,
-            'cancel' => Label.stgBtnCancel,
-            'delete' => Label.alloDeleteRow,
-            'saveAndNew' => Label.lvlBtnSaveAndNew,
-            'name' => Label.CRLP_Name
+                'active' => Label.CRLP_Active,
+                'cancel' => Label.stgBtnCancel,
+                'clone' => Label.stgBtnClone,
+                'delete' => Label.alloDeleteRow,
+                'edit' => Label.stgBtnEdit,
+                'filterCreate' => Label.CRLP_FilterCreate,
+                'filterGroupName' => Label.CRLP_FilterGroupName,
+                'filterGroupsTitle' => Label.CRLP_FilterGroups,
+                'filterGroupsView' => Label.CRLP_FilterView,
+                'filterNew' => Label.CRLP_FilterNew,
+                'name' => Label.CRLP_Name,
+                'operation' => Label.CRLP_Operation,
+                'return' => Label.CRLP_Return,
+                'rollupCreate' => Label.CRLP_RollupCreate,
+                'rollupNew' => Label.CRLP_RollupNew,
+                'rollupSummaryTitle' => Label.CRLP_RollupSummary,
+                'rollupType' => Label.CRLP_RollupType,
+                'save' => Label.stgBtnSave,
+                'saveAndNew' => Label.lvlBtnSaveAndNew,
+                'targetField' => Label.CRLP_TargetField
         };
 
     }

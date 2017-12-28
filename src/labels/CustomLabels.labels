@@ -620,12 +620,28 @@
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
+        <fullName>CRLP_Active</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Text for active rollups</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
         <fullName>CRLP_FilterGroups</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Filter Group Page Title</shortDescription>
         <value>Filter Groups</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_FilterGroupName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Filter Group Name for Custom Rollups</shortDescription>
+        <value>Filter Group Name</value>
     </labels>
     <labels>
         <fullName>CRLP_FilterCreate</fullName>
@@ -660,6 +676,14 @@
         <value>Name</value>
     </labels>
     <labels>
+        <fullName>CRLP_Operation</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Rollup operation</shortDescription>
+        <value>Operation</value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -684,12 +708,28 @@
         <value>New Rollup</value>
     </labels>
     <labels>
+        <fullName>CRLP_RollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Type of custom rollup</shortDescription>
+        <value>Rollup Type</value>
+    </labels>
+    <labels>
         <fullName>CRLP_RollupSummary</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Rollup Summary Page Title</shortDescription>
         <value>Customizable Rollup Summaries</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_TargetField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Rollup target field</shortDescription>
+        <value>Target Field</value>
     </labels>
     <labels>
         <fullName>DeleteAccount</fullName>
