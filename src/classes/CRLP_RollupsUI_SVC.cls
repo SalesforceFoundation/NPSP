@@ -67,6 +67,7 @@ public with sharing class CRLP_RollupsUI_SVC {
         RollupModel model = new RollupModel();
 
         model.items = getRollupDefinitions();
+        model.labels = getRollupLabels();
 
         return model;
     }
@@ -86,7 +87,27 @@ public with sharing class CRLP_RollupsUI_SVC {
             for(Integer i=0; i<mdtList.size(); i++){
                 TableItem item = new TableItem();
 
-                item.rollupType = 'TBD';
+                //item.rollupType = mdtList[i].Summary_Object__r.QualifiedAPIName;
+
+                if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+                    //item.rollupType = 'Opportunity to Account Hard Credit';
+                    item.rollupType = mdtList[i].Summary_Object__r.Label+' to '+mdtList[i].Detail_Object__r.Label+' '+Label.CRLP_HardCredit;
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+                    item.rollupType = 'Payment to Account Hard Credit';
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+                    item.rollupType = 'Opportunity to Account Soft Credit';
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+                    item.rollupType = 'Opportunity to Contact Hard Credit';
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+                    item.rollupType = 'Opportunity to Contact Soft Credit';
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+                    item.rollupType = 'Payment to Contact Hard Credit';
+                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
+                    item.rollupType = 'Allocation to GAU';
+                } else {
+                    item.rollupType = Label.stgLabelOther;
+                }
+                System.debug(mdtList[i].Summary_Object__c);
                 item.rollupName = mdtList[i].MasterLabel;
                 item.targetField = mdtList[i].Summary_Field__r.Label;
                 item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;

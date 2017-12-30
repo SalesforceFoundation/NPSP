@@ -133,9 +133,10 @@
         <members>CRLP_Rollup_BATCH_LDV</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
-        <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_Rollup_SVC</members>
         <members>CRLP_Rollup_SVC_TEST</members>
+        <members>CRLP_Rollup_TDTM</members>
+        <members>CRLP_RollupsUI_SVC</members>
         <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
@@ -496,8 +497,9 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-    	<members>CRLP_RollupApp</members>
-    	<members>CRLP_RollupsContainer</members>
+        <members>CRLP_Breadcrumbs</members>
+        <members>CRLP_RollupApp</members>
+        <members>CRLP_RollupsContainer</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -812,6 +814,14 @@
         <members>Error__c.Posted_in_Chatter__c</members>
         <members>Error__c.Record_URL__c</members>
         <members>Error__c.Stack_Trace__c</members>
+        <members>Filter_Group__mdt.Description__c</members>
+        <members>Filter_Group__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Constant__c</members>
+        <members>Filter_Rule__mdt.Field__c</members>
+        <members>Filter_Rule__mdt.Filter_Group__c</members>
+        <members>Filter_Rule__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Object__c</members>
+        <members>Filter_Rule__mdt.Operator__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
         <members>General_Accounting_Unit__c.Average_Allocation__c</members>
         <members>General_Accounting_Unit__c.Description__c</members>
@@ -903,26 +913,6 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
-        <members>Schedulable__c.Active__c</members>
-        <members>Schedulable__c.Class_Name__c</members>
-        <members>Schedulable__c.Frequency__c</members>
-        <members>Schedulable__c.Last_Time_Run__c</members>
-        <members>Trigger_Handler__c.Active__c</members>
-        <members>Trigger_Handler__c.Asynchronous__c</members>
-        <members>Trigger_Handler__c.Class__c</members>
-        <members>Trigger_Handler__c.Load_Order__c</members>
-        <members>Trigger_Handler__c.Object__c</members>
-        <members>Trigger_Handler__c.Trigger_Action__c</members>
-        <members>Trigger_Handler__c.User_Managed__c</members>
-        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
-        <members>Filter_Group__mdt.Description__c</members>
-        <members>Filter_Group__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Constant__c</members>
-        <members>Filter_Rule__mdt.Field__c</members>
-        <members>Filter_Rule__mdt.Filter_Group__c</members>
-        <members>Filter_Rule__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Object__c</members>
-        <members>Filter_Rule__mdt.Operator__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -938,6 +928,18 @@
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
         <members>Rollup__mdt.Yearly_Operation_Type__c</members>
+        <members>Schedulable__c.Active__c</members>
+        <members>Schedulable__c.Class_Name__c</members>
+        <members>Schedulable__c.Frequency__c</members>
+        <members>Schedulable__c.Last_Time_Run__c</members>
+        <members>Trigger_Handler__c.Active__c</members>
+        <members>Trigger_Handler__c.Asynchronous__c</members>
+        <members>Trigger_Handler__c.Class__c</members>
+        <members>Trigger_Handler__c.Load_Order__c</members>
+        <members>Trigger_Handler__c.Object__c</members>
+        <members>Trigger_Handler__c.Trigger_Action__c</members>
+        <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
@@ -1045,6 +1047,20 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CRLP_Active</members>
+        <members>CRLP_FilterCreate</members>
+        <members>CRLP_FilterGroupName</members>
+        <members>CRLP_FilterGroups</members>
+        <members>CRLP_FilterNew</members>
+        <members>CRLP_FilterView</members>
+        <members>CRLP_Name</members>
+        <members>CRLP_Operation</members>
+        <members>CRLP_Return</members>
+        <members>CRLP_RollupCreate</members>
+        <members>CRLP_RollupNew</members>
+        <members>CRLP_RollupSummary</members>
+        <members>CRLP_RollupType</members>
+        <members>CRLP_TargetField</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1781,6 +1797,73 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>Filter_Group.ClosedWon_RecordType_not_Membership</members>
+        <members>Filter_Group.Memberships_Only</members>
+        <members>Filter_Rule.ClosedWonOpps</members>
+        <members>Filter_Rule.ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.Membership_ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.RecordType_Equals_Membership</members>
+        <members>Filter_Rule.RecordType_not_Membership</members>
+        <members>Rollup.Account_Average_Gift</members>
+        <members>Rollup.Account_Best_Gift_Year</members>
+        <members>Rollup.Account_Best_Gift_Year_Total</members>
+        <members>Rollup.Account_Count_All_Gifts</members>
+        <members>Rollup.Account_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Count_Gifts_Last_Year</members>
+        <members>Rollup.Account_Count_Gifts_This_Year</members>
+        <members>Rollup.Account_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_First_Gift_Date</members>
+        <members>Rollup.Account_Largest_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Date</members>
+        <members>Rollup.Account_Last_Membership_Amount</members>
+        <members>Rollup.Account_Last_Membership_Date</members>
+        <members>Rollup.Account_Smallest_Gift_Amount</members>
+        <members>Rollup.Account_Total_Gifts</members>
+        <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Total_Gifts_This_Year</members>
+        <members>Rollup.Account_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_Total_Membership_Amount</members>
+        <members>Rollup.Contact_Average_Gift</members>
+        <members>Rollup.Contact_Best_Gift_Year</members>
+        <members>Rollup.Contact_Best_Gift_Year_Total</members>
+        <members>Rollup.Contact_Count_All_Gifts</members>
+        <members>Rollup.Contact_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Count_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Count_Gifts_This_Year</members>
+        <members>Rollup.Contact_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Contact_First_Gift_Date</members>
+        <members>Rollup.Contact_Largest_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Date</members>
+        <members>Rollup.Contact_Smallest_Gift_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Count_All</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_Two_Years_Ago</members>
+        <members>Rollup.Contact_SoftCredit_First_Amount</members>
+        <members>Rollup.Contact_SoftCredit_First_Date</members>
+        <members>Rollup.Contact_SoftCredit_Largest_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Date</members>
+        <members>Rollup.Contact_SoftCredit_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Total</members>
+        <members>Rollup.Contact_SoftCredit_Two_Years_Ago</members>
+        <members>Rollup.Contact_Total_Gifts</members>
+        <members>Rollup.Contact_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Total_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Total_Gifts_This_Year</members>
+        <members>Rollup.Contact_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.GAU_Largest_Allocation</members>
+        <members>Rollup.GAU_Total_Allocations_All_Time</members>
+        <members>Rollup.GAU_Total_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Total_Number_of_Allocations</members>
+        <name>CustomMetadata</name>
+    </types>
+    <types>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1796,6 +1879,8 @@
         <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
+        <members>Filter_Group__mdt</members>
+        <members>Filter_Rule__mdt</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
@@ -2131,6 +2216,8 @@
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
+        <members>Filter_Group__mdt-Filter Group Layout</members>
+        <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
@@ -2142,11 +2229,9 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
+        <members>Rollup__mdt-Rollup Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
-        <members>Filter_Group__mdt-Filter Group Layout</members>
-        <members>Filter_Rule__mdt-Filter Rule Layout</members>
-        <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
     <types>
@@ -2276,73 +2361,6 @@
         <members>Opportunity.Opportunity Copy FMV to Amount</members>
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
-    </types>
-    <types>
-        <members>Rollup.Contact_SoftCredit_Count_Last_Year</members>
-        <members>Rollup.Account_First_Gift_Date</members>
-        <members>Rollup.Account_Best_Gift_Year</members>
-        <members>Rollup.Contact_Count_All_Gifts</members>
-        <members>Rollup.Contact_Count_Gifts_Two_Years_Ago</members>
-        <members>Rollup.Contact_Total_Gifts_Last_365_Days</members>
-        <members>Rollup.GAU_Total_Allocations_Last_Year</members>
-        <members>Rollup.Contact_Smallest_Gift_Amount</members>
-        <members>Rollup.Contact_SoftCredit_First_Amount</members>
-        <members>Rollup.Contact_Best_Gift_Year_Total</members>
-        <members>Rollup.Contact_Average_Gift</members>
-        <members>Rollup.Contact_Total_Gifts_Two_Years_Ago</members>
-        <members>Rollup.Account_Count_Gifts_Last_365_Days</members>
-        <members>Rollup.Contact_Last_Gift_Date</members>
-        <members>Rollup.Contact_SoftCredit_Count_All</members>
-        <members>Rollup.Account_Count_Gifts_Last_Year</members>
-        <members>Rollup.Account_Count_Gifts_This_Year</members>
-        <members>Rollup.Account_Last_Gift_Date</members>
-        <members>Rollup.Contact_SoftCredit_Count_Last_N_Days</members>
-        <members>Rollup.Account_Count_All_Gifts</members>
-        <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
-        <members>Rollup.Contact_Total_Gifts_This_Year</members>
-        <members>Rollup.Contact_Best_Gift_Year</members>
-        <members>Rollup.Contact_SoftCredit_Count_This_Year</members>
-        <members>Rollup.Contact_SoftCredit_Count_Two_Years_Ago</members>
-        <members>Rollup.Contact_SoftCredit_Last_Amount</members>
-        <members>Rollup.Contact_SoftCredit_This_Year</members>
-        <members>Rollup.Contact_SoftCredit_First_Date</members>
-        <members>Rollup.Account_Total_Gifts</members>
-        <members>Rollup.Contact_Total_Gifts</members>
-        <members>Rollup.Account_Total_Membership_Amount</members>
-        <members>Rollup.Account_Best_Gift_Year_Total</members>
-        <members>Rollup.Contact_SoftCredit_Two_Years_Ago</members>
-        <members>Rollup.Contact_Count_Gifts_This_Year</members>
-        <members>Rollup.Contact_SoftCredit_Last_Year</members>
-        <members>Rollup.Contact_Total_Gifts_Last_Year</members>
-        <members>Rollup.GAU_Total_Allocations_All_Time</members>
-        <members>Rollup.GAU_Total_Number_of_Allocations</members>
-        <members>Rollup.Account_Largest_Gift_Amount</members>
-        <members>Rollup.Contact_SoftCredit_Largest_Amount</members>
-        <members>Rollup.Contact_Largest_Gift_Amount</members>
-        <members>Rollup.Account_Total_Gifts_Two_Years_Ago</members>
-        <members>Rollup.Contact_SoftCredit_Total</members>
-        <members>Rollup.Contact_SoftCredit_Last_Date</members>
-        <members>Rollup.Contact_SoftCredit_Last_N_Days</members>
-        <members>Rollup.Account_Last_Membership_Date</members>
-        <members>Rollup.Contact_Last_Gift_Amount</members>
-        <members>Rollup.Account_Count_Gifts_Two_Years_Ago</members>
-        <members>Rollup.Contact_First_Gift_Date</members>
-        <members>Rollup.Account_Total_Gifts_This_Year</members>
-        <members>Rollup.Contact_Count_Gifts_Last_365_Days</members>
-        <members>Rollup.Account_Last_Membership_Amount</members>
-        <members>Rollup.GAU_Largest_Allocation</members>
-        <members>Rollup.Contact_Count_Gifts_Last_Year</members>
-        <members>Rollup.Account_Average_Gift</members>
-        <members>Rollup.Account_Last_Gift_Amount</members>
-        <members>Rollup.Account_Smallest_Gift_Amount</members>
-        <members>Filter_Group.ClosedWon_RecordType_not_Membership</members>
-        <members>Filter_Group.Memberships_Only</members>
-        <members>Filter_Rule.ClosedWonOpps_IsWon</members>
-        <members>Filter_Rule.ClosedWonOpps</members>
-        <members>Filter_Rule.RecordType_Equals_Membership</members>
-        <members>Filter_Rule.RecordType_not_Membership</members>
-        <members>Filter_Rule.Membership_ClosedWonOpps_IsWon</members>
-        <name>CustomMetadata</name>
     </types>
     <version>39.0</version>
 </Package>
