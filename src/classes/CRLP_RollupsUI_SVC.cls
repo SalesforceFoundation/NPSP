@@ -67,6 +67,7 @@ public with sharing class CRLP_RollupsUI_SVC {
         RollupModel model = new RollupModel();
 
         model.items = getRollupDefinitions();
+        model.labels = getRollupLabels();
 
         return model;
     }
@@ -80,26 +81,19 @@ public with sharing class CRLP_RollupsUI_SVC {
     public static List<TableItem> getRollupDefinitions(){
         List<TableItem> mdtTableList = new List<TableItem>();
 
-        try{
-            List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
+        List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
 
-            for(Integer i=0; i<mdtList.size(); i++){
-                TableItem item = new TableItem();
+        for(Integer i=0; i<mdtList.size(); i++){
+            TableItem item = new TableItem();
 
-                item.rollupType = 'TBD';
-                item.rollupName = mdtList[i].MasterLabel;
-                item.targetField = mdtList[i].Summary_Field__r.Label;
-                item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
-                item.operation = mdtList[i].Operation__c.replace('_', ' ');
-                item.active = String.valueOf(mdtList[i].Active__c).capitalize();
+            item.rollupType = 'TBD';
+            item.rollupName = mdtList[i].MasterLabel;
+            item.targetField = mdtList[i].Summary_Field__r.Label;
+            item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
+            item.operation = mdtList[i].Operation__c.replace('_', ' ');
+            item.active = String.valueOf(mdtList[i].Active__c).capitalize();
 
-                mdtTableList.add(item);
-            }
-        }
-
-        catch(exception e){
-            throw new AuraHandledException('Unable to load rollup information at this time. Error: '
-            + e.getMessage());
+            mdtTableList.add(item);
         }
 
         return mdtTableList;
