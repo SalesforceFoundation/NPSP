@@ -1,0 +1,16 @@
+<aura:component description="tableHeader">
+    <aura:attribute name="hasAction" type="boolean" default="true"/>
+    <aura:attribute name="columns" type="List"/>
+    <thead>
+    <tr class="slds-text-title_caps">
+        <aura:iteration var="column" items="{!v.columns}">
+            <th class="slds-col" scope="col">
+                <div class="slds-truncate" title="{!column}">{!column}</div>
+            </th>
+        </aura:iteration>
+        <aura:if isTrue="{!v.hasAction}">
+            <th class="action-cell" scope="col"></th>
+        </aura:if>
+    </tr>
+    </thead>
+</aura:component>
