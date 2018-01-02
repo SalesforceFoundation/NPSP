@@ -1360,4 +1360,42 @@ public with sharing class BDI_DataImport_TEST {
         list<Account> listAcc = [select Id, Name from Account];
         system.assertEquals(2, listAcc.size());
     }
+
+    /*********************************************************************************************************
+    * @description operation
+    *        import existing contacts, from the same household
+    * verify:
+    *        no problems updating additional fields on C1 and C2
+    *        c2 matched in household
+    **********************************************************************************************************/
+    static testMethod void OneDIExistingContactsExistingHousehold() {
+        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContactsExistingHousehold') return;
+
+        // existing contacts into the same household
+        list<Contact> listConExisting = new list<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
+        insert listConExisting;
+        ID hhId = [SELECT AccountId FROM Contact].AccountId;
+        listConExisting.add(new Contact(Firstname='c2', Lastname='C1', Email='c2@C2.com', Salutation='Mrs', AccountId=hhId));
+        upsert listConExisting;
+
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com', Contact1_Salutation__c='Dr',
+            Contact2_Firstname__c='c2', Contact2_Salutation__c='Prof'));
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Firstname, Lastname, Name, AccountId, Salutation from Contact order by Lastname, Firstname];
+        system.assertEquals(2, listCon.size());
+        system.assertEquals(hhId, listCon[0].AccountId);
+        system.assertEquals(hhId, listCon[1].AccountId);
+        system.assertEquals('Dr', listCon[0].Salutation);
+        system.assertEquals('Prof', listCon[1].Salutation);
+    }
 }
