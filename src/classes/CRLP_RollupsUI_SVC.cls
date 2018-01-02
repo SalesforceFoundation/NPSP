@@ -41,12 +41,15 @@ public with sharing class CRLP_RollupsUI_SVC {
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
     public class TableItem{
-        @AuraEnabled public String rollupType;
-        @AuraEnabled public String rollupName;
-        @AuraEnabled public String targetField;
-        @AuraEnabled public String operation;
+        @AuraEnabled public Boolean active;
+        @AuraEnabled public String creditType;
+        @AuraEnabled public String detailField;
+        @AuraEnabled public String detailObject;
         @AuraEnabled public String filterGroupName;
-        @AuraEnabled public String active;
+        @AuraEnabled public String operation;
+        @AuraEnabled public String rollupName;
+        @AuraEnabled public String summaryObject;
+
     }
 
     /*******************************************************************************************************
@@ -86,32 +89,34 @@ public with sharing class CRLP_RollupsUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++){
             TableItem item = new TableItem();
 
-                //item.rollupType = mdtList[i].Summary_Object__r.QualifiedAPIName;
 
                 if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                    //item.rollupType = 'Opportunity to Account Hard Credit';
-                    item.rollupType = mdtList[i].Summary_Object__r.Label+' to '+mdtList[i].Detail_Object__r.Label+' '+Label.CRLP_HardCredit;
+                    item.creditType = Label.CRLP_HardCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                    item.rollupType = 'Payment to Account Hard Credit';
+                    item.creditType = Label.CRLP_HardCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
-                    item.rollupType = 'Opportunity to Account Soft Credit';
+                    item.creditType = Label.CRLP_SoftCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                    item.rollupType = 'Opportunity to Contact Hard Credit';
+                    item.creditType = Label.CRLP_HardCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
-                    item.rollupType = 'Opportunity to Contact Soft Credit';
+                    item.creditType = Label.CRLP_SoftCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                    item.rollupType = 'Payment to Contact Hard Credit';
+                    item.creditType = Label.CRLP_HardCredit;
                 } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
-                    item.rollupType = 'Allocation to GAU';
+                    item.creditType = Label.stgLabelNone;
                 } else {
-                    item.rollupType = Label.stgLabelOther;
+                    item.creditType = Label.stgLabelOther;
                 }
 
+
+            item.detailObject = mdtList[i].Detail_Object__r.Label;
+            item.summaryObject = mdtList[i].Summary_Object__r.Label;
+            item.creditType = 'TBD';
             item.rollupName = mdtList[i].MasterLabel;
-            item.targetField = mdtList[i].Summary_Field__r.Label;
+            item.detailField = mdtList[i].Detail_Field__r.Label;
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
-            item.active = String.valueOf(mdtList[i].Active__c).capitalize();
+            item.active = mdtList[i].Active__c;
 
             mdtTableList.add(item);
         }
@@ -128,28 +133,39 @@ public with sharing class CRLP_RollupsUI_SVC {
     //TODO: should the labels live in an enum or elsewhere to be easily accessible for other pages?
     public static Map<String, String> getRollupLabels(){
 
-        Map<String, String> labels = new Map<String,String>{
-            'active' => Label.CRLP_Active,
-            'cancel' => Label.stgBtnCancel,
-            'clone' => Label.stgBtnClone,
-            'delete' => Label.alloDeleteRow,
-            'edit' => Label.stgBtnEdit,
-            'filterCreate' => Label.CRLP_FilterCreate,
-            'filterGroupName' => Label.CRLP_FilterGroupName,
-            'filterGroupsTitle' => Label.CRLP_FilterGroups,
-            'filterGroupsView' => Label.CRLP_FilterView,
-            'filterNew' => Label.CRLP_FilterNew,
-            'name' => Label.CRLP_Name,
-            'operation' => Label.CRLP_Operation,
-            'return' => Label.CRLP_Return,
-            'rollupCreate' => Label.CRLP_RollupCreate,
-            'rollupNew' => Label.CRLP_RollupNew,
-            'rollupSummaryTitle' => Label.CRLP_RollupSummary,
-            'rollupType' => Label.CRLP_RollupType,
-            'save' => Label.stgBtnSave,
-            'saveAndNew' => Label.lvlBtnSaveAndNew,
-            'targetField' => Label.CRLP_TargetField
-        };
+
+        Map<String, String> labels = new Map<String,String>
+            {
+                'action' => Label.stgLabelActionColumn,
+                'active' => Label.CRLP_Active,
+                'cancel' => Label.stgBtnCancel,
+                'clone' => Label.stgBtnClone,
+                'creditType' => Label.CRLP_CreditType,
+                'delete' => Label.alloDeleteRow,
+                'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
+                'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
+                'edit' => Label.stgBtnEdit,
+                'filterCreate' => Label.CRLP_FilterCreate,
+                //TODO: figure out this getdescribe
+                // 'filterGroupName' => Schema.Filter_Group__mdt.getDescribe().getLabel(),
+                'filterGroupName' => 'Filter Group Name',
+                //TODO: figure out this getdescribe
+                'filterGroupsTitle' => 'Filter Group Placeholder Plural',
+                'filterGroupsView' => Label.CRLP_FilterView,
+                'filterNew' => Label.CRLP_FilterNew,
+                //TODO: figure out this getdescribe
+                // 'name' => Schema.Rollup__mdt.MasterLabel.getDescribe().getLabel(),
+                'name' => 'Name Placeholder',
+                'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
+                'return' => Label.CRLP_Return,
+                'rollupCreate' => Label.CRLP_RollupCreate,
+                'rollupNew' => Label.CRLP_RollupNew,
+                'rollupSummaryTitle' => Label.CRLP_RollupSummary,
+                'rollupType' => Label.CRLP_RollupType,
+                'save' => Label.stgBtnSave,
+                'saveAndNew' => Label.lvlBtnSaveAndNew,
+                'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel()
+            };
 
         return labels;
     }

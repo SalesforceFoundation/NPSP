@@ -8,18 +8,18 @@
             var state = response.getState();
             if (state === "SUCCESS") {
                 var model = response.getReturnValue();
-                cmp.set("v.rollupList", model.items);
-                cmp.set('v.columns', [
-                    //these can't be translated; another reason for a custom table component
-                    {label: 'Rollup Type', fieldName: 'rollupType', type: 'text'},
-                    {label: 'Name', fieldName: 'rollupName', type: 'text'},
-                    {label: 'Target Field', fieldName: 'targetField', type: 'text'},
-                    {label: 'Operation', fieldName: 'operation', type: 'text'},
-                    {label: 'Filter Group Name', fieldName: 'filterGroupName', type: 'text'},
-                    {label: 'Active', fieldName: 'active', type: 'text'}
-                    //{label: 'Actions', fieldName: '', type:'text'}
-                ]);
                 cmp.set("v.labels", model.labels);
+                cmp.set("v.rollupList", model.items);
+                var cols = [model.labels.name
+                            , model.labels.summaryObject
+                            , model.labels.detailObject
+                            //TODO: this will need extra logic b/c it comes from 3 fields: , model.labels.detailField
+                            , model.labels.creditType
+                            , model.labels.operation
+                            , model.labels.filterGroupName
+                            , model.labels.active
+                            ];
+                cmp.set('v.columns', cols);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();

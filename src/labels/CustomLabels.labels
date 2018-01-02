@@ -588,22 +588,6 @@
         <value>omit</value>
     </labels>
     <labels>
-        <fullName>CascadeDeletionError</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Cascade Deletion Error Message In Classic</shortDescription>
-        <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with the following records. Delete or re-associate these records and then try again.&lt;br/&gt;&lt;br/&gt;{1}</value>
-    </labels>
-    <labels>
-        <fullName>CascadeDeletionErrorLightning</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
-        <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
-    </labels>
-    <labels>
         <fullName>ClosedWonOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -628,28 +612,20 @@
         <value>Active</value>
     </labels>
     <labels>
+        <fullName>CRLP_CreditType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Type</shortDescription>
+        <value>Credit Type</value>
+    </labels>
+    <labels>
         <fullName>CRLP_FilterCreate</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Title for new filter group page</shortDescription>
         <value>Create Filter Group</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_FilterGroupName</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Filter Group Name for Custom Rollups</shortDescription>
-        <value>Filter Group Name</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_FilterGroups</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Filter Group Page Title</shortDescription>
-        <value>Filter Groups</value>
     </labels>
     <labels>
         <fullName>CRLP_FilterNew</fullName>
@@ -668,20 +644,12 @@
         <value>View Filter Groups</value>
     </labels>
     <labels>
-        <fullName>CRLP_Name</fullName>
+        <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>CRLP_Name</shortDescription>
-        <value>Name</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_Operation</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Rollup operation</shortDescription>
-        <value>Operation</value>
+        <shortDescription>Hard Credit</shortDescription>
+        <value>Hard Credit</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>
@@ -724,20 +692,12 @@
         <value>Rollup Type</value>
     </labels>
     <labels>
-        <fullName>CRLP_TargetField</fullName>
+        <fullName>CRLP_SoftCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Rollup target field</shortDescription>
-        <value>Target Field</value>
-    </labels>
-    <labels>
-        <fullName>CampaignMemberStatusOmit</fullName>
-        <categories>Opportunity, Campaign Member</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>CampaignMemberStatusOmit</shortDescription>
-        <value>omit</value>
+        <shortDescription>Soft Credit</shortDescription>
+        <value>Soft Credit</value>
     </labels>
     <labels>
         <fullName>CascadeDeletionError</fullName>
@@ -754,22 +714,6 @@
         <protected>true</protected>
         <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
-    </labels>
-    <labels>
-        <fullName>ClosedWonOpportunities</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ClosedWonOpportunities</shortDescription>
-        <value>Closed Won Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>ConfirmDeleteAccount</fullName>
-        <categories>Error, Delete</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
         <fullName>DeleteAccount</fullName>

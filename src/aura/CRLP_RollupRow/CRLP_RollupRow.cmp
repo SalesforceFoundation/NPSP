@@ -1,6 +1,47 @@
-<!--
- - Created by randi.wilson on 1/2/18.
- -->
-
 <aura:component description="CRLP_RollupRow">
+    <!-- public attributes -->
+    <aura:attribute name="rollup" type="Object" required="true"/>
+    <aura:attribute name="labels" type="Map"/>
+
+    <!--markup-->
+    <tr class="slds-hint-parent">
+        <!--target object, summary object, credit type-->
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.rollupName}">
+                <!--<a href="javascript:void(0);" onclick="{!c.clickLink}" data-id="{!v.rollup.relatedId}"></a>-->
+                    {!v.rollup.rollupName}
+            </div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.summaryObject}">{!v.rollup.summaryObject}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.detailObject}">{!v.rollup.detailObject}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.creditType}">{!v.rollup.creditType}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.operation}">{!v.rollup.operation}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.filterGroupName}">{!v.rollup.filterGroupName}</div>
+        </td>
+        <td>
+            <div class="slds-truncate slds-text-align_center" title="{!v.rollup.active}">
+                <aura:if isTrue="{!v.rollup.active}">
+                    <lightning:icon iconName="utility:check" size="x-small"/>
+                </aura:if>
+            </div>
+        </td>
+        <td>
+            <div title="Actions">
+                <lightning:buttonMenu menuAlignment="right" alternativeText="Actions" onselect="{!c.handleMenuSelect}">
+                    <lightning:menuItem label="{!v.labels.edit}" value="{!v.labels.edit}" />
+                    <lightning:menuItem label="{!v.labels.clone}" value="{!v.labels.clone}"/>
+                    <lightning:menuItem label="{!v.labels.delete}" value="{!v.labels.delete}" />
+                </lightning:buttonMenu>
+            </div>
+        </td>
+    </tr>
 </aura:component>

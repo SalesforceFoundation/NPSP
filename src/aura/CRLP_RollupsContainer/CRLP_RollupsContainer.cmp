@@ -1,50 +1,50 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupsUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.TableItem[]" access="public"/>
+    <aura:attribute name="columns" type="List" access="public"/>
     <!-- private attributes -->
-    <aura:attribute name="columns" type="List" access="private"/>
     <aura:attribute name="labels" type="Map" access="private"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
-    <!-- markup follows -->
+    <!-- markup -->
     <div class="slds-grid_vertical-stretch">
-            <div class="slds-p-horizontal--large slds-p-top--large">
-                <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
-            </div>
-            <div class="slds-p-around--large">
-                <h1 class="slds-page-header__title" title="Customizable Summary Rollups">{!v.labels.rollupSummaryTitle}</h1>
-            </div>
-            <div class="slds-p-horizontal--large slds-p-bottom--large">
-                <!--TODO:add onChange function-->
-                <lightning:layout horizontalAlign="spread">
-                    <lightning:layoutItem flexibility="auto">
-                        <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
-                            <option value="All">Select All</option>
-                            <option value="Account">Account</option>
-                            <option value="Contact">Contact</option>
-                            <option value="GAU">GAU</option>
-                        </lightning:select>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem flexibility="auto">
-                        <lightning:buttonGroup >
-                            <lightning:button label="{!v.labels.rollupNew}"/>
-                            <lightning:button label="{!v.labels.filterGroupsView}"/>
-                        </lightning:buttonGroup>
-                    </lightning:layoutItem>
-                </lightning:layout>
-            </div>
+        <div class="slds-p-horizontal--large slds-p-top--large">
+            <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
         </div>
+        <div class="slds-p-around--large">
+            <h1 class="slds-page-header__title" title="Customizable Summary Rollups">{!v.labels.rollupSummaryTitle}</h1>
+        </div>
+        <div class="slds-p-horizontal--large slds-p-bottom--large">
+            <!--TODO:add onChange function-->
+            <lightning:layout horizontalAlign="spread">
+                <lightning:layoutItem flexibility="auto">
+                    <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
+                        <option value="All">Select All</option>
+                        <option value="Account">Account</option>
+                        <option value="Contact">Contact</option>
+                        <option value="GAU">GAU</option>
+                    </lightning:select>
+                </lightning:layoutItem>
+                <lightning:layoutItem flexibility="auto">
+                    <lightning:buttonGroup >
+                        <lightning:button label="{!v.labels.rollupNew}"/>
+                        <lightning:button label="{!v.labels.filterGroupsView}"/>
+                    </lightning:buttonGroup>
+                </lightning:layoutItem>
+            </lightning:layout>
+        </div>
+    </div>
         <!--Rollup Table-->
-        <div class="slds-p-horizontal--large slds-p-bottom--large" style="height: 300px;">
-            <!--TODO: this will probably need to be custom components to accommodate the buttons-->
-            <lightning:datatable data="{!v.rollupList}"
-                                     columns="{!v.columns}"
-                                     keyField="id"
-                                     hideCheckboxColumn="true"
-
-            />
-        </div>
-
+    <div class="slds-p-horizontal--large slds-p-bottom--large">
+        <table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid" style="height: 600px;">
+            <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
+            <tbody>
+            <aura:iteration var="rollup" items="{!v.rollupList}">
+                <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}"/>
+            </aura:iteration>
+            </tbody>
+        </table>
+    </div>
 </aura:component>

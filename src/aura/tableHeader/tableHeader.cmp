@@ -1,16 +1,20 @@
 <aura:component description="tableHeader">
+    <!-- public attributes -->
     <aura:attribute name="hasAction" type="boolean" default="true"/>
     <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="labels" type="Map"/>
+
+    <!-- markup -->
     <thead>
-    <tr class="slds-text-title_caps">
-        <aura:iteration var="column" items="{!v.columns}">
-            <th class="slds-col" scope="col">
-                <div class="slds-truncate" title="{!column}">{!column}</div>
-            </th>
-        </aura:iteration>
-        <aura:if isTrue="{!v.hasAction}">
-            <th class="action-cell" scope="col"></th>
-        </aura:if>
-    </tr>
+        <tr class="slds-text-title_caps">
+            <aura:iteration var="column" items="{!v.columns}">
+                <th class="slds-col slds-is-sortable slds-is-resizable" scope="col">
+                    <div class="slds-truncate" title="{!column}">{!column}</div>
+                </th>
+            </aura:iteration>
+            <aura:if isTrue="{!v.hasAction}">
+                <th class="action-cell" scope="col" title="Action">{!v.labels.action}</th>
+            </aura:if>
+        </tr>
     </thead>
 </aura:component>

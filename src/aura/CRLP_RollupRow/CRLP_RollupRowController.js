@@ -1,4 +1,5 @@
-/**
- * Created by randi.wilson on 1/2/18.
- */
-({})
+({
+    handleMenuSelect: function(cmp, event, helper) {
+        var selectedMenuItemValue = event.getParam("value");
+    }
+})

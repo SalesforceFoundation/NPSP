@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -346,11 +346,11 @@
         <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
+        <members>UTIL_DMLService</members>
+        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
-        <members>UTIL_DMLService</members>
-        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -363,8 +363,6 @@
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_PlatformCache</members>
-        <members>UTIL_PerfLogger</members>
-        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
@@ -499,6 +497,7 @@
     <types>
         <members>CRLP_Breadcrumbs</members>
         <members>CRLP_RollupApp</members>
+        <members>CRLP_RollupRow</members>
         <members>CRLP_RollupsContainer</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
@@ -522,6 +521,7 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
+        <members>tableHeader</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -814,14 +814,6 @@
         <members>Error__c.Posted_in_Chatter__c</members>
         <members>Error__c.Record_URL__c</members>
         <members>Error__c.Stack_Trace__c</members>
-        <members>Filter_Group__mdt.Description__c</members>
-        <members>Filter_Group__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Constant__c</members>
-        <members>Filter_Rule__mdt.Field__c</members>
-        <members>Filter_Rule__mdt.Filter_Group__c</members>
-        <members>Filter_Rule__mdt.Is_Deleted__c</members>
-        <members>Filter_Rule__mdt.Object__c</members>
-        <members>Filter_Rule__mdt.Operator__c</members>
         <members>General_Accounting_Unit__c.Active__c</members>
         <members>General_Accounting_Unit__c.Average_Allocation__c</members>
         <members>General_Accounting_Unit__c.Description__c</members>
@@ -913,6 +905,26 @@
         <members>Partial_Soft_Credit__c.Contact__c</members>
         <members>Partial_Soft_Credit__c.Opportunity__c</members>
         <members>Partial_Soft_Credit__c.Role_Name__c</members>
+        <members>Schedulable__c.Active__c</members>
+        <members>Schedulable__c.Class_Name__c</members>
+        <members>Schedulable__c.Frequency__c</members>
+        <members>Schedulable__c.Last_Time_Run__c</members>
+        <members>Trigger_Handler__c.Active__c</members>
+        <members>Trigger_Handler__c.Asynchronous__c</members>
+        <members>Trigger_Handler__c.Class__c</members>
+        <members>Trigger_Handler__c.Load_Order__c</members>
+        <members>Trigger_Handler__c.Object__c</members>
+        <members>Trigger_Handler__c.Trigger_Action__c</members>
+        <members>Trigger_Handler__c.User_Managed__c</members>
+        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
+        <members>Filter_Group__mdt.Description__c</members>
+        <members>Filter_Group__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Constant__c</members>
+        <members>Filter_Rule__mdt.Field__c</members>
+        <members>Filter_Rule__mdt.Filter_Group__c</members>
+        <members>Filter_Rule__mdt.Is_Deleted__c</members>
+        <members>Filter_Rule__mdt.Object__c</members>
+        <members>Filter_Rule__mdt.Operator__c</members>
         <members>Rollup__mdt.Active__c</members>
         <members>Rollup__mdt.Amount_Field__c</members>
         <members>Rollup__mdt.Amount_Object__c</members>
@@ -928,18 +940,6 @@
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
         <members>Rollup__mdt.Yearly_Operation_Type__c</members>
-        <members>Schedulable__c.Active__c</members>
-        <members>Schedulable__c.Class_Name__c</members>
-        <members>Schedulable__c.Frequency__c</members>
-        <members>Schedulable__c.Last_Time_Run__c</members>
-        <members>Trigger_Handler__c.Active__c</members>
-        <members>Trigger_Handler__c.Asynchronous__c</members>
-        <members>Trigger_Handler__c.Class__c</members>
-        <members>Trigger_Handler__c.Load_Order__c</members>
-        <members>Trigger_Handler__c.Object__c</members>
-        <members>Trigger_Handler__c.Trigger_Action__c</members>
-        <members>Trigger_Handler__c.User_Managed__c</members>
-        <members>Trigger_Handler__c.Usernames_to_Exclude__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
@@ -1048,19 +1048,17 @@
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
         <members>CRLP_Active</members>
+        <members>CRLP_CreditType</members>
         <members>CRLP_FilterCreate</members>
-        <members>CRLP_FilterGroupName</members>
-        <members>CRLP_FilterGroups</members>
         <members>CRLP_FilterNew</members>
         <members>CRLP_FilterView</members>
-        <members>CRLP_Name</members>
-        <members>CRLP_Operation</members>
+        <members>CRLP_HardCredit</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupCreate</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
         <members>CRLP_RollupType</members>
-        <members>CRLP_TargetField</members>
+        <members>CRLP_SoftCredit</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1525,6 +1523,7 @@
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
+        <members>stgBtnClone</members>
         <members>stgBtnCreateAutoRel</members>
         <members>stgBtnCreateMapping</members>
         <members>stgBtnCreateRDPeriod</members>
@@ -1879,8 +1878,6 @@
         <members>Engagement_Plan__c</members>
         <members>Error_Settings__c</members>
         <members>Error__c</members>
-        <members>Filter_Group__mdt</members>
-        <members>Filter_Rule__mdt</members>
         <members>Fund__c</members>
         <members>General_Accounting_Unit__c</members>
         <members>Grant_Deadline__c</members>
@@ -2216,8 +2213,6 @@
         <members>Engagement_Plan_Template__c-Engagement Plan Template Layout</members>
         <members>Engagement_Plan__c-Engagement Plan Layout</members>
         <members>Error__c-Error Layout</members>
-        <members>Filter_Group__mdt-Filter Group Layout</members>
-        <members>Filter_Rule__mdt-Filter Rule Layout</members>
         <members>Fund__c-Fund Layout</members>
         <members>General_Accounting_Unit__c-General Accounting Unit Layout</members>
         <members>Grant_Deadline__c-Grant Deadline Layout</members>
@@ -2229,9 +2224,11 @@
         <members>Opportunity-Matching Gift Layout</members>
         <members>Opportunity-Membership Layout</members>
         <members>Partial_Soft_Credit__c-Partial Soft Credit Layout</members>
-        <members>Rollup__mdt-Rollup Layout</members>
         <members>Schedulable__c-Schedulable Layout</members>
         <members>Trigger_Handler__c-Trigger Handler Layout</members>
+        <members>Filter_Group__mdt-Filter Group Layout</members>
+        <members>Filter_Rule__mdt-Filter Rule Layout</members>
+        <members>Rollup__mdt-Rollup Layout</members>
         <name>Layout</name>
     </types>
     <types>
