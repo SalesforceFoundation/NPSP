@@ -89,29 +89,25 @@ public with sharing class CRLP_RollupsUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++){
             TableItem item = new TableItem();
 
-
-                if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                    item.creditType = Label.CRLP_HardCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                    item.creditType = Label.CRLP_HardCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
-                    item.creditType = Label.CRLP_SoftCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                    item.creditType = Label.CRLP_HardCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
-                    item.creditType = Label.CRLP_SoftCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                    item.creditType = Label.CRLP_HardCredit;
-                } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
-                    item.creditType = Label.stgLabelNone;
-                } else {
-                    item.creditType = Label.stgLabelOther;
-                }
-
-
+            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+                item.creditType = Label.CRLP_HardCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+                item.creditType = Label.CRLP_HardCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+                item.creditType = Label.CRLP_SoftCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+                item.creditType = Label.CRLP_HardCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+                item.creditType = Label.CRLP_SoftCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+                item.creditType = Label.CRLP_HardCredit;
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
+                //TODO: "--None--" is misleading; it seems to imply that this still needs to be set/selected.
+                //The value more accurately should be "Not applicable" / "n/a" or just left blank.
+                //item.creditType = Label.stgLabelNone;
+            }
             item.detailObject = mdtList[i].Detail_Object__r.Label;
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
-            item.creditType = 'TBD';
             item.rollupName = mdtList[i].MasterLabel;
             item.detailField = mdtList[i].Detail_Field__r.Label;
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
@@ -134,7 +130,7 @@ public with sharing class CRLP_RollupsUI_SVC {
     public static Map<String, String> getRollupLabels(){
 
 
-        Map<String, String> labels = new Map<String,String>
+            Map<String, String> labels = new Map<String,String>
             {
                 'action' => Label.stgLabelActionColumn,
                 'active' => Label.CRLP_Active,
@@ -146,16 +142,11 @@ public with sharing class CRLP_RollupsUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
                 'filterCreate' => Label.CRLP_FilterCreate,
-                //TODO: figure out this getdescribe
-                // 'filterGroupName' => Schema.Filter_Group__mdt.getDescribe().getLabel(),
-                'filterGroupName' => 'Filter Group Name',
-                //TODO: figure out this getdescribe
-                'filterGroupsTitle' => 'Filter Group Placeholder Plural',
+                'filterGroup' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
+                'filterGroupsTitle' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupsView' => Label.CRLP_FilterView,
                 'filterNew' => Label.CRLP_FilterNew,
-                //TODO: figure out this getdescribe
-                // 'name' => Schema.Rollup__mdt.MasterLabel.getDescribe().getLabel(),
-                'name' => 'Name Placeholder',
+                'rollupName' => Label.stgLabelName,
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
                 'return' => Label.CRLP_Return,
                 'rollupCreate' => Label.CRLP_RollupCreate,

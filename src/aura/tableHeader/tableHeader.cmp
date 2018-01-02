@@ -8,7 +8,7 @@
     <thead>
         <tr class="slds-text-title_caps">
             <aura:iteration var="column" items="{!v.columns}">
-                <th class="slds-col slds-is-sortable slds-is-resizable" scope="col">
+                <th class="slds-col" scope="col">
                     <div class="slds-truncate" title="{!column}">{!column}</div>
                 </th>
             </aura:iteration>

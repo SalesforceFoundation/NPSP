@@ -55,7 +55,7 @@ public class CRLP_Rollup_SEL {
                                 Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
                                 Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
                         FROM Rollup__mdt
-                        ORDER BY Summary_Object__c];
+                        ORDER BY Summary_Object__c, MasterLabel];
             }
             return cachedRollups;
         } private set;

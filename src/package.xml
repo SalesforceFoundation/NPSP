@@ -1706,6 +1706,7 @@
         <members>stgLabelLeadSettings</members>
         <members>stgLabelLvlAssignBatchTitle</members>
         <members>stgLabelMembershipSettings</members>
+        <members>stgLabelName</members>
         <members>stgLabelNewAutoRel</members>
         <members>stgLabelNewPaymentMapping</members>
         <members>stgLabelNewRDFieldMap</members>

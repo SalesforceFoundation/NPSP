@@ -27,7 +27,7 @@
             <div class="slds-truncate" title="{!v.rollup.filterGroupName}">{!v.rollup.filterGroupName}</div>
         </td>
         <td>
-            <div class="slds-truncate slds-text-align_center" title="{!v.rollup.active}">
+            <div class="slds-truncate" title="{!v.rollup.active}">
                 <aura:if isTrue="{!v.rollup.active}">
                     <lightning:icon iconName="utility:check" size="x-small"/>
                 </aura:if>

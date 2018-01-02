@@ -5681,7 +5681,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelActionColumn</shortDescription>
-        <value>Action</value>
+        <value>Actions</value>
     </labels>
     <labels>
         <fullName>stgLabelAddressVerification</fullName>
@@ -5906,6 +5906,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelMembershipSettings</shortDescription>
         <value>Membership Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelName</shortDescription>
+        <value>Name</value>
     </labels>
     <labels>
         <fullName>stgLabelNewAutoRel</fullName>

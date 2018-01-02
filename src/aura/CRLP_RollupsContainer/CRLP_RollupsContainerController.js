@@ -10,13 +10,12 @@
                 var model = response.getReturnValue();
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
-                var cols = [model.labels.name
+                var cols = [model.labels.rollupName
                             , model.labels.summaryObject
                             , model.labels.detailObject
-                            //TODO: this will need extra logic b/c it comes from 3 fields: , model.labels.detailField
                             , model.labels.creditType
                             , model.labels.operation
-                            , model.labels.filterGroupName
+                            , model.labels.filterGroup
                             , model.labels.active
                             ];
                 cmp.set('v.columns', cols);
