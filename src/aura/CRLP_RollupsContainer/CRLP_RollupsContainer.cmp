@@ -38,7 +38,7 @@
     </div>
         <!--Rollup Table-->
     <div class="slds-p-horizontal--large slds-p-bottom--large">
-        <table class="slds-table slds-table_bordered slds-table_fixed-layout" role="grid" style="height: 600px;">
+        <table class="slds-table slds-table_bordered">
             <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
             <tbody>
             <aura:iteration var="rollup" items="{!v.rollupList}">

@@ -5,7 +5,6 @@
 
     <!--markup-->
     <tr class="slds-hint-parent">
-        <!--target object, summary object, credit type-->
         <td>
             <div class="slds-truncate" title="{!v.rollup.rollupName}">
                 <!--<a href="javascript:void(0);" onclick="{!c.clickLink}" data-id="{!v.rollup.relatedId}"></a>-->
@@ -36,7 +35,7 @@
         </td>
         <td>
             <div title="Actions">
-                <lightning:buttonMenu menuAlignment="right" alternativeText="Actions" onselect="{!c.handleMenuSelect}">
+                <lightning:buttonMenu menuAlignment="right" alternativeText="{!v.labels.action}" onselect="{!c.handleMenuSelect}">
                     <lightning:menuItem label="{!v.labels.edit}" value="{!v.labels.edit}" />
                     <lightning:menuItem label="{!v.labels.clone}" value="{!v.labels.clone}"/>
                     <lightning:menuItem label="{!v.labels.delete}" value="{!v.labels.delete}" />
