@@ -363,7 +363,8 @@ public without sharing class RLLP_OppRollup {
             }
         }         
 
-        update accountsToUpdate.values();     
+        UTIL_DMLService.updateRecordBatchAndLogErrors(accountsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
+
     }    
     
     /*******************************************************************************************************
@@ -525,7 +526,7 @@ public without sharing class RLLP_OppRollup {
             }                
         }
 
-        update contactsToUpdate.values();
+        UTIL_DMLService.updateRecordBatchAndLogErrors(contactsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
     }    
     
     /*******************************************************************************************************
@@ -686,8 +687,8 @@ public without sharing class RLLP_OppRollup {
                 }
             }                
         }
-        
-        update householdsToUpdate.values();
+
+        UTIL_DMLService.updateRecordBatchAndLogErrors(householdsToUpdate.values(), ERR_Handler_API.Context.RLLP.name());
     }  
     
     /*******************************************************************************************************

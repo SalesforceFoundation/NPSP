@@ -245,6 +245,20 @@ public class UTIL_DMLService {
         return Database.upsert(recordToUpsert);
     }
 
+    /*********************************************************************************************************
+    * @description Handles the batch DML updates of records combined with error handling.
+    * @param records The records to be updated
+    * @param context The context ERR_Handler_API enum value for the context in which this operation occurs
+    **********************************************************************************************************/
+    public static void updateRecordBatchAndLogErrors(List<SObject> records, string context){
+        List<Database.SaveResult> srList = Database.update(records, false);
+
+        ERR_Handler.Errors errorResult = ERR_Handler.getJobErrors(srList, records, context);
+        if (errorResult.errorsExist) {
+            ERR_Handler.processErrors(errorResult.errorRecords, context);
+        }
+    }
+
 
     /*********************************************************************************************************
     * @description Wraps the Database class upsert method.
