@@ -19,7 +19,6 @@
                     {},
                     "gridWrapperCmp",
                     function() {
-                        console.log("HelloWorld component loaded");
                     }
             );
         });

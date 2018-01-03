@@ -1748,6 +1748,7 @@
         <members>stgLabelUDRTargetField</members>
         <members>stgLabelUDRTargetFieldHelp</members>
         <members>stgLabelUDRTargetObject</members>
+        <members>stgLabelView</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>

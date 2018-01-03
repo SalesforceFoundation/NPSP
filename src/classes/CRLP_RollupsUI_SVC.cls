@@ -40,7 +40,7 @@ public with sharing class CRLP_RollupsUI_SVC {
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
-    public class TableItem{
+    public class RollupTableItem{
         @AuraEnabled public Boolean active;
         @AuraEnabled public String creditType;
         @AuraEnabled public String detailField;
@@ -53,11 +53,11 @@ public with sharing class CRLP_RollupsUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Creates a model to collect both the TableItems and the labels used on the page to minimize server trips.
+    * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
     public class RollupModel{
-        @AuraEnabled public List<TableItem> items;
+        @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
 
     }
@@ -77,17 +77,17 @@ public with sharing class CRLP_RollupsUI_SVC {
 
     /*******************************************************************************************************
     * @description Queries from the rollup selector to fetch all rollup__mdt records. Parses so that only the relevant
-    * information is returned, and a custom TableItem class is created with this information.
+    * information is returned, and a custom RollupTableItem class is created with this information.
     * @return a list of all rollup definitions
     */
     @AuraEnabled
-    public static List<TableItem> getRollupDefinitions(){
-        List<TableItem> mdtTableList = new List<TableItem>();
+    public static List<RollupTableItem> getRollupDefinitions(){
+        List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
 
         for(Integer i=0; i<mdtList.size(); i++){
-            TableItem item = new TableItem();
+            RollupTableItem item = new RollupTableItem();
 
             if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
                 item.creditType = Label.CRLP_HardCredit;
@@ -142,9 +142,8 @@ public with sharing class CRLP_RollupsUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
                 'filterCreate' => Label.CRLP_FilterCreate,
-                'filterGroup' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
-                'filterGroupsTitle' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
-                'filterGroupsView' => Label.CRLP_FilterView,
+                'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
+                'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterNew' => Label.CRLP_FilterNew,
                 'rollupName' => Label.stgLabelName,
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
@@ -155,7 +154,8 @@ public with sharing class CRLP_RollupsUI_SVC {
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
-                'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel()
+                'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
+                'view' => Label.stgLabelView
             };
 
         return labels;

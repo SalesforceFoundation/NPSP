@@ -15,7 +15,7 @@
                             , model.labels.detailObject
                             , model.labels.creditType
                             , model.labels.operation
-                            , model.labels.filterGroup
+                            , model.labels.filterGroupLabel
                             , model.labels.active
                             ];
                 cmp.set('v.columns', cols);
