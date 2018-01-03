@@ -33,20 +33,59 @@
  * @group Utilities
  * @description Cascade deletion extension for Campaign object.
  */
-public with sharing class CAM_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {
-    
+public with sharing class CAM_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
+
     /*******************************************************************************************************
-    * @description Cascade deletion definitions for Campaign.
+    * @description Gets the ChildrenLoader Object of the running Trigger. 
+    * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    private static List<Cascade> cascades = new List<Cascade>{
-        new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Campaign__c')
-    };
-    
+    protected override CascadeDeleteLookupsDomain.ChildrenLoader getDeletionChildrenLoader() {
+        return new CampaignDeletionChildrenLoader();
+    }
+
     /*******************************************************************************************************
-    * @description Override provides super class with cascades for this triger.
-    * @return List<Cascade> The cascade deletions to perform for this trigger.
-    ********************************************************************************************************/    
-    public override List<Cascade> getCascades() {
-        return cascades;
+    * @description Gets the ChildrenLoader Object of the running Trigger. 
+    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    ********************************************************************************************************/
+    protected override CascadeDeleteLookupsDomain.ChildrenLoader getUndeletionChildrenLoader() {
+        return new CampaignUndeletionChildrenLoader();
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the Campaign being deleted
+    ********************************************************************************************************/
+    class CampaignDeletionChildrenLoader implements CascadeDeleteLookupsDomain.ChildrenLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Campaign being deleted
+        * @return List<Allocation__c> Deleted Campaign's Allocations
+        ********************************************************************************************************/
+        public List<Allocation__c> loadChildren(Set<Id> parentsIds) {
+            return [
+                SELECT Campaign__c
+                FROM Allocation__c
+                WHERE Campaign__c IN :parentsIds
+            ];
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the children of the Campaign being undeleted
+    ********************************************************************************************************/
+    class CampaignUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.ChildrenLoader {
+
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Campaign being undeleted
+        * @return List<Allocation__c> Undeleted Campaign's Allocations
+        ********************************************************************************************************/
+        public List<Allocation__c> loadChildren(Set<Id> parentsIds) {
+            return [
+                SELECT Campaign__c
+                FROM Allocation__c
+                WHERE Campaign__c IN :parentsIds
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+        }
     }
 }
