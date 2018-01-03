@@ -1,7 +1,3 @@
-<!--
- - Created by randi.wilson on 12/21/17.
- -->
-
 <apex:page standardStylesheets="false" applyBodyTag="false" id="CRLP_Setup" showHeader="true" sideBar="false">
 
     <apex:slds />
@@ -16,11 +12,21 @@
     <script>
         $Lightning.use("c:CRLP_RollupApp", function() {
             $Lightning.createComponent("c:CRLP_RollupsContainer",
-                    {},
-                    "gridWrapperCmp",
-                    function() {
-                    }
-            );
+                    {}, "gridWrapperCmp", function () {
+                        $A.eventService.addHandler({
+                                    event: 'force:navigateToURL',
+                                    handler: function (event) {
+                                        if (typeof sforce != 'undefined' && sforce.one) {
+                                            // VF page in S1 or Lightning Exp
+                                            sforce.one.navigateToURL(event.getParams().url);
+                                        } else {
+                                            // VF page in Classic
+                                            window.location = event.getParams().url;
+                                        }
+                                    }
+                                }
+                         );
+                    });
         });
     </script>
 </apex:page>

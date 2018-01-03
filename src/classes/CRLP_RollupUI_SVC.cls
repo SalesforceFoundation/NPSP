@@ -35,12 +35,12 @@
 * @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
 */
 
-public with sharing class CRLP_RollupsUI_SVC {
+public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
-    public class RollupTableItem{
+    public class RollupTableItem {
         @AuraEnabled public Boolean active;
         @AuraEnabled public String creditType;
         @AuraEnabled public String detailField;
@@ -56,7 +56,7 @@ public with sharing class CRLP_RollupsUI_SVC {
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
-    public class RollupModel{
+    public class RollupModel {
         @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
 
@@ -81,7 +81,7 @@ public with sharing class CRLP_RollupsUI_SVC {
     * @return a list of all rollup definitions
     */
     @AuraEnabled
-    public static List<RollupTableItem> getRollupDefinitions(){
+    public static List<RollupTableItem> getRollupDefinitions() {
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
@@ -127,7 +127,7 @@ public with sharing class CRLP_RollupsUI_SVC {
     * @return a list of all labels used in the rollups UI.
     */
     //TODO: should the labels live in an enum or elsewhere to be easily accessible for other pages?
-    public static Map<String, String> getRollupLabels(){
+    public static Map<String, String> getRollupLabels() {
 
 
             Map<String, String> labels = new Map<String,String>

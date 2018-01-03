@@ -35,4 +35,12 @@
 
         $A.enqueueAction(action);
     },
+    navToFilterGroups: function(cmp, event, helper){
+        console.log('in the nav function');
+        var urlEvent = $A.get("e.force:navigateToURL");
+         urlEvent.setParams({
+            "url": "/apex/STG_SettingsManager"
+        });
+         urlEvent.fire();
+    }
 })
