@@ -1,4 +1,4 @@
-<aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupsUI_SVC">
+<aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
     <aura:attribute name="columns" type="List" access="public"/>
@@ -30,7 +30,7 @@
                 <lightning:layoutItem flexibility="auto">
                     <lightning:buttonGroup >
                         <lightning:button label="{!v.labels.rollupNew}"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}"/>
+                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.navToFilterGroups}"/>
                     </lightning:buttonGroup>
                 </lightning:layoutItem>
             </lightning:layout>
