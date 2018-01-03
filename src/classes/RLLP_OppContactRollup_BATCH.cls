@@ -69,8 +69,8 @@ public class RLLP_OppContactRollup_BATCH implements Database.Batchable<SObject>,
         // exception percolate up the call stack, then the batch will think it all succeeded.
         // but if we were to log it, and then propagate the exception, the transaction will 
         // get rolled back, and the logging will be erased!
-        RLLP_OppRollup oppRoller = new RLLP_OppRollup();        
-        oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));    
+        RLLP_OppRollup oppRoller = new RLLP_OppRollup();
+        oppRoller.RollupContacts(new Map<id, Contact>((List<Contact>)result));
     }
 
     /*******************************************************************************************************
