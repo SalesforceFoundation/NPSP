@@ -14,7 +14,7 @@
             <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
         </div>
         <div class="slds-p-around--large">
-            <h1 class="slds-page-header__title" title="Customizable Summary Rollups">{!v.labels.rollupSummaryTitle}</h1>
+            <h1 class="slds-page-header__title" title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
         </div>
         <div class="slds-p-horizontal--large slds-p-bottom--large">
             <!--TODO:add onChange function-->
