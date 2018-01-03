@@ -28,7 +28,7 @@
     POSSIBILITY OF SUCH DAMAGE.
 */
 /****************************************************************************************
- * @author Tomas "Bobby" Hnizdil, Saleforce.org
+ * @author Tomas "Bobby" Hnizdil, Salesforce.org
  * @date 8/22/2013
  * @group Opportunity
  * @description class to update soft credit rollup fields on Contact with values from OpportunityContactRole and Partial_Soft_Credit__c records
@@ -161,7 +161,8 @@ public class RLLP_OppPartialSoftCreditRollup {
                 toUpdate.add(newC);
             }
         }
-        update toUpdate;
+
+        UTIL_DMLService.updateRecordBatchAndLogErrors(toUpdate, ERR_Handler_API.Context.RLLP.name());
     }
     
     /*******************************************************************************************************
