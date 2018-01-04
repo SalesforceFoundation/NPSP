@@ -78,6 +78,9 @@
 
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isFilterGroupsGrid",true);
+
+        var rollupName = {!v.labels.rollupName};
+        cmp.set("v.breadcrumbs",[{label:rollupName,onclick:'navToRollupsGrid'}])
     },
     navToRollupsGrid: function(cmp, event, helper){
         cmp.set("v.isRollupsGrid",true);

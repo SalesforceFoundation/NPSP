@@ -8,6 +8,7 @@
     <aura:attribute name="labels" type="Map" access="private"/>
     <aura:attribute name="isRollupsGrid" type="Boolean" default="true" access="private"/>
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" default="false" access="private"/>
+    <aura:attribute name="breadcrumbs" type="Object[]" access="private"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -19,7 +20,10 @@
     <div class="slds-p-horizontal--large slds-p-top--large">
         <c:CRLP_Breadcrumbs labels="{!v.labels}" level="{!v.breadcrumbLevel}"/>
         <lightning:breadcrumbs>
-            <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"></lightning:breadcrumb>
+            <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
+            <aura:iteration items="{!v.breadcrumbs}" var="bc">
+                <lightning:breadcrumb label="{!bc.label}" onclick="{!c.+bc.onclick}" name="{!bc.label}" title="{!bc.label}"/>
+            </aura:iteration>
         </lightning:breadcrumbs>
     </div>
     <!--END BREADCRUMB-->
