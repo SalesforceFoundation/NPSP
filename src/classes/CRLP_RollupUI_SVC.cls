@@ -122,6 +122,19 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Queries from the Filter Rule selector to fetch all Filter_Group__mdt records. Parses so that only the relevant
+    * information is returned, and a custom FilterGroupTableItem class is created with this information.
+    * @return a list of all rollup definitions
+    */
+    @AuraEnabled
+    public static List<Filter_Group__mdt> getFilterGroupDefinitions() {
+
+        List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
+        return mdtList;
+
+    }
+
+    /*******************************************************************************************************
     @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
     * If any additional labels are required, they should be added here.
     * @return a list of all labels used in the rollups UI.

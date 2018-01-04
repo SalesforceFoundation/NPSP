@@ -148,4 +148,11 @@ public without sharing class CMT_FilterRule_SEL {
         }
         return soql.removeEnd(',');
     }
+
+    /**
+    * @description Return a simple list of all Rollup definition CMT records
+    */
+    public static List<Filter_Group__mdt> getFilterGroups() {
+        return cachedFilterGroups;
+    }
 }

@@ -1,50 +1,90 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
+    <aura:attribute name="filterGroupList" type="Filter_Group__mdt[]" access="public"/>
     <aura:attribute name="columns" type="List" access="public"/>
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private"/>
+    <aura:attribute name="isRollupsGrid" type="Boolean" default="true" access="private"/>
+    <aura:attribute name="isFilterGroupsGrid" type="Boolean" default="false" access="private"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- markup -->
-    <div class="slds-grid_vertical-stretch">
-        <div class="slds-p-horizontal--large slds-p-top--large">
-            <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
-        </div>
-        <div class="slds-p-around--large">
+
+    <!--BEGIN BREADCRUMB-->
+    <div class="slds-p-horizontal--large slds-p-top--large">
+        <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
+    </div>
+    <!--END BREADCRUMB-->
+
+    <!--BEGIN HEADER-->
+    <div class="slds-p-around--large">
+        <aura:if isTrue="{!v.isRollupsGrid}">
             <h1 class="slds-page-header__title" title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
-        </div>
-        <div class="slds-p-horizontal--large slds-p-bottom--large">
-            <!--TODO:add onChange function-->
-            <lightning:layout horizontalAlign="spread">
-                <lightning:layoutItem flexibility="auto">
+        </aura:if>
+        <aura:if isTrue="{!v.isFilterGroupsGrid}">
+            <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
+        </aura:if>
+    </div>
+    <div class="slds-p-horizontal--large slds-p-bottom--large">
+        <!--TODO:add onChange function-->
+        <lightning:layout horizontalAlign="spread">
+            <lightning:layoutItem flexibility="auto">
+                <aura:if isTrue="{!v.isRollupsGrid}">
                     <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
                         <option value="All">Select All</option>
                         <option value="Account">Account</option>
                         <option value="Contact">Contact</option>
                         <option value="GAU">GAU</option>
                     </lightning:select>
-                </lightning:layoutItem>
-                <lightning:layoutItem flexibility="auto">
-                    <lightning:buttonGroup >
+                </aura:if>
+            </lightning:layoutItem>
+            <lightning:layoutItem flexibility="auto">
+                <lightning:buttonGroup >
+                    <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:button label="{!v.labels.rollupNew}"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.navToFilterGroups}"/>
-                    </lightning:buttonGroup>
-                </lightning:layoutItem>
-            </lightning:layout>
+                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.navToFilterGroupsGrid}"/>
+                    </aura:if>
+                    <aura:if isTrue="{!v.isFilterGroupsGrid}">
+                        <lightning:button label="New Filter Group"/>
+                        <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.navToRollupsGrid}"/>
+                    </aura:if>
+                </lightning:buttonGroup>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <!--END HEADER-->
+
+    <!--BEGIN ROLLUPS GRID-->
+    <aura:if isTrue="{!v.isRollupsGrid}">
+        <div class="slds-p-horizontal--large slds-p-bottom--large">
+            <table class="slds-table slds-table_bordered">
+                <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
+                <tbody>
+                <aura:iteration var="rollup" items="{!v.rollupList}">
+                    <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}"/>
+                </aura:iteration>
+                </tbody>
+            </table>
         </div>
-    </div>
-        <!--Rollup Table-->
-    <div class="slds-p-horizontal--large slds-p-bottom--large">
-        <table class="slds-table slds-table_bordered">
-            <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
-            <tbody>
-            <aura:iteration var="rollup" items="{!v.rollupList}">
-                <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}"/>
-            </aura:iteration>
-            </tbody>
-        </table>
-    </div>
+    </aura:if>
+    <!--END ROLLUPS GRID-->
+
+    <!--BEGIN FILTER GROUPS GRID -->
+    <aura:if isTrue="{!v.isFilterGroupsGrid}">
+        <div class="slds-p-horizontal--large slds-p-bottom--large">
+            <table class="slds-table slds-table_bordered">
+                <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
+                <tbody>
+                <aura:iteration var="filterGroup" items="{!v.filterGroupList}">
+                    <c:CRLP_FilterGroupRow filterGroup="{!filterGroup}" labels="{!v.labels}"/>
+                </aura:iteration>
+                </tbody>
+            </table>
+        </div>
+    </aura:if>
+    <!--END FILTER GROUPS GRID-->
+
 </aura:component>

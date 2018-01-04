@@ -35,12 +35,56 @@
 
         $A.enqueueAction(action);
     },
-    navToFilterGroups: function(cmp, event, helper){
+    /*navToFilterGroups: function(cmp, event, helper){
         console.log('in the nav function');
         var urlEvent = $A.get("e.force:navigateToURL");
-         urlEvent.setParams({
+        urlEvent.setParams({
             "url": "/apex/STG_SettingsManager"
         });
-         urlEvent.fire();
+        urlEvent.fire();
+    },*/
+    navToFilterGroupsGrid: function(cmp, event, helper){
+        var action = cmp.get("c.getFilterGroupDefinitions");
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var filtergroups = response.getReturnValue();
+                cmp.set("v.filterGroupList", filtergroups);
+                var cols = ["Name"
+                    ,"Description"
+                ];
+                cmp.set('v.columns', cols);
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+
+        $A.enqueueAction(action);
+        cmp.set("v.isRollupsGrid",false);
+        cmp.set("v.isFilterGroupsGrid",true);
+    },
+    navToRollupsGrid: function(cmp, event, helper){
+        cmp.set("v.isRollupsGrid",true);
+        cmp.set("v.isFilterGroupsGrid",false);
+        var labels = cmp.get("v.labels");
+        var cols = [labels.rollupName
+            , labels.summaryObject
+            , labels.detailObject
+            , labels.creditType
+            , labels.operation
+            , labels.filterGroupLabel
+            , labels.active
+        ];
+        cmp.set('v.columns', cols);
     }
 })

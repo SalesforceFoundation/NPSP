@@ -129,6 +129,7 @@
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupScheduler</members>
         <members>CRLP_RollupScheduler_TEST</members>
+        <members>CRLP_RollupUI_SVC</members>
         <members>CRLP_Rollup_BATCH</members>
         <members>CRLP_Rollup_BATCH_LDV</members>
         <members>CRLP_Rollup_SEL</members>
@@ -136,7 +137,6 @@
         <members>CRLP_Rollup_SVC</members>
         <members>CRLP_Rollup_SVC_TEST</members>
         <members>CRLP_Rollup_TDTM</members>
-        <members>CRLP_RollupsUI_SVC</members>
         <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>
@@ -412,9 +412,10 @@
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
+        <members>CRLP_FilterGroupSetup</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
-        <members>CRLP_Setup</members>
+        <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
@@ -496,6 +497,9 @@
     </types>
     <types>
         <members>CRLP_Breadcrumbs</members>
+        <members>CRLP_FilterGroupApp</members>
+        <members>CRLP_FilterGroupRow</members>
+        <members>CRLP_FilterGroupsContainer</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupRow</members>
         <members>CRLP_RollupsContainer</members>
