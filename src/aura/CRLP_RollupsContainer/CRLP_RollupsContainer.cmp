@@ -3,6 +3,7 @@
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
     <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public"/>
     <aura:attribute name="columns" type="List" access="public"/>
+    <aura:attribute name="breadcrumbLevel" type="Integer" access="public" default="0"/>
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private"/>
     <aura:attribute name="isRollupsGrid" type="Boolean" default="true" access="private"/>
@@ -10,12 +11,16 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="navigateBreadcrumbEvent" event="c:CRLP_NavigateBreadcrumb" action="{!c.breadcrumbHandler}"/>
 
     <!-- markup -->
 
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
-        <c:CRLP_Breadcrumbs labels="{!v.labels}" level="0"/>
+        <c:CRLP_Breadcrumbs labels="{!v.labels}" level="{!v.breadcrumbLevel}"/>
+        <lightning:breadcrumbs>
+            <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"></lightning:breadcrumb>
+        </lightning:breadcrumbs>
     </div>
     <!--END BREADCRUMB-->
 

@@ -44,36 +44,38 @@
         urlEvent.fire();
     },*/
     navToFilterGroupsGrid: function(cmp, event, helper){
-        var action = cmp.get("c.getFilterGroupDefinitions");
+        //check for list first so that we only make necessary server trips
+        if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
+            var action = cmp.get("c.getFilterGroupDefinitions");
 
-        action.setCallback(this, function(response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                //check for list so that we only make necessary server trips
-                if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
+            action.setCallback(this, function(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
                     var filtergroups = response.getReturnValue();
                     cmp.set("v.filterGroupList", filtergroups);
-                    console.log(filtergroups);
                 }
-                var cols = ["Name"
-                    ,"Description"
-                ];
-                cmp.set('v.columns', cols);
-            }
-            else if (state === "ERROR") {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
+                else if (state === "ERROR") {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            console.log("Error message: " +
+                                errors[0].message);
+                        }
+                    } else {
+                        console.log("Unknown error");
                     }
-                } else {
-                    console.log("Unknown error");
                 }
-            }
-        });
+            });
 
-        $A.enqueueAction(action);
+            $A.enqueueAction(action);
+        }
+
+        var cols = ["Name"
+            , "Description"
+            ];
+        cmp.set('v.columns', cols);
+        cmp.set('v.breadcrumbLevel', 1);
+
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isFilterGroupsGrid",true);
     },
