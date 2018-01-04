@@ -1,7 +1,7 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
-    <aura:attribute name="filterGroupList" type="Filter_Group__mdt[]" access="public"/>
+    <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public"/>
     <aura:attribute name="columns" type="List" access="public"/>
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private"/>

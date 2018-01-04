@@ -499,7 +499,6 @@
         <members>CRLP_Breadcrumbs</members>
         <members>CRLP_FilterGroupApp</members>
         <members>CRLP_FilterGroupRow</members>
-        <members>CRLP_FilterGroupsContainer</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupRow</members>
         <members>CRLP_RollupsContainer</members>

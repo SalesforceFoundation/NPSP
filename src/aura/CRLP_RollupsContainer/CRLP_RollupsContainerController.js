@@ -49,8 +49,12 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var filtergroups = response.getReturnValue();
-                cmp.set("v.filterGroupList", filtergroups);
+                //check for list so that we only make necessary server trips
+                if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
+                    var filtergroups = response.getReturnValue();
+                    cmp.set("v.filterGroupList", filtergroups);
+                    console.log(filtergroups);
+                }
                 var cols = ["Name"
                     ,"Description"
                 ];

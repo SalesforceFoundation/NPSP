@@ -51,6 +51,13 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String summaryObject;
 
     }
+    /*******************************************************************************************************
+    * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
+    */
+    public class FilterGroupTableItem{
+        @AuraEnabled public string filterGroupName;
+        @AuraEnabled public string description;
+    }
 
     /*******************************************************************************************************
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
@@ -124,13 +131,24 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description Queries from the Filter Rule selector to fetch all Filter_Group__mdt records. Parses so that only the relevant
     * information is returned, and a custom FilterGroupTableItem class is created with this information.
-    * @return a list of all rollup definitions
+    * @return a list of all filter group definitions
     */
     @AuraEnabled
-    public static List<Filter_Group__mdt> getFilterGroupDefinitions() {
+    public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
 
+        List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
-        return mdtList;
+
+        for(Integer i=0; i<mdtList.size(); i++) {
+            FilterGroupTableItem item = new FilterGroupTableItem();
+
+            item.filterGroupName = mdtList[i].MasterLabel;
+            item.description = mdtList[i].Description__c;
+
+            mdtTableList.add(item);
+        }
+
+        return mdtTableList;
 
     }
 
@@ -141,7 +159,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     //TODO: should the labels live in an enum or elsewhere to be easily accessible for other pages?
     public static Map<String, String> getRollupLabels() {
-
 
             Map<String, String> labels = new Map<String,String>
             {
