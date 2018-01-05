@@ -604,14 +604,6 @@
         <value>New Filter Group</value>
     </labels>
     <labels>
-        <fullName>CMT_NoFilterGroups</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Message to display when there are no filter groups found or available.</shortDescription>
-        <value>No custom filter groups found.</value>
-    </labels>
-    <labels>
         <fullName>ConfirmDeleteAccount</fullName>
         <categories>Error, Delete</categories>
         <language>en_US</language>
@@ -634,14 +626,6 @@
         <protected>true</protected>
         <shortDescription>Hard Credit</shortDescription>
         <value>Hard Credit</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_NoRollups</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Message to display when there are no custom rollups found or available.</shortDescription>
-        <value>No custom rollups found.</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>
@@ -6266,6 +6250,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLinkDelete</shortDescription>
         <value>Del</value>
+    </labels>
+    <labels>
+        <fullName>stgNoObjectsFound</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No records of an object found. Pass in the object's plural label.</shortDescription>
+        <value>No {0} found.</value>
     </labels>
     <labels>
         <fullName>stgNPSPGuideImportData</fullName>

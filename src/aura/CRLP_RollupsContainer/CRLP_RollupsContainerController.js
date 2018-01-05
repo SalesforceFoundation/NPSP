@@ -51,7 +51,6 @@
                 if (state === "SUCCESS") {
                     var filtergroups = response.getReturnValue();
                     cmp.set("v.filterGroupList", filtergroups);
-                    cmp.set("v.isFilterGroupsGrid",true);
                 }
                 else if (state === "ERROR") {
                     var errors = response.getError();
@@ -63,8 +62,9 @@
                     } else {
                         console.log("Unknown error");
                     }
-                    cmp.set("v.isFilterGroupsGrid",true);
+
                 }
+                cmp.set("v.isFilterGroupsGrid",true);
             });
 
             $A.enqueueAction(action);
