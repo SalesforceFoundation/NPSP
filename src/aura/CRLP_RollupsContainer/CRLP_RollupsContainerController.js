@@ -51,6 +51,7 @@
                 if (state === "SUCCESS") {
                     var filtergroups = response.getReturnValue();
                     cmp.set("v.filterGroupList", filtergroups);
+                    cmp.set("v.isFilterGroupsGrid",true);
                 }
                 else if (state === "ERROR") {
                     var errors = response.getError();
@@ -62,10 +63,13 @@
                     } else {
                         console.log("Unknown error");
                     }
+                    cmp.set("v.isFilterGroupsGrid",true);
                 }
             });
 
             $A.enqueueAction(action);
+        } else {
+            cmp.set("v.isFilterGroupsGrid",true);
         }
 
         var labels = cmp.get("v.labels");
@@ -78,7 +82,7 @@
         cmp.set('v.breadcrumbLevel', 1);
 
         cmp.set("v.isRollupsGrid",false);
-        cmp.set("v.isFilterGroupsGrid",true);
+        //cmp.set("v.isFilterGroupsGrid",true);
         console.log('made it past booleans');
 
         var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");
@@ -89,6 +93,7 @@
         cmp.set("v.isRollupsGrid",true);
         cmp.set("v.isFilterGroupsGrid",false);
         cmp.set("v.isRollupDetail",false);
+        cmp.set("v.activeRollup", null);
 
         var labels = cmp.get("v.labels");
 

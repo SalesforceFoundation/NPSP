@@ -80,7 +80,7 @@
     <!--BEGIN ROLLUPS GRID-->
     <aura:if isTrue="{!v.isRollupsGrid}">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
-            <aura:if isTrue="true"> <!--//TODO: add better no-data-found error handling-->
+            <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
                 <table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
@@ -91,7 +91,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                        No Rollups found. //NEEDS CUSTOM LABEL
+                        {!v.labels.noRollups}
                     </ui:message>
                 </aura:set>
             </aura:if>
@@ -103,7 +103,7 @@
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
-            <aura:if isTrue="true"> <!--//TODO: add better no-data-found error handling-->
+            <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
                 <table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
@@ -114,7 +114,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                        No Filter Groups found. //NEEDS CUSTOM LABEL
+                        {!v.labels.noFilterGroups}
                     </ui:message>
                 </aura:set>
             </aura:if>

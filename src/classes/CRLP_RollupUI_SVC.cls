@@ -209,6 +209,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
                 'name' => Label.stgLabelName,
+                'noFilterGroups' => Label.CMT_NoFilterGroups,
+                'noRollups' => Label.CRLP_NoRollups,
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
                 'return' => Label.CRLP_Return,
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -218,6 +220,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
+                'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView
             };
