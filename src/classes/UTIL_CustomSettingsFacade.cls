@@ -49,6 +49,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c householdNamingSettings;
     static Allocations_Settings__c allocationsSettings;
     static Data_Import_Settings__c dataImportSettings;
+    static Customizable_Rollup_Settings__c customizableRollupSettings;
     
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -62,6 +63,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
+    static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
 
     /*******************************************************************************************************
     * @description Returns the default Contacts and Orgs settings. 
@@ -525,14 +527,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
 
-        // New default settings for the Customizable Rollups engine
-        hs.Customizable_Rollups_Enabled__c = false;
-        hs.Rollups_Limit_on_Attached_Opps_for_LDV__c = 500;
-        hs.Rollups_LDV_Batch_Size__c = 600;
-        hs.Rollups_Account_Batch_Size__c = 200;
-        hs.Rollups_Contact_Batch_Size__c = 200;
-        hs.Rollups_Allocation_Batch_Size__c = 1000;
-
         // new HH Account model overrides having HH objects
         if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
@@ -689,13 +683,6 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
         householdsSettings.Use_Dated_Conversion_Rates__c = mySettings.Use_Dated_Conversion_Rates__c;
         householdsSettings.Custom_Exchange_Rate_Field__c = mySettings.Custom_Exchange_Rate_Field__c;
-        // Customizable Rollups Settings
-        householdsSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
-        householdsSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
-        householdsSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
-        householdsSettings.Rollups_Allocation_Batch_Size__c = mySettings.Rollups_Allocation_Batch_Size__c;
-        householdsSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c = mySettings.Rollups_Limit_on_Attached_Opps_for_LDV__c;
-        householdsSettings.Rollups_LDV_Batch_Size__c  = mySettings.Rollups_LDV_Batch_Size__c;
 
         orgHouseholdsSettings = householdsSettings;
  
@@ -816,6 +803,74 @@ public without sharing class UTIL_CustomSettingsFacade {
 
       orgHouseholdNamingSettings = householdNamingSettings;
       return householdNamingSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the default Customizable Rollups settings. 
+    * @return Customizable_Rollup_Settings__c 
+    */
+    public static Customizable_Rollup_Settings__c getCustomizableRollupSettings() {
+        if(Test.isRunningTest() && customizableRollupSettings == null) {
+            customizableRollupSettings = new Customizable_Rollup_Settings__c();
+            configRollupSettings(customizableRollupSettings);
+        } else if (customizableRollupSettings == null) {
+            customizableRollupSettings = Customizable_Rollup_Settings__c.getInstance();
+            if(customizableRollupSettings.Id == null) {
+                customizableRollupSettings = getOrgCustomizableRollupSettings();
+            }
+        }
+        return customizableRollupSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Org Level Customizable Rollups settings. 
+    * @return Customizable_Rollup_Settings__c 
+    */
+    public static Customizable_Rollup_Settings__c getOrgCustomizableRollupSettings() {
+        if(orgCustomizableRollupSettings == null) {
+            orgCustomizableRollupSettings = Customizable_Rollup_Settings__c.getOrgDefaults();
+            if(orgCustomizableRollupSettings.Id == null) {
+                configRollupSettings(orgCustomizableRollupSettings);
+                if(!Test.isRunningTest()) {
+                    upsert orgCustomizableRollupSettings;
+                }
+            }
+        }
+        return orgCustomizableRollupSettings;
+    }
+
+    private static void configRollupSettings(Customizable_Rollup_Settings__c crs) {
+        // New default settings for the Customizable Rollups engine
+        crs.Customizable_Rollups_Enabled__c = false;
+        crs.Rollups_Limit_on_Attached_Opps_for_LDV__c = 500;
+        crs.Rollups_LDV_Batch_Size__c = 600;
+        crs.Rollups_Account_Batch_Size__c = 200;
+        crs.Rollups_Contact_Batch_Size__c = 200;
+        crs.Rollups_Allocation_Batch_Size__c = 1000;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods 
+    * will see these settings as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Customizable_Rollup_Settings__c The configured settings.
+    **/
+    public static Customizable_Rollup_Settings__c getRollupSettingsForTests(Customizable_Rollup_Settings__c mySettings) {
+        if(customizableRollupSettings == null) {
+            customizableRollupSettings = new Customizable_Rollup_Settings__c();
+        }
+
+        // Customizable Rollups Settings
+        customizableRollupSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
+        customizableRollupSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
+        customizableRollupSettings.Rollups_Allocation_Batch_Size__c = mySettings.Rollups_Allocation_Batch_Size__c;
+        customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c = mySettings.Rollups_Limit_on_Attached_Opps_for_LDV__c;
+        customizableRollupSettings.Rollups_LDV_Batch_Size__c  = mySettings.Rollups_LDV_Batch_Size__c;
+
+        orgCustomizableRollupSettings = customizableRollupSettings;
+
+        return customizableRollupSettings;
     }
 
 }
