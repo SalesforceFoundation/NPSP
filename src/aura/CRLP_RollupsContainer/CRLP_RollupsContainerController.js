@@ -23,7 +23,7 @@
 
                 cmp.set('v.isRollupsGrid',true);
                 cmp.set('v.isFilterGroupsGrid',false);
-                cmp.set('v.activeRollupId',model.items[0].id);
+                //cmp.set('v.activeRollupId',model.items[0].id);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
