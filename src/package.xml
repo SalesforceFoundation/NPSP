@@ -650,6 +650,13 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Allocation_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_LDV_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
@@ -954,13 +961,7 @@
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Custom_Exchange_Rate_Field__c</members>
-        <members>npo02__Households_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Account_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Allocation_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Contact_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_LDV_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
@@ -1786,6 +1787,7 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
+        <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>

@@ -149,9 +149,7 @@ private class CRLP_RollupAccount_TEST {
     private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
                         Rollups_LDV_Batch_Size__c = 200,

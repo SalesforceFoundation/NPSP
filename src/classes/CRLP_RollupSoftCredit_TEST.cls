@@ -135,13 +135,17 @@ private class CRLP_RollupSoftCredit_TEST {
                 new npo02__Households_Settings__c (
                         npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                         npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-                        npo02__Household_Contact_Roles_On__c = true,
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
-                        Rollups_LDV_Batch_Size__c = 600,
-                        Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Contact_Batch_Size__c = 20
+                        npo02__Household_Contact_Roles_On__c = true
                 ));
+
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
+                Rollups_LDV_Batch_Size__c = 600,
+                Rollups_Account_Batch_Size__c = 20,
+                Rollups_Contact_Batch_Size__c = 20
+        ));
+
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,

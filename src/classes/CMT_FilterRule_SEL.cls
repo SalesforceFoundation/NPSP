@@ -57,7 +57,7 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Rule__mdt> cachedFilterRules {
         get {
             if (cachedFilterRules == null) {
-                cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName,
+                cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName, Filter_Group__r.DeveloperName,
                                 Filter_Group__c, Field__r.QualifiedApiName, Object__r.QualifiedApiName,
                                 Operator__c, Constant__c
                         FROM Filter_Rule__mdt

@@ -64,8 +64,8 @@ public abstract class UTIL_AbstractRollup_BATCH implements database.batchable<SO
     protected Boolean customizableRollupEngineEnabled {
         get {
             if (customizableRollupEngineEnabled == null) {
-                npo02__Households_Settings__c household_settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-                customizableRollupEngineEnabled = (household_settings.Customizable_Rollups_Enabled__c == true);
+                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+                customizableRollupEngineEnabled = (customizableRollupSettings.Customizable_Rollups_Enabled__c == true);
             }
             return customizableRollupEngineEnabled;
         } private set;
