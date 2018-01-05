@@ -49,14 +49,17 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
         @AuraEnabled public String summaryObject;
+        @AuraEnabled public Id id;
 
     }
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
     */
     public class FilterGroupTableItem{
-        @AuraEnabled public string filterGroupName;
-        @AuraEnabled public string description;
+        @AuraEnabled public String filterGroupName;
+        @AuraEnabled public String description;
+        @AuraEnabled public Integer countFilterRules;
+        @AuraEnabled public Integer countRollups;
     }
 
     /*******************************************************************************************************
@@ -120,6 +123,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
             item.active = mdtList[i].Active__c;
+            item.id = mdtList[i].Id;
 
             mdtTableList.add(item);
         }
@@ -138,12 +142,15 @@ public with sharing class CRLP_RollupUI_SVC {
 
         List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
         List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
+        Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
 
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterGroupTableItem item = new FilterGroupTableItem();
 
             item.filterGroupName = mdtList[i].MasterLabel;
             item.description = mdtList[i].Description__c;
+            item.countFilterRules = mdtList[i].Filter_Rules__r.size();
+            item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
 
             mdtTableList.add(item);
         }
@@ -151,6 +158,29 @@ public with sharing class CRLP_RollupUI_SVC {
         return mdtTableList;
 
     }
+
+    /*******************************************************************************************************
+    @description Fetches a single Rollup__mdt record by Id.
+    * @return a Rollup__mdt record.
+    */
+
+    @AuraEnabled
+    public static Rollup__mdt getRollupById(Id id) {
+
+        Rollup__mdt rollup = [SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
+                Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
+                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
+                Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
+                Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
+                Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
+                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
+                Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
+        FROM Rollup__mdt
+        WHERE Id = :id];
+
+        return rollup;
+    }
+
 
     /*******************************************************************************************************
     @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
@@ -163,22 +193,26 @@ public with sharing class CRLP_RollupUI_SVC {
             Map<String, String> labels = new Map<String,String>
             {
                 'action' => Label.stgLabelActionColumn,
-                'active' => Label.CRLP_Active,
+                'active' => Label.stgActive,
                 'cancel' => Label.stgBtnCancel,
                 'clone' => Label.stgBtnClone,
+                'countOf' => Label.stgCountOf,
+                'create' => Label.stgCreate,
                 'creditType' => Label.CRLP_CreditType,
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
+                'description' => 'Description',
                 'edit' => Label.stgBtnEdit,
-                'filterCreate' => Label.CRLP_FilterCreate,
+                'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
-                'filterNew' => Label.CRLP_FilterNew,
-                'rollupName' => Label.stgLabelName,
+                'filterGroupNew' => Label.CMT_FilterNew,
+                'name' => Label.stgLabelName,
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
                 'return' => Label.CRLP_Return,
-                'rollupCreate' => Label.CRLP_RollupCreate,
+                'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
+                'rollupLabelPlural' => Schema.SObjectType.Rollup__mdt.getLabelPlural(),
                 'rollupNew' => Label.CRLP_RollupNew,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,

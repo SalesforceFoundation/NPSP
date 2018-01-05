@@ -2,13 +2,15 @@
     <!-- public attributes -->
     <aura:attribute name="rollup" type="Object" required="true"/>
     <aura:attribute name="labels" type="Map"/>
+    <aura:attribute name="activeRollupId" type="Object"/>
 
     <!--markup-->
     <tr class="slds-hint-parent">
         <td>
             <div class="slds-truncate" title="{!v.rollup.rollupName}">
-                <!--<a href="javascript:void(0);" onclick="{!c.clickLink}" data-id="{!v.rollup.relatedId}"></a>-->
+                <a href="javascript:void(0);" onclick="{!c.setActiveRollup}" data-id="{!v.rollup.relatedId}">
                     {!v.rollup.rollupName}
+                </a>
             </div>
         </td>
         <td>

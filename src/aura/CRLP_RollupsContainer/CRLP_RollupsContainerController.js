@@ -10,7 +10,8 @@
                 var model = response.getReturnValue();
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
-                var cols = [model.labels.rollupName
+
+                var cols = [model.labels.name
                             , model.labels.summaryObject
                             , model.labels.detailObject
                             , model.labels.creditType
@@ -19,6 +20,10 @@
                             , model.labels.active
                             ];
                 cmp.set('v.columns', cols);
+
+                cmp.set('v.isRollupsGrid',true);
+                cmp.set('v.isFilterGroupsGrid',false);
+                cmp.set('v.activeRollupId',model.items[0].id);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
@@ -35,15 +40,8 @@
 
         $A.enqueueAction(action);
     },
-    /*navToFilterGroups: function(cmp, event, helper){
-        console.log('in the nav function');
-        var urlEvent = $A.get("e.force:navigateToURL");
-        urlEvent.setParams({
-            "url": "/apex/STG_SettingsManager"
-        });
-        urlEvent.fire();
-    },*/
-    navToFilterGroupsGrid: function(cmp, event, helper){
+
+    displayFilterGroupsGrid: function(cmp, event, helper){
         //check for list first so that we only make necessary server trips
         if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
             var action = cmp.get("c.getFilterGroupDefinitions");
@@ -70,23 +68,31 @@
             $A.enqueueAction(action);
         }
 
-        var cols = ["Name"
-            , "Description"
+        var labels = cmp.get("v.labels");
+        var cols = [labels.name
+            , labels.filterGroupDescription
+            , labels.countOf+' '+labels.filterGroupLabelPlural
+            , labels.countOf+' '+labels.rollupLabelPlural
             ];
         cmp.set('v.columns', cols);
         cmp.set('v.breadcrumbLevel', 1);
 
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isFilterGroupsGrid",true);
+        console.log('made it past booleans');
 
-        var rollupName = {!v.labels.rollupName};
-        cmp.set("v.breadcrumbs",[{label:rollupName,onclick:'navToRollupsGrid'}])
+        var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");
+        cmp.set("v.breadcrumbs",[{label:rollupSummaryTitle,onclick:'!c.displayRollupsGrid'}])
     },
-    navToRollupsGrid: function(cmp, event, helper){
+
+    displayRollupsGrid: function(cmp, event, helper){
         cmp.set("v.isRollupsGrid",true);
         cmp.set("v.isFilterGroupsGrid",false);
+        cmp.set("v.isRollupDetail",false);
+
         var labels = cmp.get("v.labels");
-        var cols = [labels.rollupName
+
+        var cols = [labels.name
             , labels.summaryObject
             , labels.detailObject
             , labels.creditType
@@ -95,5 +101,45 @@
             , labels.active
         ];
         cmp.set('v.columns', cols);
+
+        cmp.set("v.breadcrumbs",null);
+    },
+
+    handleRollupSelect: function(cmp, event, helper) {
+
+        //console.log(cmp.get("v.activeRollup.rollupName"));
+        //console.log(cmp.get("v.activeRollup.id"));
+        var action = cmp.get("c.getRollupById");
+        action.setParams({ id : cmp.get("v.activeRollupId") });
+
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                cmp.set("v.activeRollup", response.getReturnValue());
+                console.log('GOT TO ASSIGNMENT IN HANDLEROLLUPSELECT FUNCTION');
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+
+        $A.enqueueAction(action);
+
+        cmp.set("v.isRollupsGrid",false);
+        cmp.set("v.isRollupDetail",true);
     }
+
+    //setActiveRollup: function(cmp, event, helper) {
+    //    var rollup = cmp.get("v.rollup");
+    //    cmp.set("v.activeRollup",rollup);
+    //}
+
 })

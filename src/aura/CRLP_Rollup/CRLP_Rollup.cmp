@@ -1,0 +1,48 @@
+<!--
+ - Created by bbreisnes on 2018-01-04.
+ -->
+
+<aura:component description="CRLP_Rollup">
+
+    <aura:attribute name="labels" type="Map" />
+    <aura:attribute name="activeRollup" type="Object" />
+    <aura:attribute name="mode" type="String" />
+
+
+
+<div aria-labelledby="rollupdetail">
+    <form class="slds-form--stacked">
+        <lightning:layout multipleRows="true">
+            <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                <lightning:input aura:id="rollupdetail"
+                                 label="Rollup Name"
+                                 name="rollupname"
+                                 value="{!v.activeRollup.MasterLabel}"
+                                 required="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                <lightning:input aura:id="rollupdetail"
+                             label="Detail_Object__c"
+                             name="description"
+                             value="{!v.activeRollup.Detail_Object__r.Label}"
+                         required="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                <lightning:input aura:id="rollupdetail"
+                                 label="Summary Object"
+                                 name="description"
+                                 value="{!v.activeRollup.Summary_Object__r.Label}"
+                                 required="true"/>
+            </lightning:layoutItem>
+            <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                <lightning:input aura:id="rollupdetail"
+                                 label="Summary Field"
+                                 name="description"
+                                 value="{!v.activeRollup.Summary_Field__r.Label}"
+                                 required="true"/>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </form>
+</div>
+
+</aura:component>

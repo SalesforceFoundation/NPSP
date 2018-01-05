@@ -3,27 +3,32 @@
     <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
     <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public"/>
     <aura:attribute name="columns" type="List" access="public"/>
-    <aura:attribute name="breadcrumbLevel" type="Integer" access="public" default="0"/>
+    <aura:attribute name="activeRollupId" type="Id"/>
+    <aura:attribute name="activeRollup" type="Object"/>
+    <!--<aura:attribute name="breadcrumbLevel" type="Integer" access="public" default="0"/>-->
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private"/>
-    <aura:attribute name="isRollupsGrid" type="Boolean" default="true" access="private"/>
-    <aura:attribute name="isFilterGroupsGrid" type="Boolean" default="false" access="private"/>
-    <aura:attribute name="breadcrumbs" type="Object[]" access="private"/>
+    <aura:attribute name="isRollupsGrid" type="Boolean" access="private"/>
+    <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private"/>
+    <aura:attribute name="isRollupDetail" type="Boolean" access="private"/>
+    <!--<aura:attribute name="breadcrumbs" type="Object[]" access="private"/>-->
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler name="navigateBreadcrumbEvent" event="c:CRLP_NavigateBreadcrumb" action="{!c.breadcrumbHandler}"/>
+    <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
     <!-- markup -->
 
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
-        <c:CRLP_Breadcrumbs labels="{!v.labels}" level="{!v.breadcrumbLevel}"/>
         <lightning:breadcrumbs>
             <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
-            <aura:iteration items="{!v.breadcrumbs}" var="bc">
-                <lightning:breadcrumb label="{!bc.label}" onclick="{!c.+bc.onclick}" name="{!bc.label}" title="{!bc.label}"/>
-            </aura:iteration>
+            <aura:if isTrue="{!or(v.isFilterGroupsGrid,v.isRollupDetail)}">
+                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
+            </aura:if>
+            <!--<aura:iteration items="{!v.breadcrumbs}" var="bread">
+                <lightning:breadcrumb label="{!bread.label}" onclick="{!c+'.'+bread.onclick}" name="{!bread.label}" title="{!bread.label}"/>
+            </aura:iteration>-->
         </lightning:breadcrumbs>
     </div>
     <!--END BREADCRUMB-->
@@ -36,8 +41,13 @@
         <aura:if isTrue="{!v.isFilterGroupsGrid}">
             <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
         </aura:if>
+        <aura:if isTrue="{!v.isRollupDetail}">
+            <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
+            <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
+        </aura:if>
     </div>
-    <div class="slds-p-horizontal--large slds-p-bottom--large">
+    <aura:if isTrue="{! !v.isRollupDetail }">
+        <div class="slds-p-horizontal--large slds-p-bottom--large">
         <!--TODO:add onChange function-->
         <lightning:layout horizontalAlign="spread">
             <lightning:layoutItem flexibility="auto">
@@ -54,46 +64,70 @@
                 <lightning:buttonGroup >
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:button label="{!v.labels.rollupNew}"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.navToFilterGroupsGrid}"/>
+                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.displayFilterGroupsGrid}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.isFilterGroupsGrid}">
-                        <lightning:button label="New Filter Group"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.navToRollupsGrid}"/>
+                        <lightning:button label="{!v.labels.filterGroupNew}"/>
+                        <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}"/>
                     </aura:if>
                 </lightning:buttonGroup>
             </lightning:layoutItem>
         </lightning:layout>
     </div>
+    </aura:if>
     <!--END HEADER-->
 
     <!--BEGIN ROLLUPS GRID-->
     <aura:if isTrue="{!v.isRollupsGrid}">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
-            <table class="slds-table slds-table_bordered">
-                <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
-                <tbody>
-                <aura:iteration var="rollup" items="{!v.rollupList}">
-                    <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}"/>
-                </aura:iteration>
-                </tbody>
-            </table>
+            <aura:if isTrue="true"> <!--//TODO: add better no-data-found error handling-->
+                <table class="slds-table slds-table_bordered">
+                    <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
+                    <tbody>
+                    <aura:iteration var="rollup" items="{!v.rollupList}">
+                        <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}" activeRollupId="{!v.activeRollupId}"/>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+                <aura:set attribute="else">
+                    <ui:message severity="info" closable="false">
+                        No Rollups found. //NEEDS CUSTOM LABEL
+                    </ui:message>
+                </aura:set>
+            </aura:if>
         </div>
+
     </aura:if>
     <!--END ROLLUPS GRID-->
 
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
-            <table class="slds-table slds-table_bordered">
-                <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
-                <tbody>
-                <aura:iteration var="filterGroup" items="{!v.filterGroupList}">
-                    <c:CRLP_FilterGroupRow filterGroup="{!filterGroup}" labels="{!v.labels}"/>
-                </aura:iteration>
-                </tbody>
-            </table>
+            <aura:if isTrue="true"> <!--//TODO: add better no-data-found error handling-->
+                <table class="slds-table slds-table_bordered">
+                    <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
+                    <tbody>
+                    <aura:iteration var="filterGroup" items="{!v.filterGroupList}">
+                        <c:CRLP_FilterGroupRow filterGroup="{!filterGroup}" labels="{!v.labels}"/>
+                    </aura:iteration>
+                    </tbody>
+                </table>
+                <aura:set attribute="else">
+                    <ui:message severity="info" closable="false">
+                        No Filter Groups found. //NEEDS CUSTOM LABEL
+                    </ui:message>
+                </aura:set>
+            </aura:if>
         </div>
     </aura:if>
     <!--END FILTER GROUPS GRID-->
+
+    <!--BEGIN ROLLUP DETAIL-->
+    <aura:if isTrue="{!v.isRollupDetail}">
+        <div class="slds-p-bottom--large">
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="view" />
+        </div>
+    </aura:if>
+    <!--END ROLLUP DETAIL-->
 
 </aura:component>

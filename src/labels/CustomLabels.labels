@@ -596,6 +596,14 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>New Filter Group</value>
+    </labels>
+    <labels>
         <fullName>ConfirmDeleteAccount</fullName>
         <categories>Error, Delete</categories>
         <language>en_US</language>
@@ -604,44 +612,12 @@
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
-        <fullName>CRLP_Active</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Text for active rollups</shortDescription>
-        <value>Active</value>
-    </labels>
-    <labels>
         <fullName>CRLP_CreditType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Credit Type</shortDescription>
         <value>Credit Type</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_FilterCreate</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title for new filter group page</shortDescription>
-        <value>Create Filter Group</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_FilterNew</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>New filter group button</shortDescription>
-        <value>New Filter Group</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_FilterView</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>View the Filter Group page</shortDescription>
-        <value>View Filter Groups</value>
     </labels>
     <labels>
         <fullName>CRLP_HardCredit</fullName>
@@ -658,14 +634,6 @@
         <protected>true</protected>
         <shortDescription>Breadcrumb text to return to NPSP settings</shortDescription>
         <value>Back to NPSP Settings</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_RollupCreate</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Title for create rollup page</shortDescription>
-        <value>Create New Rollup</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupNew</fullName>
@@ -4333,6 +4301,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Not Started</value>
     </labels>
     <labels>
+        <fullName>stgActive</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgActive</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -4539,6 +4515,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
+    </labels>
+    <labels>
+        <fullName>stgCountOf</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCountOf</shortDescription>
+        <value>Count of</value>
+    </labels>
+    <labels>
+        <fullName>stgCreate</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCreate</shortDescription>
+        <value>Create</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>

@@ -412,7 +412,6 @@
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
-        <members>CRLP_FilterGroupSetup</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
         <members>CRLP_RollupSetup</members>
@@ -496,9 +495,8 @@
         <name>ApexTrigger</name>
     </types>
     <types>
-        <members>CRLP_Breadcrumbs</members>
-        <members>CRLP_FilterGroupApp</members>
         <members>CRLP_FilterGroupRow</members>
+        <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupRow</members>
         <members>CRLP_RollupsContainer</members>
@@ -1007,6 +1005,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CMT_FilterNew</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -1050,14 +1049,9 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
-        <members>CRLP_Active</members>
         <members>CRLP_CreditType</members>
-        <members>CRLP_FilterCreate</members>
-        <members>CRLP_FilterNew</members>
-        <members>CRLP_FilterView</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_Return</members>
-        <members>CRLP_RollupCreate</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
         <members>CRLP_RollupType</members>
@@ -1522,6 +1516,7 @@
         <members>statusCompleted</members>
         <members>statusInProgress</members>
         <members>statusNotStarted</members>
+        <members>stgActive</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
@@ -1548,6 +1543,8 @@
         <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
+        <members>stgCountOf</members>
+        <members>stgCreate</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>

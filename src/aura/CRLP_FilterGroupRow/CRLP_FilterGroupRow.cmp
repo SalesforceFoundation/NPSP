@@ -14,12 +14,12 @@
             <td>
                 <div class="slds-truncate" title="{!v.filterGroup.description}">{!v.filterGroup.description}</div>
             </td>
-            <!--<td>
-                <div class="slds-truncate" title="{!v.filterGroup.detailObject}">{!v.filterGroup.detailObject}</div>
+            <td>
+                <div class="slds-truncate" title="{!v.filterGroup.countFilterRules}">{!v.filterGroup.countFilterRules}</div>
             </td>
             <td>
-                <div class="slds-truncate" title="{!v.filterGroup.creditType}">{!v.filterGroup.creditType}</div>
-            </td>-->
+                <div class="slds-truncate" title="{!v.filterGroup.countRollups}">{!v.filterGroup.countRollups}</div>
+            </td>
             <td>
                 <div title="Actions">
                     <lightning:buttonMenu menuAlignment="right" alternativeText="{!v.labels.action}" onselect="{!c.handleMenuSelect}">
