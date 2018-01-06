@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Utilities
 * @description Unit test for the Custom Metadata Type api class
 */
@@ -37,7 +37,7 @@
 private class CMT_MetadataAPI_TEST {
 
     static testMethod void test_cmt_api() {
-        CMT_MetadataAPI.upsertCustomMetadata(CMT_MetadataAPI.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
+        CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'Rule_1', 'Rule 1: OCR.Role',
                 new Map<String,Object>{
                         'Filter_Group__c' => 'm016A000000YXdG',
                         'Operation__c' => 'Equals',
@@ -47,11 +47,17 @@ private class CMT_MetadataAPI_TEST {
                 });
 
         CMT_MetadataAPI.commitPendingOperations();
-        CMT_MetadataAPI.deleteCustomMetadataTypeRecord(CMT_MetadataAPI.MetadataObject.Filter_Group, 'SomeName');
+        CMT_MetadataAPI.deleteCustomMetadataTypeRecord(CRLP_RollupCMT.MetadataObject.Filter_Group, 'SomeName');
 
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack();
+        // Construct our callback class
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test', null);
+
+        // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
+
+        // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
+
     }
 
 
