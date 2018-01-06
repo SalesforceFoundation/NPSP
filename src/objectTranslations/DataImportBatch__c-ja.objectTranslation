@@ -10,6 +10,7 @@
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
+        <help><!-- An optional description about this batch. --></help>
         <label><!-- Batch Description --></label>
         <name>Batch_Description__c</name>
     </fields>
@@ -72,5 +73,58 @@
         <label><!-- Donation Matching Rule --></label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
+    <fields>
+        <help><!-- The date and time when the batch was last processed. --></help>
+        <label><!-- Last Processed On --></label>
+        <name>Last_Processed_On__c</name>
+    </fields>
+    <fields>
+        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job. --></help>
+        <label><!-- Process Using Scheduled Job --></label>
+        <name>Process_Using_Scheduled_Job__c</name>
+    </fields>
+    <fields>
+        <help><!-- Shows the number of records that failed to be successfully processed on the date listed in the Last Processed On field. --></help>
+        <label><!-- Records Failed --></label>
+        <name>Records_Failed__c</name>
+    </fields>
+    <fields>
+        <help><!-- Shows the number of records that were successfully processed on the date listed in the Last Processed On field. --></help>
+        <label><!-- Records Successfully Processed --></label>
+        <name>Records_Successfully_Processed__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
+    <layouts>
+        <layout>NPSP Data Import Batch Layout</layout>
+        <sections>
+            <label><!-- Contact &amp; Account Matching --></label>
+            <section>Contact &amp; Account Matching</section>
+        </sections>
+        <sections>
+            <label><!-- Custom Links --></label>
+            <section>Custom Links</section>
+        </sections>
+        <sections>
+            <label><!-- Donation Matching --></label>
+            <section>Donation Matching</section>
+        </sections>
+        <sections>
+            <label><!-- Extensibility --></label>
+            <section>Extensibility</section>
+        </sections>
+    </layouts>
     <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
+    <webLinks>
+        <label><!-- Process_Batch --></label>
+        <name>Process_Batch</name>
+    </webLinks>
 </CustomObjectTranslation>
