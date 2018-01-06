@@ -39,7 +39,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
     * @description Gets the ChildrenLoader Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.ChildrenLoader getDeletionChildrenLoader() {
+    protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
         return new RDDeletionChildrenLoader();
     }
 
@@ -47,7 +47,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
     * @description Gets the ChildrenLoader Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.ChildrenLoader getUndeletionChildrenLoader() {
+    protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
         return new RDUndeletionChildrenLoader();
     }
 
@@ -55,51 +55,51 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
     * @description Gets the ChildrenLoader Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.ChildrenValidator getChildrenValidator() {
+    protected override CascadeDeleteLookupsDomain.DeleteChildrenValidator getDeletionChildrenValidator() {
         return new RDChildrenValidator();
     }
 
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Recurring Donations being deleted
     ********************************************************************************************************/
-    class RDDeletionChildrenLoader implements CascadeDeleteLookupsDomain.ChildrenLoader {
+    class RDDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the children of the Recurring Donations being deleted
-        * @return List<Allocation__c> Deleted Recurring Donation's Allocations
+        * @return List<SObject> Deleted Recurring Donation's Allocations
         ********************************************************************************************************/
-        public List<SObject> loadChildren(Set<Id> parentsIds) {
-            Map<Id, SObject> result = new Map<Id, SObject>();
+        public List<SObject> load(Set<Id> parentsIds) {
+            List<SObject> result = new List<SObject>();
 
-            List<Opportunity> relatedOpportunities = [
+            List<SObject> relatedOpportunities = [
                 SELECT Name, npe03__Recurring_Donation__c, IsWon, IsClosed
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :parentsIds
             ];
-            List<Allocation__c> relatedAllocations = [
+            List<SObject> relatedAllocations = [
                 SELECT Recurring_Donation__c, Opportunity__c
                 FROM Allocation__c
                 WHERE Recurring_Donation__c IN :parentsIds
                 OR Opportunity__c IN :relatedOpportunities
             ];
 
-            result.putAll(relatedOpportunities);
-            result.putAll(relatedAllocations);
+            result.addAll(relatedOpportunities);
+            result.addAll(relatedAllocations);
 
-            return result.values();
+            return (new Map<Id, SObject>(result)).values();
         }
     }
 
     /*******************************************************************************************************
     * @description Retrieves the children of the Recurring Donations being undeleted
     ********************************************************************************************************/
-    class RDUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.ChildrenLoader {
+    class RDUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
 
         /*******************************************************************************************************
         * @description Retrieves the children of the Recurring Donations being undeleted
-        * @return List<Allocation__c> Undeleted Recurring Donations's Allocations
+        * @return List<SObject> Undeleted Recurring Donations's Allocations
         ********************************************************************************************************/
-        public List<SObject> loadChildren(Set<Id> parentsIds) {
+        public List<SObject> load(Set<Id> parentsIds) {
             Map<Id, SObject> result = new Map<Id, SObject>();
 
             Map<Id, Opportunity> relatedOpportunities = new Map<Id, Opportunity>([
@@ -122,33 +122,57 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
 
             return result.values();
         }
+
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Recurring Donations being undeleted
+        * @return List<SObject> Undeleted Recurring Donations's Allocations
+        ********************************************************************************************************/
+        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
+            return null;
+        }
     }
 
     /*******************************************************************************************************
     * @description Class that validates the children of the Recurring Donations being deleted
     ********************************************************************************************************/
-    class RDChildrenValidator implements CascadeDeleteLookupsDomain.ChildrenValidator {
+    class RDChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
 
         /*******************************************************************************************************
         * @description validates the children of the Recurring Donations being undeleted
         * @return void
         ********************************************************************************************************/
-        public void validateChildrenDeletion(List<npe03__Recurring_Donation__c> parentRecords, List<SObject> childrenRecords) {
-            for(npe03__Recurring_Donation__c parentRecord : parentRecords) {
-                CascadeDeleteLookupsDomain.DeletionError deletionError = new CascadeDeleteLookupsDomain.DeletionError(parentRecord.Name);
-                for (SObject childRecord : childrenRecords) {
-                    if (childRecord instanceof Opportunity && 
-                        (Id) childRecord.get('npe03__Recurring_Donation__c') == parentRecord.Id && 
-                        (Boolean) childRecord.get('IsClosed') && (Boolean) childRecord.get('IsWon')
-                    ) {
-                        deletionError.addChildError(Label.ClosedWonOpportunities, (Id) childRecord.get('Id'), (String) childRecord.get('Name')); 
+        public List<SObject> validateDeletion(List<npe03__Recurring_Donation__c> parents, List<SObject> children) {
+            List<SObject> validChildren = new List<SObject>();
+
+            for(npe03__Recurring_Donation__c parent : parents) {
+                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Name);
+
+                for (SObject child : children) {
+                    if (isDeletableOpportunity(child, parent)) {
+                        Opportunity nonDeletableOpportunity = (Opportunity) child;
+                        error.addChildError(Label.ClosedWonOpportunities, nonDeletableOpportunity.Id, nonDeletableOpportunity.Name);
+                    }
+                    else {
+                        validChildren.add(child);
                     }
                 }
-                String deletionErrorMessage = deletionError.getMessage();
-                if (String.isNotBlank(deletionErrorMessage)) {
-                    parentRecord.addError(deletionErrorMessage, false);
+
+                String errorMessage = error.getMessage();
+                if (String.isNotBlank(errorMessage)) {
+                    parent.addError(errorMessage, false);
                 }
             }
+
+            return validChildren;
+        }
+
+        private Boolean isDeletableOpportunity(SObject record, npe03__Recurring_Donation__c parent) {
+            if ((record instanceof Opportunity) == false) {
+                return false;
+            }
+            Opportunity opportunityRecord = (Opportunity) record;
+            
+            return opportunityRecord.npe03__Recurring_Donation__c == parent.Id && opportunityRecord.IsClosed && opportunityRecord.IsWon;
         }
     }
 }

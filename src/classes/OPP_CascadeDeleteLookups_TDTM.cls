@@ -33,20 +33,68 @@
  * @group Utilities
  * @description Cascade deletion extension for Opportunity object.
  */
-public with sharing class OPP_CascadeDeleteLookups_TDTM extends UTIL_CascadeDeleteLookups_TDTM {
+public with sharing class OPP_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
 
     /*******************************************************************************************************
-    * @description Cascade deletion definitions for Opportunity.
+    * @description Gets the ChildrenLoader Object of the running Trigger. 
+    * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    private static List<Cascade> cascades = new List<Cascade>{
-        new Cascade(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'),'Opportunity__c')
-    };
-    
+    protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
+        return new OpportunityDeletionChildrenLoader();
+    }
+
     /*******************************************************************************************************
-    * @description Override provides super class with cascades for this triger.
-    * @return List<Cascade> The cascade deletions to perform for this trigger.
-    ********************************************************************************************************/    
-    public override List<Cascade> getCascades() {
-        return cascades;
+    * @description Gets the ChildrenLoader Object of the running Trigger. 
+    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    ********************************************************************************************************/
+    protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
+        return new OpportunityUndeletionChildrenLoader();
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the Opportunity being deleted
+    ********************************************************************************************************/
+    class OpportunityDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Opportunity being deleted
+        * @return List<Allocation__c> Deleted Opportunity's Allocations
+        ********************************************************************************************************/
+        public List<Allocation__c> load(Set<Id> parentsIds) {
+            return [
+                SELECT Opportunity__c
+                FROM Allocation__c
+                WHERE Opportunity__c IN :parentsIds
+            ];
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the children of the Opportunity being undeleted
+    ********************************************************************************************************/
+    class OpportunityUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
+
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Opportunity being undeleted
+        * @return List<Allocation__c> Undeleted Opportunity's Allocations
+        ********************************************************************************************************/
+        public List<Allocation__c> load(Set<Id> parentsIds) {
+            return [
+                SELECT Opportunity__c
+                FROM Allocation__c
+                WHERE Opportunity__c IN :parentsIds
+                AND IsDeleted = TRUE
+                ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Recurring Donations being undeleted
+        * @return List<SObject> Undeleted Recurring Donations's Allocations
+        ********************************************************************************************************/
+        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
+            return null;
+
+        }
     }
 }

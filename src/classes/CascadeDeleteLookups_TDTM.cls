@@ -47,15 +47,6 @@
 
 public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
-    private static CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete;
-
-    public static CascadeDeleteLookupsDomain.CascadeDelete getCascadeDelete() {
-        if (cascadeDelete == null) {
-            return new CascadeDeleteLookupsDomain.CascadeDelete();
-        }
-        return cascadeDelete;
-    }
-
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
     * records depending on trigger action.
@@ -73,15 +64,14 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             return null;
         }
 
-        cascadeDelete = CascadeDeleteLookups_TDTM.getCascadeDelete();
-
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
+            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
             cascadeDelete.setParents(oldlist);
             if (cascadeDelete.hasChildrenLoader() == false) {
                 cascadeDelete.setChildrenLoader(getDeletionChildrenLoader());
             }
             if (cascadeDelete.hasChildrenValidator() == false) {
-                cascadeDelete.setChildrenValidator(getChildrenValidator());
+                cascadeDelete.setChildrenValidator(getDeletionChildrenValidator());
             }
             cascadeDelete.loadChildren();
             cascadeDelete.validateChildrenDeletion();
@@ -96,16 +86,17 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             } catch (Exception ex) {}
 
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
+            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
             cascadeDelete.deleteChildren();
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
-            cascadeDelete.setParents(newlist);
-            cascadeDelete.setChildrenLoader(getUndeletionChildrenLoader());
-            cascadeDelete.loadChildren();
-            cascadeDelete.unDeleteChildren();
+            CascadeDeleteLookupsDomain.CascadeUndelete cascadeUndelete = CascadeDeleteLookupsDomain.getCascadeUndelete();
+            cascadeUndelete.setParents(newlist);
+            cascadeUndelete.setChildrenLoader(getUndeletionChildrenLoader());
+            cascadeUndelete.undeleteChildren();
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
@@ -116,7 +107,7 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @description Gets the ChildrenLoader Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.ChildrenLoader getDeletionChildrenLoader() {
+    protected virtual CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
         return null;
     }
 
@@ -124,7 +115,7 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @description Gets the ChildrenLoader Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenLoader
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.ChildrenLoader getUndeletionChildrenLoader() {
+    protected virtual CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
         return null;
     }
 
@@ -132,7 +123,7 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @description Gets the ChildrenValidator Object of the running Trigger. 
     * @return CascadeDeleteLookupsDomain.ChildrenValidator
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.ChildrenValidator getChildrenValidator() {
+    protected virtual CascadeDeleteLookupsDomain.DeleteChildrenValidator getDeletionChildrenValidator() {
         return null;
     }
 }

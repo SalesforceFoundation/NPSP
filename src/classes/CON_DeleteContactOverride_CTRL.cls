@@ -175,16 +175,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     */ 
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
-            //add cascades with validation that we can't include all the time
-            //this is because contact merge runs before delete triggers with no way to differentiate from standard delete
-            List<UTIL_CascadeDeleteLookups_TDTM.Cascade> contactCascades = new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'ContactId'),
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity','Primary_Contact__c', new List<String>{'IsWon','IsClosed','AccountId'}),
-                new UTIL_CascadeDeleteLookups_TDTM.Cascade('npe03__Recurring_Donation__c', 'npe03__Contact__c')
-            };
-            //validate that there are no cases associated with this contact, but don't try to cascade delete them if validation passes
-            contactCascades[0].validateOnly = true;
-            CON_CascadeDeleteLookups_TDTM.cascades.addAll(contactCascades);
+
+            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
+            cascadeDelete.setChildrenLoader(new ContactDeletionChildrenLoader());
+            cascadeDelete.setChildrenValidator(new ContactChildrenValidator());
+
             delete queryContact;
 
             if (sforceUser) {
@@ -216,17 +211,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteAccount() {
         Account accForDelete = new Account(id=accountId);
         
-        //add cascade to make prettier error message on contact delete page,
-        //but don't want to attempt under normal account circumstances as these are handled by the platform 
-        List<UTIL_CascadeDeleteLookups_TDTM.Cascade> validationOnlyCascades = new List<UTIL_CascadeDeleteLookups_TDTM.Cascade>{
-            new UTIL_CascadeDeleteLookups_TDTM.Cascade('Opportunity', 'AccountId', new List<String>{'IsWon','IsClosed'}),
-            new UTIL_CascadeDeleteLookups_TDTM.Cascade('Case', 'AccountId')
-        };
-        //validate that there are no cases or closed/won opps associated with this account, but don't try to cascade delete them if validation passes
-        validationOnlyCascades[0].validateOnly = true;
-        validationOnlyCascades[1].validateOnly = true;
-
-        ACCT_CascadeDeleteLookups_TDTM.cascades.addAll(validationOnlyCascades);
+        CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
+        cascadeDelete.setChildrenLoader(new AccountDeletionChildrenLoader());
+        cascadeDelete.setChildrenValidator(new AccountChildrenValidator());
 
         try {
             delete accForDelete;
@@ -281,5 +268,188 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         PageReference redirect = new PageReference(url);
         redirect.setRedirect(true);
         return redirect;
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the Recurring Donations being deleted
+    ********************************************************************************************************/
+    class ContactDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Recurring Donations being deleted
+        * @return List<SObject> Deleted Recurring Donation's Allocations
+        ********************************************************************************************************/
+        public List<SObject> load(Set<Id> parentsIds) {
+            List<SObject> result = new List<SObject>();
+
+            List<SObject> relatedCases = [
+                SELECT CaseNumber
+                FROM Case
+                WHERE ContactId IN :parentsIds
+            ];
+            result.addAll(relatedCases);
+
+            List<SObject> relatedOpportunities = [
+                SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
+                FROM Opportunity
+                WHERE Primary_Contact__c IN :parentsIds
+            ];
+            result.addAll(relatedOpportunities);
+
+            List<SObject> relatedRecurringDonations = [
+                SELECT Name
+                FROM npe03__Recurring_Donation__c
+                WHERE npe03__Contact__c IN :parentsIds
+            ];
+            result.addAll(relatedRecurringDonations);
+
+            return (new Map<Id, SObject>(result)).values();
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that validates the children of the Recurring Donations being deleted
+    ********************************************************************************************************/
+    class ContactChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
+
+        /*******************************************************************************************************
+        * @description validates the children of the Recurring Donations being undeleted
+        * @return void
+        ********************************************************************************************************/
+        public List<SObject> validateDeletion(List<Contact> parents, List<SObject> children) {
+            List<SObject> validChildren = new List<SObject>();
+
+            for(Contact parent : parents) {
+                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Firstname + ' ' + parent.LastName);
+
+                for (SObject child : children) {
+                    Boolean isValidChild = true;
+
+                    if (isClosedWonOpportunity(child, parent.Id)) {
+                        error.addChildError(Label.ClosedWonOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                        isValidChild = false;
+                    }
+                    if (isOrganizationalOpportunity(child, parent.Id)) {
+                        error.addChildError(Label.OrganizationalOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                        isValidChild = false;
+                    }
+                    if (isCase(child, parent.Id)) {
+                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), ((Case) child).Id, ((Case) child).CaseNumber);
+                        isValidChild = false;
+                    }
+                    if (isValidChild) {
+                        validChildren.add(child);
+                    }
+                }
+
+                String errorMessage = error.getMessage();
+                if (String.isNotBlank(errorMessage)) {
+                    parent.addError(errorMessage, false);
+                }
+            }
+
+            return validChildren;
+        }
+
+        private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
+            return (
+                record instanceof Opportunity && 
+                ((Opportunity) record).Primary_Contact__c == parentId &&
+                ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
+            );
+        }
+
+        private Boolean isOrganizationalOpportunity(SObject record, Id parentId) {
+            return (
+                record instanceof Opportunity && 
+                ((Opportunity) record).Primary_Contact__c == parentId &&
+                ((Opportunity) record).AccountId != ((Opportunity) record).Primary_Contact__r.AccountId
+            );
+        }
+
+        private Boolean isCase(SObject record, Id parentId) {
+            return (
+                record instanceof Case && 
+                ((Case) record).ContactId == parentId
+            );
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the children of the Recurring Donations being deleted
+    ********************************************************************************************************/
+    class AccountDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+        
+        /*******************************************************************************************************
+        * @description Retrieves the children of the Recurring Donations being deleted
+        * @return List<SObject> Deleted Recurring Donation's Allocations
+        ********************************************************************************************************/
+        public List<SObject> load(Set<Id> parentsIds) {
+            List<SObject> result = new List<SObject>();
+
+            List<SObject> relatedCases = [
+                SELECT CaseNumber
+                FROM Case
+                WHERE AccountId IN :parentsIds
+            ];
+            result.addAll(relatedCases);
+
+            List<SObject> relatedOpportunities = [
+                SELECT Name, AccountId, IsWon, IsClosed
+                FROM Opportunity
+                WHERE AccountId IN :parentsIds
+            ];
+            result.addAll(relatedOpportunities);
+
+            return (new Map<Id, SObject>(result)).values();
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that validates the children of the Recurring Donations being deleted
+    ********************************************************************************************************/
+    class AccountChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
+
+        /*******************************************************************************************************
+        * @description validates the children of the Recurring Donations being undeleted
+        * @return void
+        ********************************************************************************************************/
+        public List<SObject> validateDeletion(List<Account> parents, List<SObject> children) {
+
+            for(Account parent : parents) {
+                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Name);
+
+                for (SObject child : children) {
+                    if (isClosedWonOpportunity(child, parent.Id)) {
+                        error.addChildError(Label.ClosedWonOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                    }
+                    if (isCase(child, parent.Id)) {
+                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), ((Case) child).Id, ((Case) child).CaseNumber);
+                    }
+                }
+
+                String errorMessage = error.getMessage();
+                if (String.isNotBlank(errorMessage)) {
+                    parent.addError(errorMessage, false);
+                }
+            }
+
+            return new List<SObject>();
+        }
+
+        private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
+            return (
+                record instanceof Opportunity && 
+                ((Opportunity) record).AccountId == parentId &&
+                ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
+            );
+        }
+
+        private Boolean isCase(SObject record, Id parentId) {
+            return (
+                record instanceof Case && 
+                ((Case) record).ContactId == parentId
+            );
+        }
     }
 }
