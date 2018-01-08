@@ -376,6 +376,13 @@ public class CMT_FilterRule {
                 } else {
                     return false;
                 }
+
+            } else if (fieldValue == null && (rule.operation == FilterOperation.DOES_NOT_CONTAIN
+                    || rule.operation == FilterOperation.NOT_IN_LIST || rule.operation == FilterOperation.IS_NOT_INCLUDED)) {
+                // If the field value is null value and the operation is one of these exclusionary types, then
+                // always return true (i.e. passed)
+                return true;
+
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
 
