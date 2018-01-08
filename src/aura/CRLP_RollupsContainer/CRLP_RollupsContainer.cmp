@@ -1,24 +1,26 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
-    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public"/>
-    <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public"/>
-    <aura:attribute name="columns" type="List" access="public"/>
-    <aura:attribute name="activeRollupId" type="Id"/>
-    <aura:attribute name="activeRollup" type="Object"/>
+    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public" description="List of custom items to fill the rollup grid."/>
+    <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public" description="List of custom items to fill the filter groups grid"/>
+    <aura:attribute name="columns" type="List" access="public" description="Columns for both grids."/>
+    <aura:attribute name="activeRollupId" type="Id" description="ID of the selected rollup to display in rollup detail. Should only be set in child component to avoid onchange confusion."/>
+    <aura:attribute name="activeRollup" type="Object" description="Active rollup item to display in rollup detail. Is set to null once detail is hidden."/>
+    <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Is set to null once component is hidden."/>
     <!--<aura:attribute name="breadcrumbLevel" type="Integer" access="public" default="0"/>-->
     <!-- private attributes -->
-    <aura:attribute name="labels" type="Map" access="private"/>
-    <aura:attribute name="isRollupsGrid" type="Boolean" access="private"/>
-    <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private"/>
-    <aura:attribute name="isRollupDetail" type="Boolean" access="private"/>
+    <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
+    <aura:attribute name="isRollupsGrid" type="Boolean" access="private" description="Determines if Rollups Grid is shown."/>
+    <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
+    <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
     <!--<aura:attribute name="breadcrumbs" type="Object[]" access="private"/>-->
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <!-- handleRollupSelect handles the bubbling up from the RollupRow; avoid setting activeRollupId elsewhere-->
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
     <!-- markup -->
-
+    <p>Detail Mode: {!v.detailMode}</p>
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
         <lightning:breadcrumbs>
@@ -43,12 +45,19 @@
         </aura:if>
         <aura:if isTrue="{!v.isRollupDetail}">
             <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
-            <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
+            <!--Show record label header for Edit and View modes only-->
+            <!--TODO: check this logic-->
+            <aura:if isTrue="{!or(equals(v.detailMode,v.labels.edit),equals(v.detailMode,v.labels.view))}">
+                <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
+                <!--Else show mode header-->
+                <aura:set attribute="else">
+                    <h1 class="slds-page-header__title" title="{!v.detailMode + ' ' + v.labels.rollupLabel}">{!v.detailMode + ' ' + v.labels.rollupLabel}</h1>
+                </aura:set>
+            </aura:if>
         </aura:if>
     </div>
     <aura:if isTrue="{! !v.isRollupDetail }">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
-        <!--TODO:add onChange function-->
         <lightning:layout horizontalAlign="spread">
             <lightning:layoutItem flexibility="auto">
                 <aura:if isTrue="{!v.isRollupsGrid}">
@@ -63,7 +72,7 @@
             <lightning:layoutItem flexibility="auto">
                 <lightning:buttonGroup >
                     <aura:if isTrue="{!v.isRollupsGrid}">
-                        <lightning:button label="{!v.labels.rollupNew}"/>
+                        <lightning:button label="{!v.labels.rollupNew}" onclick="{!c.displayNewRollupForm}"/>
                         <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.displayFilterGroupsGrid}"/>
                     </aura:if>
                     <aura:if isTrue="{!v.isFilterGroupsGrid}">
@@ -85,7 +94,7 @@
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
                     <aura:iteration var="rollup" items="{!v.rollupList}">
-                        <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}" activeRollupId="{!v.activeRollupId}"/>
+                        <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}" activeRollupId="{!v.activeRollupId}" mode="{!v.detailMode}"/>
                     </aura:iteration>
                     </tbody>
                 </table>
@@ -125,7 +134,7 @@
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom--large">
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="view" />
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="{!v.detailMode}" />
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

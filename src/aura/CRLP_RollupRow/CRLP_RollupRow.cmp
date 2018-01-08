@@ -1,14 +1,15 @@
 <aura:component description="CRLP_RollupRow">
     <!-- public attributes -->
-    <aura:attribute name="rollup" type="Object" required="true"/>
-    <aura:attribute name="labels" type="Map"/>
-    <aura:attribute name="activeRollupId" type="Object"/>
+    <aura:attribute name="rollup" type="Object" required="true" description="All available fields on the rollup item to be displayed in the row."/>
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="activeRollupId" type="Object" description="The ID of the record to be set in the controller and bubbled up."/>
+    <aura:attribute name="mode" type="String" description="The mode to be set in the controller and bubbled up depending on the choice made in the row."/>
 
     <!--markup-->
     <tr class="slds-hint-parent">
         <td>
             <div class="slds-truncate" title="{!v.rollup.rollupName}">
-                <a href="javascript:void(0);" onclick="{!c.setActiveRollup}" data-id="{!v.rollup.relatedId}">
+                <a href="javascript:void(0);" onclick="{!c.setActiveRollup}" >
                     {!v.rollup.rollupName}
                 </a>
             </div>
@@ -45,4 +46,5 @@
             </div>
         </td>
     </tr>
+    <!--end markup-->
 </aura:component>
