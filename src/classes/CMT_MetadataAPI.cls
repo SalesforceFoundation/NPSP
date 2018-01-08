@@ -191,7 +191,7 @@ public class CMT_MetadataAPI {
                     }
                     errMsg += '* ' + result.details.componentFailures[n].fullName + ': ' + result.details.componentFailures[n].problem;
                 }
-                statusMap.put(this.jobId, errMsg.left(230));
+                statusMap.put(this.jobId, errMsg.left(220));
                 isSuccess = false;
             }
 
@@ -202,7 +202,7 @@ public class CMT_MetadataAPI {
             } else {
                 // Otherwise, write the deployment status to the custom settings object
                 Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-                crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap);
+                crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
                 if (!Test.isRunningTest()) {
                     upsert crlpSettings;
                 }

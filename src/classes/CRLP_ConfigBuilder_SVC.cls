@@ -52,53 +52,15 @@ public class CRLP_ConfigBuilder_SVC {
         nestedMetadata.add(groups);
         nestedMetadata.add(rules);
 
-        CMT_MetadataAPI.deployMetadata(UserInfo.getUserId(), nestedMetadata);
+        CMT_MetadataAPI.deployMetadata(getUniqueJobId(), nestedMetadata);
     }
 
-    /** ***************************************************************************************************
-    * ==================  SAMPLE CODE THAT ILLUSTRATES HOW TO IMPLEMENT THIS CLASS  =======================
-    *******************************************************************************************************
-    * Notes:
-    * - Can call upsertCustomMetadata() multiple times to add insert/updates to the queue so that a single
-    *   call to commitPendingOperations() will insert/update multiple records at once.
-    * - When handling FilterGroups and FilterRules, the FilterGroups would have to be inserted first
-    *   and then after the async job completes, the data can be queried using CMT_FilterRule_SEL
-    *   to get the Id's to use to insert the FilterRule records.
-    * - When inserting/updating CMT's from a UI, Javascript can be used to poll the status of the operations
-    *   showing status to the User while also waiting for the first operation to complete before calling
-    *   secondary actions (i.e., Filter_Rules__mdt).
-    * - If this is being done as a headless operation (i.e., from a PostInstall script or something like that)
-    *   then the process probably has to be split into chained queuable jobs where the first job inserts the
-    *   Filter_Groups. The callback method for that job could launch the second queueable job to insert the
-    *   Filter_Rules and Rollup records (both of which are dependent upon FilterGroup.Id).
-    ******************************************************************************************************* */
-    public static void testMetadataTypes() {
-
-        /*CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Group, 'TEST_GROUP', 'Test Filter Group for Chained Deploy',
-                new Map<String,Object>{
-                        'Description__c' => 'Test Description',
-                        'Is_Deleted__c' => false
-                });
-
-        List<List<Metadata.CustomMetadata>> nestedData = new List<List<Metadata.CustomMetadata>>();
-        nestedData.add(cmtUpsertQueue.clone());
-        cmtUpsertQueue.clear();
-
-        CMT_MetadataAPI.upsertCustomMetadata(CRLP_RollupCMT.MetadataObject.Filter_Rule, 'TEST_GROUP_Rule_1', 'Test Group 1: Filter Opportunity Type',
-                new Map<String,Object>{
-                        'Filter_Group__c' => 'TEST_GROUP',
-                        'Operator__c' => CMT_FilterRule.FilterOperation.NOT_EQUALS.name(),
-                        'Constant__c' => 'Solicitor',
-                        'Object__c' => SObjectType.Opportunity.getName(),
-                        'Field__c' => SObjectType.Opportunity.Fields.Type.getName(),
-                        'Is_Deleted__c' => false
-                });
-        nestedData.add(cmtUpsertQueue.clone());
-        cmtUpsertQueue.clear();
-
-        CMT_MetadataAPI.deployMetadata('1232', nestedData);*/
-        // Can query AsyncApexJob to determine when the job has completed.
+    /**
+     * @return A 10 character unique 'jobId' to use for
+     */
+    public static String getUniqueJobId() {
+        return UserInfo.getUserId().left(15).right(4).toUpperCase() +
+                String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
     }
-    /* ==================================================================================================== */
 
 }
