@@ -1554,14 +1554,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Begin Dry Run</value>
     </labels>
     <labels>
-        <fullName>bdiDryRunError</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DI Status that the record has an error from Dry Run</shortDescription>
-        <value>Dry Run - Error</value>
-    </labels>
-    <labels>
         <fullName>bdiDryRunMatched</fullName>
         <categories>Data Importer</categories>
         <language>en_US</language>
@@ -1616,14 +1608,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>title on the progress indicator during dry run mode</shortDescription>
         <value>NPSP Data Importer - Dry Run</value>
-    </labels>
-    <labels>
-        <fullName>bdiDryRunValidated</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>DI Status that the record went thru Dry Run</shortDescription>
-        <value>Dry Run - Validated</value>
     </labels>
     <labels>
         <fullName>bdiErrorBatchNameRequired</fullName>
