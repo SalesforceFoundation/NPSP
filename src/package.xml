@@ -1087,7 +1087,6 @@
         <members>bdiDonation</members>
         <members>bdiDonationMatchingRuleEmpty</members>
         <members>bdiDryRunBeginButton</members>
-        <members>bdiDryRunError</members>
         <members>bdiDryRunMatched</members>
         <members>bdiDryRunMatchedBest</members>
         <members>bdiDryRunMatchedId</members>
@@ -1095,7 +1094,6 @@
         <members>bdiDryRunRecordsError</members>
         <members>bdiDryRunRecordsValidated</members>
         <members>bdiDryRunTitle</members>
-        <members>bdiDryRunValidated</members>
         <members>bdiErrorBatchNameRequired</members>
         <members>bdiErrorDonationLookupMatch</members>
         <members>bdiErrorDonationMultiMatch</members>
@@ -2063,6 +2061,8 @@
         <members>Batch__c.Open_Batches</members>
         <members>DataImportBatch__c.All</members>
         <members>DataImport__c.All</members>
+        <members>DataImport__c.Dry_Run_Error</members>
+        <members>DataImport__c.Dry_Run_Validated</members>
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
         <members>DataImport__c.To_Be_Imported</members>
