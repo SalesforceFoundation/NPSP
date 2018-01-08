@@ -2061,7 +2061,7 @@
         <members>Batch__c.Open_Batches</members>
         <members>DataImportBatch__c.All</members>
         <members>DataImport__c.All</members>
-        <members>DataImport__c.Dry_Run_Error</members>
+        <members>DataImport__c.Dry_Run_Errors</members>
         <members>DataImport__c.Dry_Run_Validated</members>
         <members>DataImport__c.Failed_Data_Imports</members>
         <members>DataImport__c.Succesfully_Imported</members>
