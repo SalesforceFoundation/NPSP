@@ -9,8 +9,8 @@
         <value><!-- Recurring Donations --></value>
     </caseValues>
     <fields>
-        <help><!-- When checked, all future monthly or quarterly donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field. This is ignored when the installment period is not set to Monthly or Quarterly. --></help>
-        <label><!-- Always use last day of month --></label>
+        <help>Indien aangevinkt zullen alle toekomstige maandelijkse en kwartaal Donatie Termijnen op de laatste dag van de maand gezet worden, ongeacht de datum in het  &quot;Volgende Donatiedatum&quot; veld. Dit geldt alleen voor maandelijks of per kwartaal.</help>
+        <label>Gebruik altijd laatste dag van de maand</label>
         <name>Always_Use_Last_Day_Of_Month__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

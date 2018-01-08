@@ -9,8 +9,8 @@
         <value><!-- Error Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Used to keep track of the most recent execution of the Async job error logger --></help>
-        <label><!-- Async Error Check Last Run --></label>
+        <help>Wordt gebruikt om de meest recente uitvoer van de Async Opdracht Fout Logboek bij te houden</help>
+        <label>Async Fout Controleer Laatste Verwerking</label>
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
@@ -19,8 +19,8 @@
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. --></help>
-        <label><!-- Don&apos;t Auto Schedule Default NPSP Jobs --></label>
+        <help>Indien ingeschakeld, zal NPSP niet automatisch terugkerende opdrachten uitvoeren. Deze opdrachten bevatten Rollups, adreswijzigingen, bijwerken van teugkerende donaties en foutafhandeling.</help>
+        <label>Plan geen Standaard NPSP Opdrachten</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
