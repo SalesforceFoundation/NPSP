@@ -37,8 +37,10 @@
 */
 public class CRLP_ConfigBuilder_SVC {
 
+    /** @description Metadata queued up for deployment */
+    private static List<List<Metadata.CustomMetadata>> queuedNestedMetadata = new List<List<Metadata.CustomMetadata>>();
+
     public static void queueRollupConfigForDeploy(List<CRLP_RollupCMT.FilterGroup> groupsAndRules) {
-        List<List<Metadata.CustomMetadata>> nestedMetadata = new List<List<Metadata.CustomMetadata>>();
 
         List<Metadata.CustomMetadata> groups = new List<Metadata.CustomMetadata>();
         List<Metadata.CustomMetadata> rules = new List<Metadata.CustomMetadata>();
@@ -49,10 +51,23 @@ public class CRLP_ConfigBuilder_SVC {
             }
         }
 
-        nestedMetadata.add(groups);
-        nestedMetadata.add(rules);
+        queuedNestedMetadata.add(groups);
+        queuedNestedMetadata.add(rules);
+    }
 
-        CMT_MetadataAPI.deployMetadata(getUniqueJobId(), nestedMetadata);
+    public static void queueRollupConfigForDeploy(List<CRLP_RollupCMT.Rollup> rollups) {
+        List<Metadata.CustomMetadata> rollupMD = new List<Metadata.CustomMetadata>();
+        for (CRLP_RollupCMT.Rollup rlp : rollups) {
+            rollupMD.add(rlp.getMetadataRecord());
+        }
+
+        queuedNestedMetadata.add(rollupMD);
+    }
+
+    public static String deployedQueuedMetadataTypes() {
+        String jobId = getUniqueJobId();
+        CMT_MetadataAPI.deployMetadata(jobId, queuedNestedMetadata);
+        return jobId;
     }
 
     /**

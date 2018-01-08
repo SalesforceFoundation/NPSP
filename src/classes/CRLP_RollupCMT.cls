@@ -219,16 +219,22 @@ public class CRLP_RollupCMT {
                     'Integer__c' => intValue,
                     'Use_Fiscal_Year__c' => useFiscalYear,
                     'Active__c' => isActive,
-                    'Deleted__c' => isDeleted,
+                    /*'Deleted__c' => isDeleted,*/
                     'Summary_Object__c' => parseObjectField(summaryData)[0],
                     'Summary_Field__c' => summaryData,
                     'Detail_Object__c' => parseObjectField(detailData)[0],
-                    'Detail_Field__c' => detailData,
                     'Amount_Object__c' => parseObjectField(amountData)[0],
-                    'Amount_Field__c' => amountData,
-                    'Date_Object__c' => parseObjectField(dateData)[0],
-                    'Date_Field__c' => dateData
+                    'Date_Object__c' => parseObjectField(dateData)[0]
                 };
+                if (parseObjectField(detailData)[1] != null) {
+                    fldValues.put('Detail_Field__c', detailData);
+                }
+                if (parseObjectField(amountData)[1] != null) {
+                    fldValues.put('Amount_Field__c', amountData);
+                }
+                if (parseObjectField(dateData)[1] != null) {
+                    fldValues.put('Date_Field__c', dateData);
+                }
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }

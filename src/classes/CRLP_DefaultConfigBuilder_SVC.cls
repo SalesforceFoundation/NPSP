@@ -38,105 +38,153 @@
 */
 public class CRLP_DefaultConfigBuilder_SVC {
 
-    /** @description Prefix all CMT DeveloperName values with this */
-    private static final String RecordNamePrefix = 'NPSP_';
-
-    /** @description Legacy Account/Contact rollup settings are stored in this custom settings object */
-    private static final npo02__Households_Settings__c legacySettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-
-    /** @description Legacy Allocation rollup settings are stored in this custom settings object */
-    private static final Allocations_Settings__c legacyAllocSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
-
     /** @description Use this Map of RecordTypes by Id to convert the legacy settings into a DeveloperName for the Filter Rule */
-    private static final Map<Id, RecordType> recordTypesById = new Map<Id, RecordType>([SELECT Id, RecordType.DeveloperName
-            FROM RecordType WHERE SobjectType = 'Opportunity' AND IsActive = True]);
+    private static final Map<Id, RecordType> recordTypesById = new Map<Id, RecordType>(
+        [SELECT Id, RecordType.DeveloperName
+            FROM RecordType
+            WHERE SobjectType = 'Opportunity' AND IsActive = True]);
 
-    /** @description The RecordName for the default filter group of Closed Won Donations */
-    private static final String FilterGroup_Donations = RecordNamePrefix + 'ClosedWon_Donations';
 
-    /** @description The RecordName for the default filter group of Closed Won Membership */
-    private static final String FilterGroup_Membership = RecordNamePrefix + 'ClosedWon_Memberships';
-
-    /** @description The RecordName for the default filter group to use for Allocations Rollups */
-    private static final String FilterGroup_Allocations = RecordNamePrefix + 'Allocations_Filter';
-
-    /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
-     * following set of rollup properties
-     * List<String>{ DetailObject.Field, FilterGroupRecordName, AmountObject.Field, DateObject.Field, OperationString, YearlyOperationString, IntValue }
+    /*************************************************************************************************************
+     * @description Call each of the methods in this class to build the default Filter Groups and each of the four
+     * Rollup Types (Account Hard Credit/Membership, Contact Hard Credit/Membership, Contact Soft Credit, and GAU)
      */
-    private static final Map<String, List<String>> rollupDetailsBySummaryField = new Map<String, List<String>>();
+    public static void convertLegacyRollupsIntoCustomizableRollups() {
+        List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
-    /** @description Map of Rollup Name & Descriptions; Keeping these separate from the Rollup details map just
-     * to make the maps easier to read.
-     * List<String>{ Rollup Label, Rollup Description }
-     */
-    private static final Map<String, List<String>> rollupNameAndDescriptionsBySummaryField = new Map<String, List<String>>();
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+        rollups.addAll(buildDefaultAccountRollups());
+        rollups.addAll(buildDefaultContactRollups());
+        rollups.addAll(buildDefaultSoftCreditRollups());
+        rollups.addAll(buildDefaultGAURollups());
 
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+
+
+        // TODO -- User Defined Rollups!
+
+        String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+        System.debug('Queued Customizable Rollups Metadata for Deployment: ' + jobId);
+    }
 
     /*************************************************************************************************************
      * @description Create the 3 default Filter Groups used for Customizable Rollups using the legacy settings
      */
-    public static void buildDefaultFilterGroups() {
+    private static List<CRLP_RollupCMT.FilterGroup> buildDefaultFilterGroups() {
+
+        // TODO: Need to create different Account / Contact Filter Groups for Donations if the legacy settings are different
+
+        String acctDonation = 'Donations';  // Use this to differentiate Account from Contact filters if that is needed
+        String contDonation = 'Donations';  // Use this to differentiate Account from Contact filters if that is needed
+        if (CRLP_DefaultConfigBuilder.isDifferentContactFilterGroupNeeded) {
+            acctDonation = acctDonation + '-Acct';
+            contDonation = contDonation + '-Cont';
+        }
 
         // ==============================================================================================================
         // Default "Donations: Close/Won Stage" filter group -- All Hard Credit, Soft Credit, and GAU Rollups
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupClosedWonDonations = new CRLP_RollupCMT.FilterGroup('Donations: Closed Won excluding RTs');
-        groupClosedWonDonations.recordName = FilterGroup_Donations;
+        CRLP_RollupCMT.FilterGroup groupClosedWonDonations = new CRLP_RollupCMT.FilterGroup(acctDonation+': Closed Won excluding RTs');
+        groupClosedWonDonations.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Donations_Accounts;
         groupClosedWonDonations.description = 'Closed/Won Non-Membership Opportunities for all Hard and Soft Credit Rollups. ' +
                 'The additional filter rule for SoftCredit Donor Role is only applied when rolling up Soft Credits to the Account or Contact objects';
 
-        CRLP_RollupCMT.FilterRule ruleCloseWonStage = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, 'Donations: CloseWon Only');
-        ruleCloseWonStage.recordName = RecordNamePrefix + ruleCloseWonStage.recordName;
+        CRLP_RollupCMT.FilterRule ruleCloseWonStage = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': CloseWon Only');
+        ruleCloseWonStage.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage.recordName;
         ruleCloseWonStage.objectData = 'Opportunity.IsWon';
         ruleCloseWonStage.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage.value = 'true';
         groupClosedWonDonations.rules.add(ruleCloseWonStage);
 
-        CRLP_RollupCMT.FilterRule ruleDonationsRecordType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, 'Donations: Excluded Record Types');
-        ruleDonationsRecordType.recordName = RecordNamePrefix + ruleDonationsRecordType.recordName;
+        CRLP_RollupCMT.FilterRule ruleDonationsRecordType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': Excluded RT');
+        ruleDonationsRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleDonationsRecordType.recordName;
         ruleDonationsRecordType.objectData = 'Opportunity.RecordTypeId';
         ruleDonationsRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-        ruleDonationsRecordType.value = convertExcludedRecordTypeIdsToDevNames(legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
+        ruleDonationsRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
         groupClosedWonDonations.rules.add(ruleDonationsRecordType);
 
-        if (legacySettings.npo02__Excluded_Account_Opp_Types__c != null) {
-            CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, 'Donations: Excluded Opp.Type');
-            ruleOppType.recordName = RecordNamePrefix + ruleOppType.recordName;
+        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c != null) {
+            CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': Excluded Opp.Type');
+            ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
             ruleOppType.objectData = 'Opportunity.Type';
             ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleOppType.value = legacySettings.npo02__Excluded_Account_Opp_Types__c;
+            ruleOppType.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
             groupClosedWonDonations.rules.add(ruleOppType);
         }
 
-        if (legacySettings.npo02__Soft_Credit_Roles__c != null) {
-            CRLP_RollupCMT.FilterRule ruleSoftCreditRoles = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, 'Donations: Soft Credit Roles ');
-            ruleSoftCreditRoles.recordName = RecordNamePrefix + ruleSoftCreditRoles.recordName;
+        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c != null) {
+            CRLP_RollupCMT.FilterRule ruleSoftCreditRoles = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': Soft Credit Roles ');
+            ruleSoftCreditRoles.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleSoftCreditRoles.recordName;
             ruleSoftCreditRoles.objectData = SObjectType.Partial_Soft_Credit__c.getName() + '.' +  SObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.getName();
             ruleSoftCreditRoles.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
-            ruleSoftCreditRoles.value = legacySettings.npo02__Soft_Credit_Roles__c;
+            ruleSoftCreditRoles.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c;
             groupClosedWonDonations.rules.add(ruleSoftCreditRoles);
+        }
+
+        // If there is a need to create another Filter Group for Contacts that is different than Accounts ...
+        CRLP_RollupCMT.FilterGroup groupClosedWonDonationsContacts;
+        if (CRLP_DefaultConfigBuilder.isDifferentContactFilterGroupNeeded) {
+            // ==============================================================================================================
+            // Default "Donations: Close/Won Stage" filter group -- All Hard Credit, Soft Credit, and GAU Rollups CONTACTS ONLY
+            // ==============================================================================================================
+            groupClosedWonDonationsContacts = new CRLP_RollupCMT.FilterGroup('Donations-Cont: ClosedWon excl RTs');
+            groupClosedWonDonationsContacts.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Donations_Contacts;
+            groupClosedWonDonationsContacts.description = 'Closed/Won Non-Membership Opportunities for Contact Hard and Soft Credit Rollups. ' +
+                    'The additional filter rule for SoftCredit Donor Role is only applied when rolling up Soft Credits to the Contact object';
+
+            CRLP_RollupCMT.FilterRule ruleCloseWonStage1 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: CloseWon Only');
+            ruleCloseWonStage1.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage1.recordName;
+            ruleCloseWonStage1.objectData = 'Opportunity.IsWon';
+            ruleCloseWonStage1.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+            ruleCloseWonStage1.value = 'true';
+            groupClosedWonDonationsContacts.rules.add(ruleCloseWonStage1);
+
+            CRLP_RollupCMT.FilterRule ruleDonationsRecordType1 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Excluded RT');
+            ruleDonationsRecordType1.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleDonationsRecordType1.recordName;
+            ruleDonationsRecordType1.objectData = 'Opportunity.RecordTypeId';
+            ruleDonationsRecordType1.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleDonationsRecordType1.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
+            groupClosedWonDonationsContacts.rules.add(ruleDonationsRecordType1);
+
+            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c != null) {
+                CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Excluded Opp.Type');
+                ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
+                ruleOppType.objectData = 'Opportunity.Type';
+                ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleOppType.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
+                groupClosedWonDonationsContacts.rules.add(ruleOppType);
+            }
+
+            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c != null) {
+                CRLP_RollupCMT.FilterRule ruleSoftCreditRoles = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Soft Credit Roles ');
+                ruleSoftCreditRoles.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleSoftCreditRoles.recordName;
+                ruleSoftCreditRoles.objectData = SObjectType.Partial_Soft_Credit__c.getName() + '.' +  SObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.getName();
+                ruleSoftCreditRoles.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+                ruleSoftCreditRoles.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c;
+                groupClosedWonDonationsContacts.rules.add(ruleSoftCreditRoles);
+            }
         }
 
         // ==============================================================================================================
         // Default "Memberships: Close/Won Stage" filter group
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupMemberships = new CRLP_RollupCMT.FilterGroup('Membership: Closed Won excluding RTs');
+        CRLP_RollupCMT.FilterGroup groupMemberships = new CRLP_RollupCMT.FilterGroup('Membership: Closed Won for specific RTs');
         groupMemberships.description = 'Closed/Won Membership Opportunities for all Membership Rollups';
-        groupMemberships.recordName = FilterGroup_Membership;
+        groupMemberships.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Membership;
 
         CRLP_RollupCMT.FilterRule ruleCloseWonStage2 = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: CloseWon Only');
-        ruleCloseWonStage2.recordName = RecordNamePrefix + ruleCloseWonStage2.recordName;
+        ruleCloseWonStage2.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage2.recordName;
         ruleCloseWonStage2.objectData = 'Opportunity.IsWon';
         ruleCloseWonStage2.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage2.value = 'true';
         groupMemberships.rules.add(ruleCloseWonStage2);
 
-        CRLP_RollupCMT.FilterRule ruleMembershipRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Type(s)');
-        ruleMembershipRecordType.recordName = RecordNamePrefix + ruleMembershipRecordType.recordName;
+        CRLP_RollupCMT.FilterRule ruleMembershipRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
+        ruleMembershipRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleMembershipRecordType.recordName;
         ruleMembershipRecordType.objectData = 'Opportunity.RecordTypeId';
         ruleMembershipRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
-        ruleMembershipRecordType.value = convertExcludedRecordTypeIdsToDevNames(legacySettings.npo02__Membership_Record_Types__c, 'Membership');
+        ruleMembershipRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c, 'Membership');
         groupMemberships.rules.add(ruleMembershipRecordType);
 
         // ==============================================================================================================
@@ -144,30 +192,30 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // ==============================================================================================================
         CRLP_RollupCMT.FilterGroup groupAllocations = new CRLP_RollupCMT.FilterGroup('Allocations: Closed Won excluding RTs');
         groupAllocations.description = 'Closed/Won Opportunities for the Allocation to GAU Rollup';
-        groupAllocations.recordName = FilterGroup_Allocations;
+        groupAllocations.recordName = CRLP_DefaultConfigBuilder.FilterGroup_Allocations;
 
         CRLP_RollupCMT.FilterRule ruleCloseWonStage3 = new CRLP_RollupCMT.FilterRule(groupAllocations.recordName, 'Allocations: CloseWon Only');
-        ruleCloseWonStage3.recordName = RecordNamePrefix + ruleCloseWonStage3.recordName;
+        ruleCloseWonStage3.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage3.recordName;
         ruleCloseWonStage3.objectData = 'Opportunity.IsWon';
         ruleCloseWonStage3.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage3.value = 'true';
         groupAllocations.rules.add(ruleCloseWonStage3);
 
-        if (legacyAllocSettings.Excluded_Opp_RecTypes__c != null) {
+        if (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c != null) {
             CRLP_RollupCMT.FilterRule ruleAllocationsRT = new CRLP_RollupCMT.FilterRule(groupAllocations.recordName, 'Allocations: Excluded Record Types');
-            ruleAllocationsRT.recordName = RecordNamePrefix + ruleAllocationsRT.recordName;
+            ruleAllocationsRT.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAllocationsRT.recordName;
             ruleAllocationsRT.objectData = 'Opportunity.RecordTypeId';
             ruleAllocationsRT.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
-            ruleAllocationsRT.value = convertExcludedRecordTypeIdsToDevNames(legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
+            ruleAllocationsRT.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
             groupAllocations.rules.add(ruleAllocationsRT);
         }
 
-        if (legacyAllocSettings.Excluded_Opp_Types__c != null) {
+        if (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_Types__c != null) {
             CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupAllocations.recordName, 'Memberships: Excluded Opp.Types');
-            ruleOppType.recordName = RecordNamePrefix + ruleOppType.recordName;
+            ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
             ruleOppType.objectData = 'Opportunity.Type';
             ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleOppType.value = legacyAllocSettings.Excluded_Opp_Types__c;
+            ruleOppType.value = CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_Types__c;
             groupAllocations.rules.add(ruleOppType);
         }
 
@@ -178,9 +226,146 @@ public class CRLP_DefaultConfigBuilder_SVC {
         List<CRLP_RollupCMT.FilterGroup> groups = new List<CRLP_RollupCMT.FilterGroup>{
                 groupClosedWonDonations, groupMemberships, groupAllocations
         };
+        if (groupClosedWonDonationsContacts != null) {
+            groups.add(groupClosedWonDonationsContacts);
+        }
 
-        // TODO -- Will these be deployed separately, or will this be combined with Rollups?
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(groups);
+        return groups;
+    }
+
+    /*************************************************************************************************************
+     * @description Create the default Account Hard Credit and Membership Rollups
+     */
+    private static List<CRLP_RollupCMT.Rollup> buildDefaultAccountRollups() {
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+
+        // 0 = DetailObject.Field
+        // 1 = FilterGroupRecordName,
+        // 2 = AmountObject.Field,
+        // 3 = DateObject.Field,
+        // 4 = OperationString,
+        // 5 = YearlyOperationString,
+        // 6 = IntValue
+
+        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
+            if (summaryObjectField.startsWith('Account.')) {
+                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
+                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+
+                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
+                rollup.description = rollupText[1];
+                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
+                rollup.filterGroupRecordName = rollupDetails[1];
+                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
+                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
+                rollup.operation = rollupDetails[4];
+                rollup.yearlyOperationType = rollupDetails[5];
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                if (!String.isEmpty(rollupDetails[6])) {
+                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
+                }
+                rollups.add(rollup);
+            }
+        }
+
+        return rollups;
+    }
+
+    /*************************************************************************************************************
+     * @description Create the default Contact Hard Credit Rollups
+     */
+    private static List<CRLP_RollupCMT.Rollup> buildDefaultContactRollups() {
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+
+        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
+            if (summaryObjectField.startsWith('Contact.') && !summaryObjectField.containsIgnoreCase('soft_credit')) {
+                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
+                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+
+                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
+                rollup.description = rollupText[1];
+                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
+                rollup.filterGroupRecordName = rollupDetails[1];
+                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
+                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
+                rollup.operation = rollupDetails[4];
+                rollup.yearlyOperationType = rollupDetails[5];
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                if (!String.isEmpty(rollupDetails[6])) {
+                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
+                }
+                rollups.add(rollup);
+            }
+        }
+
+        return rollups;
+    }
+
+    /*************************************************************************************************************
+     * @description Create the default Contact Soft Credit Rollups
+     */
+    private static List<CRLP_RollupCMT.Rollup> buildDefaultSoftCreditRollups() {
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+
+        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
+            if (summaryObjectField.containsIgnoreCase('soft_credit')) {
+                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
+                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+
+                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
+                rollup.description = rollupText[1];
+                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
+                rollup.filterGroupRecordName = rollupDetails[1];
+                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
+                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
+                rollup.operation = rollupDetails[4];
+                rollup.yearlyOperationType = rollupDetails[5];
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                if (!String.isEmpty(rollupDetails[6])) {
+                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
+                }
+                rollups.add(rollup);
+            }
+        }
+
+        return rollups;
+    }
+
+    /*************************************************************************************************************
+     * @description Create the default GAU Rollups
+     */
+    private static List<CRLP_RollupCMT.Rollup> buildDefaultGAURollups() {
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+
+        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
+            if (summaryObjectField.startsWith('General_Accounting_Unit__c.')) {
+                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
+                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+
+                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
+                rollup.description = rollupText[1];
+                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
+                rollup.filterGroupRecordName = rollupDetails[1];
+                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
+                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
+                rollup.operation = rollupDetails[4];
+                rollup.yearlyOperationType = rollupDetails[5];
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                if (!String.isEmpty(rollupDetails[6])) {
+                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
+                }
+                rollups.add(rollup);
+            }
+        }
+        return rollups;
     }
 
     /*************************************************************************************************************
@@ -206,5 +391,22 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rtDevNames.add(defRT);   // default to this if there are no current exclusions
         }
         return String.join(new List<String>(rtDevNames), ';');
+    }
+
+    /**
+     * @description The Object.Field strings defined in this class do not apply the npsp__ namespace for fields that
+     * are in the npsp package. This method parses that string value and applies the appropriate namespace to the
+     * object and/or field names as necessary.
+     * @param objFieldData Object.Field (or just Object).
+     * @return Object.Field with applied npsp namespace where necessary
+     */
+    private static String applyNameSpaceToObjectField(String objFieldData) {
+        if (objFieldData.contains('.')) {
+            String obj = objFieldData.split('\\.')[0];
+            String fld = objFieldData.split('\\.')[1];
+            return UTIL_Namespace.StrAllNSPrefix(obj) + '.' + UTIL_Namespace.StrAllNSPrefix(fld);
+        } else {
+            return UTIL_Namespace.StrAllNSPrefix(objFieldData);
+        }
     }
 }

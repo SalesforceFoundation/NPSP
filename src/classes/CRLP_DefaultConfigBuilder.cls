@@ -1,0 +1,444 @@
+/*
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2018
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups2.htm
+* @description Static variables used to create the custom metadata type record for Customizable Rollups from
+* the legacy rollup settings in the NPSP Custom Settings objects.
+*/
+public class CRLP_DefaultConfigBuilder {
+
+    /** @description Prefix all CMT DeveloperName values with this */
+    public static final String RecordNamePrefix = 'NPSP_';
+
+    /** @description Legacy Account/Contact rollup settings are stored in this custom settings object */
+    public static final npo02__Households_Settings__c legacySettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+    /** @description Set to True if the legacy Rollup Settings are different for Contacts versus Accounts */
+    public static final Boolean isDifferentContactFilterGroupNeeded =
+            (legacySettings.npo02__Excluded_Account_Opp_Rectypes__c != legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c
+            || legacySettings.npo02__Excluded_Account_Opp_Types__c != legacySettings.npo02__Excluded_Contact_Opp_Types__c);
+
+    /** @description Legacy Allocation rollup settings are stored in this custom settings object */
+    public static final Allocations_Settings__c legacyAllocSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
+
+    /** @description Number of days to use for all the N_Days rollups */
+    private static final String LastNDaysString = (legacySettings.npo02__Rollup_N_Day_Value__c != null ?
+        String.valueOf(legacySettings.npo02__Rollup_N_Day_Value__c) : '365');
+
+    /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Account rollups) */
+    public static String FilterGroup_Donations_Accounts = RecordNamePrefix + 'ClosedWon_Donations' +
+            (isDifferentContactFilterGroupNeeded  ? '_Accounts' : '');
+
+    /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Contact rollups) */
+    public static String FilterGroup_Donations_Contacts = RecordNamePrefix + 'ClosedWon_Donations' +
+            (isDifferentContactFilterGroupNeeded ? '_Contacts' : '');
+
+    /** @description The RecordName for the default filter group of Closed Won Membership */
+    public static final String FilterGroup_Membership = RecordNamePrefix + 'ClosedWon_Memberships';
+
+    /** @description The RecordName for the default filter group to use for Allocations Rollups */
+    public static final String FilterGroup_Allocations = RecordNamePrefix + 'Allocations_Filter';
+
+    // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
+    private static final String allocAmountFld = 'Allocation__c.Amount__c';
+    private static final String pscAmountFld = 'Partial_Soft_Credit__c.Amount__c';
+    private static final String oppAmountFld = 'Opportunity.Amount';
+    private static final String oppCloseDateFld = 'Opportunity.CloseDate';
+
+    /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
+     * following set of rollup properties
+     * List<String>{ DetailObject.Field, FilterGroupRecordName, AmountObject.Field, DateObject.Field, OperationString, YearlyOperationString, IntValue }
+     */
+    public static Map<String, List<String>> rollupDetailsBySummaryField = new Map<String, List<String>>{
+
+            /* ======== Account Hard Credit ======== */
+            'Account.npo02__AverageAmount__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+            'Account.npo02__Best_Gift_Year__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+            'Account.npo02__Best_Gift_Year_Total__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+            'Account.npo02__FirstCloseDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'Account.npo02__LargestAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+            'Account.npo02__LastCloseDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Account.npo02__LastOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Account.npo02__NumberOfClosedOpps__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
+            'Account.npo02__OppAmount2YearsAgo__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+            'Account.npo02__OppAmountLastNDays__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+            'Account.npo02__OppAmountLastYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+            'Account.npo02__OppAmountThisYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+            'Account.npo02__OppsClosed2YearsAgo__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+            'Account.npo02__OppsClosedLastNDays__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+            'Account.npo02__OppsClosedLastYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+            'Account.npo02__OppsClosedThisYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+            'Account.npo02__SmallestAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+            'Account.npo02__TotalOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+
+            /* ======== Account Membership ======== */
+            'Account.npo02__TotalMembershipOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+            'Account.npo02__LastMembershipAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', '', '' },
+            'Account.npo02__LastMembershipDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', '', '' },
+            'Account.npo02__LastMembershipLevel__c' =>
+                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Account.npo02__LastMembershipOrigin__c' =>
+                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Account.npo02__MembershipEndDate__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, oppAmountFld, 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
+            'Account.npo02__MembershipJoinDate__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, oppAmountFld, 'Opportunity.npe01__Membership_Start_Date__c', 'Last', 'All_Time', '' },
+            'Account.npo02__NumberOfMembershipOpps__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
+
+            /* ======== Contact Hard Credit ======== */
+            'Contact.npo02__AverageAmount__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+            'Contact.npo02__Best_Gift_Year__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+            'Contact.npo02__Best_Gift_Year_Total__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+            'Contact.npo02__FirstCloseDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'Contact.npo02__LargestAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+            'Contact.npo02__LastCloseDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__LastOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__NumberOfClosedOpps__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
+            'Contact.npo02__OppAmount2YearsAgo__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+            'Contact.npo02__OppAmountLastNDays__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+            'Contact.npo02__OppAmountLastYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+            'Contact.npo02__OppAmountThisYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+            'Contact.npo02__OppsClosed2YearsAgo__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+            'Contact.npo02__OppsClosedLastNDays__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+            'Contact.npo02__OppsClosedLastYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+            'Contact.npo02__OppsClosedThisYear__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+            'Contact.npo02__SmallestAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+            'Contact.npo02__TotalOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+
+            /* ======== Contact Soft Credit ======== */
+            'Contact.First_Soft_Credit_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'Contact.Last_Soft_Credit_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.First_Soft_Credit_Amount__c' =>
+                    new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'Contact.Largest_Soft_Credit_Amount__c' =>
+                    new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+            'Contact.Last_Soft_Credit_Amount__c' =>
+                    new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__Soft_Credit_Last_Year__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+            'Contact.npo02__Soft_Credit_This_Year__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+            'Contact.npo02__Soft_Credit_Total__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
+            'Contact.npo02__Soft_Credit_Two_Years_Ago__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+            'Contact.Number_of_Soft_Credits__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
+            'Contact.Number_of_Soft_Credits_Last_N_Days__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+            'Contact.Number_of_Soft_Credits_Last_Year__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+            'Contact.Number_of_Soft_Credits_This_Year__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+            'Contact.Number_of_Soft_Credits_Two_Years_Ago__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+            'Contact.Soft_Credit_Last_N_Days__c' =>
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+
+            /* ======== Contact Membership ======== */
+            'Contact.npo02__TotalMembershipOppAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+            'Contact.npo02__NumberOfMembershipOpps__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, 'Opportunity', 'Opportunity', 'Count', '', '' },
+            'Contact.npo02__MembershipEndDate__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
+            'Contact.npo02__MembershipJoinDate__c' =>
+                    new List<String>{ 'Opportunity', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_Start_Date__c', 'Last', 'All_Time', '' },
+            'Contact.npo02__LastMembershipAmount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__LastMembershipDate__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__LastMembershipLevel__c' =>
+                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+            'Contact.npo02__LastMembershipOrigin__c' =>
+                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+
+            /* ======== Allocation to GAU ======== */
+            'General_Accounting_Unit__c.Average_Allocation__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+            'General_Accounting_Unit__c.First_Allocation_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'General_Accounting_Unit__c.Largest_Allocation__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+            'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c' =>
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+            'General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c' =>
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+            'General_Accounting_Unit__c.Number_of_Allocations_This_Year__c' =>
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+            'General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c' =>
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+            'General_Accounting_Unit__c.Smallest_Allocation__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+            'General_Accounting_Unit__c.Total_Allocations__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
+            'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+            'General_Accounting_Unit__c.Total_Allocations_Last_Year__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+            'General_Accounting_Unit__c.Total_Allocations_This_Year__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+            'General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+            'General_Accounting_Unit__c.Total_Number_of_Allocations__c' =>
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' }
+    };
+
+    /** @description Map of Rollup Name & Descriptions; Keeping these separate from the Rollup details map just
+     * to make the maps easier to read.
+     * List<String>{ Rollup Label, Rollup Description }
+     */
+    public static final Map<String, List<String>> rollupNameAndDescriptionsBySummaryField = new Map<String, List<String>>{
+
+            /* ======== Account Hard Credit ======== */
+            'Account.npo02__TotalOppAmount__c' =>
+                    new List<String>{ 'Account: Total Gifts', 'Total of all gifts from the household' },
+            'Account.npo02__AverageAmount__c' =>
+                    new List<String>{ 'Account: Average Gift', 'Average of all Gifts to the Household' },
+            'Account.npo02__Best_Gift_Year__c' =>
+                    new List<String>{ 'Account: Best Gift Year', 'Year with the highest total gifts' },
+            'Account.npo02__Best_Gift_Year_Total__c' =>
+                    new List<String>{ 'Account: Best Gift Year Total', 'Total gifts in the year with the highest total gifts' },
+            'Account.npo02__FirstCloseDate__c' =>
+                    new List<String>{ 'Account: First Gift Date', 'Date of the first gift from the Household' },
+            'Account.npo02__LargestAmount__c' =>
+                    new List<String>{ 'Account: Largest Gift Amount', 'Largest gift amount from the Household' },
+            'Account.npo02__LastCloseDate__c' =>
+                    new List<String>{ 'Account: Last Gift Date', 'Date of the last gift from the Household' },
+            'Account.npo02__LastOppAmount__c' =>
+                    new List<String>{ 'Account: Last Gift Amount', 'Amount of the last gift from the Household' },
+            'Account.npo02__NumberOfClosedOpps__c' =>
+                    new List<String>{ 'Account: Count All Gifts', 'Total number of all gifts from the Household' },
+            'Account.npo02__OppAmount2YearsAgo__c' =>
+                    new List<String>{ 'Account: Total Gifts Two Years Ago', 'Total of all gifts from 2 Calendar Years ago' },
+            'Account.npo02__OppAmountLastNDays__c' =>
+                    new List<String>{ 'Account: Total Gifts Last ' + LastNDaysString + ' Days', 'Total of all gifts for the last ' + LastNDaysString + ' days' },
+            'Account.npo02__OppAmountLastYear__c' =>
+                    new List<String>{ 'Account: Total Gifts Last Year', 'Total of all gifts from the previous Calendar year' },
+            'Account.npo02__OppAmountThisYear__c' =>
+                    new List<String>{ 'Account: Total Gifts This Year', 'Total of all gifts in the current Calendar year' },
+            'Account.npo02__OppsClosed2YearsAgo__c' =>
+                    new List<String>{ 'Account: Count Gifts Two Years Ago', 'Count of all gifts from 2 Calendar Years ago' },
+            'Account.npo02__OppsClosedLastNDays__c' =>
+                    new List<String>{ 'Account: Count Gifts Last ' + LastNDaysString + ' Days', 'Count of all gifts for the last ' + LastNDaysString + ' days' },
+            'Account.npo02__OppsClosedLastYear__c' =>
+                    new List<String>{ 'Account: Count Gifts Last Year', 'Count of all gifts from the previous Calendar year' },
+            'Account.npo02__OppsClosedThisYear__c' =>
+                    new List<String>{ 'Account: Count Gifts This Year', 'Count of all gifts in the current Calendar year' },
+            'Account.npo02__SmallestAmount__c' =>
+                    new List<String>{ 'Account: Smallest Gift Amount', 'Smallest gift amount from the Household' },
+
+            /* ======== Account Membership ======== */
+            'Account.npo02__TotalMembershipOppAmount__c' =>
+                    new List<String>{ 'Account Membership: Total', 'Total of all Memberships for the household' },
+            'Account.npo02__LastMembershipAmount__c' =>
+                    new List<String>{ 'Account Membership: Last Amount', 'Amount of the most recent Membership Opportunity for the household' },
+            'Account.npo02__LastMembershipDate__c' =>
+                    new List<String>{ 'Account Membership: Last Close Date', 'CloseDate of the most recent Membership Opportunity for the household' },
+            'Account.npo02__LastMembershipLevel__c' =>
+                    new List<String>{ 'Account Membership: Last Level', 'Membership Level from the most recent Membership Opportunity for the household' },
+            'Account.npo02__LastMembershipOrigin__c' =>
+                    new List<String>{ 'Account Membership: Last Origin', 'Membership Origin from the most recent Membership Opportunity for the household' },
+            'Account.npo02__MembershipEndDate__c' =>
+                    new List<String>{ 'Account Membership: Last End Date', 'Latest of Membership End Date for the household' },
+            'Account.npo02__MembershipJoinDate__c' =>
+                    new List<String>{ 'Account Membership: Last Join Date', 'Latest Membership Join Date for the household' },
+            'Account.npo02__NumberOfMembershipOpps__c' =>
+                    new List<String>{ 'Account Membership: Count', 'Count of all Membership Opportunities for the household' },
+
+            /* ======== Contact Hard Credit ======== */
+            'Contact.npo02__TotalOppAmount__c' =>
+                    new List<String>{ 'Contact: Total Gifts', 'Total of all gifts where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__AverageAmount__c' =>
+                    new List<String>{ 'Contact: Average Gift', 'Average of all Gifts where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__Best_Gift_Year__c' =>
+                    new List<String>{ 'Contact: Best Gift Year', 'Year with highest total gifts where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__Best_Gift_Year_Total__c' =>
+                    new List<String>{ 'Contact: Best Gift Year Total', 'Total of all gifts in the best gift year where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__FirstCloseDate__c' =>
+                    new List<String>{ 'Contact: First Gift Date', 'The date of the first gift where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LargestAmount__c' =>
+                    new List<String>{ 'Contact: Largest Gift Amount', 'The largest gift where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastCloseDate__c' =>
+                    new List<String>{ 'Contact: Last Gift Date', 'The close date most recent gift where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastOppAmount__c' =>
+                    new List<String>{ 'Contact: Last Gift Amount', 'The amount of the most recent gift where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__NumberOfClosedOpps__c' =>
+                    new List<String>{ 'Contact: Count All Gifts', 'The count of all gifts where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppAmount2YearsAgo__c' =>
+                    new List<String>{ 'Contact: Total Gifts Two Years Ago', 'The total of all gifts two calendar years ago where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppAmountLastNDays__c' =>
+                    new List<String>{ 'Contact: Total Gifts Last ' + LastNDaysString + ' Days', 'The total of all gifts in the last ' + LastNDaysString + ' days where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppAmountLastYear__c' =>
+                    new List<String>{ 'Contact: Total Gifts Last Year', 'The total of all gifts in the last calendar year where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppAmountThisYear__c' =>
+                    new List<String>{ 'Contact: Total Gifts This Year', 'The total of all gifts in the current calendar year where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppsClosed2YearsAgo__c' =>
+                    new List<String>{ 'Contact: Count Gifts Two Years Ago', 'The count of all gifts two calendar years ago where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppsClosedLastNDays__c' =>
+                    new List<String>{ 'Contact: Count Gifts Last ' + LastNDaysString + ' Days', 'The count of all gifts in the last ' + LastNDaysString + ' days where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppsClosedLastYear__c' =>
+                    new List<String>{ 'Contact: Count Gifts Last Year', 'The count of all gifts in the last calendar year where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__OppsClosedThisYear__c' =>
+                    new List<String>{ 'Contact: Count Gifts This Year', 'The count of all gifts in the current calendar year where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__SmallestAmount__c' =>
+                    new List<String>{ 'Contact: Smallest Gift Amount', 'The smallest gift where the Contact is the Opportunity Primary Contact' },
+
+            /* ======== Contact Soft Credit ======== */
+            'Contact.First_Soft_Credit_Date__c' =>
+                    new List<String>{ 'Contact Soft Credit: First Date', 'Date of the first gift where the Contact is designed for Soft Credit' },
+            'Contact.Last_Soft_Credit_Date__c' =>
+                    new List<String>{ 'Contact Soft Credit: Last Date', 'Date of the lasat gift where the Contact is designed for Soft Credit' },
+            'Contact.First_Soft_Credit_Amount__c' =>
+                    new List<String>{ 'Contact Soft Credit: First Amount', 'Amount of the first gift where the Contact is designed for Soft Credit' },
+            'Contact.Largest_Soft_Credit_Amount__c' =>
+                    new List<String>{ 'Contact Soft Credit: Largest Amount', 'Largest gift where the Contact is designed for Soft Credit' },
+            'Contact.Last_Soft_Credit_Amount__c' =>
+                    new List<String>{ 'Contact Soft Credit: Last Amount', 'Amount of the most recent gift where the Contact is designed for Soft Credit' },
+            'Contact.npo02__Soft_Credit_Total__c' =>
+                    new List<String>{ 'Contact Soft Credit: Total', 'Total of all gifts where the Contact is designed for Soft Credit' },
+            'Contact.npo02__Soft_Credit_This_Year__c' =>
+                    new List<String>{ 'Contact Soft Credit: This Year', 'Total of all gifts in the current calendar year where the Contact is designed for Soft Credit' },
+            'Contact.npo02__Soft_Credit_Last_Year__c' =>
+                    new List<String>{ 'Contact Soft Credit: Last Year', 'Total of all gifts in the previous calendar year where the Contact is designed for Soft Credit' },
+            'Contact.npo02__Soft_Credit_Two_Years_Ago__c' =>
+                    new List<String>{ 'Contact Soft Credit: Two Years Ago', 'Total of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
+            'Contact.Soft_Credit_Last_N_Days__c' =>
+                    new List<String>{ 'Contact Soft Credit: Last N Days', 'Total of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
+            'Contact.Number_of_Soft_Credits__c' =>
+                    new List<String>{ 'Contact Soft Credit: Count All', 'Count of all gifts where the Contact is designed for Soft Credit' },
+            'Contact.Number_of_Soft_Credits_This_Year__c' =>
+                    new List<String>{ 'Contact Soft Credit: Count This Year', 'Count of all gifts in the current calendar year where the Contact is designed for Soft Credit' },
+            'Contact.Number_of_Soft_Credits_Last_Year__c' =>
+                    new List<String>{ 'Contact Soft Credit: Count Last Year', 'Count of all gifts in the previous calendar year where the Contact is designed for Soft Credit' },
+            'Contact.Number_of_Soft_Credits_Two_Years_Ago__c' =>
+                    new List<String>{ 'Contact Soft Credit: Count Two Years', 'Count of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
+            'Contact.Number_of_Soft_Credits_Last_N_Days__c' =>
+                    new List<String>{ 'Contact Soft Credit: Count Last N Days', 'Count of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
+
+            /* ======== Contact Membership ======== */
+            'Contact.npo02__TotalMembershipOppAmount__c' =>
+                    new List<String>{ 'Contact Memberships: Total', 'Total of all Membership Donations where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__NumberOfMembershipOpps__c' =>
+                    new List<String>{ 'Contact Memberships: Count', 'Count of all Membership Donations where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__MembershipEndDate__c' =>
+                    new List<String>{ 'Contact Memberships: Last End Date', 'Latest Membership End Date where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__MembershipJoinDate__c' =>
+                    new List<String>{ 'Contact Memberships: Last Join Date', 'Latest Membership Join Date where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastMembershipAmount__c' =>
+                    new List<String>{ 'Contact Memberships: Last Amount', 'Amount of the most recent Membership Opportunity where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastMembershipDate__c' =>
+                    new List<String>{ 'Contact Memberships: Last CloseDate', 'Latest Membership Close Date where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastMembershipLevel__c' =>
+                    new List<String>{ 'Contact Memberships: Last Level', 'Latest Membership Level where the Contact is the Opportunity Primary Contact' },
+            'Contact.npo02__LastMembershipOrigin__c' =>
+                    new List<String>{ 'Contact Memberships: Last Origin', 'Latest Membership Origin where the Contact is the Opportunity Primary Contact' },
+
+            /* ======== Allocation to GAU ======== */
+            'General_Accounting_Unit__c.Total_Allocations__c' =>
+                    new List<String>{ 'GAU: Total Allocations All Time', 'Total of all Allocation Amounts to this GAU' },
+            'General_Accounting_Unit__c.Average_Allocation__c' =>
+                    new List<String>{ 'GAU: Average Allocation', 'Average of all Allocation Amounts to this GAU' },
+            'General_Accounting_Unit__c.First_Allocation_Date__c' =>
+                    new List<String>{ 'GAU: First Allocation Date', 'Date of the first Opportunity with an Allocation to this GAU' },
+            'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
+                    new List<String>{ 'GAU: Last Allocation Date', 'Date of the last Opportunity with an Allocation to this GAU' },
+            'General_Accounting_Unit__c.Largest_Allocation__c' =>
+                    new List<String>{ 'GAU: Largest Allocation', 'Largest amount allocated to this GAU' },
+            'General_Accounting_Unit__c.Smallest_Allocation__c' =>
+                    new List<String>{ 'GAU: Smallest Allocation', 'Smallest amount of allocated to this GAU' },
+            'General_Accounting_Unit__c.Total_Number_of_Allocations__c' =>
+                    new List<String>{ 'GAU: Count Allocations All Time', 'Count of all Allocation Amounts to this GAU' },
+            'General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c' =>
+                    new List<String>{ 'GAU: Count Allocations Last ' + LastNDaysString + ' Days', 'Count of all Allocation Amounts in the last ' + LastNDaysString + ' days to this GAU' },
+            'General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c' =>
+                    new List<String>{ 'GAU: Count Allocations Last Year','Count of all Allocation Amounts in the last calendar year to this GAU' },
+            'General_Accounting_Unit__c.Number_of_Allocations_This_Year__c' =>
+                    new List<String>{ 'GAU: Count Allocations This Year', 'Count of all Allocation Amounts in the current calendar year to this GAU' },
+            'General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c' =>
+                    new List<String>{ 'GAU: Count Allocations Two Years Ago', 'Count of all Allocation Amounts two calendar years ago to this GAU' },
+            'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
+                    new List<String>{ 'GAU: Total Allocations Last ' + LastNDaysString + ' Days', 'Total of all Allocation Amounts in the last ' + LastNDaysString + ' days to this GAU' },
+            'General_Accounting_Unit__c.Total_Allocations_Last_Year__c' =>
+                    new List<String>{ 'GAU: Total Allocations Last Year', 'Total of all Allocation Amounts in the last calendar year to this GAU' },
+            'General_Accounting_Unit__c.Total_Allocations_This_Year__c' =>
+                    new List<String>{ 'GAU: Total Allocations This Year', 'Total of all Allocation Amounts in the current calendar year to this GAU' },
+            'General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c' =>
+                    new List<String>{ 'GAU: Total Allocations Two Years Ago', 'Total of all Allocation Amounts two calendar years ago to this GAU' }
+    };
+
+}
