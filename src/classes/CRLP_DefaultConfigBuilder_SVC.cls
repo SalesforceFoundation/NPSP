@@ -81,7 +81,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // ==============================================================================================================
         // Default "Donations: Close/Won Stage" filter group -- All Hard Credit, Soft Credit, and GAU Rollups
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupClosedWonDonations = new CRLP_RollupCMT.FilterGroup('Donations: Closed Won excluding RTs xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        CRLP_RollupCMT.FilterGroup groupClosedWonDonations = new CRLP_RollupCMT.FilterGroup('Donations: Closed Won excluding RTs');
         groupClosedWonDonations.recordName = FilterGroup_Donations;
         groupClosedWonDonations.description = 'Closed/Won Non-Membership Opportunities for all Hard and Soft Credit Rollups. ' +
                 'The additional filter rule for SoftCredit Donor Role is only applied when rolling up Soft Credits to the Account or Contact objects';
@@ -121,7 +121,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // ==============================================================================================================
         // Default "Memberships: Close/Won Stage" filter group
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupMemberships = new CRLP_RollupCMT.FilterGroup('Membership: Closed Won excluding RTs xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        CRLP_RollupCMT.FilterGroup groupMemberships = new CRLP_RollupCMT.FilterGroup('Membership: Closed Won excluding RTs');
         groupMemberships.description = 'Closed/Won Membership Opportunities for all Membership Rollups';
         groupMemberships.recordName = FilterGroup_Membership;
 
@@ -132,7 +132,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage2.value = 'true';
         groupMemberships.rules.add(ruleCloseWonStage2);
 
-        CRLP_RollupCMT.FilterRule ruleMembershipRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Excluded Record Types');
+        CRLP_RollupCMT.FilterRule ruleMembershipRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Type(s)');
         ruleMembershipRecordType.recordName = RecordNamePrefix + ruleMembershipRecordType.recordName;
         ruleMembershipRecordType.objectData = 'Opportunity.RecordTypeId';
         ruleMembershipRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
@@ -142,7 +142,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // ==============================================================================================================
         // Default "Allocations" filter group
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupAllocations = new CRLP_RollupCMT.FilterGroup('ALlocations: Closed Won excluding RTs xxxxxxxxxxxxxxxxxxxxxxxxxxx');
+        CRLP_RollupCMT.FilterGroup groupAllocations = new CRLP_RollupCMT.FilterGroup('Allocations: Closed Won excluding RTs');
         groupAllocations.description = 'Closed/Won Opportunities for the Allocation to GAU Rollup';
         groupAllocations.recordName = FilterGroup_Allocations;
 
