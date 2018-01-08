@@ -67,7 +67,7 @@ public with sharing class BDI_DryRun_TEST {
             Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.Contact1Imported__c);
             system.assertEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
@@ -103,7 +103,7 @@ public with sharing class BDI_DryRun_TEST {
             Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.Contact1Imported__c);
             system.assertEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
@@ -141,7 +141,7 @@ public with sharing class BDI_DryRun_TEST {
             Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.Contact1Imported__c);
             system.assertEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
@@ -190,7 +190,7 @@ public with sharing class BDI_DryRun_TEST {
             Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -228,7 +228,7 @@ public with sharing class BDI_DryRun_TEST {
             Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.Account1Imported__c);
             system.assertEquals(null, di.Account2Imported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.Account1ImportStatus__c);
@@ -272,7 +272,7 @@ public with sharing class BDI_DryRun_TEST {
             Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Account1Imported__c);
             system.assertNotEquals(null, di.Account2Imported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Account1ImportStatus__c);
@@ -322,7 +322,7 @@ public with sharing class BDI_DryRun_TEST {
         listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c order by Home_City__c];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.HomeAddressImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.HomeAddressImportStatus__c);
         }
@@ -374,7 +374,7 @@ public with sharing class BDI_DryRun_TEST {
         listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c order by Home_City__c];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.HomeAddressImported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.HomeAddressImportStatus__c);
         }
@@ -410,12 +410,12 @@ public with sharing class BDI_DryRun_TEST {
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
             if (di.Contact1_Firstname__c == 'fail') {
-                system.assertEquals(label.bdiDryRunError, di.Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiDryRunError, di.Status__c);
                 system.assertEquals(null, di.Contact1Imported__c);
                 system.assertEquals(null, di.HouseholdAccountImported__c);
                 system.assertNotEquals(null, di.Contact1ImportStatus__c);
             } else {
-                system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
                 system.assertEquals(null, di.Contact1Imported__c);
                 system.assertEquals(null, di.HouseholdAccountImported__c);
                 system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
@@ -456,7 +456,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertEquals(null, di.Contact1Imported__c);
             system.assertEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
@@ -516,7 +516,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -582,7 +582,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -648,7 +648,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -717,7 +717,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -786,7 +786,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);
@@ -846,7 +846,7 @@ public with sharing class BDI_DryRun_TEST {
             DonationImportStatus__c, DonationImported__c, Donation_Possible_Matches__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
-            system.assertEquals(label.bdiDryRunError, di.Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiDryRunError, di.Status__c);
             system.assertNotEquals(null, di.Contact1Imported__c);
             system.assertNotEquals(null, di.HouseholdAccountImported__c);
             system.assertEquals(label.bdiDryRunMatched, di.Contact1ImportStatus__c);

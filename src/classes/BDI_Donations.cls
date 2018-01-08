@@ -234,7 +234,7 @@ public class BDI_Donations {
         for (DataImport__c di : bdi.listDI) {
             
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed) {
+            if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                continue;
             }
             
@@ -447,7 +447,7 @@ public class BDI_Donations {
         for (DataImport__c di : listDIDonations) {
 
             // opps
-            if (di.DonationImportStatus__c == label.bdiFailed) {
+            if (di.DonationImportStatus__c == BDI_DataImport_API.bdiFailed) {
                 di.DonationImportStatus__c = bdi.statusDIFailed();
             } else if (di.DonationImportStatus__c == label.bdiMatched) {
                 di.DonationImportStatus__c = bdi.statusMatchedExisting();
@@ -460,7 +460,7 @@ public class BDI_Donations {
             }
 
             // payments
-            if (di.PaymentImportStatus__c == label.bdiFailed) {
+            if (di.PaymentImportStatus__c == BDI_DataImport_API.bdiFailed) {
                 di.PaymentImportStatus__c = bdi.statusDIFailed();
             } else if (di.PaymentImportStatus__c == label.bdiMatched) {
                 di.PaymentImportStatus__c = bdi.statusMatchedExisting();
@@ -487,7 +487,7 @@ public class BDI_Donations {
         list<ID> listOppId = new list<ID>();        
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                continue;
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 listOppId.add(di.DonationImported__c);
@@ -506,7 +506,7 @@ public class BDI_Donations {
         // store the Payments into our shared map and update their DI record
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                continue;
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
@@ -551,7 +551,7 @@ public class BDI_Donations {
         // update payments
         for (DataImport__c di : listDIDonations) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                continue;            
             if (di.PaymentImported__c != null) {
                 npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);

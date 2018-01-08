@@ -315,7 +315,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecImported {
         get {
             if (apexJobId != null) {
-                String status = isDryRun ? label.bdiDryRunValidated : label.bdiImported;
+                String status = isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
                 crecImported = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecImported;
             }
@@ -330,7 +330,7 @@ public with sharing class BDI_DataImport_CTRL {
     public integer crecFailed {
         get {
             if (apexJobId != null) {
-                String status = isDryRun ? label.bdiDryRunError : label.bdiFailed;
+                String status = isDryRun ? BDI_DataImport_API.bdiDryRunError : BDI_DataImport_API.bdiFailed;
                 crecFailed = [select count() from DataImport__c where Status__c = :status and ApexJobId__c = :apexJobId];
                 return crecFailed;
             }
@@ -346,7 +346,7 @@ public with sharing class BDI_DataImport_CTRL {
     */
     public integer crecToProcess {
         get {
-            crecToProcess = [select count() from DataImport__c where Status__c <> :label.bdiImported and
+            crecToProcess = [select count() from DataImport__c where Status__c <> :BDI_DataImport_API.bdiImported and
             NPSP_Data_Import_Batch__c = :diBatch.Id];
             return crecToProcess;
         }

@@ -185,7 +185,7 @@ public with sharing class BDI_ContactService {
 
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con = ContactFromDi(di, iCx);
             if (con == null)
@@ -312,7 +312,7 @@ public with sharing class BDI_ContactService {
 
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             List<String> listDiKey = listDIKeyCx(di, strCx);
             Contact con = ContactFromDiKeys(listDiKey);
@@ -355,7 +355,7 @@ public with sharing class BDI_ContactService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con = ContactFromDi(di, 1);
             if (con != null && con.AccountId != null) {
@@ -420,7 +420,7 @@ public with sharing class BDI_ContactService {
 
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             // SF Id's

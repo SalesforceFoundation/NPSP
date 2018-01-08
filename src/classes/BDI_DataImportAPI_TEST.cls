@@ -103,7 +103,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(3, listDI.size());
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
-        system.assertEquals(label.bdiImported, listDI[2].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
         list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
         system.assertEquals(2, listBatches.size());
@@ -149,7 +149,7 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
         system.assertEquals(3, listDI.size());
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
 
@@ -205,8 +205,8 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
         system.assertEquals(3, listDI.size());
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);
-        system.assertEquals(label.bdiImported, listDI[1].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
 
         list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
@@ -301,7 +301,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         list<Contact> listCon = [select Id, Name from Contact];
         system.assertEquals(3, listCon.size());
 
-        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :label.bdiImported];
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported];
         system.assertEquals(3, listDI.size());
     }
 
@@ -338,7 +338,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         list<Contact> listCon = [select Id, Name from Contact];
         system.assertEquals(0, listCon.size());
 
-        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :label.bdiDryRunValidated];
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiDryRunValidated];
         system.assertEquals(3, listDI.size());
     }
 }

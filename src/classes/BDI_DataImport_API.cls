@@ -50,6 +50,15 @@ global with sharing class BDI_DataImport_API {
     global static final string BestMatchOrCreate = 'Best Match or Create'; // Use the best match. Create opportunity if no match.
 
     /*******************************************************************************************************
+    * @description master values for the BDI Status field picklist
+    */
+    global static final string bdiImported = 'Imported';
+    global static final string bdiFailed = 'Failed';
+    global static final string bdiDryRunValidated = 'Dry Run - Validated';
+    global static final string bdiDryRunError = 'Dry Run - Error';
+
+
+    /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported and do not belong
     * to any specific batch. Their status is changed to imported, once the process finishes.
     * @return ID The ID of the batch job that performs the data import.

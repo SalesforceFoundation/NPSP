@@ -59,7 +59,7 @@ global with sharing class BDI_DataImportService {
         // construct or SOQL for the batch
         strSoql = 'SELECT ' + String.join(listStrDataImportFields, ',');
         strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';
+        strSoql += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 
         if (batchId != null) {
             strSoql += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
@@ -255,7 +255,7 @@ global with sharing class BDI_DataImportService {
                 SELECT COUNT()
                 FROM DataImport__c
                 WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
-                AND Status__c = :label.bdiImported
+                AND Status__c = :BDI_DataImport_API.bdiImported
                 AND ApexJobId__c = :apexJobId
             ];
             integer cRecordsFailed = cRecordsProcessed - cRecordsSucceeded;
@@ -410,7 +410,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusDIFailed() {
-        return isDryRun ? label.bdiDryRunError : label.bdiFailed;
+        return isDryRun ? BDI_DataImport_API.bdiDryRunError : BDI_DataImport_API.bdiFailed;
     }
 
     /*******************************************************************************************************
@@ -418,7 +418,7 @@ global with sharing class BDI_DataImportService {
     * @return String
     */
     public String statusDISuccess() {
-        return isDryRun ? label.bdiDryRunValidated : label.bdiImported;
+        return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
     }
 
     /*******************************************************************************************************
@@ -547,7 +547,7 @@ global with sharing class BDI_DataImportService {
         for (DataImport__c di: listDI) {
             if (di.Status__c == null) {
                 di.Status__c = statusDISuccess();
-            } else if (di.Status__c == label.bdiFailed) {
+            } else if (di.Status__c == BDI_DataImport_API.bdiFailed) {
                 di.Status__c = statusDIFailed();
             }
             di.ImportedDate__c = system.now();
@@ -622,7 +622,7 @@ global with sharing class BDI_DataImportService {
     */
     public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
         //system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
-        di.Status__c = label.bdiFailed;
+        di.Status__c = BDI_DataImport_API.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
             di.put(strStatusField, strError.left(255));
@@ -783,7 +783,7 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HouseholdAccountImported__c == null)
                 continue;
@@ -915,7 +915,7 @@ global with sharing class BDI_DataImportService {
         // create/update our A1's
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 1);
@@ -981,7 +981,7 @@ global with sharing class BDI_DataImportService {
         setDIKeyUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 2);
@@ -1168,7 +1168,7 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             // a1
@@ -1225,7 +1225,7 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 1);
@@ -1313,7 +1313,7 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con = ContactFromDi(di, 1);
             if (con != null && con.AccountId != null)
@@ -1335,7 +1335,7 @@ global with sharing class BDI_DataImportService {
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Contact con = ContactFromDi(di, 1);
@@ -1402,7 +1402,7 @@ global with sharing class BDI_DataImportService {
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
@@ -1447,7 +1447,7 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HouseholdAccountImported__c != null)
                 setHHId.add(di.HouseholdAccountImported__c);
@@ -1458,7 +1458,7 @@ global with sharing class BDI_DataImportService {
         // now update home address on the contacts and hh account
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con1 = ContactFromDi(di, 1);
             Contact con2 = ContactFromDi(di, 2);
@@ -1547,7 +1547,7 @@ global with sharing class BDI_DataImportService {
         Set<String> setStrCampaign = new Set<String>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.Donation_Campaign_Name__c != null)
                 setStrCampaign.add(di.Donation_Campaign_Name__c);
@@ -1564,7 +1564,7 @@ global with sharing class BDI_DataImportService {
         setStrCampaign.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             String strName = di.Donation_Campaign_Name__c;
             Campaign cmp;
@@ -1614,7 +1614,7 @@ global with sharing class BDI_DataImportService {
         // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
         for (DataImport__c di : listDI) {
             // skip that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             // only create CMs here for rows that don't have an opportunity
             if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {
