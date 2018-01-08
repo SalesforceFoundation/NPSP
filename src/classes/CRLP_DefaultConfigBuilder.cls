@@ -52,8 +52,8 @@ public class CRLP_DefaultConfigBuilder {
     public static final Allocations_Settings__c legacyAllocSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
     /** @description Number of days to use for all the N_Days rollups */
-    private static final String LastNDaysString = (legacySettings.npo02__Rollup_N_Day_Value__c != null ?
-        String.valueOf(legacySettings.npo02__Rollup_N_Day_Value__c) : '365');
+    public static final String LastNDaysString = (legacySettings.npo02__Rollup_N_Day_Value__c != null ?
+        String.valueOf(legacySettings.npo02__Rollup_N_Day_Value__c.intValue()) : '365');
 
     /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Account rollups) */
     public static String FilterGroup_Donations_Accounts = RecordNamePrefix + 'ClosedWon_Donations' +
@@ -378,7 +378,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.npo02__Soft_Credit_Two_Years_Ago__c' =>
                     new List<String>{ 'Contact Soft Credit: Two Years Ago', 'Total of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
             'Contact.Soft_Credit_Last_N_Days__c' =>
-                    new List<String>{ 'Contact Soft Credit: Last N Days', 'Total of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact Soft Credit: Last ' + LastNDaysString + ' Days', 'Total of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
             'Contact.Number_of_Soft_Credits__c' =>
                     new List<String>{ 'Contact Soft Credit: Count All', 'Count of all gifts where the Contact is designed for Soft Credit' },
             'Contact.Number_of_Soft_Credits_This_Year__c' =>
@@ -388,7 +388,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.Number_of_Soft_Credits_Two_Years_Ago__c' =>
                     new List<String>{ 'Contact Soft Credit: Count Two Years', 'Count of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
             'Contact.Number_of_Soft_Credits_Last_N_Days__c' =>
-                    new List<String>{ 'Contact Soft Credit: Count Last N Days', 'Count of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact Soft Credit: Count Last ' + LastNDaysString + ' Days', 'Count of all first gifts in the last ' + LastNDaysString + ' days where the Contact is designed for Soft Credit' },
 
             /* ======== Contact Membership ======== */
             'Contact.npo02__TotalMembershipOppAmount__c' =>

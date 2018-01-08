@@ -253,7 +253,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
                 CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
                 rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
                 rollup.description = rollupText[1];
                 rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
@@ -285,7 +285,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
                 CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
                 rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
                 rollup.description = rollupText[1];
                 rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
@@ -317,7 +317,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
                 CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
                 rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
                 rollup.description = rollupText[1];
                 rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
@@ -349,7 +349,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
                 CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).left(40);
+                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
                 rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
                 rollup.description = rollupText[1];
                 rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
