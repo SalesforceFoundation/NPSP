@@ -53,16 +53,11 @@ public class CRLP_DefaultConfigBuilder_SVC {
         List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
-        rollups.addAll(buildDefaultAccountRollups());
-        rollups.addAll(buildDefaultContactRollups());
-        rollups.addAll(buildDefaultSoftCreditRollups());
-        rollups.addAll(buildDefaultGAURollups());
+        rollups.addAll(buildDefaultRollups());
+        rollups.addAll(buildUserDefinedRollups());
 
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
-
-
-        // TODO -- User Defined Rollups!
 
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
         System.debug('Queued Customizable Rollups Metadata for Deployment: ' + jobId);
@@ -72,9 +67,6 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @description Create the 3 default Filter Groups used for Customizable Rollups using the legacy settings
      */
     private static List<CRLP_RollupCMT.FilterGroup> buildDefaultFilterGroups() {
-
-        // TODO: Need to create different Account / Contact Filter Groups for Donations if the legacy settings are different
-
         String acctDonation = 'Donations';  // Use this to differentiate Account from Contact filters if that is needed
         String contDonation = 'Donations';  // Use this to differentiate Account from Contact filters if that is needed
         if (CRLP_DefaultConfigBuilder.isDifferentContactFilterGroupNeeded) {
@@ -234,9 +226,9 @@ public class CRLP_DefaultConfigBuilder_SVC {
     }
 
     /*************************************************************************************************************
-     * @description Create the default Account Hard Credit and Membership Rollups
+     * @description Create the default Rollups for all standard NPSP rollup fields
      */
-    private static List<CRLP_RollupCMT.Rollup> buildDefaultAccountRollups() {
+    private static List<CRLP_RollupCMT.Rollup> buildDefaultRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
         // 0 = DetailObject.Field
@@ -248,122 +240,50 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // 6 = IntValue
 
         for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
-            if (summaryObjectField.startsWith('Account.')) {
-                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
-                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+            List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
+            List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
-                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
-                rollup.description = rollupText[1];
-                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
-                rollup.filterGroupRecordName = rollupDetails[1];
-                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
-                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
-                rollup.operation = rollupDetails[4];
-                rollup.yearlyOperationType = rollupDetails[5];
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                if (!String.isEmpty(rollupDetails[6])) {
-                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
-                }
-                rollups.add(rollup);
+            CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
+            rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
+            rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
+            rollup.description = rollupText[1];
+            rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
+            rollup.filterGroupRecordName = rollupDetails[1];
+            rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
+            rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
+            rollup.operation = rollupDetails[4];
+            rollup.yearlyOperationType = rollupDetails[5];
+            rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+            if (!String.isEmpty(rollupDetails[6])) {
+                rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
+            rollups.add(rollup);
         }
 
         return rollups;
     }
 
     /*************************************************************************************************************
-     * @description Create the default Contact Hard Credit Rollups
+     * @description Convert the User Defined Rollups if there are any
      */
-    private static List<CRLP_RollupCMT.Rollup> buildDefaultContactRollups() {
+    private static List<CRLP_RollupCMT.Rollup> buildUserDefinedRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
-        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
-            if (summaryObjectField.startsWith('Contact.') && !summaryObjectField.containsIgnoreCase('soft_credit')) {
-                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
-                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
+        for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
+            String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_','') + ' to ' +
+                    udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_','');
+            CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
+            // rollup.recordName = 'UDR_' + rollup.recordName;
+            rollup.summaryData = applyNameSpaceToObjectField(udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c);
+            rollup.description = 'User Defined Roll-up';
+            rollup.detailData  = 'Opportunity.' + udr.npo02__Source_Field__c;
+            rollup.filterGroupRecordName = CRLP_DefaultConfigBuilder.FilterGroup_Donations_Accounts;
+            rollup.amountData = 'Opportunity.Amount';
+            rollup.dateData  = 'Opportunity.CloseDate';
+            rollup.operation = CRLP_Operation.getRollupTypeFromString(udr.npo02__Field_Action__c).name();
+            rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+            rollups.add(rollup);
 
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
-                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
-                rollup.description = rollupText[1];
-                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
-                rollup.filterGroupRecordName = rollupDetails[1];
-                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
-                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
-                rollup.operation = rollupDetails[4];
-                rollup.yearlyOperationType = rollupDetails[5];
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                if (!String.isEmpty(rollupDetails[6])) {
-                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
-                }
-                rollups.add(rollup);
-            }
-        }
-
-        return rollups;
-    }
-
-    /*************************************************************************************************************
-     * @description Create the default Contact Soft Credit Rollups
-     */
-    private static List<CRLP_RollupCMT.Rollup> buildDefaultSoftCreditRollups() {
-        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
-
-        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
-            if (summaryObjectField.containsIgnoreCase('soft_credit')) {
-                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
-                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
-
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
-                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
-                rollup.description = rollupText[1];
-                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
-                rollup.filterGroupRecordName = rollupDetails[1];
-                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
-                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
-                rollup.operation = rollupDetails[4];
-                rollup.yearlyOperationType = rollupDetails[5];
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                if (!String.isEmpty(rollupDetails[6])) {
-                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
-                }
-                rollups.add(rollup);
-            }
-        }
-
-        return rollups;
-    }
-
-    /*************************************************************************************************************
-     * @description Create the default GAU Rollups
-     */
-    private static List<CRLP_RollupCMT.Rollup> buildDefaultGAURollups() {
-        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
-
-        for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
-            if (summaryObjectField.startsWith('General_Accounting_Unit__c.')) {
-                List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
-                List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
-
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-                rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
-                rollup.summaryData = applyNameSpaceToObjectField(summaryObjectField);
-                rollup.description = rollupText[1];
-                rollup.detailData  = applyNameSpaceToObjectField(rollupDetails[0]);
-                rollup.filterGroupRecordName = rollupDetails[1];
-                rollup.amountData  = applyNameSpaceToObjectField(rollupDetails[2]);
-                rollup.dateData  = applyNameSpaceToObjectField(rollupDetails[3]);
-                rollup.operation = rollupDetails[4];
-                rollup.yearlyOperationType = rollupDetails[5];
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                if (!String.isEmpty(rollupDetails[6])) {
-                    rollup.intValue = Integer.valueOf(rollupDetails[6]);
-                }
-                rollups.add(rollup);
-            }
         }
         return rollups;
     }

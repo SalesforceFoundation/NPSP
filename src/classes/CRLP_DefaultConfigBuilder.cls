@@ -43,6 +43,9 @@ public class CRLP_DefaultConfigBuilder {
     /** @description Legacy Account/Contact rollup settings are stored in this custom settings object */
     public static final npo02__Households_Settings__c legacySettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
+    /** @description List of Legacy User Defined Rollups */
+    public static final List<npo02__User_Rollup_Field_Settings__c> legacyUDRSettings = UTIL_ListCustomSettingsFacade.getMapUserRollupFieldSettings().values();
+
     /** @description Set to True if the legacy Rollup Settings are different for Contacts versus Accounts */
     public static final Boolean isDifferentContactFilterGroupNeeded =
             (legacySettings.npo02__Excluded_Account_Opp_Rectypes__c != legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c
