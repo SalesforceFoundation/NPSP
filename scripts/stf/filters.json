@@ -67,6 +67,7 @@
     "CustomField.npsp__DataImport__c.npsp__Donation_Membership_Origin.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Donation_Membership_Start_Date.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Donation_Name.HelpText",
+    "CustomField.npsp__DataImport__c.npsp__Donation_Record_Type_Name__c.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Donation_Stage.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Donation_Type.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Home_City.HelpText",
