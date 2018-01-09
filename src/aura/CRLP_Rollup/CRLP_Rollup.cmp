@@ -1,10 +1,16 @@
-<aura:component description="CRLP_Rollup">
+<aura:component description="CRLP_Rollup" controller="CRLP_RollupUI_SVC">
 
     <!-- public attributes -->
     <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
-    <aura:attribute name="activeRollup" type="Object" description="The active rollup displayed. Only populated from Clone, View and Edit."/>
+    <aura:attribute name="activeRollup" type="Map" description="The active rollup displayed. Only populated from Clone, View and Edit."/>
     <aura:attribute name="mode" type="String" default="edit" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
+    <!-- private attributes -->
+    <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
+    <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
+    <aura:attribute name="detailFields" type="Map" description="Dependent list of detail fields" access="private"/>
+    <aura:attribute name="summaryObjects" type="Map" description="Dependent list of summary objects" access="private"/>
+    <aura:attribute name="summaryFields" type="Map" description="Dependent list of summary fields" access="private"/>
 
     <!-- events we handle -->
     <!--tracking activeRollup instead of changeMode because the change of Mode isn't being registered in the sibling-->
@@ -22,7 +28,7 @@
             </lightning:layoutItem>
         </lightning:layout>
     </div>
-
+    {!v.detailObjects}
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
             <lightning:layout multipleRows="true">
@@ -35,12 +41,23 @@
                                      readonly="{!v.isReadOnly}"/>
                 </lightning:layoutItem>
                 <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
+                    <!--<lightning:input aura:id="rollupdetail"
                                      label="{!v.labels.detailObject}"
                                      name="{!v.labels.detailObject}"
                                      value="{!v.activeRollup.Detail_Object__r.Label}"
                                      required="true"
-                                     readonly="{!v.isReadOnly}"/>
+                                     readonly="{!v.isReadOnly}"/>-->
+
+                    <lightning:select name="{!v.labels.detailObject}"
+                                      label="{!v.labels.detailObject}"
+                                      onchange="{!c.changeDetailObject}"
+                                      value="{!v.activeRollup.Detail_Object__r.Label}"
+                                      required="true"
+                                      readonly="{!v.isReadOnly}">
+                        <aura:iteration items="{!v.detailObjects}" var="detailObject">
+                            <option value="{!detailObject.name}" label="{!detailObject.label}"/>
+                        </aura:iteration>
+                    </lightning:select>
                 </lightning:layoutItem>
                 <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                     <lightning:input aura:id="rollupdetail"
