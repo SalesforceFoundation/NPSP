@@ -1,8 +1,7 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="Object[]" access="public" description="List of custom items to fill the rollup grid."/>
-    <!--<aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public" description="List of custom items to fill the rollup grid."/>-->
-    <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public" description="List of custom items to fill the filter groups grid"/>
+    <aura:attribute name="filterGroupList" type="Object[]" access="public" description="List of custom items to fill the filter groups grid"/>
     <aura:attribute name="columns" type="List" access="public" description="Columns for both grids."/>
     <aura:attribute name="activeRollupId" type="Id" description="ID of the selected rollup to display in rollup detail. Should only be set in child component to avoid onchange confusion."/>
     <aura:attribute name="activeRollup" type="Object" description="Active rollup item to display in rollup detail. Is set to null once detail is hidden."/>
@@ -20,6 +19,7 @@
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
     <!-- markup -->
+
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
         <lightning:breadcrumbs>
