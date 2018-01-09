@@ -75,7 +75,7 @@ public class CRLP_RollupCMT {
 
         /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
-         * insance for the Filter_Group.
+         * instance for the Filter_Group.
          * @return Metadata.CustomMetadata instance for deployment
          */
         public Metadata.CustomMetadata getMetadataRecord() {
@@ -149,7 +149,7 @@ public class CRLP_RollupCMT {
 
         /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
-         * insance for the Filter_Rule.
+         * instance for the Filter_Rule.
          * @return Metadata.CustomMetadata instance for deployment
          */
         public Metadata.CustomMetadata getMetadataRecord() {
@@ -235,7 +235,7 @@ public class CRLP_RollupCMT {
 
         /**
          * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
-         * insance for the Rollup.
+         * instance for the Rollup.
          * @return Metadata.CustomMetadata instance for deployment
          */
         public Metadata.CustomMetadata getMetadataRecord() {
@@ -319,6 +319,13 @@ public class CRLP_RollupCMT {
         return parsedValues;
     }
 
+    /**
+     * @description Combine an object and a field into a single Object.Field string value; handling the
+     * scenario with field is null.
+     * @param objName
+     * @param fieldName
+     * @return Object.Field format string (unless field is null in which case it just returns object)
+     */
     private static String combineObjectAndField(String objName, String fieldName) {
         return objName + (fieldName != null ? '.' + fieldName : '');
     }

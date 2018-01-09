@@ -112,6 +112,7 @@
         <members>CRLP_Debug_UTIL</members>
         <members>CRLP_DefaultConfigBuilder</members>
         <members>CRLP_DefaultConfigBuilder_SVC</members>
+        <members>CRLP_DefaultConfigBuilder_TEST</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_Operation</members>
