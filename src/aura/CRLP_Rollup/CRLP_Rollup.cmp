@@ -12,131 +12,147 @@
     <aura:handler name="change" value="{!v.mode}" action="{!c.changeMode}" />
 
     <!-- markup -->
-    <div class="slds-p-horizontal--large slds-p-bottom--small">
-        <lightning:layout horizontalAlign="end">
-            <lightning:layoutItem flexibility="auto">
-                <lightning:buttonGroup >
-                    <lightning:button label="{!v.labels.edit}" value="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
-                    <lightning:button label="{!v.labels.clone}" value="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
-                </lightning:buttonGroup>
-            </lightning:layoutItem>
-        </lightning:layout>
-    </div>
+
 
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
-            <lightning:layout multipleRows="true">
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.rollupLabel + v.labels.rollupName}"
-                                     name="{!v.labels.rollupLabel + v.labels.rollupName}"
-                                     value="{!v.activeRollup.MasterLabel}"
-                                     required="true"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.detailObject}"
-                                     name="{!v.labels.detailObject}"
-                                     value="{!v.activeRollup.Detail_Object__r.Label}"
-                                     required="true"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.summaryObject}"
-                                     name="{!v.labels.summaryObject}"
-                                     value="{!v.activeRollup.Summary_Object__r.Label}"
-                                     required="true"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.summaryField}"
-                                     name="{!v.labels.summaryField}"
-                                     value="{!v.activeRollup.Summary_Field__r.Label}"
-                                     required="true"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.operation}"
-                                     value="{!v.activeRollup.Operation__c}"
-                                     required="true"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <!-- Using ui:inputCheckbox here because the boolean/checkbox fx of lightning:input still sucks -->
-                    <!-- it looks a little large... not a deal-breaker, but probably can be fixed with some class cleverness. -->
-                    <ui:inputCheckbox label="{!v.labels.useFiscalYear}"
-                                      value="{!v.activeRollup.Use_Fiscal_Year__c}"
-                                      disabled="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.yearlyOperationType}"
-                                     value="{!v.activeRollup.Yearly_Operation_Type__c}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.integer}"
-                                     value="{!v.activeRollup.Integer__c}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.filterGroupLabel}"
-                                     value="{!v.activeRollup.Filter_Group__r.MasterLabel}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
+            <lightning:layout>
+                <lightning:layoutItem size="12" largeDeviceSize="8">
+                    <div class="slds-p-horizontal--large slds-p-bottom--small">
+                        <lightning:layout horizontalAlign="end">
+                            <lightning:layoutItem flexibility="auto">
+                                <lightning:buttonGroup >
+                                    <lightning:button label="{!v.labels.edit}" value="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
+                                    <lightning:button label="{!v.labels.clone}" value="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
+                                </lightning:buttonGroup>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </div>
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.rollupLabel + v.labels.rollupName}"
+                                             name="{!v.labels.rollupLabel + v.labels.rollupName}"
+                                             value="{!v.activeRollup.MasterLabel}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.detailObject}"
+                                             name="{!v.labels.detailObject}"
+                                             value="{!v.activeRollup.Detail_Object__r.Label}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.detailField}"
+                                             name="{!v.labels.detailField}"
+                                             value="{!v.activeRollup.Detail_Field__r.Label}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.summaryObject}"
+                                             name="{!v.labels.summaryObject}"
+                                             value="{!v.activeRollup.Summary_Object__r.Label}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.summaryField}"
+                                             name="{!v.labels.summaryField}"
+                                             value="{!v.activeRollup.Summary_Field__r.Label}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.operation}"
+                                             value="{!v.activeRollup.Operation__c}"
+                                             required="true"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <!-- Using ui:inputCheckbox here because the boolean/checkbox fx of lightning:input still sucks -->
+                            <!-- it looks a little large... not a deal-breaker, but probably can be fixed with some class cleverness. -->
+                            <ui:inputCheckbox label="{!v.labels.useFiscalYear}"
+                                              value="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                              disabled="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.yearlyOperationType}"
+                                             value="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.integer}"
+                                             value="{!v.activeRollup.Integer__c}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.filterGroupLabel}"
+                                             value="{!v.activeRollup.Filter_Group__r.MasterLabel}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.amountObject}"
+                                             value="{!v.activeRollup.Amount_Object__r.Label}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.amountField}"
+                                             value="{!v.activeRollup.Amount_Field__r.Label}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.dateObject}"
+                                             value="{!v.activeRollup.Date_Object__r.Label}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:input aura:id="rollupdetail"
+                                             label="{!v.labels.dateField}"
+                                             value="{!v.activeRollup.Date_Field__r.Label}"
+                                             required="false"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                    <aura:if isTrue="{!or(v.mode == 'edit', v.mode == 'clone')}">
+                        <div class="slds-p-around--large">
+                            <lightning:layout horizontalAlign="center">
+                                <!--TODO: this button needs an onclick function to save stuff-->
+                                <lightning:button label="{!v.labels.save}" variant="brand"/>
+                                <!--TODO: onclick to set mode back to view-->
+                                <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.setModeView}"/>
+                            </lightning:layout>
+                        </div>
+                    </aura:if>
                 </lightning:layoutItem>
             </lightning:layout>
-            <lightning:layout multipleRows="true">
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.amountObject}"
-                                     value="{!v.activeRollup.Amount_Object__r.Label}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.amountField}"
-                                     value="{!v.activeRollup.Amount_Field__r.Label}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.dateObject}"
-                                     value="{!v.activeRollup.Date_Object__r.Label}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                    <lightning:input aura:id="rollupdetail"
-                                     label="{!v.labels.dateField}"
-                                     value="{!v.activeRollup.Date_Field__r.Label}"
-                                     required="false"
-                                     readonly="{!v.isReadOnly}"/>
-                </lightning:layoutItem>
-            </lightning:layout>
-        </form>
+       </form>
     </div>
 
-    <aura:if isTrue="{!or(v.mode == 'edit', v.mode == 'clone')}">
-        <div class="slds-p-around--large">
-            <lightning:layout horizontalAlign="center">
-                <!--TODO: this button needs an onclick function to save stuff-->
-                <lightning:button label="{!v.labels.save}" variant="brand"/>
-                <!--TODO: onclick to set mode back to view-->
-                <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.setModeView}"/>
-            </lightning:layout>
-        </div>
-    </aura:if>
+
 
 
     <!-- end markup -->
