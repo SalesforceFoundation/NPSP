@@ -264,13 +264,17 @@ public class CascadeDeleteLookupsDomain {
             // Undelete all the records at once can cause a broken reference.
             while (currentChildrenLoader != null) {
                 List<SObject> children = currentChildrenLoader.load(parentIds);
+                if (children.isEmpty()) {
+                    currentChildrenLoader = currentChildrenLoader.next();
+                    continue;
+                }
 
                 List<Database.UndeleteResult> undeleteResults = Database.undelete(children, false);
                 ERR_Handler.Errors errorResult = ERR_Handler.getErrors(undeleteResults, children);
                 if (errorResult.errorsExist) {
                     ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
                 }
-
+                
                 currentChildrenLoader = currentChildrenLoader.next();
             }
         }

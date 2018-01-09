@@ -71,13 +71,13 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
                 WHERE AccountId IN :parentIds
             ];
 
-            List<SObject> relatedRelationships = getRelatedRelationships(relatedContacts);
+            List<npe4__Relationship__c> relatedRelationships = getRelatedRelationships(relatedContacts);
             result.addAll((List<SObject>) relatedRelationships);
             
             List<npe03__Recurring_Donation__c> relatedRecurringDonations = getRelatedRecurringDonations(parentIds, relatedContacts);
             result.addAll((List<SObject>) relatedRecurringDonations);
 
-            List<SObject> relatedAllocations = getRelatedAllocations(parentIds, relatedRecurringDonations);
+            List<Allocation__c> relatedAllocations = getRelatedAllocations(parentIds, relatedRecurringDonations);
             result.addAll((List<SObject>) relatedAllocations);
             
             return (new Map<Id, SObject>(result)).values();
@@ -139,12 +139,15 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the first children group of the Accounts being undeleted
+    * @description Class that retrieves the first children group of the Accounts being undeleted.
     ********************************************************************************************************/
     class UndeletionFirstChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
 
         private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
 
+        /******************************************************************************************************
+        * @description The Constructor of UndeletionFirstChildrenLoader
+        */
         UndeletionFirstChildrenLoader() {
             this.relatedRecurringDonations = new List<npe03__Recurring_Donation__c>();
         }
@@ -163,7 +166,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
                 WHERE AccountId IN :parentIds
             ];
 
-            List<npe03__Recurring_Donation__c> relatedRecurringDonations = getRelatedRecurringDonations(parentIds, relatedContacts);
+            relatedRecurringDonations = getRelatedRecurringDonations(parentIds, relatedContacts);
             result.addAll((List<SObject>) relatedRecurringDonations);
 
             List<npe4__Relationship__c> relatedRelationships = getRelatedRelationships(relatedContacts);
