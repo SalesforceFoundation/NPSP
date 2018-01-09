@@ -1,18 +1,18 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
-    <aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public" description="List of custom items to fill the rollup grid."/>
+    <aura:attribute name="rollupList" type="Object[]" access="public" description="List of custom items to fill the rollup grid."/>
+    <!--<aura:attribute name="rollupList" type="CRLP_RollupsUI_SVC.RollupTableItem[]" access="public" description="List of custom items to fill the rollup grid."/>-->
     <aura:attribute name="filterGroupList" type="CRLP_RollupsUI_SVC.Filter_Group__mdt[]" access="public" description="List of custom items to fill the filter groups grid"/>
     <aura:attribute name="columns" type="List" access="public" description="Columns for both grids."/>
     <aura:attribute name="activeRollupId" type="Id" description="ID of the selected rollup to display in rollup detail. Should only be set in child component to avoid onchange confusion."/>
     <aura:attribute name="activeRollup" type="Object" description="Active rollup item to display in rollup detail. Is set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Is set to null once component is hidden."/>
-    <!--<aura:attribute name="breadcrumbLevel" type="Integer" access="public" default="0"/>-->
+
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
     <aura:attribute name="isRollupsGrid" type="Boolean" access="private" description="Determines if Rollups Grid is shown."/>
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
-    <!--<aura:attribute name="breadcrumbs" type="Object[]" access="private"/>-->
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -20,7 +20,6 @@
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
     <!-- markup -->
-    <p>Detail Mode: {!v.detailMode}</p>
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
         <lightning:breadcrumbs>
@@ -28,9 +27,6 @@
             <aura:if isTrue="{!or(v.isFilterGroupsGrid,v.isRollupDetail)}">
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
-            <!--<aura:iteration items="{!v.breadcrumbs}" var="bread">
-                <lightning:breadcrumb label="{!bread.label}" onclick="{!c+'.'+bread.onclick}" name="{!bread.label}" title="{!bread.label}"/>
-            </aura:iteration>-->
         </lightning:breadcrumbs>
     </div>
     <!--END BREADCRUMB-->
@@ -47,7 +43,7 @@
             <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
             <!--Show record label header for Edit and View modes only-->
             <!--TODO: check this logic-->
-            <aura:if isTrue="{!or(equals(v.detailMode,v.labels.edit),equals(v.detailMode,v.labels.view))}">
+            <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
                 <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
                 <!--Else show mode header-->
                 <aura:set attribute="else">
@@ -56,6 +52,9 @@
             </aura:if>
         </aura:if>
     </div>
+    <!--END HEADER-->
+
+    <!--BEGIN BUTTONS-->
     <aura:if isTrue="{! !v.isRollupDetail }">
         <div class="slds-p-horizontal--large slds-p-bottom--large">
         <lightning:layout horizontalAlign="spread">
@@ -84,7 +83,7 @@
         </lightning:layout>
     </div>
     </aura:if>
-    <!--END HEADER-->
+    <!--END BUTTONS-->
 
     <!--BEGIN ROLLUPS GRID-->
     <aura:if isTrue="{!v.isRollupsGrid}">

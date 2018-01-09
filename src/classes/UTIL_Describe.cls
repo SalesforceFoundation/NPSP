@@ -175,7 +175,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Returns all field describe data
     * @param objectName the name of the object to look up
-    * @return Map<String, Schema.DescribeFieldResult> a map of object names to describe file results.
+    * @return Map<String, Schema.DescribeFieldResult> a map of field api names to describe file results.
     */
     public static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
 
@@ -187,10 +187,29 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description Returns the Name field of any given object.
+    * @description Returns a map of field names to data types
     * @param objectName the name of the object to look up
-    * @return String the API name of the Name field
+    * @return Map<String, String> a map of field api names to field data type.
     */
+    public static Map<String, String> getAllFieldsWithType(String objectName) {
+
+        Map<String, String> fieldNameToType = new Map<String, String>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            fieldNameToType.put(dfr.name, dfr.getType().Name());
+        }
+
+        return fieldNameToType;
+    }
+
+
+/*******************************************************************************************************
+* @description Returns the Name field of any given object.
+* @param objectName the name of the object to look up
+* @return String the API name of the Name field
+*/
     public static String getNameField(String objectName) {
         String nameField = 'Name';
 

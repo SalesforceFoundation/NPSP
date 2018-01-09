@@ -120,6 +120,12 @@
                 if (state === "SUCCESS") {
                     cmp.set("v.activeRollup", response.getReturnValue());
                     var activeRollupMap = cmp.get("v.activeRollup");
+                    if(!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
+                        cmp.set("v.activeRollup.Yearly_Operation_Type__c",cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
+                    }
+                    if(!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))){
+                        cmp.set("v.activeRollup.Operation__c",cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
+                    }
                 }
                 else if (state === "ERROR") {
                     var errors = response.getError();
@@ -145,7 +151,7 @@
         //toggle grid and detail views, set detail mode to create
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isRollupDetail",true);
-        cmp.set("v.detailMode", cmp.get("v.labels.create"));
+        cmp.set("v.detailMode", 'create');
         cmp.set("v.activeRollup", {});
     }
 

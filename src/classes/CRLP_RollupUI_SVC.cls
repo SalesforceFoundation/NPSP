@@ -167,18 +167,55 @@ public with sharing class CRLP_RollupUI_SVC {
     @AuraEnabled
     public static Rollup__mdt getRollupById(Id id) {
 
-        Rollup__mdt rollup = [SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
-                Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
-                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
-                Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
-                Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
-                Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
-                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
-                Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
+        Rollup__mdt rollup = [SELECT Id
+                , DeveloperName
+                , MasterLabel
+                , Active__c
+                , Use_Fiscal_Year__c
+                , Yearly_Operation_Type__c
+                , Description__c
+                , Filter_Group__c
+                , Filter_Group__r.MasterLabel
+                , Operation__c
+                , Integer__c
+                , Summary_Field__r.QualifiedApiName
+                , Summary_Field__r.Label
+                , Summary_Object__r.QualifiedApiName
+                , Summary_Object__r.Label
+                , Detail_Field__r.QualifiedApiName
+                , Detail_Field__r.Label
+                , Detail_Object__r.QualifiedApiName
+                , Detail_Object__r.Label
+                , Amount_Field__r.QualifiedApiName
+                , Amount_Field__r.Label
+                , Amount_Object__r.QualifiedApiName
+                , Amount_Object__r.Label
+                , Date_Field__r.QualifiedApiName
+                , Date_Field__r.Label
+                , Date_Object__r.QualifiedApiName
+                , Date_Object__r.Label
         FROM Rollup__mdt
         WHERE Id = :id];
 
         return rollup;
+    }
+
+    /*******************************************************************************************************
+    @description Fetches all field labels, mapped to their data types, for a list of objects.
+    * @return a map of strings to string-string maps. Map<String,Map<String,String>>
+    */
+
+    @AuraEnabled
+    public static Map<String,Map<String,String>> getFieldsByDataType(List<String> objectNames) {
+
+        Map<String,Map<String,String>> objNametoFieldTypeMap = new Map<String,Map<String,String>>();
+
+        for(String obj : objectNames){
+            Map<String,String> fieldNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
+            objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
+        }
+
+        return objNametoFieldTypeMap;
     }
 
 
@@ -194,11 +231,15 @@ public with sharing class CRLP_RollupUI_SVC {
             {
                 'action' => Label.stgLabelActionColumn,
                 'active' => Label.stgActive,
+                'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
+                'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
                 'cancel' => Label.stgBtnCancel,
                 'clone' => Label.stgBtnClone,
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
                 'creditType' => Label.CRLP_CreditType,
+                'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
+                'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
@@ -208,6 +249,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'name' => Label.stgLabelName,
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
@@ -222,7 +264,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
-                'view' => Label.stgLabelView
+                'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
+                'view' => Label.stgLabelView,
+                'yearlyOperationType' => Schema.Rollup__mdt.Yearly_Operation_Type__c.getDescribe().getLabel()
             };
 
         return labels;
