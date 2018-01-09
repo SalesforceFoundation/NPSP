@@ -36,29 +36,30 @@
 public with sharing class CAM_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
 
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the deleted Campaigns ChildrenLoader Object. 
+    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
     ********************************************************************************************************/
     protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
         return new CampaignDeletionChildrenLoader();
     }
 
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the undeleted Campaigns ChildrenLoader Object.
+    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
     ********************************************************************************************************/
     protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
         return new CampaignUndeletionChildrenLoader();
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Campaign being deleted
+    * @description Class that retrieves the children of the Campaigns being deleted.
     ********************************************************************************************************/
     class CampaignDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Campaign being deleted
-        * @return List<Allocation__c> Deleted Campaign's Allocations
+        * @description Retrieves the related Allocations of the Campaign being deleted.
+        * @param Set<Id> The Ids of the deleted Campaigns
+        * @return List<Allocation__c> Deleted Campaigns' Allocations.
         ********************************************************************************************************/
         public List<Allocation__c> load(Set<Id> parentsIds) {
             return [
@@ -70,13 +71,14 @@ public with sharing class CAM_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the children of the Campaign being undeleted
+    * @description Class that retrieves the children of the Campaigns being undeleted
     ********************************************************************************************************/
     class CampaignUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Campaign being undeleted
-        * @return List<Allocation__c> Undeleted Campaign's Allocations
+        * @description Retrieves the related Allocations of the Campaign being undeleted.
+        * @param Set<Id> The Ids of the undeleted Campaigns
+        * @return List<Allocation__c> Undeleted Campaigns' Allocations.
         ********************************************************************************************************/
         public List<Allocation__c> load(Set<Id> parentsIds) {
             return [
@@ -89,12 +91,12 @@ public with sharing class CAM_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Recurring Donations being undeleted
-        * @return List<SObject> Undeleted Recurring Donations's Allocations
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Allocations undeletion.
+        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
         ********************************************************************************************************/
         public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
             return null;
-
         }
     }
 }

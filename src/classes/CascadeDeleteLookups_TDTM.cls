@@ -36,8 +36,9 @@
  * The only differences in functionality with standard cascade deletion is that child records show up separately from
  * their parent in the recycle bin, and all triggers run on cascade deleted objects.
  *
- * To enable cascade delete for a new object type: extend this class, create a static list of Cascades, override the
- * getCascades() method to return that static list, and create a Trigger Handler record for the new class.
+ * To enable cascade delete for a new object type: extend this class, override the getDeletionChildrenLoader(), 
+ * getUndeletionChildrenLoader() and getDeletionChildrenValidator() methods. The method getDeletionChildrenValidator()
+ * is optional, and should override only validation of the children is needed.
  *
  * NOTE: Since standard cascade deletes don't run triggers on deleted children, records in the "cascades" map can also
  * be created for children further down the chain, e.g. grandchildren, great-grandchildren, etc. The relationship to 
@@ -104,16 +105,16 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the Delete ChildrenLoader Object of the running Trigger.
+    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
     ********************************************************************************************************/
     protected virtual CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
         return null;
     }
 
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the Undelete ChildrenLoader Object of the running Trigger. 
+    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
     ********************************************************************************************************/
     protected virtual CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
         return null;
@@ -121,7 +122,7 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Gets the ChildrenValidator Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenValidator
+    * @return CascadeDeleteLookupsDomain.DeleteChildrenValidator
     ********************************************************************************************************/
     protected virtual CascadeDeleteLookupsDomain.DeleteChildrenValidator getDeletionChildrenValidator() {
         return null;

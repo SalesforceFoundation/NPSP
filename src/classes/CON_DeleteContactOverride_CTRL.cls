@@ -209,7 +209,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteAccount() {
-        Account accForDelete = new Account(id=accountId);
+        Account accForDelete = new Account(Id = accountId);
         
         CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
         cascadeDelete.setChildrenLoader(new AccountDeletionChildrenLoader());
@@ -271,12 +271,13 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Recurring Donations being deleted
+    * @description Class that retrieves the children of the Contacts to delete
     ********************************************************************************************************/
     class ContactDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Recurring Donations being deleted
+        * @description Retrieves the children of the Contacts being deleted.
+        * @param Set<Id> The Ids of the Contacts to delete.
         * @return List<SObject> Deleted Recurring Donation's Allocations
         ********************************************************************************************************/
         public List<SObject> load(Set<Id> parentsIds) {
@@ -308,33 +309,37 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Class that validates the children of the Recurring Donations being deleted
+    * @description Class that validates the children of the Contacts being deleted
     ********************************************************************************************************/
     class ContactChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
 
         /*******************************************************************************************************
-        * @description validates the children of the Recurring Donations being undeleted
-        * @return void
+        * @description validates the children of the Contact.
+        * @param List<Contact> The Accounts to delete.
+        * @param List<SObject> The children to validate.
+        * @return List<Object> Valid children records that can be deleted.
         ********************************************************************************************************/
         public List<SObject> validateDeletion(List<Contact> parents, List<SObject> children) {
             List<SObject> validChildren = new List<SObject>();
 
             for(Contact parent : parents) {
                 CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Firstname + ' ' + parent.LastName);
-
                 for (SObject child : children) {
                     Boolean isValidChild = true;
-
+                    
                     if (isClosedWonOpportunity(child, parent.Id)) {
-                        error.addChildError(Label.ClosedWonOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                        Opportunity closedWonOpportunity = (Opportunity) child;
+                        error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                         isValidChild = false;
                     }
                     if (isOrganizationalOpportunity(child, parent.Id)) {
-                        error.addChildError(Label.OrganizationalOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                        Opportunity organizationalOpportunity = (Opportunity) child;
+                        error.addChildError(Label.OrganizationalOpportunities, organizationalOpportunity.Id, organizationalOpportunity.Name);
                         isValidChild = false;
                     }
                     if (isCase(child, parent.Id)) {
-                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), ((Case) child).Id, ((Case) child).CaseNumber);
+                        Case caseRecord = (Case) child;
+                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), caseRecord.Id, caseRecord.CaseNumber);
                         isValidChild = false;
                     }
                     if (isValidChild) {
@@ -351,6 +356,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             return validChildren;
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the record is a Closed Won Opportunity.
+        * @param SObject The child record.
+        * @param Id The Id of the parent record.
+        * @return Boolean.
+        ********************************************************************************************************/
         private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
             return (
                 record instanceof Opportunity && 
@@ -359,6 +370,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             );
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the record is an Organizational Opportunity
+        * @param SObject The child record.
+        * @param Id The Id of the parent record.
+        * @return Boolean.
+        ********************************************************************************************************/
         private Boolean isOrganizationalOpportunity(SObject record, Id parentId) {
             return (
                 record instanceof Opportunity && 
@@ -367,6 +384,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             );
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the record is a Case.
+        * @param SObject The child record.
+        * @param Id The Id of the parent record.
+        * @return Boolean.
+        ********************************************************************************************************/
         private Boolean isCase(SObject record, Id parentId) {
             return (
                 record instanceof Case && 
@@ -376,13 +399,14 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Recurring Donations being deleted
+    * @description Class that retrieves the children of the Account to delete
     ********************************************************************************************************/
     class AccountDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Recurring Donations being deleted
-        * @return List<SObject> Deleted Recurring Donation's Allocations
+        * @description Retrieves the children of the Accounts to delete.
+        * @param Set<Id> The Ids of the Accounts to delete.
+        * @return List<SObject> The Account Cases and Opportunities.
         ********************************************************************************************************/
         public List<SObject> load(Set<Id> parentsIds) {
             List<SObject> result = new List<SObject>();
@@ -406,25 +430,28 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Class that validates the children of the Recurring Donations being deleted
+    * @description Class that validates the children of the Account to delete
     ********************************************************************************************************/
     class AccountChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
 
         /*******************************************************************************************************
-        * @description validates the children of the Recurring Donations being undeleted
-        * @return void
+        * @description validates the children of the Account.
+        * @param List<Account> The Accounts to delete.
+        * @param List<SObject> The children to validate.
+        * @return List<Object> Valid children records that can be deleted.
         ********************************************************************************************************/
         public List<SObject> validateDeletion(List<Account> parents, List<SObject> children) {
-
             for(Account parent : parents) {
                 CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Name);
 
                 for (SObject child : children) {
                     if (isClosedWonOpportunity(child, parent.Id)) {
-                        error.addChildError(Label.ClosedWonOpportunities, ((Opportunity) child).Id, ((Opportunity) child).Name);
+                        Opportunity closedWonOpportunity = (Opportunity) child;
+                        error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                     }
                     if (isCase(child, parent.Id)) {
-                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), ((Case) child).Id, ((Case) child).CaseNumber);
+                        Case caseRecord = (Case) child;
+                        error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), caseRecord.Id, caseRecord.CaseNumber);
                     }
                 }
 
@@ -437,6 +464,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             return new List<SObject>();
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the record is a Closed Won Opportunity.
+        * @param SObject The child record.
+        * @param Id The Id of the parent record.
+        * @return Boolean.
+        ********************************************************************************************************/
         private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
             return (
                 record instanceof Opportunity && 
@@ -445,6 +478,12 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             );
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the record is a Case.
+        * @param SObject The child record.
+        * @param Id The Id of the parent record.
+        * @return Boolean.
+        ********************************************************************************************************/
         private Boolean isCase(SObject record, Id parentId) {
             return (
                 record instanceof Case && 

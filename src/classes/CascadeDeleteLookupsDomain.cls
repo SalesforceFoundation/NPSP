@@ -31,76 +31,115 @@
  * @author Salesforce.org
  * @date 2017
  * @group Utilities
- * @description Cascade deletion Domain Classes
+ * @description Cascade deletion and undeletion Domain Classes
  */
 
 public class CascadeDeleteLookupsDomain {
 
     @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
 
+    /** @description The single instance of the CascadeDelete. */
     private static CascadeDelete cascadeDelete;
+
+    /** @description The single instance of the CascadeUndelete. */
     private static CascadeUndelete cascadeUndelete;
 
-    public static CascadeDeleteLookupsDomain.CascadeDelete getCascadeDelete() {
+    /*******************************************************************************************************
+    * @description Gets a single instance of the CascadeDelete.
+    * @return CascadeDelete
+    ********************************************************************************************************/
+    public static CascadeDelete getCascadeDelete() {
         if (cascadeDelete == null) {
             cascadeDelete = new CascadeDelete();
         }
         return cascadeDelete;
     }
 
-    public static CascadeDeleteLookupsDomain.CascadeUndelete getCascadeUndelete() {
+    /*******************************************************************************************************
+    * @description Gets a single instance of the CascadeUndelete.
+    * @return CascadeUndelete
+    ********************************************************************************************************/
+    public static CascadeUndelete getCascadeUndelete() {
         if (cascadeUndelete == null) {
             cascadeUndelete = new CascadeUndelete();
         }
         return cascadeUndelete;
     }
 
-    /*******************************************************************************************************
-    * @description Contains the method that a Class needs to implements in order to pass the Children records
-    * to the instance of the "CascadeDelete" Class. 
-    ********************************************************************************************************/
+    /************************************************************************************************************
+    * @description Contains the method a Class needs to implement in order to load the children records to delete.
+    * To load the children records to delete, a class should implement this Interface and be passed to the 
+    * "CascadeUndelete" object.
+    *************************************************************************************************************/
     public interface DeleteChildrenLoader {
+
+        /*******************************************************************************************************
+        * @description Gets the children records that need to be validated or deleted.
+        * @param Set<Id> The parent ids of the records that need to be retrieved.
+        * @return List<SObject> The children records.
+        ********************************************************************************************************/
         List<SObject> load(Set<Id> parentIds);
     }
 
     /*******************************************************************************************************
-    * @description Contains the method that a Class needs to implements in order to validate the deletion of
+    * @description Contains the method a Class needs to implement in order to validate the deletion of
     * the children records. This is run by the instance of the "CascadeDelete" Class.
     ********************************************************************************************************/
     public interface DeleteChildrenValidator {
+
+        /*******************************************************************************************************
+        * @description Validates the children records.
+        * @param List<SObject> The parents records that are being deleted.
+        * @param List<SObject> The children records to validate.
+        * @return List<SObject> The children records that pass the validation, and can be deleted.
+        ********************************************************************************************************/
         List<SObject> validateDeletion(List<SObject> parents, List<SObject> children);
     }
 
     /*******************************************************************************************************
-    * @description Contains the method that a Class needs to implements in order to pass the Children records
-    * to the instance of the "CascadeDelete" Class. 
+    * @description Contains the method a Class needs to implement in order to load the children records.
+    * To load the children records to undelete, a class should implement this Interface 
+    * and be passed to the "CascadeUndelete" object.
     ********************************************************************************************************/
     public interface UndeleteChildrenLoader {
+
+        /*******************************************************************************************************
+        * @description Gets the children records that need to be undeleted.
+        * @param Set<Id> The parent ids of the records that need to be retrieved.
+        * @return List<SObject> The children records.
+        ********************************************************************************************************/
         List<SObject> load(Set<Id> parentIds);
+
+        /*******************************************************************************************************
+        * @description Gets the next UndeleteChildrenLoader.
+        * @return UndeleteChildrenLoader The next UndeleteChildrenLoader.
+        ********************************************************************************************************/
         UndeleteChildrenLoader next();
     }
 
     /*******************************************************************************************************
-    * @description Contains the logic for performing the Cascade Deletion. The Triggers use this class to 
-    * retrieve the children of the records being deleted, validate the deletion of the children and delete them.
+    * @description Contains Cascade Delete logic. The Trigger Handlers use this class to retrieve  
+    * the children of the records being deleted, validate and delete the children records.
     ********************************************************************************************************/
     public class CascadeDelete {
         private Map<Id, SObject> parents;
         private List<SObject> children;
+        private List<SObject> validChildren;
 
         private DeleteChildrenLoader childrenLoader;
         private DeleteChildrenValidator childrenValidator;
 
-        /*********************************************************************************************************
+        /******************************************************************************************************
         * @description The Constructor of CascadeDelete
         */
         public CascadeDelete() {
             parents = new Map<Id, SObject>();
             children = new List<SObject>();
+            validChildren = new List<SObject>();
         }
 
         /*******************************************************************************************************
-        * @description Sets the parents records that are being deleted. 
+        * @description Sets the parents records (from the Triggers context) that are being deleted.
         * @return void
         ********************************************************************************************************/
         public void setParents(List<SObject> parents) {
@@ -116,7 +155,7 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Sets the object that validates the deletion of the children records.
+        * @description Sets the object that validates the children records.
         * @return void
         ********************************************************************************************************/
         public void setChildrenValidator(DeleteChildrenValidator childrenValidator) {
@@ -132,7 +171,7 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Checks if the object that validate the deletion of the children records exists.
+        * @description Checks if the object that validates the children records exists.
         * @return Boolean
         ********************************************************************************************************/
         public Boolean hasChildrenValidator() {
@@ -140,7 +179,8 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the children records, and store the records.
+        * @description Retrieves the children records, and stores the records. This method uses the injected
+        * ChildrenLoader, to load the children records.
         * @return void
         ********************************************************************************************************/
         public void loadChildren() {
@@ -152,43 +192,30 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Validates the deletion of the children records.
+        * @description Validates the children records. This method uses the injected ChildrenValidator,
+        * to load the children records.
         * @return void
         ********************************************************************************************************/
         public void validateChildrenDeletion() {
-            // separate the statement
             if (this.childrenValidator != null) {
-                children = this.childrenValidator.validateDeletion(parents.values(), children);
+                validChildren = this.childrenValidator.validateDeletion(parents.values(), children);
+            }
+            else {
+                validChildren = children;
             }
         }
 
         /*******************************************************************************************************
-        * @description Deletes the children records.
+        * @description Deletes the valid children records.
         * @return void
         ********************************************************************************************************/
         public void deleteChildren() {
-            if (children.isEmpty()) {
+            if (validChildren.isEmpty()) {
                 return;
             }
 
-            List<Database.DeleteResult> deletionResults = Database.delete(children, false);
-            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(deletionResults, children);
-            if (errorResult.errorsExist) {
-                ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
-            }
-        }
-
-        /*******************************************************************************************************
-        * @description Undeletes the children records.
-        * @return void
-        ********************************************************************************************************/
-        public void undeleteChildren() {
-            if (children.isEmpty()) {
-                return;
-            }
-
-            List<Database.UndeleteResult> undeleteResults = Database.undelete(children, false);
-            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(undeleteResults, children);
+            List<Database.DeleteResult> deletionResults = Database.delete(validChildren, false);
+            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(deletionResults, validChildren);
             if (errorResult.errorsExist) {
                 ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
             }
@@ -196,8 +223,8 @@ public class CascadeDeleteLookupsDomain {
     }
 
     /*******************************************************************************************************
-    * @description Contains the logic for performing the Cascade Deletion. The Triggers use this class to 
-    * retrieve the children of the records being deleted, validate the deletion of the children and delete them.
+    * @description Contains Cascade Undelete logic. The Trigger Handlers use this class to retrieve 
+    * the children of the records being undeleted and undelete the children records.
     ********************************************************************************************************/
     public class CascadeUndelete {
         private Set<Id> parentIds;
@@ -211,7 +238,7 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Sets the parents records that are being deleted. 
+        * @description Sets the parents records (from the Triggers context) that are being undeleted.
         * @return void
         ********************************************************************************************************/
         public void setParents(List<SObject> parents) {
@@ -233,6 +260,8 @@ public class CascadeDeleteLookupsDomain {
         public void undeleteChildren() {
             UndeleteChildrenLoader currentChildrenLoader = childrenLoader;
 
+            // The Undeletion runs in a loop because some children records need to be undeleted first.
+            // Undelete all the records at once can cause a broken reference.
             while (currentChildrenLoader != null) {
                 List<SObject> children = currentChildrenLoader.load(parentIds);
 
@@ -248,14 +277,15 @@ public class CascadeDeleteLookupsDomain {
     }
 
     /*******************************************************************************************************
-    * @description Contains the logic for displaying the error messages
+    * @description Contains the logic that displays the error messages on one parent
     ********************************************************************************************************/
     public class DeleteError {
         private String parentToDeleteName;
         private Map<String, Map<Id, String>> childrenByErrorType;
 
-        /*********************************************************************************************************
-        * @description The Constructor of CascadeDelete
+        /******************************************************************************************************
+        * @description The Constructor of DeleteError
+        * @param String The name of the Parent record
         */
         public DeleteError(String parentToDeleteName) {
             this.parentToDeleteName = parentToDeleteName;
@@ -263,7 +293,10 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Adds a Child record that prevents the parent record deletion
+        * @description Adds the information about child that prevents the deletion, and the type of error.
+        * @param String The type of error
+        * @param Id The Id of the child record
+        * @param String The name of the child record
         * @return void
         ********************************************************************************************************/
         public void addChildError(String errorType, Id childRecordId, String childRecordName) {
@@ -275,8 +308,9 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Adds a Child record that prevents the parent record deletion
-        * @return The error message
+        * @description Get the error message. The message contains the error type and the list of the children 
+        * records preventing the parent deletion.
+        * @return String The error message
         ********************************************************************************************************/
         public String getMessage() {
             List<String> result = new List<String>();
@@ -299,9 +333,9 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Returns an HTML list of the child records preventing deletion, with links to those records.
-        * @param childRecords The queried child records preventing the deletion
-        * @return String An HTML text that contains a list of the child records.
+        * @description Returns a HTML list of the child records preventing deletion, with links to those records.
+        * @param Map<Id, String> The child records preventing the deletion
+        * @return String The HTML text that contains a list of the child records.
         ********************************************************************************************************/
         private String getHTMLChildrenList(Map<Id, String> childRecords) {
             List<String> result = new List<String>{'<ul>'};
@@ -314,9 +348,9 @@ public class CascadeDeleteLookupsDomain {
         }
 
         /*******************************************************************************************************
-        * @description Returns a Plain Text list of the child records preventing deletion.
-        * @param childRecords The queried child records preventing the deletion
-        * @return String Plain text that contains a list of the child records.
+        * @description Returns a plain text list of the child records preventing deletion
+        * @param Map<Id, String> The child records preventing the deletion
+        * @return String The plain text that contains a list of the child records.
         ********************************************************************************************************/
         private String getPlainTextChildrenList(Map<Id, String> childRecords) {
             List<String> result = new List<String>();

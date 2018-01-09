@@ -31,42 +31,38 @@
  * @author Salesforce.org
  * @date 2017
  * @group Utilities
- * @description When contacts are deleted, cascade deletes related relationships, recurring donations, and 
- * opportunities. Prevents Contact deletion if any attributed opportunities are closed/won or attributed
- * to an organization.
+ * @description When contacts are deleted, cascade deletes related relationships.
  */
 public with sharing class CON_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
 
-
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the deleted Contacts ChildrenLoader Object. 
+    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
     ********************************************************************************************************/
     protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
         return new ContactDeletionChildrenLoader();
     }
 
     /*******************************************************************************************************
-    * @description Gets the ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.ChildrenLoader
+    * @description Gets the undeleted Contacts ChildrenLoader Object.
+    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
     ********************************************************************************************************/
     protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
         return new ContactUndeletionChildrenLoader();
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Contact being deleted
+    * @description Class that retrieves the children of the Contacts being deleted.
     ********************************************************************************************************/
     class ContactDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Contact being deleted
-        * @return List<SObject> Deleted Contact's Allocations
+        * @description Retrieves the related Relationships of the Contacts being deleted.
+        * @param Set<Id> The Ids of the deleted Contacts
+        * @return List<npe4__Relationship__c> Deleted Contacts' Relationships.
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentsIds) {
-            List<SObject> result = new List<SObject>();
-
-            List<SObject> contactsReciprocalRelatedRelationship = [
+        public List<npe4__Relationship__c> load(Set<Id> parentsIds) {
+            List<SObject> contactsReciprocalRelatedRelationships = [
                 SELECT Id
                 FROM npe4__Relationship__c
                 WHERE npe4__Contact__c IN :parentsIds
@@ -75,21 +71,22 @@ public with sharing class CON_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
             return [
                 SELECT Name
                 FROM npe4__Relationship__c
-                WHERE npe4__ReciprocalRelationship__c IN :contactsReciprocalRelatedRelationship
+                WHERE npe4__ReciprocalRelationship__c IN :contactsReciprocalRelatedRelationships
             ];
         }
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the children of the Contact being undeleted
+    * @description Class that retrieves the children of the Contacts being undeleted
     ********************************************************************************************************/
     class ContactUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Contact being undeleted
-        * @return List<SObject> Undeleted Contact's Allocations
+        * @description Retrieves the children of the Contacts being undeleted
+        * @param Set<Id> The Ids of the undeleted Contacts
+        * @return List<npe4__Relationship__c> Undeleted Contacts' Relationships
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentsIds) {
+        public List<npe4__Relationship__c> load(Set<Id> parentsIds) {
             List<npe4__Relationship__c> contactsReciprocalRelatedRelationship = [
                 SELECT Id
                 FROM npe4__Relationship__c
@@ -106,12 +103,12 @@ public with sharing class CON_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Recurring Donations being undeleted
-        * @return List<SObject> Undeleted Recurring Donations's Allocations
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Relationships undeletion.
+        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
         ********************************************************************************************************/
         public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
             return null;
-
         }
     }
 }
