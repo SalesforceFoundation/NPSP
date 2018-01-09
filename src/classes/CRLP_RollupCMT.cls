@@ -32,7 +32,8 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Wrapper classes for the Customizable Rollups CustomMetadataType objects
+* @description Wrapper classes for the Customizable Rollups CustomMetadataType objects used to create the
+* default CMT data as well as for updates through the Customizable Rollups UI.
 */
 public class CRLP_RollupCMT {
 
@@ -48,6 +49,9 @@ public class CRLP_RollupCMT {
     /** @description Default value for the Protected_x property when inserting new Custom Metadata Type records */
     private static final Boolean IS_PROTECTED = false;
 
+    /** ***************************************************************************************************
+     * @description Wrapper Class for the Filter_Group__mdt custom metadata type object
+     */
     public class FilterGroup {
         public String recordName;
         public String label;
@@ -69,6 +73,11 @@ public class CRLP_RollupCMT {
             this.rules = new List<FilterRule>();
         }
 
+        /**
+         * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
+         * insance for the Filter_Group.
+         * @return Metadata.CustomMetadata instance for deployment
+         */
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
@@ -94,6 +103,10 @@ public class CRLP_RollupCMT {
             return md;
         }
 
+        /**
+         * @description Retrieve a List of Metadata.CustomMetadata for each attached FilterRule instance
+         * @return List<Metadata.CustomMetadata> with one instance per Filter Rule for deployment
+         */
         public List<Metadata.CustomMetadata> getRuleMetadataRecords() {
             List<Metadata.CustomMetadata> rulesMDT = new List<Metadata.CustomMetadata>();
             for (FilterRule fr : rules) {
@@ -103,11 +116,16 @@ public class CRLP_RollupCMT {
         }
     }
 
+    /** ***************************************************************************************************
+     * @description Wrapper Class for the Filter_Rule__mdt custom metadata type object. Includes a property
+     * with a list of all attached Filter_Rule instances
+     */
     public class FilterRule {
         public String recordName;
         public String label;
         public String filterGroupRecordName;
-        public String objectData;   // Object.Field
+        public String objectName;
+        public String fieldName;
         public String operation;
         public String value;
         public Boolean isDeleted;
@@ -123,11 +141,17 @@ public class CRLP_RollupCMT {
             this.recordName = filterRule.DeveloperName;
             this.filterGroupRecordName = filterRule.Filter_Group__r.DeveloperName;
             this.operation = filterRule.Operator__c;
-            this.objectData = filterRule.Field__c;
+            this.objectName = filterRule.Object__r.QualifiedApiName;
+            this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
             this.value = filterRule.Constant__c;
             this.isDeleted = filterRule.Is_Deleted__c;
         }
 
+        /**
+         * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
+         * insance for the Filter_Rule.
+         * @return Metadata.CustomMetadata instance for deployment
+         */
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
@@ -143,8 +167,8 @@ public class CRLP_RollupCMT {
             if (this.isDeleted != true) {
                 fldValues = new Map<String, Object>{
                     'Filter_Group__c' => filterGroupRecordName,
-                    'Object__c' => parseObjectField(objectData)[0],
-                    'Field__c' => objectData,
+                    'Object__c' => this.objectName,
+                    'Field__c' => combineObjectAndField(this.objectName, this.fieldName),
                     'Operator__c' => operation,
                     'Constant__c' => value,
                     'Is_Deleted__c' => isDeleted
@@ -158,6 +182,9 @@ public class CRLP_RollupCMT {
         }
     }
 
+    /** ***************************************************************************************************
+     * @description Wrapper Class for the Rollup__mdt custom metadata type object
+     */
     public class Rollup {
         public String recordName;
         public String label;
@@ -165,10 +192,14 @@ public class CRLP_RollupCMT {
         public String description;
         public String operation;
         public String yearlyOperationType;
-        public String summaryData;  // Object.Field
-        public String detailData;   // Object.Field
-        public String amountData;   // Object.Field
-        public String dateData;     // Object.Field
+        public String summaryObject;
+        public String summaryField;
+        public String detailObject;
+        public String detailField;
+        public String amountObject;
+        public String amountField;
+        public String dateObject;
+        public String dateField;
         public Boolean isActive;
         public Boolean isDeleted;
         public Boolean useFiscalYear;
@@ -188,16 +219,25 @@ public class CRLP_RollupCMT {
             this.description = rlp.Description__c;
             this.operation = rlp.Operation__c;
             this.yearlyOperationType = rlp.Yearly_Operation_Type__c;
-            this.summaryData = (rlp.Summary_Field__c != null ? rlp.Summary_Field__r.QualifiedApiName : rlp.Summary_Object__r.QualifiedApiName);
-            this.detailData = (rlp.Detail_Field__c != null ? rlp.Detail_Field__r.QualifiedApiName : rlp.Detail_Object__r.QualifiedApiName);
-            this.amountData = (rlp.Amount_Field__c != null ? rlp.Amount_Field__r.QualifiedApiName : rlp.Amount_Object__r.QualifiedApiName);
-            this.dateData = (rlp.Date_Field__c != null ? rlp.Date_Field__r.QualifiedApiName : rlp.Date_Object__r.QualifiedApiName);
+            this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
+            this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
+            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            this.detailField = parseObjectField(rlp.Detail_Field__r.QualifiedApiName)[1];
+            this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
+            this.amountField = parseObjectField(rlp.Amount_Field__r.QualifiedApiName)[1];
+            this.dateObject = rlp.Date_Object__r.QualifiedApiName;
+            this.dateField = parseObjectField(rlp.Date_Field__r.QualifiedApiName)[1];
             this.useFiscalYear = rlp.Use_Fiscal_Year__c;
             this.intValue = (rlp.Integer__c != null ? rlp.Integer__c.intValue() : null);
             this.isDeleted = false;
             this.isActive = rlp.Active__c;
         }
 
+        /**
+         * @description Convert the wrapper class instance into a valid Metadata.CustomMetadata
+         * insance for the Rollup.
+         * @return Metadata.CustomMetadata instance for deployment
+         */
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
@@ -219,21 +259,20 @@ public class CRLP_RollupCMT {
                     'Integer__c' => intValue,
                     'Use_Fiscal_Year__c' => useFiscalYear,
                     'Active__c' => isActive,
-                    /*'Deleted__c' => isDeleted,*/
-                    'Summary_Object__c' => parseObjectField(summaryData)[0],
-                    'Summary_Field__c' => summaryData,
-                    'Detail_Object__c' => parseObjectField(detailData)[0],
-                    'Amount_Object__c' => parseObjectField(amountData)[0],
-                    'Date_Object__c' => parseObjectField(dateData)[0]
+                    'Summary_Object__c' => summaryObject,
+                    'Summary_Field__c' => combineObjectAndField(summaryObject, summaryField),
+                    'Detail_Object__c' => detailObject,
+                    'Amount_Object__c' => amountObject,
+                    'Date_Object__c' => dateObject
                 };
-                if (parseObjectField(detailData)[1] != null) {
-                    fldValues.put('Detail_Field__c', detailData);
+                if (detailField != null) {
+                    fldValues.put('Detail_Field__c', combineObjectAndField(detailObject, detailField));
                 }
-                if (parseObjectField(amountData)[1] != null) {
-                    fldValues.put('Amount_Field__c', amountData);
+                if (amountField != null) {
+                    fldValues.put('Amount_Field__c', combineObjectAndField(amountObject, amountField));
                 }
-                if (parseObjectField(dateData)[1] != null) {
-                    fldValues.put('Date_Field__c', dateData);
+                if (dateField != null) {
+                    fldValues.put('Date_Field__c', combineObjectAndField(dateObject, dateField));
                 }
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
@@ -265,9 +304,9 @@ public class CRLP_RollupCMT {
     /**
      * @description Convert an Object.Field format string into two values List<String>{Object,Field}
      * @param objField Object.Field format string
-     * @return List<String>{Object,Field}
+     * @return List<String>{Object,Field} ; Field may be null if the string only contains an Object name
      */
-    private static List<String> parseObjectField(String objField) {
+    public static List<String> parseObjectField(String objField) {
         List<String> parsedValues = new List<String>{ null, null };
         if (objField == null) {
             // return blank values
@@ -280,8 +319,7 @@ public class CRLP_RollupCMT {
         return parsedValues;
     }
 
-    // IS THIS NEED?
-    /*public static void updateRollupMetadata(List<CMT_MetadataAPI.MetadataObject> cmtData, Object callbackClass) {
-
-    }*/
+    private static String combineObjectAndField(String objName, String fieldName) {
+        return objName + (fieldName != null ? '.' + fieldName : '');
+    }
 }

@@ -118,7 +118,6 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
     /**
      * @description For a give set of records that were inserted/updated/deleted/undeleted, determine the
      * parent Account/Contact/GAU Id's that require rolling up to and initiate the jobs that do those rollups
-     * TODO - Add LDV support on the Account/Contact object
      * @param detailRecordsToRollup
      */
     private static void executeRollupsForSpecifiedRecords(List<SObject> detailRecordsToRollup) {

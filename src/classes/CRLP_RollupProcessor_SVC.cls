@@ -290,45 +290,7 @@ public class CRLP_RollupProcessor_SVC {
             }
         }
 
-        // Ibitiate the DML operation with allOrNone set to false (don't fail the entire batch if one record fails)
-        List<Database.SaveResult> srs = UTIL_DMLService.updateRecords(recordsToUpdate, false);
-        for(Integer i=0; i<srs.size(); i++) {
-            Database.SaveResult sr = srs[i];
-            if (!sr.isSuccess()) {
-                // Capture the error message and record Id of the failed record
-                Id recordId = recordsToUpdate[i].Id;
-                dmlErrors.put(recordId, ERR_ExceptionHandler.beautifyExceptionMessage(sr.getErrors()[0].getMessage()));
-            }
-        }
-        if (!dmlErrors.isEmpty()) {
-            logDmlErrors(dmlErrors);
-        }
-    }
-
-    /**
-     * @description Log any captured DML errors to the npsp__Error__c object
-     * @param dmlErrors
-     * TODO - Refactor this to use what Randi builds in the DML Errors branch
-     */
-    public static void logDmlErrors(Map<Id, String> dmlErrors) {
-        if (dmlErrors != null && dmlErrors.size() > 0) {
-            String objTypeName = (new List<Id>(dmlErrors.keySet()))[0].getSobjectType().getDescribe().getName();
-            String errMessage = 'The following errors were encountered during updates to the ' + objTypeName + ' records:\n';
-            for (Id recordId : dmlErrors.keySet()) {
-                errMessage += '\n* ' + recordId + ': ' + dmlErrors.get(recordId);
-            }
-
-            // TEMPORARY CODE TO SAVE ALL ERRORS
-            Error__c error = new Error__c();
-            error.Datetime__c = System.now();
-            error.Error_Type__c = 'Rollups DML';
-            error.Context_Type__c = ERR_Handler_API.Context.CRLP.name();
-            error.Full_Message__c = errMessage;
-            error.Object_Type__c = objTypeName;
-            // TODO - Remove this after debugging code is removed
-            error.Stack_Trace__c = CRLP_Debug_UTIL.getCurrentRollupState();
-            insert error;
-
-        }
+        // Initiate the DML operation with allOrNone set to false (don't fail the entire batch if one record fails)
+        UTIL_DMLService.updateRecordBatchAndLogErrors(recordsToUpdate, ERR_Handler_API.Context.CRLP.name());
     }
 }

@@ -32,14 +32,25 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Service methods to
-*
+* @description Service methods insert/update Customizable Rollups CMT data using the Metadata API
+* Process:
+* 1) Call one of the 3 queue() methods to add a list of CRLP_RollupCMT wrapper class instances to the static var
+*    collection for deployment
+* 2) Call deployedQueuedMetadataTypes() to deploy the queue. This returns a unique job Id that can be used to retrieve
+*    the deployment status from the Customizable Rollups Custom Settings object
+* 3) Call clearQueue() when done (unless the code execution contents changes in which case the static contents are lost)
 */
 public class CRLP_ConfigBuilder_SVC {
 
     /** @description Metadata queued up for deployment */
+    @TestVisible
     private static List<List<Metadata.CustomMetadata>> queuedNestedMetadata = new List<List<Metadata.CustomMetadata>>();
 
+    /**
+     * @description Queue a list of CRLP_RollupCMT.Filter Groups instances and optionally a list of Filter Rules
+     * within the Group for deployment.
+     * @param groupsAndRules List<CRLP_RollupCMT.FilterGroup>
+     */
     public static void queueRollupConfigForDeploy(List<CRLP_RollupCMT.FilterGroup> groupsAndRules) {
 
         List<Metadata.CustomMetadata> groups = new List<Metadata.CustomMetadata>();
@@ -55,25 +66,54 @@ public class CRLP_ConfigBuilder_SVC {
         queuedNestedMetadata.add(rules);
     }
 
+    /**
+     * @description Queue a list of CRLP_RollupCMT.FilterRule instances for deployment.
+     * @param rules List<CRLP_RollupCMT.FilterRule>
+     */
+    public static void queueRollupConfigForDeploy(List<CRLP_RollupCMT.FilterRule> rules) {
+        List<Metadata.CustomMetadata> rollupMD = new List<Metadata.CustomMetadata>();
+        for (CRLP_RollupCMT.FilterRule fr : rules) {
+            rollupMD.add(fr.getMetadataRecord());
+        }
+        queuedNestedMetadata.add(rollupMD);
+    }
+
+    /**
+     * @description Queue a list of CRLP_RollupCMT.Rollup instances for deployment.
+     * @param rollups List<CRLP_RollupCMT.Rollup>
+     */
     public static void queueRollupConfigForDeploy(List<CRLP_RollupCMT.Rollup> rollups) {
         List<Metadata.CustomMetadata> rollupMD = new List<Metadata.CustomMetadata>();
         for (CRLP_RollupCMT.Rollup rlp : rollups) {
             rollupMD.add(rlp.getMetadataRecord());
         }
-
         queuedNestedMetadata.add(rollupMD);
     }
 
+    /**
+     * @description Clear the queuedNestedMetadata static var contents
+     */
+    public static void clearQueue() {
+        queuedNestedMetadata.clear();
+    }
+
+    /**
+     * @description Pass the List<List<CustomMetadata>> to the CMT_MetadataAPI for deployment using a chaining process
+     * to support inserting/updating one set of CMT records before another set can be updated/inserted.
+     * @return A unique jobId. This value is used when writing the final status to the Customizable_Rollup_Settings__c
+     * object and is needed to ensure that the status retrieved from that custom settings object is for this
+     * particular deployment and not a previous one.
+     */
     public static String deployedQueuedMetadataTypes() {
         String jobId = getUniqueJobId();
-        CMT_MetadataAPI.deployMetadata(jobId, queuedNestedMetadata);
+        CMT_MetadataAPI.deployMetadata(jobId, queuedNestedMetadata.clone());
         return jobId;
     }
 
     /**
      * @return A 10 character unique 'jobId' to use for
      */
-    public static String getUniqueJobId() {
+    private static String getUniqueJobId() {
         return UserInfo.getUserId().left(15).right(4).toUpperCase() +
                 String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
     }
