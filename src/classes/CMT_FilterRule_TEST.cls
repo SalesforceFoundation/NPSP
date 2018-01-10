@@ -87,9 +87,8 @@ private class CMT_FilterRule_TEST {
         String soql = 'SELECT Id,' + queryFields + ' FROM ' + objName + ' LIMIT 1';
         List<SObject> test = database.query(soql);
 
-        System.AssertEquals(1, CMT_FilterRule_SEL.getReferencedFieldsByObject(Partial_Soft_Credit__c.SObjectType).size(),
+        System.AssertEquals(true, CMT_FilterRule_SEL.getReferencedFieldsByObject(Partial_Soft_Credit__c.SObjectType).size() > 0,
                 'There should be at least one referenced field for the Partial_Soft_Credit object in Filter_Rule__mdt');
-
     }
 
     /**
