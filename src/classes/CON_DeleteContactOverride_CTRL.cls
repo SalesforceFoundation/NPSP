@@ -176,9 +176,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
-            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
-            cascadeDelete.setChildrenLoader(new ContactDeletionChildrenLoader());
-            cascadeDelete.setChildrenValidator(new ContactChildrenValidator());
+            CDL_CascadeDeleteLookups.CascadeDelete cascadeDelete = CDL_CascadeDeleteLookups.getCascadeDelete();
+            cascadeDelete.setLoader(new ContactCascadeDeleteLoader());
+            cascadeDelete.setValidator(new ContactCascadeDeleteValidator());
 
             delete queryContact;
 
@@ -211,9 +211,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteAccount() {
         Account accForDelete = new Account(Id = accountId);
         
-        CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
-        cascadeDelete.setChildrenLoader(new AccountDeletionChildrenLoader());
-        cascadeDelete.setChildrenValidator(new AccountChildrenValidator());
+        CDL_CascadeDeleteLookups.CascadeDelete cascadeDelete = CDL_CascadeDeleteLookups.getCascadeDelete();
+        cascadeDelete.setLoader(new AccountCascadeDeleteLoader());
+        cascadeDelete.setValidator(new AccountCascadeDeleteValidator());
 
         try {
             delete accForDelete;
@@ -273,7 +273,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Contacts to delete
     ********************************************************************************************************/
-    class ContactDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+    class ContactCascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the children of the Contacts being deleted.
@@ -311,7 +311,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that validates the children of the Contacts being deleted
     ********************************************************************************************************/
-    class ContactChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
+    class ContactCascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
 
         /*******************************************************************************************************
         * @description validates the children of the Contact.
@@ -323,7 +323,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
             List<SObject> validChildren = new List<SObject>();
 
             for(Contact parent : parents) {
-                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Firstname + ' ' + parent.LastName);
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Firstname + ' ' + parent.LastName);
                 for (SObject child : children) {
                     Boolean isValidChild = true;
                     
@@ -401,7 +401,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Account to delete
     ********************************************************************************************************/
-    class AccountDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+    class AccountCascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the children of the Accounts to delete.
@@ -432,7 +432,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that validates the children of the Account to delete
     ********************************************************************************************************/
-    class AccountChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
+    class AccountCascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
 
         /*******************************************************************************************************
         * @description validates the children of the Account.
@@ -442,7 +442,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         ********************************************************************************************************/
         public List<SObject> validateDeletion(List<Account> parents, List<SObject> children) {
             for(Account parent : parents) {
-                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Name);
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Name);
 
                 for (SObject child : children) {
                     if (isClosedWonOpportunity(child, parent.Id)) {

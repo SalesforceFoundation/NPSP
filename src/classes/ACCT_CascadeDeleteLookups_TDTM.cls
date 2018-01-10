@@ -33,28 +33,28 @@
  * @group Utilities
  * @description Cascade deletion extension for Account object.
  */
-public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
+public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
 
     /*******************************************************************************************************
-    * @description Gets the deleted Accounts ChildrenLoader Object. 
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
+    * @description Gets the deleted Accounts CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
-        return new AccountDeletionChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
     }
 
     /*******************************************************************************************************
-    * @description Gets the undeleted Accounts ChildrenLoader Object.
-    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
+    * @description Gets the undeleted Accounts CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
-        return new UndeletionFirstChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new FirstCascadeUndeleteLoader();
     }
 
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Accounts being deleted.
     ********************************************************************************************************/
-    class AccountDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the related Relationships, Recurring Donations, Allocations.
@@ -141,14 +141,14 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
     /*******************************************************************************************************
     * @description Class that retrieves the first children group of the Accounts being undeleted.
     ********************************************************************************************************/
-    class UndeletionFirstChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
+    class FirstCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
 
         /******************************************************************************************************
-        * @description The Constructor of UndeletionFirstChildrenLoader
+        * @description The Constructor of FirstCascadeUndeleteLoader
         */
-        UndeletionFirstChildrenLoader() {
+        FirstCascadeUndeleteLoader() {
             this.relatedRecurringDonations = new List<npe03__Recurring_Donation__c>();
         }
 
@@ -178,10 +178,10 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is another
         * group of children records to undelete.
-        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader 
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader 
         ********************************************************************************************************/
-        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
-            return new UndeletionSecondChildrenLoader(relatedRecurringDonations);
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            return new SecondCascadeUndeleteLoader(relatedRecurringDonations);
 
         }
 
@@ -225,15 +225,15 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
     /*******************************************************************************************************
     * @description Class that retrieves the second children group of the Accounts being undeleted
     ********************************************************************************************************/
-    class UndeletionSecondChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
+    class SecondCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
 
         /*********************************************************************************************************
-        * @description The Constructor of UndeletionSecondChildrenLoader
+        * @description The Constructor of SecondCascadeUndeleteLoader
         * @param List<npe03__Recurring_Donation__c> The Recurring Donations. 
         */
-        UndeletionSecondChildrenLoader(List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
+        SecondCascadeUndeleteLoader(List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
             this.relatedRecurringDonations = relatedRecurringDonations;
         }
 
@@ -264,7 +264,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CascadeDeleteLo
         * @description Retrieves the children of the Recurring Donations being undeleted.
         * @return List<SObject> Undeleted Recurring Donations's Allocations.
         ********************************************************************************************************/
-        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;
         }
     }

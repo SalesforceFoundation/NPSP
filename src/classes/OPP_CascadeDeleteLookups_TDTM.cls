@@ -33,28 +33,28 @@
  * @group Utilities
  * @description Cascade deletion extension for Opportunity object.
  */
-public with sharing class OPP_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
+public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
 
     /*******************************************************************************************************
-    * @description Gets the deleted Opportunities ChildrenLoader Object. 
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
+    * @description Gets the deleted Opportunities CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
-        return new OpportunityDeletionChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
     }
 
     /*******************************************************************************************************
-    * @description Gets the undeleted Opportunities ChildrenLoader Object.
-    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
+    * @description Gets the undeleted Opportunities CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
-        return new OpportunityUndeletionChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new CascadeUndeleteLoader();
     }
 
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Opportunities being deleted.
     ********************************************************************************************************/
-    class OpportunityDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the related Allocations of the Opportunities being deleted.
@@ -73,7 +73,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Opportunities being undeleted
     ********************************************************************************************************/
-    class OpportunityUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
+    class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         /*******************************************************************************************************
         * @description Retrieves the related Allocations of the Opportunities being undeleted.
@@ -93,9 +93,9 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CascadeDeleteLoo
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is no other
         * group of children records to undelete after Allocations undeletion.
-        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
         ********************************************************************************************************/
-        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;
         }
     }

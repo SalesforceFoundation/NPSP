@@ -33,59 +33,59 @@
  * @group Utilities
  * @description Cascade deletion extension for Recurring Donation object.
  */
-public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLookups_TDTM {
+public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
 
     /*******************************************************************************************************
-    * @description Gets the deleted Recurring Donations ChildrenLoader Object. 
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
+    * @description Gets the deleted Recurring Donations CascadeDeleteLoader Object. 
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
-        return new RDDeletionChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
+        return new CascadeDeleteLoader();
     }
 
     /*******************************************************************************************************
-    * @description Gets the undeleted Recurring Donations ChildrenLoader Object.
-    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
+    * @description Gets the undeleted Recurring Donations CascadeUndeleteLoader Object.
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
-        return new RDUndeletionChildrenLoader();
+    protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
+        return new CascadeUndeleteLoader();
     }
 
     /*******************************************************************************************************
     * @description Gets the ChildrenValidator Object.
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenValidator.
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteValidator.
     ********************************************************************************************************/
-    protected override CascadeDeleteLookupsDomain.DeleteChildrenValidator getDeletionChildrenValidator() {
-        return new RDChildrenValidator();
+    protected override CDL_CascadeDeleteLookups.CascadeDeleteValidator getCascadeDeleteValidator() {
+        return new CascadeDeleteValidator();
     }
 
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Recurring Donations being deleted.
     ********************************************************************************************************/
-    class RDDeletionChildrenLoader implements CascadeDeleteLookupsDomain.DeleteChildrenLoader {
+    class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the related Opportunities and Allocations of the Recurring Donations being deleted.
         * @param Set<Id> The Ids of the deleted Recurring Donations.
         * @return List<SObject> Deleted Recurring Donations' Opportunities and Allocations.
-        ********************************************************************************************************/
+        ****************************************************************************    ****************************/
         public List<SObject> load(Set<Id> parentsIds) {
             List<SObject> result = new List<SObject>();
 
-            List<SObject> relatedOpportunities = [
+            List<Opportunity> relatedOpportunities = [
                 SELECT Name, npe03__Recurring_Donation__c, IsWon, IsClosed
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :parentsIds
             ];
-            result.addAll(relatedOpportunities);
+            result.addAll((List<SObject>) relatedOpportunities);
 
-            List<SObject> relatedAllocations = [
+            List<Allocation__c> relatedAllocations = [
                 SELECT Recurring_Donation__c, Opportunity__c
                 FROM Allocation__c
                 WHERE Recurring_Donation__c IN :parentsIds
                 OR Opportunity__c IN :relatedOpportunities
             ];
-            result.addAll(relatedAllocations);
+            result.addAll((List<SObject>) relatedAllocations);
 
             return (new Map<Id, SObject>(result)).values();
         }
@@ -94,7 +94,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
     /*******************************************************************************************************
     * @description Class that retrieves the children of the Recurring Donations being undeleted.
     ********************************************************************************************************/
-    class RDUndeletionChildrenLoader implements CascadeDeleteLookupsDomain.UndeleteChildrenLoader {
+    class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         /*******************************************************************************************************
         * @description Retrieves the related Opportunities and Allocations of the Recurring Donations being undeleted.
@@ -128,9 +128,9 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is no other
         * group of children records to undelete after Opportunities and Allocations undeletion.
-        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
         ********************************************************************************************************/
-        public CascadeDeleteLookupsDomain.UndeleteChildrenLoader next() {
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;
         }
     }
@@ -138,7 +138,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
     /*******************************************************************************************************
     * @description Class that validates the children of the Recurring Donations being deleted
     ********************************************************************************************************/
-    class RDChildrenValidator implements CascadeDeleteLookupsDomain.DeleteChildrenValidator {
+    class CascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
 
         /*******************************************************************************************************
         * @description validates the children of the Account.
@@ -150,7 +150,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
             List<SObject> validChildren = new List<SObject>();
 
             for(npe03__Recurring_Donation__c parent : parents) {
-                CascadeDeleteLookupsDomain.DeleteError error = new CascadeDeleteLookupsDomain.DeleteError(parent.Name);
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Name);
                 for (SObject child : children) {
                     if (isClosedWonOpportunity(child, parent.Id)) {
                         Opportunity closedWonOpportunity = (Opportunity) child;
@@ -174,7 +174,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CascadeDeleteLook
         * @description Checks if the record is a Closed Won Opportunity.
         * @param SObject The child record.
         * @param Id The Id of the parent record.
-        * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader.
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
             return (
