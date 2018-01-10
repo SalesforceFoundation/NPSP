@@ -432,7 +432,7 @@ public with sharing class RLLP_OppRollup_TEST {
     * attributed to a organizatio account, and verifies rollups go to the primary contact instead of the account.
     * @param strProcessor The account processor type.
     */
-   static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
+    static void testGivingRollupAlwaysPrimaryProcessor (string strProcessor) {
 
             npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
                 npe01__Account_Processor__c = strProcessor,
@@ -607,61 +607,76 @@ public with sharing class RLLP_OppRollup_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupAcctHHAccount') return;
         testGivingRollupAcct(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
+
     /*********************************************************************************************************
     * @description
     */
     static void testGivingRollupAcct (string strProcessor) {
  
-            npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-                npe01__Account_Processor__c = strProcessor,
-                npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
-                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Account_Processor__c = strProcessor,
+            npe01__Enable_Opportunity_Contact_Role_Trigger__c = true,
+            npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
+        ));
+
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+            new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Always_Rollup_to_Primary_Contact__c = false,
+                npo02__Enable_Opp_Rollup_Triggers__c = true,
+                npo02__Excluded_Account_Opp_Rectypes__c = null,
+                npo02__Excluded_Account_Opp_Types__c = null,
+                npo02__Excluded_Contact_Opp_Rectypes__c = null,
+                npo02__Excluded_Contact_Opp_Types__c = null,
+                npo02__Membership_Record_Types__c = null
             ));
-            
-            npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                    npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                    npo02__Always_Rollup_to_Primary_Contact__c = false,
-                    npo02__Enable_Opp_Rollup_Triggers__c = true,
-                    npo02__Excluded_Account_Opp_Rectypes__c = null,
-                    npo02__Excluded_Account_Opp_Types__c = null,
-                    npo02__Excluded_Contact_Opp_Rectypes__c = null,
-                    npo02__Excluded_Contact_Opp_Types__c = null,
-                    npo02__Membership_Record_Types__c = null
-                ));
 
-            Date datClose = System.Today();
+        Date datClose = System.Today();
 
-            // create account
-            account testacct = new account(name='testacct');
-            insert testacct;
-            opportunity newOpp =
-                 new opportunity (
-                    name = 'testopp',
-                    accountid = testacct.id, 
-                    stagename=UTIL_UnitTestData_TEST.getClosedWonStage(),
-                    closedate=datClose, amount=33333
-                 );
-            if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
-                newOpp.put('RecordTypeId', giftRecordTypeIdForTests);
-            }
-            // insert the opp(s)
-            Test.StartTest();
-            insert newOpp;
-            Test.StopTest();
-            
-            // test whether the trigger worked
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-            Account updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
-                                    
-            System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );
+        // create account
+        account testacct = new account(name='testacct');
+        insert testacct;
+        opportunity newOpp =
+             new opportunity (
+                name = 'testopp',
+                accountid = testacct.id,
+                stagename=UTIL_UnitTestData_TEST.getClosedWonStage(),
+                closedate=datClose, amount=33333
+             );
+        if(RLLP_OppRollup_UTIL.areRecordTypesOnOpps()){
+            newOpp.put('RecordTypeId', giftRecordTypeIdForTests);
+        }
+        // insert the opp(s)
+        Test.StartTest();
+        insert newOpp;
+        Test.StopTest();
 
-            // now roll up manually
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
+        // test whether the trigger worked
+        RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+        Account updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
 
-            updatedAcct = [select id, npo02__TotalOppAmount__c from account where id =: testacct.id];
-            System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );    
+        System.AssertEquals ( 33333 , updatedAcct.npo02__TotalOppAmount__c );
+
+        // now roll up manually
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
+
+        testAcct = [select id, npo02__TotalOppAmount__c, npo02__LastMembershipOrigin__c from account where id =: testacct.id];
+        System.AssertEquals ( 33333 , testAcct.npo02__TotalOppAmount__c );
+
+        // validate that the Membership Origin on the Account is null
+        System.AssertEquals ( null , testAcct.npo02__LastMembershipOrigin__c );
+
+        // Requery the Account object object to pass to the rollup logic
+        updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
+
+        // Force a manual rollups and validate that the object is NOT updated again
+        // by comparing the number of DML Statements before and after the rollup
+        Integer dmlCount = Limits.getDmlStatements();
+        rg = new RLLP_OppRollup();
+        rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
+        System.assertEquals(dmlCount, Limits.getDmlStatements(),
+                'The rollup should not have made any record updates because nothing was changed');
     }
 
     static testMethod void testGivingRollupAcctMembershipOne2One(){
@@ -706,7 +721,6 @@ public with sharing class RLLP_OppRollup_TEST {
             // insert the opp(s)
             Test.StartTest();
             insert newOpp;
-            Test.StopTest();
 
             // test whether the trigger worked      
             RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
@@ -722,10 +736,31 @@ public with sharing class RLLP_OppRollup_TEST {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
 
-            updatedAcct = [select id, npo02__TotalMembershipOppAmount__c from account where id =: testacct.id];
-            System.AssertEquals ( 33333 , updatedAcct.npo02__TotalMembershipOppAmount__c );
+            // Verify that the membership amount was updated
+            testAcct = [select id, npo02__TotalMembershipOppAmount__c from account where id =: testacct.id];
+            System.AssertEquals ( 33333 , testAcct.npo02__TotalMembershipOppAmount__c );
+
+            // Reset these to null
+            newOpp.npe01__member_level__c = null;
+            newOpp.npe01__membership_origin__c = null;
+            update newOpp;
+
+            // validate that the Membership Origin on the Account is now null
+            testAcct = [select id, npo02__LastMembershipOrigin__c from account where id =: testacct.id];
+            System.AssertEquals ( null , testAcct.npo02__LastMembershipOrigin__c );
+
+            // Requery the Account object object to pass to the rollup logic
+            updatedAcct = Database.query(oppRollupUtil.buildAccountQuery() + ' where id =\''+testacct.id+'\'');
+
+            // Force a manual rollups and validate that the object is NOT updated again
+            // by comparing the number of DML Statements before and after the rollup
+            Integer dmlCount = Limits.getDmlStatements();
+            rg = new RLLP_OppRollup();
+            rg.rollupAccounts(new map<id, Account>(new list<Account>{updatedAcct}));
+            System.assertEquals(dmlCount, Limits.getDmlStatements(),
+                    'The rollup should not have made any record updates because nothing was changed');
         }
-    }
+}
 
     static testMethod void testGivingRollupBatchOne2One(){
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupBatchOne2One') return;
