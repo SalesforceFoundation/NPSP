@@ -1591,7 +1591,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>progress field label</shortDescription>
-        <value>Records with errors</value>
+        <value>Records with errors:</value>
     </labels>
     <labels>
         <fullName>bdiDryRunRecordsValidated</fullName>
@@ -1599,7 +1599,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>label on progress widget during Dry Run</shortDescription>
-        <value>Records validated</value>
+        <value>Records validated:</value>
     </labels>
     <labels>
         <fullName>bdiDryRunTitle</fullName>
