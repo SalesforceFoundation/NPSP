@@ -20,6 +20,11 @@
 
     <!-- markup -->
 
+        {!v.activeRollup.Detail_Object__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Detail_Field__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Summary_Object__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Summary_Field__r.QualifiedApiName}
+
 
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
@@ -51,12 +56,11 @@
                                               onchange="{!c.changeDetailObject}"
                                               label="{!v.labels.detailObject}"
                                               name="{!v.labels.detailObject}"
-                                              value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
                                               required="true"
                                               disabled="{!v.isReadOnly}">
                                             <!-- this doesn't do anything: readonly="true"-->
                                 <aura:iteration items="{!v.detailObjects}" var="option">
-                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.selected}"/>
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Detail_Object__r.QualifiedApiName}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
@@ -68,8 +72,9 @@
                                               value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
                                               required="true"
                                               disabled="{!v.isReadOnly}">
+                                <option value="null" text="{!v.labels.na}" selected="{!null == v.activeRollup.Detail_Field__r.QualifiedApiName}"/>
                                 <aura:iteration items="{!v.detailFields}" var="option">
-                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.selected}"/>
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Detail_Field__r.QualifiedApiName}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
@@ -82,7 +87,7 @@
                                               required="true"
                                               disabled="{!v.isReadOnly}">
                                 <aura:iteration items="{!v.summaryObjects}" var="option">
-                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.selected}"/>
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Summary_Object__r.QualifiedApiName}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
@@ -94,7 +99,7 @@
                                               required="true"
                                               disabled="{!v.isReadOnly}">
                                 <aura:iteration items="{!v.summaryFields}" var="option">
-                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.selected}"/>
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Summary_Field__r.QualifiedApiName}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>

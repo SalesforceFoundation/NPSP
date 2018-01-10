@@ -9,6 +9,7 @@
         } else {
             cmp.set("v.isReadOnly", true);
         }
+        console.log('calling helper...');
         helper.setObjectAndFieldDependencies(cmp);
     },
 
@@ -37,7 +38,7 @@
         helper.resetDetailFields(cmp, detailObject);
 
         //reset anything else necessary
-        //helper.resetSummaryFields(cmp, detailObject);
+        //helper.resetSummaryFields(cmp, summaryObject);
     },
     changeDetailField: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
@@ -48,8 +49,8 @@
     changeSummaryObject: function(cmp, event, helper){
         //change summary fields to match new summary object + existing detailField
         var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        var detailField = cmp.find("detailFieldSelect").get("v.value");
-        //helper.resetSummaryFields(cmp, detailField, summaryObject);
+        //var detailField = cmp.find("detailFieldSelect").get("v.value");
+        helper.resetSummaryFields(cmp, summaryObject);
     },
 
 })

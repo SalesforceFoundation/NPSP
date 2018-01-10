@@ -5,13 +5,14 @@
         if($A.util.isEmpty(cmp.get("v.objectDetails"))) {
 
             console.log("In the helper function");
-            var detailObjects = [{label: 'Opportunity', name: 'Opportunity'}
-                , {label: 'Partial Soft Credit', name: 'Partial_Soft_Credit__c'}
-                , {label: 'Payment', name: 'npe01__OppPayment__c'}
-                , {label: 'Allocation', name: 'Allocation__c'}];
+            var labels = cmp.get("v.labels");
+            var detailObjects = [{label: labels.opportunityLabel, name: 'Opportunity'}
+                , {label: labels.partialSoftCreditLabel, name: 'Partial_Soft_Credit__c'}
+                , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
+                , {label: labels.allocationLabel, name: 'Allocation__c'}];
             var summaryObjects = [{label: 'Account', name: 'Account'}
-                , {label: 'Contact', name: 'Contact'}
-                , {label: 'General Accounting Unit', name: 'General_Accounting_Unit__c'}];
+                , {label: labels.contactLabel, name: 'Contact'}
+                , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}];
             var availableObjects = detailObjects.concat(summaryObjects);
 
             cmp.set("v.detailObjects", detailObjects);
@@ -30,11 +31,13 @@
                 if (state === "SUCCESS") {
                     var response = response.getReturnValue();
                     cmp.set("v.objectDetails", response);
-                    console.log(response.getReturnValue());
+                    console.log("got a response");
                     //TODO: set detailFields here? could depend on mode + first value
-                    var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName")
                     console.log('Before calling reset details');
+                    var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+                    var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
                     this.resetDetailFields(cmp, detailObject);
+                    this.resetSummaryFields(cmp, summaryObject);
                     console.log('Called reset details');
                 }
                 else if (state === "ERROR") {
@@ -71,13 +74,25 @@
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
-    resetSummaryFields: function(cmp, detailObject, summaryObject){
+    resetSummaryFields: function(cmp, summaryObject){
         //TODO: this needs to handle detail field, summary object && detail object
         console.log("Fired summary field reset");
-        var objectDetails = cmp.get("v.objectDetails");
-        var detailFieldMapForObject = objectDetails[detailObject];
-        var summaryFieldMapForObject = objectDetails[summaryObject];
 
+        //this code is getting all fields + type, not all fields for given detail object
+        var objectDetails = cmp.get("v.objectDetails");
+        var summaryFieldMapForObject = objectDetails[summaryObject];
+        var newSummaryFields = [];
+
+        for(var i=0; i<summaryFieldMapForObject.length; i++){
+            var name = summaryFieldMapForObject[i].name;
+            var label = summaryFieldMapForObject[i].label;
+            var datatype = summaryFieldMapForObject[i].type;
+            var fieldObj = {label: label, name: name, type: datatype};
+            //newDetailFields.push(summaryFieldMapForObject[i]);
+            newSummaryFields.push(fieldObj);
+        }
+        //todo: 2 attributes?
+        cmp.set("v.summaryFields", newSummaryFields);
     },
     resetDetailFields: function(cmp, detailObject){
         console.log("Fired detail field reset");
@@ -86,8 +101,6 @@
         //this code is getting all fields + type, not all fields for given detail object
         var objectDetails = cmp.get("v.objectDetails");
         var detailFieldMapForObject = objectDetails[detailObject];
-        console.log('Detail Field Map for object: ');
-        console.log(detailFieldMapForObject);
         var newDetailFields = [];
 
         for(var i=0; i<detailFieldMapForObject.length; i++){
@@ -95,12 +108,9 @@
             var label = detailFieldMapForObject[i].label;
             var datatype = detailFieldMapForObject[i].type;
             var fieldObj = {label: label, name: name, type: datatype};
-            console.log(fieldObj);
             newDetailFields.push(fieldObj);
-            console.log(newDetailFields);
         }
         //todo: 2 attributes?
-        console.log(newDetailFields);
         cmp.set("v.detailFields", newDetailFields);
     }
 })

@@ -1788,6 +1788,7 @@
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
         <members>stgNoObjectsFound</members>
+        <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
         <members>stgTools</members>

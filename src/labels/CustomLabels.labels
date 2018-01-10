@@ -6556,6 +6556,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>User Defined Rollups</value>
     </labels>
     <labels>
+        <fullName>stgNotApplicable</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNotApplicable</shortDescription>
+        <value>N/A</value>
+    </labels>
+    <labels>
         <fullName>stgOppNamingDescription</fullName>
         <categories>Settings, OppNaming</categories>
         <language>en_US</language>
