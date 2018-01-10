@@ -338,7 +338,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue.equals(compVal.trim())) {
+                    if (fieldValue != null && fieldValue.equals(compVal.trim())) {
                         found = true;
                         break;
                     }
@@ -389,10 +389,6 @@ public class CMT_FilterRule {
             } else if (rule.operation == FilterOperation.NOT_EQUALS) {
                 return fieldValue != compareValue;
 
-            } else if (fieldValue == null) {
-                // A null value in the the field can't be compared using any of the remaining operations
-                return false;
-
             } else if (rule.operation == FilterOperation.STARTS_WITH) {
                 compareValue = (compareValue == null ? '' : compareValue);
                 return fieldValue.startsWithIgnoreCase(compareValue);
@@ -436,7 +432,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue.equalsIgnoreCase(compVal.trim())) {
+                    if (fieldValue != null && fieldValue.equalsIgnoreCase(compVal.trim())) {
                         found = true;
                         break;
                     }
