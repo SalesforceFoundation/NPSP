@@ -261,7 +261,7 @@ private class CRLP_RollupContact_TEST {
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType));
         } else if (tt == TestType.TestLDV) {
-            database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType));
+            database.executeBatch(new CRLP_Rollup_LDV_BATCH(Contact.SObjectType));
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{conId})));
         }

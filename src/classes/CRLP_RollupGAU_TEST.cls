@@ -205,7 +205,7 @@ private class CRLP_RollupGAU_TEST {
         // since this is the only rollup method that supports allocations
         Test.startTest();
         Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-        database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ), batchSize);
+        database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ), batchSize);
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups

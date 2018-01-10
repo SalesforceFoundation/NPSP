@@ -138,10 +138,10 @@
         <members>CRLP_RollupScheduler</members>
         <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_Rollup_BATCH</members>
-        <members>CRLP_Rollup_BATCH_LDV</members>
-        <members>CRLP_Rollup_BATCH_PSC_LDV</members>
+        <members>CRLP_Rollup_LDV_BATCH</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
+        <members>CRLP_Rollup_SoftCredit_LDV_BATCH</members>
         <members>CRLP_Rollup_TDTM</members>
         <members>CRLP_Rollup_SVC</members>
         <members>CRLP_Rollup_SVC_TEST</members>

@@ -89,9 +89,9 @@ public class CRLP_RollupScheduler implements Schedulable {
 
             // If there is at least one LDV Account to roll up, execute this batch job
             if (this.rollupObjectType == Partial_Soft_Credit__c.SObjectType) {
-                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), batchSize);
+                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), batchSize);
             } else if (hasLDVAccounts) {
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(this.rollupObjectType), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(this.rollupObjectType), batchSize);
             }
         }
     }

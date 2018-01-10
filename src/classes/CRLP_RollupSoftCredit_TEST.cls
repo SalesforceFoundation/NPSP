@@ -230,7 +230,7 @@ private class CRLP_RollupSoftCredit_TEST {
                 'There should be 300 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
-        database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), 600);
+        database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), 600);
         Test.stopTest();
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups

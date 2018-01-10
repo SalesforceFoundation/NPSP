@@ -258,7 +258,7 @@ private class CRLP_RollupAccount_TEST {
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(new List<Id>{acctId}));
         } else if (tt == TestType.TestLDV) {
-            database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{acctId}));
+            database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{acctId}));
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{acctId})));
         }

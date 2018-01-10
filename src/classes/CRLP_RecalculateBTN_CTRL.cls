@@ -88,13 +88,13 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             } else {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(this.objType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ recordId }), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ recordId }), batchSize);
             }
 
             // Execute Contact or Account Soft Credit roll-ups
             if (this.objType == Account.SObjectType || this.objType == Contact.SObjectType) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(new List<Id>{ recordId }), batchSize);
+                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(new List<Id>{ recordId }), batchSize);
             }
 
         } else {

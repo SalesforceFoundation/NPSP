@@ -36,7 +36,7 @@
 *  LDV style query. Stateful vars are used to hold rollups of the Account and Contact across multiple batch
 *  iterations.
 */
-public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
     /*******************************************************************************************************
     * @description Stateful collection of Rollups used to hold Rollups for Contacts and Accounts that
@@ -54,7 +54,7 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
-    public CRLP_Rollup_BATCH_PSC_LDV() {
+    public CRLP_Rollup_SoftCredit_LDV_BATCH() {
         this.cntctStatefulRollups = new List<CRLP_Rollup>();
         this.acctStatefulRollups = new List<CRLP_Rollup>();
     }
@@ -62,7 +62,7 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
-    public CRLP_Rollup_BATCH_PSC_LDV(List<Id> recordIds) {
+    public CRLP_Rollup_SoftCredit_LDV_BATCH(List<Id> recordIds) {
         this();
         this.recordIds = recordIds;
     }

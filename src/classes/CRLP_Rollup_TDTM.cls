@@ -159,7 +159,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             // Don't submit the batch job when unit tests are running
             if (!Test.isRunningTest() && !gauIds.isEmpty()) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(gauIds), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(gauIds), batchSize);
             }
         }
 
