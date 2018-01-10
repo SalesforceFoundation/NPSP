@@ -100,7 +100,16 @@ public class CRLP_Rollup_SVC {
                 Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
-                if (origValue != newValue) {
+                if (summaryField.getSoapType() == SoapType.STRING && (origValue != null || newValue != null)) {
+                    // Handle an empty string as null to prevent unecessary DML updates
+                    String origString = (origValue != null ? (String)origValue : null);
+                    String newString = (newValue != null ? (String)newValue : null);
+                    origString = (String.isEmpty(origString) ? null : origString);
+                    newString = (String.isEmpty(newString) ? null : newString);
+                    if (origString != newString) {
+                        hasValueChanged = true;
+                    }
+                } else if (origValue != newValue) {
                     hasValueChanged = true;
                 }
                 /*if (rollup.fldType == SoapType.DOUBLE) {
