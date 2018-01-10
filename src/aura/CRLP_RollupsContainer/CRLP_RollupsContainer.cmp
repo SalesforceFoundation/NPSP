@@ -133,6 +133,7 @@
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom--large">
+            <!--TODO: should activeRollup be passed by value instead of reference, or cleared before returning?-->
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="{!v.detailMode}" />
         </div>
     </aura:if>

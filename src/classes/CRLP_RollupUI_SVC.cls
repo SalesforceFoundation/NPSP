@@ -72,6 +72,14 @@ public with sharing class CRLP_RollupUI_SVC {
 
     }
     /*******************************************************************************************************
+    * @description Creates a model to organize fields by name, label and type to minimize server trips.
+    */
+    public class FieldInformation {
+        @AuraEnabled public List<RollupTableItem> items;
+        @AuraEnabled public Map<String, String> labels;
+
+    }
+    /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model.
     * @return
     */
@@ -206,13 +214,14 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static Map<String,Map<String,String>> getFieldsByDataType(List<String> objectNames) {
+    public static Map<String,List<Map<String,String>>> getFieldsByDataType(List<String> objectNames) {
 
-        Map<String,Map<String,String>> objNametoFieldTypeMap = new Map<String,Map<String,String>>();
+        Map<String,List<Map<String,String>>> objNametoFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String obj : objectNames){
-            Map<String,String> fieldNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
+            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllLabeledFieldsWithType(obj);
             objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
+            //TODO: filter out fields that can be rolled up before returning
         }
 
         return objNametoFieldTypeMap;

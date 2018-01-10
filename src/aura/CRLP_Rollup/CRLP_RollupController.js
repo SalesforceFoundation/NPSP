@@ -28,7 +28,28 @@
     },
 
     changeDetailObject: function(cmp, event, helper){
+        //clear out everything else?
+        //set new summary objects based on selected value
+        var detailObject = cmp.find("detailObjectSelect").get("v.value");
+        helper.resetSummaryObjects(cmp, detailObject);
 
-    }
+        //set new detail fields based on new selected object
+        helper.resetDetailFields(cmp, detailObject);
+
+        //reset anything else necessary
+        //helper.resetSummaryFields(cmp, detailObject);
+    },
+    changeDetailField: function(cmp, event, helper){
+        //change summary fields to match available detail field types + existing summary object
+        var detailField = cmp.find("detailFieldSelect").get("v.value");
+        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
+        //helper.resetSummaryFields(cmp, detailField, summaryObject);
+    },
+    changeSummaryObject: function(cmp, event, helper){
+        //change summary fields to match new summary object + existing detailField
+        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
+        var detailField = cmp.find("detailFieldSelect").get("v.value");
+        //helper.resetSummaryFields(cmp, detailField, summaryObject);
+    },
 
 })

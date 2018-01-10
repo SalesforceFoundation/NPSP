@@ -189,19 +189,24 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Returns a map of field names to data types
     * @param objectName the name of the object to look up
-    * @return Map<String, String> a map of field api names to field data type.
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static Map<String, String> getAllFieldsWithType(String objectName) {
+    public static List<Map<String, String>> getAllLabeledFieldsWithType(String objectName) {
 
-        Map<String, String> fieldNameToType = new Map<String, String>();
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            fieldNameToType.put(dfr.name, dfr.getType().Name());
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', dfr.name);
+            fieldObject.put('label', dfr.label);
+            fieldObject.put('type', dfr.getType().Name());
+
+            fieldObjectList.add(fieldObject);
         }
 
-        return fieldNameToType;
+        return fieldObjectList;
     }
 
 
