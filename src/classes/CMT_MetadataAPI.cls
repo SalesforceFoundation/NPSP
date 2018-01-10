@@ -196,7 +196,7 @@ public class CMT_MetadataAPI {
             }
 
             // If there are more records to deploy, chain the Queuable class to continue the deployment
-            if (isSuccess && this.nextOperation != null && this.nextOperation.size() > 0) {
+            if (isSuccess && this.nextOperation != null && this.nextOperation.size() > 0 && !Test.isRunningTest()) {
                 System.debug('Queue Deploy for Next Operation');
                 System.enqueueJob(new QueueableDeployMetadata(this.jobId, this.nextOperation));
             } else {

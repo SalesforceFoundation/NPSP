@@ -93,13 +93,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage.value = 'true';
         groupClosedWonDonations.rules.add(ruleCloseWonStage);
 
-        CRLP_RollupCMT.FilterRule ruleDonationsRecordType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': Excluded RT');
-        ruleDonationsRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleDonationsRecordType.recordName;
-        ruleDonationsRecordType.objectName = 'Opportunity';
-        ruleDonationsRecordType.fieldName = 'RecordTypeId';
-        ruleDonationsRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-        ruleDonationsRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
-        groupClosedWonDonations.rules.add(ruleDonationsRecordType);
+        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c != null) {
+            CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation + ': Excluded RT');
+            ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
+            ruleRecordType.objectName = 'Opportunity';
+            ruleRecordType.fieldName = 'RecordTypeId';
+            ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
+            groupClosedWonDonations.rules.add(ruleRecordType);
+        }
 
         if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c != null) {
             CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctDonation+': Excluded Opp.Type');
@@ -140,13 +142,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStage1.value = 'true';
             groupClosedWonDonationsContacts.rules.add(ruleCloseWonStage1);
 
-            CRLP_RollupCMT.FilterRule ruleDonationsRecordType1 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Excluded RT');
-            ruleDonationsRecordType1.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleDonationsRecordType1.recordName;
-            ruleDonationsRecordType1.objectName = 'Opportunity';
-            ruleDonationsRecordType1.fieldName = 'RecordTypeId';
-            ruleDonationsRecordType1.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleDonationsRecordType1.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
-            groupClosedWonDonationsContacts.rules.add(ruleDonationsRecordType1);
+            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c != null) {
+                CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Excluded RT');
+                ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
+                ruleRecordType.objectName = 'Opportunity';
+                ruleRecordType.fieldName = 'RecordTypeId';
+                ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
+                groupClosedWonDonationsContacts.rules.add(ruleRecordType);
+            }
 
             if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c != null) {
                 CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, 'Donations-Contact: Excluded Opp.Type');
@@ -184,13 +188,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage2.value = 'true';
         groupMemberships.rules.add(ruleCloseWonStage2);
 
-        CRLP_RollupCMT.FilterRule ruleMembershipRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
-        ruleMembershipRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleMembershipRecordType.recordName;
-        ruleMembershipRecordType.objectName = 'Opportunity';
-        ruleMembershipRecordType.fieldName = 'RecordTypeId';
-        ruleMembershipRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
-        ruleMembershipRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c, 'Membership');
-        groupMemberships.rules.add(ruleMembershipRecordType);
+        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c != null) {
+            CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
+            ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
+            ruleRecordType.objectName = 'Opportunity';
+            ruleRecordType.fieldName = 'RecordTypeId';
+            ruleRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+            ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c, 'Membership');
+            groupMemberships.rules.add(ruleRecordType);
+        }
 
         // ==============================================================================================================
         // Default "Allocations" filter group
@@ -208,13 +214,13 @@ public class CRLP_DefaultConfigBuilder_SVC {
         groupAllocations.rules.add(ruleCloseWonStage3);
 
         if (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c != null) {
-            CRLP_RollupCMT.FilterRule ruleAllocationsRT = new CRLP_RollupCMT.FilterRule(groupAllocations.recordName, 'Allocations: Excluded Record Types');
-            ruleAllocationsRT.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAllocationsRT.recordName;
-            ruleAllocationsRT.objectName = 'Opportunity';
-            ruleAllocationsRT.fieldName = 'RecordTypeId';
-            ruleAllocationsRT.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
-            ruleAllocationsRT.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
-            groupAllocations.rules.add(ruleAllocationsRT);
+            CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupAllocations.recordName, 'Allocations: Excluded Record Types');
+            ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
+            ruleRecordType.objectName = 'Opportunity';
+            ruleRecordType.fieldName = 'RecordTypeId';
+            ruleRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+            ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
+            groupAllocations.rules.add(ruleRecordType);
         }
 
         if (CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_Types__c != null) {
