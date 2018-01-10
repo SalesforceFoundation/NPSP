@@ -32,7 +32,7 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Soft Credit roll-ups TO both Contact and Household Account
+* @description Rollup Services unique to the Contact Soft Credit roll-ups TO both Contact and Account.
 * The Partial_Soft_Credit__c object is used for all Soft Credit Rollups as a Proxy for OpportunityContactRole
 * which isn't supported as a selectable Entity in the Rollup__mdt object.
 * A Single Instance of this class will be for EITHER the Account or the Contact, but NOT BOTH AT THE SAME TIME!

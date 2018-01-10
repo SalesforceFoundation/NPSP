@@ -241,7 +241,7 @@ public class CMT_UnitTestData_TEST {
      * Detail object names since they're automatically set based on the RollupRecordType enum.
      */
     public Enum RollupRecordType {
-        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, SoftCreditToAccount
+        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, ContactSoftCreditToAccount
     }
     /**
      * @description Convert the Enum to a Summary Object name
@@ -253,7 +253,7 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.PmtToContact => 'Contact',
             RollupRecordType.GAU => 'General_Accounting_Unit__c',
             RollupRecordType.SoftCreditToContact => 'Contact',
-            RollupRecordType.SoftCreditToAccount => 'Account'
+            RollupRecordType.ContactSoftCreditToAccount => 'Account'
     };
     /**
      * @description Convert the Enum to a Detail Object name
@@ -265,7 +265,7 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.PmtToContact => 'npe01__OppPayment__c',
             RollupRecordType.GAU => 'Allocation__c',
             RollupRecordType.SoftCreditToContact => 'Partial_Soft_Credit__c',
-            RollupRecordType.SoftCreditToAccount => 'Partial_Soft_Credit__c'
+            RollupRecordType.ContactSoftCreditToAccount => 'Partial_Soft_Credit__c'
 
     };
 
@@ -373,7 +373,7 @@ public class CMT_UnitTestData_TEST {
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Detail', getDetailObject.get(rollupType));
 
-        } else if (rollupType == RollupRecordType.SoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
+        } else if (rollupType == RollupRecordType.ContactSoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
 
             String detailField;
             if (((String)parms.get('Detail')).contains('.')) {

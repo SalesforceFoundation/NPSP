@@ -94,23 +94,23 @@ private class CRLP_RollupSoftCredit_TEST {
 
                 /* ACCOUNT SOFT-CREDIT ROLL-UPS (there are no packaged soft credit fields, so using hard credit fields to test) */
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Count All', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, '') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Last Amount', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__LastOppAmount__c', CRLP_Operation.RollupType.LAST, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Largest Amount', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - First Date', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.FIRST, 'CloseDate') +
 
                 ']';

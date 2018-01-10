@@ -126,7 +126,7 @@
                 mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             }
 
-        } else {
+        } else if (detailObject == Opportunity.SObjectType) {
             // ====================================================================================================
             // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
             // ====================================================================================================

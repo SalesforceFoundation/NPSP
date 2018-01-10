@@ -63,9 +63,8 @@ public class CRLP_Rollup_BATCH_PSC_LDV implements Database.Batchable<SObject>, D
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH_PSC_LDV(List<Id> recordIds) {
+        this();
         this.recordIds = recordIds;
-        this.cntctStatefulRollups = new List<CRLP_Rollup>();
-        this.acctStatefulRollups = new List<CRLP_Rollup>();
     }
 
     /*******************************************************************************************************

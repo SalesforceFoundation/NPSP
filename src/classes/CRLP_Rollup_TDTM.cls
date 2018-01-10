@@ -157,7 +157,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             }
 
             // Don't submit the batch job when unit tests are running
-            if (!Test.isRunningTest() && !accountIds.isEmpty()) {
+            if (!Test.isRunningTest() && !gauIds.isEmpty()) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(gauIds), batchSize);
             }
@@ -177,9 +177,8 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             // Execute the roll-ups in real-time instead of asynchronously in the following cases:
             // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
             // - Called from a Batch Job, @Future or Queueable context
-            //  || System.isBatch() || System.isFuture() || System.isQueueable()
             Integer numTotalSummaryObjects = accountIds.size() + contactIds.size();
-            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)) {
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
                 // Immediate execution
                 if (!accountIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(accountIds);
