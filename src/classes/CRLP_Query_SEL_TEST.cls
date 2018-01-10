@@ -33,7 +33,7 @@
 * @group Selectors
 * @description Unit Test for the Rollup Results selector class
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_Query_SEL_TEST {
 
     /**

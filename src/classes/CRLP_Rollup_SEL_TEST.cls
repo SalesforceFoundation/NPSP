@@ -33,7 +33,7 @@
 * @group Selectors
 * @description Unit Test for the Rollup Definition Custom Metadata Type object selector
 */
-@isTest
+@isTest(IsParallel=True)
 public class CRLP_Rollup_SEL_TEST {
 
     /**

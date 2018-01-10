@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Unit Test for the Default Customizable Rollups Configuration Builder classes
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_DefaultConfigBuilder_TEST {
 
     /** @description Default gift record type for tests. */

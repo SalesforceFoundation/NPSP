@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit test for the Custom Metadata Type api class
 */
-@isTest
+@isTest(IsParallel=true)
 private class CMT_MetadataAPI_TEST {
 
     static testMethod void test_cmt_api() {
