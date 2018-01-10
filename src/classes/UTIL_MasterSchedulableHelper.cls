@@ -82,13 +82,13 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
                     // keep the naming similar and stagger the job start times slightly. Include a 3rd list item for the
                     // primary SObject to use when instantiating the scheduler
-                    // TODO Discuss the staggered schedule. Thee main concern is SoftCredit job overlapping with the main jobs
-                    defaultScheduledJobs.put('NPSP 01 - Opportunity Account Rollups (New)', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account'});
-                    defaultScheduledJobs.put('NPSP 02 - Opportunity Contact Rollups (New)', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
-                    defaultScheduledJobs.put('NPSP 03A - Opportunity Account Rollups LDV (New)', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account'});
-                    defaultScheduledJobs.put('NPSP 03B - Opportunity Contact Rollups LDV (New)', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
-                    defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups LDV (New)', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', SObjectType.Partial_Soft_Credit__c.getName()});
-                    defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups LDV (New)', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName()});
+                    // The last parameter is set to True for LDV jobs (i.e, pass True to the CRLP_RollupScheduler() instance)
+                    defaultScheduledJobs.put('NPSP 01 - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'False'});
+                    defaultScheduledJobs.put('NPSP 02 - Customizable Rollups - Contact Hard Credit', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'False'});
+                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Hard Credit Job 2', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'True'});
+                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Contact Hard Credit Job 2', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'True'});
+                    defaultScheduledJobs.put('NPSP 04 - Customizable Rollups - Soft Credits', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', SObjectType.Partial_Soft_Credit__c.getName(), 'True'});
+                    defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Allocation Units', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName(), 'True'});
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
                     jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
@@ -106,12 +106,12 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups', new List<String>{'0 0 23 ? * *', 'ALLO_Rollup_SCHED'});
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
-                    jobsToAbort.add('NPSP 01 - Opportunity Account Rollups (New)');
-                    jobsToAbort.add('NPSP 02 - Opportunity Contact Rollups (New)');
-                    jobsToAbort.add('NPSP 03A - Opportunity Account Rollups LDV (New)');
-                    jobsToAbort.add('NPSP 03B - Opportunity Contact Rollups LDV (New)');
-                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups LDV (New)');
-                    jobsToAbort.add('NPSP 05 - GAU Allocation Rollups LDV (New)');
+                    jobsToAbort.add('NPSP 01 - Customizable Rollups - Account Hard Credit');
+                    jobsToAbort.add('NPSP 02 - Customizable Rollups - Contact Hard Credit');
+                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account Hard Credit Job 2');
+                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Contact Hard Credit Job 2');
+                    jobsToAbort.add('NPSP 04 - Customizable Rollups - Soft Credits');
+                    jobsToAbort.add('NPSP 05 - Customizable Rollups - General Allocation Units');
                 }
             }
             return defaultScheduledJobs;
@@ -181,7 +181,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 // class instantiation. This is not possible using Type.forName().newInstance().
                 String objName = defaultScheduledJobs.get(jobName)[2];
                 SObjectType objType = UTIL_Describe.getSObjectType(objName);
-                Boolean isLDV = jobName.contains('LDV');
+                Boolean isLDV = defaultScheduledJobs.get(jobName)[3] == 'True';
                 classInstance = new CRLP_RollupScheduler(isLDV, objType);
             }
             System.schedule(jobName, cronExpression, classInstance);
