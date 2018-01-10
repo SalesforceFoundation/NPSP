@@ -36,8 +36,8 @@
  * The only differences in functionality with standard cascade deletion is that child records show up separately from
  * their parent in the recycle bin, and all triggers run on cascade deleted objects.
  *
- * To enable cascade delete for a new object type: extend this class, override the getDeletionChildrenLoader(), 
- * getUndeletionChildrenLoader() and getDeletionChildrenValidator() methods. The method getDeletionChildrenValidator()
+ * To enable cascade delete for a new object type: extend this class, override the getCascadeDeleteLoader(), 
+ * getCascadeUndeleteLoader() and getCascadeDeleteValidator() methods. The method getCascadeDeleteValidator()
  * is optional, and should override only validation of the children is needed.
  *
  * NOTE: Since standard cascade deletes don't run triggers on deleted children, records in the "cascades" map can also
@@ -46,7 +46,7 @@
  */
 //TBD making this class global so managed package users can add lookup cascade deletions
 
-public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
+public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Performs cascade delete for lookup fields. Stashes records, deletes records, or undeletes
@@ -66,16 +66,16 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         }
 
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
-            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
+            CDL_CascadeDeleteLookups.CascadeDelete cascadeDelete = CDL_CascadeDeleteLookups.getCascadeDelete();
             cascadeDelete.setParents(oldlist);
-            if (cascadeDelete.hasChildrenLoader() == false) {
-                cascadeDelete.setChildrenLoader(getDeletionChildrenLoader());
+            if (cascadeDelete.hasLoader() == false) {
+                cascadeDelete.setLoader(getCascadeDeleteLoader());
             }
-            if (cascadeDelete.hasChildrenValidator() == false) {
-                cascadeDelete.setChildrenValidator(getDeletionChildrenValidator());
+            if (cascadeDelete.hasValidator() == false) {
+                cascadeDelete.setValidator(getCascadeDeleteValidator());
             }
-            cascadeDelete.loadChildren();
-            cascadeDelete.validateChildrenDeletion();
+            cascadeDelete.load();
+            cascadeDelete.validateDeletion();
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
@@ -87,17 +87,17 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
             } catch (Exception ex) {}
 
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
-            CascadeDeleteLookupsDomain.CascadeDelete cascadeDelete = CascadeDeleteLookupsDomain.getCascadeDelete();
-            cascadeDelete.deleteChildren();
+            CDL_CascadeDeleteLookups.CascadeDelete cascadeDelete = CDL_CascadeDeleteLookups.getCascadeDelete();
+            cascadeDelete.deleteRecords();
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
-            CascadeDeleteLookupsDomain.CascadeUndelete cascadeUndelete = CascadeDeleteLookupsDomain.getCascadeUndelete();
+            CDL_CascadeDeleteLookups.CascadeUndelete cascadeUndelete = CDL_CascadeDeleteLookups.getCascadeUndelete();
             cascadeUndelete.setParents(newlist);
-            cascadeUndelete.setChildrenLoader(getUndeletionChildrenLoader());
-            cascadeUndelete.undeleteChildren();
+            cascadeUndelete.setLoader(getCascadeUndeleteLoader());
+            cascadeUndelete.undeleteRecords();
             TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, false);
         }
 
@@ -106,25 +106,25 @@ public abstract class CascadeDeleteLookups_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
     * @description Gets the Delete ChildrenLoader Object of the running Trigger.
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.DeleteChildrenLoader getDeletionChildrenLoader() {
+    protected virtual CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
         return null;
     }
 
     /*******************************************************************************************************
     * @description Gets the Undelete ChildrenLoader Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.UndeleteChildrenLoader
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.UndeleteChildrenLoader getUndeletionChildrenLoader() {
+    protected virtual CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
         return null;
     }
 
     /*******************************************************************************************************
     * @description Gets the ChildrenValidator Object of the running Trigger. 
-    * @return CascadeDeleteLookupsDomain.DeleteChildrenValidator
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteValidator
     ********************************************************************************************************/
-    protected virtual CascadeDeleteLookupsDomain.DeleteChildrenValidator getDeletionChildrenValidator() {
+    protected virtual CDL_CascadeDeleteLookups.CascadeDeleteValidator getCascadeDeleteValidator() {
         return null;
     }
 }

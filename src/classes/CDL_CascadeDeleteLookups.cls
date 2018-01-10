@@ -34,7 +34,7 @@
  * @description Cascade deletion and undeletion Domain Classes
  */
 
-public class CascadeDeleteLookupsDomain {
+public class CDL_CascadeDeleteLookups {
 
     @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
 
@@ -71,7 +71,7 @@ public class CascadeDeleteLookupsDomain {
     * To load the children records to delete, a class should implement this Interface and be passed to the 
     * "CascadeUndelete" object.
     *************************************************************************************************************/
-    public interface DeleteChildrenLoader {
+    public interface CascadeDeleteLoader {
 
         /*******************************************************************************************************
         * @description Gets the children records that need to be validated or deleted.
@@ -85,7 +85,7 @@ public class CascadeDeleteLookupsDomain {
     * @description Contains the method a Class needs to implement in order to validate the deletion of
     * the children records. This is run by the instance of the "CascadeDelete" Class.
     ********************************************************************************************************/
-    public interface DeleteChildrenValidator {
+    public interface CascadeDeleteValidator {
 
         /*******************************************************************************************************
         * @description Validates the children records.
@@ -101,7 +101,7 @@ public class CascadeDeleteLookupsDomain {
     * To load the children records to undelete, a class should implement this Interface 
     * and be passed to the "CascadeUndelete" object.
     ********************************************************************************************************/
-    public interface UndeleteChildrenLoader {
+    public interface CascadeUndeleteLoader {
 
         /*******************************************************************************************************
         * @description Gets the children records that need to be undeleted.
@@ -111,10 +111,10 @@ public class CascadeDeleteLookupsDomain {
         List<SObject> load(Set<Id> parentIds);
 
         /*******************************************************************************************************
-        * @description Gets the next UndeleteChildrenLoader.
-        * @return UndeleteChildrenLoader The next UndeleteChildrenLoader.
+        * @description Gets the next CascadeUndeleteLoader.
+        * @return CascadeUndeleteLoader The next CascadeUndeleteLoader.
         ********************************************************************************************************/
-        UndeleteChildrenLoader next();
+        CascadeUndeleteLoader next();
     }
 
     /*******************************************************************************************************
@@ -126,8 +126,8 @@ public class CascadeDeleteLookupsDomain {
         private List<SObject> children;
         private List<SObject> validChildren;
 
-        private DeleteChildrenLoader childrenLoader;
-        private DeleteChildrenValidator childrenValidator;
+        private CascadeDeleteLoader loader;
+        private CascadeDeleteValidator childrenValidator;
 
         /******************************************************************************************************
         * @description The Constructor of CascadeDelete
@@ -150,15 +150,15 @@ public class CascadeDeleteLookupsDomain {
         * @description Sets the object that loads the children records.
         * @return void
         ********************************************************************************************************/
-        public void setChildrenLoader(DeleteChildrenLoader childrenLoader) {
-            this.childrenLoader = childrenLoader;
+        public void setLoader(CascadeDeleteLoader loader) {
+            this.loader = loader;
         }
 
         /*******************************************************************************************************
         * @description Sets the object that validates the children records.
         * @return void
         ********************************************************************************************************/
-        public void setChildrenValidator(DeleteChildrenValidator childrenValidator) {
+        public void setValidator(CascadeDeleteValidator childrenValidator) {
             this.childrenValidator = childrenValidator;
         }
 
@@ -166,15 +166,15 @@ public class CascadeDeleteLookupsDomain {
         * @description Checks if the object that loads the children records exists.
         * @return Boolean
         ********************************************************************************************************/
-        public Boolean hasChildrenLoader() {
-            return childrenLoader != null;
+        public Boolean hasLoader() {
+            return loader != null;
         }
 
         /*******************************************************************************************************
         * @description Checks if the object that validates the children records exists.
         * @return Boolean
         ********************************************************************************************************/
-        public Boolean hasChildrenValidator() {
+        public Boolean hasValidator() {
             return childrenValidator != null;
         }
 
@@ -183,12 +183,12 @@ public class CascadeDeleteLookupsDomain {
         * ChildrenLoader, to load the children records.
         * @return void
         ********************************************************************************************************/
-        public void loadChildren() {
-            if (this.childrenLoader == null) {
+        public void load() {
+            if (this.loader == null) {
                 return;
             }
 
-            children = childrenLoader.load(parents.keySet());
+            children = loader.load(parents.keySet());
         }
 
         /*******************************************************************************************************
@@ -196,7 +196,7 @@ public class CascadeDeleteLookupsDomain {
         * to load the children records.
         * @return void
         ********************************************************************************************************/
-        public void validateChildrenDeletion() {
+        public void validateDeletion() {
             if (this.childrenValidator != null) {
                 validChildren = this.childrenValidator.validateDeletion(parents.values(), children);
             }
@@ -209,7 +209,7 @@ public class CascadeDeleteLookupsDomain {
         * @description Deletes the valid children records.
         * @return void
         ********************************************************************************************************/
-        public void deleteChildren() {
+        public void deleteRecords() {
             if (validChildren.isEmpty()) {
                 return;
             }
@@ -228,7 +228,7 @@ public class CascadeDeleteLookupsDomain {
     ********************************************************************************************************/
     public class CascadeUndelete {
         private Set<Id> parentIds;
-        private UndeleteChildrenLoader childrenLoader;
+        private CascadeUndeleteLoader loader;
 
         /*********************************************************************************************************
         * @description The Constructor of CascadeUndelete
@@ -249,16 +249,16 @@ public class CascadeDeleteLookupsDomain {
         * @description Sets the object that loads the children records.
         * @return void
         ********************************************************************************************************/
-        public void setChildrenLoader(UndeleteChildrenLoader childrenLoader) {
-            this.childrenLoader = childrenLoader;
+        public void setLoader(CascadeUndeleteLoader loader) {
+            this.loader = loader;
         }
 
         /*******************************************************************************************************
         * @description Undeletes the children records.
         * @return void
         ********************************************************************************************************/
-        public void undeleteChildren() {
-            UndeleteChildrenLoader currentChildrenLoader = childrenLoader;
+        public void undeleteRecords() {
+            CascadeUndeleteLoader currentChildrenLoader = loader;
 
             // The Undeletion runs in a loop because some children records need to be undeleted first.
             // Undelete all the records at once can cause a broken reference.
@@ -283,15 +283,15 @@ public class CascadeDeleteLookupsDomain {
     /*******************************************************************************************************
     * @description Contains the logic that displays the error messages on one parent
     ********************************************************************************************************/
-    public class DeleteError {
+    public class Error {
         private String parentToDeleteName;
         private Map<String, Map<Id, String>> childrenByErrorType;
 
         /******************************************************************************************************
-        * @description The Constructor of DeleteError
+        * @description The Constructor of Error
         * @param String The name of the Parent record
         */
-        public DeleteError(String parentToDeleteName) {
+        public Error(String parentToDeleteName) {
             this.parentToDeleteName = parentToDeleteName;
             childrenByErrorType = new Map<String, Map<Id, String>>();
         }
