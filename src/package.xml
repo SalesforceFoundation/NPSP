@@ -108,6 +108,7 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_Debug_UTIL</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_Operation</members>
@@ -122,6 +123,8 @@
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
+        <members>CRLP_RollupSoftCredit_SVC</members>
+        <members>CRLP_RollupSoftCredit_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
         <members>CRLP_RollupProcessor_SVC</members>
@@ -130,6 +133,7 @@
         <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_Rollup_BATCH</members>
         <members>CRLP_Rollup_BATCH_LDV</members>
+        <members>CRLP_Rollup_BATCH_PSC_LDV</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
         <members>CRLP_Rollup_TDTM</members>
@@ -646,6 +650,13 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Allocation_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_LDV_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
@@ -912,7 +923,6 @@
         <members>Filter_Group__mdt.Description__c</members>
         <members>Filter_Group__mdt.Is_Deleted__c</members>
         <members>Filter_Rule__mdt.Constant__c</members>
-        <members>Filter_Rule__mdt.Field_OpportunityContactRole_Role__c</members>
         <members>Filter_Rule__mdt.Field__c</members>
         <members>Filter_Rule__mdt.Filter_Group__c</members>
         <members>Filter_Rule__mdt.Is_Deleted__c</members>
@@ -932,7 +942,6 @@
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
-        <members>Rollup__mdt.Use_OCR_for_Attribution_Object__c</members>
         <members>Rollup__mdt.Yearly_Operation_Type__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
@@ -952,13 +961,7 @@
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Custom_Exchange_Rate_Field__c</members>
-        <members>npo02__Households_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Account_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Allocation_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Contact_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_LDV_Batch_Size__c</members>
-        <members>npo02__Households_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
         <name>CustomField</name>
     </types>
@@ -1784,6 +1787,7 @@
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch__c</members>
+        <members>Customizable_Rollup_Settings__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
         <members>Data_Import_Settings__c</members>
@@ -2272,6 +2276,100 @@
         <members>Opportunity.Opportunity Copy FMV to Amount</members>
         <members>Opportunity.Opportunity Email Acknowledgment</members>
         <name>WorkflowRule</name>
+    </types>
+    <types>
+        <members>Filter_Group.ClosedWon_RecordType_not_Membership</members>
+        <members>Filter_Group.Memberships_Only</members>
+        <members>Filter_Rule.ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.ClosedWonOpps_SoftCreditRoles</members>
+        <members>Filter_Rule.Membership_ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.RecordType_Equals_Membership</members>
+        <members>Filter_Rule.RecordType_not_Membership</members>
+        <members>Rollup.Account_Average_Gift</members>
+        <members>Rollup.Account_Best_Gift_Year_Total</members>
+        <members>Rollup.Account_Best_Gift_Year</members>
+        <members>Rollup.Account_Count_All_Gifts</members>
+        <members>Rollup.Account_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Count_Gifts_Last_Year</members>
+        <members>Rollup.Account_Count_Gifts_This_Year</members>
+        <members>Rollup.Account_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_First_Gift_Date</members>
+        <members>Rollup.Account_Largest_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Date</members>
+        <members>Rollup.Account_Last_Membership_Amount</members>
+        <members>Rollup.Account_Last_Membership_Date</members>
+        <members>Rollup.Account_Last_Membership_Level</members>
+        <members>Rollup.Account_Last_Membership_Origin</members>
+        <members>Rollup.Account_Membership_End_Date</members>
+        <members>Rollup.Account_Membership_Join_Date</members>
+        <members>Rollup.Account_Number_of_Memberships</members>
+        <members>Rollup.Account_Smallest_Gift_Amount</members>
+        <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Total_Gifts_Last_Year</members>
+        <members>Rollup.Account_Total_Gifts_This_Year</members>
+        <members>Rollup.Account_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_Total_Gifts</members>
+        <members>Rollup.Account_Total_Membership_Amount</members>
+        <members>Rollup.Account_Total_Membership_Amount</members>
+        <members>Rollup.Contact_Average_Gift</members>
+        <members>Rollup.Contact_Best_Gift_Year_Total</members>
+        <members>Rollup.Contact_Best_Gift_Year</members>
+        <members>Rollup.Contact_Count_All_Gifts</members>
+        <members>Rollup.Contact_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Count_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Count_Gifts_This_Year</members>
+        <members>Rollup.Contact_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Contact_First_Gift_Date</members>
+        <members>Rollup.Contact_Largest_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Date</members>
+        <members>Rollup.Contact_Last_Membership_Amount</members>
+        <members>Rollup.Contact_Last_Membership_Date</members>
+        <members>Rollup.Contact_Last_Membership_Level</members>
+        <members>Rollup.Contact_Last_Membership_Origin</members>
+        <members>Rollup.Contact_Membership_End_Date</members>
+        <members>Rollup.Contact_Membership_Join_Date</members>
+        <members>Rollup.Contact_Number_of_Memberships</members>
+        <members>Rollup.Contact_Smallest_Gift_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Count_All</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_Two_Years_Ago</members>
+        <members>Rollup.Contact_SoftCredit_First_Amount</members>
+        <members>Rollup.Contact_SoftCredit_First_Date</members>
+        <members>Rollup.Contact_SoftCredit_Largest_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Date</members>
+        <members>Rollup.Contact_SoftCredit_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Total</members>
+        <members>Rollup.Contact_SoftCredit_Two_Years_Ago</members>
+        <members>Rollup.Contact_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Total_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Total_Gifts_This_Year</members>
+        <members>Rollup.Contact_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Contact_Total_Gifts</members>
+        <members>Rollup.Contact_Total_of_Memberships</members>
+        <members>Rollup.GAU_Average_Allocation</members>
+        <members>Rollup.GAU_Count_Allocations_All_Time</members>
+        <members>Rollup.GAU_Count_Allocations_Last_365_Days</members>
+        <members>Rollup.GAU_Count_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Count_Allocations_This_Year</members>
+        <members>Rollup.GAU_Count_Allocations_Two_Years_Ago</members>
+        <members>Rollup.GAU_First_Allocation_Date</members>
+        <members>Rollup.GAU_Largest_Allocation</members>
+        <members>Rollup.GAU_Last_Allocation_Date</members>
+        <members>Rollup.GAU_Smallest_Allocation</members>
+        <members>Rollup.GAU_Total_Allocations_All_Time</members>
+        <members>Rollup.GAU_Total_Allocations_Last_365_Days</members>
+        <members>Rollup.GAU_Total_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Total_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Total_Allocations_This_Year</members>
+        <members>Rollup.GAU_Total_Allocations_Two_Years_Ago</members>
+        <name>CustomMetadata</name>
     </types>
     <version>39.0</version>
 </Package>

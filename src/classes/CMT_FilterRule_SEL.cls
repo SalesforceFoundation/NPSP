@@ -57,9 +57,9 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Rule__mdt> cachedFilterRules {
         get {
             if (cachedFilterRules == null) {
-                cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName,
+                cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName, Filter_Group__r.DeveloperName,
                                 Filter_Group__c, Field__r.QualifiedApiName, Object__r.QualifiedApiName,
-                                Field_OpportunityContactRole_Role__c, Operator__c, Constant__c
+                                Operator__c, Constant__c
                         FROM Filter_Rule__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY Filter_Group__c];
@@ -102,11 +102,7 @@ public without sharing class CMT_FilterRule_SEL {
     /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing FilterRule. This list can be used when building a query of the needed fields to retrieve
-     *  for an object. To handle filtering by OpportunityContactRole.Role, a custom field field for
-     *  Field_OpportunityContactRole_Role__c is used. If true, the logic below ignores the Object__c/Field__c
-     *  values in the record and instead uses OpportunityContactRole.Role. This is necessary because OCR
-     *  is not a supported object for the Object__c (Entity) lookup in CMT's. As a result, we need an alternative
-     *  method to know that the file rule should use the OCR.Role field value.
+     *  for an object.
      * @param objType The type of object to retrieve referenced fields for
      * @return List<DescribeFieldResult>
      */
@@ -121,20 +117,14 @@ public without sharing class CMT_FilterRule_SEL {
         // For all filter rules (regardless of the filter group)
         for (Filter_Rule__mdt fr : cachedFilterRules) {
             // Does the object match the requested object?
-            if ((fr.Field_OpportunityContactRole_Role__c == false && fr.Object__r.QualifiedApiName == objName) ||
-                    (fr.Field_OpportunityContactRole_Role__c == true && objName == ocrObjectName )) {
-                // Get the target field name (or replace it with OCR.Role) and add to the map of fields
-                if (fr.Field_OpportunityContactRole_Role__c == false) {
-                    String fldName = fr.Field__r.QualifiedApiName.toLowerCase();
-                    if (allFields.containsKey(fldName)) {
-                        referencedFields.put(fr.Field__c, allFields.get(fldName));
-                    } else {
-                        // TODO Handle fields not found
-                        system.assert(false, '>> Field ' + fldName + ' not found in allFields collection for ' + objName);
-                    }
+            if (fr.Object__r.QualifiedApiName == objName) {
+                // Get the target field name and add to the map of fields
+                String fldName = fr.Field__r.QualifiedApiName.toLowerCase();
+                if (allFields.containsKey(fldName)) {
+                    referencedFields.put(fr.Field__c, allFields.get(fldName));
                 } else {
-                    String fldName = 'Role';
-                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
+                    // TODO Handle fields not found
+                    system.assert(false, '>> Field ' + fldName + ' not found in allFields collection for ' + objName);
                 }
             }
         }

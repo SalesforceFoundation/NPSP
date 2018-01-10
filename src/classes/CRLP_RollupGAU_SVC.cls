@@ -46,6 +46,7 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(General_Accounting_Unit__c.SObjectType)) {
             addRollupDefinition(r);
         }
+        system.debug(LoggingLevel.ERROR, '>>>>> CREATE ROLLUPS=' + this.rollups.size());
     }
     /**
      * @description Primary action method. Called for each record of summaryObject with a list of the detail objects
@@ -61,21 +62,21 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
         // This service class is specific to Rollups from the Allocation to the GAU object
 
         for (Sobject s : details) {
-
-            Allocation__c alloc = (Allocation__c)s;
-            Opportunity opp = (Opportunity)alloc.getSObject('Opportunity__r');
+            Allocation__c alloc = (Allocation__c) s;
+            Opportunity opp = (Opportunity) alloc.getSObject('Opportunity__r');
             for (CRLP_Rollup rollup : this.rollups) {
                 Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
-                List<SObject> detailRows = new List<SObject>{ opp, alloc };
+                List<SObject> detailRows = new List<SObject>{
+                        opp, alloc
+                };
 
                 // Does this row pass the evaluation?
                 if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(detailRows, filterGroupId)) {
                     // YES -- now need to do the actual rollup!
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, alloc);
                 }
-
             }
         }
     }

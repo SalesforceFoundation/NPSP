@@ -45,9 +45,25 @@
     public static String getResultsQuery(SObjectType resultObject) {
 
         // Start by getting all the fields referenced by any Filter Group or active Rollup
-        List<Schema.DescribeFieldResult> allFieldsToQuery = new List<DescribeFieldResult>();
+        Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
         allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(resultObject));
         allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(resultObject));
+
+        // Force Add these 3 fields if the object is partial soft credit. These may not be directly referenced
+        // in a filter or rollup, but they are needed to support the full OCR/PSC rollup to Account and Contact.
+        if (resultObject == Partial_Soft_Credit__c.SObjectType) {
+            allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Opportunity__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Role_Name__c.getSobjectField().getDescribe());
+        } else if (resultObject == OpportunityContactRole.SObjectType) {
+            allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.ContactId.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.OpportunityId.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.Role.getSobjectField().getDescribe());
+        } else if (resultObject == Opportunity.SObjectType) {
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
+        }
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
         // to the Set of strings (enforcing uniqueness)
@@ -55,7 +71,7 @@
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             if (dfr.isAccessible()) {
                 queryFields.add(dfr.getName());
-                // Special conditions
+                // Special conditions - these are foreign key fields that are supported in filters for record type and user
                 if (dfr.getName() == 'RecordTypeId') {
                     queryFields.add('RecordType.DeveloperName');
                 } else if (dfr.getName() == 'OwnerId') {
@@ -64,6 +80,10 @@
                     queryFields.add('CreatedBy.Alias');
                 } else if (dfr.getName() == 'LastModifiedById') {
                     queryFields.add('LastModifiedBy.Alias');
+                } else if (dfr.getName() == 'ContactId') {
+                    queryFields.add('Contact.AccountId');
+                } else if (dfr.getName() == UTIL_Namespace.StrAllNSPrefix('Contact__c')) {
+                    queryFields.add(UTIL_Namespace.StrAllNSPrefix('Contact__r') + '.AccountId');
                 }
             }
         }
@@ -86,57 +106,46 @@
      * @return SOQL query WITHOUT a where clause
      */
     public static String getDetailsQuery(SObjectType detailObject, List<SObjectType> childObjects) {
-        // Get the main SOQL statement and parse out the FROM portion
+        // Get the main SOQL statement for the detail object and parse out the FROM portion
         String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
 
-        // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
-        if (detailObject != OpportunityContactRole.SObjectType && detailObject != Allocation__c.SObjectType) {
-            // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
-            for (SObjectType obj : childObjects) {
-                String relationshipName;
-                for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
-                    if (cr.childSObject == obj) {
-                        relationshipName = cr.getRelationshipName();
-                    }
-                }
-                if (relationshipName != null) {
-                    String childSoql = getResultsQuery(obj).split(' FROM ')[0];
-                    mainSoql += ', (' + childSoql + ' FROM ' + relationshipName + ')';
-                }
-            }
+        if (detailObject == OpportunityContactRole.SObjectType || detailObject == Partial_Soft_Credit__c.SObjectType
+                    || detailObject == Allocation__c.SObjectType) {
 
-        } else {
-            // If the detailObject is OCR or Allocation, then rather than include a sub-query for the child objects
+            // ====================================================================================================
+            // If the detailObject is OCR, PSC or Allocation, then rather than include a sub-query for the child objects
             // we'll include foreignkey references to the Opportunity object
+            // ====================================================================================================
 
             String oppParentField = (detailObject == OpportunityContactRole.SObjectType
                     ? 'Opportunity' : UTIL_Namespace.StrAllNSPrefix('Opportunity__r'));
 
-            // Find all the Opportunity fields referenced by these rollups and related filters
-            Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
-            allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
-            allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(Opportunity.SObjectType));
+            mainSoql += appendParentQuery(Opportunity.SObjectType, oppParentField);
 
-            for (Schema.DescribeFieldResult oppField : allFieldsToQuery) {
-                mainSoql += ',' + oppParentField + '.' + oppField.getName();
-                // Special conditions
-                if (oppField.getName() == 'RecordTypeId') {
-                    mainSoql += ',' + oppParentField + '.' + 'RecordType.DeveloperName';
-                } else if (oppField.getName() == 'OwnerId') {
-                    mainSoql += ',' + oppParentField + '.' + 'Owner.Alias';
-                } else if (oppField.getName() == 'CreatedById') {
-                    mainSoql += ',' + oppParentField + '.' + 'CreatedBy.Alias';
-                } else if (oppField.getName() == 'LastModifiedById') {
-                    mainSoql += ',' + oppParentField + '.' + 'LastModifiedBy.Alias';
-                }
-            }
             if (detailObject == Allocation__c.SObjectType) {
-                mainSoql += ',' + UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c');
+                mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+            }
+
+        } else {
+            // ====================================================================================================
+            // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
+            // ====================================================================================================
+
+            // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
+            for (SObjectType obj : childObjects) {
+                // Loop through all the relationships on the detail object to find the one that matches the child object
+                for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
+                    if (cr.childSObject == obj) {
+                        mainSoql += buildChildQuery(obj, cr.getRelationshipName());
+                        break;
+                    }
+                }
             }
         }
 
         // Append the main object back to the query and return it
         mainSoql += ' FROM ' + detailObject.getDescribe().getName();
+        UTIL_Debug.debug('SOQL=' + mainSoql);
         return mainSoql;
     }
 
@@ -164,15 +173,6 @@
             mainObject = Opportunity.SObjectType;
             childObjects.add(npe01__OppPayment__c.SObjectType);
             detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-        } else if (objType == General_Accounting_Unit__c.SObjectType) {
-            // Allocation to GAU
-            mainObject = Allocation__c.SObjectType;
-            detailKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-
-        } else if (objType == OpportunityContactRole.SObjectType) {
-            // TODO OpportunityContactRole TBD
-
         }
 
         // Get the base query
@@ -180,12 +180,58 @@
 
         // Add the appropriate filtering
         detailsQuery += ' WHERE ' + detailKeyField + ' IN :summaryRecordIds';
-        if (objType == General_Accounting_Unit__c.SObjectType) {
-            // In the specific case of the Allocation to GAU roll-up, explicitly filter out any
-            // Allocation__c records where the Opportunity__c field is null.
-            detailsQuery += ' AND ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null';
-        }
 
         return detailsQuery;
     }
+
+    /**
+     * @description Returns part of a query for a child object using fields referenced by rollup/filter operations.
+     * @param childObject
+     * @param relationshipName
+     * @return part of a SOQL string
+     */
+    private static String buildChildQuery(SObjectType childObject, String relationshipName) {
+        String childQuery = ', (' + getResultsQuery(childObject).split(' FROM ')[0] + + ' FROM ' + relationshipName + ')';
+        return childQuery;
+    }
+
+    /**
+     * @description Returns part of a query referencing parent fields through dot-notation.
+     * @param parentObject
+     * @param parentKeyField
+     * @return part of a SOQL string
+     */
+    private static String appendParentQuery(SObjectType parentObject, String parentKeyField) {
+        String addlQuery = '';
+
+        Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
+        allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(parentObject));
+        allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(parentObject));
+
+        // Include the Opportunity.PrimaryContact field in the query
+        if (parentObject == Opportunity.SObjectType) {
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.Id.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.Primary_Contact__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
+        }
+
+        for (Schema.DescribeFieldResult fld : allFieldsToQuery) {
+            if (fld.isAccessible()) {
+                addlQuery += ',' + parentKeyField + '.' + fld.getName();
+                // Special conditions - these are foreign key fields that are supported in filters for record type and user
+                if (fld.getName() == 'RecordTypeId') {
+                    addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
+                } else if (fld.getName() == 'OwnerId') {
+                    addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
+                } else if (fld.getName() == 'CreatedById') {
+                    addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
+                } else if (fld.getName() == 'LastModifiedById') {
+                    addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
+                }
+            }
+        }
+
+        return addlQuery;
+    }
+
 }

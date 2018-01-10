@@ -46,10 +46,9 @@ public class CRLP_Rollup_SEL {
         get {
             if (cachedRollups == null) {
                 cachedRollups = [
-                        SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
+                        SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
-                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName,
-                                Use_OCR_for_Attribution_Object__c, Yearly_Operation_Type__c,
+                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
                                 Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
@@ -141,12 +140,6 @@ public class CRLP_Rollup_SEL {
                 }
                 if (rollup.Date_Object__r.QualifiedApiName == objName && rollup.Date_Field__r != null) {
                     String fldName = rollup.Date_Field__r.QualifiedApiName;
-                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                }
-                if (rollup.Use_OCR_for_Attribution_Object__c == true && objName == 'OpportunityContactRole') {
-                    String fldName = 'Role';
-                    referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
-                    fldName = 'ContactId';
                     referencedFields.put(fldName, allFields.get(fldName.toLowerCase()));
                 }
             }

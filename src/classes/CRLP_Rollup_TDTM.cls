@@ -41,6 +41,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
      * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
      * TODO Partial Soft Credits?
+     * TODO Prevent the queuable action from being run multiple times as the Opportunity, Payment and Allocation records are inserted
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -110,6 +111,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 break;
             }
         }
+
         return changed;
     }
 
@@ -155,7 +157,8 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
             }
 
-            if (!accountIds.isEmpty()) {
+            // Don't submit the batch job when unit tests are running
+            if (!Test.isRunningTest() && !accountIds.isEmpty()) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(gauIds), batchSize);
             }
@@ -172,13 +175,32 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
             }
 
-            // Account Rollup
-            if (!accountIds.isEmpty()) {
-                System.enqueueJob(new CRLP_RollupQueueable(accountIds));
-            }
-            // Contact Rollup
-            if (!contactIds.isEmpty()) {
-                System.enqueueJob(new CRLP_RollupQueueable(contactIds));
+            // Execute the roll-ups in real-time instead of asynchronously in the following cases:
+            // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
+            // - Called from a Batch Job, @Future or Queueable context
+            //  || System.isBatch() || System.isFuture() || System.isQueueable()
+            Integer numTotalSummaryObjects = accountIds.size() + contactIds.size();
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)) {
+                // Immediate execution
+                if (!accountIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(accountIds);
+                }
+                if (!contactIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(contactIds);
+                }
+
+            } else  {
+                // Queueable execution using chained queuable executions for each type of summary object
+
+                List<List<Id>> queueOfSummaryIds = new List<List<Id>>();
+                queueOfSummaryIds.add(accountIds);
+                queueOfSummaryIds.add(contactIds);
+
+                // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
+                // The queueable job will pop the list of Id's off the stack and process them in serial.
+                if (!queueOfSummaryIds.isEmpty() && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
+                    System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                }
             }
         }
     }

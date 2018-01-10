@@ -220,16 +220,6 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Use_OCR_for_Attribution_Object__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>This is necessary because OCR is still a second class object in Salesforce, meaning that it&apos;s not supported as a value in any Object entity reference field. This field is used behind the scenes by the UI and roll-up engine. The User will not actually see this field in the Filter Rule custom setup UI, but it&apos;s used to indicate that the Rollup is related to OCR and/or Partial Soft Credits</description>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <inlineHelpText>When checked, the engine will use the OpportunityContactRole.Role field value in the rollup logic</inlineHelpText>
-        <label>Use OCR or PSC for Attribution Object</label>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Yearly_Operation_Type__c</fullName>
         <description>Related to the Integer__c field. The value in that field represents the number of Years to sum or the number of days back to sum amounts for.</description>
         <externalId>false</externalId>

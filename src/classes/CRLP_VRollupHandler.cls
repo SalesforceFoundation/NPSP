@@ -46,6 +46,8 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String ocrObjectName = UTIL_Describe.getObjectDescribe('OpportunityContactRole').getName();
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
+    protected final String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String gauObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String allocObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
@@ -128,7 +130,9 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
         for (CRLP_Rollup rollup : this.rollups) {
             Map<String,Object> results = rollup.getFinalValues();
+            CRLP_Debug_UTIL.setCurrentRollupState(CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
+                CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
                 this.record.put(fld, results.get(fld));
             }
         }

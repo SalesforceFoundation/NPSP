@@ -102,10 +102,6 @@
                 <behavior>Edit</behavior>
                 <field>Date_Field__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Use_OCR_for_Attribution_Object__c</field>
-            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>

@@ -120,6 +120,7 @@ private class UTIL_CurrencyConversion_TEST {
             }
         }
 
+
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
                 new npe01__Contacts_And_Orgs_Settings__c (npe01__Payments_Enabled__c= true)
         );

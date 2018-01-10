@@ -10,7 +10,7 @@
             <c:UTIL_JobProgressLightning id="jobProgress"
                 eventTargetId="{!$Component.jobProgress}"
                 strBatchComponentLabel="{!$Label.stgLabelOppBatchProgress}"
-                cNumberOfJobs="4"
+                cNumberOfJobs="{!numJobSubmitted}"
                 startPolling="True"
                 stopPollingOnComplete="True"
                 pollingDelay="1000"/>

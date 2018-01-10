@@ -112,14 +112,8 @@ public class CMT_FilterRule {
      */
     public CMT_FilterRule(Filter_Rule__mdt filterRule) {
 
-        if (filterRule.Field_OpportunityContactRole_Role__c == false) {
-            this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
-            this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
-        } else {
-            // Alternate method to handle the OpportunityContactRole object
-            this.objectType = OpportunityContactRole.SObjectType;
-            this.field = UTIL_Describe.getFieldDescribe('OpportunityContactRole', 'Role').getSObjectField();
-        }
+        this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
+        this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
         this.constant = filterRule.Constant__c;
         String fixedOperator = filterRule.Operator__c.replaceAll(' ', '_');
         this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(fixedOperator);
@@ -340,7 +334,6 @@ public class CMT_FilterRule {
                 // IN and NOT-IN only works with standard text and simple picklist fields
                 // It checks to see if the field value is in the liste of entered value(s)
                 String compareValue = String.isBlank(rule.constant) ? '' : String.valueOf(rule.constant);
-                System.debug(LoggingLevel.ERROR, 'compareValue=' + compareValue);
 
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
@@ -383,6 +376,13 @@ public class CMT_FilterRule {
                 } else {
                     return false;
                 }
+
+            } else if (fieldValue == null && (rule.operation == FilterOperation.DOES_NOT_CONTAIN
+                    || rule.operation == FilterOperation.NOT_IN_LIST || rule.operation == FilterOperation.IS_NOT_INCLUDED)) {
+                // If the field value is null value and the operation is one of these exclusionary types, then
+                // always return true (i.e. passed)
+                return true;
+
             } else if (rule.operation == FilterOperation.EQUALS) {
                 return fieldValue == compareValue;
 

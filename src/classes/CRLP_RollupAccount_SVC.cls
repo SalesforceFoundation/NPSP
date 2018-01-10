@@ -41,12 +41,15 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
     /**
      * @description Called by the setRecordId() method in the parent (super) class, this configures the
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
+     * For the given summary object, pre-populates the rollupResults map by rollupId,
+     * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
+     * are handled by a different service class.
      */
     public override void initRollup() {
         if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Account.SObjectType)) {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
-                if (r.Detail_Object__r.QualifiedApiName == oppObjectName
-                        || r.Detail_Object__r.QualifiedApiName == pmtObjectName) {
+                if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                        && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
                     addRollupDefinition(r);
                 }
             }

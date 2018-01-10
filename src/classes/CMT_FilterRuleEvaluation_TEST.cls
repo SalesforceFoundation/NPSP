@@ -92,8 +92,8 @@ private class CMT_FilterRuleEvaluation_TEST {
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule7', 'Opportunity', 'Amount', 'Greater_Or_Equal', '0') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule8', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Not_Equals', '1') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule9', 'Opportunity', 'Recurring_Donation_Installment_Number__c', 'Greater_Or_Equal', '0') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule10', 'OpportunityContactRole', 'Role', 'In_List', 'Donor;Member') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule11', 'OpportunityContactRole', 'Role', 'Not_In_List', 'InvalidRole') +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule10', 'Partial_Soft_Credit__c', 'Role_Name__c', 'In_List', 'Donor;Member') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule11', 'Partial_Soft_Credit__c', 'Role_Name__c', 'Not_In_List', 'InvalidRole') +
             ']';
 
         // Count the number of records that there should be in the group and rule JSON strings
@@ -135,9 +135,17 @@ private class CMT_FilterRuleEvaluation_TEST {
         insert o;
         System.AssertEquals(1, [SELECT Count() FROM OpportunityContactRole]);
 
+        Partial_Soft_Credit__c psc = new Partial_Soft_Credit__c(
+                Opportunity__c = o.Id,
+                Contact__c = c.Id,
+                Role_Name__c = 'Donor',
+                Amount__c = o.Amount
+        );
+        insert psc;
+
         // Query the Opportunity and the child OCR and Payment records to use in the evaluation
         String soql = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
-                new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType});
+                new List<SObjectType>{OpportunityContactRole.SObjectType, npe01__OppPayment__c.SObjectType, Partial_Soft_Credit__c.SObjectType});
         o = database.query(soql);
 
         Test.startTest();

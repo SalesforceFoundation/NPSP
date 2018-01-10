@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups Batch for non-LDV-type Rollups
 */
-public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_Rollup_BATCH implements Database.Batchable<SObject> {
 
     private SObjectType summaryObjectType;
     private List<Id> recordIds;
@@ -89,6 +89,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
 
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
 
@@ -110,6 +111,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
             options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
             options.parentObjType = this.summaryObjectType;
+            options.detailObjType = Opportunity.SObjectType;
             if (this.summaryObjectType == Account.SObjectType) {
                 options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
             } else if (this.summaryObjectType == Contact.SObjectType) {
@@ -122,6 +124,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+            ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
     }

@@ -41,19 +41,19 @@ private class CRLP_Rollup_SVC_TEST {
      */
     static testMethod void test_get_batch_sizes() {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c(
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
                         Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Allocation_Batch_Size__c = 400,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
 
         system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(Account.SObjectType));
         system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(Contact.SObjectType));
-        system.assertEquals(200, CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType));
+        system.assertEquals(200, CRLP_Rollup_SVC.getLDVBatchSize(Account.SObjectType));
+        system.assertEquals(400, CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType));
         system.assertEquals(200, CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode());
         system.assertEquals(true, CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled);
         system.assertNotEquals(null, CRLP_Rollup_SVC.getSObjectFieldDescribe('Account', 'Name'));

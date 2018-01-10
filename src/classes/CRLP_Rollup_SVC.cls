@@ -120,15 +120,15 @@ public class CRLP_Rollup_SVC {
         return hasValueChanged;
     }
 
-    /** @description HouseholdSettings record that defines specific Customizable Rollups settings */
-    private static final npo02__Households_Settings__c household_settings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
     /**
     * @description Returns true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
     */
     public static Boolean isCustomizableRollupEngineEnabled {
         get {
-            return (household_settings.Customizable_Rollups_Enabled__c == true);
+            return (customizableRollupSettings.Customizable_Rollups_Enabled__c == true);
         } private set;
     }
 
@@ -139,11 +139,11 @@ public class CRLP_Rollup_SVC {
      */
     public static Integer getBatchSize(SObjectType objType) {
         if (objType == Account.SObjectType) {
-            return household_settings.Rollups_Account_Batch_Size__c.intValue();
+            return customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
         } else if (objType == Contact.SObjectType) {
-            return household_settings.Rollups_Contact_Batch_Size__c.intValue();
+            return customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
         } else if (objType == Allocation__c.SObjectType) {
-            return household_settings.Rollups_Allocation_Batch_Size__c.intValue();
+            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
         }
         return 200;
     }
@@ -154,7 +154,11 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getLDVBatchSize(SObjectType objType) {
-        return household_settings.Rollups_LDV_Batch_Size__c.intValue();
+        if (objType == General_Accounting_Unit__c.SObjectType) {
+            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+        } else {
+            return customizableRollupSettings.Rollups_LDV_Batch_Size__c.intValue();
+        }
     }
 
     /**
@@ -163,7 +167,7 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getMaxRelatedOppsForNonLDVMode() {
-        return household_settings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
+        return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
     }
 
     /**

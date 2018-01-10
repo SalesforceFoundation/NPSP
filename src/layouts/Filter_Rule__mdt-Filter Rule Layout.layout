@@ -25,10 +25,6 @@
                 <behavior>Required</behavior>
                 <field>Operator__c</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>Field_OpportunityContactRole_Role__c</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

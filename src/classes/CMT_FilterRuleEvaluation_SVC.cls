@@ -49,6 +49,7 @@ public class CMT_FilterRuleEvaluation_SVC {
     /**
      * @description Static cache of filter group eval results by a concatenation of detail row Ids
      */
+    @TestVisible
     private static Map<String, Boolean> cachedFilterEvalResults = new Map<String, Boolean>();
 
     /**
@@ -81,6 +82,8 @@ public class CMT_FilterRuleEvaluation_SVC {
         }
 
         List<CMT_FilterRule> rulesToEvaluate = mapOfFilterRulesByGroupId.get(filterGroupId);
+
+        CRLP_Debug_UTIL.setCurrentRollupState('Evaluate Filter Group for ' + cacheKey + ' against ' + filterGroupId);
 
         for (SObject record : detailRows) {
             SObjectType objType = record.getSObjectType();

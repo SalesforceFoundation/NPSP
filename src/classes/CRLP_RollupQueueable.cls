@@ -37,31 +37,57 @@
 */
 public class CRLP_RollupQueueable implements System.Queueable {
 
-    private List<Id> summaryRecordIds;
+    /** @description List of a list of summary record Id's to roll up to, chaining each group one at a time */
+    private List<List<Id>> queueOfSummaryIds;
 
     /**
      * @description Constructor
      * @param recordIds List<Id> list of Summary Record Id's to roll up for
      */
     public CRLP_RollupQueueable(List<Id> summaryRecordIds) {
-        this.summaryRecordIds = summaryRecordIds;
+        this.queueOfSummaryIds = new List<List<Id>>{ summaryRecordIds};
+    }
+    public CRLP_RollupQueueable(List<List<Id>> queueOfSummaryIds) {
+        this.queueOfSummaryIds = queueOfSummaryIds;
     }
 
+    /**
+     * @description Primary execute method for the queuable action. Pops the first list of Id's off of the
+     * queueOfSummaryIds[] collection and passes that to the runRollupsForIds() method for processing.
+     * If there are more items left in queueOfSummaryIds[], chains another queueable job to continue processing.
+     * @param qc
+     */
     public void execute(QueueableContext qc) {
         try {
-            runRollupsForIds(this.summaryRecordIds);
+            // If there are no summary record Id's, then using a List of a List of Summary Id's
+            // In this case, use the first set in the list as the records to roll up to, and
+            // remove that list from the queue.
+            List<Id> summaryRecordIds = this.queueOfSummaryIds[0];
+            this.queueOfSummaryIds.remove(0);
+            runRollupsForIds(summaryRecordIds);
         }  catch (Exception ex) {
-//            ex.setMessage(ex.getMessage() + '\n\nRollups State: \n' + CRLP_RollupProcessor_SVC.getCurrentRollupState());
+            ex.setMessage(ex.getMessage() + '\n\nRollups State: \n' + CRLP_Debug_UTIL.getCurrentRollupState());
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+        }
+
+        // If there are more summary record Id's in the queue to roll-up, chain this job to run again
+        if (!Test.isRunningTest() && this.queueOfSummaryIds != null && !this.queueOfSummaryIds.isEmpty()) {
+            System.enqueueJob(new CRLP_RollupQueueable(this.queueOfSummaryIds));
         }
     }
 
+    /**
+     * @description Primary job to handle processing in the queueable context. Public to support calling directly
+     * from the CRLP_Rollup_TDTM class during unit test execution
+     * @param summaryRecordIds
+     */
     public static void runRollupsForIds(List<Id> summaryRecordIds) {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
 
         CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
         options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
         options.parentObjType = objType;
+        options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
         } else if (objType == Contact.SObjectType) {
@@ -75,7 +101,6 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Get the detail records for the current set of Summary Records
         List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
-
 
         // Call the method to do the actual rollups. This returns only records that require updating
         List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);

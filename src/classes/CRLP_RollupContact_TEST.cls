@@ -45,22 +45,29 @@ private class CRLP_RollupContact_TEST {
      */
     private static void mockRollupCMTValues() {
 
+        String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
+        String membershipRTId = UTIL_RecordTypes.getRecordTypeIdForMembershipTests(Opportunity.SObjectType);
+        RecordType rtDonation = [SELECT DeveloperName FROM RecordType WHERE Id = :donationRTId LIMIT 1];
+        RecordType rtMembership = [SELECT DeveloperName FROM RecordType WHERE Id = :membershipRTId LIMIT 1];
+
         // Create a single Filter Group (no need for filter rules here)
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
 
-        // Extremely simple Filter Rule for IsWon only
+        // Simple testing filters for IsWon, RecordType, and Paid/Written Off
         String filterGroupsJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, 'TestFilterGroup1-IsWon+Paid') + ',' +
                 CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId2, 'TestFilterGroup2-IsWon+WrittenOff') +
-                ']';
+            ']';
         String filterRulesJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') + ',' +
 
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
-                ']';
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule3', 'npe01__OppPayment__c', 'npe01__Written_Off__c', 'Equals', 'True') +
+            ']';
 
         // Deserialize the filter group and filter rule to use for the tests
         CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
@@ -147,15 +154,18 @@ private class CRLP_RollupContact_TEST {
     private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
                         Rollups_LDV_Batch_Size__c = 200,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
+                npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
+                npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                npe01__Payments_Enabled__c = true
+        ));
 
         // Create the test data
         mockRollupCMTValues();
@@ -228,10 +238,15 @@ private class CRLP_RollupContact_TEST {
         pmt1.npe01__Paid__c = false;
 
         npe01__OppPayment__c pmt2 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-        WHERE npe01__Opportunity__r.IsWon = true LIMIT 1];
+        WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
 
+        Test.startTest();
+
+        // Because data is being modified by the above, any cached filter evaluations are now invalid
+        // so before issuing the DML against the payment records, clear any cached eval results
+        CMT_FilterRuleEvaluation_SVC.cachedFilterEvalResults.clear();
         update new List<npe01__OppPayment__c>{ pmt1, pmt2 };
 
         system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
@@ -240,7 +255,6 @@ private class CRLP_RollupContact_TEST {
                 'There should be 100 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity
-        Test.startTest();
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().

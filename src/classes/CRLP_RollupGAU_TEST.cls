@@ -127,19 +127,22 @@ private class CRLP_RollupGAU_TEST {
         insert allocs;
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
                         Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Allocation_Batch_Size__c = 20,
+                        Rollups_Allocation_Batch_Size__c = 400,
                         Rollups_LDV_Batch_Size__c = 100
                 )
         );
 
         // Create the test data
         mockRollupCMTValues();
+
+        // Disable all legacy rollup triggers
+        UTIL_UnitTestData_TEST.disableRollupTriggers();
+        // Disable all customizable rollup triggers
+        UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
         // Insert a dummy Contact and 100 Opportunity records
         Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
@@ -201,7 +204,8 @@ private class CRLP_RollupGAU_TEST {
         // Now test the rollups to the GAU from the Allocation using the LDV Batch Job
         // since this is the only rollup method that supports allocations
         Test.startTest();
-        database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ));
+        Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
+        database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ), batchSize);
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
