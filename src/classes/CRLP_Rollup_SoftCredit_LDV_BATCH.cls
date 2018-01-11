@@ -331,7 +331,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
     private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
         Set<Id> oppIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
         String oppQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
-                new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType });
+                new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +
+                ' WHERE ID IN :oppIds';
         Map<Id, Opportunity> oppsMapById = new Map<Id, Opportunity>((List<Opportunity>)database.query(oppQuery));
 
         List<Partial_Soft_Credit__c> pscDetailRecords = new List<Partial_Soft_Credit__c>();
@@ -343,7 +344,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
             Partial_Soft_Credit__c matchedPSC;
             for (Partial_Soft_Credit__c psc : opp.Partial_Soft_Credits__r) {
                 if (psc.Contact__c == ocr.ContactId) {
-                    matchedPSC = psc;
+                    matchedPSC = psc.clone(true, true, true, true);
                     matchedPSC.Opportunity__r = opp;
                     break;
                 }

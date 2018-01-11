@@ -84,7 +84,7 @@
                 } else if (dfr.getName() == 'ContactId') {
                     queryFields.add('Contact.AccountId');
                 } else if (dfr.getName() == contactRelField) {
-                    queryFields.add(contactRelField + '.AccountId');
+                    queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
                 }
             }
         }
