@@ -46,7 +46,7 @@ private class CMT_MetadataAPI_TEST {
                         'Field__c' => SObjectType.OpportunityContactRole.Fields.Role.getName()
                 });
 
-        CMT_MetadataAPI.commitPendingOperations();
+        CMT_MetadataAPI.commitPendingOperations(UserInfo.getUserId());
         CMT_MetadataAPI.deleteCustomMetadataTypeRecord(CRLP_RollupCMT.MetadataObject.Filter_Group, 'SomeName');
 
         // Construct our callback class
@@ -57,22 +57,10 @@ private class CMT_MetadataAPI_TEST {
 
         // Call the handleResult() method of our main Callback with our dummy context var
         callback.handleResult(null, context);
-
     }
 
 
-    // DeployCallbackContext subclass for testing that returns myJobId
-    // This appears to be not available yet, even though the docs say that this needs to be extended.
-    // No new features to the Metadata Api are due in Winter '18, so the fix for this might be in until
-    // later in 2018.
-    /*public class TestingDeployResult extends Metadata.DeployResult {
-        public override Metadata.DeployStatus getStatus() {
-            return Metadata.DeployStatus.Succeeded;
-        }
-    }*/
-
-
-    // DeployCallbackContext subclass for testing that returns myJobId
+    /* @description DeployCallbackContext subclass for testing that returns myJobId */
     public class TestingDeployCallbackContext extends Metadata.DeployCallbackContext {
         public override Id getCallbackJobId() {
             return '000000000122345';
