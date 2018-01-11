@@ -861,5 +861,47 @@ public with sharing class BDI_DryRun_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description operation:
+    *    process new contacts through Dry Run mode using a Batch
+    * verify:
+    *    no objects created
+    *    Statuses updated appropriately
+    *    Batch statistics are not updated
+    **********************************************************************************************************/
+    static testMethod void manyDISameBatch() {
+
+        DataImportBatch__c batch = BDI_DataImportAPI_TEST.newBatch('mybatch', false);
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        listDI.add(BDI_DataImportAPI_TEST.newDI(batch.Id, 'c1', 'C1'));
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH(batch.Id, true);
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(0, listCon.size());
+
+        listDI = [select Status__c, Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c,
+            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Id];
+        system.assertEquals(3, listDI.size());
+        for (DataImport__c di : listDI) {
+            system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
+            system.assertEquals(null, di.Contact1Imported__c);
+            system.assertEquals(null, di.HouseholdAccountImported__c);
+            system.assertEquals(label.bdiDryRunNoMatch, di.Contact1ImportStatus__c);
+        }
+
+        DataImportBatch__c diBatch = [SELECT Id, Records_Failed__c, Records_Successfully_Processed__c, Last_Processed_On__c from DataImportBatch__c];
+        system.assertEquals(null, diBatch.Records_Failed__c);
+        system.assertEquals(null, diBatch.Records_Successfully_Processed__c);
+        system.assertEquals(null, diBatch.Last_Processed_On__c);
+    }
 
 }

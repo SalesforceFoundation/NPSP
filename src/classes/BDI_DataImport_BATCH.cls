@@ -111,6 +111,8 @@ public class BDI_DataImport_BATCH implements Database.Batchable<sObject> {
     * @return void
     */
     public void finish(Database.BatchableContext bc) {
-        BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
+        if (!isDryRun) {
+            BDI_DataImportService.updateDIBatchStatistics(bc.getJobId(), batchId);
+        }
     }
 }
