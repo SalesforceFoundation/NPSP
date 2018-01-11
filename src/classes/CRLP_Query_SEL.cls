@@ -67,6 +67,7 @@
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
         // to the Set of strings (enforcing uniqueness)
+        String contactRelField = UTIL_Namespace.StrAllNSPrefix('Contact__c');
         Set<String> queryFields = new Set<String>{'Id'};
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             if (dfr.isAccessible()) {
@@ -82,8 +83,8 @@
                     queryFields.add('LastModifiedBy.Alias');
                 } else if (dfr.getName() == 'ContactId') {
                     queryFields.add('Contact.AccountId');
-                } else if (dfr.getName() == UTIL_Namespace.StrAllNSPrefix('Contact__c')) {
-                    queryFields.add(UTIL_Namespace.StrAllNSPrefix('Contact__r') + '.AccountId');
+                } else if (dfr.getName() == contactRelField) {
+                    queryFields.add(contactRelField + '.AccountId');
                 }
             }
         }
