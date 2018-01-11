@@ -1,7 +1,7 @@
 ({
     setObjectAndFieldDependencies: function(cmp) {
         //set list of objects and get data type for all
-        //TODO: set proper labels
+        console.log('is objDetails empty?? '+$A.util.isEmpty(cmp.get("v.objectDetails")));
         if($A.util.isEmpty(cmp.get("v.objectDetails"))) {
 
             console.log("In the helper function");
@@ -31,13 +31,21 @@
                 if (state === "SUCCESS") {
                     var response = response.getReturnValue();
                     cmp.set("v.objectDetails", response);
-                    console.log("got a response");
-                    //TODO: set detailFields here? could depend on mode + first value
+
                     console.log('Before calling reset details');
+
                     var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+                    this.resetFields(cmp, detailObject, 'detail');
+
                     var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                    this.resetDetailFields(cmp, detailObject);
-                    this.resetSummaryFields(cmp, summaryObject);
+                    this.resetFields(cmp, summaryObject, 'summary');
+
+                    var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+                    this.resetFields(cmp, amountObject, 'amount');
+
+                    var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+                    this.resetFields(cmp, dateObject, 'date');
+
                     console.log('Called reset details');
                 }
                 else if (state === "ERROR") {
@@ -57,6 +65,7 @@
             $A.enqueueAction(action);
         }
     },
+
     resetSummaryObjects: function(cmp, detailObject){
         //todo: add ifNecesary check?
         console.log('Fired summary object reset');
@@ -74,26 +83,37 @@
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
-    resetSummaryFields: function(cmp, summaryObject){
-        //TODO: this needs to handle detail field, summary object && detail object
-        console.log("Fired summary field reset");
+    resetFields: function(cmp, object, context){
+
+        console.log("Fired field reset for context: "+context);
 
         //this code is getting all fields + type, not all fields for given detail object
         var objectDetails = cmp.get("v.objectDetails");
-        var summaryFieldMapForObject = objectDetails[summaryObject];
-        var newSummaryFields = [];
+        var fieldMapForObject = objectDetails[object];
+        console.log('fieldMapForObject:');
+        console.log(fieldMapForObject);
+        var newFields = [];
 
-        for(var i=0; i<summaryFieldMapForObject.length; i++){
-            var name = summaryFieldMapForObject[i].name;
-            var label = summaryFieldMapForObject[i].label;
-            var datatype = summaryFieldMapForObject[i].type;
+        for(var i=0; i<fieldMapForObject.length; i++){
+            var name = fieldMapForObject[i].name;
+            var label = fieldMapForObject[i].label;
+            var datatype = fieldMapForObject[i].type;
             var fieldObj = {label: label, name: name, type: datatype};
-            //newDetailFields.push(summaryFieldMapForObject[i]);
-            newSummaryFields.push(fieldObj);
+            newFields.push(fieldObj);
         }
-        //todo: 2 attributes?
-        cmp.set("v.summaryFields", newSummaryFields);
-    },
+
+        if(context=='detail'){
+            cmp.set("v.detailFields", newFields);
+        } else if (context=='summary') {
+            cmp.set("v.summaryFields", newFields);
+        } else if (context=='date') {
+            cmp.set("v.dateFields", newFields);
+        } else if (context=='amount') {
+            cmp.set("v.amountFields", newFields);
+        }
+    }
+
+    /*,
     resetDetailFields: function(cmp, detailObject){
         console.log("Fired detail field reset");
         //TODO: detail field list needs refinement in controller, not here
@@ -112,5 +132,5 @@
         }
         //todo: 2 attributes?
         cmp.set("v.detailFields", newDetailFields);
-    }
+    }*/
 })

@@ -31,14 +31,12 @@
     changeDetailObject: function(cmp, event, helper){
         //clear out everything else?
         //set new summary objects based on selected value
-        var detailObject = cmp.find("detailObjectSelect").get("v.value");
-        helper.resetSummaryObjects(cmp, detailObject);
+        var object = cmp.find("detailObjectSelect").get("v.value");
+        helper.resetSummaryObjects(cmp, object);
 
-        //set new detail fields based on new selected object
-        helper.resetDetailFields(cmp, detailObject);
+        //set new detail fields based on new selected detail object
+        helper.resetFields(cmp, object, 'detail');
 
-        //reset anything else necessary
-        //helper.resetSummaryFields(cmp, summaryObject);
     },
     changeDetailField: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
@@ -48,9 +46,19 @@
     },
     changeSummaryObject: function(cmp, event, helper){
         //change summary fields to match new summary object + existing detailField
-        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        //var detailField = cmp.find("detailFieldSelect").get("v.value");
-        helper.resetSummaryFields(cmp, summaryObject);
+        var object = cmp.find("summaryObjectSelect").get("v.value");
+        helper.resetFields(cmp, object, 'summary');
     },
+    changeAmountObject: function(cmp, event, helper){
+        //change amount fields to match new summary object + existing detailField
+        var object = cmp.find("amountObjectSelect").get("v.value");
+        helper.resetFields(cmp, object, 'amount');
+    },
+    changeDateObject: function(cmp, event, helper){
+        console.log('HITTING CHANGEDATEOBJECT FUNCTION');
+        //change date fields to match new summary object + existing detailField
+        var object = cmp.find("dateObjectSelect").get("v.value");
+        helper.resetFields(cmp, object, 'date');
+    }
 
 })

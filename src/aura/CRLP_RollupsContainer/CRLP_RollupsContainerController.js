@@ -10,6 +10,14 @@
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
 
+                console.log(model.operations);
+
+                var ops = [];
+                for(var i in model.operations){
+                    ops.push({name: i, label: model.operations[i]});
+                }
+                cmp.set("v.operations", ops);
+
                 var cols = [model.labels.name
                             , model.labels.summaryObject
                             , model.labels.detailObject

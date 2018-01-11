@@ -69,6 +69,7 @@ public with sharing class CRLP_RollupUI_SVC {
     public class RollupModel {
         @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
+        @AuraEnabled public Map<String, String> operations;
 
     }
     /*******************************************************************************************************
@@ -89,6 +90,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         model.items = getRollupDefinitions();
         model.labels = getRollupLabels();
+        model.operations = getRollupOperations();
 
         return model;
     }
@@ -165,6 +167,25 @@ public with sharing class CRLP_RollupUI_SVC {
 
         return mdtTableList;
 
+    }
+
+
+    /*******************************************************************************************************
+    * @description Queries from the Filter Rule selector to fetch all Filter_Group__mdt records. Parses so that only the relevant
+    * information is returned, and a custom FilterGroupTableItem class is created with this information.
+    * @return a map of picklist options api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getRollupOperations() {
+
+        Map<String,String> rollupOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Rollup__mdt.Operation__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues())
+            rollupOperations.put(f.getValue(),f.getLabel());
+
+        return rollupOperations;
     }
 
     /*******************************************************************************************************

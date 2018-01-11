@@ -5,12 +5,16 @@
     <aura:attribute name="activeRollup" type="Map" description="The active rollup displayed. Only populated from Clone, View and Edit."/>
     <aura:attribute name="mode" type="String" default="edit" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
+    <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
+
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
     <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
-    <aura:attribute name="detailFields" type="Map" description="Dependent list of detail fields" access="private"/>
-    <aura:attribute name="summaryObjects" type="Map" description="Dependent list of summary objects" access="private"/>
-    <aura:attribute name="summaryFields" type="Map" description="Dependent list of summary fields" access="private"/>
+    <aura:attribute name="detailFields" type="List" description="Dependent list of detail fields" access="private"/>
+    <aura:attribute name="summaryObjects" type="List" description="Dependent list of summary objects" access="private"/>
+    <aura:attribute name="summaryFields" type="List" description="Dependent list of summary fields" access="private"/>
+    <aura:attribute name="amountFields" type="List" description="Dependent list of amount fields" access="private"/>
+    <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
 
     <!-- events we handle -->
     <!--tracking activeRollup instead of changeMode because the change of Mode isn't being registered in the sibling-->
@@ -24,6 +28,8 @@
     <br/>{!v.activeRollup.Detail_Field__r.QualifiedApiName}
     <br/>{!v.activeRollup.Summary_Object__r.QualifiedApiName}
     <br/>{!v.activeRollup.Summary_Field__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Date_Field__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Amount_Field__r.QualifiedApiName}
 
 
     <div aria-labelledby="rollupdetail">
@@ -56,6 +62,7 @@
                                               onchange="{!c.changeDetailObject}"
                                               label="{!v.labels.detailObject}"
                                               name="{!v.labels.detailObject}"
+                                              value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
                                               required="true"
                                               disabled="{!v.isReadOnly}">
                                             <!-- this doesn't do anything: readonly="true"-->
@@ -104,11 +111,16 @@
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.operation}"
-                                             value="{!v.activeRollup.Operation__c}"
-                                             required="true"
-                                             readonly="{!v.isReadOnly}"/>
+                            <lightning:select aura:id="operationSelect"
+                                              label="{!v.labels.operation}"
+                                              name="{!v.labels.operation}"
+                                              value="{!v.activeRollup.Operation__c}"
+                                              required="true"
+                                              disabled="{!v.isReadOnly}">
+                                <aura:iteration items="{!v.operations}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Operation__c}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <!-- Using ui:inputCheckbox here because the boolean/checkbox fx of lightning:input still sucks -->
@@ -139,35 +151,62 @@
                                              readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
+
+
+
+
+
                     <lightning:layout multipleRows="true">
+
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.amountObject}"
-                                             value="{!v.activeRollup.Amount_Object__r.QualifiedApiName}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                            <lightning:select aura:id="amountObjectSelect"
+                                              onchange="{!c.changeAmountObject}"
+                                              label="{!v.labels.amountObject}"
+                                              value="{!v.activeRollup.Amount_Object__r.QualifiedApiName}"
+                                              name="{!v.labels.amountObject}"
+                                              disabled="{!v.isReadOnly}" >
+                                <aura:iteration items="{!v.detailObjects}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Amount_Object__r.QualifiedApiName}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.amountField}"
-                                             value="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                            <lightning:select aura:id="amountFieldSelect"
+                                              onchange="{!c.changeAmountField}"
+                                              label="{!v.labels.amountField}"
+                                              value="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
+                                              name="{!v.labels.amountField}"
+                                              disabled="{!v.isReadOnly}" >
+                                <aura:iteration items="{!v.amountFields}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Amount_Field__r.QualifiedApiName}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.dateObject}"
-                                             value="{!v.activeRollup.Date_Object__r.QualifiedApiName}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                            <lightning:select aura:id="dateObjectSelect"
+                                              onchange="{!c.changeDateObject}"
+                                              label="{!v.labels.dateObject}"
+                                              value="{!v.activeRollup.Date_Object__r.QualifiedApiName}"
+                                              name="{!v.labels.dateObject}"
+                                              disabled="{!v.isReadOnly}" >
+                                <aura:iteration items="{!v.detailObjects}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Date_Object__r.QualifiedApiName}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.dateField}"
-                                             value="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                            <lightning:select aura:id="DateFieldSelect"
+                                              onchange="{!c.changeDateField}"
+                                              label="{!v.labels.dateField}"
+                                              value="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
+                                              name="{!v.labels.dateField}"
+                                              disabled="{!v.isReadOnly}" >
+                                <aura:iteration items="{!v.dateFields}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Date_Field__r.QualifiedApiName}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
+
                     </lightning:layout>
                     <aura:if isTrue="{!or(v.mode == 'edit', v.mode == 'clone')}">
                         <div class="slds-p-around--large">
