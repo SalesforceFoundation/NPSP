@@ -80,8 +80,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == Contact.SObjectType) {
                 Contact c = [SELECT Account.Number_of_Opportunities__c FROM Contact WHERE Id = :recordId LIMIT 1];
                 numOpps = c.Account.Number_of_Opportunities__c;
-            } else {
-                // GAU's
+            } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 numOpps = 1000000;  // always want to run these in LDV mode
             }
 
@@ -90,6 +89,12 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(this.objType);
                 Database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ recordId }), batchSize);
+            }
+
+            // Execute Contact or Account Soft Credit roll-ups
+            if (this.objType == Account.SObjectType || this.objType == Contact.SObjectType) {
+                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
+                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(new List<Id>{ recordId }), batchSize);
             }
 
         } else {

@@ -46,7 +46,7 @@ public class CRLP_Rollup_SEL {
         get {
             if (cachedRollups == null) {
                 cachedRollups = [
-                        SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c,
+                        SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,

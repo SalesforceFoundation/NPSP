@@ -66,4 +66,52 @@ public class CRLP_Debug_UTIL {
                 '\n==================================';
     }
 
+    public static String getRollupState(List<CRLP_Rollup> rollups) {
+        String theState = '';
+        for (CRLP_Rollup r : rollups) {
+            theState += getRollupCurrentValues(r) + '\n';
+        }
+        return theState;
+    }
+
+    /**
+     * @description Simple utility method to clear out all target roll-up fields on the specified Object.
+     * Works for Account, Contact, and General_Accounting_Unit__c; and should clear out all target fields on
+     * all records no matter how many records there are in the system.
+     * @param summObjectType Summary Object Type
+     */
+    public static void clearAllRollupFields(SObjectType summObjectType) {
+        System.enqueueJob(new clearRollupFieldsASync(summObjectType, 0));
+    }
+
+    /**
+     * @description Queueable Implementation called by clearAllRollupFields()
+     */
+    private class clearRollupFieldsASync implements System.Queueable {
+
+        private SObjectType objType;
+        private Integer queryOffset;
+        public clearRollupFieldsASync(SObjectType summObjectType, Integer queryOffset) {
+            this.objType = summObjectType;
+            this.queryOffset = queryOffset;
+        }
+
+        public void execute(QueueableContext qc) {
+            List<Schema.DescribeFieldResult> fldList = CRLP_Rollup_SEL.getReferencedFieldsByObject(this.objType);
+            String soql = 'SELECT ' + CRLP_Rollup_SEL.getReferencedFieldsByObjectAsString(this.objType) +
+                    ' FROM ' + this.objType.getDescribe().getName() +
+                    ' LIMIT 1000' +
+                    (this.queryOffset != 0 ? ' OFFSET ' + this.queryOffset : '');
+            List<SObject> records = database.query(soql);
+            for (SObject s : records) {
+                for (DescribeFieldResult dfr : fldList) {
+                    s.put(dfr.getSobjectField(), null);
+                }
+            }
+            if (records.size() > 0) {
+                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(records);
+                System.enqueueJob(new clearRollupFieldsASync(this.objType, records.size()));
+            }
+        }
+    }
 }

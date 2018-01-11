@@ -80,6 +80,10 @@
                     queryFields.add('CreatedBy.Alias');
                 } else if (dfr.getName() == 'LastModifiedById') {
                     queryFields.add('LastModifiedBy.Alias');
+                } else if (dfr.getName() == 'ContactId') {
+                    queryFields.add('Contact.AccountId');
+                } else if (dfr.getName() == UTIL_Namespace.StrAllNSPrefix('Contact__c')) {
+                    queryFields.add(UTIL_Namespace.StrAllNSPrefix('Contact__r') + '.AccountId');
                 }
             }
         }
@@ -121,7 +125,6 @@
             if (detailObject == Allocation__c.SObjectType) {
                 mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             }
-
 
         } else {
             // ====================================================================================================
@@ -170,12 +173,6 @@
             mainObject = Opportunity.SObjectType;
             childObjects.add(npe01__OppPayment__c.SObjectType);
             detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-
-        } else if (objType == General_Accounting_Unit__c.SObjectType) {
-            // Allocation to GAU
-            mainObject = Allocation__c.SObjectType;
-            detailKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
-
         }
 
         // Get the base query
@@ -183,11 +180,6 @@
 
         // Add the appropriate filtering
         detailsQuery += ' WHERE ' + detailKeyField + ' IN :summaryRecordIds';
-        if (objType == General_Accounting_Unit__c.SObjectType) {
-            // In the specific case of the Allocation to GAU roll-up, explicitly filter out any
-            // Allocation__c records where the Opportunity__c field is null.
-            detailsQuery += ' AND ' + SObjectType.Allocation__c.fields.Opportunity__c.getName() + ' != null';
-        }
 
         return detailsQuery;
     }

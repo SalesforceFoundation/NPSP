@@ -46,6 +46,7 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(General_Accounting_Unit__c.SObjectType)) {
             addRollupDefinition(r);
         }
+        system.debug(LoggingLevel.ERROR, '>>>>> CREATE ROLLUPS=' + this.rollups.size());
     }
     /**
      * @description Primary action method. Called for each record of summaryObject with a list of the detail objects

@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups Batch for non-LDV-type Rollups
 */
-public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_Rollup_BATCH implements Database.Batchable<SObject> {
 
     private SObjectType summaryObjectType;
     private List<Id> recordIds;
@@ -111,6 +111,7 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
             options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
             options.parentObjType = this.summaryObjectType;
+            options.detailObjType = Opportunity.SObjectType;
             if (this.summaryObjectType == Account.SObjectType) {
                 options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
             } else if (this.summaryObjectType == Contact.SObjectType) {

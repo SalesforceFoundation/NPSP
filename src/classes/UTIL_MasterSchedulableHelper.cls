@@ -87,8 +87,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     defaultScheduledJobs.put('NPSP 02 - Opportunity Contact Rollups (New)', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
                     defaultScheduledJobs.put('NPSP 03A - Opportunity Account Rollups LDV (New)', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account'});
                     defaultScheduledJobs.put('NPSP 03B - Opportunity Contact Rollups LDV (New)', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact'});
-                    // TODO Finalize SoftCredit rollups
-                    // defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups (New)', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', 'TODO'});
+                    defaultScheduledJobs.put('NPSP 04 - Opportunity Soft Credit Rollups LDV (New)', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', SObjectType.Partial_Soft_Credit__c.getName()});
                     defaultScheduledJobs.put('NPSP 05 - GAU Allocation Rollups LDV (New)', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName()});
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
@@ -111,7 +110,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     jobsToAbort.add('NPSP 02 - Opportunity Contact Rollups (New)');
                     jobsToAbort.add('NPSP 03A - Opportunity Account Rollups LDV (New)');
                     jobsToAbort.add('NPSP 03B - Opportunity Contact Rollups LDV (New)');
-                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups (New)');
+                    jobsToAbort.add('NPSP 04 - Opportunity Soft Credit Rollups LDV (New)');
                     jobsToAbort.add('NPSP 05 - GAU Allocation Rollups LDV (New)');
                 }
             }

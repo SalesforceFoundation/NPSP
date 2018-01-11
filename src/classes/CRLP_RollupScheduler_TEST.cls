@@ -43,9 +43,8 @@ private class CRLP_RollupScheduler_TEST {
     static testMethod void test_schedule_CRLPJobs() {
 
         // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
                         Rollups_Account_Batch_Size__c = 100,
@@ -82,7 +81,7 @@ private class CRLP_RollupScheduler_TEST {
         UTIL_MasterSchedulableHelper.defaultScheduledJobs = null;
 
         // Turn off Customizable Rollups
-        UTIL_CustomSettingsFacade.getHouseholdsSettings().Customizable_Rollups_Enabled__c = false;
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = false;
         UTIL_MasterSchedulableHelper.setScheduledJobs();
 
         System.assertEquals(0, [SELECT count() FROM AsyncApexJob
@@ -96,9 +95,8 @@ private class CRLP_RollupScheduler_TEST {
     static testMethod void test_Scheduled_CRLP_Rollup_Job() {
 
         // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
                         Rollups_Account_Batch_Size__c = 100,
@@ -133,9 +131,8 @@ private class CRLP_RollupScheduler_TEST {
     static testMethod void test_Scheduled_CRLP_Rollup_LDV_Job() {
 
         // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
+                new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 1,
                         Rollups_Account_Batch_Size__c = 100,

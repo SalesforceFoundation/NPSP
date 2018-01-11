@@ -246,7 +246,7 @@ public without sharing class RLLP_OppRollup_UTIL {
 
         // If the new Customizable Rollup Engine is enabled, then all of the legacy NPSP
         // rollups are disabled.
-        customizableRollupEngineEnabled = (household_settings.Customizable_Rollups_Enabled__c == true);
+        customizableRollupEngineEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
 
         //set the static var
         hh_settings = household_settings;

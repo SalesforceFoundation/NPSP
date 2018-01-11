@@ -71,9 +71,7 @@ private class CRLP_RecalculateBTN_TEST {
     static testMethod void test_legacy_rollups() {
 
         // Ensure that Customizable Rollups are disabled
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = false
                 ));
 
@@ -98,9 +96,7 @@ private class CRLP_RecalculateBTN_TEST {
     static testMethod void test_new_rollups() {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
                         Rollups_LDV_Batch_Size__c = 200,
@@ -125,7 +121,8 @@ private class CRLP_RecalculateBTN_TEST {
 
         Test.stopTest();
 
-        system.assertEquals(2, [SELECT Count() FROM AsyncApexJob], 'Two Queueable jobs should been executed');
+        // validate that both the standard and the partial soft credit jobs were submitted
+        system.assertEquals(4, [SELECT Count() FROM AsyncApexJob], 'Four Queueable jobs should been executed');
     }
 
 }

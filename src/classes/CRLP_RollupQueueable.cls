@@ -87,6 +87,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
         CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
         options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
         options.parentObjType = objType;
+        options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
         } else if (objType == Contact.SObjectType) {

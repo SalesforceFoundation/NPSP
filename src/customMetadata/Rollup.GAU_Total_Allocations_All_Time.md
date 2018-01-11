@@ -28,7 +28,7 @@
     </values>
     <values>
         <field>Detail_Field__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">Amount__c</value>
     </values>
     <values>
         <field>Detail_Object__c</field>

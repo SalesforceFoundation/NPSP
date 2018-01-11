@@ -65,14 +65,14 @@ public class CRLP_Rollup {
     // Vars to handle using a different field for the summary. For example, might have Largest as the Operation
     // against the Opportunity.Amount, but the ResultField might pull in Opportunity.Id or any field from the
     // Opportunity object.
-    // Using Two-dimensional array to store first/last values for all the various data types. For example,
-    // might have a rollup of "Id of the first donation", "Amount of the last donation",
+    // Using Four-dimensional array to store first/last/largest/smallest values for all the various data types.
+    // For example, might have a rollup of "Id of the first donation", "Amount of the last donation",
     // or "{some text field} from first donation"
     public String[] textValue;
     public Decimal[] numValue;
     public Id[] idValue;
-    public Date dateValue;
-    public DateTime dateTimeValue;
+    public Date[] dateValue;
+    public DateTime[] dateTimeValue;
 
     // Maps of rolled up stats by year; where the map key is the year (fiscal or calendar) from the specified date field
     public Map<String, Double> sumByYear;
@@ -112,17 +112,19 @@ public class CRLP_Rollup {
     public void resetValues() {
         this.theCount = 0;
         this.theSum = this.minValue = this.maxValue = 0;
-        this.dateValue = this.minDate = this.maxDate = null;
-        this.dateTimeValue = this.minDateTime = this.maxDateTime = null;
+        this.minDate = this.maxDate = null;
+        this.minDateTime = this.maxDateTime = null;
 
         this.minByYear = new Map<String, Double>();
         this.maxByYear = new Map<String, Double>();
         this.sumByYear = new Map<String, Double>();
         this.countByYear = new Map<String, Integer>();
 
-        this.textValue = new List<String>{ null, null };
-        this.numValue = new List<Decimal>{ 0, 0 };
-        this.idValue = new List<Id>{ null, null };
+        this.textValue = new List<String>{ null, null, null, null };
+        this.numValue = new List<Decimal>{ 0, 0, 0, 0 };
+        this.idValue = new List<Id>{ null, null, null, null };
+        this.dateValue = new List<Date>{ null, null, null, null };
+        this.dateTimeValue = new List<DateTime>{ null, null, null, null };
     }
 
     /**
@@ -197,7 +199,7 @@ public class CRLP_Rollup {
         SoapType fldType = targetField.getSoapType();
         Object resultValue;
 
-        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c.replaceAll(' ', '_'));
+        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
         CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
                 '/' + fldType + ' for ' + operation);
@@ -224,21 +226,6 @@ public class CRLP_Rollup {
         }
 
         // ================================================================
-        // Simple ResultField types
-        // ================================================================
-        /*if (this.resultFieldType != null) {
-            if (this.resultFieldType == SoapType.DATE) {
-                resultValue = this.dateValue;
-            } else if (this.resultFieldType == SoapType.DATETIME) {
-                resultValue = this.dateTimeValue;
-            } else if (this.resultFieldType == SoapType.ID) {
-                resultValue = this.idValue;
-            } else {
-                resultValue = this.textValue;
-            }
-        }*/
-
-        // ================================================================
         // First/Last Donation Date or DateTime
         // ================================================================
         if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.FIRST) {
@@ -252,16 +239,21 @@ public class CRLP_Rollup {
         }
 
         // ================================================================
-        // First/Last of some value not of a Date or DateTime type,such as "Last Gift Amount"
+        // First/Last ,such as "Last Gift Amount"
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
+            Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
-                resultValue = numValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = numValue[arrayPosition];
             } else if (fldType == SoapType.ID) {
-                resultValue = idValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = idValue[arrayPosition];
+            } else if (fldType == SoapType.DATE) {
+                resultValue = dateValue[arrayPosition];
+            } else if (fldType == SoapType.DATETIME) {
+                resultValue = dateTimeValue[arrayPosition];
             } else {
-                resultValue = textValue[(operation == CRLP_Operation.RollupType.FIRST ? 0 : 1)];
+                resultValue = textValue[arrayPosition];
             }
         }
 
@@ -338,18 +330,18 @@ public class CRLP_Rollup {
         // Current Streak (returns the number of years going back from this yer that a donation has been made)
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.CURRENT_STREAK) {
-            List<String> yearlySorted = new List<String>( this.sumByYear.keySet() );
+            List<String> yearlySorted = new List<String>(this.sumByYear.keySet());
             yearlySorted.sort();
             Integer streakLength = 0;
 
             Integer currentYear = fiscalYrs.getYear(System.today());
-            if (currentYear != Integer.valueOf(yearlySorted[yearlySorted.size()-1])) {
+            if (currentYear != Integer.valueOf(yearlySorted[yearlySorted.size() - 1])) {
                 // if they haven't donated this year, start counting last year
                 currentYear--;
             }
 
             // Loop through all the years with donations in reverse to find the current streak
-            for (Integer n=yearlySorted.size()-1; n >= 0 ; n--) {
+            for (Integer n = yearlySorted.size() - 1; n >= 0; n--) {
                 if (Integer.valueOf(yearlySorted[n]) == currentYear) {
                     streakLength++;
                     currentYear--;
@@ -358,6 +350,23 @@ public class CRLP_Rollup {
                 }
             }
             resultValue = streakLength;
+
+        // ================================================================
+        // Largest/Smallest for other types
+        // ================================================================
+        } else if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
+            Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
+            if (fldType == SoapType.DOUBLE) {
+                resultValue = numValue[arrayPosition];
+            } else if (fldType == SoapType.ID) {
+                resultValue = idValue[arrayPosition];
+            } else if (fldType == SoapType.DATE) {
+                resultValue = dateValue[arrayPosition];
+            } else if (fldType == SoapType.DATETIME) {
+                resultValue = dateTimeValue[arrayPosition];
+            } else {
+                resultValue = textValue[arrayPosition];
+            }
         }
 
         CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
