@@ -62,6 +62,8 @@ public class CRLP_Debug_UTIL {
                 '\n* countByYear=' + JSON.serialize(r.countByYear) +
                 '\n* textValue=' + JSON.serialize(r.textValue) +
                 '\n* numValue=' + JSON.serialize(r.numValue) +
+                '\n* dateValue=' + JSON.serialize(r.dateValue) +
+                '\n* dateTimeValue=' + JSON.serialize(r.dateTimeValue) +
                 '\n* idValue=' + JSON.serialize(r.idValue) +
                 '\n==================================';
     }

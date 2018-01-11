@@ -88,6 +88,10 @@ private class CRLP_RollupSoftCredit_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
                         'Largest_Soft_Credit_Amount__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Date of Largest', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
+                        'Largest_Soft_Credit_Date__c', CRLP_Operation.RollupType.LARGEST, 'CloseDate') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - First Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
                         'First_Soft_Credit_Date__c', CRLP_Operation.RollupType.FIRST, 'CloseDate') + ',' +
@@ -187,7 +191,7 @@ private class CRLP_RollupSoftCredit_TEST {
         Integer cnt = 100;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
-        Date lastCloseDate;
+        Date lastCloseDate, largestGiftDate;
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
@@ -207,6 +211,7 @@ private class CRLP_RollupSoftCredit_TEST {
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;
+                largestGiftDate = closeDate.addMonths(n);
             }
             lastCloseDate = closeDate.addMonths(n);
         }
@@ -242,6 +247,7 @@ private class CRLP_RollupSoftCredit_TEST {
         System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
         System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
         System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
+        System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
         System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
         System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
 

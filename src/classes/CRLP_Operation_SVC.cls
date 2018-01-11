@@ -32,17 +32,18 @@
 * @date 2017
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Operation Services
+* @description Rollup Operation Services:
+* Called by the RollupHandler service class instance for each Source record and each active rollup that
+* passes the filter. For example, there may be 10 instances of the CRLP_Rollup class created for 10 rollups
+* from Opportunity to Account. Each instances doOperation() method will get called once to do the rollup from
+* the Detail/Attribution records to the Source record - though the values are actually stored in the CRLP_Rollup
+* instance until ready to be written to the Sobject.
+*
 */
 public class CRLP_Operation_SVC {
 
-/*
-Called by the RollupHandler service class instance for each Source record and each active rollup that
-passes the filter. For example, there may be 10 instances of the CRLP_Rollup class created for 10 rollups
-from Opportunity to Account. Each instances doOperation() method will get called once to do the rollup from
-the Detail/Attribution records to the Source record - though the values are actually stored in the CRLP_Rollup
-instance until ready to be written to the Sobject.
- */
+    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
+    private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
 
     /**
      * @description Perform the rollup operation based on the details in the CRLP_Rollup_SVC.Rollup instance
@@ -119,9 +120,10 @@ instance until ready to be written to the Sobject.
         // If there is a result field retrieve it's value and convert as required
         // There is only one Rollup__mdt record when a Result Object/Field is involved.
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
-        if (rollup.resultFieldType != null && rollup.detailObject == objName) {
+        if (rollup.resultFieldType != null && (rollup.detailObject == objName || rollup.detailObject == oppObjectName)) {
 
-            Object resultVal = detailSObject.get(rollup.resultFieldName);
+            Object resultVal = (rollup.detailObject == oppObjectName ?
+                    oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
             for (Rollup__mdt r : rollup.rollupsMdt) {
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
                 if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
@@ -133,11 +135,11 @@ instance until ready to be written to the Sobject.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
-                    // Operation = SMALLEST (always based on an amount)
+                    // Operation = SMALLEST (always based on an amount, but the result field might actually be a date)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
-                    // Operation = LARGEST (always based on an amount)
+                    // Operation = LARGEST (always based on an amount, but the result field might actually be a date)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 }

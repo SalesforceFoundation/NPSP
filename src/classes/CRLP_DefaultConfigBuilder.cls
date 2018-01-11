@@ -188,6 +188,8 @@ public class CRLP_DefaultConfigBuilder {
                     new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Contact.Largest_Soft_Credit_Amount__c' =>
                     new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+            'Contact.Largest_Soft_Credit_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
             'Contact.Last_Soft_Credit_Amount__c' =>
                     new List<String>{ pscAmountFld, FilterGroup_Donations_Contacts, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__Soft_Credit_Last_Year__c' =>
@@ -372,6 +374,8 @@ public class CRLP_DefaultConfigBuilder {
                     new List<String>{ 'Contact Soft Credit: First Amount', 'Amount of the first gift where the Contact is designed for Soft Credit' },
             'Contact.Largest_Soft_Credit_Amount__c' =>
                     new List<String>{ 'Contact Soft Credit: Largest Amount', 'Largest gift where the Contact is designed for Soft Credit' },
+            'Contact.Largest_Soft_Credit_Date__c' =>
+                    new List<String>{ 'Contact Soft Credit: Date of Largest', 'Date of the Largest gift where the Contact is designed for Soft Credit' },
             'Contact.Last_Soft_Credit_Amount__c' =>
                     new List<String>{ 'Contact Soft Credit: Last Amount', 'Amount of the most recent gift where the Contact is designed for Soft Credit' },
             'Contact.npo02__Soft_Credit_Total__c' =>
