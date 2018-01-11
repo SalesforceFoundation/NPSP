@@ -73,7 +73,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 jobsToAbort.clear();
                 defaultScheduledJobs = new Map<String, List<String>>{
                     'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
-                    'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 23 ? * *', 'RD_RecurringDonations_BATCH'},
+                    // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
+                    // the Opps that may be created/modified by the RD job.
+                    'NPSP 06 - Recurring Donation Updates'      => new List<String>{'0 0 22 ? * *', 'RD_RecurringDonations_BATCH'},
                     'NPSP 07 - Seasonal Address Updates'        => new List<String>{'0 0 23 ? * *', 'ADDR_Seasonal_SCHED'},
                     'NPSP 08 - Level Assignment Updates'        => new List<String>{'0 0 4 ? * *',  'LVL_LevelAssign_SCHED'},
                     'NPSP 09 - Data Import Batch Processing'    => new List<String>{'0 0 22 ? * *', 'BDI_DataImportBatch_SCHED'}
@@ -82,7 +84,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
                     // keep the naming similar and stagger the job start times slightly. Include a 3rd list item for the
                     // primary SObject to use when instantiating the scheduler
-                    // The last parameter is set to True for LDV jobs (i.e, pass True to the CRLP_RollupScheduler() instance)
+                    // The last parameter is set to True for LDV jobs (i.e, pass True to the CRLP_RollupScheduler() instance).
+                    // Jobs are staggered by 10 minutes to hopefully improve performance when each of the jobs starts with a large query
                     defaultScheduledJobs.put('NPSP 01 - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'False'});
                     defaultScheduledJobs.put('NPSP 02 - Customizable Rollups - Contact Hard Credit', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'False'});
                     defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Hard Credit Job 2', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'True'});
