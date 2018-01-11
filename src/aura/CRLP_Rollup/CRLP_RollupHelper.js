@@ -10,7 +10,7 @@
                 , {label: labels.partialSoftCreditLabel, name: 'Partial_Soft_Credit__c'}
                 , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
                 , {label: labels.allocationLabel, name: 'Allocation__c'}];
-            var summaryObjects = [{label: 'Account', name: 'Account'}
+            var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
                 , {label: labels.contactLabel, name: 'Contact'}
                 , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}];
             var availableObjects = detailObjects.concat(summaryObjects);
@@ -69,15 +69,15 @@
     resetSummaryObjects: function(cmp, detailObject){
         //todo: add ifNecesary check?
         console.log('Fired summary object reset');
+        var labels = cmp.get("v.labels");
         var newSummaryObjects;
         if(detailObject == "Allocation__c"){
-            //todo: add correct labels
-            newSummaryObjects = [{label: 'General Accounting Unit', name:'General_Accounting_Unit__c'}];
+            newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
 
         } else {
             //todo: add correct labels
-            newSummaryObjects = [{label: 'Account', name: 'Account'}
-                , {label: 'Contact', name: 'Contact'}];
+            newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
+                , {label: labels.contactLabel, name: 'Contact'}];
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
@@ -86,21 +86,7 @@
     resetFields: function(cmp, object, context){
 
         console.log("Fired field reset for context: "+context);
-
-        //this code is getting all fields + type, not all fields for given detail object
-        var objectDetails = cmp.get("v.objectDetails");
-        var fieldMapForObject = objectDetails[object];
-        console.log('fieldMapForObject:');
-        console.log(fieldMapForObject);
-        var newFields = [];
-
-        for(var i=0; i<fieldMapForObject.length; i++){
-            var name = fieldMapForObject[i].name;
-            var label = fieldMapForObject[i].label;
-            var datatype = fieldMapForObject[i].type;
-            var fieldObj = {label: label, name: name, type: datatype};
-            newFields.push(fieldObj);
-        }
+        var newFields = cmp.get("v.objectDetails")[object];
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
@@ -111,26 +97,38 @@
         } else if (context=='amount') {
             cmp.set("v.amountFields", newFields);
         }
-    }
-
-    /*,
-    resetDetailFields: function(cmp, detailObject){
-        console.log("Fired detail field reset");
-        //TODO: detail field list needs refinement in controller, not here
-
-        //this code is getting all fields + type, not all fields for given detail object
-        var objectDetails = cmp.get("v.objectDetails");
-        var detailFieldMapForObject = objectDetails[detailObject];
-        var newDetailFields = [];
-
-        for(var i=0; i<detailFieldMapForObject.length; i++){
-            var name = detailFieldMapForObject[i].name;
-            var label = detailFieldMapForObject[i].label;
-            var datatype = detailFieldMapForObject[i].type;
-            var fieldObj = {label: label, name: name, type: datatype};
-            newDetailFields.push(fieldObj);
+    },
+    filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
+        //loop over all detail fields to get the type of selected field
+        var detailFields = cmp.get("v.detailFields");
+        var type;
+        for(var i=0; i<detailFields.length; i++){
+            if(detailFields[i].name == detailField){
+                type = detailFields[i].type;
+                break;
+            }
         }
-        //todo: 2 attributes?
-        cmp.set("v.detailFields", newDetailFields);
-    }*/
+        //TODO: will type ever be blank?
+        console.log("Type is " + type);
+        //need to get all summary fields, or we filter on a subset of all options
+        var allFields = cmp.get("v.objectDetails")[summaryObject];
+        console.log(allFields);
+        var newFields = [];
+
+        allFields.forEach(function(field){
+            var datatype = field.type;
+            if(datatype==type){
+                newFields.push(field);
+            }
+        });
+        console.log(newFields);
+        if(newFields.length > 0){
+            cmp.set("v.summaryFields", newFields);
+        } else {
+            //TODO: get/set better label messaging; this would need tooltip help
+            //var na = cmp.get("v.labels.na");
+            newFields = [{name: 'None', label: "No eligible fields found."}];
+            cmp.set("v.summaryFields", newFields);
+        }
+    }
 })

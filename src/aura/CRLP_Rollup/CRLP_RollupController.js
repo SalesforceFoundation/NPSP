@@ -37,17 +37,28 @@
         //set new detail fields based on new selected detail object
         helper.resetFields(cmp, object, 'detail');
 
+        //TODO: what should we be doing with summary fields?
+
     },
     changeDetailField: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
         var detailField = cmp.find("detailFieldSelect").get("v.value");
         var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        //helper.resetSummaryFields(cmp, detailField, summaryObject);
+        //TODO: will summary object always be populated?
+        if(summaryObject){
+            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+        }
     },
     changeSummaryObject: function(cmp, event, helper){
         //change summary fields to match new summary object + existing detailField
-        var object = cmp.find("summaryObjectSelect").get("v.value");
-        helper.resetFields(cmp, object, 'summary');
+        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
+        //helper.resetFields(cmp, object, 'summary');
+
+        var detailField = cmp.find("detailFieldSelect").get("v.value");
+        if(detailField){
+            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+        }
+
     },
     changeAmountObject: function(cmp, event, helper){
         //change amount fields to match new summary object + existing detailField

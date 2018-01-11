@@ -24,12 +24,12 @@
 
     <!-- markup -->
 
-        {!v.activeRollup.Detail_Object__r.QualifiedApiName}
+    <!--    {!v.activeRollup.Detail_Object__r.QualifiedApiName}
     <br/>{!v.activeRollup.Detail_Field__r.QualifiedApiName}
     <br/>{!v.activeRollup.Summary_Object__r.QualifiedApiName}
     <br/>{!v.activeRollup.Summary_Field__r.QualifiedApiName}
     <br/>{!v.activeRollup.Date_Field__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Amount_Field__r.QualifiedApiName}
+    <br/>{!v.activeRollup.Amount_Field__r.QualifiedApiName}-->
 
 
     <div aria-labelledby="rollupdetail">
@@ -125,7 +125,8 @@
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <!-- Using ui:inputCheckbox here because the boolean/checkbox fx of lightning:input still sucks -->
                             <!-- it looks a little large... not a deal-breaker, but probably can be fixed with some class cleverness. -->
-                            <ui:inputCheckbox label="{!v.labels.useFiscalYear}"
+                            <ui:inputCheckbox aura:id="fiscalYearCheckbox"
+                                              label="{!v.labels.useFiscalYear}"
                                               value="{!v.activeRollup.Use_Fiscal_Year__c}"
                                               disabled="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
