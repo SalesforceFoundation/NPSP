@@ -63,6 +63,7 @@
     "CustomField.npsp__DataImport__c.npsp__Household_Phone.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Payment_Check_Reference_Number.HelpText",
     "CustomField.npsp__DataImport__c.npsp__Payment_Method.HelpText",
+    "CustomLabel.npe01__Matching_Donation_Record_Suffix",
     "CustomLabel.npe03__RecurringDonationInstallmentPeriod1stand15th 1st and 15th",
     "CustomLabel.npe03__RecurringDonationInstallmentPeriodMonthly",
     "CustomLabel.npe03__RecurringDonationInstallmentPeriodQuarterly",
