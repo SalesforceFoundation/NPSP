@@ -41,48 +41,70 @@ private class RD_CascadeDeleteLookups_TEST {
     * Then undeletes recurring donation, which undeletes opportunities and allocation. Verifies results.
     */
     static testMethod void testRDCascade(){
-        Contact con = new Contact(LastName='foo');
-        insert con;
+        Integer maxRecords = 1;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'test',
-            npe03__Installments__c = 2,
-            npe03__Amount__c = 1,
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c = date.newinstance(1970,6,12),
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Contact__c = con.id
-        );
-        insert rd;
+        List<Contact> testContacts = createContacts(maxRecords);
+        insert testContacts;
 
-        List<Opportunity> queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
-        System.assertEquals(2, queryOpps.size(), 'Two opps should be auto created by recurring donation.');
+        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
+        testRecurringDonations.addAll(createContactRDs(testContacts));
+        insert testRecurringDonations;
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
-        Allocation__c alloForInsert = new Allocation__c(Recurring_Donation__c=rd.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
-        insert alloForInsert;
+        List<Opportunity> testRDOpportunities = [
+            SELECT Id 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :testRecurringDonations
+        ];
+        System.assertEquals(testRecurringDonations.size() * 2, testRDOpportunities.size(), 'Two opportunities should be auto created by recurring donations');
+
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert testGAU;
+
+        List<Allocation__c> testAllocations = new List<Allocation__c>();
+        testAllocations.addAll(createRDAllocations(testGAU, testRecurringDonations));
+        insert testAllocations;
 
         Test.startTest();
-        delete rd;
+        delete testRecurringDonations;
         Test.stopTest();
 
-        queryOpps = [SELECT Id FROM Opportunity WHERE IsDeleted=true ALL ROWS];
-        System.assertEquals(2, queryOpps.size(), 'Opportunities should be cascade deleted with the recurring donation.');
-
-        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        List<Error__c> errors = [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
+        ];
         System.assertEquals(0, errors.size(), errors);
 
-        List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
+        List<Opportunity> deletedRDOpportunities = [
+            SELECT Id 
+            FROM Opportunity 
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+        System.assertEquals(testRDOpportunities.size(), deletedRDOpportunities.size(), 'The Opportunities should be cascade deleted with the recurring donations.');
 
-        undelete rd;
+        List<Allocation__c> deletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
 
-        queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
-        System.assertEquals(2, queryOpps.size(), 'Two opps should be cascade undeleted.');
+        undelete testRecurringDonations;
 
-        List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedAllo.size(), 'Allocation should be cascade undeleted.');
+        List<Opportunity> undeletedRDOpportunities = [
+            SELECT Id 
+            FROM Opportunity 
+            WHERE IsDeleted = false
+        ];
+        System.assertEquals(deletedRDOpportunities.size(), undeletedRDOpportunities.size(), 'The deleted Recurring Donation Opportunities should be cascade undeleted.');
+
+        List<Allocation__c> undeletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c
+            WHERE IsDeleted = false
+        ];
+        System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'The Recurring Donation Allocations should be cascade undeleted.');
     }
 
     /*********************************************************************************************************
@@ -90,38 +112,98 @@ private class RD_CascadeDeleteLookups_TEST {
     * exception is thrown.
     */
     static testMethod void testRDDeleteException(){
-        Contact con = new Contact(LastName='foo');
-        insert con;
+        Contact testContact = new Contact(LastName='foo');
+        insert testContact;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'test',
+        npe03__Recurring_Donation__c testRecurringDonation = new npe03__Recurring_Donation__c(
+            Name = 'TEST_RD',
             npe03__Installments__c = 2,
             npe03__Amount__c = 1,
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c = date.newinstance(1970,6,12),
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Contact__c = con.id
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c = date.newinstance(1970, 6, 12),
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            npe03__Contact__c = testContact.Id
         );
-        insert rd;
+        insert testRecurringDonation;
 
-        List<Opportunity> queryOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id];
-        System.assertEquals(2, queryOpps.size(), 'Two opps should be auto created by recurring donation.');
+        List<Opportunity> testRDOpportunities = [
+            SELECT Id 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :testRecurringDonation.Id
+        ];
+        System.assertEquals(2, testRDOpportunities.size(), 'Two opps should be auto created by recurring donation.');
 
-        queryOpps[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
-        update queryOpps[0];
+        testRDOpportunities[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update testRDOpportunities[0];
 
         Exception caughException;
 
         Test.startTest();
         try{
-            delete rd;
+            delete testRecurringDonation;
         } catch (Exception ex) {
             caughException = ex;
         }
         Test.stopTest();
 
         System.assertNotEquals(null, caughException, 'An exception should be caught.');
-        System.assert(caughException.getMessage().contains(queryOpps[0].id), 'Exception message should contain the closed won opportunity id.');
+        System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
+    }
+
+    /*******************************************************************************************************
+    * @description Create Contacts
+    * @param Integer The maximum records to create
+    * @return List<Contact> The created Contacts
+    ********************************************************************************************************/
+    private static List<Contact> createContacts(Integer maxRecords) {
+        List<Contact> result = new List<Contact>();
+        for (Integer i = 0; i < maxRecords; i++) {
+            result.add(new Contact(LastName = 'CONTACT' + i));
+        }
+        return result;
+    }
+
+    /*******************************************************************************************************
+    * @description Create Contact Recurring Donations
+    * @param List<Contact> The Contacts records that are used to create the Recurring Donations
+    * @return List<npe03__Recurring_Donation__c> The created Contact Recurring Donations
+    ********************************************************************************************************/
+    private static List<npe03__Recurring_Donation__c> createContactRDs(List<Contact> testContacts) {
+        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
+        for (Contact testContact : testContacts) {
+            result.add(
+                new npe03__Recurring_Donation__c(
+                    Name = 'CON_RD',
+                    npe03__Installments__c = 2,
+                    npe03__Amount__c = 1,
+                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+                    npe03__Date_Established__c = Date.newinstance(1970, 6, 12),
+                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+                    npe03__Contact__c = testContact.Id
+                )
+            );
+        }
+        return result;
+    }
+
+    /*******************************************************************************************************
+    * @description Create Recurring Donation Allocations
+    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
+    * @param List<npe03__Recurring_Donation__c> The Recurring Donations records that are used to create the Allocations
+    * @return List<Allocation__c> The created Allocations
+    ********************************************************************************************************/
+    private static List<Allocation__c> createRDAllocations(General_Accounting_Unit__c testGAU,  List<npe03__Recurring_Donation__c> testRecurringDonations) {
+        List<Allocation__c> result = new List<Allocation__c>();
+        for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
+            result.add(
+                new Allocation__c(
+                    Amount__c = 4, 
+                    Recurring_Donation__c = testRecurringDonation.Id,
+                    General_Accounting_Unit__c = testGAU.Id
+                )
+            );
+        }
+        return result;
     }
 }

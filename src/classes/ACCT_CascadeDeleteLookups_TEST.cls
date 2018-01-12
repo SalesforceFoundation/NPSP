@@ -31,14 +31,14 @@
 * @author Salesforce.org
 * @date 2016
 * @group Utilities
-* @description Tests for cascade delete of Account
+* @description Tests for cascade delete of Accounts
 */
 @isTest
 private class ACCT_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Test the merge of 2 Accounts. Deleted Account should no cascade delete the child records
-    * Verifies result: The losing account in a merge operation doesn't get child records cascade deleted.
+    * @description Tests the merge of 2 Accounts. Deleted Account should not cascade delete the child records
+    * Verifies results: The losing account in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testAccountMergeNoCascade() {
         List<Contact> testContacts = createContacts(2);
@@ -157,7 +157,7 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true 
             ALL ROWS
         ];
-        System.assertEquals(testRecurringDonations.size(), deletedRecurringDonations.size(), 'Contact and Account Recurring Donation should be cascade deleted when Account is deleted.');
+        System.assertEquals(testRecurringDonations.size(), deletedRecurringDonations.size(), 'Contact and Account Recurring Donation should be cascade deleted when Accounts are deleted.');
 
         List<Allocation__c> deletedAllocations = [
             SELECT Id 
@@ -165,7 +165,7 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true 
             ALL ROWS
         ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when recurring donations are deleted.');
 
         List<npe4__Relationship__c> deletedRelationships = [
             SELECT Id 
@@ -186,23 +186,23 @@ private class ACCT_CascadeDeleteLookups_TEST {
         List<npe03__Recurring_Donation__c> undeletedRecurringDonations = [
             SELECT Id 
             FROM npe03__Recurring_Donation__c 
-            WHERE IsDeleted = false 
-            ALL ROWS];
-        System.assertEquals(deletedRecurringDonations.size(), undeletedRecurringDonations.size(), 'Contacts and Accounts Recurring Donations should be cascade undeleted when Account is undeleted.');
+            WHERE IsDeleted = false
+        ];
+        System.assertEquals(deletedRecurringDonations.size(), undeletedRecurringDonations.size(), 'Contacts and Accounts Recurring Donations should be cascade undeleted when Accounts are undeleted.');
 
         List<Allocation__c> undeletedAllocations = [
             SELECT Id 
             FROM Allocation__c
-            WHERE IsDeleted = false 
-            ALL ROWS
+            WHERE IsDeleted = false
         ];
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted.');
 
         List<npe4__Relationship__c> undeletedRelationships = [
             SELECT Id 
             FROM npe4__Relationship__c
+            WHERE IsDeleted = false
         ];
-        System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships for each Contact should be undeleted when account is undeleted.');
+        System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships for each Contact should be undeleted when accounts are undeleted.');
     }
 
     /*******************************************************************************************************

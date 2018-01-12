@@ -31,34 +31,91 @@
 * @author Salesforce.org
 * @date 2016
 * @group Utilities
-* @description Tests for cascade delete of Recurring Donations
+* @description Tests for cascade delete of Campaigns
 */
 @isTest
 private class CAM_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Deletes a campaign which deletes an allocation. Verifies results.
-    * Then undeletes the campaign, which undeletes the allocation. Verifies results.
+    * @description Deletes the Campaigns which deletes the related Allocations. Verifies results.
+    * Then undeletes the Campaigns, which undeletes the Allocations. Verifies results.
     */
-    static testMethod void testOppCascade(){
-        Campaign cam = new Campaign(Name='foo', IsActive=true);
-        insert cam;
+    static testMethod void testCampaignsCascadeDelete(){
+        Integer maxRecords = 200;
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
-        Allocation__c alloForInsert = new Allocation__c(Campaign__c=cam.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
-        insert alloForInsert;
+        List<Campaign> testCampaigns = createCampaigns(maxRecords);
+        insert testCampaigns;
+
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert testGAU;
+        List<Allocation__c> testAllocations = new List<Allocation__c>();
+        testAllocations.addAll(createCampaignAllocations(testGAU, testCampaigns));
+        insert testAllocations;
 
         Test.startTest();
-        delete cam;
+        delete testCampaigns;
         Test.stopTest();
 
-        List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when campaign is deleted.');
+        List<Error__c> errors = [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
+        ];
+        System.assertEquals(0, errors.size(), errors);
 
-        undelete cam;
+        List<Allocation__c> deletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when campaigns are deleted.');
 
-        List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedAllo.size(), 'Allocation should be cascade undeleted.');
+        undelete testCampaigns;
+
+        errors = [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
+        ];
+        System.assertEquals(0, errors.size(), errors);
+
+        List<Allocation__c> undeletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = false
+        ];
+        System.assertEquals(deletedAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade undeleted.');
+    }
+
+    /*******************************************************************************************************
+    * @description Create Campaigns
+    * @param Integer The maximum records to create
+    * @return List<Campaign> The created Campaigns
+    ********************************************************************************************************/
+    private static List<Campaign> createCampaigns(Integer maxRecords) {
+        List<Campaign> result = new List<Campaign>();
+        for (Integer i = 0; i < maxRecords; i++) {
+            result.add(new Campaign(Name = 'CAMP' + i));
+        }
+        return result;
+    }
+
+    /*******************************************************************************************************
+    * @description Create Campaign Allocations
+    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
+    * @param List<Campaign> The Campaigns records that are used to create the Allocations
+    * @return List<Allocation__c> The created Allocations
+    ********************************************************************************************************/
+    private static List<Allocation__c> createCampaignAllocations(General_Accounting_Unit__c testGAU,  List<Campaign> testCampaigns) {
+        List<Allocation__c> result = new List<Allocation__c>();
+        for (Campaign testCampaign : testCampaigns) {
+            result.add(
+                new Allocation__c(
+                    Amount__c = 4, 
+                    Campaign__c = testCampaign.Id,
+                    General_Accounting_Unit__c = testGAU.Id
+                )
+            );
+        }
+        return result;
     }
 }
