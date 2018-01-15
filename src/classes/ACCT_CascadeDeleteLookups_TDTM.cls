@@ -37,7 +37,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
 
     /*******************************************************************************************************
     * @description Gets the deleted Accounts CascadeDeleteLoader Object. 
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
         return new CascadeDeleteLoader();
@@ -52,44 +52,44 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Accounts being deleted.
+    * @description Class that retrieves the children of the deleted Accounts.
     ********************************************************************************************************/
     class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
         * @description Retrieves the related Relationships, Recurring Donations, Allocations.
-        * of the Accounts being deleted.
-        * @param Set<Id> The Ids of the deleted Accounts
+        * of the deleted Accounts.
+        * @param Set<Id> The Ids of the deleted Accounts.
         * @return List<SObject> Deleted Accounts' Relationships, Recurring Donations, Allocations.
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentIds) {
+        public List<SObject> load(Set<Id> accountIds) {
             List<SObject> result = new List<SObject>();
 
             List<Contact> relatedContacts = [
                 SELECT Id
                 FROM Contact 
-                WHERE AccountId IN :parentIds
+                WHERE AccountId IN :accountIds
             ];
 
             List<npe4__Relationship__c> relatedRelationships = getRelatedRelationships(relatedContacts);
             result.addAll((List<SObject>) relatedRelationships);
             
-            List<npe03__Recurring_Donation__c> relatedRecurringDonations = getRelatedRecurringDonations(parentIds, relatedContacts);
+            List<npe03__Recurring_Donation__c> relatedRecurringDonations = getRelatedRecurringDonations(accountIds, relatedContacts);
             result.addAll((List<SObject>) relatedRecurringDonations);
 
-            List<Allocation__c> relatedAllocations = getRelatedAllocations(parentIds, relatedRecurringDonations);
+            List<Allocation__c> relatedAllocations = getRelatedAllocations(accountIds, relatedRecurringDonations);
             result.addAll((List<SObject>) relatedAllocations);
             
             return (new Map<Id, SObject>(result)).values();
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Relationships of the Accounts being deleted.
+        * @description Retrieves the related Relationships of the deleted Accounts.
         * @param List<Contact> The Contacts of the deleted Accounts.
         * @return List<npe4__Relationship__c> Deleted Accounts' Relationships.
         ********************************************************************************************************/
         private List<npe4__Relationship__c> getRelatedRelationships(List<Contact> relatedContacts) {
-            List<SObject> reciprocalRelationships = [
+            List<npe4__Relationship__c> reciprocalRelationships = [
                 SELECT Id
                 FROM npe4__Relationship__c
                 WHERE npe4__Contact__c IN :relatedContacts
@@ -102,31 +102,31 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Recurring Donations of the Accounts being deleted.
+        * @description Retrieves the related Recurring Donations of the deleted Accounts.
         * @param Set<Id> The Ids of the deleted Accounts.
         * @param List<Contact> The Contacts of the deleted Accounts.
         * @return List<npe03__Recurring_Donation__c> Deleted Accounts' Recurring Donations.
         ********************************************************************************************************/
-        private List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Set<Id> parentIds, List<Contact> relatedContacts) {
+        private List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Set<Id> accountIds, List<Contact> relatedContacts) {
             return [
                 SELECT Name, npe03__Organization__c, npe03__Contact__r.AccountId
                 FROM npe03__Recurring_Donation__c
-                WHERE npe03__Organization__c IN :parentIds
+                WHERE npe03__Organization__c IN :accountIds
                 OR npe03__Contact__c IN :relatedContacts
             ];
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Allocations of the Accounts being deleted.
+        * @description Retrieves the related Allocations of the deleted Accounts.
         * @param Set<Id> The Ids of the deleted Accounts.
         * @param List<npe03__Recurring_Donation__c> The Recurring Donations of the deleted Accounts.
         * @return List<Allocation__c> Deleted Accounts' Allocations.
         ********************************************************************************************************/
-        private List<Allocation__c> getRelatedAllocations(Set<Id> parentIds, List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
+        private List<Allocation__c> getRelatedAllocations(Set<Id> accountIds, List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
             List<Opportunity> relatedOpportunities = [
                 SELECT Id 
                 FROM Opportunity 
-                WHERE AccountId IN :parentIds
+                WHERE AccountId IN :accountIds
             ];
             return [
                 SELECT Name, Opportunity__r.AccountId, Recurring_Donation__r.npe03__Organization__c, 
@@ -139,34 +139,34 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the first children group of the Accounts being undeleted.
+    * @description Class that retrieves the first children group of the undeleted Accounts.
     ********************************************************************************************************/
     class FirstCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
 
         /******************************************************************************************************
-        * @description The Constructor of FirstCascadeUndeleteLoader
+        * @description The Constructor of FirstCascadeUndeleteLoader.
         */
         FirstCascadeUndeleteLoader() {
             this.relatedRecurringDonations = new List<npe03__Recurring_Donation__c>();
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Relationships and Recurring Donations of the Accounts being deleted.
-        * @param Set<Id> The Ids of the undeleted Accounts
+        * @description Retrieves the related Recurring Donations and Relationships of the undeleted Accounts.
+        * @param Set<Id> The Ids of the undeleted Accounts.
         * @return List<SObject> Deleted Accounts' Relationships, Recurring Donations.
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentIds) {
+        public List<SObject> load(Set<Id> accountIds) {
             List<SObject> result = new List<SObject>();
 
             List<Contact> relatedContacts = [
                 SELECT Id
                 FROM Contact 
-                WHERE AccountId IN :parentIds
+                WHERE AccountId IN :accountIds
             ];
 
-            relatedRecurringDonations = getRelatedRecurringDonations(parentIds, relatedContacts);
+            relatedRecurringDonations = getRelatedRecurringDonations(accountIds, relatedContacts);
             result.addAll((List<SObject>) relatedRecurringDonations);
 
             List<npe4__Relationship__c> relatedRelationships = getRelatedRelationships(relatedContacts);
@@ -178,7 +178,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is another
         * group of children records to undelete.
-        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader 
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return new SecondCascadeUndeleteLoader(relatedRecurringDonations);
@@ -186,8 +186,24 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Relationships of the Accounts being undeleted.
+        * @description Retrieves the related Recurring Donations of the undeleted Accounts.
+        * @param Set<Id> The Ids of the undeleted Accounts.
         * @param List<Contact> The Contacts of the undeleted Accounts
+        * @return List<npe03__Recurring_Donation__c> Undeleted Accounts' Recurring Donations.
+        ********************************************************************************************************/
+        private List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Set<Id> accountIds, List<Contact> relatedContacts) {
+            return [
+                SELECT Name, npe03__Organization__c, npe03__Contact__r.AccountId
+                FROM npe03__Recurring_Donation__c
+                WHERE IsDeleted = TRUE
+                AND (npe03__Organization__c IN :accountIds OR npe03__Contact__c IN :relatedContacts)
+                ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related Relationships of the undeleted Accounts.
+        * @param List<Contact> The Contacts of the undeleted Accounts.
         * @return List<npe4__Relationship__c> Undeleted Accounts' Relationships.
         ********************************************************************************************************/
         private List<npe4__Relationship__c> getRelatedRelationships(List<Contact> relatedContacts) {
@@ -204,33 +220,17 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
                 ALL ROWS
             ];
         }
-
-        /*******************************************************************************************************
-        * @description Retrieves the related Recurring Donations of the Accounts being undeleted.
-        * @param Set<Id> The Ids of the undeleted Accounts
-        * @param List<Contact> The Contacts of the undeleted Accounts
-        * @return List<npe03__Recurring_Donation__c> Undeleted Accounts' Recurring Donations.
-        ********************************************************************************************************/
-        private List<npe03__Recurring_Donation__c> getRelatedRecurringDonations(Set<Id> parentIds, List<Contact> relatedContacts) {
-            return [
-                SELECT Name, npe03__Organization__c, npe03__Contact__r.AccountId
-                FROM npe03__Recurring_Donation__c
-                WHERE IsDeleted = TRUE
-                AND (npe03__Organization__c IN :parentIds OR npe03__Contact__c IN :relatedContacts)
-                ALL ROWS
-            ];
-        }
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the second children group of the Accounts being undeleted
+    * @description Class that retrieves the second children group of the Accounts being undeleted.
     ********************************************************************************************************/
     class SecondCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         private List<npe03__Recurring_Donation__c> relatedRecurringDonations;
 
         /*********************************************************************************************************
-        * @description The Constructor of SecondCascadeUndeleteLoader
+        * @description The Constructor of SecondCascadeUndeleteLoader.
         * @param List<npe03__Recurring_Donation__c> The Recurring Donations. 
         */
         SecondCascadeUndeleteLoader(List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
@@ -242,12 +242,12 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         * @param Set<Id> The Ids of the undeleted Accounts.
         * @return List<Allocation__c> Undeleted Accounts' Allocations.
         ********************************************************************************************************/
-        public List<Allocation__c> load(Set<Id> parentIds) {
+        public List<Allocation__c> load(Set<Id> accountIds) {
 
             List<Opportunity> relatedOpportunities = [
                 SELECT Id 
                 FROM Opportunity 
-                WHERE AccountId IN :parentIds
+                WHERE AccountId IN :accountIds
             ];
 
             return [
@@ -261,8 +261,9 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Recurring Donations being undeleted.
-        * @return List<SObject> Undeleted Recurring Donations's Allocations.
+        * @description Retrieves the next children records group to be undeleted. In this case, there is no other
+        * group of children records to undelete after Allocations undeletion.
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;

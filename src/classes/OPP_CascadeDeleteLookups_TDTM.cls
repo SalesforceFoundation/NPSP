@@ -37,7 +37,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
 
     /*******************************************************************************************************
     * @description Gets the deleted Opportunities CascadeDeleteLoader Object. 
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
         return new CascadeDeleteLoader();
@@ -52,39 +52,39 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Opportunities being deleted.
+    * @description Class that retrieves the children of the deleted Opportunities.
     ********************************************************************************************************/
     class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the related Allocations of the Opportunities being deleted.
-        * @param Set<Id> The Ids of the deleted Opportunities
+        * @description Retrieves the related Allocations of the deleted Opportunities.
+        * @param Set<Id> The Ids of the deleted Opportunities.
         * @return List<Allocation__c> Deleted Opportunities' Allocations.
         ********************************************************************************************************/
-        public List<Allocation__c> load(Set<Id> parentsIds) {
+        public List<Allocation__c> load(Set<Id> opportunityIds) {
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :parentsIds
+                WHERE Opportunity__c IN :opportunityIds
             ];
         }
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Opportunities being undeleted
+    * @description Class that retrieves the children of the undeleted Opportunities.
     ********************************************************************************************************/
     class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         /*******************************************************************************************************
-        * @description Retrieves the related Allocations of the Opportunities being undeleted.
-        * @param Set<Id> The Ids of the undeleted Opportunities
+        * @description Retrieves the related Allocations of the undeleted Opportunities.
+        * @param Set<Id> The Ids of the undeleted Opportunities.
         * @return List<Allocation__c> Undeleted Opportunities' Allocations.
         ********************************************************************************************************/
-        public List<Allocation__c> load(Set<Id> parentsIds) {
+        public List<Allocation__c> load(Set<Id> opportunityIds) {
             return [
                 SELECT Opportunity__c
                 FROM Allocation__c
-                WHERE Opportunity__c IN :parentsIds
+                WHERE Opportunity__c IN :opportunityIds
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
@@ -93,7 +93,7 @@ public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is no other
         * group of children records to undelete after Allocations undeletion.
-        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;

@@ -37,7 +37,7 @@ public with sharing class CAM_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
 
     /*******************************************************************************************************
     * @description Gets the deleted Campaigns CascadeDeleteLoader Object. 
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
         return new CascadeDeleteLoader();
@@ -52,39 +52,39 @@ public with sharing class CAM_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Campaigns being deleted.
+    * @description Class that retrieves the children of the deleted Campaigns.
     ********************************************************************************************************/
     class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the related Allocations of the Campaign being deleted.
-        * @param Set<Id> The Ids of the deleted Campaigns
+        * @description Retrieves the related Allocations of the deleted Campaigns.
+        * @param Set<Id> The Ids of the deleted Campaigns.
         * @return List<Allocation__c> Deleted Campaigns' Allocations.
         ********************************************************************************************************/
-        public List<Allocation__c> load(Set<Id> parentsIds) {
+        public List<Allocation__c> load(Set<Id> campaignIds) {
             return [
                 SELECT Campaign__c
                 FROM Allocation__c
-                WHERE Campaign__c IN :parentsIds
+                WHERE Campaign__c IN :campaignIds
             ];
         }
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Campaigns being undeleted
+    * @description Class that retrieves the children of the undeleted Campaigns.
     ********************************************************************************************************/
     class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         /*******************************************************************************************************
-        * @description Retrieves the related Allocations of the Campaign being undeleted.
-        * @param Set<Id> The Ids of the undeleted Campaigns
+        * @description Retrieves the related Allocations of the undeleted Campaigns.
+        * @param Set<Id> The Ids of the undeleted Campaigns.
         * @return List<Allocation__c> Undeleted Campaigns' Allocations.
         ********************************************************************************************************/
-        public List<Allocation__c> load(Set<Id> parentsIds) {
+        public List<Allocation__c> load(Set<Id> campaignIds) {
             return [
                 SELECT Campaign__c
                 FROM Allocation__c
-                WHERE Campaign__c IN :parentsIds
+                WHERE Campaign__c IN :campaignIds
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
@@ -93,7 +93,7 @@ public with sharing class CAM_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is no other
         * group of children records to undelete after Allocations undeletion.
-        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
             return null;

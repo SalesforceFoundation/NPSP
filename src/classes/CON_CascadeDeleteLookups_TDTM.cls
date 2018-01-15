@@ -37,7 +37,7 @@ public with sharing class CON_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
 
     /*******************************************************************************************************
     * @description Gets the deleted Contacts CascadeDeleteLoader Object. 
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
         return new CascadeDeleteLoader();
@@ -52,51 +52,51 @@ public with sharing class CON_CascadeDeleteLookups_TDTM extends CDL_CascadeDelet
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Contacts being deleted.
+    * @description Class that retrieves the children of the deleted Contacts.
     ********************************************************************************************************/
     class CascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the related Relationships of the Contacts being deleted.
-        * @param Set<Id> The Ids of the deleted Contacts
+        * @description Retrieves the related Relationships of the deleted Contacts.
+        * @param Set<Id> The Ids of the deleted Contacts.
         * @return List<npe4__Relationship__c> Deleted Contacts' Relationships.
         ********************************************************************************************************/
-        public List<npe4__Relationship__c> load(Set<Id> parentsIds) {
-            List<SObject> contactsReciprocalRelatedRelationships = [
+        public List<npe4__Relationship__c> load(Set<Id> contactIds) {
+            List<SObject> reciprocalRelationships = [
                 SELECT Id
                 FROM npe4__Relationship__c
-                WHERE npe4__Contact__c IN :parentsIds
+                WHERE npe4__Contact__c IN :contactIds
             ];
 
             return [
                 SELECT Name
                 FROM npe4__Relationship__c
-                WHERE npe4__ReciprocalRelationship__c IN :contactsReciprocalRelatedRelationships
+                WHERE npe4__ReciprocalRelationship__c IN :reciprocalRelationships
             ];
         }
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Contacts being undeleted
+    * @description Class that retrieves the children of the undeleted Contacts.
     ********************************************************************************************************/
     class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Contacts being undeleted
-        * @param Set<Id> The Ids of the undeleted Contacts
-        * @return List<npe4__Relationship__c> Undeleted Contacts' Relationships
+        * @description Retrieves the Relationships of the undeleted Contacts.
+        * @param Set<Id> The Ids of the undeleted Contacts.
+        * @return List<npe4__Relationship__c> Undeleted Contacts' Relationships.
         ********************************************************************************************************/
-        public List<npe4__Relationship__c> load(Set<Id> parentsIds) {
-            List<npe4__Relationship__c> contactsReciprocalRelatedRelationship = [
+        public List<npe4__Relationship__c> load(Set<Id> contactIds) {
+            List<npe4__Relationship__c> reciprocalRelationships = [
                 SELECT Id
                 FROM npe4__Relationship__c
-                WHERE npe4__Contact__c IN :parentsIds
+                WHERE npe4__Contact__c IN :contactIds
             ];
 
             return [
                 SELECT Name
                 FROM npe4__Relationship__c
-                WHERE npe4__ReciprocalRelationship__c IN :contactsReciprocalRelatedRelationship
+                WHERE npe4__ReciprocalRelationship__c IN :reciprocalRelationships
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
