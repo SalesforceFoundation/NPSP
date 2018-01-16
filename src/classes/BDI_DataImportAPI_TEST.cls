@@ -103,7 +103,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(3, listDI.size());
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
-        system.assertEquals(label.bdiImported, listDI[2].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
         list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
         system.assertEquals(2, listBatches.size());
@@ -149,7 +149,7 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
         system.assertEquals(3, listDI.size());
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
 
@@ -205,8 +205,8 @@ public with sharing class BDI_DataImportAPI_TEST {
 
         listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
         system.assertEquals(3, listDI.size());
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);
-        system.assertEquals(label.bdiImported, listDI[1].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[1].Status__c);
         system.assertEquals(null, listDI[2].Status__c);
 
         list<DataImportBatch__c> listBatches = [SELECT Id, Last_Processed_On__c, Records_Failed__c, Records_Successfully_Processed__c FROM DataImportBatch__c];
@@ -268,4 +268,77 @@ public with sharing class BDI_DataImportAPI_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    * @description operation
+    *     import di records directly without using a batch process
+    * verify:
+    *     only the provided di records processed
+    *     other di records left alone
+    **********************************************************************************************************/
+    static testMethod void processRecordsImport() {
+        // DI's to process
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI(null, 'c1', 'C1'));
+        listDI.add(newDI(null, 'c2', 'C2'));
+        listDI.add(newDI(null, 'c3', 'C3'));
+        insert listDI;
+
+        // DI's to be left alone
+        list<DataImport__c> listDI2 = new list<DataImport__c>();
+        listDI2.add(newDI(null, 'c4', 'C4'));
+        listDI2.add(newDI(null, 'c5', 'C5'));
+        insert listDI2;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+
+        //run data import
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, false);
+        Test.stopTest();
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(3, listCon.size());
+
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported];
+        system.assertEquals(3, listDI.size());
+    }
+
+    /*********************************************************************************************************
+    * @description operation
+    *     Dry Run di records directly without using a batch process
+    * verify:
+    *     only the provided di records processed
+    *     other di records left alone
+    **********************************************************************************************************/
+    static testMethod void processRecordsDryRun() {
+        // DI's to process
+        list<DataImport__c> listDI = new list<DataImport__c>();
+        listDI.add(newDI(null, 'c1', 'C1'));
+        listDI.add(newDI(null, 'c2', 'C2'));
+        listDI.add(newDI(null, 'c3', 'C3'));
+        insert listDI;
+
+        // DI's to be left alone
+        list<DataImport__c> listDI2 = new list<DataImport__c>();
+        listDI2.add(newDI(null, 'c4', 'C4'));
+        listDI2.add(newDI(null, 'c5', 'C5'));
+        insert listDI2;
+
+        Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
+        diSettings.Contact_Matching_Rule__c = 'Firstname,Lastname,Phone';
+
+        //run data import
+        Test.startTest();
+        BDI_DataImport_API.processDataImportRecords(diSettings, listDI, true);
+        Test.stopTest();
+
+        // verify expected results
+        list<Contact> listCon = [select Id, Name from Contact];
+        system.assertEquals(0, listCon.size());
+
+        listDI = [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiDryRunValidated];
+        system.assertEquals(3, listDI.size());
+    }
 }

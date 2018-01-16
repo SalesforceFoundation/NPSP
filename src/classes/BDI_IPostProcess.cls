@@ -39,7 +39,7 @@ global interface BDI_IPostProcess {
     /*******************************************************************************************************
     * @description Perform any additional processing steps after NPSP has completed processing all Data
     * Import records in the current batch execution.
-    * @param bdi The BDI instance currently running
+    * @param bdi The BDI instance currently running.  Make sure to honor bdi.isDryRun
     * @return void
     */
     void process(BDI_DataImportService bdi);
