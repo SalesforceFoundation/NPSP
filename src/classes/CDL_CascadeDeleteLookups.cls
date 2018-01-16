@@ -67,51 +67,52 @@ public class CDL_CascadeDeleteLookups {
     }
 
     /************************************************************************************************************
-    * @description Contains the method a Class needs to implement in order to load the children records to delete.
-    * To load the children records to delete, a class should implement this Interface and be passed to the 
-    * "CascadeUndelete" object.
+    * @description Contains the method a Class needs to implement in order to load the children of the deleted 
+    * records. To load the children of the deleted records, a class should implement this Interface and pass it to the 
+    * "CascadeDelete" object.
     *************************************************************************************************************/
     public interface CascadeDeleteLoader {
 
         /*******************************************************************************************************
-        * @description Gets the children records that need to be validated or deleted.
-        * @param Set<Id> The parent ids of the records that need to be retrieved.
+        * @description Gets the children of the deleted records.
+        * @param Set<Id> The deleted records Ids.
         * @return List<SObject> The children records.
         ********************************************************************************************************/
-        List<SObject> load(Set<Id> parentIds);
+        List<SObject> load(Set<Id> deletedRecordIds);
     }
 
     /*******************************************************************************************************
-    * @description Contains the method a Class needs to implement in order to validate the deletion of
-    * the children records. This is run by the instance of the "CascadeDelete" Class.
+    * @description Contains the method a Class needs to implement in order to validate the children of the 
+    * deleted records. To validate the children of the deleted records, a class should implement this 
+    * Interface and pass it to the "CascadeDelete" object.
     ********************************************************************************************************/
     public interface CascadeDeleteValidator {
 
         /*******************************************************************************************************
         * @description Validates the children records.
-        * @param List<SObject> The parents records that are being deleted.
+        * @param List<SObject> The deleted records.
         * @param List<SObject> The children records to validate.
         * @return List<SObject> The children records that pass the validation, and can be deleted.
         ********************************************************************************************************/
-        List<SObject> validateDeletion(List<SObject> parents, List<SObject> children);
+        List<SObject> validateDeletion(List<SObject> deletedRecords, List<SObject> children);
     }
 
     /*******************************************************************************************************
-    * @description Contains the method a Class needs to implement in order to load the children records.
-    * To load the children records to undelete, a class should implement this Interface 
-    * and be passed to the "CascadeUndelete" object.
+    * @description Contains the method a Class needs to implement in order to load children of the undeleted
+    * records. To load the children of the undeleted records, a class should implement this Interface 
+    * and pass to the "CascadeUndelete" object.
     ********************************************************************************************************/
     public interface CascadeUndeleteLoader {
 
         /*******************************************************************************************************
-        * @description Gets the children records that need to be undeleted.
-        * @param Set<Id> The parent ids of the records that need to be retrieved.
+        * @description Gets the children of the undeleted records.
+        * @param Set<Id> The undeleted records Ids.
         * @return List<SObject> The children records.
         ********************************************************************************************************/
-        List<SObject> load(Set<Id> parentIds);
+        List<SObject> load(Set<Id> deletedRecordIds);
 
         /*******************************************************************************************************
-        * @description Gets the next CascadeUndeleteLoader.
+        * @description Gets the next group of child records to undelete (CascadeUndeleteLoader).
         * @return CascadeUndeleteLoader The next CascadeUndeleteLoader.
         ********************************************************************************************************/
         CascadeUndeleteLoader next();
@@ -119,10 +120,10 @@ public class CDL_CascadeDeleteLookups {
 
     /*******************************************************************************************************
     * @description Contains Cascade Delete logic. The Trigger Handlers use this class to retrieve  
-    * the children of the records being deleted, validate and delete the children records.
+    * the children of the deleted records, validate and delete children records.
     ********************************************************************************************************/
     public class CascadeDelete {
-        private Map<Id, SObject> parents;
+        private Map<Id, SObject> deletedRecords;
         private List<SObject> children;
         private List<SObject> validChildren;
 
@@ -133,17 +134,17 @@ public class CDL_CascadeDeleteLookups {
         * @description The Constructor of CascadeDelete
         */
         public CascadeDelete() {
-            parents = new Map<Id, SObject>();
+            deletedRecords = new Map<Id, SObject>();
             children = new List<SObject>();
             validChildren = new List<SObject>();
         }
 
         /*******************************************************************************************************
-        * @description Sets the parents records (from the Triggers context) that are being deleted.
+        * @description Sets the records (from the Triggers context) that are deleted.
         * @return void
         ********************************************************************************************************/
-        public void setParents(List<SObject> parents) {
-            this.parents = new Map<Id, SObject>(parents);
+        public void setDeletedRecords(List<SObject> deletedRecords) {
+            this.deletedRecords = new Map<Id, SObject>(deletedRecords);
         }
 
         /*******************************************************************************************************
@@ -188,7 +189,7 @@ public class CDL_CascadeDeleteLookups {
                 return;
             }
 
-            children = loader.load(parents.keySet());
+            children = loader.load(deletedRecords.keySet());
         }
 
         /*******************************************************************************************************
@@ -198,7 +199,7 @@ public class CDL_CascadeDeleteLookups {
         ********************************************************************************************************/
         public void validateDeletion() {
             if (this.childrenValidator != null) {
-                validChildren = this.childrenValidator.validateDeletion(parents.values(), children);
+                validChildren = this.childrenValidator.validateDeletion(deletedRecords.values(), children);
             }
             else {
                 validChildren = children;
@@ -224,25 +225,25 @@ public class CDL_CascadeDeleteLookups {
 
     /*******************************************************************************************************
     * @description Contains Cascade Undelete logic. The Trigger Handlers use this class to retrieve 
-    * the children of the records being undeleted and undelete the children records.
+    * the children of the undeleted records, and undelete the children records
     ********************************************************************************************************/
     public class CascadeUndelete {
-        private Set<Id> parentIds;
+        private Set<Id> undeletedRecordIds;
         private CascadeUndeleteLoader loader;
 
         /*********************************************************************************************************
-        * @description The Constructor of CascadeUndelete
+        * @description The Constructor of CascadeUndelete.
         */
         public CascadeUndelete() {
-            parentIds = new Set<Id>();
+            undeletedRecordIds = new Set<Id>();
         }
 
         /*******************************************************************************************************
-        * @description Sets the parents records (from the Triggers context) that are being undeleted.
+        * @description Sets the records (from the Triggers context) that are undeleted
         * @return void
         ********************************************************************************************************/
-        public void setParents(List<SObject> parents) {
-            this.parentIds = new Map<Id, SObject>(parents).keySet();
+        public void setUndeletedRecords(List<SObject> undeletedRecords) {
+            this.undeletedRecordIds = new Map<Id, SObject>(undeletedRecords).keySet();
         }
 
         /*******************************************************************************************************
@@ -261,9 +262,9 @@ public class CDL_CascadeDeleteLookups {
             CascadeUndeleteLoader currentChildrenLoader = loader;
 
             // The Undeletion runs in a loop because some children records need to be undeleted first.
-            // Undelete all the records at once can cause a broken reference.
+            // Undelete all the records at once can break the references.
             while (currentChildrenLoader != null) {
-                List<SObject> children = currentChildrenLoader.load(parentIds);
+                List<SObject> children = currentChildrenLoader.load(undeletedRecordIds);
                 if (children.isEmpty()) {
                     currentChildrenLoader = currentChildrenLoader.next();
                     continue;
@@ -281,18 +282,18 @@ public class CDL_CascadeDeleteLookups {
     }
 
     /*******************************************************************************************************
-    * @description Contains the logic that displays the error messages on one parent
+    * @description Contains the logic that displays the error messages for a deleted record.
     ********************************************************************************************************/
     public class Error {
-        private String parentToDeleteName;
+        private String deletedRecordName;
         private Map<String, Map<Id, String>> childrenByErrorType;
 
         /******************************************************************************************************
-        * @description The Constructor of Error
-        * @param String The name of the Parent record
+        * @description The Constructor of Error.
+        * @param String The name of the deleted record.
         */
-        public Error(String parentToDeleteName) {
-            this.parentToDeleteName = parentToDeleteName;
+        public Error(String deletedRecordName) {
+            this.deletedRecordName = deletedRecordName;
             childrenByErrorType = new Map<String, Map<Id, String>>();
         }
 
@@ -312,8 +313,8 @@ public class CDL_CascadeDeleteLookups {
         }
 
         /*******************************************************************************************************
-        * @description Get the error message. The message contains the error type and the list of the children 
-        * records preventing the parent deletion.
+        * @description Gets the error message. The message contains the error type and the list of the children 
+        * preventing the deletion.
         * @return String The error message
         ********************************************************************************************************/
         public String getMessage() {
@@ -326,18 +327,18 @@ public class CDL_CascadeDeleteLookups {
                 for (String errorType : childrenByErrorType.keySet()) {
                     result.add(errorType + ' (' + getPlainTextChildrenList(childrenByErrorType.get(errorType)) + ')');
                 }
-                return String.format(Label.CascadeDeletionErrorLightning, new List<String>{parentToDeleteName, String.join(result, ',')});
+                return String.format(Label.CascadeDeletionErrorLightning, new List<String>{deletedRecordName, String.join(result, ',')});
             }
             else {
                 for (String errorType : childrenByErrorType.keySet()) {
                     result.add(errorType + ':' + getHTMLChildrenList(childrenByErrorType.get(errorType)));
                 }
-                return String.format(Label.CascadeDeletionError, new List<String>{parentToDeleteName, String.join(result, '')});
+                return String.format(Label.CascadeDeletionError, new List<String>{deletedRecordName, String.join(result, '')});
             }
         }
 
         /*******************************************************************************************************
-        * @description Returns a HTML list of the child records preventing deletion, with links to those records.
+        * @description Returns a HTML list of the child records preventing the deletion, with links to those records.
         * @param Map<Id, String> The child records preventing the deletion
         * @return String The HTML text that contains a list of the child records.
         ********************************************************************************************************/
@@ -352,7 +353,7 @@ public class CDL_CascadeDeleteLookups {
         }
 
         /*******************************************************************************************************
-        * @description Returns a plain text list of the child records preventing deletion
+        * @description Returns a plain text list of the child records preventing the deletion
         * @param Map<Id, String> The child records preventing the deletion
         * @return String The plain text that contains a list of the child records.
         ********************************************************************************************************/

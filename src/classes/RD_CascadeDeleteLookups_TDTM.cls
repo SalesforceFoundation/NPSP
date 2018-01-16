@@ -144,15 +144,15 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
         * @description validates the children of the Account.
         * @param List<npe03__Recurring_Donation__c> The deleted Recurring Donations.
         * @param List<SObject> The The deleted Recurring Donations children to validate.
-        * @return List<Object> The deleted Recurring Donations that can be deleted.
+        * @return List<Object> The deleted Recurring Donations children that can be deleted.
         ********************************************************************************************************/
-        public List<SObject> validateDeletion(List<npe03__Recurring_Donation__c> parents, List<SObject> children) {
+        public List<SObject> validateDeletion(List<npe03__Recurring_Donation__c> deletedRecurringDonations, List<SObject> children) {
             List<SObject> validChildren = new List<SObject>();
 
-            for(npe03__Recurring_Donation__c parent : parents) {
-                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Name);
+            for(npe03__Recurring_Donation__c deletedRecurringDonation : deletedRecurringDonations) {
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(deletedRecurringDonation.Name);
                 for (SObject child : children) {
-                    if (isClosedWonOpportunity(child, parent.Id)) {
+                    if (isClosedWonOpportunity(child, deletedRecurringDonation.Id)) {
                         Opportunity closedWonOpportunity = (Opportunity) child;
                         error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                     }
@@ -163,7 +163,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
 
                 String errorMessage = error.getMessage();
                 if (String.isNotBlank(errorMessage)) {
-                    parent.addError(errorMessage, false);
+                    deletedRecurringDonation.addError(errorMessage, false);
                 }
             }
 
@@ -173,13 +173,13 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
         /*******************************************************************************************************
         * @description Checks if the record is a Closed Won Opportunity.
         * @param SObject The child record.
-        * @param Id The Id of the parent record.
+        * @param Id The Id of the deleted Recurring Donation.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
+        private Boolean isClosedWonOpportunity(SObject record, Id deletedRecurringDonatioinId) {
             return (
                 record instanceof Opportunity && 
-                ((Opportunity) record).npe03__Recurring_Donation__c == parentId &&
+                ((Opportunity) record).npe03__Recurring_Donation__c == deletedRecurringDonatioinId &&
                 ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
             );
         }
