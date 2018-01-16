@@ -7,6 +7,7 @@
     <aura:attribute name="activeRollup" type="Object" description="Active rollup item to display in rollup detail. Is set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Is set to null once component is hidden."/>
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
+    <aura:attribute name="yearlyOperations" type="List" description="Map of yearly operations, api name to label"/>
 
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
@@ -135,7 +136,7 @@
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom--large">
             <!--TODO: should activeRollup be passed by value instead of reference, or cleared before returning?-->
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="{!v.detailMode}" operations="{!v.operations}" />
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}" filterGroups="{!v.filterGroupList}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

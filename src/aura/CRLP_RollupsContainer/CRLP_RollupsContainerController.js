@@ -9,6 +9,7 @@
                 var model = response.getReturnValue();
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
+                cmp.set("v.filterGroupList", model.filterGroups);
 
                 console.log(model.operations);
 
@@ -17,6 +18,12 @@
                     ops.push({name: i, label: model.operations[i]});
                 }
                 cmp.set("v.operations", ops);
+
+                var yOps = [];
+                for(var i in model.yearlyOperations){
+                    yOps.push({name: i, label: model.yearlyOperations[i]});
+                }
+                cmp.set("v.yearlyOperations", yOps);
 
                 var cols = [model.labels.name
                             , model.labels.summaryObject
@@ -49,7 +56,7 @@
 
     displayFilterGroupsGrid: function(cmp, event, helper){
         //check for list first so that we only make necessary server trips
-        if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
+        /**if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
             var action = cmp.get("c.getFilterGroupDefinitions");
 
             action.setCallback(this, function(response) {
@@ -76,8 +83,9 @@
             $A.enqueueAction(action);
         } else {
             cmp.set("v.isFilterGroupsGrid",true);
-        }
+        }**/
 
+        cmp.set("v.isFilterGroupsGrid",true);
         var labels = cmp.get("v.labels");
         var cols = [labels.name
             , labels.filterGroupDescription
@@ -85,7 +93,6 @@
             , labels.countOf+' '+labels.rollupLabelPlural
             ];
         cmp.set("v.columns", cols);
-        cmp.set("v.breadcrumbLevel", 1);
         cmp.set("v.isRollupsGrid",false);
 
         var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");

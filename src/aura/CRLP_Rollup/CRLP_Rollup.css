@@ -1,4 +1,4 @@
-.THIS .slds-select[disabled]{
+/**.THIS .slds-select[disabled]{
     background-color: transparent;
     border-color: transparent;
     cursor: text;
@@ -10,7 +10,7 @@
 .THIS .slds-select[disabled]:focus{
     background-color: #f4f6f9;
     box-shadow: 0px 0px 3px 0px rgb(0, 112, 210);
-}
+}**/
 
 /*doesn't work with: .slds-select[disabled]*/
 .THIS .slds-select_container::before{
@@ -21,5 +21,8 @@
 }
 /*for IE10 if necessary*/
 .THIS .slds-select[disabled]::-ms-expand  {
-    display: none;
+    /*display: none;*/
+}
+.THIS .slds-checkbox{
+    padding-top: 15px;
 }

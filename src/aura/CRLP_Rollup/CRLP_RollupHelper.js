@@ -34,17 +34,7 @@
 
                     console.log('Before calling reset details');
 
-                    var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
-                    this.resetFields(cmp, detailObject, 'detail');
-
-                    var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                    this.resetFields(cmp, summaryObject, 'summary');
-
-                    var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
-                    this.resetFields(cmp, amountObject, 'amount');
-
-                    var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
-                    this.resetFields(cmp, dateObject, 'date');
+                    this.resetAllFields(cmp);
 
                     console.log('Called reset details');
                 }
@@ -98,6 +88,20 @@
             cmp.set("v.amountFields", newFields);
         }
     },
+    resetAllFields: function(cmp){
+
+        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        this.resetFields(cmp, detailObject, 'detail');
+
+        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        this.resetFields(cmp, summaryObject, 'summary');
+
+        var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+        this.resetFields(cmp, amountObject, 'amount');
+
+        var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+        this.resetFields(cmp, dateObject, 'date');
+    },
     filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
         //loop over all detail fields to get the type of selected field
         var detailFields = cmp.get("v.detailFields");
@@ -108,19 +112,24 @@
                 break;
             }
         }
-        //TODO: will type ever be blank?
+        //TODO: maybe check if type is the same to see if need to filter?
         console.log("Type is " + type);
         //need to get all summary fields, or we filter on a subset of all options
         var allFields = cmp.get("v.objectDetails")[summaryObject];
         console.log(allFields);
         var newFields = [];
 
-        allFields.forEach(function(field){
-            var datatype = field.type;
-            if(datatype==type){
-                newFields.push(field);
-            }
-        });
+        //if type is null, no detail field is selected
+        if(type==undefined || type==null){
+            newFields = allFields;
+        } else{
+            allFields.forEach(function(field){
+                var datatype = field.type;
+                if(datatype==type){
+                    newFields.push(field);
+                }
+            });
+        }
         console.log(newFields);
         if(newFields.length > 0){
             cmp.set("v.summaryFields", newFields);
@@ -130,5 +139,47 @@
             newFields = [{name: 'None', label: "No eligible fields found."}];
             cmp.set("v.summaryFields", newFields);
         }
+    },
+    handleRollupSelect: function(cmp) {
+
+        var activeRollupId = cmp.get("v.activeRollup.Id");
+        var action = cmp.get("c.getRollupById");
+        action.setParams({id: activeRollupId});
+
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var response = response.getReturnValue();
+                cmp.set("v.activeRollup", response);
+                var activeRollupMap = cmp.get("v.activeRollup");
+
+                //need to reset all fields
+                this.resetAllFields(cmp);
+
+                if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
+                    cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
+                }
+                if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
+                    cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
+                }
+                if (!$A.util.isUndefined(response.Integer__c)) {
+                    console.log('Integer is undefined');
+                    cmp.set("v.activeRollup.Integer__c", "");
+                }
+
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+        $A.enqueueAction(action);
     }
 })

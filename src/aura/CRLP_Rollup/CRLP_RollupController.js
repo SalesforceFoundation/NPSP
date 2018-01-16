@@ -24,8 +24,10 @@
         helper.setObjectAndFieldDependencies(cmp);
     },
 
-    setModeView: function(cmp, event, helper) {
+    onCancel: function(cmp, event, helper) {
         cmp.set("v.mode", "view");
+        console.log('in cancel');
+        helper.handleRollupSelect(cmp);
     },
 
     changeDetailObject: function(cmp, event, helper){
@@ -40,26 +42,13 @@
         //TODO: what should we be doing with summary fields?
 
     },
-    changeDetailField: function(cmp, event, helper){
+    changeSummaryField: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
         var detailField = cmp.find("detailFieldSelect").get("v.value");
         var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        //TODO: will summary object always be populated?
-        if(summaryObject){
-            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
-        }
+        helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
     },
-    changeSummaryObject: function(cmp, event, helper){
-        //change summary fields to match new summary object + existing detailField
-        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        //helper.resetFields(cmp, object, 'summary');
 
-        var detailField = cmp.find("detailFieldSelect").get("v.value");
-        if(detailField){
-            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
-        }
-
-    },
     changeAmountObject: function(cmp, event, helper){
         //change amount fields to match new summary object + existing detailField
         var object = cmp.find("amountObjectSelect").get("v.value");
@@ -70,6 +59,6 @@
         //change date fields to match new summary object + existing detailField
         var object = cmp.find("dateObjectSelect").get("v.value");
         helper.resetFields(cmp, object, 'date');
-    }
+    },
 
 })

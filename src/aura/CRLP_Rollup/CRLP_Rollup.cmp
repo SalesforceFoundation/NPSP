@@ -6,6 +6,8 @@
     <aura:attribute name="mode" type="String" default="edit" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
+    <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public" />
+    <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
@@ -24,39 +26,38 @@
 
     <!-- markup -->
 
-    <!--    {!v.activeRollup.Detail_Object__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Detail_Field__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Summary_Object__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Summary_Field__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Date_Field__r.QualifiedApiName}
-    <br/>{!v.activeRollup.Amount_Field__r.QualifiedApiName}-->
-
-
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
             <lightning:layout>
                 <lightning:layoutItem size="12" largeDeviceSize="8">
                     <div class="slds-p-horizontal--large slds-p-bottom--small">
-                        <lightning:layout horizontalAlign="end">
-                            <lightning:layoutItem flexibility="auto">
-                                <lightning:buttonGroup >
-                                    <lightning:button label="{!v.labels.edit}" value="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
-                                    <lightning:button label="{!v.labels.clone}" value="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
-                                </lightning:buttonGroup>
-                            </lightning:layoutItem>
+                        <lightning:layout>
+                            <aura:if isTrue="{!or(v.mode == 'view')}">
+                                <lightning:layoutItem flexibility="auto">
+                                    <lightning:buttonGroup >
+                                        <lightning:button label="{!v.labels.edit}" value="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
+                                        <lightning:button label="{!v.labels.clone}" value="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
+                                    </lightning:buttonGroup>
+                                </lightning:layoutItem>
+                            </aura:if>
                         </lightning:layout>
                     </div>
-                    <lightning:layout multipleRows="true">
+                    <lightning:layout multipleRows="true" verticalAlign="center">
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
+                            <lightning:input aura:id="nameInput"
                                              label="{!v.labels.rollupLabel + v.labels.rollupName}"
                                              name="{!v.labels.rollupLabel + v.labels.rollupName}"
                                              value="{!v.activeRollup.MasterLabel}"
                                              required="true"
                                              readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
-                    </lightning:layout>
-                    <lightning:layout multipleRows="true">
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
+                            <lightning:textarea aura:id="descriptionInput"
+                                             label="{!v.labels.description}"
+                                             name="{!v.labels.description}"
+                                             value="{!v.activeRollup.Description__c}"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <lightning:select aura:id="detailObjectSelect"
                                               onchange="{!c.changeDetailObject}"
@@ -65,15 +66,15 @@
                                               value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
                                               required="true"
                                               disabled="{!v.isReadOnly}">
-                                            <!-- this doesn't do anything: readonly="true"-->
                                 <aura:iteration items="{!v.detailObjects}" var="option">
                                     <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Detail_Object__r.QualifiedApiName}"/>
                                 </aura:iteration>
+                                <span class="slds-assistive-text">{!v.labels.detailObject}: {!v.activeRollup.Detail_Object__r.QualifiedApiName}</span>
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <lightning:select aura:id="detailFieldSelect"
-                                              onchange="{!c.changeDetailField}"
+                                              onchange="{!c.changeSummaryField}"
                                               label="{!v.labels.detailField}"
                                               name="{!v.labels.detailField}"
                                               value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
@@ -87,7 +88,7 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <lightning:select aura:id="summaryObjectSelect"
-                                              onchange="{!c.changeSummaryObject}"
+                                              onchange="{!c.changeSummaryField}"
                                               label="{!v.labels.summaryObject}"
                                               name="{!v.labels.summaryObject}"
                                               value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
@@ -111,6 +112,22 @@
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+                            <lightning:select aura:id="filterGroupSelect"
+                                              label="{!v.labels.filterGroupLabel}"
+                                              value="{!v.activeRollup.Filter_Group__r.MasterLabel}"
+                                              required="false"
+                                              disabled="{!v.isReadOnly}">
+                                <aura:iteration items="{!v.filterGroups}" var="option">
+                                    <option value="{!option.name}" text="{!option.filterGroupName}" selected="{!option.name == v.activeRollup.Filter_Group__r.MasterLabel}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+
+                    <lightning:layout multipleRows="true" verticalAlign="center">
+
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="3" size="12">
                             <lightning:select aura:id="operationSelect"
                                               label="{!v.labels.operation}"
                                               name="{!v.labels.operation}"
@@ -122,43 +139,33 @@
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <!-- Using ui:inputCheckbox here because the boolean/checkbox fx of lightning:input still sucks -->
-                            <!-- it looks a little large... not a deal-breaker, but probably can be fixed with some class cleverness. -->
-                            <ui:inputCheckbox aura:id="fiscalYearCheckbox"
-                                              label="{!v.labels.useFiscalYear}"
-                                              value="{!v.activeRollup.Use_Fiscal_Year__c}"
-                                              disabled="{!v.isReadOnly}"/>
+                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="3" size="12">
+                            <lightning:select aura:id="yearlyOperationSelect"
+                                              label="{!v.labels.yearlyOperationType}"
+                                              name="{!v.labels.operation}"
+                                              value="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                              required="true"
+                                              disabled="{!v.isReadOnly}">
+                                <aura:iteration items="{!v.yearlyOperations}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeRollup.Yearly_Operation_Type__c}"/>
+                                </aura:iteration>
+                            </lightning:select>
                         </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.yearlyOperationType}"
-                                             value="{!v.activeRollup.Yearly_Operation_Type__c}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
-                        </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
+                        <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3" size="12">
+                            <lightning:input aura:id="integerInput"
+                                             type="number"
                                              label="{!v.labels.integer}"
                                              value="{!v.activeRollup.Integer__c}"
                                              required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                                             disabled="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:input aura:id="rollupdetail"
-                                             label="{!v.labels.filterGroupLabel}"
-                                             value="{!v.activeRollup.Filter_Group__r.MasterLabel}"
-                                             required="false"
-                                             readonly="{!v.isReadOnly}"/>
+                        <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3" size="12">
+                            <lightning:input aura:id="fiscalYearCheckbox"
+                                             type="checkbox"
+                                             label="{!v.labels.useFiscalYear}"
+                                             value="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                             disabled="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
-                    </lightning:layout>
-
-
-
-
-
-                    <lightning:layout multipleRows="true">
-
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <lightning:select aura:id="amountObjectSelect"
                                               onchange="{!c.changeAmountObject}"
@@ -173,7 +180,6 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <lightning:select aura:id="amountFieldSelect"
-                                              onchange="{!c.changeAmountField}"
                                               label="{!v.labels.amountField}"
                                               value="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
                                               name="{!v.labels.amountField}"
@@ -196,8 +202,7 @@
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                            <lightning:select aura:id="DateFieldSelect"
-                                              onchange="{!c.changeDateField}"
+                            <lightning:select aura:id="dateFieldSelect"
                                               label="{!v.labels.dateField}"
                                               value="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
                                               name="{!v.labels.dateField}"
@@ -214,8 +219,7 @@
                             <lightning:layout horizontalAlign="center">
                                 <!--TODO: this button needs an onclick function to save stuff-->
                                 <lightning:button label="{!v.labels.save}" variant="brand"/>
-                                <!--TODO: onclick to set mode back to view-->
-                                <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.setModeView}"/>
+                                <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
                             </lightning:layout>
                         </div>
                     </aura:if>

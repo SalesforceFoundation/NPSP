@@ -60,6 +60,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String description;
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
+        @AuraEnabled public String name;
     }
 
     /*******************************************************************************************************
@@ -70,6 +71,8 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public Map<String, String> operations;
+        @AuraEnabled public Map<String, String> yearlyOperations;
+        @AuraEnabled public List<FilterGroupTableItem> filterGroups;
 
     }
     /*******************************************************************************************************
@@ -91,6 +94,8 @@ public with sharing class CRLP_RollupUI_SVC {
         model.items = getRollupDefinitions();
         model.labels = getRollupLabels();
         model.operations = getRollupOperations();
+        model.yearlyOperations = getYearlyOperations();
+        model.filterGroups = getFilterGroupDefinitions();
 
         return model;
     }
@@ -158,6 +163,7 @@ public with sharing class CRLP_RollupUI_SVC {
             FilterGroupTableItem item = new FilterGroupTableItem();
 
             item.filterGroupName = mdtList[i].MasterLabel;
+            item.name = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
@@ -171,8 +177,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
 
     /*******************************************************************************************************
-    * @description Queries from the Filter Rule selector to fetch all Filter_Group__mdt records. Parses so that only the relevant
-    * information is returned, and a custom FilterGroupTableItem class is created with this information.
+    * @description Queries from the Rollup operations to fetch all rollup operation values.
     * @return a map of picklist options api values to labels
     */
     @AuraEnabled
@@ -186,6 +191,23 @@ public with sharing class CRLP_RollupUI_SVC {
             rollupOperations.put(f.getValue(),f.getLabel());
 
         return rollupOperations;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Rollup yearly operation types to fetch all yearly operation values.
+    * @return a map of picklist yearly operations api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getYearlyOperations() {
+
+        Map<String,String> yearlyOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Rollup__mdt.Yearly_Operation_Type__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues())
+            yearlyOperations.put(f.getValue(),f.getLabel());
+
+        return yearlyOperations;
     }
 
     /*******************************************************************************************************
@@ -276,7 +298,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
-                'description' => 'Description',
+                'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
