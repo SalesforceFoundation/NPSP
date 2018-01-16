@@ -46,8 +46,9 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Contact.SObjectType)) {
-            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType)) {
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(Contact.SObjectType);
+        if (rlps != null) {
+            for (Rollup__mdt r : rlps) {
                 if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
                         && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
                     addRollupDefinition(r);
@@ -69,10 +70,11 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
     public override void processRollups(List<SObject> details) {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
-        for (Sobject s : details) {
-            CRLP_Debug_UTIL.setCurrentRollupState('ProcessRollups for : ' + s.Id);
+        List<Opportunity> opps = (List<Opportunity>) details;
+        for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
+            Opportunity opp = opps[n];
+            CRLP_Debug_UTIL.setCurrentRollupState('ProcessRollups for : ' + opp.Id);
 
-            Opportunity opp = (Opportunity)s;
             for (CRLP_Rollup rollup : this.rollups) {
                 Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
 
@@ -88,7 +90,8 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
                 } else if (rollup.detailObject == pmtObjectName) {
                     // Process rollups from the Payment to the Account
 
-                    for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                    List<npe01__OppPayment__c> payments = opp.npe01__OppPayment__r;
+                    for (npe01__OppPayment__c pmt : payments) {
                         if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
                             CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
                         }

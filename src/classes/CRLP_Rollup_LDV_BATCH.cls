@@ -157,9 +157,10 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
             // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
             List<SObject> updatedDetailRecords = new List<SObject>();
             String allocKeyField = SObjectType.Allocation__c.fields.Opportunity__c.getName();
-            for (SObject s : detailRecords) {
-                if (summaryObjectType != General_Accounting_Unit__c.SObjectType || s.get(allocKeyField) != null) {
-                    updatedDetailRecords.add(s);
+            for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
+                SObject dtl = detailRecords[n];
+                if (summaryObjectType != General_Accounting_Unit__c.SObjectType || dtl.get(allocKeyField) != null) {
+                    updatedDetailRecords.add(dtl);
                 }
             }
 

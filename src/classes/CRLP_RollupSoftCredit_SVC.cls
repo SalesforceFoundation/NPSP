@@ -51,8 +51,9 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
         SObjectType targetObjType = this.objectId.getSobjectType();
-        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(targetObjType)) {
-            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType)) {
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType);
+        if (rlps != null) {
+            for (Rollup__mdt r : rlps) {
                 // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
                 // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
                 // the only reliable ObjectField to check against is AmountObject since that will always point
@@ -77,8 +78,11 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
     public override void processRollups(List<SObject> details) {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
-        for (Partial_Soft_Credit__c psc : (List<Partial_Soft_Credit__c>)details) {
+        List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
+        for (Integer n=0, listSize=pscs.size(); n<listSize; n++) {
+            Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
+
             for (CRLP_Rollup rollup : this.rollups) {
                 Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
 

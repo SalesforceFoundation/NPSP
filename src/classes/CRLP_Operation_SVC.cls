@@ -92,7 +92,7 @@ public class CRLP_Operation_SVC {
 
         // Get the Amount value from the appropriate object
         SObject amtSObject = detailSObject;
-        if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
+        if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.AmountObject) == Opportunity.SObjectType) {
             amtSObject = oppSObject;
         }
         if (amtField != null && amtSObject.get(amtField) != null) {

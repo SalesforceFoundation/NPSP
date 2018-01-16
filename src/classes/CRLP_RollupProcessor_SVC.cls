@@ -111,9 +111,14 @@ public class CRLP_RollupProcessor_SVC {
             summaryRecords = database.query(soql);
         }
 
+        SObjectType detailObjectType = (detailRecords != null && !detailRecords.isEmpty() ? detailRecords[0].getSObjectType() : null);
+        Boolean isSoftCreditPreventDupeOppsMode = (options.preventDupeOppsInRollup && detailObjectType == Partial_Soft_Credit__c.SObjectType);
+
         // Loop through each of the detail records and call the appropriate handler processing method
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
-        for (SObject parent : summaryRecords) {
+
+        for (Integer ns=0, listSizeSum=summaryRecords.size(); ns<listSizeSum; ns++) {
+            SObject parent = summaryRecords[ns];
             Id parentId = (Id) parent.get('Id');
 
             // Clear the list of stateful rollups any time the parent Id changes
@@ -127,13 +132,13 @@ public class CRLP_RollupProcessor_SVC {
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
             // collection is unique by Opportunity Id
-            if (options.preventDupeOppsInRollup && detailRecords != null && !detailRecords.isEmpty()
-                        && detailRecords[0].getSObjectType() == Partial_Soft_Credit__c.SObjectType) {
+            if (isSoftCreditPreventDupeOppsMode == true) {
                 List<SObject> prunedOpps = new List<SObject>();
-                for (SObject s : detailRecords) {
-                    Id dtlId = (Id)s.get(Partial_Soft_Credit__c.Opportunity__c);
+                for (Integer nd=0, listSizeDtl=detailRecords.size(); nd<listSizeDtl; nd++) {
+                    SObject dtl = detailRecords[nd];
+                    Id dtlId = (Id)dtl.get(Partial_Soft_Credit__c.Opportunity__c);
                     if (!options.setOfProcessedOppIds.contains(dtlId)) {
-                        prunedOpps.add(s);
+                        prunedOpps.add(dtl);
                         options.setOfProcessedOppIds.add(dtlId);
                     }
                 }
@@ -230,6 +235,13 @@ public class CRLP_RollupProcessor_SVC {
     }
 
     /**
+     * @description Saved instance of the instantiated handler class to avoid recreating each time. Because the soft credit
+     * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
+     * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
+     */
+    private static Map<SObjectType, CRLP_VRollupHandler> handlersMapByType = new Map<SObjectType, CRLP_VRollupHandler>();
+
+    /**
      * @description For a given Parent (Summary) record, and set of detail records, complete the rollup of the
      * details to the parent. The List<CRLP_Rollup> collection in ProcessingOptions is used for the actual rollup
      * accumulations. This method is called by all of the entry points for Rollup Calculations -- Batch, LDV, Queueable
@@ -242,14 +254,18 @@ public class CRLP_RollupProcessor_SVC {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
 
-        Type handlerClass = getHanderClassType(parent.getSobjectType(), options.detailObjType);
-        CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClass.getName() + ' for ' + parent.Id);
-        CRLP_VRollupHandler handler = (CRLP_VRollupHandler) handlerClass.newInstance();
-
-        if (UserInfo.isMultiCurrencyOrganization()) {
-            handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
+        CRLP_VRollupHandler handler = handlersMapByType.get(parent.getSobjectType());
+        if (handler == null) {
+            Type handlerClassType = getHanderClassType(parent.getSobjectType(), options.detailObjType);
+            CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parent.Id);
+            handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
+            }
+            handlersMapByType.put(parent.getSobjectType(), handler);
         }
 
+        // Set the Id of the summary object. This method will also reset and load the appropriate rollup mdt records
         handler.setRecordId(parent.Id);
 
         // In LDV Mode, pass in the stateful rollups collection.

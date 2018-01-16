@@ -64,6 +64,13 @@ public class CRLP_Rollup_SVC {
     }
 
     /**
+     * @description Rather than recreate the empty Summary SObject every time, we'll cache an empty version
+     * of the record with no Id. This will be cloned each time and the Id set before returning the record.
+     * Testing shows that caching an empty SObject and cloning is nearly 10 times faster than recreating each time.
+     */
+    private static Map<SObjectType, SObject> cachedEmptyObjects = new Map<SObjectType, SObject>();
+
+    /**
      * @description Creates an empty target (summmary) SObject with all of the specific rollup target fields
      * set to null, but only for the specific rollups passed as a parameter.
      * TODO: Support extending this for archived records.
@@ -72,13 +79,18 @@ public class CRLP_Rollup_SVC {
      * @return An empty SObject.
      */
     public static SObject createEmptyResultObject(Id objectId, List<CRLP_Rollup> rollups) {
-        SObject emptyObject = UTIL_Describe.getPrototypeObject(objectId.getSobjectType().getDescribe().getName());
-        emptyObject.put('Id', objectId);
-        for (CRLP_Rollup rollup : rollups) {
-            for (Rollup__mdt r : rollup.rollupsMdt) {
-                emptyObject.put(r.Summary_Field__r.QualifiedApiName, null);
+        SObjectType objType = objectId.getSobjectType();
+        if (!cachedEmptyObjects.containsKey(objType)) {
+            SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
+            for (CRLP_Rollup rollup : rollups) {
+                for (Rollup__mdt r : rollup.rollupsMdt) {
+                    emptyObject.put(r.Summary_Field__r.QualifiedApiName, null);
+                }
             }
+            cachedEmptyObjects.put(objType, emptyObject);
         }
+        SObject emptyObject = cachedEmptyObjects.get(objType).clone(false, true);
+        emptyObject.put('Id', objectId);
         return emptyObject;
     }
 

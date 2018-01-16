@@ -98,9 +98,13 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public void setRecordId(Id objectId) {
         this.objectId = objectId;
-        this.rollups.clear();
-        // This will call the method in the class that extends this class, not the empty virtual method below.
-        initRollup();
+        if (this.rollups.size() == 0) {
+            // This will call the method in the class that extends this class, not the empty virtual method above.
+            initRollup();
+        } else {
+            // clear all the rolled up values in the current instances of any CRLP_Rollup objects
+            resetAllRollups();
+        }
     }
 
     /**
@@ -132,7 +136,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
             Map<String,Object> results = rollup.getFinalValues();
             CRLP_Debug_UTIL.setCurrentRollupState(CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
-                CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
+                //CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
                 this.record.put(fld, results.get(fld));
             }
         }
