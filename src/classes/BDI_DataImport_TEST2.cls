@@ -994,15 +994,15 @@ private with sharing class BDI_DataImport_TEST2 {
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Account1_Name__c == 'a2') {
                 system.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);                
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
             } else if (listDI[i].Account1_Name__c == 'a4') {
                 system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
                 system.assertEquals(label.bdiMatched, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(label.bdiImported, listDI[i].Status__c);                
+                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
             } else {
                 system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
                 system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(label.bdiImported, listDI[i].Status__c);                
+                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
             }
             
         }
@@ -1060,7 +1060,7 @@ private with sharing class BDI_DataImport_TEST2 {
                 cC2++;
             }
             if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
                 system.assert(listDI[i].FailureInformation__c.contains(label.bdiErrorInvalidLastname));                 
             }
@@ -1114,7 +1114,7 @@ private with sharing class BDI_DataImport_TEST2 {
                 cC2++;
             }
             if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
                 system.assert(listDI[i].Contact1ImportStatus__c != null || listDI[i].Contact2ImportStatus__c != null);                 
             }
@@ -1171,7 +1171,7 @@ private with sharing class BDI_DataImport_TEST2 {
                 cA2++;
             }
             if (listDI[i].Account1Imported__c == null && listDI[i].Account2Imported__c == null) {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
                 system.assert(listDI[i].Account1ImportStatus__c != null || listDI[i].Account2ImportStatus__c != null);                 
             }
@@ -1217,7 +1217,7 @@ private with sharing class BDI_DataImport_TEST2 {
                 system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
                 cOpp++;
             } else {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
                 system.assertNotEquals(null, listDI[i].DonationImportStatus__c);    
             }
@@ -1258,11 +1258,11 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(4, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Donation_Campaign_Name__c == 'cmpNotCreated') {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
                 system.assertEquals(null, listDI[i].DonationImported__c);
             } else {
-                system.assertEquals(label.bdiImported, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
                 system.assertEquals(null, listDI[i].FailureInformation__c);    
                 system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);    
             }
@@ -1303,7 +1303,7 @@ private with sharing class BDI_DataImport_TEST2 {
                 system.assertEquals(label.bdiCreated, listDI[i].HomeAddressImportStatus__c);
                 cAddr++;
             } else {
-                system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
                 system.assertNotEquals(null, listDI[i].FailureInformation__c);    
                 system.assertNotEquals(null, listDI[i].HomeAddressImportStatus__c);    
             }
@@ -1431,7 +1431,7 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assertEquals(4, listDI.size());
         for (integer i = 0; i < 3; i++) {
             system.assertEquals(listDI[i].Contact1Imported__c, null);
-            system.assertEquals(label.bdiFailed, listDI[i].Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
             string flsError = label.flsError;
             flsError = flsError.replace('{0}', '');
             flsError = flsError.replace('.', '');
@@ -1484,9 +1484,9 @@ private with sharing class BDI_DataImport_TEST2 {
         system.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
         system.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
 
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);        
-        system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
-        system.assertEquals(label.bdiImported, listDI[2].Status__c);        
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
         system.assertEquals(null, listDI[0].FailureInformation__c);        
         system.assert(listDI[1].FailureInformation__c.contains('invalid city'));        

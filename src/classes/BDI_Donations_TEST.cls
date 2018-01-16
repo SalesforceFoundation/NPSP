@@ -1568,7 +1568,7 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(expectedStatus, listDI[0].DonationImportStatus__c);
         system.assertEquals(hasMultiMatches, listDI[0].Donation_Possible_Matches__c != null || listDI[0].Payment_Possible_Matches__c != null);
         if (imatch >= 0) {                
-            system.assertEquals(label.bdiImported, listDI[0].Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
             system.assertEquals(listOpp[imatch].Id, listDI[0].DonationImported__c);
             if (imatch != 6 && imatch != 7) {
                 system.assertNotEquals(null, listDI[0].PaymentImported__c);
