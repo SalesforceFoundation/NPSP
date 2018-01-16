@@ -78,7 +78,7 @@ public with sharing class BDI_DataImportDeleteBTN_CTRL {
             if (isDeleteAll) {
                 delete [SELECT Id FROM DataImport__c LIMIT 10000];
             } else {
-                delete [SELECT Id FROM DataImport__c WHERE Status__c = :label.bdiImported LIMIT 10000];
+                delete [SELECT Id FROM DataImport__c WHERE Status__c = :BDI_DataImport_API.bdiImported LIMIT 10000];
             }
 
             return close(); 

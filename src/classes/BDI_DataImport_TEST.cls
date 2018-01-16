@@ -1274,8 +1274,8 @@ public with sharing class BDI_DataImport_TEST {
         system.assertEquals(listDI[1].DonationImported__c, null);
         system.assertEquals(label.bdiCreated, listDI[0].DonationImportStatus__c);
         system.assertEquals(label.bdiErrorInvalidDonor, listDI[1].DonationImportStatus__c);
-        system.assertEquals(label.bdiImported, listDI[0].Status__c);        
-        system.assertEquals(label.bdiFailed, listDI[1].Status__c);        
+        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+        system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
     }
 
     /*********************************************************************************************************
