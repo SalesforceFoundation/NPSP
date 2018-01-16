@@ -50,6 +50,15 @@ global with sharing class BDI_DataImport_API {
     global static final string BestMatchOrCreate = 'Best Match or Create'; // Use the best match. Create opportunity if no match.
 
     /*******************************************************************************************************
+    * @description master values for the BDI Status field picklist
+    */
+    global static final string bdiImported = 'Imported';
+    global static final string bdiFailed = 'Failed';
+    global static final string bdiDryRunValidated = 'Dry Run - Validated';
+    global static final string bdiDryRunError = 'Dry Run - Error';
+
+
+    /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported and do not belong
     * to any specific batch. Their status is changed to imported, once the process finishes.
     * @return ID The ID of the batch job that performs the data import.
@@ -66,18 +75,32 @@ global with sharing class BDI_DataImport_API {
     /*******************************************************************************************************
     * @description Imports all DataImport records that have not been previously imported.
     * Their status is changed to imported, once the process finishes.
-    * @param batchId optional batch to scope processing to.
-    * @return ID The ID of the batch job that performs the data import.
+    * @param listbatchId the batch(es) to scope processing to.  Can be a list containing a null Id for all
+    * records not referenced by any Batch.
+    * @return list<ProcessDataImportBatchesResult> a list of Result classes
     */
     @InvocableMethod(label='processDataImportBatches' description='starts the batch processing of a list of DataImport batches')
     global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId) {
+
+        return processDataImportBatches(listBatchId, false);
+    }
+
+    /*******************************************************************************************************
+    * @description Processes all DataImport records that have not been previously imported in either
+    * Dry Run Mode, or for actual Commit. Their status is updated, once the process finishes.
+    * @param listbatchId the batch(es) to scope processing to.  Can be a list containing a null Id for all
+    * records not referenced by any Batch.
+    * @param isDryRun whether to run in Dry Run mode or commit records.
+    * @return list<ProcessDataImportBatchesResult> a list of Result classes
+    */
+    global static list<ProcessDataImportBatchesResult> processDataImportBatches(list<ID> listBatchId, Boolean isDryRun) {
 
         list<ProcessDataImportBatchesResult> listResult = new list<ProcessDataImportBatchesResult>();
 
         Savepoint sp = Database.setSavepoint();
         for (ID batchId : listBatchId) {
             try {
-                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId);
+                BDI_DataImport_BATCH batch = new BDI_DataImport_BATCH(batchId, isDryRun);
                 listResult.add(new ProcessDataImportBatchesResult(Database.executeBatch(batch, integer.valueOf(batch.diSettings.Batch_Size__c))));
             } catch (exception ex) {
                 Database.rollback(sp);
@@ -86,6 +109,18 @@ global with sharing class BDI_DataImport_API {
             }
         }
         return listResult;
+    }
+
+    /*******************************************************************************************************
+    * @description Process the provided list of DataImport records
+    * @param diSettings the settings to control processing behavior
+    * @param listDI a list of Data Import records to process
+    * @param isDryRun whether to process in Dry Run mode or commit records.
+    * @return void
+    */
+    global static void processDataImportRecords(Data_Import_Settings__c diSettings, List<DataImport__c> listDI, Boolean isDryRun) {
+        BDI_DataImportService bdi = new BDI_DataImportService(isDryRun);
+        bdi.process(null, diSettings, listDI);
     }
 
     /*******************************************************************************************************

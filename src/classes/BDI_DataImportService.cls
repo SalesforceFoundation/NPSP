@@ -41,9 +41,11 @@ global with sharing class BDI_DataImportService {
 
     /*******************************************************************************************************
     * @description constructor
+    * @param isDryRun whether to run in Dry Run mode or commit records.
     */
-    public BDI_DataImportService() {
+    public BDI_DataImportService(Boolean isDryRun) {
         contactService = new BDI_ContactService(this);
+        this.isDryRun = isDryRun;
     }
 
     /*******************************************************************************************************
@@ -57,7 +59,7 @@ global with sharing class BDI_DataImportService {
         // construct or SOQL for the batch
         strSoql = 'SELECT ' + String.join(listStrDataImportFields, ',');
         strSoql += ' FROM ' + UTIL_Namespace.StrTokenNSPrefix('DataImport__c');
-        strSoql += ' WHERE Status__c <> \'' + label.bdiImported + '\' ';
+        strSoql += ' WHERE Status__c <> \'' + BDI_DataImport_API.bdiImported + '\' ';
 
         if (batchId != null) {
             strSoql += ' AND NPSP_Data_Import_Batch__c = \'' + batchId + '\'';
@@ -253,7 +255,7 @@ global with sharing class BDI_DataImportService {
                 SELECT COUNT()
                 FROM DataImport__c
                 WHERE NPSP_Data_Import_Batch__c = :diBatch.Id
-                AND Status__c = :label.bdiImported
+                AND Status__c = :BDI_DataImport_API.bdiImported
                 AND ApexJobId__c = :apexJobId
             ];
             integer cRecordsFailed = cRecordsProcessed - cRecordsSucceeded;
@@ -284,6 +286,11 @@ global with sharing class BDI_DataImportService {
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
     global Data_Import_Settings__c diSettings { get; private set; }
+
+    /*******************************************************************************************************
+    * @description whether the processing should be done in Dry Run mode (vs. normal mode).
+    */
+    global Boolean isDryRun { get; private set; }
 
     /*******************************************************************************************************
     * @description holds the performance logger object for tracking performance metrics during processing.
@@ -351,14 +358,79 @@ global with sharing class BDI_DataImportService {
     }
 
     /*******************************************************************************************************
+    * @description label to use for matched existing records, taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedExisting() {
+        return isDryRun ? label.bdiDryRunMatched : label.bdiMatched;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matched best records (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedBest() {
+        return isDryRun ? label.bdiDryRunMatchedBest : label.bdiMatchedBest;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matched by Id (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedById() {
+        return isDryRun ? label.bdiDryRunMatchedId : label.bdiMatchedId;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matched none (donations), taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedNone() {
+        return isDryRun ? label.bdiDryRunNoMatch : label.bdiMatchedNone;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matches to new records going to be created, taking into account if in Dry Run
+    * @return String
+    */
+    public String statusMatchedNew() {
+        return isDryRun ? label.bdiDryRunNoMatch : label.bdiMatched;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for matches to new records going to be created, taking into account if in Dry Run
+    * @return String
+    */
+    public String statusCreatedNew() {
+        return isDryRun ? label.bdiDryRunNoMatch : label.bdiCreated;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for overall DI record status error/failed, taking into account if in Dry Run
+    * @return String
+    */
+    public String statusDIFailed() {
+        return isDryRun ? BDI_DataImport_API.bdiDryRunError : BDI_DataImport_API.bdiFailed;
+    }
+
+    /*******************************************************************************************************
+    * @description label to use for overall DI record status success, taking into account if in Dry Run
+    * @return String
+    */
+    public String statusDISuccess() {
+        return isDryRun ? BDI_DataImport_API.bdiDryRunValidated : BDI_DataImport_API.bdiImported;
+    }
+
+    /*******************************************************************************************************
     * @description The real work gets done here! Given a list of di records, process them.
     * @param apexJobId the apexJob that this is executing under
     * @param diSettings the settings to control processing behavior
     * @param listDI a list of Data Import records to import
+    * @param isDryRun whether to run in Dry Run mode or commit records.
     * @return void
     */
-    public static void execute(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI) {
-        BDI_DataImportService bdi = new BDI_DataImportService();
+    public static void execute(Id apexJobId, Data_Import_Settings__c diSettings, List<DataImport__c> listDI, Boolean isDryRun) {
+        BDI_DataImportService bdi = new BDI_DataImportService(isDryRun);
         bdi.process(apexJobId, diSettings, listDI);
     }
 
@@ -449,8 +521,8 @@ global with sharing class BDI_DataImportService {
             for (DataImport__c di : listDI) {
                 listDIError.add(new DataImport__c(
                     Id = di.Id,
-                    Status__c = label.bdiFailed,
-                    FailureInformation__c = di.Status__c == label.bdiFailed ? di.FailureInformation__c : e.getMessage(),
+                    Status__c = statusDIFailed(),
+                    FailureInformation__c = di.Status__c == statusDIFailed() ? di.FailureInformation__c : e.getMessage(),
                     ApexJobId__c = apexJobId
                 ));
             }
@@ -473,8 +545,11 @@ global with sharing class BDI_DataImportService {
     private void updateDIStatuses(Id apexJobId) {
         // update final status for each DI
         for (DataImport__c di: listDI) {
-            if (di.Status__c == null)
-                di.Status__c = label.bdiImported;
+            if (di.Status__c == null) {
+                di.Status__c = statusDISuccess();
+            } else if (di.Status__c == BDI_DataImport_API.bdiFailed) {
+                di.Status__c = statusDIFailed();
+            }
             di.ImportedDate__c = system.now();
             di.ApexJobId__c = apexJobId;
 
@@ -482,12 +557,9 @@ global with sharing class BDI_DataImportService {
             // household since it later shows up in C2, location, we can't be assured that the
             // contact's original household account is the same (and valid). Thus we must fixup
             // all Household Account Id lookups in our di records.
-            if (di.Status__c == label.bdiImported) {
-                Contact c1 = ContactFromDi(di, 1);
-                if (c1 != null)
-                    di.HouseholdAccountImported__c = c1.AccountId;
-            } else {
-                di.HouseholdAccountImported__c = null;
+            Contact c1 = ContactFromDi(di, 1);
+            if (c1 != null) {
+                di.HouseholdAccountImported__c = c1.AccountId;
             }
 
             // our matching marks non-matches with created, assuming they will get created
@@ -550,7 +622,7 @@ global with sharing class BDI_DataImportService {
     */
     public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
         //system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
-        di.Status__c = label.bdiFailed;
+        di.Status__c = BDI_DataImport_API.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
             di.put(strStatusField, strError.left(255));
@@ -692,6 +764,11 @@ global with sharing class BDI_DataImportService {
     */
     private void importHouseholdAccountFields() {
 
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         // get our mapping of household custom fields
         Map<String, String> mapDIFieldToHHField = mapFieldsForDIObject('Household', 'Account', listStrDataImportFields);
 
@@ -706,7 +783,7 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HouseholdAccountImported__c == null)
                 continue;
@@ -825,6 +902,11 @@ global with sharing class BDI_DataImportService {
         matchExistingAccounts();
         pl.stop();
 
+        // done matching for Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         // handle multiple di's referring to the same existing account
         Set<String> setDIKeyUpsert = new Set<String>();
         List<Account> listAccUpsert = new List<Account>();
@@ -833,7 +915,7 @@ global with sharing class BDI_DataImportService {
         // create/update our A1's
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 1);
@@ -899,7 +981,7 @@ global with sharing class BDI_DataImportService {
         setDIKeyUpsert.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 2);
@@ -1086,7 +1168,7 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             // a1
@@ -1143,17 +1225,17 @@ global with sharing class BDI_DataImportService {
 
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Account acc = AccountFromDi(di, 1);
             List<String> listDiKey = listDiKeyA1(di);
             if (acc != null) {
                 di.Account1Imported__c = acc.id;
-                di.Account1ImportStatus__c = label.bdiMatched;
+                di.Account1ImportStatus__c = (acc.id != null ? statusMatchedExisting() : statusMatchedNew());
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
-                di.Account1ImportStatus__c = label.bdiCreated;
+                di.Account1ImportStatus__c = statusCreatedNew();
             }
             // make sure all dikeys for that account are in the map
             for (String diKey : listDiKey)
@@ -1163,10 +1245,10 @@ global with sharing class BDI_DataImportService {
             listDiKey = listDiKeyA2(di);
             if (acc != null) {
                 di.Account2Imported__c = acc.id;
-                di.Account2ImportStatus__c = label.bdiMatched;
+                di.Account2ImportStatus__c = (acc.id != null ? statusMatchedExisting() : statusMatchedNew());
             } else if (listDiKey.size() > 0) {
                 acc = new Account();
-                di.Account2ImportStatus__c = label.bdiCreated;
+                di.Account2ImportStatus__c = statusCreatedNew();
             }
             // make sure all dikeys for that account are in the map
             for (String diKey : listDiKey)
@@ -1231,7 +1313,7 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con = ContactFromDi(di, 1);
             if (con != null && con.AccountId != null)
@@ -1253,7 +1335,7 @@ global with sharing class BDI_DataImportService {
         Map<String, Address__c> mapHHAddrKeyToAddrNew = new Map<String, Address__c>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
 
             Contact con = ContactFromDi(di, 1);
@@ -1278,16 +1360,18 @@ global with sharing class BDI_DataImportService {
                 ID idAddr = mapHHAddrKeyToId.get(strKeyOfAddr(addr));
                 if (idAddr != null) {
                     di.HomeAddressImported__c = idAddr;
-                    di.HomeAddressImportStatus__c = label.bdiMatched;
+                    di.HomeAddressImportStatus__c = statusMatchedExisting();
                 } else {
                     // see if we are already creating this new address
                     Address__c addrNew = mapHHAddrKeyToAddrNew.get(strKeyOfAddr(addr));
                     if (addrNew != null) {
                         addr = addrNew;
+                        di.HomeAddressImportStatus__c = statusMatchedNew();
                     } else {
                         mapHHAddrKeyToAddrNew.put(strKeyOfAddr(addr), addr);
                         listAddrInsert.add(addr);
                         listDIInsert.add(di);
+                        di.HomeAddressImportStatus__c = statusCreatedNew();
                     }
                     mapDIIdToAddr.put(di.Id, addr);
                 }
@@ -1295,6 +1379,11 @@ global with sharing class BDI_DataImportService {
             if (Test.isRunningTest() && addr.MailingCity__c != null && addr.MailingCity__c.startsWith('FailTest')) {
                 addr.Household_Account__c = di.Id;  // a bogus id for this field
             }
+        }
+
+        // done matching for Dry Run
+        if (isDryRun) {
+            return;
         }
 
         // two prong strategy! if any address object fails to save, do one
@@ -1313,13 +1402,13 @@ global with sharing class BDI_DataImportService {
         // update each DI with its new home address
         for (DataImport__c di: listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HomeAddressImported__c == null) {
                 Address__c addr = mapDIIdToAddr.get(di.Id);
                 if (addr != null && addr.Id != null) {
                     di.HomeAddressImported__c = addr.Id;
-                    di.HomeAddressImportStatus__c = label.bdiCreated;
+                    di.HomeAddressImportStatus__c = statusCreatedNew();
                 }
             }
         }
@@ -1340,6 +1429,11 @@ global with sharing class BDI_DataImportService {
     */
     private void importAddressesAsAddressFields() {
 
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         // track the contacts and hh accounts to update
         Set<Id> setIdUpdate = new Set<Id>();
         List<Contact> listCon1Update = new List<Contact>();
@@ -1353,7 +1447,7 @@ global with sharing class BDI_DataImportService {
         Set<Id> setHHId = new Set<Id>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.HouseholdAccountImported__c != null)
                 setHHId.add(di.HouseholdAccountImported__c);
@@ -1364,7 +1458,7 @@ global with sharing class BDI_DataImportService {
         // now update home address on the contacts and hh account
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             Contact con1 = ContactFromDi(di, 1);
             Contact con2 = ContactFromDi(di, 2);
@@ -1443,11 +1537,17 @@ global with sharing class BDI_DataImportService {
     */
     private void importCampaigns() {
 
+        // since we don't currently fill in a campaign lookup or status on the DI record,
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         // need to find all the Campaigns that we might need
         Set<String> setStrCampaign = new Set<String>();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             if (di.Donation_Campaign_Name__c != null)
                 setStrCampaign.add(di.Donation_Campaign_Name__c);
@@ -1464,7 +1564,7 @@ global with sharing class BDI_DataImportService {
         setStrCampaign.clear();
         for (DataImport__c di : listDI) {
             // skip di's that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             String strName = di.Donation_Campaign_Name__c;
             Campaign cmp;
@@ -1501,13 +1601,20 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     private void importCampaignMembers() {
+
+        // there is no work to do in Dry Run.
+        if (isDryRun) {
+            return;
+        }
+
         List<String> newCmContactIds = new List<String>();
         List<String> listCampaignIds = new List<String>();
         List<String> listCmStatues = new List<String>();
+
         // loop over the dis contacts and find existing cms or new cms to create (if they have a campaign)
         for (DataImport__c di : listDI) {
             // skip that already have an error
-            if (di.Status__c == label.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
                 continue;
             // only create CMs here for rows that don't have an opportunity
             if (di.Donation_Campaign_Name__c != null && di.DonationImported__c == null) {

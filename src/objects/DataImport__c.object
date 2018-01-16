@@ -1075,6 +1075,16 @@
                     <label>Imported</label>
                 </value>
                 <value>
+                    <fullName>Dry Run - Validated</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Validated</label>
+                </value>
+                <value>
+                    <fullName>Dry Run - Error</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Error</label>
+                </value>
+                <value>
                     <fullName>Failed</fullName>
                     <default>false</default>
                     <label>Failed</label>
@@ -1094,6 +1104,42 @@
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Errors</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Error</value>
+        </filters>
+        <label>Dry Run - Errors</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Validated</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Validated</value>
+        </filters>
+        <label>Dry Run - Validated</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
         <fullName>Failed_Data_Imports</fullName>
