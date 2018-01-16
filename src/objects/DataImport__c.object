@@ -1063,25 +1063,6 @@
         <externalId>false</externalId>
         <inlineHelpText>The status of importing the Data Import record.</inlineHelpText>
         <label>Status</label>
-        <picklist>
-            <picklistValues>
-                <fullName>Imported</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Failed</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Dry Run - Validated</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Dry Run - Error</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -1092,6 +1073,16 @@
                     <fullName>Imported</fullName>
                     <default>false</default>
                     <label>Imported</label>
+                </value>
+                <value>
+                    <fullName>Dry Run - Validated</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Validated</label>
+                </value>
+                <value>
+                    <fullName>Dry Run - Error</fullName>
+                    <default>false</default>
+                    <label>Dry Run - Error</label>
                 </value>
                 <value>
                     <fullName>Failed</fullName>
