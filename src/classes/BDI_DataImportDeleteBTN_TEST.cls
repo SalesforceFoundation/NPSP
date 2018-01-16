@@ -157,7 +157,7 @@ class BDI_DataImportDeleteBTN_TEST {
         if (isNotRunnable('TestDeleteImportedDataImportRecordsBtn')) return;
             
         DataImport__c[] records = setUpData();
-        records[3].Status__c = label.bdiImported;
+        records[3].Status__c = BDI_DataImport_API.bdiImported;
         update records;
         
         Test.startTest();
@@ -169,7 +169,7 @@ class BDI_DataImportDeleteBTN_TEST {
         records = [SELECT Id, Status__c FROM DataImport__c ORDER BY Status__c];
         System.assertEquals(2, records.size());
         System.assertEquals(null, records[0].Status__c);
-        System.assertEquals(label.bdiFailed, records[1].Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed, records[1].Status__c);
     }
 
     /**
@@ -249,8 +249,8 @@ class BDI_DataImportDeleteBTN_TEST {
             BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4'),
             BDI_DataImport_TEST.newDI('c3', 'C3', 'c4', 'C4')
         };
-        records[0].Status__c = label.bdiImported;
-        records[1].Status__c = label.bdiFailed;
+        records[0].Status__c = BDI_DataImport_API.bdiImported;
+        records[1].Status__c = BDI_DataImport_API.bdiFailed;
 
         insert records;
         return records;

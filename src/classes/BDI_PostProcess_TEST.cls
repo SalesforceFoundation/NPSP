@@ -82,7 +82,7 @@ public with sharing class BDI_PostProcess_TEST {
         listDI = [select Id, Status__c from DataImport__c order by Contact1_Lastname__c];
         system.assertEquals(6, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
-            system.assertEquals(label.bdiImported, listDI[i].Status__c);
+            system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
         }
     }
 

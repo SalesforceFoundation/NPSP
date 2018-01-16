@@ -84,6 +84,7 @@
                                     <div class="slds-form-element">
                                         <div class="slds-form-element__control">
                                             <apex:commandButton value="{!$Label.bdiRunBtn}" action="{!importData}" immediate="false" styleClass="slds-button slds-button_brand" rerender="idForm"/>
+                                            <apex:commandButton value="{!$Label.bdiDryRunBeginButton}" action="{!startDryRun}" immediate="false" styleClass="slds-button slds-button_neutral" rerender="idForm"/>
                                             <apex:commandButton value="{!$Label.stgBtnCancel}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                         </div>
                                     </div>
@@ -119,7 +120,7 @@
 
                             <div class="slds-card">
                                 <div class="slds-card__header slds-grid">
-                                    <h3 class="slds-text-heading_small slds-has-flexi-truncate">{!$Label.bdiDataImporterTitle}</h3>
+                                    <h3 class="slds-text-heading_small slds-has-flexi-truncate">{!IF(isDryRun, $Label.bdiDryRunTitle, $Label.bdiDataImporterTitle)}</h3>
                                     <div class="slds-no-flex">
                                         <apex:commandButton value="{!$Label.bdiBtnClose}" action="{!close}" immediate="true" styleClass="slds-button slds-button_neutral" />
                                     </div>
@@ -165,13 +166,13 @@
                                                         {!crecProcessed}
                                                     </dd>
                                                     <dt class="slds-dl_horizontal__label slds-size_3-of-12">
-                                                        {!$Label.bdiRecordsImported}
+                                                        {!IF(isDryRun, $Label.bdiDryRunRecordsValidated, $Label.bdiRecordsImported)}
                                                     </dt>
                                                     <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!crecImported}
                                                     </dd>
                                                     <dt class="slds-dl_horizontal__label slds-size_3-of-12">
-                                                        {!$Label.bdiRecordsFailed}
+                                                        {!IF(isDryRun, $Label.bdiDryRunRecordsError, $Label.bdiRecordsFailed)}
                                                     </dt>
                                                     <dd class="slds-dl_horizontal__detail slds-tile__meta slds-size_9-of-12">
                                                         {!crecFailed}
