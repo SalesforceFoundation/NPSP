@@ -1063,6 +1063,25 @@
         <externalId>false</externalId>
         <inlineHelpText>The status of importing the Data Import record.</inlineHelpText>
         <label>Status</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Imported</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Failed</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Dry Run - Validated</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Dry Run - Error</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -1094,6 +1113,42 @@
         <columns>LAST_UPDATE</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Errors</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Error</value>
+        </filters>
+        <label>Dry Run - Errors</label>
+        <language>en_US</language>
+    </listViews>
+    <listViews>
+        <fullName>Dry_Run_Validated</fullName>
+        <columns>NAME</columns>
+        <columns>Status__c</columns>
+        <columns>FailureInformation__c</columns>
+        <columns>Contact1_Firstname__c</columns>
+        <columns>Contact1_Lastname__c</columns>
+        <columns>Account1_Name__c</columns>
+        <columns>LAST_UPDATE</columns>
+        <filterScope>Everything</filterScope>
+        <filters>
+            <field>Status__c</field>
+            <operation>equals</operation>
+            <value>Dry Run - Validated</value>
+        </filters>
+        <label>Dry Run - Validated</label>
+        <language>en_US</language>
     </listViews>
     <listViews>
         <fullName>Failed_Data_Imports</fullName>
