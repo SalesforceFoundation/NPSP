@@ -55,36 +55,6 @@
     },
 
     displayFilterGroupsGrid: function(cmp, event, helper){
-        //check for list first so that we only make necessary server trips
-        /**if($A.util.isEmpty(cmp.get("v.filterGroupList"))){
-            var action = cmp.get("c.getFilterGroupDefinitions");
-
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    var filtergroups = response.getReturnValue();
-                    cmp.set("v.filterGroupList", filtergroups);
-                }
-                else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-
-                }
-                cmp.set("v.isFilterGroupsGrid",true);
-            });
-
-            $A.enqueueAction(action);
-        } else {
-            cmp.set("v.isFilterGroupsGrid",true);
-        }**/
-
         cmp.set("v.isFilterGroupsGrid",true);
         var labels = cmp.get("v.labels");
         var cols = [labels.name
@@ -159,6 +129,9 @@
 
             cmp.set("v.isRollupsGrid",false);
             cmp.set("v.isRollupDetail",true);
+            cmp.set("v.width", 8);
+        } else{
+            cmp.set("v.width", 12);
         }
 
     },
@@ -166,8 +139,17 @@
         //toggle grid and detail views, set detail mode to create
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isRollupDetail",true);
-        cmp.set("v.detailMode", 'create');
+        cmp.set("v.detailMode", "create");
         cmp.set("v.activeRollup", {});
-    }
+    },
 
+    //TODO: can these be combined?
+    setModeEdit: function(cmp, event, helper) {
+        cmp.set("v.detailMode", "edit");
+        console.log("In setModeEdit");
+    },
+    setModeClone: function(cmp, event, helper) {
+        cmp.set("v.detailMode", "clone");
+        console.log("In setModeClone");
+    },
 })

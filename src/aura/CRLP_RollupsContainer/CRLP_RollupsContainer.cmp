@@ -14,6 +14,7 @@
     <aura:attribute name="isRollupsGrid" type="Boolean" access="private" description="Determines if Rollups Grid is shown."/>
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
+    <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -35,57 +36,66 @@
 
     <!--BEGIN HEADER-->
     <div class="slds-p-around--large">
-        <aura:if isTrue="{!v.isRollupsGrid}">
-            <h1 class="slds-page-header__title" title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
-        </aura:if>
-        <aura:if isTrue="{!v.isFilterGroupsGrid}">
-            <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
-        </aura:if>
-        <aura:if isTrue="{!v.isRollupDetail}">
-            <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
-            <!--Show record label header for Edit and View modes only-->
-            <!--TODO: check this logic-->
-            <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
-                <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
-                <!--Else show mode header-->
-                <aura:set attribute="else">
-                    <h1 class="slds-page-header__title" title="{!v.detailMode + ' ' + v.labels.rollupLabel}">{!v.detailMode + ' ' + v.labels.rollupLabel}</h1>
-                </aura:set>
-            </aura:if>
-        </aura:if>
-    </div>
-    <!--END HEADER-->
-
-    <!--BEGIN BUTTONS-->
-    <aura:if isTrue="{! !v.isRollupDetail }">
-        <div class="slds-p-horizontal--large slds-p-bottom--large">
-        <lightning:layout horizontalAlign="spread">
-            <lightning:layoutItem flexibility="auto">
-                <aura:if isTrue="{!v.isRollupsGrid}">
-                    <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
-                        <option value="All">Select All</option>
-                        <option value="Account">Account</option>
-                        <option value="Contact">Contact</option>
-                        <option value="GAU">GAU</option>
-                    </lightning:select>
-                </aura:if>
-            </lightning:layoutItem>
-            <lightning:layoutItem flexibility="auto">
-                <lightning:buttonGroup >
+        <!--BEGIN TITLE-->
+        <lightning:layout>
+            <lightning:layoutItem mediumDeviceSize="{!v.width}" size="12">
+                <lightning:layout horizontalAlign="spread">
+                    <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="6" size="12">
+                        <aura:if isTrue="{!v.isRollupsGrid}">
+                            <h1 class="slds-page-header__title" title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
+                        </aura:if>
+                        <aura:if isTrue="{!v.isFilterGroupsGrid}">
+                            <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
+                        </aura:if>
+                        <aura:if isTrue="{!v.isRollupDetail}">
+                            <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
+                            <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
+                                <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
+                                <!--Else show mode header-->
+                                <aura:set attribute="else">
+                                    <h1 class="slds-page-header__title" title="{!v.labels.rollupNew}">{!v.labels.rollupNew}</h1>
+                                </aura:set>
+                            </aura:if>
+                        </aura:if>
+                    </lightning:layoutItem>
+                    <!--END TITLE-->
+                    <!--BEGIN BUTTONS-->
+                    <lightning:layoutItem smallDeviceSize="4" mediumDeviceSize="4" size="12" flexibility="auto">
+                        <lightning:buttonGroup class="slds-float_right">
+                            <aura:if isTrue="{!v.isRollupsGrid}">
+                                <lightning:button label="{!v.labels.rollupNew}" onclick="{!c.displayNewRollupForm}"/>
+                                <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.displayFilterGroupsGrid}"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isFilterGroupsGrid}">
+                                <lightning:button label="{!v.labels.filterGroupNew}"/>
+                                <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}"/>
+                            </aura:if>
+                            <aura:if isTrue="{!and(v.isRollupDetail, v.detailMode == 'view')}">
+                                <lightning:button label="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
+                                <lightning:button label="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
+                            </aura:if>
+                        </lightning:buttonGroup>
+                    </lightning:layoutItem>
+                    <!--END BUTTONS-->
+                </lightning:layout>
+                <!--BEGIN FILTER-->
+                <lightning:layout>
                     <aura:if isTrue="{!v.isRollupsGrid}">
-                        <lightning:button label="{!v.labels.rollupNew}" onclick="{!c.displayNewRollupForm}"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.displayFilterGroupsGrid}"/>
+                        <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
+                            <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
+                                <option value="All">Select All</option>
+                                <option value="Account">Account</option>
+                                <option value="Contact">Contact</option>
+                                <option value="GAU">GAU</option>
+                            </lightning:select>
+                        </lightning:layoutItem>
                     </aura:if>
-                    <aura:if isTrue="{!v.isFilterGroupsGrid}">
-                        <lightning:button label="{!v.labels.filterGroupNew}"/>
-                        <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}"/>
-                    </aura:if>
-                </lightning:buttonGroup>
+                </lightning:layout>
+                <!--END FILTER-->
             </lightning:layoutItem>
         </lightning:layout>
     </div>
-    </aura:if>
-    <!--END BUTTONS-->
+    <!--END HEADER-->
 
     <!--BEGIN ROLLUPS GRID-->
     <aura:if isTrue="{!v.isRollupsGrid}">
@@ -101,7 +111,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                        {!v.labels.noRollups}
+                            {!v.labels.noRollups}
                     </ui:message>
                 </aura:set>
             </aura:if>
@@ -124,7 +134,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                        {!v.labels.noFilterGroups}
+                            {!v.labels.noFilterGroups}
                     </ui:message>
                 </aura:set>
             </aura:if>

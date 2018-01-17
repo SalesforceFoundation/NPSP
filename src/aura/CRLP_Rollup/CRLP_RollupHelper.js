@@ -156,15 +156,12 @@
                 //need to reset all fields
                 this.resetAllFields(cmp);
 
+                //this converts values to a user-friendly format
                 if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
                     cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
                 }
                 if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
                     cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
-                }
-                if (!$A.util.isUndefined(response.Integer__c)) {
-                    console.log('Integer is undefined');
-                    cmp.set("v.activeRollup.Integer__c", "");
                 }
 
             }
