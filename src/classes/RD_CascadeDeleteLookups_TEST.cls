@@ -108,11 +108,11 @@ private class RD_CascadeDeleteLookups_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct 
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Classic Theme
     * exception is thrown.
     */
     static testMethod void testRDDeleteException(){
-        Contact testContact = new Contact(LastName='foo');
+        Contact testContact = new Contact(LastName='CONTACT');
         insert testContact;
 
         npe03__Recurring_Donation__c testRecurringDonation = new npe03__Recurring_Donation__c(
@@ -127,7 +127,7 @@ private class RD_CascadeDeleteLookups_TEST {
         insert testRecurringDonation;
 
         List<Opportunity> testRDOpportunities = [
-            SELECT Id 
+            SELECT Name 
             FROM Opportunity 
             WHERE npe03__Recurring_Donation__c = :testRecurringDonation.Id
         ];
@@ -137,6 +137,8 @@ private class RD_CascadeDeleteLookups_TEST {
         update testRDOpportunities[0];
 
         Exception caughException;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonation.Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
 
         Test.startTest();
         try{
@@ -147,6 +149,102 @@ private class RD_CascadeDeleteLookups_TEST {
         Test.stopTest();
 
         System.assertNotEquals(null, caughException, 'An exception should be caught.');
+        System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
+        System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
+    }
+
+    /*********************************************************************************************************
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Lightning 
+    * exception is thrown.
+    */
+    static testMethod void testRDDeleteException_LightningThemeContext(){
+        Contact testContact = new Contact(LastName='CONTACT');
+        insert testContact;
+
+        npe03__Recurring_Donation__c testRecurringDonation = new npe03__Recurring_Donation__c(
+            Name = 'TEST_RD',
+            npe03__Installments__c = 2,
+            npe03__Amount__c = 1,
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c = date.newinstance(1970, 6, 12),
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            npe03__Contact__c = testContact.Id
+        );
+        insert testRecurringDonation;
+
+        List<Opportunity> testRDOpportunities = [
+            SELECT Name 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :testRecurringDonation.Id
+        ];
+        System.assertEquals(2, testRDOpportunities.size(), 'Two opps should be auto created by recurring donation.');
+
+        testRDOpportunities[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update testRDOpportunities[0];
+
+        Exception caughException;
+        CDL_CascadeDeleteLookups.LIGHTNING_CONTEXT = true;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonation.Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+
+        Test.startTest();
+        try{
+            delete testRecurringDonation;
+        } catch (Exception ex) {
+            caughException = ex;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughException, 'An exception should be caught.');
+        System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
+        System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id) == false, 'Exception message should not contain the closed won opportunity Id.');
+        System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
+    }
+
+    /*********************************************************************************************************
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Classic Theme
+    * exception is thrown.
+    */
+    static testMethod void testRDDeleteException_ClassicThemeContext(){
+        Contact testContact = new Contact(LastName='CONTACT');
+        insert testContact;
+
+        npe03__Recurring_Donation__c testRecurringDonation = new npe03__Recurring_Donation__c(
+            Name = 'TEST_RD',
+            npe03__Installments__c = 2,
+            npe03__Amount__c = 1,
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
+            npe03__Date_Established__c = date.newinstance(1970, 6, 12),
+            npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
+            npe03__Contact__c = testContact.Id
+        );
+        insert testRecurringDonation;
+
+        List<Opportunity> testRDOpportunities = [
+            SELECT Name 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :testRecurringDonation.Id
+        ];
+        System.assertEquals(2, testRDOpportunities.size(), 'Two opps should be auto created by recurring donation.');
+
+        testRDOpportunities[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+        update testRDOpportunities[0];
+
+        Exception caughException;
+        CDL_CascadeDeleteLookups.LIGHTNING_CONTEXT = false;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonation.Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+
+        Test.startTest();
+        try{
+            delete testRecurringDonation;
+        } catch (Exception ex) {
+            caughException = ex;
+        }
+        Test.stopTest();
+
+        System.assertNotEquals(null, caughException, 'An exception should be caught.');
+        System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
         System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
     }

@@ -145,17 +145,13 @@ public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     * @description Gets the Delete ChildrenLoader Object of the running Cascade Trigger Handler.
     * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
     ********************************************************************************************************/
-    protected virtual CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader() {
-        return null;
-    }
+    protected abstract CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader();
 
     /*******************************************************************************************************
     * @description Gets the Undelete ChildrenLoader Object of the running Cascade Trigger Handler. 
     * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
     ********************************************************************************************************/
-    protected virtual CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
-        return null;
-    }
+    protected abstract CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader();
 
     /*******************************************************************************************************
     * @description Gets the ChildrenValidator Object of the running Cascade Trigger Handler. 

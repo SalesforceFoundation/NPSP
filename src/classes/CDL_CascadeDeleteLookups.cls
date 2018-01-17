@@ -36,7 +36,9 @@
 
 public class CDL_CascadeDeleteLookups {
 
-    @TestVisible private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
+    @TestVisible
+    private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
+    @TestVisible private static Boolean LIGHTNING_CONTEXT;
 
     /** @description The single instance of the CascadeDelete. */
     private static CascadeDelete cascadeDelete;
@@ -131,7 +133,7 @@ public class CDL_CascadeDeleteLookups {
         private CascadeDeleteValidator childrenValidator;
 
         /******************************************************************************************************
-        * @description The Constructor of CascadeDelete
+        * @description The Constructor of CascadeDelete.
         */
         public CascadeDelete() {
             deletedRecords = new Map<Id, SObject>();
@@ -225,7 +227,7 @@ public class CDL_CascadeDeleteLookups {
 
     /*******************************************************************************************************
     * @description Contains Cascade Undelete logic. The Trigger Handlers use this class to retrieve 
-    * the children of the undeleted records, and undelete the children records
+    * the children of the undeleted records, and undelete the children records.
     ********************************************************************************************************/
     public class CascadeUndelete {
         private Set<Id> undeletedRecordIds;
@@ -239,7 +241,7 @@ public class CDL_CascadeDeleteLookups {
         }
 
         /*******************************************************************************************************
-        * @description Sets the records (from the Triggers context) that are undeleted
+        * @description Sets the records (from the Triggers context) that are undeleted.
         * @return void
         ********************************************************************************************************/
         public void setUndeletedRecords(List<SObject> undeletedRecords) {
@@ -248,7 +250,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Sets the object that loads the children records.
-        * @return void
+        * @return void.
         ********************************************************************************************************/
         public void setLoader(CascadeUndeleteLoader loader) {
             this.loader = loader;
@@ -256,7 +258,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Undeletes the children records.
-        * @return void
+        * @return void.
         ********************************************************************************************************/
         public void undeleteRecords() {
             CascadeUndeleteLoader currentChildrenLoader = loader;
@@ -299,10 +301,10 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Adds the information about child that prevents the deletion, and the type of error.
-        * @param String The type of error
-        * @param Id The Id of the child record
-        * @param String The name of the child record
-        * @return void
+        * @param String The type of error.
+        * @param Id The Id of the child record.
+        * @param String The name of the child record.
+        * @return void.
         ********************************************************************************************************/
         public void addChildError(String errorType, Id childRecordId, String childRecordName) {
             if (childrenByErrorType.containsKey(errorType) == false) {
@@ -313,9 +315,9 @@ public class CDL_CascadeDeleteLookups {
         }
 
         /*******************************************************************************************************
-        * @description Gets the error message. The message contains the error type and the list of the children 
+        * @description Gets the error message. The message contains the error type and the list of the children
         * preventing the deletion.
-        * @return String The error message
+        * @return String The error message.
         ********************************************************************************************************/
         public String getMessage() {
             List<String> result = new List<String>();
@@ -323,7 +325,7 @@ public class CDL_CascadeDeleteLookups {
                 return '';
             }
 
-            if (USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()) {
+            if (isLightningContext()) {
                 for (String errorType : childrenByErrorType.keySet()) {
                     result.add(errorType + ' (' + getPlainTextChildrenList(childrenByErrorType.get(errorType)) + ')');
                 }
@@ -339,7 +341,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Returns a HTML list of the child records preventing the deletion, with links to those records.
-        * @param Map<Id, String> The child records preventing the deletion
+        * @param Map<Id, String> The child records preventing the deletion.
         * @return String The HTML text that contains a list of the child records.
         ********************************************************************************************************/
         private String getHTMLChildrenList(Map<Id, String> childRecords) {
@@ -353,8 +355,8 @@ public class CDL_CascadeDeleteLookups {
         }
 
         /*******************************************************************************************************
-        * @description Returns a plain text list of the child records preventing the deletion
-        * @param Map<Id, String> The child records preventing the deletion
+        * @description Returns a plain text list of the child records preventing the deletion.
+        * @param Map<Id, String> The child records preventing the deletion.
         * @return String The plain text that contains a list of the child records.
         ********************************************************************************************************/
         private String getPlainTextChildrenList(Map<Id, String> childRecords) {
@@ -364,6 +366,17 @@ public class CDL_CascadeDeleteLookups {
             }
             
             return String.join(result, ', ');
+        }
+
+        /*******************************************************************************************************
+        * @description Get the current user Theme Context (Lightning Experience or Classic).
+        * @return Boolean.
+        ********************************************************************************************************/
+        private Boolean isLightningContext() {
+            if (LIGHTNING_CONTEXT != null) {
+                return LIGHTNING_CONTEXT;
+            }
+            return USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile();
         }
     }
 }
