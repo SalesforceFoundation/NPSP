@@ -1,4 +1,9 @@
 ({
+    doInit:function(cmp, event, helper){
+        console.log('in the init, calling helper');
+        helper.setObjectAndFieldDependencies(cmp);
+    },
+
     changeMode: function (cmp, event, helper) {
         var mode = cmp.get("v.mode");
         console.log("Mode is " + mode);
@@ -10,7 +15,13 @@
             cmp.set("v.isReadOnly", true);
         }
         console.log('calling helper...');
-        helper.setObjectAndFieldDependencies(cmp);
+        helper.resetAllFields(cmp);
+    },
+
+    onModeChanged:function(cmp,event,helper){
+            console.log('heard ModeChanged event');
+            var mode = event.getParam('mode');
+            cmp.set("v.mode",mode);
     },
 
     setModeEdit: function(cmp, event, helper) {
@@ -35,6 +46,7 @@
         //set new summary objects based on selected value
         //var object = cmp.find("detailObjectSelect").get("v.value");
         var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        console.log('object: '+object);
         helper.resetSummaryObjects(cmp, object);
 
         //set new detail fields based on new selected detail object

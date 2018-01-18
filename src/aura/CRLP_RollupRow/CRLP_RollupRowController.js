@@ -11,11 +11,24 @@
         } else if (selectedMenuItemValue == "delete"){
             //prompt to delete row
         }
+
+        console.log('trying to fire event to change mode to edit or clone...');
+        var changeModeEvt = cmp.getEvent("modeChanged");
+        changeModeEvt.setParams({"mode" : selectedMenuItemValue});
+        changeModeEvt.fire();
+        console.log('past the fire');
+
     },
 
     setActiveRollup: function(cmp, event, helper) {
         var rollup = cmp.get("v.rollup");
         cmp.set("v.mode", "view");
         cmp.set("v.activeRollupId",rollup.id);
+
+        console.log('trying to fire event to change mode to view...');
+        var changeModeEvt = cmp.getEvent("modeChanged");
+        changeModeEvt.setParams({"mode" : "view"});
+        changeModeEvt.fire();
+
     }
 })

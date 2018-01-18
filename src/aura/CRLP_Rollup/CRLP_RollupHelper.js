@@ -25,10 +25,13 @@
 
             var action = cmp.get("c.getFieldsByDataType");
             action.setParams({objectNames: objectList});
+            console.log('obj list: '+objectList);
 
             action.setCallback(this, function (response) {
                 var state = response.getState();
+                console.log('STATE'+state);
                 if (state === "SUCCESS") {
+                    console.log('RESPONSE: '+response.getReturnValue());
                     var response = response.getReturnValue();
                     cmp.set("v.objectDetails", response);
 
@@ -51,13 +54,13 @@
 
                 }
             });
-
+            console.log('about to make the callback');
             $A.enqueueAction(action);
         }
     },
 
     resetSummaryObjects: function(cmp, detailObject){
-        //todo: add ifNecesary check?
+        //todo: add if Necesary check?
         console.log('Fired summary object reset');
         var labels = cmp.get("v.labels");
         var newSummaryObjects;
@@ -77,6 +80,8 @@
     resetFields: function(cmp, object, context){
 
         console.log("Fired field reset for context: "+context);
+        var test = cmp.get("v.objectDetails");
+        console.log(test);
         var newFields = cmp.get("v.objectDetails")[object];
         console.log(newFields);
 

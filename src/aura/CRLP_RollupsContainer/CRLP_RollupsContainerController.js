@@ -76,7 +76,7 @@
         cmp.set("v.isFilterGroupsGrid",false);
         cmp.set("v.isRollupDetail",false);
         cmp.set("v.activeRollup", null);
-        cmp.set("v.detailMode", null);
+        //cmp.set("v.detailMode", null);
 
         var labels = cmp.get("v.labels");
 

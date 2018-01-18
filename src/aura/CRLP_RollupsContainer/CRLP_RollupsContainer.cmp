@@ -22,7 +22,6 @@
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
     <!-- markup -->
-
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
         <lightning:breadcrumbs>
@@ -31,6 +30,8 @@
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
         </lightning:breadcrumbs>
+        Detail Mode: {!v.detailMode}
+
     </div>
     <!--END BREADCRUMB-->
 

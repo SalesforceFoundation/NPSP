@@ -3,7 +3,7 @@
     <!-- public attributes -->
     <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
     <aura:attribute name="activeRollup" type="Map" description="The active rollup displayed. Only populated from Clone, View and Edit."/>
-    <aura:attribute name="mode" type="String" default="edit" description="The current mode of the component. Options are: view, edit, clone, or create."/>
+    <aura:attribute name="mode" type="String" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public" />
@@ -21,16 +21,18 @@
     <!-- events we handle -->
     <!--tracking activeRollup instead of changeMode because the change of Mode isn't being registered in the sibling-->
     <!--TODO: remove duplicate action -> remove activeRollup, use event in rollupRow-->
-    <aura:handler name="change" value="{!v.activeRollup}" action="{!c.changeMode}" />
+    <!--<aura:handler name="change" value="{!v.activeRollup}" action="{!c.changeMode}" />-->
     <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
     <aura:handler name="change" value="{!v.mode}" action="{!c.changeMode}" />
+    <aura:handler name="ModeChanged" event="c:CRLP_ModeChanged" action="{!c.onModeChanged}"/>
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
-    <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}" action="{!c.changeDetailObject}" />
+
+   <!-- <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}" action="{!c.changeDetailObject}" />
     <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}" action="{!c.changeSummaryField}" />
-
+-->
     <!-- markup -->
-        {!v.activeRollup.Detail_Object__r.QualifiedApiName}
-        {!v.activeRollup.Detail_Field__r.QualifiedApiName}
+        Mode: {!v.mode}
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
@@ -52,6 +54,18 @@
                                              value="{!v.activeRollup.Description__c}"
                                              readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
+
+
+                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                            auraId="detailObject"
+                                            fieldName="{!v.labels.detailObject}"
+                                            entityLabel="{!v.activeRollup.Detail_Object__r.Label}"
+                                            apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                                            placeholder="Not Yet Selected"
+                                            options="{!v.detailObjects}"
+
+                        />
+                        <!--
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <lightning:input aura:id="detailObjectView"
@@ -72,7 +86,7 @@
                                 </aura:set>
                             </aura:if>
                         </lightning:layoutItem>
-
+-->
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="detailField"
                                             fieldName="{!v.labels.detailField}"
