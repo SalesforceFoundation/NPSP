@@ -319,7 +319,145 @@ private class CON_DeleteContactOverride_TEST {
         System.assertNotEquals(null, con, 'The Contact should be retrieved from DB.');
         System.assert(con.isDeleted, 'The Contact should be deleted');
     }
+
+    /*********************************************************************************************************
+    * @description Attempts to delete contact with closed/won and org opps, verifies correct exception is thrown.
+    */
+    static testMethod void testContactDeleteExceptionWithOverride(){
+        //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
+        Account conAccount = new Account(Name='ConAccount');
+        insert conAccount;
+
+        Contact con = new Contact(LastName='foo', AccountId=conAccount.Id);
+        insert con;
+
+        //org account for opportunity attribution
+        Account org = new Account(Name='org');
+        insert org;
+
+        Opportunity closedWonOpp = new Opportunity(
+            Amount = 8,
+            Name = 'foo',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = System.today(),
+            Primary_Contact__c = con.Id
+        );
+        insert closedWonOpp;
+
+        Opportunity orgOpp = new Opportunity(
+            Amount = 8,
+            AccountId = org.Id,
+            Name = 'foo',
+            StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
+            CloseDate = System.today(),
+            Primary_Contact__c = con.Id
+        );
+        insert orgOpp;
+
+        Case conCase = new Case(
+            AccountId = conAccount.Id,
+            ContactId = con.Id
+        );
+        insert conCase;
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+
+        Test.startTest();
+        ctrl.processDelete();
+        Test.stopTest();
+
+        System.assert(ApexPages.hasMessages(), 'An exception should be caught and added to page messages.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(closedWonOpp.Id), 'Exception message should contain the closed won opportunity Id.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(orgOpp.Id), 'Exception message should contain the org opportunity Id.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.OrganizationalOpportunities), 'Exception message should mention Organizational Opportunities.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(conCase.Id), 'Exception message should contain the Case Id.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(Case.SObjectType.getDescribe().getLabelPlural()), 'Exception message should mention Cases.');
+    }
+
+    /*********************************************************************************************************
+    * @description Attempts to delete contact with Recurring Donation, verifies Recurring Donation is deleted.
+    */
+    static testMethod void testContactDeleteWithOverride(){
+        //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
+        Account conAccount = new Account(Name='ConAccount');
+        insert conAccount;
+
+        Contact con = new Contact(LastName='foo', AccountId=conAccount.Id);
+        insert con;
+
+        npe03__Recurring_Donation__c testRecurringDonation = CDL_CascadeDeleteLookups_TEST.createContactRDs(
+            new List<Contact>{con}
+        )[0];
+        insert testRecurringDonation;
+
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+
+        Test.startTest();
+        ctrl.processDelete();
+        Test.stopTest();
+
+        List<Error__c> errors = [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
+        ];
+        System.assertEquals(0, errors.size(), errors);
+
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
+            SELECT Id 
+            FROM npe03__Recurring_Donation__c
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+        System.assertEquals(1, deletedRecurringDonations.size(), 'The Contact Recurring Donation should be cascade deleted when Contact is deleted.');
+    }
         
+    /*********************************************************************************************************
+    * @description Attempts to delete Account with closed/won opp and case, verifies correct exception is thrown.
+    */
+    static testMethod void testAccountDeleteExceptionWithOverride(){
+        //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
+        Account conAccount = new Account(
+            Name='ConAccount',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+        insert conAccount;
+
+        Contact con = new Contact(LastName='foo', AccountId=conAccount.Id);
+        insert con;
+
+        Opportunity closedWonOpp = new Opportunity(
+            Amount = 8,
+            AccountId = conAccount.Id,
+            Name = 'foo',
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
+            CloseDate = System.today()
+        );
+        insert closedWonOpp;
+
+        Case conCase = new Case(
+            AccountId = conAccount.Id
+        );
+        insert conCase;
+        
+        Test.setCurrentPage(Page.CON_DeleteContactOverride);
+        ApexPages.currentPage().getParameters().put('Id', con.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
+
+        Test.startTest();
+        ctrl.deleteAccount();
+        Test.stopTest();
+
+        System.assert(ApexPages.hasMessages(), 'An exception should be caught and added to page messages.');
+        System.assert(String.valueOf(ApexPages.getMessages()).contains(closedWonOpp.Id), 'Exception message should contain the closed won opportunity Id.');
+        System.assert(String.valueOf(ApexPages.getMessages()).contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
+        System.assert(String.valueOf(ApexPages.getMessages()).contains(conCase.Id), 'Exception message should contain the Case Id.');
+        System.assert(String.valueOf(ApexPages.getMessages()).contains(Case.SObjectType.getDescribe().getLabelPlural()), 'Exception message should mention Cases.');
+    }
 
     // Helpers
     ///////////
