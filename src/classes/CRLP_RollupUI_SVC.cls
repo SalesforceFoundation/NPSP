@@ -288,6 +288,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
                 'cancel' => Label.stgBtnCancel,
+                'checkboxTrue' => Label.stgCheckboxTrue,
+                'checkboxFalse' => Label.stgCheckboxFalse,
                 'clone' => Label.stgBtnClone,
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,

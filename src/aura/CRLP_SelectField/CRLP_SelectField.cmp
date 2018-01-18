@@ -1,0 +1,37 @@
+<aura:component description="CRLP_SelectField">
+    <aura:attribute name="isReadOnly" type="Boolean"/>
+    <aura:attribute name="hasNullOption" type="Boolean" default="false"/>
+    <aura:attribute name="auraId" type="String" description="Id label to be used for aura:id for view and select"/>
+    <aura:attribute name="fieldName" type="String" description="Label for the rollup__mdt field" />
+    <aura:attribute name="entityLabel" type="String" description="Label of the selected entity" />
+    <aura:attribute name="apiName" type="String" description="API name of the selected entity"/>
+    <aura:attribute name="placeholder" type="String"/>
+    <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
+
+    <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+        <aura:if isTrue="{!v.isReadOnly}">
+            <lightning:input aura:id="{!v.auraId + 'View'}"
+                             label="{!v.fieldName}"
+                             name="{!v.fieldName}"
+                             value="{!v.entityLabel}"
+                             readonly="true"
+                             placeholder="{!v.placeholder}"/>
+            <aura:set attribute="else">
+                <lightning:select aura:id="{!v.auraId + 'Select'}"
+                                  label="{!v.fieldName}"
+                                  name="{!v.fieldName}"
+                                  value="{!v.apiName}"
+                                  required="true">
+                    <!--onchange="{!c.changeSummaryField}"-->
+                    <aura:if isTrue="{!v.hasNullOption}">
+                        <option value="null" text="{!v.placeholder}" selected="{!null == v.apiName}"/>
+                    </aura:if>
+                    <aura:iteration items="{!v.options}" var="option">
+                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.apiName}"/>
+                    </aura:iteration>
+                </lightning:select>
+            </aura:set>
+        </aura:if>
+    </lightning:layoutItem>
+
+</aura:component>

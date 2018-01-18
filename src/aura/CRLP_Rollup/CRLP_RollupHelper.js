@@ -61,6 +61,7 @@
         console.log('Fired summary object reset');
         var labels = cmp.get("v.labels");
         var newSummaryObjects;
+        console.log("detail object is " + detailObject);
         if(detailObject == "Allocation__c"){
             newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
 
@@ -77,9 +78,11 @@
 
         console.log("Fired field reset for context: "+context);
         var newFields = cmp.get("v.objectDetails")[object];
+        console.log(newFields);
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
+            console.log('detail fields reset');
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
         } else if (context=='date') {

@@ -20,13 +20,17 @@
 
     <!-- events we handle -->
     <!--tracking activeRollup instead of changeMode because the change of Mode isn't being registered in the sibling-->
-    <!--TODO: remove duplicate action -> remove activeRollup, use event??-->
+    <!--TODO: remove duplicate action -> remove activeRollup, use event in rollupRow-->
     <aura:handler name="change" value="{!v.activeRollup}" action="{!c.changeMode}" />
     <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
     <aura:handler name="change" value="{!v.mode}" action="{!c.changeMode}" />
 
-    <!-- markup -->
+    <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}" action="{!c.changeDetailObject}" />
+    <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}" action="{!c.changeSummaryField}" />
 
+    <!-- markup -->
+        {!v.activeRollup.Detail_Object__r.QualifiedApiName}
+        {!v.activeRollup.Detail_Field__r.QualifiedApiName}
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
         <form class="slds-form--stacked">
@@ -57,7 +61,6 @@
                                                  readonly="true"/>
                                 <aura:set attribute="else">
                                     <lightning:select aura:id="detailObjectSelect"
-                                                      onchange="{!c.changeDetailObject}"
                                                       label="{!v.labels.detailObject}"
                                                       name="{!v.labels.detailObject}"
                                                       value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
@@ -69,7 +72,18 @@
                                 </aura:set>
                             </aura:if>
                         </lightning:layoutItem>
-                        <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+
+                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                            auraId="detailField"
+                                            fieldName="{!v.labels.detailField}"
+                                            entityLabel="{!v.activeRollup.Detail_Field__r.Label}"
+                                            apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
+                                            placeholder="{!v.labels.na}"
+                                            options="{!v.detailFields}"
+                                            hasNullOption="true"
+
+                        />
+                        <!--<lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <lightning:input aura:id="detailFieldView"
                                                  label="{!v.labels.detailField}"
@@ -91,7 +105,7 @@
                                     </lightning:select>
                                 </aura:set>
                             </aura:if>
-                        </lightning:layoutItem>
+                        </lightning:layoutItem>-->
                         <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <lightning:input aura:id="summaryObjectView"
@@ -209,8 +223,10 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3" size="12">
                             <aura:if isTrue="{!v.isReadOnly}">
-                                <!--todo: add altchecked & fix formatting w/ the labels-->
-                                <ui:outputCheckbox value="{!v.activeRollup.Use_Fiscal_Year__c}" class="fiscalYearCheckbox"/>
+                                <!--todo: how can this be screen-readable?-->
+                                <ui:outputCheckbox value="{!v.activeRollup.Use_Fiscal_Year__c}" class="fiscalYearCheckbox"
+                                                   altChecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxTrue}"
+                                                   altUnchecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxFalse}"/>
                                 <span class="slds-form-element__label fiscalYearCheckbox">{!v.labels.useFiscalYear}</span>
                                 <aura:set attribute="else">
                                     <lightning:input aura:id="fiscalYearCheckbox"

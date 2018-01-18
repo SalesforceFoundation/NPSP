@@ -4581,6 +4581,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
+        <fullName>stgCheckboxTrue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>For alternative text when a boolean is selected.</shortDescription>
+        <value>Selected</value>
+    </labels>
+    <labels>
+        <fullName>stgCheckboxFalse</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>For alternative text when a boolean is not selected.</shortDescription>
+        <value>Not Selected</value>
+    </labels>
+    <labels>
         <fullName>stgCountOf</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
