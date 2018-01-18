@@ -43,13 +43,13 @@ private class CAM_CascadeDeleteLookups_TEST {
     static testMethod void testCampaignsCascadeDelete(){
         Integer maxRecords = 200;
 
-        List<Campaign> testCampaigns = createCampaigns(maxRecords);
+        List<Campaign> testCampaigns = CDL_CascadeDeleteLookups_TEST.createCampaigns(maxRecords);
         insert testCampaigns;
 
         General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
         insert testGAU;
         List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(createCampaignAllocations(testGAU, testCampaigns));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createCampaignAllocations(testGAU, testCampaigns));
         insert testAllocations;
 
         Test.startTest();
@@ -84,38 +84,5 @@ private class CAM_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = false
         ];
         System.assertEquals(deletedAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade undeleted.');
-    }
-
-    /*******************************************************************************************************
-    * @description Create Campaigns
-    * @param Integer The maximum records to create
-    * @return List<Campaign> The created Campaigns
-    ********************************************************************************************************/
-    private static List<Campaign> createCampaigns(Integer maxRecords) {
-        List<Campaign> result = new List<Campaign>();
-        for (Integer i = 0; i < maxRecords; i++) {
-            result.add(new Campaign(Name = 'CAMP' + i));
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Campaign Allocations
-    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
-    * @param List<Campaign> The Campaigns records that are used to create the Allocations
-    * @return List<Allocation__c> The created Allocations
-    ********************************************************************************************************/
-    private static List<Allocation__c> createCampaignAllocations(General_Accounting_Unit__c testGAU,  List<Campaign> testCampaigns) {
-        List<Allocation__c> result = new List<Allocation__c>();
-        for (Campaign testCampaign : testCampaigns) {
-            result.add(
-                new Allocation__c(
-                    Amount__c = 4, 
-                    Campaign__c = testCampaign.Id,
-                    General_Accounting_Unit__c = testGAU.Id
-                )
-            );
-        }
-        return result;
     }
 }

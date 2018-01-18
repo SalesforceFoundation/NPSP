@@ -45,16 +45,16 @@ private class OPP_CascadeDeleteLookups_TEST {
     static testMethod void testOppCascade() {
         Integer maxRecords = 200;
 
-        List<Account> testAccounts = createAccounts(maxRecords);
+        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(maxRecords);
         insert testAccounts;
 
-        List<Opportunity> testOpportunities = createOpportunities(testAccounts);
+        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
         insert testOpportunities;
 
         General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
         insert testGAU;
         List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(createOpportunityAllocations(testGAU, testOpportunities));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
         insert testAllocations;
 
         Test.startTest();
@@ -77,59 +77,5 @@ private class OPP_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = false
         ];
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted.');
-    }
-
-    /*******************************************************************************************************
-    * @description Create Accounts
-    * @param Integer The maximum records to create
-    * @return List<Account> The created Accounts
-    ********************************************************************************************************/
-    private static List<Account> createAccounts(Integer maxRecords) {
-        List<Account> result = new List<Account>();
-        for (Integer i = 0; i < maxRecords; i++) {
-            result.add(new Account(Name = 'Account' + i));
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Opportunities
-    * @param List<Account> The Accounts records that are used to create the Opportunities
-    * @return List<Opportunity> The created Opportunities
-    ********************************************************************************************************/
-    private static List<Opportunity> createOpportunities(List<Account> testAccounts) {
-        List<Opportunity> result = new List<Opportunity>();
-        for (Account testAccount : testAccounts) {
-            result.add(
-                new Opportunity(
-                    Amount = 8,
-                    AccountId = testAccount.Id,
-                    Name = 'OPP_' + testAccount.Name,
-                    StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
-                    CloseDate = System.today()
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Opportunity Allocations
-    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
-    * @param List<Opportunity> The Opportunities records that are used to create the Allocations
-    * @return List<Allocation__c> The created Allocations
-    ********************************************************************************************************/
-    private static List<Allocation__c> createOpportunityAllocations(General_Accounting_Unit__c testGAU,  List<Opportunity> testOpportunities) {
-        List<Allocation__c> result = new List<Allocation__c>();
-        for (Opportunity testOpportunity : testOpportunities) {
-            result.add(
-                new Allocation__c(
-                    Amount__c = 4, 
-                    Opportunity__c = testOpportunity.Id,
-                    General_Accounting_Unit__c = testGAU.Id
-                )
-            );
-        }
-        return result;
     }
 }

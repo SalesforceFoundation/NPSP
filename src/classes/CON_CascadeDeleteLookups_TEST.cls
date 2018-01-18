@@ -43,10 +43,10 @@ private class CON_CascadeDeleteLookups_TEST {
     static testMethod void testContactsCascadeDelete(){
         Integer maxRecords = 200;
 
-        List<Contact> testContacts = createContacts(maxRecords);
+        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
         insert testContacts;
 
-        List<npe4__Relationship__c> testRelationships = createRelationships(testContacts);
+        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
         insert testRelationships;
 
         Test.startTest();
@@ -81,10 +81,10 @@ private class CON_CascadeDeleteLookups_TEST {
     * @description Verifies that the losing contact in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testContactMergeNoCascade(){
-        List<Contact> testContacts = createContacts(2);
+        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(2);
         insert testContacts;
 
-        List<npe4__Relationship__c> testRelationships = createRelationships(testContacts);
+        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
         insert testRelationships;
 
         merge testContacts[0] testContacts[1];
@@ -102,46 +102,5 @@ private class CON_CascadeDeleteLookups_TEST {
             ALL ROWS 
         ];
         System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
-
-    }
-
-    /*******************************************************************************************************
-    * @description Create Contacts
-    * @param Integer The maximum records to create
-    * @return List<Contact> The created Contacts
-    ********************************************************************************************************/
-    private static List<Contact> createContacts(Integer maxRecords) {
-        List<Contact> result = new List<Contact>();
-        for (Integer i = 0; i < maxRecords; i++) {
-            result.add(new Contact(LastName = 'CONTACT' + i));
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Relationships
-    * @param List<Contact> The Contacts records that are used to create the Relationships
-    * @return List<npe4__Relationship__c> The created Relationships
-    ********************************************************************************************************/
-    private static List<npe4__Relationship__c> createRelationships(List<Contact> testContacts) {
-        List<npe4__Relationship__c> result = new List<npe4__Relationship__c>();
-
-        Map<Id, Contact> testContactsWithFriends = new Map<Id, Contact>();
-        for (Contact testContact : testContacts) {
-            testContactsWithFriends.put(testContact.Id, new Contact(LastName = 'FRIEND_OF_' + testContact.LastName));
-        }
-        insert testContactsWithFriends.values();
-
-        for (Contact testContact : testContacts) {
-            result.add(
-                new npe4__Relationship__c(
-                    npe4__contact__c = testContact.Id, 
-                    npe4__relatedcontact__c = testContactsWithFriends.get(testContact.Id).Id, 
-                    npe4__Type__c = 'Friend',
-                    npe4__Status__c = 'Active'
-                )
-            );
-        }
-        return result;
     }
 }

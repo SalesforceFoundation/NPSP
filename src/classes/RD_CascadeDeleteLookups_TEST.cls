@@ -43,11 +43,11 @@ private class RD_CascadeDeleteLookups_TEST {
     static testMethod void testRDCascade(){
         Integer maxRecords = 1;
 
-        List<Contact> testContacts = createContacts(maxRecords);
+        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
         insert testContacts;
 
         List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(createContactRDs(testContacts));
+        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(testContacts));
         insert testRecurringDonations;
 
         List<Opportunity> testRDOpportunities = [
@@ -61,7 +61,7 @@ private class RD_CascadeDeleteLookups_TEST {
         insert testGAU;
 
         List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(createRDAllocations(testGAU, testRecurringDonations));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
         insert testAllocations;
 
         Test.startTest();
@@ -108,7 +108,7 @@ private class RD_CascadeDeleteLookups_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Attempts to delete recurring donation with closed/won and org opps, verifies correct Classic Theme
+    * @description Attempts to delete recurring donation with closed/won and org opps, verifies
     * exception is thrown.
     */
     static testMethod void testRDDeleteException(){
@@ -247,61 +247,5 @@ private class RD_CascadeDeleteLookups_TEST {
         System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
         System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
-    }
-
-    /*******************************************************************************************************
-    * @description Create Contacts
-    * @param Integer The maximum records to create
-    * @return List<Contact> The created Contacts
-    ********************************************************************************************************/
-    private static List<Contact> createContacts(Integer maxRecords) {
-        List<Contact> result = new List<Contact>();
-        for (Integer i = 0; i < maxRecords; i++) {
-            result.add(new Contact(LastName = 'CONTACT' + i));
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Contact Recurring Donations
-    * @param List<Contact> The Contacts records that are used to create the Recurring Donations
-    * @return List<npe03__Recurring_Donation__c> The created Contact Recurring Donations
-    ********************************************************************************************************/
-    private static List<npe03__Recurring_Donation__c> createContactRDs(List<Contact> testContacts) {
-        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
-        for (Contact testContact : testContacts) {
-            result.add(
-                new npe03__Recurring_Donation__c(
-                    Name = 'CON_RD',
-                    npe03__Installments__c = 2,
-                    npe03__Amount__c = 1,
-                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                    npe03__Date_Established__c = Date.newinstance(1970, 6, 12),
-                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Contact__c = testContact.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Recurring Donation Allocations
-    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
-    * @param List<npe03__Recurring_Donation__c> The Recurring Donations records that are used to create the Allocations
-    * @return List<Allocation__c> The created Allocations
-    ********************************************************************************************************/
-    private static List<Allocation__c> createRDAllocations(General_Accounting_Unit__c testGAU,  List<npe03__Recurring_Donation__c> testRecurringDonations) {
-        List<Allocation__c> result = new List<Allocation__c>();
-        for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
-            result.add(
-                new Allocation__c(
-                    Amount__c = 4, 
-                    Recurring_Donation__c = testRecurringDonation.Id,
-                    General_Accounting_Unit__c = testGAU.Id
-                )
-            );
-        }
-        return result;
     }
 }

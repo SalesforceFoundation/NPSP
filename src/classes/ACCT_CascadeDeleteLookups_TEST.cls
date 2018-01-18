@@ -41,7 +41,7 @@ private class ACCT_CascadeDeleteLookups_TEST {
     * Verifies results: The losing account in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testAccountMergeNoCascade() {
-        List<Contact> testContacts = createContacts(2);
+        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(2);
         insert testContacts;
 
         //Retrieve auto created HH Accounts
@@ -52,21 +52,21 @@ private class ACCT_CascadeDeleteLookups_TEST {
         ];
 
         List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(createContactRDs(testContacts));
-        testRecurringDonations.addAll(createOrganizationalRDs(testAccounts));
+        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(testContacts));
+        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
         insert testRecurringDonations;
 
         General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
         insert testGAU;
-        List<Opportunity> testOpportunities = createOpportunities(testAccounts);
+        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
         insert testOpportunities;
 
         List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(createRDAllocations(testGAU, testRecurringDonations));
-        testAllocations.addAll(createOpportunityAllocations(testGAU, testOpportunities));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
         insert testAllocations;
 
-        List<npe4__Relationship__c> testRelationships = createRelationships(testContacts);
+        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
         insert testRelationships;
 
         Test.startTest();
@@ -107,13 +107,12 @@ private class ACCT_CascadeDeleteLookups_TEST {
     /*********************************************************************************************************
     * @description Tests cascade delete: deletes accounts, which deletes recurring dontations allocations 
     * and relationships. 
-    * Verifies results. Then undeletes accounts, which undeletes recurring donations and allocations. Verifies
-    * results.
+    * Verifies results. Then undeletes accounts, which undeletes recurring donations allocations and relationships.
     */
     static testMethod void testAccountsCascadeGrandchildren() {
         Integer maxRecords = 200;
 
-        List<Contact> testContacts = createContacts(maxRecords);
+        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
         insert testContacts;
 
         //Retrieve auto created HH Accounts
@@ -124,21 +123,21 @@ private class ACCT_CascadeDeleteLookups_TEST {
         ];
 
         List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(createContactRDs(testContacts));
-        testRecurringDonations.addAll(createOrganizationalRDs(testAccounts));
+        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(testContacts));
+        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
         insert testRecurringDonations;
 
         General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
         insert testGAU;
-        List<Opportunity> testOpportunities = createOpportunities(testAccounts);
+        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
         insert testOpportunities;
 
         List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(createRDAllocations(testGAU, testRecurringDonations));
-        testAllocations.addAll(createOpportunityAllocations(testGAU, testOpportunities));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
         insert testAllocations;
 
-        List<npe4__Relationship__c> testRelationships = createRelationships(testContacts);
+        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
         insert testRelationships;
 
         Test.startTest();
@@ -203,152 +202,5 @@ private class ACCT_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = false
         ];
         System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships for each Contact should be undeleted when accounts are undeleted.');
-    }
-
-    /*******************************************************************************************************
-    * @description Create Contacts
-    * @param Integer The maximum records to create
-    * @return List<Contact> The created Contacts
-    ********************************************************************************************************/
-    private static List<Contact> createContacts(Integer maxRecords) {
-        List<Contact> result = new List<Contact>();
-        for (Integer i = 0; i < maxRecords; i++) {
-            result.add(new Contact(LastName = 'CONTACT' + i));
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Contact Recurring Donations
-    * @param List<Contact> The Contacts records that are used to create the Recurring Donations
-    * @return List<npe03__Recurring_Donation__c> The created Contact Recurring Donations
-    ********************************************************************************************************/
-    private static List<npe03__Recurring_Donation__c> createContactRDs(List<Contact> testContacts) {
-        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
-        for (Contact testContact : testContacts) {
-            result.add(
-                new npe03__Recurring_Donation__c(
-                    Name = 'CON_RD',
-                    npe03__Installments__c = 2,
-                    npe03__Amount__c = 1,
-                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                    npe03__Date_Established__c = Date.newinstance(1970,6,12),
-                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Contact__c = testContact.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Organizational Recurring Donations
-    * @param List<Account> The Accounts records that are used to create the Recurring Donations
-    * @return List<npe03__Recurring_Donation__c> The created Organizational Recurring Donations
-    ********************************************************************************************************/
-    private static List<npe03__Recurring_Donation__c> createOrganizationalRDs(List<Account> testAccounts) {
-        List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
-        for (Account testAccount : testAccounts) {
-            result.add(
-                new npe03__Recurring_Donation__c(
-                    Name = 'ORG_RD' + testAccount.Name,
-                    npe03__Installments__c = 2,
-                    npe03__Amount__c = 1,
-                    npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodYearly,
-                    npe03__Date_Established__c = Date.newinstance(1970,6,12),
-                    npe03__Schedule_Type__c = System.Label.npe03.RecurringDonationMultiplyValue,
-                    npe03__Organization__c = testAccount.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Opportunities
-    * @param List<Account> The Accounts records that are used to create the Opportunities
-    * @return List<Opportunity> The created Opportunities
-    ********************************************************************************************************/
-    private static List<Opportunity> createOpportunities(List<Account> testAccounts) {
-        List<Opportunity> result = new List<Opportunity>();
-        for (Account testAccount : testAccounts) {
-            result.add(
-                new Opportunity(
-                    Name = 'OPP_' + testAccount.Name,
-                    Amount = 8,
-                    AccountId = testAccount.Id,
-                    StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
-                    CloseDate = System.today()
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Recurring Donation Allocations
-    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
-    * @param List<npe03__Recurring_Donation__c> The Recurring Donations records that are used to create the Allocations
-    * @return List<Allocation__c> The created Allocations
-    ********************************************************************************************************/
-    private static List<Allocation__c> createRDAllocations(General_Accounting_Unit__c testGAU,  List<npe03__Recurring_Donation__c> testRecurringDonations) {
-        List<Allocation__c> result = new List<Allocation__c>();
-        for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
-            result.add(
-                new Allocation__c(
-                    Amount__c = 4, 
-                    Recurring_Donation__c = testRecurringDonation.Id,
-                    General_Accounting_Unit__c = testGAU.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Opportunity Allocations
-    * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations
-    * @param List<Opportunity> The Opportunities records that are used to create the Allocations
-    * @return List<Allocation__c> The created Allocations
-    ********************************************************************************************************/
-    private static List<Allocation__c> createOpportunityAllocations(General_Accounting_Unit__c testGAU,  List<Opportunity> testOpportunities) {
-        List<Allocation__c> result = new List<Allocation__c>();
-        for (Opportunity testOpportunity : testOpportunities) {
-            result.add(
-                new Allocation__c(
-                    Amount__c = 4, 
-                    Opportunity__c = testOpportunity.Id,
-                    General_Accounting_Unit__c = testGAU.Id
-                )
-            );
-        }
-        return result;
-    }
-
-    /*******************************************************************************************************
-    * @description Create Relationships
-    * @param List<Contact> The Contacts records that are used to create the Relationships
-    * @return List<npe4__Relationship__c> The created Relationships
-    ********************************************************************************************************/
-    private static List<npe4__Relationship__c> createRelationships(List<Contact> testContacts) {
-        List<npe4__Relationship__c> result = new List<npe4__Relationship__c>();
-
-        Map<Id, Contact> testContactsWithFriends = new Map<Id, Contact>();
-        for (Contact testContact : testContacts) {
-            testContactsWithFriends.put(testContact.Id, new Contact(LastName = 'FRIEND_OF_' + testContact.LastName));
-        }
-        insert testContactsWithFriends.values();
-
-        for (Contact testContact : testContacts) {
-            result.add(
-                new npe4__Relationship__c(
-                    npe4__contact__c = testContact.Id, 
-                    npe4__relatedcontact__c = testContactsWithFriends.get(testContact.Id).Id, 
-                    npe4__Type__c = 'Friend',
-                    npe4__Status__c = 'Active'
-                )
-            );
-        }
-        return result;
     }
 }
