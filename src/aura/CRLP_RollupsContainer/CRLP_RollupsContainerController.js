@@ -6,7 +6,9 @@
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var model = response.getReturnValue();
+                var modelString = response.getReturnValue();
+                var model = JSON.parse(modelString);
+
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);

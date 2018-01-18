@@ -75,20 +75,13 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
 
     }
-    /*******************************************************************************************************
-    * @description Creates a model to organize fields by name, label and type to minimize server trips.
-    */
-    public class FieldInformation {
-        @AuraEnabled public List<RollupTableItem> items;
-        @AuraEnabled public Map<String, String> labels;
 
-    }
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model.
     * @return
     */
     @AuraEnabled
-    public static RollupModel setupRollups() {
+    public static String setupRollups() {
         RollupModel model = new RollupModel();
 
         model.items = getRollupDefinitions();
@@ -97,7 +90,9 @@ public with sharing class CRLP_RollupUI_SVC {
         model.yearlyOperations = getYearlyOperations();
         model.filterGroups = getFilterGroupDefinitions();
 
-        return model;
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
     }
 
     /*******************************************************************************************************
