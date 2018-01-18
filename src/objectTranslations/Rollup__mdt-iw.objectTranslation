@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <caseValues>
+        <article>None</article>
         <plural>false</plural>
         <value><!-- Rollup --></value>
     </caseValues>
     <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הRollup --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
         <plural>true</plural>
         <value><!-- Rollup --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הRollup --></value>
     </caseValues>
     <fields>
         <label><!-- Active --></label>
@@ -125,7 +137,7 @@
             <translation><!-- Years Ago --></translation>
         </picklistValues>
     </fields>
-    <gender><!-- Neuter --></gender>
+    <gender><!-- Masculine --></gender>
     <layouts>
         <layout>Rollup Layout</layout>
         <sections>

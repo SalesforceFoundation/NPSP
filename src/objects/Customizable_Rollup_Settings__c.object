@@ -3,15 +3,6 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>Customizable_Rollups_Enabled__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <inlineHelpText>Check this box to enable the new NPSP Customizable Roll-Up Engine</inlineHelpText>
-        <label>Customizable Roll-Ups Enabled</label>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>CMT_API_Status__c</fullName>
         <description>Result of the last CustomMetadataType deployment</description>
         <externalId>false</externalId>
@@ -21,6 +12,15 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Customizable_Rollups_Enabled__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this box to enable the new NPSP Customizable Roll-Up Engine</inlineHelpText>
+        <label>Customizable Roll-Ups Enabled</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Rollups_Account_Batch_Size__c</fullName>
