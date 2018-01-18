@@ -84,6 +84,7 @@
         <members>CAO_Constants</members>
         <members>CDL_CascadeDeleteLookups</members>
         <members>CDL_CascadeDeleteLookups_TDTM</members>
+        <members>CDL_CascadeDeleteLookups_TEST</members>
         <members>CONV_Account_Conversion_BATCH</members>
         <members>CONV_Account_Conversion_BATCH_TEST</members>
         <members>CONV_Account_Conversion_CTRL</members>
