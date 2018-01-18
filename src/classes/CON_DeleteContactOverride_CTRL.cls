@@ -168,8 +168,9 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Deletes a contact, after adding cascade deletion records for related opportunities and 
-    * recurring donations. Validates opportunities and adds error messages where appropriate.
+    * @description Deletes a contact, after adding cascade delete Loader and Validator to load and checks the 
+    * related opportunities, cases and recurring donations. Prevents the deletion if there are closed won 
+    * opportunities and cases.
     * @return pageReference Redirects to the Contacts tab if the contact has been deleted, otherwise stays
     * on the page and displays error messages.
     */ 
@@ -201,8 +202,8 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Deletes contact's account once the user has accepted to do so. Adds cascade deletion 
-    * records for validating that there are no related closed/won opportunities or cases associated with this
+    * @description Deletes contact's account once the user has accepted to do so. Adds cascade delete Loader
+    * and Validator for validating that there are no related closed/won opportunities or cases associated with this
     * Account. Although the platform handles this validation, the error message returned in this custom page
     * wasn't friendly; the cascade deletion framework displays helpful errors with links to the offending records.
     * @return pageReference Redirects to the Contacts tab if the account has been deleted, otherwise stays
@@ -271,73 +272,73 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the Contacts to delete
+    * @description Class that retrieves the children of the Contacts to delete.
     ********************************************************************************************************/
     class ContactCascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Contacts being deleted.
+        * @description Retrieves the Cases, Opportunities and Recurring Donations of the deleted Contacts.
         * @param Set<Id> The Ids of the Contacts to delete.
-        * @return List<SObject> Deleted Recurring Donation's Allocations
+        * @return List<SObject> Deleted Contacts's Cases, Opportunities, Recurring Donations.
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentsIds) {
+        public List<SObject> load(Set<Id> contactIds) {
             List<SObject> result = new List<SObject>();
 
-            List<SObject> relatedCases = [
-                SELECT CaseNumber
+            List<Case> relatedCases = [
+                SELECT CaseNumber, ContactId
                 FROM Case
-                WHERE ContactId IN :parentsIds
+                WHERE ContactId IN :contactIds
             ];
-            result.addAll(relatedCases);
+            result.addAll((List<SObject>) relatedCases);
 
-            List<SObject> relatedOpportunities = [
+            List<Opportunity> relatedOpportunities = [
                 SELECT Name, AccountId, Primary_Contact__c, Primary_Contact__r.AccountId, IsWon, IsClosed
                 FROM Opportunity
-                WHERE Primary_Contact__c IN :parentsIds
+                WHERE Primary_Contact__c IN :contactIds
             ];
-            result.addAll(relatedOpportunities);
+            result.addAll((List<SObject>) relatedOpportunities);
 
-            List<SObject> relatedRecurringDonations = [
-                SELECT Name
+            List<npe03__Recurring_Donation__c> relatedRecurringDonations = [
+                SELECT Name, npe03__Contact__c
                 FROM npe03__Recurring_Donation__c
-                WHERE npe03__Contact__c IN :parentsIds
+                WHERE npe03__Contact__c IN :contactIds
             ];
-            result.addAll(relatedRecurringDonations);
+            result.addAll((List<SObject>) relatedRecurringDonations);
 
             return (new Map<Id, SObject>(result)).values();
         }
     }
 
     /*******************************************************************************************************
-    * @description Class that validates the children of the Contacts being deleted
+    * @description Class that validates the children of the deleted Contacts.
     ********************************************************************************************************/
     class ContactCascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
 
         /*******************************************************************************************************
-        * @description validates the children of the Contact.
-        * @param List<Contact> The Accounts to delete.
-        * @param List<SObject> The children to validate.
-        * @return List<Object> Valid children records that can be deleted.
+        * @description validates the children of the Contacts.
+        * @param List<Contact> The deleted Contacts.
+        * @param List<SObject> The deleted Contacts children to validate.
+        * @return List<Object> The deleted Contacts children that can be deleted.
         ********************************************************************************************************/
-        public List<SObject> validateDeletion(List<Contact> parents, List<SObject> children) {
+        public List<SObject> validateDeletion(List<Contact> deletedContacts, List<SObject> children) {
             List<SObject> validChildren = new List<SObject>();
 
-            for(Contact parent : parents) {
-                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Firstname + ' ' + parent.LastName);
+            for(Contact deletedContact : deletedContacts) {
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(deletedContact.Firstname + ' ' + deletedContact.LastName);
                 for (SObject child : children) {
                     Boolean isValidChild = true;
                     
-                    if (isClosedWonOpportunity(child, parent.Id)) {
+                    if (isClosedWonOpportunity(child, deletedContact.Id)) {
                         Opportunity closedWonOpportunity = (Opportunity) child;
                         error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                         isValidChild = false;
                     }
-                    if (isOrganizationalOpportunity(child, parent.Id)) {
+                    if (isOrganizationalOpportunity(child, deletedContact.Id)) {
                         Opportunity organizationalOpportunity = (Opportunity) child;
                         error.addChildError(Label.OrganizationalOpportunities, organizationalOpportunity.Id, organizationalOpportunity.Name);
                         isValidChild = false;
                     }
-                    if (isCase(child, parent.Id)) {
+                    if (isCase(child, deletedContact.Id)) {
                         Case caseRecord = (Case) child;
                         error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), caseRecord.Id, caseRecord.CaseNumber);
                         isValidChild = false;
@@ -349,7 +350,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
                 String errorMessage = error.getMessage();
                 if (String.isNotBlank(errorMessage)) {
-                    parent.addError(errorMessage, false);
+                    deletedContact.addError(errorMessage, false);
                 }
             }
 
@@ -359,41 +360,41 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         /*******************************************************************************************************
         * @description Checks if the record is a Closed Won Opportunity.
         * @param SObject The child record.
-        * @param Id The Id of the parent record.
+        * @param Id The Id of the Contact record.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
+        private Boolean isClosedWonOpportunity(SObject childRecord, Id contactId) {
             return (
-                record instanceof Opportunity && 
-                ((Opportunity) record).Primary_Contact__c == parentId &&
-                ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
+                childRecord instanceof Opportunity && 
+                ((Opportunity) childRecord).Primary_Contact__c == contactId &&
+                ((Opportunity) childRecord).IsClosed && ((Opportunity) childRecord).IsWon
             );
         }
 
         /*******************************************************************************************************
         * @description Checks if the record is an Organizational Opportunity
         * @param SObject The child record.
-        * @param Id The Id of the parent record.
+        * @param Id The Id of the Contact record.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isOrganizationalOpportunity(SObject record, Id parentId) {
+        private Boolean isOrganizationalOpportunity(SObject childRecord, Id ContactId) {
             return (
-                record instanceof Opportunity && 
-                ((Opportunity) record).Primary_Contact__c == parentId &&
-                ((Opportunity) record).AccountId != ((Opportunity) record).Primary_Contact__r.AccountId
+                childRecord instanceof Opportunity && 
+                ((Opportunity) childRecord).Primary_Contact__c == ContactId &&
+                ((Opportunity) childRecord).AccountId != ((Opportunity) childRecord).Primary_Contact__r.AccountId
             );
         }
 
         /*******************************************************************************************************
         * @description Checks if the record is a Case.
         * @param SObject The child record.
-        * @param Id The Id of the parent record.
+        * @param Id The Id of the Contact record.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isCase(SObject record, Id parentId) {
+        private Boolean isCase(SObject childRecord, Id contactId) {
             return (
-                record instanceof Case && 
-                ((Case) record).ContactId == parentId
+                childRecord instanceof Case && 
+                ((Case) childRecord).ContactId == contactId
             );
         }
     }
@@ -404,52 +405,52 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     class AccountCascadeDeleteLoader implements CDL_CascadeDeleteLookups.CascadeDeleteLoader {
         
         /*******************************************************************************************************
-        * @description Retrieves the children of the Accounts to delete.
+        * @description Retrieves the Cases and Opportunities of the deleted Accounts.
         * @param Set<Id> The Ids of the Accounts to delete.
-        * @return List<SObject> The Account Cases and Opportunities.
+        * @return List<SObject> The deleted Accounts' Cases and Opportunities.
         ********************************************************************************************************/
-        public List<SObject> load(Set<Id> parentsIds) {
+        public List<SObject> load(Set<Id> accountsIds) {
             List<SObject> result = new List<SObject>();
 
-            List<SObject> relatedCases = [
-                SELECT CaseNumber
+            List<Case> relatedCases = [
+                SELECT CaseNumber, AccountId
                 FROM Case
-                WHERE AccountId IN :parentsIds
+                WHERE AccountId IN :accountsIds
             ];
-            result.addAll(relatedCases);
+            result.addAll((List<SObject>) relatedCases);
 
-            List<SObject> relatedOpportunities = [
+            List<Opportunity> relatedOpportunities = [
                 SELECT Name, AccountId, IsWon, IsClosed
                 FROM Opportunity
-                WHERE AccountId IN :parentsIds
+                WHERE AccountId IN :accountsIds
             ];
-            result.addAll(relatedOpportunities);
+            result.addAll((List<SObject>) relatedOpportunities);
 
             return (new Map<Id, SObject>(result)).values();
         }
     }
 
     /*******************************************************************************************************
-    * @description Class that validates the children of the Account to delete
+    * @description Class that validates the children of the Accounts to delete
     ********************************************************************************************************/
     class AccountCascadeDeleteValidator implements CDL_CascadeDeleteLookups.CascadeDeleteValidator {
 
         /*******************************************************************************************************
-        * @description validates the children of the Account.
-        * @param List<Account> The Accounts to delete.
-        * @param List<SObject> The children to validate.
-        * @return List<Object> Valid children records that can be deleted.
+        * @description validates the children of the Accounts.
+        * @param List<Account> The deleted Accounts.
+        * @param List<SObject> The deleted Accounts children to validate.
+        * @return List<Object> The deleted Accounts children that can be deleted.
         ********************************************************************************************************/
-        public List<SObject> validateDeletion(List<Account> parents, List<SObject> children) {
-            for(Account parent : parents) {
-                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(parent.Name);
+        public List<SObject> validateDeletion(List<Account> deletedAccounts, List<SObject> children) {
+            for(Account deletedAccount : deletedAccounts) {
+                CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(deletedAccount.Name);
 
                 for (SObject child : children) {
-                    if (isClosedWonOpportunity(child, parent.Id)) {
+                    if (isClosedWonOpportunity(child, deletedAccount.Id)) {
                         Opportunity closedWonOpportunity = (Opportunity) child;
                         error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
                     }
-                    if (isCase(child, parent.Id)) {
+                    if (isCase(child, deletedAccount.Id)) {
                         Case caseRecord = (Case) child;
                         error.addChildError(Case.SObjectType.getDescribe().getLabelPlural(), caseRecord.Id, caseRecord.CaseNumber);
                     }
@@ -457,7 +458,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
 
                 String errorMessage = error.getMessage();
                 if (String.isNotBlank(errorMessage)) {
-                    parent.addError(errorMessage, false);
+                    deletedAccount.addError(errorMessage, false);
                 }
             }
 
@@ -470,11 +471,11 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * @param Id The Id of the parent record.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isClosedWonOpportunity(SObject record, Id parentId) {
+        private Boolean isClosedWonOpportunity(SObject childRecord, Id accountId) {
             return (
-                record instanceof Opportunity && 
-                ((Opportunity) record).AccountId == parentId &&
-                ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
+                childRecord instanceof Opportunity && 
+                ((Opportunity) childRecord).AccountId == accountId &&
+                ((Opportunity) childRecord).IsClosed && ((Opportunity) childRecord).IsWon
             );
         }
 
@@ -484,10 +485,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * @param Id The Id of the parent record.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isCase(SObject record, Id parentId) {
+        private Boolean isCase(SObject childRecord, Id accountId) {
             return (
-                record instanceof Case && 
-                ((Case) record).ContactId == parentId
+                childRecord instanceof Case && 
+                ((Case) childRecord).AccountId == accountId
             );
         }
     }
