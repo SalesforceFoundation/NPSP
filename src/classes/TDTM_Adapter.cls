@@ -44,7 +44,7 @@ global virtual with sharing class TDTM_Adapter {
      *
      * @return List<Trigger_Handler__c> The TDTM configuration.
      */
-    global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords() {
+    global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
         return TDTM_Config_API.getDefaultRecords();
     }
 }

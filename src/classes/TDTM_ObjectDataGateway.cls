@@ -91,6 +91,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      */
     public static list<Trigger_Handler__c> listTH {
         get {
+
             Boolean useAdv = false;
             String apiNpspClass = '';
 
@@ -104,24 +105,25 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
                 // HEDA's TDTM config.
             }
 
-            if (listTH == null) {
-                if (useAdv) {
-                    //Using Adv config.
-                    Type classType = Type.forName(apiNpspClass);
-                    if (classType != null) {
-                        Object classInstance = classType.newInstance();
-                        if (classInstance instanceof TDTM_Adapter) {
-                            TDTM_Adapter API_NPSP = (TDTM_Adapter) classInstance;
-                            //We already have the configuration as tokens, so no need for any transformation.
-                            listTH = API_NPSP.getDefaultTdtmConfigNpspRecords();
-                        }
+            if(useAdv) {
+                //Using Adv config.
+                Type classType = Type.forName(apiNpspClass);
+                if (classType != null) {
+                    Object classInstance = classType.newInstance();
+                    if (classInstance instanceof TDTM_Adapter) {
+                        TDTM_Adapter API_NPSP = (TDTM_Adapter) classInstance;
+                        //We already have the configuration as tokens, so no need for any transformation.
+                        listTH = API_NPSP.getDefaultTdtmConfigNpspRecords(listTH);
                     }
-                } else {
-                    //Not Using Adv config.
+                }
+
+            } else {
+                if (listTH == null) {
                     listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
                             Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
                 }
             }
+
             return listTH;
         }
         set;
