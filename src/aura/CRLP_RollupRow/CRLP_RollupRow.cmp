@@ -5,7 +5,7 @@
     <aura:attribute name="activeRollupId" type="Object" description="The ID of the record to be set in the controller and bubbled up."/>
     <aura:attribute name="mode" type="String" description="The mode to be set in the controller and bubbled up depending on the choice made in the row."/>
 
-    <aura:registerEvent name="modeChanged" type="c:CRLP_ModeChanged"/>
+    <!--<aura:registerEvent name="modeChanged" type="c:CRLP_ModeChanged"/>-->
 
     <!--markup-->
     <tr class="slds-hint-parent">

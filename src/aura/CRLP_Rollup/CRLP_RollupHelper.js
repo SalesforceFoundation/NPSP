@@ -186,5 +186,56 @@
             }
         });
         $A.enqueueAction(action);
-    }
+    },
+    resetAllFields: function(cmp){
+
+        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        this.resetFields(cmp, detailObject, 'detail');
+
+        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        this.resetFields(cmp, summaryObject, 'summary');
+
+        var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+        this.resetFields(cmp, amountObject, 'amount');
+
+        var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+        this.resetFields(cmp, dateObject, 'date');
+    },
+    resetFields: function(cmp, object, context){
+
+        console.log("Fired field reset for context: "+context);
+        var test = cmp.get("v.objectDetails");
+        console.log(test);
+        var newFields = cmp.get("v.objectDetails")[object];
+        console.log(newFields);
+
+        if(context=='detail'){
+            cmp.set("v.detailFields", newFields);
+            console.log('detail fields reset');
+        } else if (context=='summary') {
+            cmp.set("v.summaryFields", newFields);
+        } else if (context=='date') {
+            cmp.set("v.dateFields", newFields);
+        } else if (context=='amount') {
+            cmp.set("v.amountFields", newFields);
+        }
+    },
+    resetSummaryObjects: function(cmp, detailObject){
+        //todo: add if Necesary check?
+        console.log('Fired summary object reset');
+        var labels = cmp.get("v.labels");
+        var newSummaryObjects;
+        console.log("detail object is " + detailObject);
+        if(detailObject == "Allocation__c"){
+            newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
+
+        } else {
+            //todo: add correct labels
+            newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
+                , {label: labels.contactLabel, name: 'Contact'}];
+        }
+        console.log(newSummaryObjects);
+        cmp.set("v.summaryObjects", newSummaryObjects);
+        console.log("End summary object reset");
+    },
 })

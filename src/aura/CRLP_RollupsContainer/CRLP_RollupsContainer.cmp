@@ -39,7 +39,7 @@
     <div class="slds-p-around--large">
         <!--BEGIN TITLE-->
         <lightning:layout>
-            <lightning:layoutItem mediumDeviceSize="{!v.width}" size="12">
+            <lightning:layoutItem largeDeviceSize="{!v.width}" size="12">
                 <lightning:layout horizontalAlign="spread">
                     <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="6" size="12">
                         <aura:if isTrue="{!v.isRollupsGrid}">

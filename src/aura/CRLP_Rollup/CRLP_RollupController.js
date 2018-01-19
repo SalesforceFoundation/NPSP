@@ -1,10 +1,7 @@
 ({
-    doInit:function(cmp, event, helper){
-        console.log('in the init, calling helper');
-        helper.setObjectAndFieldDependencies(cmp);
-    },
 
     changeMode: function (cmp, event, helper) {
+
         var mode = cmp.get("v.mode");
         console.log("Mode is " + mode);
         console.log("In changeMode");
@@ -15,7 +12,7 @@
             cmp.set("v.isReadOnly", true);
         }
         console.log('calling helper...');
-        helper.resetAllFields(cmp);
+        helper.setObjectAndFieldDependencies(cmp);
     },
 
     onModeChanged:function(cmp,event,helper){
@@ -42,10 +39,9 @@
     },
 
     changeDetailObject: function(cmp, event, helper){
-        //clear out everything else?
         //set new summary objects based on selected value
-        //var object = cmp.find("detailObjectSelect").get("v.value");
-        var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        var object = cmp.find("detailObjectSelect").get("v.value");
+        //var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
         console.log('object: '+object);
         helper.resetSummaryObjects(cmp, object);
 
@@ -57,10 +53,10 @@
     },
     changeSummaryField: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
-        //var detailField = cmp.find("detailFieldSelect").get("v.value");
-        //var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-        var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName")
+        var detailField = cmp.find("detailFieldSelect").get("v.value");
+        var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
+        //var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+        //var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName")
         helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
     },
 

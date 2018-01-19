@@ -3,6 +3,8 @@
         var action = cmp.get("c.setupRollups");
         console.log("in the init function");
 
+        //setup rollup records, filter group records, and operations
+        //also sets the rollups grid to display on page load
         action.setCallback(this, function(response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -57,6 +59,7 @@
     },
 
     displayFilterGroupsGrid: function(cmp, event, helper){
+        //sets the filter group grid to be displayed, resets the column labels, and changes the breadcrumbs
         cmp.set("v.isFilterGroupsGrid",true);
         var labels = cmp.get("v.labels");
         var cols = [labels.name
@@ -72,11 +75,12 @@
     },
 
     displayRollupsGrid: function(cmp, event, helper){
+        //sets the rollups grid to be displayed, resets the column labels, and changes the breadcrumbs
         cmp.set("v.isRollupsGrid",true);
         cmp.set("v.isFilterGroupsGrid",false);
         cmp.set("v.isRollupDetail",false);
         cmp.set("v.activeRollup", null);
-        //cmp.set("v.detailMode", null);
+        cmp.set("v.detailMode", null);
 
         var labels = cmp.get("v.labels");
 
@@ -95,9 +99,9 @@
     },
 
     handleRollupSelect: function(cmp, event, helper) {
-        //query using the active rollup ID to populate the full active rollup detail
+        //query using the active rollup ID to populate the full active rollup detail (after a check that it's not null)
+        //also switches the display to the detail view and sets the width for the buttons
         var activeRollupId = cmp.get("v.activeRollupId");
-        //first check that activeRollupId hasn't been nulled out
         if(activeRollupId != null){
             var action = cmp.get("c.getRollupById");
             action.setParams({ id : activeRollupId });
@@ -139,6 +143,7 @@
     },
     displayNewRollupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
+        //resets the active rollup to ensure there is no leftover data
         cmp.set("v.isRollupsGrid",false);
         cmp.set("v.isRollupDetail",true);
         cmp.set("v.detailMode", "create");
@@ -147,10 +152,12 @@
 
     //TODO: can these be combined?
     setModeEdit: function(cmp, event, helper) {
+        //changes the mode from the edit or clone buttons
         cmp.set("v.detailMode", "edit");
         console.log("In setModeEdit");
     },
     setModeClone: function(cmp, event, helper) {
+        //changes the mode from the edit or clone buttons
         cmp.set("v.detailMode", "clone");
         console.log("In setModeClone");
     },
