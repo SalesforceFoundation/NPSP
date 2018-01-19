@@ -68,19 +68,18 @@
             , labels.countOf+' '+labels.rollupLabelPlural
             ];
         cmp.set("v.columns", cols);
-        cmp.set("v.isRollupsGrid",false);
+        cmp.set("v.isRollupsGrid", false);
 
         var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");
-        cmp.set("v.breadcrumbs",[{label:rollupSummaryTitle,onclick:'!c.displayRollupsGrid'}])
     },
 
     displayRollupsGrid: function(cmp, event, helper){
         //sets the rollups grid to be displayed, resets the column labels, and changes the breadcrumbs
-        cmp.set("v.isRollupsGrid",true);
-        cmp.set("v.isFilterGroupsGrid",false);
-        cmp.set("v.isRollupDetail",false);
-        cmp.set("v.activeRollup", null);
+        cmp.set("v.isRollupsGrid", true);
+        cmp.set("v.isFilterGroupsGrid", false);
+        cmp.set("v.isRollupDetail", false);
         cmp.set("v.detailMode", null);
+        cmp.set("v.activeRollup", null);
 
         var labels = cmp.get("v.labels");
 
@@ -93,14 +92,15 @@
             , labels.active
         ];
         cmp.set("v.columns", cols);
-
-        cmp.set("v.breadcrumbs",null);
+        //checks if we're coming from the detail view; if already null the onchange won't fire
         cmp.set("v.activeRollupId", null);
     },
 
     handleRollupSelect: function(cmp, event, helper) {
-        //query using the active rollup ID to populate the full active rollup detail (after a check that it's not null)
-        //also switches the display to the detail view and sets the width for the buttons
+        /**called when the activeRollupId changes, specifically in the rollupRow
+         * queries active rollup ID to populate the full active rollup detail
+         * switches the display to the detail view and sets the width for the buttons
+         * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");
         if(activeRollupId != null){
             var action = cmp.get("c.getRollupById");
@@ -144,9 +144,10 @@
     displayNewRollupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
         //resets the active rollup to ensure there is no leftover data
-        cmp.set("v.isRollupsGrid",false);
-        cmp.set("v.isRollupDetail",true);
+        cmp.set("v.isRollupsGrid", false);
+        cmp.set("v.isRollupDetail", true);
         cmp.set("v.detailMode", "create");
+        //todo: check if this is necessary
         cmp.set("v.activeRollup", {});
     },
 

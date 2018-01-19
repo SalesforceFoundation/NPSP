@@ -36,7 +36,7 @@
                     cmp.set("v.objectDetails", response);
 
                     console.log('Before calling reset details');
-
+                    //need to reset fields to populate the selected objects
                     this.resetAllFields(cmp);
 
                     console.log('Called reset details');
@@ -81,13 +81,13 @@
 
         console.log("Fired field reset for context: "+context);
         var test = cmp.get("v.objectDetails");
-        console.log(test);
+        //console.log(test);
         var newFields = cmp.get("v.objectDetails")[object];
-        console.log(newFields);
+        //console.log(newFields);
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
-            console.log('detail fields reset');
+            //console.log('detail fields reset');
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
         } else if (context=='date') {
@@ -124,7 +124,6 @@
         console.log("Type is " + type);
         //need to get all summary fields, or we filter on a subset of all options
         var allFields = cmp.get("v.objectDetails")[summaryObject];
-        console.log(allFields);
         var newFields = [];
 
         //if type is null, no detail field is selected
@@ -138,7 +137,7 @@
                 }
             });
         }
-        console.log(newFields);
+
         if(newFields.length > 0){
             cmp.set("v.summaryFields", newFields);
         } else {
@@ -148,8 +147,9 @@
             cmp.set("v.summaryFields", newFields);
         }
     },
-    handleRollupSelect: function(cmp) {
+    resetRollup: function(cmp) {
 
+        //TODO: refactor this: consider caching rolllup, and review what is necessary
         var activeRollupId = cmp.get("v.activeRollup.Id");
         var action = cmp.get("c.getRollupById");
         action.setParams({id: activeRollupId});
@@ -161,7 +161,7 @@
                 cmp.set("v.activeRollup", response);
                 var activeRollupMap = cmp.get("v.activeRollup");
 
-                //need to reset all fields
+                //need to reset all fields to match the selected objects
                 this.resetAllFields(cmp);
 
                 //this converts values to a user-friendly format
@@ -205,13 +205,13 @@
 
         console.log("Fired field reset for context: "+context);
         var test = cmp.get("v.objectDetails");
-        console.log(test);
+        //console.log(test);
         var newFields = cmp.get("v.objectDetails")[object];
-        console.log(newFields);
+        //console.log(newFields);
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
-            console.log('detail fields reset');
+            //console.log('detail fields reset');
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
         } else if (context=='date') {
@@ -225,7 +225,6 @@
         console.log('Fired summary object reset');
         var labels = cmp.get("v.labels");
         var newSummaryObjects;
-        console.log("detail object is " + detailObject);
         if(detailObject == "Allocation__c"){
             newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
 
@@ -234,7 +233,6 @@
             newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
                 , {label: labels.contactLabel, name: 'Contact'}];
         }
-        console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
