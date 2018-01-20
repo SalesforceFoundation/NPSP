@@ -103,7 +103,9 @@
          * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");
         if(activeRollupId != null){
+            /*
             var action = cmp.get("c.getRollupById");
+
             action.setParams({ id : activeRollupId });
 
             action.setCallback(this, function(response) {
@@ -132,6 +134,7 @@
             });
 
             $A.enqueueAction(action);
+            */
 
             cmp.set("v.isRollupsGrid",false);
             cmp.set("v.isRollupDetail",true);

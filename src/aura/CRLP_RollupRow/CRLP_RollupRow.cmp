@@ -11,7 +11,7 @@
     <tr class="slds-hint-parent">
         <td>
             <div class="slds-truncate" title="{!v.rollup.rollupName}">
-                <a href="javascript:void(0);" onclick="{!c.setActiveRollup}" >
+                <a href="javascript:void(0);" onclick="{!c.setActiveRollupId}" >
                     {!v.rollup.rollupName}
                 </a>
             </div>

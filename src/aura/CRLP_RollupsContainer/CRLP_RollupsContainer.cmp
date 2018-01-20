@@ -21,6 +21,7 @@
     <!-- handleRollupSelect handles the bubbling up from the RollupRow; avoid setting activeRollupId elsewhere-->
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
 
+
     <!-- markup -->
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal--large slds-p-top--large">
@@ -30,7 +31,8 @@
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
         </lightning:breadcrumbs>
-        Detail Mode: {!v.detailMode}
+        Detail Mode: {!v.detailMode}<br/>
+        ActiveRollupId: {!v.activeRollupId}
 
     </div>
     <!--END BREADCRUMB-->
@@ -146,8 +148,7 @@
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom--large">
-            <!--TODO: should activeRollup be passed by value instead of reference, or cleared before returning?-->
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}" filterGroups="{!v.filterGroupList}"/>
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{!v.activeRollupId}" mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}" filterGroups="{!v.filterGroupList}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

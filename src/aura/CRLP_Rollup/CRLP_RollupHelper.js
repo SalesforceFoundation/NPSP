@@ -59,6 +59,30 @@
         }
     },
 
+    changeMode: function(cmp){
+        //this works like a doInit in this case; a doInit is not necessary
+        //we check to see if mode is null since the change handler is called when mode is cleared in the container
+        var mode = cmp.get("v.mode");
+        console.log(mode);
+        if(mode != null) {
+            console.log("Mode is " + mode);
+            console.log("In changeMode");
+            //set readonly fields if mode is View, else allow user to make changes
+            if(mode != "view"){
+                cmp.set("v.isReadOnly",false);
+            } else {
+                cmp.set("v.isReadOnly", true);
+            }
+            //this checks that fields are set; this action only needs to be done once per rollup
+            if($A.util.isEmpty(cmp.get("v.objectDetails"))){
+                this.setObjectAndFieldDependencies(cmp);
+            } else {
+                //TODO: this is what's causing the mode to change. there's something wrong with the change handler that seems to be blocking this.
+                //this.resetAllFields(cmp);
+            }
+        }
+    },
+
     resetSummaryObjects: function(cmp, detailObject){
         //todo: add if Necesary check?
         console.log('Fired summary object reset');
@@ -201,11 +225,12 @@
         var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
         this.resetFields(cmp, dateObject, 'date');
     },
+
     resetFields: function(cmp, object, context){
 
         console.log("Fired field reset for context: "+context);
         var test = cmp.get("v.objectDetails");
-        //console.log(test);
+        console.log("objectDetails: "+test);
         var newFields = cmp.get("v.objectDetails")[object];
         //console.log(newFields);
 

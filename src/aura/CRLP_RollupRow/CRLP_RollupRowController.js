@@ -23,7 +23,7 @@
 
     },
 
-    setActiveRollup: function(cmp, event, helper) {
+    setActiveRollupId: function(cmp, event, helper) {
         //changes the mode to edit and gets the rollupId to bubble up to the parent component
         var rollup = cmp.get("v.rollup");
         cmp.set("v.mode", "view");
