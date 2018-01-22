@@ -180,9 +180,13 @@ public class CRLP_Rollup {
         fiscalYrs = new CRLP_FiscalYears(this.useFiscalYear);
 
         // Get the rolled up value for each Rollup__mdt record
-        for (Rollup__mdt r : this.rollupsMdt) {
+        for (Integer ns=0, listSize=rollupsMdt.size(); ns<listSize; ns++) {
+            Rollup__mdt r = this.rollupsMdt[ns];
             Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
-            rtnValues.put(targetField.getName(), determineRollupValue(r, targetField));
+            Object val = determineRollupValue(r, targetField);
+            if (val != null) {
+                rtnValues.put(r.Summary_Field__r.QualifiedApiName, val);
+            }
         }
 
         return rtnValues;

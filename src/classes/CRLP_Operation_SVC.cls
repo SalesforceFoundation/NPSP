@@ -68,15 +68,17 @@ public class CRLP_Operation_SVC {
 
         Date dateValue, resultFieldDate;
         Datetime resultFieldDateTime;
-        Double amountValue = 0, resultFieldAmount = 0;
+        Double amountValue = null, resultFieldAmount = 0;
         String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
+        // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
+        // Since the Date is almost always the CloseDate field, we'll hard code this performance tweak.
         SObject dateSObject = detailSObject;
-        if (rollup.dateObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
-            dateSObject = oppSObject;
+        if (rollup.dateObject == oppObjectName && dateField == 'CloseDate') {
+            dateValue = oppSObject.CloseDate;
         }
-        if (dateField != null && dateSObject.get(dateField) != null) {
+        if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
             dateValue = (Date) dateSObject.get(dateField);
         }
 
@@ -92,10 +94,10 @@ public class CRLP_Operation_SVC {
 
         // Get the Amount value from the appropriate object
         SObject amtSObject = detailSObject;
-        if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.AmountObject) == Opportunity.SObjectType) {
-            amtSObject = oppSObject;
+        if (rollup.AmountObject == oppObjectName && amtField == 'Amount') {
+            amountValue = oppSObject.Amount;
         }
-        if (amtField != null && amtSObject.get(amtField) != null) {
+        if (amountValue == null && amtField != null && amtSObject.get(amtField) != null) {
             amountValue = (Double) amtSObject.get(amtField);
         }
 
@@ -127,6 +129,7 @@ public class CRLP_Operation_SVC {
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
                 Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
+
                 if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     // Only want to use < as the operator for the date comparison so it only retrieves the first
