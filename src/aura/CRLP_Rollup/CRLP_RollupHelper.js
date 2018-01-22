@@ -70,8 +70,10 @@
             //set readonly fields if mode is View, else allow user to make changes
             if(mode != "view"){
                 cmp.set("v.isReadOnly",false);
+                this.changeYearlyOperationsOptions(cmp);
             } else {
                 cmp.set("v.isReadOnly", true);
+                this.resetYearlyOperationsOptions(cmp);
             }
             //this checks that fields are set; this action only needs to be done once per rollup
             if($A.util.isEmpty(cmp.get("v.objectDetails"))){
@@ -81,6 +83,31 @@
                 //this.resetAllFields(cmp);
             }
         }
+    },
+
+    changeYearlyOperationsOptions: function(cmp){
+
+        var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+        //cmp.set(operation, cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
+        console.log(operation);
+        var readOnlyMap = cmp.get("v.readOnlyMap");
+        console.log(readOnlyMap);
+        //todo: is this ok for translation?
+        if (operation == 'All_Time') {
+            //disable fiscal year and integer
+            readOnlyMap["useFiscalYear"] = true;
+            readOnlyMap["integer"] = true;
+        } else if (operation == 'Years_Ago') {
+            //enable fiscal year and integer
+            readOnlyMap["useFiscalYear"] = false;
+            readOnlyMap["integer"] = false;
+        } else if (operation == 'Days_Back') {
+            //disable fiscal year and enable integer
+            readOnlyMap["useFiscalYear"] = true;
+            readOnlyMap["integer"] = false;
+        }
+        console.log("Read Only Map is ");
+        console.log(readOnlyMap);
     },
 
     resetSummaryObjects: function(cmp, detailObject){
@@ -189,11 +216,12 @@
                 this.resetAllFields(cmp);
 
                 //this converts values to a user-friendly format
+                //todo: determine if necessary and how to do this so that the selected value of the lightning select tags work
                 if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
-                    cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
+                    //cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
                 }
                 if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
-                    cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
+                    //cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
                 }
 
             }
@@ -261,4 +289,12 @@
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
+    resetYearlyOperationsOptions: function(cmp){
+        console.log("In reset yearly operations");
+        var readOnlyMap = cmp.get("v.readOnlyMap");
+        readOnlyMap["useFiscalYear"] = true;
+        readOnlyMap["integer"] = true;
+        //cmp.set(readOnlyMap, newMap);
+        console.log("complete yearly operations reset");
+    }
 })

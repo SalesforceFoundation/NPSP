@@ -114,7 +114,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                            {!v.labels.noRollups}
+                        {!v.labels.noRollups}
                     </ui:message>
                 </aura:set>
             </aura:if>
@@ -137,7 +137,7 @@
                 </table>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
-                            {!v.labels.noFilterGroups}
+                        {!v.labels.noFilterGroups}
                     </ui:message>
                 </aura:set>
             </aura:if>

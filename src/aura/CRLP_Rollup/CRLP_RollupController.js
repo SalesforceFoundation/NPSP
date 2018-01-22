@@ -15,18 +15,18 @@
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    cmp.set("v.activeRollup", response.getReturnValue());
-                    cmp.set("v.cachedRollup", response.getReturnValue());
+                    //note: the parsing is important to avoid a shared reference
+                    //todo: try to stringify on server side; only parse on client
+                    //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
+                    cmp.set("v.activeRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
+                    cmp.set("v.cachedRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
                     if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
-                        cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
+                        //cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
                     }
                     if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
-                        cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
+                        //cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
                     }
-                    cmp.set("v.isRollupsGrid", false);
-                    cmp.set("v.isRollupDetail", true);
-                    cmp.set("v.width", 8);
-                    helper.changeMode(cmp);
+                    //helper.changeMode(cmp);
                     //moved these into the callback so the slow load doesn't happen.
                     //need to consider an error message if the callback fails.
                     //the way this is now, if it fails, it'll stay on the grid cmp
@@ -47,29 +47,12 @@
             $A.enqueueAction(action);
 
         } else {
-            cmp.set("v.width", 12);
+
         }
     },
 
-/*
-    setActiveToCached:function(cmp, event, helper) {
-        console.log("in setActiveToCached");
-        var activeRollup = cmp.get("v.activeRollup");
-        console.log('Active Rollup: '+activeRollup);
-        cmp.set("v.cachedRollup",activeRollup);
-        console.log('Cached Rollup: '+cmp.get("v.cachedRollup"));
-        helper.changeMode(cmp);
-    },
-*/
-
     changeMode: function (cmp, event, helper) {
         helper.changeMode(cmp);
-    },
-
-    onModeChanged:function(cmp,event,helper){
-        console.log('heard ModeChanged event');
-        var mode = event.getParam('mode');
-        cmp.set("v.mode", mode);
     },
 
     setModeEdit: function(cmp, event, helper) {
@@ -87,20 +70,21 @@
         //resets mode to view to become display-only
         //also needs to reset rollup values to match what exists in the database
         console.log('in cancel');
+        cmp.set("v.mode", "view");
         var cachedRollup = cmp.get("v.cachedRollup");
-        console.log("Cached Rollup: "+cachedRollup);
+        console.log("Cached Rollup: ");
+        console.log(cachedRollup);
         cmp.set("v.activeRollup",cachedRollup);
         console.log("Active Rollup:");
         console.log(cmp.get("v.activeRollup"));
-        cmp.set("v.mode", "view");
         //helper.resetAllFields(cmp);
-        //helper.resetRollup(cmp);
     },
 
     onChangeDetailObject: function(cmp, event, helper){
-        console.log("in changedetailobject");
+        console.log("hitting changedetailobject");
         if(cmp.get("v.objectDetails") != null){
             if(cmp.get("v.activeRollup") != null) {
+                console.log("in changedetailobject function");
                 //set new summary objects based on selected value
                 var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
                 console.log('object: ' + object);
@@ -115,32 +99,44 @@
         }
     },
 
-    onChangeDetailField: function(cmp, event, helper){
-        if(cmp.get("v.objectDetails") != null){
-            if(cmp.get("v.activeRollup") != null){
-                //change summary fields to match available detail field types + existing summary object
-                console.log('in change summary field');
-                //var detailField = cmp.find("detailFieldSelect").get("v.value");
-                //var summaryObject = cmp.find("summaryObjectSelect").get("v.value");
-                var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-                console.log("Detail Field: "+detailField);
-                var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName")
-                console.log("Summary Field: "+summaryObject);
-                helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
-            }
+    changeSummaryFields: function(cmp, event, helper){
+        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null){
+            //change summary fields to match available detail field types + existing summary object
+            console.log('in change summary field');
+            var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName")
+            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
         }
     },
 
-    changeAmountObject: function(cmp, event, helper){
+    onChangeAmountObject: function(cmp, event, helper){
         //change amount fields to match new summary object + existing detailField
-        var object = cmp.find("amountObjectSelect").get("v.value");
-        helper.resetFields(cmp, object, 'amount');
+        console.log('HITTING CHANGEAMOUNTOBJECT FUNCTION');
+        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            console.log('In onChangeAmount FUNCTION');
+            var object = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+            helper.resetFields(cmp, object, 'amount');
+        }
     },
-    changeDateObject: function(cmp, event, helper){
+    onChangeDateObject: function(cmp, event, helper){
         console.log('HITTING CHANGEDATEOBJECT FUNCTION');
-        //change date fields to match new summary object + existing detailField
-        var object = cmp.find("dateObjectSelect").get("v.value");
-        helper.resetFields(cmp, object, 'date');
+        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            //change date fields to match new summary object + existing detailField
+            console.log('In onChangeDateObject FUNCTION');
+            var object = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+            helper.resetFields(cmp, object, 'date');
+        }
     },
+    onChangeOperation: function(cmp, event, helper){
+        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            var operation = cmp.get("v.activeRollup.Operation__c");
+        }
+    },
+    onChangeYearlyOperation: function(cmp, event, helper){
+        console.log('HITTING CHANGEYEARLYOBJECT FUNCTION');
+        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            helper.changeYearlyOperationsOptions(cmp);
+        }
+    }
 
 })

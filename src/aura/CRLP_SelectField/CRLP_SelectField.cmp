@@ -7,8 +7,9 @@
     <aura:attribute name="apiName" type="String" description="API name of the selected entity"/>
     <aura:attribute name="placeholder" type="String"/>
     <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
+    <aura:attribute name="mediumDeviceSize" type="Integer" default="6" description="Controls the number of items per row on a medium device"/>
 
-    <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
+    <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
         <aura:if isTrue="{!v.isReadOnly}">
             <lightning:input aura:id="{!v.auraId + 'View'}"
                              label="{!v.fieldName}"
@@ -22,7 +23,6 @@
                                   name="{!v.fieldName}"
                                   value="{!v.apiName}"
                                   required="true">
-                    <!--onchange="{!c.changeSummaryField}"-->
                     <aura:if isTrue="{!v.hasNullOption}">
                         <option value="null" text="{!v.placeholder}" selected="{!null == v.apiName}"/>
                     </aura:if>

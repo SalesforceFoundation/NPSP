@@ -56,7 +56,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
     */
     public class FilterGroupTableItem{
-        @AuraEnabled public String filterGroupName;
+        @AuraEnabled public String label;
         @AuraEnabled public String description;
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
@@ -157,7 +157,7 @@ public with sharing class CRLP_RollupUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterGroupTableItem item = new FilterGroupTableItem();
 
-            item.filterGroupName = mdtList[i].MasterLabel;
+            item.label = mdtList[i].MasterLabel;
             item.name = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();

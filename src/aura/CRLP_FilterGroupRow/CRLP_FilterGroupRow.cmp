@@ -6,9 +6,9 @@
     <!--markup-->
     <tr class="slds-hint-parent">
         <td>
-            <div class="slds-truncate" title="{!v.filterGroup.filterGroupName}">
+            <div class="slds-truncate" title="{!v.filterGroup.label}">
                 <!--<a href="javascript:void(0);" onclick="{!c.clickLink}" data-id="{!v.filterGroup.relatedId}"></a>-->
-                    {!v.filterGroup.filterGroupName}
+                    {!v.filterGroup.label}
             </div>
         </td>
         <td>

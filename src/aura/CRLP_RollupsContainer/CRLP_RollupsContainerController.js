@@ -98,44 +98,10 @@
 
     handleRollupSelect: function(cmp, event, helper) {
         /**called when the activeRollupId changes, specifically in the rollupRow
-         * queries active rollup ID to populate the full active rollup detail
          * switches the display to the detail view and sets the width for the buttons
          * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");
         if(activeRollupId != null){
-            /*
-            var action = cmp.get("c.getRollupById");
-
-            action.setParams({ id : activeRollupId });
-
-            action.setCallback(this, function(response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    cmp.set("v.activeRollup", response.getReturnValue());
-                    var activeRollupMap = cmp.get("v.activeRollup");
-                    if(!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
-                        cmp.set("v.activeRollup.Yearly_Operation_Type__c",cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
-                    }
-                    if(!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))){
-                        cmp.set("v.activeRollup.Operation__c",cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
-                    }
-                }
-                else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-                }
-            });
-
-            $A.enqueueAction(action);
-            */
-
             cmp.set("v.isRollupsGrid",false);
             cmp.set("v.isRollupDetail",true);
             cmp.set("v.width", 8);
