@@ -83,8 +83,8 @@ public class CRLP_Rollup_SVC {
         if (!cachedEmptyObjects.containsKey(objType)) {
             SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
             for (CRLP_Rollup rollup : rollups) {
-                for (Rollup__mdt r : rollup.rollupsMdt) {
-                    emptyObject.put(r.Summary_Field__r.QualifiedApiName, null);
+                for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                    emptyObject.put(rollup.rollupsMdt[ns].Summary_Field__r.QualifiedApiName, null);
                 }
             }
             cachedEmptyObjects.put(objType, emptyObject);
@@ -108,7 +108,8 @@ public class CRLP_Rollup_SVC {
                 List<CRLP_Rollup> rollups) {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
-            for (Rollup__mdt r : rollup.rollupsMdt) {
+            for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                Rollup__mdt r = rollup.rollupsMdt[ns];
                 Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());

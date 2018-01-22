@@ -125,7 +125,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
             // Filter out primary contacts and set the sort order to Account, Contact, Opp
             query += (query.endsWith(' WHERE ') ? '' : ' AND ') + 'IsPrimary = False ';
-            query += ' ORDER BY Contact.AccountId, ContactId, OpportunityId ';
+            query += ' ORDER BY Contact.AccountId, ContactId, Opportunity.CreatedDate ASC ';
 
             UTIL_Debug.debug(LoggingLevel.WARN, '>> LDV Batch Query =' + query);
 

@@ -64,7 +64,7 @@ public class CMT_FilterRuleEvaluation_SVC {
         // Build a unique key of a concatenation of the Id's of all the detail rows.
         String cacheKey = filterGroupId + '.';
         for (SObject record : detailRows) {
-            cacheKey += (String)record.get('Id');
+            cacheKey += record.Id;
         }
         // If this set of detail rows has already been evaluated for this filter group, return the cached result
         if (cachedFilterEvalResults.containsKey(cacheKey)) {

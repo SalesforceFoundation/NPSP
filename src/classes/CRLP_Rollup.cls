@@ -178,7 +178,6 @@ public class CRLP_Rollup {
         // Instantiate this with the first Rollup__mdt record. All records have the same
         // value in the Use_Fiscal_Year__c field.
         fiscalYrs = new CRLP_FiscalYears(this.useFiscalYear);
-        UTIL_Debug.debug('> Rollup=' + this);
 
         // Get the rolled up value for each Rollup__mdt record
         for (Rollup__mdt r : this.rollupsMdt) {
@@ -201,9 +200,8 @@ public class CRLP_Rollup {
 
         CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
-        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
-                '/' + fldType + ' for ' + operation);
-
+//        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
+//                '/' + fldType + ' for ' + operation);
 
         // ================================================================
         // Yearly Operation Type - Get the Sum/Min/Max for the specified number of years back to use
@@ -222,7 +220,7 @@ public class CRLP_Rollup {
                 maxForSpecifiedYear += minByYear.get(yrString);
                 countForSpecifiedYear += countByYear.get(yrString);
             }
-            CRLP_Debug_UTIL.amendLastCurrentRollupState('Yr=' + yrString + ' / Sum=' + sumForSpecifiedYear);
+//            CRLP_Debug_UTIL.amendLastCurrentRollupState('Yr=' + yrString + ' / Sum=' + sumForSpecifiedYear);
         }
 
         // ================================================================
@@ -311,7 +309,7 @@ public class CRLP_Rollup {
             } else {
                 if (bestYr == null || fldType == SoapType.STRING) {
                     resultValue = bestYr;
-                } else /*if (fldType == SoapType.DOUBLE)*/ {
+                } else {
                     resultValue = Integer.valueOf(bestYr);
                 }
             }
@@ -369,7 +367,7 @@ public class CRLP_Rollup {
             }
         }
 
-        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
+//        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }
 }

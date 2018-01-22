@@ -124,14 +124,19 @@ public class CRLP_Operation_SVC {
 
             Object resultVal = (rollup.detailObject == oppObjectName ?
                     oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
-            for (Rollup__mdt r : rollup.rollupsMdt) {
+            for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
                 if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
+                    // Only want to use < as the operator for the date comparison so it only retrieves the first
+                    // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LAST && (dateValue > rollup.maxDate || rollup.maxDate == null)) {
+                } else if (operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
                     // Operation = LAST (always based on a date)
+                    // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
+                    // result value from whatever record makes up the 'last' record' by date
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {

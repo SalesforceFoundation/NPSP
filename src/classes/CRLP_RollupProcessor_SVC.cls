@@ -204,6 +204,15 @@ public class CRLP_RollupProcessor_SVC {
         }
 
         String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds);
+
+        // Force the details query to sort by Ascending CreatedDate so that the records are process
+        // in the order in which they were created in the database. Thus the 'first' is truly the first
+        // and the last is truly the last.
+        if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
+            detailsQuery += ', CreatedDate ASC';
+        } else {
+            detailsQuery += ' ORDER BY CreatedDate ASC';
+        }
         return database.query(detailsQuery);
     }
 
