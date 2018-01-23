@@ -35,6 +35,8 @@
                     var response = response.getReturnValue();
                     cmp.set("v.objectDetails", response);
 
+                    this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
+
                     console.log('Before calling reset details');
                     //need to reset fields to populate the selected objects
                     this.resetAllFields(cmp);
@@ -81,10 +83,8 @@
             }
             //this checks that fields are set; this action only needs to be done once per rollup
             if($A.util.isEmpty(cmp.get("v.objectDetails"))){
+                console.log("before set object field dependencies");
                 this.setObjectAndFieldDependencies(cmp);
-            } else {
-                //TODO: this is what's causing the mode to change. there's something wrong with the change handler that seems to be blocking this.
-                //this.resetAllFields(cmp);
             }
         }
     },
@@ -140,9 +140,7 @@
 
         console.log("Fired field reset for context: "+context);
         var test = cmp.get("v.objectDetails");
-        //console.log(test);
         var newFields = cmp.get("v.objectDetails")[object];
-        //console.log(newFields);
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
@@ -170,39 +168,48 @@
         this.resetFields(cmp, dateObject, 'date');
     },
     filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
-        //loop over all detail fields to get the type of selected field
-        var detailFields = cmp.get("v.detailFields");
-        console.log(detailFields);
-        var type;
-        for(var i=0; i<detailFields.length; i++){
-            if(detailFields[i].name == detailField){
-                type = detailFields[i].type;
-                break;
-            }
-        }
-        //TODO: maybe check if type is the same to see if need to filter?
-        console.log("Type is " + type);
+
         //need to get all summary fields, or we filter on a subset of all options
         var allFields = cmp.get("v.objectDetails")[summaryObject];
         var newFields = [];
 
-        //if type is null, no detail field is selected
-        if(type==undefined || type==null){
-            newFields = allFields;
-        } else{
-            allFields.forEach(function(field){
-                var datatype = field.type;
-                if(datatype==type){
-                    newFields.push(field);
-                }
-            });
-        }
+        //checks if summary field is set
+        if(allFields != undefined) {
 
-        if(newFields.length > 0){
-            cmp.set("v.summaryFields", newFields);
+            //loop over all detail fields to get the type of selected field
+            var detailFields = cmp.get("v.detailFields");
+            console.log(detailFields);
+            var type;
+            for (var i = 0; i < detailFields.length; i++) {
+                if (detailFields[i].name == detailField) {
+                    type = detailFields[i].type;
+                    break;
+                }
+            }
+            //TODO: maybe check if type is the same to see if need to filter?
+            console.log("Type is " + type);
+
+            //if type is null, no detail field is selected
+            if (type == undefined || type == null) {
+                newFields = allFields;
+            } else {
+                allFields.forEach(function (field) {
+                    var datatype = field.type;
+                    if (datatype == type) {
+                        newFields.push(field);
+                    }
+                });
+            }
+
+            if (newFields.length > 0) {
+                cmp.set("v.summaryFields", newFields);
+            } else {
+                //TODO: get/set better label messaging; this would need tooltip help
+                //var na = cmp.get("v.labels.na");
+                newFields = [{name: 'None', label: "No eligible fields found."}];
+                cmp.set("v.summaryFields", newFields);
+            }
         } else {
-            //TODO: get/set better label messaging; this would need tooltip help
-            //var na = cmp.get("v.labels.na");
             newFields = [{name: 'None', label: "No eligible fields found."}];
             cmp.set("v.summaryFields", newFields);
         }

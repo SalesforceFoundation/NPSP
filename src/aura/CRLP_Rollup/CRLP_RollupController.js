@@ -26,7 +26,8 @@
                     if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
                         //cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
                     }
-                    //helper.changeMode(cmp);
+                    //change mode needs to be fired here because the sibling change of mode isn't being registered
+                    helper.changeMode(cmp);
                     //moved these into the callback so the slow load doesn't happen.
                     //need to consider an error message if the callback fails.
                     //the way this is now, if it fails, it'll stay on the grid cmp
@@ -69,6 +70,7 @@
     onCancel: function(cmp, event, helper) {
         //resets mode to view to become display-only
         //also needs to reset rollup values to match what exists in the database
+        console.log("before changing view");
         cmp.set("v.mode", "view");
         console.log('in cancel');
         var cachedRollup = cmp.get("v.cachedRollup");
@@ -77,6 +79,7 @@
         console.log(cachedRollup);
         //json shenanigans to avoid shared reference
         cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
+        console.log('after changing rollup');
         //helper.resetAllFields(cmp);
     },
 
@@ -93,8 +96,9 @@
                 //set new detail fields based on new selected detail object
                 helper.resetFields(cmp, object, 'detail');
 
-                //TODO: what should we be doing with summary fields?
-                //likely: change to 'please select'
+                //remove summary fields since no summary object is selected
+                var newFields = [{name: 'None', label: "No eligible fields found."}];
+                cmp.set("v.summaryFields", newFields);
             }
         }
     },
@@ -106,11 +110,12 @@
                 console.log('in change summary field');
                 var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
                 var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+                //todo: nulls are evaluating to strings here; do we need a null check?
                 if(summaryObject != null && detailField != null){
                     helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
                 } else {
                     //cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName","select");
-                    //cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName","select");
+                    cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
                 }
             }
         }

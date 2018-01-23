@@ -31,8 +31,8 @@
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
         </lightning:breadcrumbs>
-        Detail Mode: {!v.detailMode}<br/>
-        ActiveRollupId: {!v.activeRollupId}
+        <!--Detail Mode: {!v.detailMode}<br/>
+        ActiveRollupId: {!v.activeRollupId}-->
 
     </div>
     <!--END BREADCRUMB-->
