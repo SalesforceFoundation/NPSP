@@ -71,6 +71,10 @@
             if(mode != "view"){
                 cmp.set("v.isReadOnly",false);
                 this.changeYearlyOperationsOptions(cmp);
+                this.resetSummaryObjects(cmp,cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
+                if(!$A.util.isEmpty(cmp.get("v.objectDetails"))){
+                    this.resetAllFields(cmp);
+                }
             } else {
                 cmp.set("v.isReadOnly", true);
                 this.resetYearlyOperationsOptions(cmp);
@@ -129,7 +133,7 @@
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
-        cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+        //cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
         console.log("End summary object reset");
     },
     resetFields: function(cmp, object, context){
@@ -244,56 +248,7 @@
         });
         $A.enqueueAction(action);
     },
-    resetAllFields: function(cmp){
 
-        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
-        this.resetFields(cmp, detailObject, 'detail');
-
-        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-        this.resetFields(cmp, summaryObject, 'summary');
-
-        var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
-        this.resetFields(cmp, amountObject, 'amount');
-
-        var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
-        this.resetFields(cmp, dateObject, 'date');
-    },
-
-    resetFields: function(cmp, object, context){
-
-        console.log("Fired field reset for context: "+context);
-        var test = cmp.get("v.objectDetails");
-        console.log("objectDetails: "+test);
-        var newFields = cmp.get("v.objectDetails")[object];
-        //console.log(newFields);
-
-        if(context=='detail'){
-            cmp.set("v.detailFields", newFields);
-            //console.log('detail fields reset');
-        } else if (context=='summary') {
-            cmp.set("v.summaryFields", newFields);
-        } else if (context=='date') {
-            cmp.set("v.dateFields", newFields);
-        } else if (context=='amount') {
-            cmp.set("v.amountFields", newFields);
-        }
-    },
- /*   resetSummaryObjects: function(cmp, detailObject){
-        //todo: add if Necesary check?
-        console.log('Fired summary object reset');
-        var labels = cmp.get("v.labels");
-        var newSummaryObjects;
-        if(detailObject == "Allocation__c"){
-            newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
-
-        } else {
-            //todo: add correct labels
-            newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
-                , {label: labels.contactLabel, name: 'Contact'}];
-        }
-        cmp.set("v.summaryObjects", newSummaryObjects);
-        console.log("End summary object reset");
-    },*/
     resetYearlyOperationsOptions: function(cmp){
         console.log("In reset yearly operations");
         var readOnlyMap = cmp.get("v.readOnlyMap");

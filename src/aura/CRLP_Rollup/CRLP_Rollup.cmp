@@ -39,9 +39,16 @@
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
 
      activeRollup:<br/>
-    Detail_Field__r.QualifiedApiName:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
-    Detail_Field__r.Label: {!v.activeRollup.Detail_Field__r.Label}<br/>
-    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}
+    Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
+    Detail Field API Name:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
+    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Field API Name: {!v.activeRollup.Summary_Field__r.QualifiedApiName}<br/>
+    <br/>
+    cachedRollup:<br/>
+    Detail Object API Name:    {!v.cachedRollup.Detail_Object__r.QualifiedApiName}<br/>
+    Detail Field API Name:    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}<br/>
+    Summary Object API Name: {!v.cachedRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>
 
     <!-- markup -->
     <!--START FORM-->

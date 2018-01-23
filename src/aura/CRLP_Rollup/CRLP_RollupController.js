@@ -69,21 +69,21 @@
     onCancel: function(cmp, event, helper) {
         //resets mode to view to become display-only
         //also needs to reset rollup values to match what exists in the database
-        console.log('in cancel');
         cmp.set("v.mode", "view");
+        console.log('in cancel');
         var cachedRollup = cmp.get("v.cachedRollup");
-        console.log("Cached Rollup: ");
+        console.log("Cached Rollup summary obj: ");
+        console.log(cmp.get("v.cachedRollup.Summary_Object__r.QualifiedApiName"));
         console.log(cachedRollup);
-        cmp.set("v.activeRollup",cachedRollup);
-        console.log("Active Rollup:");
-        console.log(cmp.get("v.activeRollup"));
+        //json shenanigans to avoid shared reference
+        cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
         //helper.resetAllFields(cmp);
     },
 
     onChangeDetailObject: function(cmp, event, helper){
-        console.log("hitting changedetailobject");
-        if(cmp.get("v.objectDetails") != null){
-            if(cmp.get("v.activeRollup") != null) {
+        if(cmp.get("v.mode")!='view') {
+            console.log("hitting changedetailobject");
+            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
                 console.log("in changedetailobject function");
                 //set new summary objects based on selected value
                 var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
@@ -100,47 +100,57 @@
     },
 
     changeSummaryFields: function(cmp, event, helper){
-        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null){
-            //change summary fields to match available detail field types + existing summary object
-            console.log('in change summary field');
-            var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-            if(summaryObject != null && detailField != null){
-                helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
-            } else {
-                cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName",null);
-                cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
+        if(cmp.get("v.mode")!='view'){
+            if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null){
+                //change summary fields to match available detail field types + existing summary object
+                console.log('in change summary field');
+                var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+                var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+                if(summaryObject != null && detailField != null){
+                    helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+                } else {
+                    //cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName","select");
+                    //cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName","select");
+                }
             }
         }
     },
 
     onChangeAmountObject: function(cmp, event, helper){
-        //change amount fields to match new summary object + existing detailField
-        console.log('HITTING CHANGEAMOUNTOBJECT FUNCTION');
-        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-            console.log('In onChangeAmount FUNCTION');
-            var object = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
-            helper.resetFields(cmp, object, 'amount');
+        if(cmp.get("v.mode")!='view') {
+            //change amount fields to match new summary object + existing detailField
+            console.log('HITTING CHANGEAMOUNTOBJECT FUNCTION');
+            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+                console.log('In onChangeAmount FUNCTION');
+                var object = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+                helper.resetFields(cmp, object, 'amount');
+            }
         }
     },
     onChangeDateObject: function(cmp, event, helper){
-        console.log('HITTING CHANGEDATEOBJECT FUNCTION');
-        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-            //change date fields to match new summary object + existing detailField
-            console.log('In onChangeDateObject FUNCTION');
-            var object = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
-            helper.resetFields(cmp, object, 'date');
+        if(cmp.get("v.mode")!='view') {
+            console.log('HITTING CHANGEDATEOBJECT FUNCTION');
+            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+                //change date fields to match new summary object + existing detailField
+                console.log('In onChangeDateObject FUNCTION');
+                var object = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+                helper.resetFields(cmp, object, 'date');
+            }
         }
     },
     onChangeOperation: function(cmp, event, helper){
-        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-            var operation = cmp.get("v.activeRollup.Operation__c");
+        if(cmp.get("v.mode")!='view') {
+            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+                var operation = cmp.get("v.activeRollup.Operation__c");
+            }
         }
     },
     onChangeYearlyOperation: function(cmp, event, helper){
-        console.log('HITTING CHANGEYEARLYOBJECT FUNCTION');
-        if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-            helper.changeYearlyOperationsOptions(cmp);
+        if(cmp.get("v.mode")!='view') {
+            console.log('HITTING CHANGEYEARLYOBJECT FUNCTION');
+            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+                helper.changeYearlyOperationsOptions(cmp);
+            }
         }
     }
 
