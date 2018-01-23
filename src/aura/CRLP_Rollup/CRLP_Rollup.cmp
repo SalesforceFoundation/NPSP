@@ -7,7 +7,7 @@
     <aura:attribute name="cachedRollup" type="Map" description="The queried rollup with its original fields as they are on the server."/>
     <aura:attribute name="mode" type="String" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
-    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true}" description="Dependent disabling of fields"/>
+    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true}" description="Dependent disabling of fields" access="public" />
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public" />
     <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
@@ -37,15 +37,10 @@
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}" action="{!c.onChangeYearlyOperation}" />
 
-    useFiscalYear: {!v.readOnlyMap.useFiscalYear}<br/>
-    integer: {!v.readOnlyMap.integer}
-    <br/>
-    Operation Type:
-    {!v.activeRollup.Yearly_Operation_Type__c}
-    <br/>
-    <!--Cached Rollup:
-    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}
-    {!v.cachedRollup.Detail_Field__r.Label}-->
+     activeRollup:<br/>
+    Detail_Field__r.QualifiedApiName:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
+    Detail_Field__r.Label: {!v.activeRollup.Detail_Field__r.Label}<br/>
+    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}
     <!-- markup -->
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
@@ -77,6 +72,7 @@
                                             apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
                                             placeholder="Not Yet Selected"
                                             options="{!v.detailObjects}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -87,15 +83,16 @@
                                             placeholder="{!v.labels.na}"
                                             options="{!v.detailFields}"
                                             hasNullOption="true"
-
+                                            selectLabel="{!v.labels.selectOne}"
                         />
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                              auraId="summaryObject"
-                                              fieldName="{!v.labels.summaryObject}"
-                                              entityLabel="{!v.activeRollup.Summary_Object__r.Label}"
-                                              apiName="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
-                                              placeholder="{!v.labels.na}"
-                                              options="{!v.summaryObjects}"
+                                            auraId="summaryObject"
+                                            fieldName="{!v.labels.summaryObject}"
+                                            entityLabel="{!v.activeRollup.Summary_Object__r.Label}"
+                                            apiName="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
+                                            placeholder="{!v.labels.na}"
+                                            options="{!v.summaryObjects}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -105,6 +102,7 @@
                                             apiName="{!v.activeRollup.Summary_Field__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.summaryFields}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -114,6 +112,7 @@
                                             apiName="{!v.activeRollup.Filter_Group__r.DeveloperName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.filterGroups}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
                     </lightning:layout>
@@ -129,6 +128,7 @@
                                             placeholder="{!v.labels.na}"
                                             options="{!v.operations}"
                                             mediumDeviceSize="3"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
 
@@ -140,6 +140,7 @@
                                             placeholder="{!v.labels.na}"
                                             options="{!v.yearlyOperations}"
                                             mediumDeviceSize="3"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3" size="12">
@@ -149,7 +150,7 @@
                                              label="{!v.labels.integer}"
                                              value="{!v.activeRollup.Integer__c}"
                                              required="false"
-                                             readonly="{!v.readOnlyMap.useFiscalYear}"/>
+                                             readonly="{!v.readOnlyMap.integer}"/>
                         </lightning:layoutItem>
 
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3" size="12">
@@ -175,6 +176,7 @@
                                             apiName="{!v.activeRollup.Amount_Object__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.detailObjects}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
 
@@ -185,6 +187,7 @@
                                             apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.amountFields}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
 
@@ -195,6 +198,7 @@
                                             apiName="{!v.activeRollup.Date_Object__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.detailObjects}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
 
@@ -205,6 +209,7 @@
                                             apiName="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.dateFields}"
+                                            selectLabel="{!v.labels.selectOne}"
 
                         />
 

@@ -106,13 +106,16 @@
             readOnlyMap["useFiscalYear"] = true;
             readOnlyMap["integer"] = false;
         }
+        cmp.set("v.readOnlyMap",readOnlyMap);
         console.log("Read Only Map is ");
-        console.log(readOnlyMap);
+        console.log(readOnlyMap.useFiscalYear);
+        console.log(readOnlyMap.integer);
     },
 
     resetSummaryObjects: function(cmp, detailObject){
         //todo: add if Necesary check?
         console.log('Fired summary object reset');
+        console.log('TEST');
         var labels = cmp.get("v.labels");
         var newSummaryObjects;
         console.log("detail object is " + detailObject);
@@ -126,6 +129,9 @@
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
+        //bb shenanigans
+        cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+        console.log(cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName"));
         console.log("End summary object reset");
     },
     resetFields: function(cmp, object, context){
@@ -273,7 +279,7 @@
             cmp.set("v.amountFields", newFields);
         }
     },
-    resetSummaryObjects: function(cmp, detailObject){
+ /*   resetSummaryObjects: function(cmp, detailObject){
         //todo: add if Necesary check?
         console.log('Fired summary object reset');
         var labels = cmp.get("v.labels");
@@ -288,7 +294,7 @@
         }
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
-    },
+    },*/
     resetYearlyOperationsOptions: function(cmp){
         console.log("In reset yearly operations");
         var readOnlyMap = cmp.get("v.readOnlyMap");

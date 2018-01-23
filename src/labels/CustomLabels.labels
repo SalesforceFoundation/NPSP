@@ -6660,6 +6660,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Power of Us Hub</value>
     </labels>
     <labels>
+        <fullName>stgSelectOne</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgSelectOne</shortDescription>
+        <value>Select one</value>
+    </labels>
+    <labels>
         <fullName>stgTools</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

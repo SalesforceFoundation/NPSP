@@ -6,6 +6,7 @@
     <aura:attribute name="entityLabel" type="String" description="Label of the selected entity" />
     <aura:attribute name="apiName" type="String" description="API name of the selected entity"/>
     <aura:attribute name="placeholder" type="String"/>
+    <aura:attribute name="selectLabel" type="String"/>
     <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
     <aura:attribute name="mediumDeviceSize" type="Integer" default="6" description="Controls the number of items per row on a medium device"/>
 
@@ -18,11 +19,13 @@
                              readonly="true"
                              placeholder="{!v.placeholder}"/>
             <aura:set attribute="else">
+                {!v.apiName}
                 <lightning:select aura:id="{!v.auraId + 'Select'}"
                                   label="{!v.fieldName}"
                                   name="{!v.fieldName}"
                                   value="{!v.apiName}"
                                   required="true">
+                    <option value="null" text="{!v.selectLabel}"/>
                     <aura:if isTrue="{!v.hasNullOption}">
                         <option value="null" text="{!v.placeholder}" selected="{!null == v.apiName}"/>
                     </aura:if>

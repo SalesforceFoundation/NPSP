@@ -319,6 +319,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
+                'selectOne' => Label.stgSelectOne,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),

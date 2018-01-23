@@ -1808,6 +1808,7 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgSelectOne</members>
         <members>stgTools</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
