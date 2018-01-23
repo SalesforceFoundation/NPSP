@@ -162,7 +162,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Contact.SObjectType);
 
                 // Get all parent records to be processed by this batch iteration, being sure to include the
-                // last parent id processed by the previous batch
+                // last parent id processed by the previous batch.
                 Set<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'ContactId');
                 if (this.currentContactRecordId != null) {
                     parentIds.add(this.currentContactRecordId);
@@ -170,7 +170,16 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
                 // Get the Summary (target) records for the current set of Detail Records
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+
+                // Note: The result of this query will not force the currentContactRecordId to the first record in the
+                // collection. That is required for the stateful rollups to work. To work around this, we'll manually
+                // re-sequence the result to get the needed record first
                 List<SObject> summaryRecords = database.query(soql);
+                if (this.currentContactRecordId != null) {
+                    summaryRecords = CRLP_Rollup_SVC.resequenceSummaryRecords(summaryRecords, this.currentContactRecordId);
+                } else {
+                    summaryRecords = CRLP_Rollup_SVC.resequenceSummaryRecords(summaryRecords, detailRecords[0].ContactId);
+                }
 
                 // Call the method to do the actual rollups. This returns only records that require updating
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
@@ -198,7 +207,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Account.SObjectType);
 
                 // Get all parent records to be processed by this batch iteration, being sure to include the
-                // last parent id processed by the previous batch
+                // last parent id processed by the previous batch.
                 Set<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'Contact.AccountId');
                 if (this.currentAccountRecordId != null) {
                     parentIds.add(this.currentAccountRecordId);

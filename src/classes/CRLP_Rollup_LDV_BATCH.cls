@@ -145,12 +145,14 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
 
             // Get all parent records to be processed by this batch iteration, being sure to include the
             // last parent id processed by the previous batch
-            Set<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField);
+            Set<Id> parentIds = new Set<Id>();
             if (this.currentParentRecordId != null) {
                 parentIds.add(this.currentParentRecordId);
             }
+            parentIds.addAll(CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField));
+
             // Get the Summary (target) records for the current set of Detail Records
-            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
             List<SObject> summaryRecords = database.query(soql);
 
             // For the GAU object, strip out any detail records where the key field is NULL. This is better

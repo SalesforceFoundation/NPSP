@@ -207,4 +207,30 @@ public class CRLP_Rollup_SVC {
         } catch (Exception ex){ }
         return false;
     }
+
+    /**
+     * @description
+     * The result of this query will not force the currentContactRecordId to the first record in the
+     * collection. That is required for the stateful rollups to work. To work around this, we'll manually
+     * re-sequence the result to get the needed record first
+     * @param summaryRecords
+     * @param firsRecordId
+     * @return
+     */
+    public static List<SObject> resequenceSummaryRecords(List<SObject> summaryRecords, Id firsRecordId) {
+        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(summaryRecords);
+        if (mapOfSummaryRecords.containsKey(firsRecordId)) {
+            List<SObject> newSummaryRecords = new List<SObject>();
+            newSummaryRecords.add(mapOfSummaryRecords.get(firsRecordId));
+            for (SObject s : summaryRecords) {
+                if (s.Id != firsRecordId) {
+                    newSummaryRecords.add(s);
+                }
+            }
+            return newSummaryRecords;
+        }
+        return summaryRecords;
+    }
+
+    public class CRLP_Exception extends Exception {}
 }

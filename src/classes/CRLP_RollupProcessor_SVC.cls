@@ -119,7 +119,7 @@ public class CRLP_RollupProcessor_SVC {
 
         for (Integer ns=0, listSizeSum=summaryRecords.size(); ns<listSizeSum; ns++) {
             SObject parent = summaryRecords[ns];
-            Id parentId = (Id) parent.get('Id');
+            Id parentId = parent.Id;
 
             // Clear the list of stateful rollups any time the parent Id changes
             if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != parentId) {

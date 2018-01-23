@@ -167,8 +167,8 @@ public class CRLP_Operation_SVC {
 
         String theYear;
 
-        // Set the First/Last Date values
-        if (dateValue != null) {
+        // Set the First/Last Date values; excluding Opportunities with a null Date or a null Amount
+        if (dateValue != null && amountValue != null) {
             theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
             if (rollup.minDate == null || rollup.minDate > dateValue) {
                 rollup.minDate = dateValue;
