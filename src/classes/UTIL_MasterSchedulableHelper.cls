@@ -88,8 +88,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // Jobs are staggered by 10 minutes to hopefully improve performance when each of the jobs starts with a large query
                     defaultScheduledJobs.put('NPSP 01 - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'False'});
                     defaultScheduledJobs.put('NPSP 02 - Customizable Rollups - Contact Hard Credit', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'False'});
-                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Hard Credit Job 2', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'True'});
-                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Contact Hard Credit Job 2', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'True'});
+                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Hard Credit for Large Data Volumes', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'True'});
+                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Contact Hard Credit for Large Data Volumes', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'True'});
                     defaultScheduledJobs.put('NPSP 04 - Customizable Rollups - Soft Credits', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', SObjectType.Partial_Soft_Credit__c.getName(), 'True'});
                     defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Allocation Units', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName(), 'True'});
 
@@ -111,8 +111,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
                     jobsToAbort.add('NPSP 01 - Customizable Rollups - Account Hard Credit');
                     jobsToAbort.add('NPSP 02 - Customizable Rollups - Contact Hard Credit');
-                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account Hard Credit Job 2');
-                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Contact Hard Credit Job 2');
+                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account Hard Credit for Large Data Volumes');
+                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Contact Hard Credit for Large Data Volumes');
                     jobsToAbort.add('NPSP 04 - Customizable Rollups - Soft Credits');
                     jobsToAbort.add('NPSP 05 - Customizable Rollups - General Allocation Units');
                 }
