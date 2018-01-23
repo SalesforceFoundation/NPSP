@@ -36,11 +36,13 @@
     <aura:handler name="change" value="{!v.activeRollup.Date_Object__r.QualifiedApiName}" action="{!c.onChangeDateObject}" />
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}" action="{!c.onChangeYearlyOperation}" />
+    <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
 
      activeRollup:<br/>
     Detail_Field__r.QualifiedApiName:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
     Detail_Field__r.Label: {!v.activeRollup.Detail_Field__r.Label}<br/>
     Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}
+
     <!-- markup -->
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">

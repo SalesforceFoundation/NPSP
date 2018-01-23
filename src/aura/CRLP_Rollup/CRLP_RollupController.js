@@ -104,8 +104,13 @@
             //change summary fields to match available detail field types + existing summary object
             console.log('in change summary field');
             var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName")
-            helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+            if(summaryObject != null && detailField != null){
+                helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+            } else {
+                cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName",null);
+                cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
+            }
         }
     },
 

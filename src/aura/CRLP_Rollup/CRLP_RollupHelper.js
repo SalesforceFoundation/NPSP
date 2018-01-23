@@ -129,9 +129,7 @@
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
-        //bb shenanigans
         cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
-        console.log(cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName"));
         console.log("End summary object reset");
     },
     resetFields: function(cmp, object, context){
@@ -170,6 +168,7 @@
     filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
         //loop over all detail fields to get the type of selected field
         var detailFields = cmp.get("v.detailFields");
+        console.log(detailFields);
         var type;
         for(var i=0; i<detailFields.length; i++){
             if(detailFields[i].name == detailField){
