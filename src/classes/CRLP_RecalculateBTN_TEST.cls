@@ -42,7 +42,7 @@ private class CRLP_RecalculateBTN_TEST {
      */
     static testMethod void test_nopermissions() {
         // Insert a dummy Contact
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
         // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile

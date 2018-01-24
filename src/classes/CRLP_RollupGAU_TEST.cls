@@ -145,7 +145,7 @@ private class CRLP_RollupGAU_TEST {
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;

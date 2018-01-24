@@ -119,7 +119,7 @@ private class CMT_FilterRuleEvaluation_TEST {
     static testMethod void test_evaluateFilterRules() {
         mockFilterCMTValues();
 
-        Contact c = new Contact(FirstName = 'UNITTEST', LastName = 'UNITTEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, AccountId, FirstName, LastName FROM Contact LIMIT 1];
 

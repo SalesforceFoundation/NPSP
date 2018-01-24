@@ -164,18 +164,18 @@ private class CRLP_RollupSoftCredit_TEST {
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
 
         // Create two additional family members
-        Contact c2 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-1', AccountId = c.AccountId);
-        Contact c3 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-2', AccountId = c.AccountId);
+        Contact c2 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-1', AccountId = c.AccountId);
+        Contact c3 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-2', AccountId = c.AccountId);
 
         // Create one more Contact that is used to test filters
-        Contact c4 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-3');
+        Contact c4 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-3');
 
         insert new List<Contact>{ c2, c3, c4 };
 
