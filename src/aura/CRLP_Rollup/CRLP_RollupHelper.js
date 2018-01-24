@@ -154,12 +154,13 @@
         } else {
             //todo: add a better label
             newSummaryObjects = [{name: 'None', label: "No eligible objects found."}];
-            cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+            //cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
+
     resetFields: function(cmp, object, context){
 
         console.log("Fired field reset for context: "+context);
@@ -174,9 +175,12 @@
             cmp.set("v.detailFields", newFields);
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
-        } else if (context=='date') {
+        }
+        else if (context=='date') {
+            newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context=='amount') {
+            newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
             cmp.set("v.amountFields", newFields);
         }
     },
@@ -188,11 +192,32 @@
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         this.resetFields(cmp, summaryObject, 'summary');
 
-        var amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
-        this.resetFields(cmp, amountObject, 'amount');
+        //detail object is the provided object for amount fields because detail and amount object are ALWAYS the same
+        this.resetFields(cmp, detailObject, 'amount');
 
         var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
         this.resetFields(cmp, dateObject, 'date');
+    },
+    filterFieldsByType: function(cmp, typeList, allFields) {
+        //if type is null, no detail field is selected
+        console.log("filter fields by type function");
+        var newFields = [];
+
+        typeList.forEach(function(type){
+            if (type == undefined || type == null) {
+                newFields.push(allFields);
+            } else {
+                allFields.forEach(function (field) {
+                    var datatype = field.type;
+                    if (datatype == type) {
+                        newFields.push(field);
+                    }
+                });
+            }
+        });
+        console.log("newFields");
+        console.log(newFields);
+        return newFields;
     },
     filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
 
@@ -218,17 +243,10 @@
             //TODO: maybe check if type is the same to see if need to filter?
             console.log("Type is " + type);
 
-            //if type is null, no detail field is selected
-            if (type == undefined || type == null) {
-                newFields = allFields;
-            } else {
-                allFields.forEach(function (field) {
-                    var datatype = field.type;
-                    if (datatype == type) {
-                        newFields.push(field);
-                    }
-                });
-            }
+            newFields = this.filterFieldsByType(cmp, [type], allFields);
+
+            console.log("new fields returned");
+            console.log(newFields);
 
             if (newFields.length > 0) {
                 cmp.set("v.summaryFields", newFields);
@@ -242,6 +260,8 @@
             newFields = [{name: 'None', label: "No eligible fields found."}];
             cmp.set("v.summaryFields", newFields);
         }
+        //reset field to null regardless of summary object value
+        cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
     },
     resetRollup: function(cmp) {
 

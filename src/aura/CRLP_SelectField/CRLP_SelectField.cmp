@@ -9,6 +9,7 @@
     <aura:attribute name="selectLabel" type="String"/>
     <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
     <aura:attribute name="mediumDeviceSize" type="Integer" default="6" description="Controls the number of items per row on a medium device"/>
+    <aura:attribute name="objectLabel" type="String" default="" description="Optional parameter to concatenate the object label with the field labels"/>
 
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
         <aura:if isTrue="{!v.isReadOnly}">
@@ -30,7 +31,7 @@
                         <option value="null" text="{!v.placeholder}" selected="{!null == v.apiName}"/>
                     </aura:if>-->
                     <aura:iteration items="{!v.options}" var="option">
-                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.apiName}"/>
+                        <option value="{!option.name}" text="{!v.objectLabel+option.label}" selected="{!option.name == v.apiName}"/>
                     </aura:iteration>
                 </lightning:select>
             </aura:set>

@@ -95,13 +95,45 @@
 
                 //set new detail fields based on new selected detail object
                 helper.resetFields(cmp, object, 'detail');
-                if(object === 'null'){
+                //if(object === 'null'){
                     cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
-                }
+                //}
+                cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+                cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
+                cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
 
                 //remove summary fields since no summary object is selected
                 var newFields = [{name: 'None', label: "No eligible fields found."}];
                 cmp.set("v.summaryFields", newFields);
+                console.log("reset summary fields");
+
+                //reset amount fields to match detail
+                //TODO: reset entity label
+                var objLabel;
+                var detailObjects = cmp.get("v.detailObjects");
+
+                for(var i=0; i<detailObjects.length; i++){
+                    if(detailObjects[i].name == object){
+                        objLabel = detailObjects[i].label;
+                        break;
+                    }
+                }
+
+                //change detail object labels to correctly show selected detail object in amount field
+                cmp.set("v.activeRollup.Detail_Object__r.Label", objLabel);
+
+                //filter and reset amount fields
+                helper.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
+
+                //set date object label and api name based on the selected detail object then reset fields + selected value
+                if(object == 'npe01__OppPayment__c'){
+                    cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
+                    cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
+                } else {
+                    cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
+                    cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
+                }
+                helper.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
             }
         }
     },
@@ -124,7 +156,7 @@
         }
     },
 
-    onChangeAmountObject: function(cmp, event, helper){
+    /*onChangeAmountObject: function(cmp, event, helper){
         if(cmp.get("v.mode")!='view') {
             //change amount fields to match new summary object + existing detailField
             console.log('HITTING CHANGEAMOUNTOBJECT FUNCTION');
@@ -145,7 +177,7 @@
                 helper.resetFields(cmp, object, 'date');
             }
         }
-    },
+    },*/
     onChangeOperation: function(cmp, event, helper){
         console.log('HITTING CHANGEOPERATION FUNCTION');
         if(cmp.get("v.mode")!='view') {

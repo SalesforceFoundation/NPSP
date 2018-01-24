@@ -32,16 +32,16 @@
     <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}" action="{!c.onChangeDetailObject}" />
     <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}" action="{!c.changeSummaryFields}" />
     <aura:handler name="change" value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}" action="{!c.changeSummaryFields}" />
-    <aura:handler name="change" value="{!v.activeRollup.Amount_Object__r.QualifiedApiName}" action="{!c.onChangeAmountObject}" />
+   <!-- <aura:handler name="change" value="{!v.activeRollup.Amount_Object__r.QualifiedApiName}" action="{!c.onChangeAmountObject}" />
     <aura:handler name="change" value="{!v.activeRollup.Date_Object__r.QualifiedApiName}" action="{!c.onChangeDateObject}" />
-    <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
+--> <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}" action="{!c.onChangeYearlyOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
 
-    <!--activeRollup:<br/>
+    activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
-    Detail Field API Name:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
-    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Detail Field API Name:    {!v.activeRollup.Detail_Object__r.Label}<br/>
+    <!--Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
     Summary Field API Name: {!v.activeRollup.Summary_Field__r.QualifiedApiName}<br/>
     <br/>
     cachedRollup:<br/>
@@ -177,7 +177,7 @@
                             </aura:if>
                         </lightning:layoutItem>
 
-                        <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
+                        <!--<c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
                                             auraId="amountObject"
                                             fieldName="{!v.labels.amountObject}"
                                             entityLabel="{!v.activeRollup.Amount_Object__r.Label}"
@@ -186,7 +186,7 @@
                                             options="{!v.detailObjects}"
                                             selectLabel="{!v.labels.selectOne}"
 
-                        />
+                        />-->
 
                         <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
                                             auraId="amountField"
@@ -196,10 +196,11 @@
                                             placeholder="{!v.labels.na}"
                                             options="{!v.amountFields}"
                                             selectLabel="{!v.labels.selectOne}"
+                                            objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
 
                         />
 
-                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                        <!--<c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="dateObject"
                                             fieldName="{!v.labels.dateObject}"
                                             entityLabel="{!v.activeRollup.Date_Object__r.Label}"
@@ -208,7 +209,7 @@
                                             options="{!v.detailObjects}"
                                             selectLabel="{!v.labels.selectOne}"
 
-                        />
+                        />-->
 
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="dateField"
@@ -218,6 +219,7 @@
                                             placeholder="{!v.labels.na}"
                                             options="{!v.dateFields}"
                                             selectLabel="{!v.labels.selectOne}"
+                                            objectLabel="{!v.activeRollup.Date_Object__r.Label + ': '}"
 
                         />
 
