@@ -39,13 +39,20 @@
 */
 public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
-    /*******************************************************************************************************
-    * @description Stateful collection of Rollups to process
-    */
-    public List<CRLP_Rollup> statefulRollups;
-    public Id currentParentRecordId;
-    public Integer batchIteration = 0;
+    /** @description Stateful collection of CRLP_Rollup instances by Parent Id */
+    private Map<Id, List<CRLP_Rollup>> statefulRollupsById;
+
+    /** @description The last Parent Id processed by the batch job */
+    private Id lastParentIdProcessed;
+
+    /** @description Simple counters used to track state */
+    private Integer batchIteration = 0;
+    private Integer totalRecordsModified = 0;
+
+    /** @description The Summary Object Type this batch job will process */
     private SObjectType summaryObjectType;
+
+    /** @description Specified list of Summary (Account, Contact, or GAU) Id's to roll up */
     private List<Id> recordIds;
 
     /*******************************************************************************************************
@@ -55,7 +62,7 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
         this.summaryObjectType = objType;
 
         // Init the stateful rollups collection
-        this.statefulRollups = new List<CRLP_Rollup>();
+        this.statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
     }
 
     /*******************************************************************************************************
@@ -64,7 +71,7 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
     public CRLP_Rollup_LDV_BATCH(List<Id> recordIds) {
         this.summaryObjectType = recordIds[0].getSobjectType();
         this.recordIds = recordIds;
-        this.statefulRollups = new List<CRLP_Rollup>();
+        this.statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
     }
 
     /*******************************************************************************************************
@@ -145,15 +152,24 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
 
             // Get all parent records to be processed by this batch iteration, being sure to include the
             // last parent id processed by the previous batch
-            Set<Id> parentIds = new Set<Id>();
-            if (this.currentParentRecordId != null) {
-                parentIds.add(this.currentParentRecordId);
+            List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField);
+            if (this.lastParentIdProcessed != null) {
+                Set<Id> uniqueParentIds = new Set<Id>(parentIds);
+                if (!uniqueParentIds.contains(this.lastParentIdProcessed)) {
+                    parentIds.add(this.lastParentIdProcessed);
+                }
             }
-            parentIds.addAll(CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField));
+
+            Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
+            Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
 
             // Get the Summary (target) records for the current set of Detail Records
             String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
             List<SObject> summaryRecords = database.query(soql);
+
+            // Resequence the Parent (Summary) records to be in the exact order of the detail records
+            // using the defined parent Id
+            summaryRecords = CRLP_RollupProcessor_SVC.resequenceSummaryRecords(parentIds, summaryRecords);
 
             // For the GAU object, strip out any detail records where the key field is NULL. This is better
             // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
@@ -170,11 +186,16 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
-            this.currentParentRecordId = options.lastParentIdProcessed;
-            this.statefulRollups = options.rollups;
+            this.lastParentIdProcessed = options.lastParentIdProcessed;
+            this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
+            this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
+            this.statefulRollupsById.put(this.lastParentIdProcessed, options.mapOfRollupsByParentId.get(this.lastParentIdProcessed));
 
             // Handle dml on the records to be updated
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+            if (updatedRecords != null) {
+                this.totalRecordsModified += updatedRecords.size();
+            }
 
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
@@ -192,12 +213,13 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
 
         try {
             // Handle the final parent record in the LDV job
-            if (this.currentParentRecordId != null && this.statefulRollups.size() > 0) {
+            if (this.lastParentIdProcessed != null && this.statefulRollupsById.containsKey(this.lastParentIdProcessed)) {
                 // Build the processing options instance
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
+                options.rollups = this.statefulRollupsById.get(this.lastParentIdProcessed);
 
                 // Get the Summary (target) records for the final record to be processed
-                Set<Id> parentIds = new Set<Id>{ this.currentParentRecordId };
+                Set<Id> parentIds = new Set<Id>{ this.lastParentIdProcessed };
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds LIMIT 1';
                 SObject parent = database.query(soql);
 
@@ -207,6 +229,9 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
 
                 // Handle dml on the records to be updated
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
+                if (updatedRecord != null) {
+                    this.totalRecordsModified += 1;
+                }
             }
 
         } catch (Exception ex) {
@@ -226,8 +251,7 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
         options.parentObjType = this.summaryObjectType;
         options.detailObjType = Opportunity.SObjectType;
 
-        options.rollups = this.statefulRollups;
-        options.lastParentIdProcessed = this.currentParentRecordId;
+        options.mapOfRollupsByParentId = this.statefulRollupsById;
 
         if (this.summaryObjectType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();

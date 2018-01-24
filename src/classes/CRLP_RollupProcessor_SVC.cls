@@ -61,13 +61,13 @@ public class CRLP_RollupProcessor_SVC {
         * between various service methods with the rest of the processing options
         */
         public List<CRLP_Rollup> rollups = new List<CRLP_Rollup>();
-
+        public Map<Id, List<CRLP_Rollup>> mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
         /**
          * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
          * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
          * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
          */
-        public Set<Id> setOfProcessedOppIds = new Set<Id>();
+        public Map<Id,Set<Id>> mapOfProcessedOppIdsByAcctId = new Map<Id,Set<Id>>();
     }
 
     /**
@@ -121,13 +121,6 @@ public class CRLP_RollupProcessor_SVC {
             SObject parent = summaryRecords[ns];
             Id parentId = parent.Id;
 
-            // Clear the list of stateful rollups any time the parent Id changes
-            if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != parentId) {
-                options.rollups.clear();
-                options.lastParentIdProcessed = parentId;
-                options.setOfProcessedOppIds.clear();
-            }
-
             List<SObject> detailsForParent = mapOfDetailsByParentId.get(parentId);
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
@@ -137,15 +130,27 @@ public class CRLP_RollupProcessor_SVC {
                 for (Integer nd=0, listSizeDtl=detailRecords.size(); nd<listSizeDtl; nd++) {
                     SObject dtl = detailRecords[nd];
                     Id dtlId = (Id)dtl.get(Partial_Soft_Credit__c.Opportunity__c);
-                    if (!options.setOfProcessedOppIds.contains(dtlId)) {
+                    if (!options.mapOfProcessedOppIdsByAcctId.containsKey(parentId)) {
+                        options.mapOfProcessedOppIdsByAcctId.put(parentId, new Set<Id>());
+                    }
+                    if (!options.mapOfProcessedOppIdsByAcctId.get(parentId).contains(dtlId)) {
                         prunedOpps.add(dtl);
-                        options.setOfProcessedOppIds.add(dtlId);
+                        options.mapOfProcessedOppIdsByAcctId.get(parentId).add(dtlId);
                     }
                 }
                 detailsForParent = prunedOpps;
             }
+            options.rollups = null;
+            if (options.mapOfRollupsByParentId.containsKey(parentId)) {
+                options.rollups = options.mapOfRollupsByParentId.get(parentId);
+            }
 
             SObject updatedRecord = completeRollupForParent(parent, detailsForParent, options);
+
+            if (options.mode == ProcessingMode.LDV && detailsForParent != null) {
+                options.mapOfRollupsByParentId.put(parentId, fullyCloneList(options.rollups));
+                options.lastParentIdProcessed = parentId;
+            }
             if (CRLP_Rollup_SVC.resultsNeedUpdate(parent, updatedRecord, options.rollups)) {
                 recordsToUpdate.put(parentId, updatedRecord);
             }
@@ -156,7 +161,8 @@ public class CRLP_RollupProcessor_SVC {
         // This is necessary to handle the situation when a single Parent record may have thousands of detail records
         // passed through multiple batch iterations. The 'final' record will be handled by the finish() method of
         // the LDV Batch job.
-        if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != null) {
+        if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != null &&
+                recordsToUpdate.containsKey(options.lastParentIdProcessed)) {
             recordsToUpdate.remove(options.lastParentIdProcessed);
         }
 
@@ -220,10 +226,11 @@ public class CRLP_RollupProcessor_SVC {
      * @description For a given set of records, returns a Set<Id> of parent records using the passed field name as the parent
      * @param detailRecords List<SObject>
      * @param parentKeyField API Name of the parent field to use for the Id
-     * @return Set<Id>
+     * @return List<Id>
      */
-    public static Set<Id> getParentIdsFromDetailRecords(List<SObject> detailRecords, String parentKeyField) {
-        Set<Id> parentIds = new Set<Id>();
+    public static List<Id> getParentIdsFromDetailRecords(List<SObject> detailRecords, String parentKeyField) {
+        Set<Id> parentIdSet = new Set<Id>();
+        List<Id> parentIds = new List<Id>();
         // If the parentKeyField is something like Contact.AccountId, then have to retrieve the parent SObject
         // first and then get the field value.
         String parentObjectField;
@@ -237,7 +244,14 @@ public class CRLP_RollupProcessor_SVC {
                 dtlRecord = dtl.getSObject(parentObjectField);
             }
             if (dtlRecord.get(parentKeyField) != null) {
-                parentIds.add((Id)dtlRecord.get(parentKeyField));
+                Id parentId = (Id)dtlRecord.get(parentKeyField);
+                // Use a set to ensure that the parentId is only in the collection one time since there is no
+                // contains() yet, but use a List to keep the parentId records in the exact same sequence
+                // that they are in the details collection
+                if (!parentIdSet.contains(parentId)) {
+                    parentIds.add(parentId);
+                    parentIdSet.add(parentId);
+                }
             }
         }
         return parentIds;
@@ -256,7 +270,8 @@ public class CRLP_RollupProcessor_SVC {
      * accumulations. This method is called by all of the entry points for Rollup Calculations -- Batch, LDV, Queueable
      * @param parent Summary SObject record
      * @param details list of Detail SObject records for a given parent Summary record
-     * @param options ProcessingOptions. Contains List<CRLP_Rollup> rollup instances provided by calling class.
+     * @param options ProcessingOptions. Contains List<CRLP_Rollup> rollup instances passed by referenced and
+     * modified within this method.
      * @return an updated Summary SObject (regardless of whether it actually requires updating or not)
      */
     public static SObject completeRollupForParent(SObject parent, List<SObject> detailRecords, ProcessingOptions options) {
@@ -317,5 +332,41 @@ public class CRLP_RollupProcessor_SVC {
 
         // Initiate the DML operation with allOrNone set to false (don't fail the entire batch if one record fails)
         UTIL_DMLService.updateRecordBatchAndLogErrors(recordsToUpdate, ERR_Handler_API.Context.CRLP.name());
+    }
+
+    /**
+     * @description In order to ensure that the List<CRLP_Rollup> values that are created and saved, as well
+     * as cached properly, the individual instances of CRLP_Rollup have to be cloned. Otherwise, Salesforce
+     * treats each element by reference meaning that we always end up with a single collection of these that is
+     * continually passed around by reference. Cloning the entire list simply creates a new reference to the List,
+     * but each individual instance of CRLP_Rollup is still a reference to the original. The only way to work around
+     * this is to clone each individual instance into a new list.
+     * @param rollups List<CRLP_Rollup> to clone
+     * @return Fully cloned list of CRLP_Rollup
+     */
+    private static List<CRLP_Rollup> fullyCloneList(List<CRLP_Rollup> rollups) {
+        List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
+        for (CRLP_Rollup r : rollups) {
+            newList.add(r.clone());
+        }
+        return newList;
+    }
+
+    /**
+     * @description Resequence the Parent (Summary) records to be in the exact order of the detail records
+     * using the defined parent Id
+     * @param parentIds
+     * @param summaryRecords
+     * @return
+     */
+    public static List<SObject> resequenceSummaryRecords(List<Id> parentIds, List<SObject> summaryRecords) {
+        // Resequence the Parent (Summary) records to be in the exact order of the detail records
+        // using the defined parent Id
+        List<SObject> reorderedSummaryRecords = new List<SObject>();
+        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(summaryRecords);
+        for (Id parentId : parentIds) {
+            reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
+        }
+        return reorderedSummaryRecords;
     }
 }

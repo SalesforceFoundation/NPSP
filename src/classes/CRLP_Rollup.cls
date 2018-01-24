@@ -337,7 +337,7 @@ public class CRLP_Rollup {
             Integer streakLength = 0;
 
             Integer currentYear = fiscalYrs.getYear(System.today());
-            if (currentYear != Integer.valueOf(yearlySorted[yearlySorted.size() - 1])) {
+            if (yearlySorted.size() != 0 && currentYear != Integer.valueOf(yearlySorted[yearlySorted.size() - 1])) {
                 // if they haven't donated this year, start counting last year
                 currentYear--;
             }

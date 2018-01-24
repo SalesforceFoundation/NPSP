@@ -144,10 +144,12 @@ public class CRLP_Operation_SVC {
 
                 } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
                     // Operation = SMALLEST (always based on an amount, but the result field might actually be a date)
+                    // This should get the first Opp with the smallest amount (in case there is more than one with the same amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
+                } else if (operation == CRLP_Operation.RollupType.LARGEST && (amountValue > rollup.maxValue || rollup.maxValue == 0)) {
                     // Operation = LARGEST (always based on an amount, but the result field might actually be a date)
+                    // This should get the first Opp with the largest amount (in case there is more than one with the same amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 }
