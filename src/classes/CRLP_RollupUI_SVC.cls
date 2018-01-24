@@ -221,6 +221,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 , Yearly_Operation_Type__c
                 , Description__c
                 , Filter_Group__c
+                , Filter_Group__r.QualifiedApiName
                 , Filter_Group__r.MasterLabel
                 , Operation__c
                 , Integer__c

@@ -7,7 +7,7 @@
     <aura:attribute name="cachedRollup" type="Map" description="The queried rollup with its original fields as they are on the server."/>
     <aura:attribute name="mode" type="String" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
-    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true}" description="Dependent disabling of fields" access="public" />
+    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true, amount: true}" description="Dependent disabling of fields" access="public" />
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public" />
     <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
@@ -38,7 +38,7 @@
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}" action="{!c.onChangeYearlyOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
 
-     activeRollup:<br/>
+    <!--activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
     Detail Field API Name:    {!v.activeRollup.Detail_Field__r.QualifiedApiName}<br/>
     Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
@@ -48,7 +48,7 @@
     Detail Object API Name:    {!v.cachedRollup.Detail_Object__r.QualifiedApiName}<br/>
     Detail Field API Name:    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}<br/>
     Summary Object API Name: {!v.cachedRollup.Summary_Object__r.QualifiedApiName}<br/>
-    Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>
+    Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>-->
 
     <!-- markup -->
     <!--START FORM-->
@@ -118,14 +118,13 @@
                                             auraId="filterGroup"
                                             fieldName="{!v.labels.filterGroupLabel}"
                                             entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
-                                            apiName="{!v.activeRollup.Filter_Group__r.DeveloperName}"
+                                            apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
                                             placeholder="{!v.labels.na}"
                                             options="{!v.filterGroups}"
                                             selectLabel="{!v.labels.selectOne}"
 
                         />
                     </lightning:layout>
-
 
                     <lightning:layout multipleRows="true" verticalAlign="center">
 
@@ -178,7 +177,7 @@
                             </aura:if>
                         </lightning:layoutItem>
 
-                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                        <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
                                             auraId="amountObject"
                                             fieldName="{!v.labels.amountObject}"
                                             entityLabel="{!v.activeRollup.Amount_Object__r.Label}"
@@ -189,7 +188,7 @@
 
                         />
 
-                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                        <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
                                             auraId="amountField"
                                             fieldName="{!v.labels.amountField}"
                                             entityLabel="{!v.activeRollup.Amount_Field__r.Label}"
@@ -221,6 +220,10 @@
                                             selectLabel="{!v.labels.selectOne}"
 
                         />
+
+                        is fiscal year read only? {!v.readOnlyMap.useFiscalYear} <br/>
+                        is integer read only? {!v.readOnlyMap.integer} <br/>
+                        is amount read only? {!v.readOnlyMap.amount} <br/>
 
                     </lightning:layout>
                 </lightning:layoutItem>

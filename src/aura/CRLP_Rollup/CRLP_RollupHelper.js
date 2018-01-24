@@ -73,13 +73,14 @@
             if(mode != "view"){
                 cmp.set("v.isReadOnly",false);
                 this.changeYearlyOperationsOptions(cmp);
+                this.changeOperationsOptions(cmp);
                 this.resetSummaryObjects(cmp,cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
                 if(!$A.util.isEmpty(cmp.get("v.objectDetails"))){
                     this.resetAllFields(cmp);
                 }
             } else {
                 cmp.set("v.isReadOnly", true);
-                this.resetYearlyOperationsOptions(cmp);
+                this.resetAllOperationsOptions(cmp);
             }
             //this checks that fields are set; this action only needs to be done once per rollup
             if($A.util.isEmpty(cmp.get("v.objectDetails"))){
@@ -89,13 +90,36 @@
         }
     },
 
+    changeOperationsOptions: function(cmp){
+
+        var operation = cmp.get("v.activeRollup.Operation__c");
+        console.log(operation);
+        var readOnlyMap = cmp.get("v.readOnlyMap");
+        console.log(readOnlyMap);
+        //todo: is this ok for translation?
+        if (operation == 'Largest' || operation == 'Smallest'
+            || operation == 'Best_Year' || operation == 'Best_Year_Total') {
+            //enable amount object and fields
+            readOnlyMap["amount"] = false;
+        } else if (operation == 'First' || operation == 'Last'
+            || operation == 'Years_Donated' || operation == 'Donor_Streak'
+            || operation == 'Count') {
+            //disable amount object and fields
+            readOnlyMap["amount"] = true;
+            cmp.set("v.activeRollup.Amount_Object__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
+        } else if (operation == 'Sum' || operation == 'Average'){
+            //todo: logic TBD
+            readOnlyMap["amount"] = false;
+        }
+        cmp.set("v.readOnlyMap",readOnlyMap);
+    },
+
     changeYearlyOperationsOptions: function(cmp){
 
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
         //cmp.set(operation, cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
-        console.log(operation);
         var readOnlyMap = cmp.get("v.readOnlyMap");
-        console.log(readOnlyMap);
         //todo: is this ok for translation?
         if (operation == 'All_Time') {
             //disable fiscal year and integer
@@ -111,9 +135,6 @@
             readOnlyMap["integer"] = false;
         }
         cmp.set("v.readOnlyMap",readOnlyMap);
-        console.log("Read Only Map is ");
-        console.log(readOnlyMap.useFiscalYear);
-        console.log(readOnlyMap.integer);
     },
 
     resetSummaryObjects: function(cmp, detailObject){
@@ -123,17 +144,20 @@
         var labels = cmp.get("v.labels");
         var newSummaryObjects;
         console.log("detail object is " + detailObject);
+        //only set if object is selected, otherwise prompt for user to select a detail object
         if(detailObject == "Allocation__c"){
             newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
-
-        } else {
-            //todo: add correct labels
+        } else if(detailObject == "npe01__OppPayment__c" || detailObject == "Partial_Soft_Credit__c"
+            || detailObject == "Opportunity") {
             newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
                 , {label: labels.contactLabel, name: 'Contact'}];
+        } else {
+            //todo: add a better label
+            newSummaryObjects = [{name: 'None', label: "No eligible objects found."}];
+            cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
-        //cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
         console.log("End summary object reset");
     },
     resetFields: function(cmp, object, context){
@@ -142,9 +166,12 @@
         var test = cmp.get("v.objectDetails");
         var newFields = cmp.get("v.objectDetails")[object];
 
+        if(newFields === undefined){
+            newFields = [{name: 'None', label: "No eligible fields found."}];
+        }
+
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
-            //console.log('detail fields reset');
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
         } else if (context=='date') {
@@ -172,6 +199,8 @@
         //need to get all summary fields, or we filter on a subset of all options
         var allFields = cmp.get("v.objectDetails")[summaryObject];
         var newFields = [];
+
+        console.log(summaryObject);
 
         //checks if summary field is set
         if(allFields != undefined) {
@@ -256,12 +285,14 @@
         $A.enqueueAction(action);
     },
 
-    resetYearlyOperationsOptions: function(cmp){
+    resetAllOperationsOptions: function(cmp){
         console.log("In reset yearly operations");
         var readOnlyMap = cmp.get("v.readOnlyMap");
         readOnlyMap["useFiscalYear"] = true;
         readOnlyMap["integer"] = true;
-        //cmp.set(readOnlyMap, newMap);
+        readOnlyMap["amount"] = true;
+        cmp.set("v.readOnlyMap",readOnlyMap);
+        console.log('Amount read only? ' + readOnlyMap.amount);
         console.log("complete yearly operations reset");
     }
 })

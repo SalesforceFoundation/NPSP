@@ -95,6 +95,9 @@
 
                 //set new detail fields based on new selected detail object
                 helper.resetFields(cmp, object, 'detail');
+                if(object === 'null'){
+                    cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+                }
 
                 //remove summary fields since no summary object is selected
                 var newFields = [{name: 'None', label: "No eligible fields found."}];
@@ -144,9 +147,11 @@
         }
     },
     onChangeOperation: function(cmp, event, helper){
+        console.log('HITTING CHANGEOPERATION FUNCTION');
         if(cmp.get("v.mode")!='view') {
             if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-                var operation = cmp.get("v.activeRollup.Operation__c");
+                console.log('In change operation FUNCTION');
+                helper.changeOperationsOptions(cmp);
             }
         }
     },
