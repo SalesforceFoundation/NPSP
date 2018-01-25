@@ -158,6 +158,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         for (CRLP_Rollup r : this.rollups) {
             r.resetValues();
         }
+    }
 
     /**
      * @description Filters the list of built CRLP_Rollup instances to either All, DateBased or NonDateBased
