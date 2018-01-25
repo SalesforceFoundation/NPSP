@@ -34,7 +34,7 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups Batch for non-LDV-type Rollups
 */
-public class CRLP_Rollup_BATCH implements Database.Batchable<SObject> {
+public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
     /** @description The Summary Object Type this batch job will process */
     private SObjectType summaryObjectType;
@@ -42,10 +42,9 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject> {
     /** @description Specified list of Summary (Account, Contact, or GAU) Id's to roll up */
     private List<Id> recordIds;
 
-    /** @description Simple counters used to track state */
+    /** @description Simple stateful counters used to track state */
     private Integer batchIteration = 0;
     private Integer totalRecordsModified = 0;
-
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties

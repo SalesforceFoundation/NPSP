@@ -39,7 +39,6 @@
 * are stored in the CRLP_RollupProcessor_SVC class.
 */
 public class CRLP_Rollup_SVC {
-
     /**
      * @description Interface class that the each of the 5 handler classes will implement
      */
@@ -47,6 +46,7 @@ public class CRLP_Rollup_SVC {
         void processRollups(List<SObject> details);
         void setRecordId(Id objectId);
         void setRollupsList(List<CRLP_Rollup> rollups);
+        List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
     }
 

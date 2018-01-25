@@ -319,7 +319,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
                 // Build the processing options instance
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Contact.SObjectType);
-                options.rollups = this.statefulRollupsById.get(this.lastContactIdProcessed).clone();
 
                 // Get the Summary (target) records for the final record to be processed
                 Set<Id> parentIds = new Set<Id>{ this.lastContactIdProcessed };
@@ -331,8 +330,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
 
                 // Handle dml on the records to be updated
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
                 if (updatedRecord != null) {
+                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
                     this.totalRecordsModified += 1;
                 }
             }
@@ -351,7 +350,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
                 // Build the processing options instance
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Account.SObjectType);
-                options.rollups = this.statefulRollupsById.get(this.lastAccountIdProcessed).clone();
 
                 // Get the Summary (target) records for the final record to be processed
                 Set<Id> parentIds = new Set<Id>{ this.lastAccountIdProcessed };
@@ -363,8 +361,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
 
                 // Handle dml on the records to be updated
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
                 if (updatedRecord != null) {
+                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
                     this.totalRecordsModified += 1;
                 }
             }

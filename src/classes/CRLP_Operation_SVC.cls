@@ -130,26 +130,26 @@ public class CRLP_Operation_SVC {
                 Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
-                if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     // Only want to use < as the operator for the date comparison so it only retrieves the first
                     // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
+                } else if (dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
                     // Operation = LAST (always based on a date)
                     // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
                     // result value from whatever record makes up the 'last' record' by date
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
+                } else if (amountValue != null && operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
                     // Operation = SMALLEST (always based on an amount, but the result field might actually be a date)
                     // This should get the first Opp with the smallest amount (in case there is more than one with the same amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LARGEST && (amountValue > rollup.maxValue || rollup.maxValue == 0)) {
+                } else if (amountValue != null && operation == CRLP_Operation.RollupType.LARGEST && (amountValue >= rollup.maxValue || rollup.maxValue == 0)) {
                     // Operation = LARGEST (always based on an amount, but the result field might actually be a date)
-                    // This should get the first Opp with the largest amount (in case there is more than one with the same amount)
+                    // This should get the last Opp with the largest amount (in case there is more than one with the same amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 }
