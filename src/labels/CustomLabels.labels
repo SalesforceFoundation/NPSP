@@ -628,6 +628,14 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_NoRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
+        <value>No Rollup Type</value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

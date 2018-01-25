@@ -100,7 +100,7 @@
                 cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
 
                 //remove summary fields since no summary object is selected
-                var newFields = [{name: 'None', label: "No eligible fields found."}];
+                var newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
                 cmp.set("v.summaryFields", newFields);
                 console.log("reset summary fields");
 
@@ -164,6 +164,43 @@
                 helper.changeYearlyOperationsOptions(cmp);
             }
         }
-    }
+    },
+    onSetTemplate: function(cmp, event, helper){
+        //set the correct options from the selected template
+        var selectedTemplate = cmp.get("v.selectedTemplate");
+        var detailObj;
+        var summaryObj;
+
+        if(selectedTemplate == 'null' || selectedTemplate == null){
+            console.log('NULL selected template is: ' + selectedTemplate);
+            detailObj = null;
+            summaryObj = null;
+        } else {
+            console.log('SELECTED selected template is: ' + selectedTemplate);
+            var splitList = selectedTemplate.split(' ');
+            //set detail object first, checking for soft credit, opportunity, or payment
+            if (splitList.indexOf('Soft') > -1) {
+                detailObj = 'Partial_Soft_Credit__c';
+            } else if (splitList.indexOf('Opportunity') > -1) {
+                detailObj = 'Opportunity';
+            } else if (splitList.indexOf('Payment') > -1) {
+                detailObj = 'npe01__OppPayment__c';
+            } else {
+                detailObj = 'Allocation__c';
+            }
+
+            //set summary object
+            if (splitList.indexOf('Account') > -1) {
+                summaryObj = 'Account';
+            } else if (splitList.indexOf('Account') > -1) {
+                summaryObj = 'Contact';
+            } else {
+                summaryObj = 'General_Accounting_Unit__c'
+            }
+        }
+        cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", detailObj);
+        cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", summaryObj);
+        cmp.set("v.mode", "clone");
+    },
 
 })

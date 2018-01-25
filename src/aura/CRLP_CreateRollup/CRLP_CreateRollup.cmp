@@ -1,0 +1,39 @@
+<aura:component description="CRLP_CreateRollup">
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="mode" type="String"
+                    description="The current mode of the component. Options are: view, edit, clone, or create."/>
+    <!--note: these may not be necessary?-->
+    <aura:attribute name="templates" type="List"
+                    description="Set list of options for the user to select a template type"
+                    default=""/>
+    <aura:attribute name="selectedTemplate" type="String" default="" description="Template selected by user"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--todo: add label-->
+
+    <div class="slds-p-around--large">
+        <lightning:layout>
+            <lightning:layoutItem size="12" mediumDeviceSize="8">
+                <lightning:layout multipleRows="true">
+                    <lightning:layoutItem size="12" class="slds-p-bottom--medium">
+                        <!--todo: get custom language from Sarah/Docs-->
+                        <h3>To get started, select a rollup template option or skip to make your own</h3>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem size="12" >
+                        <lightning:select aura:id="templateSelect"
+                                          label="{!v.labels.selectOne}"
+                                          name="{!v.labels.selectOne}"
+                                          value="{!v.selectedTemplate}">
+                            <option value="null" text="{!v.labels.noRollupType}"/>
+                            <aura:iteration items="{!v.templates}" var="option">
+                                <option value="{!option.name}" text="{!option.label}"/>
+                            </aura:iteration>
+                        </lightning:select>
+                    </lightning:layoutItem>
+                </lightning:layout>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+
+</aura:component>

@@ -189,8 +189,7 @@
                 , {label: labels.contactLabel, name: 'Contact'}];
         } else {
             //todo: add a better label
-            newSummaryObjects = [{name: 'None', label: "No eligible objects found."}];
-            //cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+            newSummaryObjects = [{name: 'None', label: cmp.get("v.labels.noObjects")}];
         }
         console.log(newSummaryObjects);
         cmp.set("v.summaryObjects", newSummaryObjects);
@@ -204,15 +203,14 @@
         var newFields = cmp.get("v.objectDetails")[object];
 
         if(newFields === undefined){
-            newFields = [{name: 'None', label: "No eligible fields found."}];
+            newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
         }
 
         if(context=='detail'){
             cmp.set("v.detailFields", newFields);
         } else if (context=='summary') {
             cmp.set("v.summaryFields", newFields);
-        }
-        else if (context=='date') {
+        } else if (context=='date') {
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context=='amount') {
@@ -290,11 +288,11 @@
             } else {
                 //TODO: get/set better label messaging; this would need tooltip help
                 //var na = cmp.get("v.labels.na");
-                newFields = [{name: 'None', label: "No eligible fields found."}];
+                newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
                 cmp.set("v.summaryFields", newFields);
             }
         } else {
-            newFields = [{name: 'None', label: "No eligible fields found."}];
+            newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
             cmp.set("v.summaryFields", newFields);
         }
         //reset field to null regardless of summary object value

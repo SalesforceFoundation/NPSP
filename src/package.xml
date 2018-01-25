@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -499,7 +499,9 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>CRLP_CreateRollup</members>
         <members>CRLP_FilterGroupRow</members>
+        <members>CRLP_ModeChanged</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupRow</members>
@@ -528,7 +530,6 @@
         <members>defaultTokens</members>
         <members>svg</members>
         <members>tableHeader</members>
-        <members>CRLP_ModeChanged</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -1058,6 +1059,7 @@
         <members>CONV_What_This_Tool_Does</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
+        <members>CRLP_NoRollupType</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>

@@ -148,7 +148,9 @@
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom--large">
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{!v.activeRollupId}" mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}" filterGroups="{!v.filterGroupList}"/>
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{!v.activeRollupId}"
+                           mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}"
+                           filterGroups="{!v.filterGroupList}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->
