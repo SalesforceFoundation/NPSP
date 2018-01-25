@@ -46,6 +46,7 @@ public class CRLP_Rollup_SVC {
         void processRollups(List<SObject> details);
         void setRecordId(Id objectId);
         void setRollupsList(List<CRLP_Rollup> rollups);
+        void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode);
         List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
     }

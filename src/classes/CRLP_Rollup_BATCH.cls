@@ -83,7 +83,10 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             } else if (this.summaryObjectType == Account.SObjectType) {
                 // If the Summary Object is the Account, then filter on Accounts that have at least a single
                 // Opportunity attached. This is helpful to reduce the overall query size.
-                query += ' AND ' + fldRelatedOppsCnt + ' > 0';
+                // To handle a scenario where an attached Oppportunity was deleted, but the record not recalculated
+                // also include any records where the TotalGifts or TotalMemberships fields are not zero
+                query += ' AND (' + fldRelatedOppsCnt + ' > 0' +
+                    ' OR npo02__NumberOfClosedOpps__c > 0 OR npo02__NumberOfMembershipOpps__c > 0)';
             }
 
             if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
