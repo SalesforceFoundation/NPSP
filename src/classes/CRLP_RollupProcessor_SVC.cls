@@ -76,6 +76,8 @@ public class CRLP_RollupProcessor_SVC {
          */
         public Id lastParentIdProcessed;
 
+        public Boolean lastParentIdRemovedFromUpdatesList = false;
+
         /**
         * @description Stateful rollups collection for LDV Mode. Needs to stay in ProcessingOptions to allow for passing
         * between various service methods with the rest of the processing options
@@ -183,9 +185,11 @@ public class CRLP_RollupProcessor_SVC {
         // This is necessary to handle the situation when a single Parent record may have thousands of detail records
         // passed through multiple batch iterations. The 'final' record will be handled by the finish() method of
         // the LDV Batch job.
+        options.lastParentIdRemovedFromUpdatesList = false;
         if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != null &&
                 recordsToUpdate.containsKey(options.lastParentIdProcessed)) {
             recordsToUpdate.remove(options.lastParentIdProcessed);
+            options.lastParentIdRemovedFromUpdatesList = true;
         }
 
         return recordsToUpdate.values();

@@ -190,6 +190,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 // Build the processing options instance for the Account rollup
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Contact.SObjectType);
 
+                Id firstParentId = detailRecords[0].ContactId;
+                Id lastParentId = detailRecords[detailRecords.size()-1].ContactId;
 
                 // Get all parent records to be processed by this batch iteration
                 List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'ContactId');
@@ -199,8 +201,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                         parentIds.add(this.lastContactIdProcessed);
                     }
                 }
-                Id firstParentId = detailRecords[0].ContactId;
-                Id lastParentId = detailRecords[detailRecords.size()-1].ContactId;
 
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER By Id';
                 List<SObject> summaryRecords = database.query(soql);
@@ -240,6 +240,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 // Build the processing options instance for the Contact rollup
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(Account.SObjectType);
 
+                Id firstParentId = detailRecords[0].Contact.AccountId;
+                Id lastParentId = detailRecords[detailRecords.size()-1].Contact.AccountId;
                 // Get all parent records to be processed by this batch iteration, being sure to include the
                 // last parent id processed by the previous batch.
                 List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'Contact.AccountId');
@@ -249,9 +251,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                         parentIds.add(this.lastAccountIdProcessed);
                     }
                 }
-                Id firstParentId = detailRecords[0].Contact.AccountId;
-                Id lastParentId = detailRecords[detailRecords.size()-1].Contact.AccountId;
-
                 // Get the Summary (target) records for the current set of Detail Records
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
 
@@ -268,18 +267,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
                 this.lastAccountIdProcessed = options.lastParentIdProcessed;
 
-                // Save Rollups collection and the last parent record id processed in stateful vars
-                /*for (Id parentId : options.mapOfRollupsByParentId.keySet()) {
-                    if (!this.statefulRollupsById.containsKey(parentId)) {
-                        this.statefulListOfSavedIds.add(parentId);
-                        if (this.statefulListOfSavedIds.size() == 1000) {
-                            Id idToPopOffStack = this.statefulListOfSavedIds[0];
-                            this.statefulListOfSavedIds.remove(0);
-                            this.statefulRollupsById.remove(idToPopOffStack);
-                        }
-                    }
-                    this.statefulRollupsById.put(parentId, options.mapOfRollupsByParentId.get(parentId));
-                }*/
                 this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
                 this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
                 this.statefulRollupsById.put(this.lastAccountIdProcessed, options.mapOfRollupsByParentId.get(this.lastAccountIdProcessed));

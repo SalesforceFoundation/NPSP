@@ -40,7 +40,14 @@
 public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
     /** @description Stateful collection of CRLP_Rollup instances by Parent Id */
-    private Map<Id, List<CRLP_Rollup>> statefulRollupsById;
+    private Map<Id, List<CRLP_Rollup>> statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
+
+    /** @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
+     * which can cause a single parent to be committed multiple times, this is used to track which parent records
+     * have not yet been committed. This is useful when Salesforce calls the execute() method with blocks of data
+     * out of sequence.
+     */
+    private Map<Id, Integer> parentIdsNotCommittedWithBatch = new Map<Id, Integer>();
 
     /** @description The last Parent Id processed by the batch job */
     private Id lastParentIdProcessed;
@@ -145,24 +152,31 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
         this.batchIteration++;
-        Boolean isAllocationsRollup = (this.summaryObjectType != General_Accounting_Unit__c.SObjectType);
+        Boolean isAllocationsRollup = (this.summaryObjectType == General_Accounting_Unit__c.SObjectType);
 
         try {
             // Build the processing options instance
             CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
+            Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
+            Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
+
             // Get all parent records to be processed by this batch iteration, being sure to include the
             // last parent id processed by the previous batch
             List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, options.parentKeyField);
-            if (this.lastParentIdProcessed != null) {
+            if (!this.parentIdsNotCommittedWithBatch.isEmpty()) {
                 Set<Id> uniqueParentIds = new Set<Id>(parentIds);
-                if (!uniqueParentIds.contains(this.lastParentIdProcessed)) {
-                    parentIds.add(this.lastParentIdProcessed);
+                // Don't add the last parent Id to the list UNLESS at least four batches have gone by. This is way of
+                // handling Salesforce's out of sequence baches while avoiding too many commits for a single record
+                for (Id lastId : this.parentIdsNotCommittedWithBatch.keySet()) {
+                    if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > 4) {
+                        if (!uniqueParentIds.contains(lastId)) {
+                            parentIds.add(lastId);
+                            this.parentIdsNotCommittedWithBatch.remove(lastId);
+                        }
+                    }
                 }
             }
-
-            Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
-            Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
 
             // Get the Summary (target) records for the current set of Detail Records
             String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
@@ -178,7 +192,7 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
             String allocKeyField = SObjectType.Allocation__c.fields.Opportunity__c.getName();
             for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
                 SObject dtl = detailRecords[n];
-                if (isAllocationsRollup || dtl.get(allocKeyField) != null) {
+                if (!isAllocationsRollup || dtl.get(allocKeyField) != null) {
                     updatedDetailRecords.add(dtl);
                 }
             }
@@ -191,6 +205,11 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
             this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
             this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
             this.statefulRollupsById.put(this.lastParentIdProcessed, options.mapOfRollupsByParentId.get(this.lastParentIdProcessed));
+
+            // Remember which batch iteration this parent was last NOT updated
+            if (options.lastParentIdRemovedFromUpdatesList == true) {
+                this.parentIdsNotCommittedWithBatch.put(this.lastParentIdProcessed, this.batchIteration);
+            }
 
             // Handle dml on the records to be updated
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
@@ -214,23 +233,29 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
 
         try {
             // Handle the final parent record in the LDV job
-            if (this.lastParentIdProcessed != null && this.statefulRollupsById.containsKey(this.lastParentIdProcessed)) {
+            if (this.parentIdsNotCommittedWithBatch != null && !this.parentIdsNotCommittedWithBatch.isEmpty()) {
                 // Build the processing options instance
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
                 // Get the Summary (target) records for the final record to be processed
-                Set<Id> parentIds = new Set<Id>{ this.lastParentIdProcessed };
-                String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds LIMIT 1';
-                SObject parent = database.query(soql);
+                Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet(); // new Set<Id>{ this.lastParentIdProcessed };
+                String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+                List<SObject> parents = database.query(soql);
 
                 // Call the method to do the actual rollup on this last remaining record, which is basically
                 // just to return the updated record
-                SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+                List<SObject> updatedRecords = new List<SObject>();
+                for (SObject parent : parents) {
+                    SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+                    if (updatedRecord != null) {
+                        updatedRecords.add(updatedRecord);
+                    }
+                }
 
                 // Handle dml on the records to be updated
-                if (updatedRecord != null) {
-                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(new List<SObject>{ updatedRecord });
-                    this.totalRecordsModified += 1;
+                if (!updatedRecords.isEmpty()) {
+                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                    this.totalRecordsModified += updatedRecords.size();
                 }
             }
 
