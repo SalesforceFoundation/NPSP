@@ -80,7 +80,6 @@
         //json shenanigans to avoid shared reference
         cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
         console.log('after changing rollup');
-        //helper.resetAllFields(cmp);
     },
 
     onChangeDetailObject: function(cmp, event, helper){
@@ -95,10 +94,8 @@
 
                 //set new detail fields based on new selected detail object
                 helper.resetFields(cmp, object, 'detail');
-                //if(object === 'null'){
-                    cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
-                //}
-                cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName",null);
+                cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+                cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", null);
                 cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
                 cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
 
@@ -146,38 +143,11 @@
                 var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
                 var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
                 //todo: nulls are evaluating to strings here; do we need a null check?
-                if(summaryObject != null && detailField != null){
-                    helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
-                } else {
-                    //cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName","select");
-                    cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
-                }
+                helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
             }
         }
     },
 
-    /*onChangeAmountObject: function(cmp, event, helper){
-        if(cmp.get("v.mode")!='view') {
-            //change amount fields to match new summary object + existing detailField
-            console.log('HITTING CHANGEAMOUNTOBJECT FUNCTION');
-            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-                console.log('In onChangeAmount FUNCTION');
-                var object = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
-                helper.resetFields(cmp, object, 'amount');
-            }
-        }
-    },
-    onChangeDateObject: function(cmp, event, helper){
-        if(cmp.get("v.mode")!='view') {
-            console.log('HITTING CHANGEDATEOBJECT FUNCTION');
-            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-                //change date fields to match new summary object + existing detailField
-                console.log('In onChangeDateObject FUNCTION');
-                var object = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
-                helper.resetFields(cmp, object, 'date');
-            }
-        }
-    },*/
     onChangeOperation: function(cmp, event, helper){
         console.log('HITTING CHANGEOPERATION FUNCTION');
         if(cmp.get("v.mode")!='view') {

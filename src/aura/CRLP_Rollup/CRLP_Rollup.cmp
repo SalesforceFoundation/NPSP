@@ -7,10 +7,12 @@
     <aura:attribute name="cachedRollup" type="Map" description="The queried rollup with its original fields as they are on the server."/>
     <aura:attribute name="mode" type="String" description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true" description="Determines if fields should be read-only. This only applies to View."/>
-    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true, amount: true}" description="Dependent disabling of fields" access="public" />
+    <aura:attribute name="readOnlyMap" type="Map" default="{useFiscalYear: true, integer: true, amount: true, dateField: true}" description="Dependent disabling of fields" access="public" />
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public" />
     <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
+    <aura:attribute name="selectedOperationLabel" type="String" />
+    <aura:attribute name="selectedYearlyOperationLabel" type="String" />
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
@@ -32,16 +34,14 @@
     <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}" action="{!c.onChangeDetailObject}" />
     <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}" action="{!c.changeSummaryFields}" />
     <aura:handler name="change" value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}" action="{!c.changeSummaryFields}" />
-   <!-- <aura:handler name="change" value="{!v.activeRollup.Amount_Object__r.QualifiedApiName}" action="{!c.onChangeAmountObject}" />
-    <aura:handler name="change" value="{!v.activeRollup.Date_Object__r.QualifiedApiName}" action="{!c.onChangeDateObject}" />
---> <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
+    <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}" action="{!c.onChangeYearlyOperation}" />
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}" />
 
-    activeRollup:<br/>
+    <!--activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
     Detail Field API Name:    {!v.activeRollup.Detail_Object__r.Label}<br/>
-    <!--Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
     Summary Field API Name: {!v.activeRollup.Summary_Field__r.QualifiedApiName}<br/>
     <br/>
     cachedRollup:<br/>
@@ -49,6 +49,11 @@
     Detail Field API Name:    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}<br/>
     Summary Object API Name: {!v.cachedRollup.Summary_Object__r.QualifiedApiName}<br/>
     Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>-->
+
+    <!--yearly Op Label: {!v.selectedYearlyOperationLabel}<br/>
+    yearly Op : {!v.activeRollup.Yearly_Operation_Type__c}<br/>
+    Op Label: {!v.selectedOperationLabel}<br/>
+    Op : {!v.activeRollup.Operation__c}-->
 
     <!-- markup -->
     <!--START FORM-->
@@ -79,7 +84,6 @@
                                             fieldName="{!v.labels.detailObject}"
                                             entityLabel="{!v.activeRollup.Detail_Object__r.Label}"
                                             apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
-                                            placeholder="Not Yet Selected"
                                             options="{!v.detailObjects}"
                                             selectLabel="{!v.labels.selectOne}"
 
@@ -89,7 +93,6 @@
                                             fieldName="{!v.labels.detailField}"
                                             entityLabel="{!v.activeRollup.Detail_Field__r.Label}"
                                             apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.detailFields}"
                                             hasNullOption="true"
                                             selectLabel="{!v.labels.selectOne}"
@@ -99,7 +102,6 @@
                                             fieldName="{!v.labels.summaryObject}"
                                             entityLabel="{!v.activeRollup.Summary_Object__r.Label}"
                                             apiName="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.summaryObjects}"
                                             selectLabel="{!v.labels.selectOne}"
 
@@ -109,7 +111,6 @@
                                             fieldName="{!v.labels.summaryField}"
                                             entityLabel="{!v.activeRollup.Summary_Field__r.Label}"
                                             apiName="{!v.activeRollup.Summary_Field__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.summaryFields}"
                                             selectLabel="{!v.labels.selectOne}"
 
@@ -119,7 +120,6 @@
                                             fieldName="{!v.labels.filterGroupLabel}"
                                             entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
                                             apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.filterGroups}"
                                             selectLabel="{!v.labels.selectOne}"
 
@@ -131,9 +131,8 @@
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="operation"
                                             fieldName="{!v.labels.operation}"
-                                            entityLabel="{!v.activeRollup.Operation__c}"
+                                            entityLabel="{!v.selectedOperationLabel}"
                                             apiName="{!v.activeRollup.Operation__c}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.operations}"
                                             mediumDeviceSize="3"
                                             selectLabel="{!v.labels.selectOne}"
@@ -143,9 +142,8 @@
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="yearlyOperation"
                                             fieldName="{!v.labels.yearlyOperationType}"
-                                            entityLabel="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                            entityLabel="{!v.selectedYearlyOperationLabel}"
                                             apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.yearlyOperations}"
                                             mediumDeviceSize="3"
                                             selectLabel="{!v.labels.selectOne}"
@@ -177,55 +175,27 @@
                             </aura:if>
                         </lightning:layoutItem>
 
-                        <!--<c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
-                                            auraId="amountObject"
-                                            fieldName="{!v.labels.amountObject}"
-                                            entityLabel="{!v.activeRollup.Amount_Object__r.Label}"
-                                            apiName="{!v.activeRollup.Amount_Object__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
-                                            options="{!v.detailObjects}"
-                                            selectLabel="{!v.labels.selectOne}"
-
-                        />-->
-
                         <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.amount}"
                                             auraId="amountField"
                                             fieldName="{!v.labels.amountField}"
-                                            entityLabel="{!v.activeRollup.Amount_Field__r.Label}"
+                                            entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Amount_Field__r.Label}"
                                             apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.amountFields}"
                                             selectLabel="{!v.labels.selectOne}"
                                             objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
 
                         />
 
-                        <!--<c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                            auraId="dateObject"
-                                            fieldName="{!v.labels.dateObject}"
-                                            entityLabel="{!v.activeRollup.Date_Object__r.Label}"
-                                            apiName="{!v.activeRollup.Date_Object__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
-                                            options="{!v.detailObjects}"
-                                            selectLabel="{!v.labels.selectOne}"
-
-                        />-->
-
-                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                        <c:CRLP_SelectField isReadOnly="{!v.readOnlyMap.dateField}"
                                             auraId="dateField"
                                             fieldName="{!v.labels.dateField}"
-                                            entityLabel="{!v.activeRollup.Date_Field__r.Label}"
+                                            entityLabel="{!v.activeRollup.Date_Object__r.Label+': '+v.activeRollup.Date_Field__r.Label}"
                                             apiName="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
-                                            placeholder="{!v.labels.na}"
                                             options="{!v.dateFields}"
                                             selectLabel="{!v.labels.selectOne}"
                                             objectLabel="{!v.activeRollup.Date_Object__r.Label + ': '}"
 
                         />
-
-                        is fiscal year read only? {!v.readOnlyMap.useFiscalYear} <br/>
-                        is integer read only? {!v.readOnlyMap.integer} <br/>
-                        is amount read only? {!v.readOnlyMap.amount} <br/>
 
                     </lightning:layout>
                 </lightning:layoutItem>

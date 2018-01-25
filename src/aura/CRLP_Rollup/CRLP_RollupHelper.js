@@ -62,18 +62,20 @@
     },
 
     changeMode: function(cmp){
-        //this works like a doInit in this case; a doInit is not necessary
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         var mode = cmp.get("v.mode");
         console.log(mode);
         if(mode != null) {
             console.log("Mode is " + mode);
             console.log("In changeMode");
+
+            //check operations to appropriately set "N/A" for date/amount field values
+            this.changeOperationsOptions(cmp);
+            this.changeYearlyOperationsOptions(cmp);
+
             //set readonly fields if mode is View, else allow user to make changes
             if(mode != "view"){
                 cmp.set("v.isReadOnly",false);
-                this.changeYearlyOperationsOptions(cmp);
-                this.changeOperationsOptions(cmp);
                 this.resetSummaryObjects(cmp,cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
                 if(!$A.util.isEmpty(cmp.get("v.objectDetails"))){
                     this.resetAllFields(cmp);
@@ -97,44 +99,78 @@
         var readOnlyMap = cmp.get("v.readOnlyMap");
         console.log(readOnlyMap);
         //todo: is this ok for translation?
-        if (operation == 'Largest' || operation == 'Smallest'
-            || operation == 'Best_Year' || operation == 'Best_Year_Total') {
+        if (operation == 'Largest'
+            || operation == 'Smallest'
+            || operation == 'Best_Year'
+            || operation == 'Best_Year_Total'
+            || operation == 'Sum'
+            || operation == 'Average') {
             //enable amount object and fields
             readOnlyMap["amount"] = false;
-        } else if (operation == 'First' || operation == 'Last'
-            || operation == 'Years_Donated' || operation == 'Donor_Streak'
+        } else if (operation == 'First'
+            || operation == 'Last'
+            || operation == 'Years_Donated'
+            || operation == 'Donor_Streak'
             || operation == 'Count') {
             //disable amount object and fields
             readOnlyMap["amount"] = true;
-            cmp.set("v.activeRollup.Amount_Object__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.Amount_Field__r.Label", cmp.get("v.labels.na"));
             cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
-        } else if (operation == 'Sum' || operation == 'Average'){
-            //todo: logic TBD
-            readOnlyMap["amount"] = false;
         }
         cmp.set("v.readOnlyMap",readOnlyMap);
+
+        var label;
+        var operations = cmp.get("v.operations");
+        console.log('OPERATIONS: '+operations);
+        for(var i=0; i<operations.length; i++){
+            console.log(operations[i].name);
+            if(operations[i].name == operation){
+                label = operations[i].label;
+                break;
+            }
+        }
+        cmp.set("v.selectedOperationLabel",label);
+        console.log(cmp.get("v.selectedOperationLabel"));
+
     },
 
     changeYearlyOperationsOptions: function(cmp){
-
+        console.log("in helper changeYearlyOperationsOptions");
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
-        //cmp.set(operation, cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
         var readOnlyMap = cmp.get("v.readOnlyMap");
         //todo: is this ok for translation?
         if (operation == 'All_Time') {
             //disable fiscal year and integer
             readOnlyMap["useFiscalYear"] = true;
             readOnlyMap["integer"] = true;
+            readOnlyMap["dateField"] = true;
+            cmp.set("v.activeRollup.Date_Field__r.Label",cmp.get("v.labels.na"));
+            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
         } else if (operation == 'Years_Ago') {
             //enable fiscal year and integer
             readOnlyMap["useFiscalYear"] = false;
             readOnlyMap["integer"] = false;
+            readOnlyMap["dateField"] = false;
         } else if (operation == 'Days_Back') {
             //disable fiscal year and enable integer
             readOnlyMap["useFiscalYear"] = true;
             readOnlyMap["integer"] = false;
+            readOnlyMap["dateField"] = false;
         }
         cmp.set("v.readOnlyMap",readOnlyMap);
+
+        var label;
+        var yearlyOperations = cmp.get("v.yearlyOperations");
+        console.log('YEARLY OPERATIONS: '+yearlyOperations);
+        for(var i=0; i<yearlyOperations.length; i++){
+            console.log(yearlyOperations[i].name);
+            if(yearlyOperations[i].name == operation){
+                label = yearlyOperations[i].label;
+                break;
+            }
+        }
+        cmp.set("v.selectedYearlyOperationLabel",label);
+        console.log(cmp.get("v.selectedYearlyOperationLabel"));
     },
 
     resetSummaryObjects: function(cmp, detailObject){
@@ -204,9 +240,7 @@
         var newFields = [];
 
         typeList.forEach(function(type){
-            if (type == undefined || type == null) {
-                newFields.push(allFields);
-            } else {
+            if (!(type == undefined || type == null)) {
                 allFields.forEach(function (field) {
                     var datatype = field.type;
                     if (datatype == type) {
@@ -242,8 +276,11 @@
             }
             //TODO: maybe check if type is the same to see if need to filter?
             console.log("Type is " + type);
-
-            newFields = this.filterFieldsByType(cmp, [type], allFields);
+            if(type == undefined){
+                newFields = allFields;
+            } else {
+                newFields = this.filterFieldsByType(cmp, [type], allFields);
+            }
 
             console.log("new fields returned");
             console.log(newFields);
@@ -306,13 +343,14 @@
     },
 
     resetAllOperationsOptions: function(cmp){
-        console.log("In reset yearly operations");
+        console.log("In reset all operations");
         var readOnlyMap = cmp.get("v.readOnlyMap");
         readOnlyMap["useFiscalYear"] = true;
         readOnlyMap["integer"] = true;
         readOnlyMap["amount"] = true;
+        readOnlyMap["dateField"] = true;
         cmp.set("v.readOnlyMap",readOnlyMap);
         console.log('Amount read only? ' + readOnlyMap.amount);
-        console.log("complete yearly operations reset");
+        console.log("complete all operations reset");
     }
 })
