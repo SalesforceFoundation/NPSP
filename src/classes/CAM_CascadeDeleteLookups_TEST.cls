@@ -41,7 +41,7 @@ private class CAM_CascadeDeleteLookups_TEST {
     * Then undeletes the Campaigns, which undeletes the Allocations. Verifies results.
     */
     static testMethod void testCampaignsCascadeDelete(){
-        Integer maxRecords = 200;
+        Integer maxRecords = 1;
 
         List<Campaign> testCampaigns = CDL_CascadeDeleteLookups_TEST.createCampaigns(maxRecords);
         insert testCampaigns;
@@ -68,7 +68,7 @@ private class CAM_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true 
             ALL ROWS
         ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when campaigns are deleted.');
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when campaign is deleted.');
 
         undelete testCampaigns;
 
@@ -83,6 +83,6 @@ private class CAM_CascadeDeleteLookups_TEST {
             FROM Allocation__c 
             WHERE IsDeleted = false
         ];
-        System.assertEquals(deletedAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade undeleted.');
+        System.assertEquals(deletedAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade undeleted when campaign is deleted.');
     }
 }

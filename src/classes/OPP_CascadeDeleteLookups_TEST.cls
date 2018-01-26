@@ -43,7 +43,7 @@ private class OPP_CascadeDeleteLookups_TEST {
     * Then the Allocations will be undeleted after the Opportunities are undeleted.
     */
     static testMethod void testOppCascade() {
-        Integer maxRecords = 200;
+        Integer maxRecords = 1;
 
         List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(maxRecords);
         insert testAccounts;
@@ -67,7 +67,7 @@ private class OPP_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true 
             ALL ROWS
         ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when opportunities are deleted.');
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when the Opportunity is deleted.');
 
         undelete testOpportunities;
 
@@ -76,6 +76,6 @@ private class OPP_CascadeDeleteLookups_TEST {
             FROM Allocation__c 
             WHERE IsDeleted = false
         ];
-        System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted.');
+        System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Opportunity is deleted.');
     }
 }

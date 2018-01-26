@@ -130,6 +130,28 @@ public class CDL_CascadeDeleteLookups_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Creates Recurring Donation Opportunities.
+    * @param List<npe03__Recurring_Donation__c> The Recurring Donations that are used to create the Opportunities.
+    * @return List<Opportunity> The created Opportunities.
+    ********************************************************************************************************/
+    public static List<Opportunity> createRDOpportunities(List<npe03__Recurring_Donation__c> testRecurringDonations, String stageName) {
+        List<Opportunity> result = new List<Opportunity>();
+        for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
+            result.add(
+                new Opportunity(
+                    Name = 'OPP_' + testRecurringDonation.Name,
+                    Amount = 8,
+                    AccountId = testRecurringDonation.npe03__Organization__c,
+                    StageName = stageName,
+                    CloseDate = System.today(),
+                    npe03__Recurring_Donation__c = testRecurringDonation.Id
+                )
+            );
+        }
+        return result;
+    }
+
+    /*******************************************************************************************************
     * @description Creates Recurring Donation Allocations.
     * @param General_Accounting_Unit__c The General Accounting Unit record that is used to create the Allocations.
     * @param List<npe03__Recurring_Donation__c> The Recurring Donations records that are used to create the Allocations.

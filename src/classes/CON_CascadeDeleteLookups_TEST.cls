@@ -37,11 +37,11 @@
 private class CON_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Deletes contact without using the override. Does not cascade delete recurring dontation or 
-    * allocation. Verifies results.
+    * @description Deletes contact and verifies it does not cascade delete the Relationships
+    * Verifies results.
     */
     static testMethod void testContactsCascadeDelete(){
-        Integer maxRecords = 200;
+        Integer maxRecords = 1;
 
         List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
         insert testContacts;
@@ -65,7 +65,7 @@ private class CON_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true 
             ALL ROWS 
         ];
-        System.assertEquals(testRelationships.size() * 2, deletedRelationships.size(), 'Both relationships should be deleted when the Contacts are deleted.');
+        System.assertEquals(testRelationships.size() * 2, deletedRelationships.size(), 'Both relationships should be deleted when the Contact is deleted.');
 
         undelete testContacts;
 
@@ -74,7 +74,7 @@ private class CON_CascadeDeleteLookups_TEST {
             FROM npe4__Relationship__c
             WHERE IsDeleted = false
         ];
-        System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships should be undeleted when contact is undeleted.');
+        System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships should be undeleted when the Contact is undeleted.');
     }
 
     /*********************************************************************************************************
