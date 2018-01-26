@@ -36,6 +36,9 @@
     <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
     <aura:handler name="change" value="{!v.mode}" action="{!c.changeMode}"/>
 
+    <!-- events we fire -->
+    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
+
     <!--these control the dynamic value binding of objects to fields-->
     <!--todo: can/should we minimize this into only tracking v.activeRollup?-->
     <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
@@ -49,7 +52,7 @@
                   action="{!c.onChangeYearlyOperation}"/>
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
 
-    activeRollup:<br/>
+    <!--activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
     Detail Field API Name:    {!v.activeRollup.Detail_Object__r.Label}<br/>
     Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
@@ -60,7 +63,7 @@
     Detail Field API Name:    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}<br/>
     Summary Object API Name: {!v.cachedRollup.Summary_Object__r.QualifiedApiName}<br/>
     Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>
-
+-->
     <!--yearly Op Label: {!v.selectedYearlyOperationLabel}<br/>
     yearly Op : {!v.activeRollup.Yearly_Operation_Type__c}<br/>
     Op Label: {!v.selectedOperationLabel}<br/>

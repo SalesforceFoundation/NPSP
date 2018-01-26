@@ -20,6 +20,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <!-- handleRollupSelect handles the bubbling up from the RollupRow; avoid setting activeRollupId elsewhere-->
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
+    <aura:handler event="c:CRLP_CancelEvent" action="{!c.handleRollupCancelEvent}"/>
 
 
     <!-- markup -->
@@ -74,8 +75,8 @@
                                 <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}"/>
                             </aura:if>
                             <aura:if isTrue="{!and(v.isRollupDetail, v.detailMode == 'view')}">
-                                <lightning:button label="{!v.labels.edit}" onclick="{!c.setModeEdit}"/>
-                                <lightning:button label="{!v.labels.clone}" onclick="{!c.setModeClone}"/>
+                                <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
+                                <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
                             </aura:if>
                         </lightning:buttonGroup>
                     </lightning:layoutItem>

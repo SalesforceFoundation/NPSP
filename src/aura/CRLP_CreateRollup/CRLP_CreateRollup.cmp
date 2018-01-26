@@ -2,36 +2,44 @@
     <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
     <aura:attribute name="mode" type="String"
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
-    <!--note: these may not be necessary?-->
+    <aura:attribute name="columns" type="List" description="Columns for rollup type table."/>
     <aura:attribute name="templates" type="List"
-                    description="Set list of options for the user to select a template type"
+                    description="Set list of options for the user to select a template type, as well as summary/detail objects for table display"
                     default=""/>
-    <aura:attribute name="selectedTemplate" type="String" default="" description="Template selected by user"/>
+    <aura:attribute name="selectedTemplate" type="Map" default="" description="Template selected by user."/>
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <!--todo: add label-->
 
-    <div class="slds-p-around--large">
-        <lightning:layout>
+    <div class="slds-p-horizontal--large">
+        <lightning:layout multipleRows="true">
             <lightning:layoutItem size="12" mediumDeviceSize="8">
                 <lightning:layout multipleRows="true">
                     <lightning:layoutItem size="12" class="slds-p-bottom--medium">
                         <!--todo: get custom language from Sarah/Docs-->
-                        <h3>To get started, select a rollup template option or skip to make your own</h3>
+                        <h2>To get started, select a rollup template option or skip to make your own</h2>
                     </lightning:layoutItem>
-                    <lightning:layoutItem size="12" >
+                    <lightning:layoutItem size="12" class="slds-p-bottom--large" mediumDeviceSize="6">
                         <lightning:select aura:id="templateSelect"
+                                          onchange="{!c.setTemplate}"
                                           label="{!v.labels.selectOne}"
-                                          name="{!v.labels.selectOne}"
-                                          value="{!v.selectedTemplate}">
+                                          name="{!v.labels.selectOne}">
                             <option value="null" text="{!v.labels.noRollupType}"/>
-                            <aura:iteration items="{!v.templates}" var="option">
-                                <option value="{!option.name}" text="{!option.label}"/>
+                            <aura:iteration items="{!v.templates}" var="option" indexVar="index">
+                                <option value="{!index}" text="{!option.label}"/>
                             </aura:iteration>
                         </lightning:select>
                     </lightning:layoutItem>
                 </lightning:layout>
+            </lightning:layoutItem>
+            <lightning:layoutItem size="12" mediumDeviceSize="10">
+                <h3 class="slds-p-bottom--small slds-text-heading_small">Available Rollup Types</h3>
+                <lightning:datatable data="{!v.templates}"
+                                     columns="{!v.columns}"
+                                     class="slds-no-row-hover slds-table_col-bordered slds-text-body_small"
+                                     hideCheckboxColumn="true"
+                                     resizeColumnDisabled="true"/>
             </lightning:layoutItem>
         </lightning:layout>
     </div>

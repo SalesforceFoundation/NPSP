@@ -119,18 +119,9 @@
         }
         cmp.set("v.readOnlyMap",readOnlyMap);
 
-        var label;
         var operations = cmp.get("v.operations");
-        console.log('OPERATIONS: '+operations);
-        for(var i=0; i<operations.length; i++){
-            console.log(operations[i].name);
-            if(operations[i].name == operation){
-                label = operations[i].label;
-                break;
-            }
-        }
+        var label = this.resetOperationFieldLabel(cmp, operation, operations);
         cmp.set("v.selectedOperationLabel",label);
-        console.log(cmp.get("v.selectedOperationLabel"));
 
     },
 
@@ -159,18 +150,9 @@
         }
         cmp.set("v.readOnlyMap",readOnlyMap);
 
-        var label;
         var yearlyOperations = cmp.get("v.yearlyOperations");
-        console.log('YEARLY OPERATIONS: '+yearlyOperations);
-        for(var i=0; i<yearlyOperations.length; i++){
-            console.log(yearlyOperations[i].name);
-            if(yearlyOperations[i].name == operation){
-                label = yearlyOperations[i].label;
-                break;
-            }
-        }
+        var label = this.resetOperationFieldLabel(cmp, operation, yearlyOperations);
         cmp.set("v.selectedYearlyOperationLabel",label);
-        console.log(cmp.get("v.selectedYearlyOperationLabel"));
     },
 
     resetSummaryObjects: function(cmp, detailObject){
@@ -350,5 +332,16 @@
         cmp.set("v.readOnlyMap",readOnlyMap);
         console.log('Amount read only? ' + readOnlyMap.amount);
         console.log("complete all operations reset");
+    },
+    resetOperationFieldLabel: function(cmp, operation, operationList){
+        var label;
+        for(var i=0; i<operationList.length; i++){
+            console.log(operationList[i].name);
+            if(operationList[i].name == operation){
+                label = operationList[i].label;
+                break;
+            }
+        }
+        return label;
     }
 })

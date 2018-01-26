@@ -279,7 +279,7 @@ public with sharing class CRLP_RollupUI_SVC {
             {
                 'accountLabel' => Schema.SObjectType.Account.getLabel(),
                 'action' => Label.stgLabelActionColumn,
-                'active' => Label.stgActive,
+                'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
                 'allocationLabel' => Schema.SObjectType.Allocation__c.getLabel(),
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
@@ -308,9 +308,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'name' => Label.stgLabelName,
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
-                //todo: how can we get 'fields' and 'objects'?
-                'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{'fields'}),
-                'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{'objects'}),
+                'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel().toLowerCase()}),
+                'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),

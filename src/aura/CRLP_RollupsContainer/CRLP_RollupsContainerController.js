@@ -74,26 +74,8 @@
     },
 
     displayRollupsGrid: function(cmp, event, helper){
-        //sets the rollups grid to be displayed, resets the column labels, and changes the breadcrumbs
-        cmp.set("v.isRollupsGrid", true);
-        cmp.set("v.isFilterGroupsGrid", false);
-        cmp.set("v.isRollupDetail", false);
-        cmp.set("v.detailMode", null);
-        cmp.set("v.activeRollup", null);
-
-        var labels = cmp.get("v.labels");
-
-        var cols = [labels.name
-            , labels.summaryObject
-            , labels.detailObject
-            , labels.creditType
-            , labels.operation
-            , labels.filterGroupLabel
-            , labels.active
-        ];
-        cmp.set("v.columns", cols);
-        //checks if we're coming from the detail view; if already null the onchange won't fire
-        cmp.set("v.activeRollupId", null);
+        //sets the rollups grid to be displayed, resets the column labels
+        helper.displayRollupsGrid(cmp);
     },
 
     handleRollupSelect: function(cmp, event, helper) {
@@ -110,25 +92,24 @@
         }
 
     },
+
+    handleRollupCancelEvent: function(cmp, event, helper){
+        //switches to rollup grid after hearing cancel event from rollup detail
+        helper.displayRollupsGrid(cmp);
+    },
+
     displayNewRollupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
         //resets the active rollup to ensure there is no leftover data
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isRollupDetail", true);
         cmp.set("v.detailMode", "create");
-        //todo: check if this is necessary
         cmp.set("v.activeRollup", {});
     },
 
-    //TODO: can these be combined?
-    setModeEdit: function(cmp, event, helper) {
+    setMode: function(cmp, event, helper) {
         //changes the mode from the edit or clone buttons
-        cmp.set("v.detailMode", "edit");
-        console.log("In setModeEdit");
-    },
-    setModeClone: function(cmp, event, helper) {
-        //changes the mode from the edit or clone buttons
-        cmp.set("v.detailMode", "clone");
-        console.log("In setModeClone");
+        var name = event.getSource().get("v.name");
+        cmp.set("v.detailMode", name);
     },
 })

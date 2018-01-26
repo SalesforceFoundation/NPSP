@@ -68,18 +68,28 @@
     },
 
     onCancel: function(cmp, event, helper) {
-        //resets mode to view to become display-only
-        //also needs to reset rollup values to match what exists in the database
-        console.log("before changing view");
-        cmp.set("v.mode", "view");
-        console.log('in cancel');
-        var cachedRollup = cmp.get("v.cachedRollup");
-        console.log("Cached Rollup summary obj: ");
-        console.log(cmp.get("v.cachedRollup.Summary_Object__r.QualifiedApiName"));
-        console.log(cachedRollup);
-        //json shenanigans to avoid shared reference
-        cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
-        console.log('after changing rollup');
+        //options for cancel: return to rollup summaries or return to view
+        //first checks to see if mode is clone and bubbles up an Id of 0 to parent to trigger handleRollupSelect
+        //else resets mode to view to become display-only and resets rollup values
+        console.log(cmp.get("v.activeRollupId"));
+        if((cmp.get("v.mode") == 'clone' || cmp.get("v.mode") == 'create') && cmp.get("v.activeRollupId") == null){
+            console.log("changing active rollup ID");
+            //set off an event here
+            var event = $A.get("e.c:CRLP_CancelEvent");
+            event.setParams({});
+            event.fire();
+        } else {
+            console.log("before changing view");
+            cmp.set("v.mode", "view");
+            console.log('in cancel');
+            var cachedRollup = cmp.get("v.cachedRollup");
+            console.log("Cached Rollup summary obj: ");
+            console.log(cmp.get("v.cachedRollup.Summary_Object__r.QualifiedApiName"));
+            console.log(cachedRollup);
+            //json shenanigans to avoid shared reference
+            cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
+            console.log('after changing rollup');
+        }
     },
 
     onChangeDetailObject: function(cmp, event, helper){
@@ -167,39 +177,25 @@
     },
     onSetTemplate: function(cmp, event, helper){
         //set the correct options from the selected template
+        var labels = cmp.get("v.labels");
         var selectedTemplate = cmp.get("v.selectedTemplate");
+        console.log(selectedTemplate);
         var detailObj;
-        var summaryObj;
+        var summaryObj
 
         if(selectedTemplate == 'null' || selectedTemplate == null){
             console.log('NULL selected template is: ' + selectedTemplate);
             detailObj = null;
             summaryObj = null;
         } else {
-            console.log('SELECTED selected template is: ' + selectedTemplate);
-            var splitList = selectedTemplate.split(' ');
-            //set detail object first, checking for soft credit, opportunity, or payment
-            if (splitList.indexOf('Soft') > -1) {
-                detailObj = 'Partial_Soft_Credit__c';
-            } else if (splitList.indexOf('Opportunity') > -1) {
-                detailObj = 'Opportunity';
-            } else if (splitList.indexOf('Payment') > -1) {
-                detailObj = 'npe01__OppPayment__c';
-            } else {
-                detailObj = 'Allocation__c';
-            }
-
-            //set summary object
-            if (splitList.indexOf('Account') > -1) {
-                summaryObj = 'Account';
-            } else if (splitList.indexOf('Account') > -1) {
-                summaryObj = 'Contact';
-            } else {
-                summaryObj = 'General_Accounting_Unit__c'
-            }
+            detailObj = selectedTemplate.detailObject;
+            summaryObj = selectedTemplate.summaryObject;
         }
+        //not setting labels yet, if that's not necessary
         cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", detailObj);
+        //cmp.set("v.activeRollup.Detail_Object__r.Label", detailObjLabel);
         cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", summaryObj);
+        //cmp.set("v.activeRollup.Summary_Object__r.Label", summaryObjLabel);
         cmp.set("v.mode", "clone");
     },
 
