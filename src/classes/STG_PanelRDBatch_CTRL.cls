@@ -51,6 +51,10 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     * @description Whether the batch process is currently running  
     */
     public boolean isRunningBatch { get; set; }
+
+    /* @description Batch size of Recurring Donations Apex job  
+    */
+    public Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c <> null) ? UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
     
     /*********************************************************************************************************
     * @description Action Method to execute the RD Batch process
@@ -62,7 +66,7 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
 	    	isRunningBatch = true;
 	        
 	        //call the batch job, processing 50 at a time 
-	        Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
+	        Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(), batchSize); 
         }
         catch(Exception e) {
             Database.rollback(sp);
