@@ -34,7 +34,6 @@
  * @description Cascade deletion extension for Recurring Donation object.
  */
 public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
-
     /*******************************************************************************************************
     * @description Gets the deleted Recurring Donations CascadeDeleteLoader Object. 
     * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
@@ -80,14 +79,14 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
             result.addAll((List<SObject>) relatedOpportunities);
 
             List<Allocation__c> relatedAllocations = [
-                SELECT Recurring_Donation__c, Opportunity__c
+                SELECT Recurring_Donation__c, Opportunity__c, Opportunity__r.npe03__Recurring_Donation__c
                 FROM Allocation__c
                 WHERE Recurring_Donation__c IN :recurringDonationIds
                 OR Opportunity__c IN :relatedOpportunities
             ];
             result.addAll((List<SObject>) relatedAllocations);
 
-            return (new Map<Id, SObject>(result)).values();
+            return result;
         }
     }
 
@@ -114,7 +113,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
             result.addAll((List<SObject>) relatedOpportunities);
 
             List<Allocation__c> relatedAllocations = [
-                SELECT Id
+                SELECT Id, Opportunity__c, Opportunity__r.npe03__Recurring_Donation__c
                 FROM Allocation__c
                 WHERE (Recurring_Donation__c IN :recurringDonationIds OR Opportunity__c IN :relatedOpportunities)
                 AND IsDeleted = TRUE
@@ -122,7 +121,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
             ];
             result.addAll((List<SObject>) relatedAllocations);
 
-            return (new Map<Id, SObject>(result)).values();
+            return result;
         }
 
         /*******************************************************************************************************
@@ -143,21 +142,18 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
         /*******************************************************************************************************
         * @description validates the children of the Account.
         * @param List<npe03__Recurring_Donation__c> The deleted Recurring Donations.
-        * @param List<SObject> The The deleted Recurring Donations children to validate.
-        * @return List<Object> The deleted Recurring Donations children that can be deleted.
+        * @param List<SObject> The deleted Recurring Donations children to validate.
+        * @return void
         ********************************************************************************************************/
-        public List<SObject> validateDeletion(List<npe03__Recurring_Donation__c> deletedRecurringDonations, List<SObject> children) {
-            List<SObject> validChildren = new List<SObject>();
-
+        public void validate(List<npe03__Recurring_Donation__c> deletedRecurringDonations, List<SObject> allChildren) {
             for(npe03__Recurring_Donation__c deletedRecurringDonation : deletedRecurringDonations) {
                 CDL_CascadeDeleteLookups.Error error = new CDL_CascadeDeleteLookups.Error(deletedRecurringDonation.Name);
-                for (SObject child : children) {
-                    if (isClosedWonOpportunity(child, deletedRecurringDonation.Id)) {
+                List<Sobject> currentRDChildren = getChildren(deletedRecurringDonation.Id, allChildren);
+
+                for (SObject child : currentRDChildren) {
+                    if (isClosedWonOpportunity(child)) {
                         Opportunity closedWonOpportunity = (Opportunity) child;
                         error.addChildError(Label.ClosedWonOpportunities, closedWonOpportunity.Id, closedWonOpportunity.Name);
-                    }
-                    else {
-                        validChildren.add(child);
                     }
                 }
 
@@ -166,8 +162,6 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
                     deletedRecurringDonation.addError(errorMessage, false);
                 }
             }
-
-            return validChildren;
         }
 
         /*******************************************************************************************************
@@ -176,12 +170,34 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
         * @param Id The Id of the deleted Recurring Donation.
         * @return Boolean.
         ********************************************************************************************************/
-        private Boolean isClosedWonOpportunity(SObject record, Id deletedRecurringDonatioinId) {
+        private Boolean isClosedWonOpportunity(SObject record) {
             return (
                 record instanceof Opportunity && 
-                ((Opportunity) record).npe03__Recurring_Donation__c == deletedRecurringDonatioinId &&
                 ((Opportunity) record).IsClosed && ((Opportunity) record).IsWon
             );
+        }
+
+        /*******************************************************************************************************
+        * @description Gets the children records fo the given Recurring Donation.
+        * @param Id The Id of the deleted Recurring Donation.
+        * @param List<SObject> The deleted Recurring Donations children.
+        * @return List<SObject> The list of the children records of the given Recurring Donation.
+        ********************************************************************************************************/
+        private List<SObject> getChildren(Id deletedRecurringDonationId, List<SObject> allChildren) {
+            List<SObject> result = new List<SObject>();
+
+            for (SObject child : allChildren) {
+                if ((child instanceof Opportunity && ((Opportunity) child).npe03__Recurring_Donation__c == deletedRecurringDonationId) ||
+                    (child instanceof Allocation__c && (
+                        ((Allocation__c) child).Recurring_Donation__c == deletedRecurringDonationId ||
+                        ((Allocation__c) child).Opportunity__r.npe03__Recurring_Donation__c == deletedRecurringDonationId
+                    ))
+                ) {
+                    result.add(child);
+                }
+            }
+
+            return result;
         }
     }
 }

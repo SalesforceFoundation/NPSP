@@ -43,9 +43,6 @@ public class CDL_CascadeDeleteLookups {
     /** @description The single instance of the CascadeDelete. */
     private static CascadeDelete cascadeDelete;
 
-    /** @description The single instance of the CascadeUndelete. */
-    private static CascadeUndelete cascadeUndelete;
-
     /*******************************************************************************************************
     * @description Gets a single instance of the CascadeDelete.
     * @return CascadeDelete
@@ -55,17 +52,6 @@ public class CDL_CascadeDeleteLookups {
             cascadeDelete = new CascadeDelete();
         }
         return cascadeDelete;
-    }
-
-    /*******************************************************************************************************
-    * @description Gets a single instance of the CascadeUndelete.
-    * @return CascadeUndelete
-    ********************************************************************************************************/
-    public static CascadeUndelete getCascadeUndelete() {
-        if (cascadeUndelete == null) {
-            cascadeUndelete = new CascadeUndelete();
-        }
-        return cascadeUndelete;
     }
 
     /************************************************************************************************************
@@ -94,9 +80,9 @@ public class CDL_CascadeDeleteLookups {
         * @description Validates the children records.
         * @param List<SObject> The deleted records.
         * @param List<SObject> The children records to validate.
-        * @return List<SObject> The children records that pass the validation, and can be deleted.
+        * @return void
         ********************************************************************************************************/
-        List<SObject> validateDeletion(List<SObject> deletedRecords, List<SObject> children);
+        void validate(List<SObject> deletedRecords, List<SObject> children);
     }
 
     /*******************************************************************************************************
@@ -127,10 +113,9 @@ public class CDL_CascadeDeleteLookups {
     public class CascadeDelete {
         private Map<Id, SObject> deletedRecords;
         private List<SObject> children;
-        private List<SObject> validChildren;
 
         private CascadeDeleteLoader loader;
-        private CascadeDeleteValidator childrenValidator;
+        private CascadeDeleteValidator validator;
 
         /******************************************************************************************************
         * @description The Constructor of CascadeDelete.
@@ -138,11 +123,11 @@ public class CDL_CascadeDeleteLookups {
         public CascadeDelete() {
             deletedRecords = new Map<Id, SObject>();
             children = new List<SObject>();
-            validChildren = new List<SObject>();
         }
 
         /*******************************************************************************************************
-        * @description Sets the records (from the Triggers context) that are deleted.
+        * @description Sets the deleted records (from the Triggers context) that are deleted.
+        * @param List<SObject> The deleted records (from the Triggers context).
         * @return void
         ********************************************************************************************************/
         public void setDeletedRecords(List<SObject> deletedRecords) {
@@ -151,6 +136,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Sets the object that loads the children records.
+        * @param CascadeDeleteLoader The Cascade Delete Loader.
         * @return void
         ********************************************************************************************************/
         public void setLoader(CascadeDeleteLoader loader) {
@@ -159,66 +145,46 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Sets the object that validates the children records.
+        * @param CascadeDeleteValidator The Cascade Delete Validator.
         * @return void
         ********************************************************************************************************/
-        public void setValidator(CascadeDeleteValidator childrenValidator) {
-            this.childrenValidator = childrenValidator;
-        }
-
-        /*******************************************************************************************************
-        * @description Checks if the object that loads the children records exists.
-        * @return Boolean
-        ********************************************************************************************************/
-        public Boolean hasLoader() {
-            return loader != null;
-        }
-
-        /*******************************************************************************************************
-        * @description Checks if the object that validates the children records exists.
-        * @return Boolean
-        ********************************************************************************************************/
-        public Boolean hasValidator() {
-            return childrenValidator != null;
+        public void setValidator(CascadeDeleteValidator validator) {
+            this.validator = validator;
         }
 
         /*******************************************************************************************************
         * @description Retrieves the children records, and stores the records. This method uses the injected
-        * ChildrenLoader, to load the children records.
+        * CascadeDeleteLoader, to load the children records.
         * @return void
         ********************************************************************************************************/
         public void load() {
-            if (this.loader == null) {
-                return;
+            if (loader != null) {
+                children = loader.load(deletedRecords.keySet());
             }
-
-            children = loader.load(deletedRecords.keySet());
         }
 
         /*******************************************************************************************************
-        * @description Validates the children records. This method uses the injected ChildrenValidator,
-        * to load the children records.
+        * @description Validates the children records. This method uses the injected CascadeDeleteValidator,
+        * to validate the children records.
         * @return void
         ********************************************************************************************************/
-        public void validateDeletion() {
-            if (this.childrenValidator != null) {
-                validChildren = this.childrenValidator.validateDeletion(deletedRecords.values(), children);
-            }
-            else {
-                validChildren = children;
+        public void validate() {
+            if (validator != null) {
+                validator.validate(deletedRecords.values(), children);
             }
         }
 
         /*******************************************************************************************************
-        * @description Deletes the valid children records.
+        * @description Deletes the children records.
         * @return void
         ********************************************************************************************************/
         public void deleteRecords() {
-            if (validChildren.isEmpty()) {
+            if (children.isEmpty()) {
                 return;
             }
 
-            List<Database.DeleteResult> deletionResults = Database.delete(validChildren, false);
-            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(deletionResults, validChildren);
+            List<Database.DeleteResult> deletionResults = Database.delete(children, false);
+            ERR_Handler.Errors errorResult = ERR_Handler.getErrors(deletionResults, children);
             if (errorResult.errorsExist) {
                 ERR_Handler.processErrors(errorResult.errorRecords, 'TDTM');
             }
@@ -242,6 +208,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Sets the records (from the Triggers context) that are undeleted.
+        * @param List<SObject> The undeleted records (from the Triggers context).
         * @return void
         ********************************************************************************************************/
         public void setUndeletedRecords(List<SObject> undeletedRecords) {
@@ -250,6 +217,7 @@ public class CDL_CascadeDeleteLookups {
 
         /*******************************************************************************************************
         * @description Sets the object that loads the children records.
+        * @param CascadeUndeleteLoader The Cascade Undelete loader
         * @return void.
         ********************************************************************************************************/
         public void setLoader(CascadeUndeleteLoader loader) {
@@ -268,8 +236,7 @@ public class CDL_CascadeDeleteLookups {
             while (currentChildrenLoader != null) {
                 List<SObject> children = currentChildrenLoader.load(undeletedRecordIds);
                 if (children.isEmpty()) {
-                    currentChildrenLoader = currentChildrenLoader.next();
-                    continue;
+                    break;
                 }
 
                 List<Database.UndeleteResult> undeleteResults = Database.undelete(children, false);
@@ -335,7 +302,7 @@ public class CDL_CascadeDeleteLookups {
                 for (String errorType : childrenByErrorType.keySet()) {
                     result.add(errorType + ':' + getHTMLChildrenList(childrenByErrorType.get(errorType)));
                 }
-                return String.format(Label.CascadeDeletionError, new List<String>{deletedRecordName, String.join(result, '')});
+                return String.format(Label.CascadeDeletionError, new List<String>{deletedRecordName, String.join(result, '<br/>')});
             }
         }
 

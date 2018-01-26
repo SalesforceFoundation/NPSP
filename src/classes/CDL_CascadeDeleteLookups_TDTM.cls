@@ -64,18 +64,12 @@ public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
         if (TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.CascadeDeletes)) {
             return null;
         }
-
         if (triggerAction == TDTM_Runnable.Action.BeforeDelete) {
             runBeforeDelete(oldList);
         }
-
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            if (isMergeTrigger(oldList[0])) {
-                return null;
-            }
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete && isNotMergeTrigger(oldList[0])) {
             runAfterDelete(oldList);
         }
-
         if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
             runAfterUndelete(newList);
         }
@@ -84,26 +78,23 @@ public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Runs the Trigger Before Delete logic
-    * @param List<SObject> The List of the deleted records
+    * @description Runs the Trigger Before Delete logic.
+    * @param List<SObject> The List of the deleted records.
     * @return void
     ********************************************************************************************************/
     private void runBeforeDelete(List<SObject> oldList) {
         CDL_CascadeDeleteLookups.CascadeDelete cascadeDelete = CDL_CascadeDeleteLookups.getCascadeDelete();
         cascadeDelete.setDeletedRecords(oldList);
-        if (cascadeDelete.hasLoader() == false) {
-            cascadeDelete.setLoader(getCascadeDeleteLoader());
-        }
-        if (cascadeDelete.hasValidator() == false) {
-            cascadeDelete.setValidator(getCascadeDeleteValidator());
-        }
+        cascadeDelete.setLoader(getCascadeDeleteLoader());
+        cascadeDelete.setValidator(getCascadeDeleteValidator());
+
         cascadeDelete.load();
-        cascadeDelete.validateDeletion();
+        cascadeDelete.validate();
     }
 
     /*******************************************************************************************************
-    * @description Runs the Trigger After Delete logic
-    * @param List<SObject> The List of the deleted records
+    * @description Runs the Trigger After Delete logic.
+    * @param List<SObject> The List of the deleted records.
     * @return void
     ********************************************************************************************************/
     private void runAfterDelete(List<SObject> oldList) {
@@ -114,13 +105,13 @@ public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Runs the Trigger After Undelete logic
-    * @param List<SObject> The List of the undeleted records
+    * @description Runs the Trigger After Undelete logic.
+    * @param List<SObject> The List of the undeleted records.
     * @return void
     ********************************************************************************************************/
     private void runAfterUndelete(List<SObject> newList) {
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.CascadeDeletes, true);
-        CDL_CascadeDeleteLookups.CascadeUndelete cascadeUndelete = CDL_CascadeDeleteLookups.getCascadeUndelete();
+        CDL_CascadeDeleteLookups.CascadeUnDelete cascadeUndelete = new CDL_CascadeDeleteLookups.CascadeUnDelete();
         cascadeUndelete.setUndeletedRecords(newList);
         cascadeUndelete.setLoader(getCascadeUndeleteLoader());
         cascadeUndelete.undeleteRecords();
@@ -128,34 +119,34 @@ public abstract class CDL_CascadeDeleteLookups_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Checks if this Trigger Context is the result of a merge. If MasterRecordId is not blank
-    * then this Trigger Context is the result of a merge.
-    * @param SObject A record from the Trigger Context
+    * @description Checks if this Trigger Context is the result of a merge. If MasterRecordId is blank or  
+    * does not exist, then this Trigger Context is not the result of a merge.
+    * @param SObject A record from the Trigger Context.
     * @return Boolean. 
     ********************************************************************************************************/
-    private Boolean isMergeTrigger(SObject record) {
+    private Boolean isNotMergeTrigger(SObject record) {
         try {
-            return String.isNotBlank((String) record.get('MasterRecordId'));
+            return String.isBlank((String) record.get('MasterRecordId'));
         } catch (Exception ex) {
-            return false;
+            return true;
         }
     }
 
     /*******************************************************************************************************
     * @description Gets the Delete ChildrenLoader Object of the running Cascade Trigger Handler.
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteLoader.
     ********************************************************************************************************/
     protected abstract CDL_CascadeDeleteLookups.CascadeDeleteLoader getCascadeDeleteLoader();
 
     /*******************************************************************************************************
     * @description Gets the Undelete ChildrenLoader Object of the running Cascade Trigger Handler. 
-    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader
+    * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
     protected abstract CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader();
 
     /*******************************************************************************************************
     * @description Gets the ChildrenValidator Object of the running Cascade Trigger Handler. 
-    * @return CDL_CascadeDeleteLookups.CascadeDeleteValidator
+    * @return CDL_CascadeDeleteLookups.CascadeDeleteValidator.
     ********************************************************************************************************/
     protected virtual CDL_CascadeDeleteLookups.CascadeDeleteValidator getCascadeDeleteValidator() {
         return null;

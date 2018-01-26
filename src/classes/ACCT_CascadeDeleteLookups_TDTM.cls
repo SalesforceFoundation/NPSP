@@ -44,7 +44,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
     }
 
     /*******************************************************************************************************
-    * @description Gets the undeleted Accounts CascadeUndeleteLoader Object.
+    * @description Gets the deleted Accounts CascadeUndeleteLoader Object.
     * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
@@ -80,7 +80,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
             List<Allocation__c> relatedAllocations = getRelatedAllocations(accountIds, relatedRecurringDonations);
             result.addAll((List<SObject>) relatedAllocations);
             
-            return (new Map<Id, SObject>(result)).values();
+            return result;
         }
 
         /*******************************************************************************************************
@@ -172,7 +172,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
             List<npe4__Relationship__c> relatedRelationships = getRelatedRelationships(relatedContacts);
             result.addAll((List<SObject>) relatedRelationships);
 
-            return (new Map<Id, SObject>(result)).values();
+            return result;
         }
 
         /*******************************************************************************************************
@@ -223,7 +223,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the second children group of the Accounts being undeleted.
+    * @description Class that retrieves the second children group of the undeleted Accounts.
     ********************************************************************************************************/
     class SecondCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
 
@@ -238,7 +238,7 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         }
 
         /*******************************************************************************************************
-        * @description Retrieves the children of the Accounts being undeleted.
+        * @description Retrieves the Allocations of the undeleted Accounts.
         * @param Set<Id> The Ids of the undeleted Accounts.
         * @return List<Allocation__c> Undeleted Accounts' Allocations.
         ********************************************************************************************************/
