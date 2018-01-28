@@ -49,7 +49,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
      * Rollup Types (Account Hard Credit/Membership, Contact Hard Credit/Membership, Contact Soft Credit, and GAU)
      */
-    public static void convertLegacyRollupsIntoCustomizableRollups() {
+    public static String convertLegacyRollupsIntoCustomizableRollups() {
         List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
@@ -60,6 +60,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
 
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+        return jobId;
     }
 
     /*************************************************************************************************************
@@ -218,7 +219,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
-            ruleRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+            ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
             groupAllocations.rules.add(ruleRecordType);
         }
@@ -269,7 +270,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
             CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-            rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName);
+            rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).replace('_365_', '_N_');
             rollup.description = rollupText[1];
             rollup.filterGroupRecordName = rollupDetails[1];
             rollup.summaryObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(summaryObjectField)[0]);
@@ -314,7 +315,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rollup.detailField = udr.npo02__Source_Field__c;
             rollup.amountObject = 'Opportunity';
             rollup.amountField = 'Amount';
-            rollup.dateObject = 'CloseDate';
+            rollup.dateObject = 'Opportunity';
             rollup.dateField = 'CloseDate';
             rollup.operation = CRLP_Operation.getRollupTypeFromString(udr.npo02__Field_Action__c).name();
             rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
