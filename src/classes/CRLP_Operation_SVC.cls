@@ -66,20 +66,26 @@ public class CRLP_Operation_SVC {
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
-        Date dateValue, resultFieldDate;
-        Datetime resultFieldDateTime;
-        Double amountValue = null, resultFieldAmount = 0;
+
+        Date dateValue;
+        DateTime dateTimeValue;
+        Double amountValue = null;
         String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
         // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
-        // Since the Date is almost always the CloseDate field, we'll hard code this performance tweak.
+        // Since the Date is almost always the CloseDate field, hardcoding this performance tweak.
         SObject dateSObject = detailSObject;
         if (rollup.dateObject == oppObjectName && dateField == 'CloseDate') {
             dateValue = oppSObject.CloseDate;
         }
         if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
-            dateValue = (Date) dateSObject.get(dateField);
+            if (rollup.dateFieldType == SoapType.DATE) {
+                dateValue = (Date) dateSObject.get(dateField);
+            } else if (rollup.dateFieldType == SoapType.DATETIME) {
+                dateTimeValue = (DateTime) dateSObject.get(dateField);
+                dateValue = dateTimeValue.date();
+            }
         }
 
         // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
@@ -94,6 +100,7 @@ public class CRLP_Operation_SVC {
 
         // Get the Amount value from the appropriate object
         SObject amtSObject = detailSObject;
+        // Hardcoding this performance tweak similar to the Opportunity.CloseDate field above
         if (rollup.AmountObject == oppObjectName && amtField == 'Amount') {
             amountValue = oppSObject.Amount;
         }
@@ -130,7 +137,19 @@ public class CRLP_Operation_SVC {
                 Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
-                if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                if (dateTimeValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateTimeValue < rollup.minDateTime || rollup.minDateTime == null)) {
+                    // Operation = FIRST (always based on a date)
+                    // Only want to use < as the operator for the date comparison so it only retrieves the first
+                    // record that meets the minimum date.
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
+
+                } else if (dateTimeValue != null && operation == CRLP_Operation.RollupType.LAST && (dateTimeValue >= rollup.maxDateTime || rollup.maxDateTime == null)) {
+                    // Operation = LAST (always based on a date)
+                    // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
+                    // result value from whatever record makes up the 'last' record' by date
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
+
+                } else if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     // Only want to use < as the operator for the date comparison so it only retrieves the first
                     // record that meets the minimum date.
@@ -170,15 +189,24 @@ public class CRLP_Operation_SVC {
         String theYear;
 
         // Set the First/Last Date values; excluding Opportunities with a null Date or a null Amount
-        if (dateValue != null && amountValue != null) {
-            theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
+        if (dateValue != null) {
+            theYear = fiscalYrs.getYear(dateValue).format().replace(',', '');
             if (rollup.minDate == null || rollup.minDate > dateValue) {
                 rollup.minDate = dateValue;
             }
             if (rollup.maxDate == null || rollup.maxDate < dateValue) {
                 rollup.maxDate = dateValue;
             }
-
+            if (dateTimeValue != null) {
+                if (rollup.minDateTime == null || rollup.minDateTime > dateTimeValue) {
+                    rollup.minDateTime = dateTimeValue;
+                }
+                if (rollup.maxDateTime == null || rollup.maxDateTime < dateTimeValue) {
+                    rollup.maxDateTime = dateTimeValue;
+                }
+            }
+        }
+        if (dateValue != null && amountValue != null) {
             if (rollup.sumByYear.containsKey(theYear)) {
                 rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);

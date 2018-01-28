@@ -163,18 +163,46 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     /**
      * @description Filters the list of built CRLP_Rollup instances to either All, DateBased or NonDateBased
      * to reduce the actual number of rollups being calculated at once.
-     * @param rollupProcessingMode All, DateBasedOnly or NonDateBasedOnly enum
+     * @param rollupProcessingMode All, DaysAgoOnly, NonDaysAgoOnly, MembershipsOnly, or NonMembershipsOnly enum
      */
     public void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode) {
         if (rollupProcessingMode != CRLP_RollupProcessor_SVC.RollupsMode.All) {
             List<CRLP_Rollup> filteredRollups = new List<CRLP_Rollup>();
             for (CRLP_Rollup r : this.rollups) {
-                if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.DateBasedOnly &&
+                if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.DaysAgoOnly &&
                         r.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                     filteredRollups.add(r);
-                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonDateBasedOnly &&
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonDaysAgoOnly &&
                         r.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                     filteredRollups.add(r);
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.MembershipsOnly) {
+                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
+                    for (Rollup__mdt rlp : r.rollupsMdt) {
+                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
+                        if (summaryField != null && summaryField.contains('Membership')) {
+                            rlps.add(rlp);
+                        }
+                    }
+                    if (!rlps.isEmpty()) {
+                        r.rollupsMdt = rlps;
+                        filteredRollups.add(r);
+                    }
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonMembershipsOnly) {
+                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
+                    for (Rollup__mdt rlp : r.rollupsMdt) {
+                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
+                        if (summaryField != null && !summaryField.contains('Membership')) {
+                            rlps.add(rlp);
+                        }
+                    }
+                    if (!rlps.isEmpty()) {
+                        r.rollupsMdt = rlps;
+                        filteredRollups.add(r);
+                    }
+
                 }
             }
             this.rollups = filteredRollups;

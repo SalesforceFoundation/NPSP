@@ -75,7 +75,9 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
             Opportunity opp = opps[n];
             CRLP_Debug_UTIL.setCurrentRollupState('ProcessRollups for : ' + opp.Id);
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
+
                 Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)

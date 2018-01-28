@@ -36,6 +36,9 @@
 */
 public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
+    // TODO Refactor the 3 batch jobs to use a larger Interface or possibly Abstract class that these classes can inherit from and share code
+    // TODO Consider using one batch job per rollup so that the list of running jobs don't show the same class name twice.
+
     /** @description The Summary Object Type this batch job will process */
     private SObjectType summaryObjectType;
 

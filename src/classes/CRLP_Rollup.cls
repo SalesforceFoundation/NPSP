@@ -48,6 +48,7 @@ public class CRLP_Rollup {
     public String detailObject;
     public String amountObject;
     public String dateObject;
+    public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
     public String yearlyOperation;
     public Integer daysBack;
@@ -94,7 +95,10 @@ public class CRLP_Rollup {
                 this.resultFieldType = resultField.getSoapType();
                 this.resultFieldName = resultField.getName();
             }
-
+            if (rollupMdt.Date_Field__c !=  null) {
+                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rollupMdt.Date_Field__r.QualifiedApiName);
+                this.dateFieldType = dateField.getSoapType();
+            }
             // Year and Date/Day related details
             this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
             this.yearlyOperation = rollupMdt.Yearly_Operation_Type__c;

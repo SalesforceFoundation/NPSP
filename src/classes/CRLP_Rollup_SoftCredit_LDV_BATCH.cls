@@ -139,7 +139,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
             query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
 
-            // If necessary, filter the Detail recodrs by either ContactId or AccountId
+            // If necessary, filter the Detail records by either ContactId or AccountId
             if (this.recordIds != null && this.recordIds.size() > 0) {
                 String keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
                 if (this.hasContactSoftCreditRollups == false) {
@@ -209,12 +209,10 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                 // using the defined parent Id
                 summaryRecords = CRLP_RollupProcessor_SVC.resequenceSummaryRecords(parentIds, summaryRecords);
 
-
                 // Call the method to do the actual rollups. This returns only records that require updating
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
                 this.lastContactIdProcessed = options.lastParentIdProcessed;
 
-                // Save Rollups collection and the last parent record id processed in stateful vars
                 this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
                 this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
                 this.statefulRollupsById.put(this.lastContactIdProcessed, options.mapOfRollupsByParentId.get(this.lastContactIdProcessed));

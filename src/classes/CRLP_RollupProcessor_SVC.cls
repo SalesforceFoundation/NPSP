@@ -50,11 +50,12 @@ public class CRLP_RollupProcessor_SVC {
     /**
      * @description To aid in performance, the rollup operations can be limited to the following:
      * - All : All rollups for the parent are processed.
-     * - DateBasedOnly : Only Rollups using "Days Ago" (i.e., "Last N Days") are processed
-     * - NonDateBasedOnly : Only Rollups NOT using "Days Ago" are processed
+     * - DaysAgoOnly : Only Rollups using "Days Ago" (i.e., "Last N Days") are processed
+     * - NonDaysAgoOnly : Only Rollups NOT using "Days Ago" are processed
+     * - MembershipOnly : Only Rollups that target a Membership field
      */
     public Enum RollupsMode {
-        All, DateBasedOnly, NonDateBasedOnly
+        All, DaysAgoOnly, NonDaysAgoOnly, MembershipsOnly, NonMembershipsOnly
     }
 
     /**
