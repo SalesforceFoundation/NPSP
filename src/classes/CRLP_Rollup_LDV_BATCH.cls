@@ -39,8 +39,15 @@
 */
 public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
-    /** @description Stateful collection of CRLP_Rollup instances by Parent Id */
-    private Map<Id, List<CRLP_Rollup>> statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
+    /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
+     * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
+     * the parent record multiple times, the code will keep uncommited rollup data in the stateful var for up to
+     * this number of batch iterations. After that number, the record will be committed to the database. There
+     * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
+     * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
+     * for heap size.
+     */
+    private static final Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 30;
 
     /** @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
      * which can cause a single parent to be committed multiple times, this is used to track which parent records
@@ -48,6 +55,9 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
      * out of sequence.
      */
     private Map<Id, Integer> parentIdsNotCommittedWithBatch = new Map<Id, Integer>();
+
+    /** @description Stateful collection of CRLP_Rollup instances by Parent Id */
+    private Map<Id, List<CRLP_Rollup>> statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
 
     /** @description The last Parent Id processed by the batch job */
     private Id lastParentIdProcessed;
@@ -169,9 +179,10 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
                 // Don't add the last parent Id to the list UNLESS at least four batches have gone by. This is way of
                 // handling Salesforce's out of sequence baches while avoiding too many commits for a single record
                 for (Id lastId : this.parentIdsNotCommittedWithBatch.keySet()) {
-                    if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > 4) {
+                    if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > NUMBER_OF_BATCHES_TO_HOLD_COMMITS) {
                         if (!uniqueParentIds.contains(lastId)) {
                             parentIds.add(lastId);
+                            uniqueParentIds.add(lastId);
                             this.parentIdsNotCommittedWithBatch.remove(lastId);
                         }
                     }
@@ -189,12 +200,15 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
             // For the GAU object, strip out any detail records where the key field is NULL. This is better
             // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
             List<SObject> updatedDetailRecords = new List<SObject>();
-            String allocKeyField = SObjectType.Allocation__c.fields.Opportunity__c.getName();
-            for (Integer n=0, listSize=detailRecords.size(); n<listSize; n++) {
-                SObject dtl = detailRecords[n];
-                if (!isAllocationsRollup || dtl.get(allocKeyField) != null) {
-                    updatedDetailRecords.add(dtl);
+            if (isAllocationsRollup) {
+                for (Integer n = 0, listSize = detailRecords.size(); n < listSize; n++) {
+                    Allocation__c alloc = (Allocation__c)detailRecords[n];
+                    if (alloc.Opportunity__c != null) {
+                        updatedDetailRecords.add(alloc);
+                    }
                 }
+            } else {
+                updatedDetailRecords = detailRecords;
             }
 
             // Call the method to do the actual rollups. This returns only records that require updating
@@ -238,7 +252,7 @@ public class CRLP_Rollup_LDV_BATCH implements Database.Batchable<SObject>, Datab
                 CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance();
 
                 // Get the Summary (target) records for the final record to be processed
-                Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet(); // new Set<Id>{ this.lastParentIdProcessed };
+                Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();
                 String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
                 List<SObject> parents = database.query(soql);
 
