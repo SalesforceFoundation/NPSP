@@ -45,7 +45,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
      * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
      * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
      * for heap size.
-    */
+     */
     private static final Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 30;
 
     /** @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
@@ -203,7 +203,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
         List<SObjectType> objTypes = new List<SObjectType>{ Contact.SObjectType, Account.SObjectType};
         for (SObjectType sobjType : objTypes) {
 
-        try {
+            try {
 
                 Boolean hasRollups = ((sobjType == Contact.SObjectType && this.hasContactSoftCreditRollups) ||
                         (sobjType == Account.SObjectType && this.hasAccountSoftCreditRollups));
@@ -233,29 +233,29 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                                         parentIds.add(lastId);
                                         uniqueParentIds.add(lastId);
                                         this.parentIdsNotCommittedWithBatch.remove(lastId);
-                }
-            }
-        }
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
 
                     String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER By Id';
-                List<SObject> summaryRecords = database.query(soql);
+                    List<SObject> summaryRecords = database.query(soql);
 
-                // Resequence the Parent (Summary) records to be in the exact order of the detail records
-                // using the defined parent Id
-                summaryRecords = CRLP_RollupProcessor_SVC.resequenceSummaryRecords(parentIds, summaryRecords);
+                    // Resequence the Parent (Summary) records to be in the exact order of the detail records
+                    // using the defined parent Id
+                    summaryRecords = CRLP_RollupProcessor_SVC.resequenceSummaryRecords(parentIds, summaryRecords);
 
-                // Call the method to do the actual rollups. This returns only records that require updating
-                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
+                    // Call the method to do the actual rollups. This returns only records that require updating
+                    List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
 
                     Id lastIdProcessed;
                     if (sobjType == Contact.SObjectType) {
                         lastIdProcessed = this.lastContactIdProcessed = options.lastParentIdProcessed;
                     } else{
                         lastIdProcessed = this.lastAccountIdProcessed = options.lastParentIdProcessed;
-                this.statefulMapOfOppIdsByAcct.put(firstParentId, options.mapOfProcessedOppIdsByAcctId.get(firstParentId));
-                this.statefulMapOfOppIdsByAcct.put(lastParentId, options.mapOfProcessedOppIdsByAcctId.get(lastParentId));
+                        this.statefulMapOfOppIdsByAcct.put(firstParentId, options.mapOfProcessedOppIdsByAcctId.get(firstParentId));
+                        this.statefulMapOfOppIdsByAcct.put(lastParentId, options.mapOfProcessedOppIdsByAcctId.get(lastParentId));
                         this.statefulMapOfOppIdsByAcct.put(this.lastAccountIdProcessed, options.mapOfProcessedOppIdsByAcctId.get(lastAccountIdProcessed));
                     }
 
@@ -268,16 +268,19 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                         this.parentIdsNotCommittedWithBatch.put(lastIdProcessed, this.batchIteration);
                     }
 
-                // Handle dml on the records to be updated
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
-                if (updatedRecords != null) {
-                    this.totalRecordsModified += updatedRecords.size();
-                }
+                    // Handle dml on the records to be updated
+                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                    if (updatedRecords != null) {
+                        this.totalRecordsModified += updatedRecords.size();
+                    }
 
-        } catch (Exception ex) {
-            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
-            ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+
+                }
+            } catch (Exception ex) {
+                // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+                ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            }
         }
     }
 
@@ -291,49 +294,50 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
         List<SObjectType> objTypes = new List<SObjectType>{ Contact.SObjectType, Account.SObjectType};
         for (SObjectType sobjType : objTypes) {
 
-        try {
+            try {
 
                 Boolean hasRollups = ((sobjType == Contact.SObjectType && this.hasContactSoftCreditRollups) ||
                         (sobjType == Account.SObjectType && this.hasAccountSoftCreditRollups)) &&
                         this.parentIdsNotCommittedWithBatch != null && !this.parentIdsNotCommittedWithBatch.isEmpty();
 
-            // Handle the final parent record in the LDV job
+                // Handle the final parent record in the LDV job
                 if (hasRollups ) {
 
 
-                // Build the processing options instance
+                    // Build the processing options instance
                     CRLP_RollupProcessor_SVC.ProcessingOptions options = createOptionsInstance(sobjType);
 
-                // Get the Summary (target) records for the final record to be processed
+                    // Get the Summary (target) records for the final record to be processed
                     Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();
                     String soql = CRLP_Query_SEL.getResultsQuery(sobjType) + ' WHERE Id IN :parentIds';
                     List<SObject> parents = database.query(soql);
 
-                // Call the method to do the actual rollup on this last remaining record, which is basically
-                // just to return the updated record
+                    // Call the method to do the actual rollup on this last remaining record, which is basically
+                    // just to return the updated record
                     List<SObject> updatedRecords = new List<SObject>();
                     for (SObject parent : parents) {
-                SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+                        SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
                         if (updatedRecord != null) {
                             updatedRecords.add(updatedRecord);
                         }
                     }
 
-                // Handle dml on the records to be updated
+                    // Handle dml on the records to be updated
                     if (!updatedRecords.isEmpty()) {
                         CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
                         this.totalRecordsModified += updatedRecords.size();
+                    }
                 }
-            }
 
-        } catch (Exception ex) {
-            // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            } catch (Exception ex) {
+                // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            }
         }
 
         try {
         } catch (Exception ex) {}
-            }
+    }
 
     }
 
