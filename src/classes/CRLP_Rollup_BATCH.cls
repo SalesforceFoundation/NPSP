@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,39 +29,28 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups Batch for non-LDV-type Rollups
 */
-public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.Stateful {
-
-    // TODO Refactor the 3 batch jobs to use a larger Interface or possibly Abstract class that these classes can inherit from and share code
-    // TODO Consider using one batch job per rollup so that the list of running jobs don't show the same class name twice.
-
-    /** @description The Summary Object Type this batch job will process */
-    private SObjectType summaryObjectType;
-
-    /** @description Specified list of Summary (Account, Contact, or GAU) Id's to roll up */
-    private List<Id> recordIds;
-
-    /** @description Simple stateful counters used to track state */
-    private Integer batchIteration = 0;
-    private Integer totalRecordsModified = 0;
+public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
+        implements Database.Batchable<SObject>, Database.Stateful {
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(SObjectType objType) {
-        this.summaryObjectType = objType;
+        super(objType);
+        this.isLdvBatchJob = false;
     }
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(List<Id> recordIds) {
-        this.summaryObjectType = recordIds[0].getSobjectType();
-        this.recordIds = recordIds;
+        super(recordIds);
+        this.isLdvBatchJob = false;
     }
 
     /*******************************************************************************************************
@@ -122,15 +111,10 @@ public class CRLP_Rollup_BATCH implements Database.Batchable<SObject>, Database.
             List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
 
             // Build the processing options instance
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-            options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
-            options.parentObjType = this.summaryObjectType;
+            CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
             options.detailObjType = Opportunity.SObjectType;
-            if (this.summaryObjectType == Account.SObjectType) {
-                options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-            } else if (this.summaryObjectType == Contact.SObjectType) {
-                options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            }
+
+// options.rollupTypesToProcess = CRLP_RollupProcessor_SVC.RollupsMode.DateBasedOnly;
 
             // Call the method to do the actual rollups. This returns only records that require updating
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);

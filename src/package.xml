@@ -109,6 +109,7 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_AbstractRollup_BATCH</members>
         <members>CRLP_ConfigBuilder_SVC</members>
         <members>CRLP_ConfigBuilder_TEST</members>
         <members>CRLP_Debug_UTIL</members>
@@ -354,11 +355,11 @@
         <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
+        <members>UTIL_DMLService</members>
+        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
-        <members>UTIL_DMLService</members>
-        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -371,8 +372,6 @@
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_PlatformCache</members>
-        <members>UTIL_PerfLogger</members>
-        <members>UTIL_PerfLogger_TEST</members>
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>

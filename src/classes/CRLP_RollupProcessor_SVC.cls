@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups service methods specific to Batch and Queueable rollup operations
@@ -250,41 +250,6 @@ public class CRLP_RollupProcessor_SVC {
     }
 
     /**
-     * @description For a given set of records, returns a Set<Id> of parent records using the passed field name as the parent
-     * @param detailRecords List<SObject>
-     * @param parentKeyField API Name of the parent field to use for the Id
-     * @return List<Id>
-     */
-    public static List<Id> getParentIdsFromDetailRecords(List<SObject> detailRecords, String parentKeyField) {
-        Set<Id> parentIdSet = new Set<Id>();
-        List<Id> parentIds = new List<Id>();
-        // If the parentKeyField is something like Contact.AccountId, then have to retrieve the parent SObject
-        // first and then get the field value.
-        String parentObjectField;
-        if (parentKeyField.contains('.')) {
-            parentObjectField = parentKeyField.split('\\.')[0];
-            parentKeyField = parentKeyField.split('\\.')[1];
-        }
-        for (SObject dtl : detailRecords) {
-            SObject dtlRecord = dtl;
-            if (parentObjectField != null) {
-                dtlRecord = dtl.getSObject(parentObjectField);
-            }
-            if (dtlRecord.get(parentKeyField) != null) {
-                Id parentId = (Id)dtlRecord.get(parentKeyField);
-                // Use a set to ensure that the parentId is only in the collection one time since there is no
-                // contains() yet, but use a List to keep the parentId records in the exact same sequence
-                // that they are in the details collection
-                if (!parentIdSet.contains(parentId)) {
-                    parentIds.add(parentId);
-                    parentIdSet.add(parentId);
-                }
-            }
-        }
-        return parentIds;
-    }
-
-    /**
      * @description Saved instance of the instantiated handler class to avoid recreating each time. Because the soft credit
      * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
      * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
@@ -397,23 +362,5 @@ public class CRLP_RollupProcessor_SVC {
             newList.add(r.clone());
         }
         return newList;
-    }
-
-    /**
-     * @description Resequence the Parent (Summary) records to be in the exact order of the detail records
-     * using the defined parent Id
-     * @param parentIds
-     * @param summaryRecords
-     * @return
-     */
-    public static List<SObject> resequenceSummaryRecords(List<Id> parentIds, List<SObject> summaryRecords) {
-        // Resequence the Parent (Summary) records to be in the exact order of the detail records
-        // using the defined parent Id
-        List<SObject> reorderedSummaryRecords = new List<SObject>();
-        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(summaryRecords);
-        for (Id parentId : parentIds) {
-            reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
-        }
-        return reorderedSummaryRecords;
     }
 }

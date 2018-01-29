@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,84 +29,34 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Soft Credits rollup to the Account and Contacts object using OpportunityContactRole as the base
 *  LDV style query. Stateful vars are used to hold rollups of the Account and Contact across multiple batch
 *  iterations.
 */
-public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObject>, Database.Stateful {
-
-    /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
-     * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
-     * the parent record multiple times, the code will keep uncommited rollup data in the stateful var for up to
-     * this number of batch iterations. After that number, the record will be committed to the database. There
-     * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
-     * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
-     * for heap size.
-     */
-    private static final Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 30;
-
-    /** @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
-     * which can cause a single parent to be committed multiple times, this is used to track which parent records
-     * have not yet been committed. This is useful when Salesforce calls the execute() method with blocks of data
-     * out of sequence.
-     */
-    private Map<Id, Integer> parentIdsNotCommittedWithBatch = new Map<Id, Integer>();
-
-    /**
-    * @description Stateful collection of Rollups used to hold Rollups for Contacts and Accounts that
-    * span beyond a single batch iteration
-    */
-    private Map<Id, List<CRLP_Rollup>> statefulRollupsById;
+public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
+        implements Database.Batchable<SObject>, Database.Stateful {
 
     /** @description The last Parent Id processed by the batch job */
     private Id lastContactIdProcessed;
     private Id lastAccountIdProcessed;
 
-    /** @description Simple counters used to track state */
-    private Integer batchIteration = 0;
-    private Integer totalRecordsModified = 0;
-
-    /**
-    * @description This list is effectively the keyset of statefulRollupsById, but it's used to keep the list of
-    * Id's in a specific sequence so that element 0 can be dropped when the 1000th element is added. When dropped,
-    * that key is also removed from the statefulRollupsById map. The intent is to keep the heap size for the stateful
-    * Map of CRLP_Rollup data limited to avoid a governor limit when dealing with millions of records.
-    */
-    private List<Id> statefulListOfSavedIds;
-
-    /**
-     * @description Map of Opportunity Id's already processed by Account to avoid duplicating a donation amount
-     * to the Account when rolling up soft credits by the Contact.AccountId
-     */
-    private Map<Id,Set<Id>> statefulMapOfOppIdsByAcct;
-
-    /** @description Are there Soft Credits to Contact-Account rollups to execute? */
-    private Boolean hasAccountSoftCreditRollups = false;
-
-    /** @description Are there Soft Credits to Contact rollups to execute? */
-    private Boolean hasContactSoftCreditRollups = false;
-
-    /** @description Specified list of Summary (Account or Contact) Id's to roll up */
-    private List<Id> recordIds;
-
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_SoftCredit_LDV_BATCH() {
-        this.statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
-        this.statefulMapOfOppIdsByAcct = new Map<Id, Set<Id>>();
-        this.statefulListOfSavedIds = new List<Id>();
+        super();
+        this.isLdvBatchJob = true;
     }
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_SoftCredit_LDV_BATCH(List<Id> recordIds) {
-        this();
-        this.recordIds = recordIds;
+        super(recordIds);
+        this.isLdvBatchJob = true;
     }
 
     /*******************************************************************************************************
@@ -118,20 +68,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
 
         String query;
         String emptyQuery = 'SELECT Id FROM OpportunityContactRole LIMIT 0';
-        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
-
-        // Loop through all the Active Rollup Definitions to determine if there are Soft Credit Rollups
-        // definitions for either the Account and/or Contact object
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitions()) {
-            // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
-            // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
-            // the only reliable ObjectField to check against is AmountObject since that will always point
-            // to the PartialSoftCredit object for these types of rollups.
-            if (r.Amount_Object__r.QualifiedApiName == pscObjectName && r.Active__c == true) {
-                this.hasAccountSoftCreditRollups = (this.hasAccountSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Account');
-                this.hasContactSoftCreditRollups = (this.hasContactSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Contact');
-            }
-        }
 
         // If a set of specific Contact or Account Id's was passed, then ONLY roll up to that Object type
         if (this.recordIds != null && !this.recordIds.isEmpty()) {
@@ -216,31 +152,14 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                             detailRecords[detailRecords.size() - 1].Contact.AccountId);
 
                     // Get all parent records to be processed by this batch iteration
-                    List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords,
-                            (sobjType ==  Contact.SObjectType ? 'ContactId' : 'Contact.AccountId'));
-                    if (!this.parentIdsNotCommittedWithBatch.isEmpty()) {
-                        Set<Id> uniqueParentIds = new Set<Id>(parentIds);
-                        // Don't add the last parent Id to the list UNLESS at least four batches have gone by. This is way of
-                        // handling Salesforce's out of sequence baches while avoiding too many commits for a single record
-                        for (Id lastId : this.parentIdsNotCommittedWithBatch.keySet()) {
-                            if (lastId.getSobjectType() == sobjType) {
-                                if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > NUMBER_OF_BATCHES_TO_HOLD_COMMITS) {
-                                    if (!uniqueParentIds.contains(lastId)) {
-                                        parentIds.add(lastId);
-                                        uniqueParentIds.add(lastId);
-                                        this.parentIdsNotCommittedWithBatch.remove(lastId);
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    List<Id> parentIds = getUniqueParentIds(sobjType, detailRecords, (sobjType ==  Contact.SObjectType ? 'ContactId' : 'Contact.AccountId'));
 
                     String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER By Id';
                     List<SObject> summaryRecords = database.query(soql);
 
                     // Resequence the Parent (Summary) records to be in the exact order of the detail records
                     // using the defined parent Id
-                    summaryRecords = CRLP_RollupProcessor_SVC.resequenceSummaryRecords(parentIds, summaryRecords);
+                    summaryRecords = resequenceSummaryRecords(parentIds, summaryRecords);
 
                     // Call the method to do the actual rollups. This returns only records that require updating
                     List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
@@ -339,12 +258,9 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
      * @return CRLP_RollupProcessor_SVC.ProcessingOptions
      */
     private CRLP_RollupProcessor_SVC.ProcessingOptions createOptionsInstance(SObjectType objType) {
-        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.LDV;
+        CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
         options.parentObjType = objType;
         options.detailObjType = Partial_Soft_Credit__c.SObjectType;
-        options.mapOfRollupsByParentId = this.statefulRollupsById;
-        options.mapOfProcessedOppIdsByAcctId = this.statefulMapOfOppIdsByAcct;
 
         if (objType == Account.SObjectType) {
             options.preventDupeOppsInRollup = true;
@@ -368,7 +284,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
      * @return List<Partial_Soft_Credit__c>
      */
     private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
-        List<Id> oppIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
+        List<Id> oppIds = getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
         String oppQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
                 new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +
                 ' WHERE ID IN :oppIds';
