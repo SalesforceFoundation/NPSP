@@ -128,8 +128,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
             // the only reliable ObjectField to check against is AmountObject since that will always point
             // to the PartialSoftCredit object for these types of rollups.
             if (r.Amount_Object__r.QualifiedApiName == pscObjectName && r.Active__c == true) {
-                this.hasAccountSoftCreditRollups = (this.hasAccountSoftCreditRollups || r.Summary_Object__c == 'Account');
-                this.hasContactSoftCreditRollups = (this.hasContactSoftCreditRollups || r.Summary_Object__c == 'Contact');
+                this.hasAccountSoftCreditRollups = (this.hasAccountSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Account');
+                this.hasContactSoftCreditRollups = (this.hasContactSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Contact');
             }
         }
 

@@ -150,8 +150,8 @@ public class CRLP_RollupProcessor_SVC {
             // collection is unique by Opportunity Id
             if (isSoftCreditPreventDupeOppsMode == true) {
                 List<SObject> prunedOpps = new List<SObject>();
-                for (Integer nd=0, listSizeDtl=detailRecords.size(); nd<listSizeDtl; nd++) {
-                    SObject dtl = detailRecords[nd];
+                for (Integer nd=0, listSizeDtl=detailsForParent.size(); nd<listSizeDtl; nd++) {
+                    SObject dtl = detailsForParent[nd];
                     Id dtlId = (Id)dtl.get(Partial_Soft_Credit__c.Opportunity__c);
                     if (!options.mapOfProcessedOppIdsByAcctId.containsKey(parentId)) {
                         options.mapOfProcessedOppIdsByAcctId.put(parentId, new Set<Id>());
