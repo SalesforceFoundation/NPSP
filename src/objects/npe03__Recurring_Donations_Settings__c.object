@@ -3,9 +3,9 @@
     <fields>
         <fullName>Recurring_Donation_Batch_Size__c</fullName>
         <defaultValue>50</defaultValue>
-        <description>The number of records processed at a time when running the Recurring Donations job. The default size is 50. Reduce to a smaller number if the Recurring Donation job is failing due to system limits.</description>
+        <description>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The number of records processed at a time when running the Recurring Donations job. The default size is 50. Reduce to a smaller number if the Recurring Donation job is failing due to system limits.</inlineHelpText>
+        <inlineHelpText>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</inlineHelpText>
         <label>Recurring Donation Batch Size</label>
         <precision>18</precision>
         <required>false</required>
