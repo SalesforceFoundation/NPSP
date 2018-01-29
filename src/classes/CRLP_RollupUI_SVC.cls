@@ -305,6 +305,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'gauLabel' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
+                'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
                 'name' => Label.stgLabelName,
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,

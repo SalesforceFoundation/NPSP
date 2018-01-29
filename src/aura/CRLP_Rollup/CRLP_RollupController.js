@@ -87,7 +87,7 @@
             console.log(cmp.get("v.cachedRollup.Summary_Object__r.QualifiedApiName"));
             console.log(cachedRollup);
             //json shenanigans to avoid shared reference
-            cmp.set("v.activeRollup",JSON.parse(JSON.stringify(cachedRollup.valueOf())));
+            cmp.set("v.activeRollup", JSON.parse(JSON.stringify(cachedRollup.valueOf())));
             console.log('after changing rollup');
         }
     },
@@ -191,11 +191,9 @@
             detailObj = selectedTemplate.detailObject;
             summaryObj = selectedTemplate.summaryObject;
         }
-        //not setting labels yet, if that's not necessary
+
         cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", detailObj);
-        //cmp.set("v.activeRollup.Detail_Object__r.Label", detailObjLabel);
         cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", summaryObj);
-        //cmp.set("v.activeRollup.Summary_Object__r.Label", summaryObjLabel);
         cmp.set("v.mode", "clone");
     },
 

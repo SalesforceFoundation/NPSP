@@ -69,25 +69,29 @@
             console.log("Mode is " + mode);
             console.log("In changeMode");
 
-            //check operations to appropriately set "N/A" for date/amount field values
-            this.changeOperationsOptions(cmp);
-            this.changeYearlyOperationsOptions(cmp);
+            //for create we don't need to set anything yet since mode will be changed to clone before viewing page
+            if(mode != 'create') {
+                //check operations to appropriately set "N/A" for date/amount field values
+                this.changeOperationsOptions(cmp);
+                this.changeYearlyOperationsOptions(cmp);
 
-            //set readonly fields if mode is View, else allow user to make changes
-            if(mode != "view"){
-                cmp.set("v.isReadOnly",false);
-                this.resetSummaryObjects(cmp,cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
-                if(!$A.util.isEmpty(cmp.get("v.objectDetails"))){
-                    this.resetAllFields(cmp);
+                //set readonly fields if mode is View, else allow user to make changes
+                if (mode != "view") {
+                    cmp.set("v.isReadOnly", false);
+                    this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
+                    if (!$A.util.isEmpty(cmp.get("v.objectDetails"))) {
+                        this.resetAllFields(cmp);
+                    }
+                } else {
+                    cmp.set("v.isReadOnly", true);
+                    //disabled to use changeOperationsOptions instead
+                    //this.resetAllOperationsOptions(cmp);
                 }
-            } else {
-                cmp.set("v.isReadOnly", true);
-                this.resetAllOperationsOptions(cmp);
-            }
-            //this checks that fields are set; this action only needs to be done once per rollup
-            if($A.util.isEmpty(cmp.get("v.objectDetails"))){
-                console.log("before set object field dependencies");
-                this.setObjectAndFieldDependencies(cmp);
+                //this checks that fields are set; this action only needs to be done once per rollup
+                if ($A.util.isEmpty(cmp.get("v.objectDetails"))) {
+                    console.log("before set object field dependencies");
+                    this.setObjectAndFieldDependencies(cmp);
+                }
             }
         }
     },
@@ -96,8 +100,8 @@
 
         var operation = cmp.get("v.activeRollup.Operation__c");
         console.log(operation);
-        var readOnlyMap = cmp.get("v.readOnlyMap");
-        console.log(readOnlyMap);
+        var renderMap = cmp.get("v.renderMap");
+        console.log(renderMap);
         //todo: is this ok for translation?
         if (operation == 'Largest'
             || operation == 'Smallest'
@@ -106,18 +110,18 @@
             || operation == 'Sum'
             || operation == 'Average') {
             //enable amount object and fields
-            readOnlyMap["amount"] = false;
+            renderMap["amount"] = true;
         } else if (operation == 'First'
             || operation == 'Last'
             || operation == 'Years_Donated'
             || operation == 'Donor_Streak'
             || operation == 'Count') {
             //disable amount object and fields
-            readOnlyMap["amount"] = true;
+            renderMap["amount"] = false;
             cmp.set("v.activeRollup.Amount_Field__r.Label", cmp.get("v.labels.na"));
             cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
         }
-        cmp.set("v.readOnlyMap",readOnlyMap);
+        cmp.set("v.renderMap",renderMap);
 
         var operations = cmp.get("v.operations");
         var label = this.resetOperationFieldLabel(cmp, operation, operations);
@@ -128,27 +132,22 @@
     changeYearlyOperationsOptions: function(cmp){
         console.log("in helper changeYearlyOperationsOptions");
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
-        var readOnlyMap = cmp.get("v.readOnlyMap");
+        var renderMap = cmp.get("v.renderMap");
         //todo: is this ok for translation?
         if (operation == 'All_Time') {
             //disable fiscal year and integer
-            readOnlyMap["useFiscalYear"] = true;
-            readOnlyMap["integer"] = true;
-            readOnlyMap["dateField"] = true;
-            cmp.set("v.activeRollup.Date_Field__r.Label",cmp.get("v.labels.na"));
-            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
+            renderMap["useFiscalYear"] = false;
+            renderMap["integer"] = false;
         } else if (operation == 'Years_Ago') {
             //enable fiscal year and integer
-            readOnlyMap["useFiscalYear"] = false;
-            readOnlyMap["integer"] = false;
-            readOnlyMap["dateField"] = false;
+            renderMap["useFiscalYear"] = true;
+            renderMap["integer"] = true;
         } else if (operation == 'Days_Back') {
             //disable fiscal year and enable integer
-            readOnlyMap["useFiscalYear"] = true;
-            readOnlyMap["integer"] = false;
-            readOnlyMap["dateField"] = false;
+            renderMap["useFiscalYear"] = false;
+            renderMap["integer"] = true;
         }
-        cmp.set("v.readOnlyMap",readOnlyMap);
+        cmp.set("v.renderMap",renderMap);
 
         var yearlyOperations = cmp.get("v.yearlyOperations");
         var label = this.resetOperationFieldLabel(cmp, operation, yearlyOperations);
@@ -200,6 +199,7 @@
             cmp.set("v.amountFields", newFields);
         }
     },
+
     resetAllFields: function(cmp){
 
         var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
@@ -229,10 +229,9 @@
                 });
             }
         });
-        console.log("newFields");
-        console.log(newFields);
         return newFields;
     },
+
     filterSummaryFieldsByDetailField: function(cmp, detailField, summaryObject){
 
         //need to get all summary fields, or we filter on a subset of all options
@@ -256,20 +255,17 @@
             }
             //TODO: maybe check if type is the same to see if need to filter?
             console.log("Type is " + type);
+            //if type is undefined, return all fields
             if(type == undefined){
                 newFields = allFields;
             } else {
                 newFields = this.filterFieldsByType(cmp, [type], allFields);
             }
 
-            console.log("new fields returned");
-            console.log(newFields);
-
             if (newFields.length > 0) {
                 cmp.set("v.summaryFields", newFields);
             } else {
-                //TODO: get/set better label messaging; this would need tooltip help
-                //var na = cmp.get("v.labels.na");
+                //TODO: get/set better label messaging
                 newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
                 cmp.set("v.summaryFields", newFields);
             }
@@ -280,6 +276,7 @@
         //reset field to null regardless of summary object value
         cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
     },
+
     resetRollup: function(cmp) {
 
         //TODO: refactor this: consider caching rolllup, and review what is necessary
@@ -322,21 +319,9 @@
         $A.enqueueAction(action);
     },
 
-    resetAllOperationsOptions: function(cmp){
-        console.log("In reset all operations");
-        var readOnlyMap = cmp.get("v.readOnlyMap");
-        readOnlyMap["useFiscalYear"] = true;
-        readOnlyMap["integer"] = true;
-        readOnlyMap["amount"] = true;
-        readOnlyMap["dateField"] = true;
-        cmp.set("v.readOnlyMap",readOnlyMap);
-        console.log('Amount read only? ' + readOnlyMap.amount);
-        console.log("complete all operations reset");
-    },
     resetOperationFieldLabel: function(cmp, operation, operationList){
         var label;
         for(var i=0; i<operationList.length; i++){
-            console.log(operationList[i].name);
             if(operationList[i].name == operation){
                 label = operationList[i].label;
                 break;

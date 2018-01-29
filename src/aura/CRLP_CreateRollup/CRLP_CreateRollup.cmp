@@ -14,13 +14,13 @@
 
     <div class="slds-p-horizontal--large">
         <lightning:layout multipleRows="true">
-            <lightning:layoutItem size="12" mediumDeviceSize="8">
+            <lightning:layoutItem size="12" largeDeviceSize="8">
                 <lightning:layout multipleRows="true">
                     <lightning:layoutItem size="12" class="slds-p-bottom--medium">
                         <!--todo: get custom language from Sarah/Docs-->
                         <h2>To get started, select a rollup template option or skip to make your own</h2>
                     </lightning:layoutItem>
-                    <lightning:layoutItem size="12" class="slds-p-bottom--large" mediumDeviceSize="6">
+                    <lightning:layoutItem size="12" class="slds-p-bottom--large" smallDeviceSize="6">
                         <lightning:select aura:id="templateSelect"
                                           onchange="{!c.setTemplate}"
                                           label="{!v.labels.selectOne}"
@@ -32,14 +32,14 @@
                         </lightning:select>
                     </lightning:layoutItem>
                 </lightning:layout>
-            </lightning:layoutItem>
-            <lightning:layoutItem size="12" mediumDeviceSize="10">
-                <h3 class="slds-p-bottom--small slds-text-heading_small">Available Rollup Types</h3>
-                <lightning:datatable data="{!v.templates}"
-                                     columns="{!v.columns}"
-                                     class="slds-no-row-hover slds-table_col-bordered slds-text-body_small"
-                                     hideCheckboxColumn="true"
-                                     resizeColumnDisabled="true"/>
+                <lightning:layoutItem size="12">
+                    <h3 class="slds-p-bottom--small slds-text-heading_small">Available Rollup Types</h3>
+                    <lightning:datatable data="{!v.templates}"
+                                         columns="{!v.columns}"
+                                         class="slds-text-body_small"
+                                         hideCheckboxColumn="true"
+                                         resizeColumnDisabled="true"/>
+                </lightning:layoutItem>
             </lightning:layoutItem>
         </lightning:layout>
     </div>
