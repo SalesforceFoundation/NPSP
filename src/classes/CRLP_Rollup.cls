@@ -232,23 +232,10 @@ public class CRLP_Rollup {
         }
 
         // ================================================================
-        // First/Last Donation Date or DateTime
-        // ================================================================
-        if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.FIRST) {
-            resultValue = minDate;
-        } else if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.LAST) {
-            resultValue = maxDate;
-        } else if (fldType == SoapType.DATETIME && operation == CRLP_Operation.RollupType.FIRST) {
-            resultValue = minDateTime;
-        } else if (fldType == SoapType.DATETIME && operation == CRLP_Operation.RollupType.LAST) {
-            resultValue = maxDateTime;
-        }
-
-        // ================================================================
         // First/Last ,such as "Last Gift Amount"
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
+        if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
