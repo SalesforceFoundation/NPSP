@@ -335,10 +335,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
             }
         }
 
-        try {
-        } catch (Exception ex) {}
-    }
-
     }
 
     /********************************************************************************************************
