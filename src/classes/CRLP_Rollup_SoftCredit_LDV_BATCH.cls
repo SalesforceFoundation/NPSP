@@ -197,7 +197,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
         // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
         List<Partial_Soft_Credit__c> pscDetailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
 
-        CRLP_PerfLogger perfLogger = new CRLP_PerfLogger(bc.getJobId(), detailRecords.size());
         this.batchIteration++;
 
         List<SObjectType> objTypes = new List<SObjectType>{ Contact.SObjectType, Account.SObjectType};
@@ -215,9 +214,6 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH implements Database.Batchable<SObj
                     Id firstParentId = (sobjType == Contact.SObjectType ? detailRecords[0].ContactId : detailRecords[0].Contact.AccountId);
                     Id lastParentId = (sobjType == Contact.SObjectType ? detailRecords[detailRecords.size() - 1].ContactId :
                             detailRecords[detailRecords.size() - 1].Contact.AccountId);
-
-                    CRLP_PerfLogger.PerfLog pl = perfLogger.newPerfLog(('00' + this.batchIteration).right(3) + ': Soft Credit ' + sobjType + ' (' +
-                            firstParentId + ' to ' + lastParentId + ')');
 
                     // Get all parent records to be processed by this batch iteration
                     List<Id> parentIds = CRLP_RollupProcessor_SVC.getParentIdsFromDetailRecords(detailRecords,
