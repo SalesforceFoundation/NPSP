@@ -142,22 +142,22 @@ public class CRLP_Rollup {
 
     /**
      * @description Determine if the passed Rollup__mdt record has the identical key properties to this
-     * Rollup instance: FilterGroup, UseFiscalYear, Summary Object, Detail Field,
-     * Amount Field and Date Field.
+     * Rollup instance: FilterGroup, Summary Object, Detail Field, Amount Field, Date Field, and UseFiscalYear.
      * @param Rollup__mdt
      * @return True or False
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
                 'Filter_Group__c','Summary_Object__c','Detail_Field__c',
-                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c', 'Yearly_Operation_Type__c'
+                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
         };
         if (this.rollupsMdt == null) {
             return true;
         }
 
         // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
-        // types cannot be combined with other rollups of different types/days.
+        // types cannot be combined with other rollups of different types/days. Group these together
+        // where the NumberOfDays is the same.
         if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
                 && this.daysBack != otherMdtRollup.Integer__c) {
             return false;
@@ -216,7 +216,7 @@ public class CRLP_Rollup {
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( this.yearlyOperation == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - r.Integer__c.intValue();
