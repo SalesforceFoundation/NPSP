@@ -38,10 +38,15 @@
 public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
     /**
+     * @description Static collection of Account/Contact/Allocation Id's that have already been submitted
+     * to a rollup job in the current execution context. This prevents them from being submitted twice
+     */
+    private static Set<Id> alreadyQueuedForRollupJob = new Set<Id>();
+
+    /**
      * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
      * TODO Partial Soft Credits?
-     * TODO Prevent the queuable action from being run multiple times as the Opportunity, Payment and Allocation records are inserted
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -126,6 +131,13 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
 
+        // Unit Tests cannot chain queuable rollups, so all rollups are done real-time. As such,
+        // don't use this static set to prevent rollups from running multiple times on the same
+        // record.
+        if (Test.isRunningTest()) {
+            alreadyQueuedForRollupJob.clear();
+        }
+
         List<Opportunity> opps = new List<Opportunity>();
         if (detailObjType == Opportunity.SObjectType) {
 
@@ -151,8 +163,9 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             List<Id> gauIds = new List<Id>();
             for (SObject s  : detailRecordsToRollup) {
                 Allocation__c alloc = (Allocation__c)s;
-                if (alloc.Opportunity__c != null) {
+                if (alloc.Opportunity__c != null && !alreadyQueuedForRollupJob.contains(alloc.Opportunity__c)) {
                     gauIds.add(alloc.General_Accounting_Unit__c);
+                    alreadyQueuedForRollupJob.add(alloc.Opportunity__c);
                 }
             }
 
@@ -167,11 +180,13 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
         // If there are Opportunities, get the Account and/or Contact Ids to roll up to
         if (detailObjType != Allocation__c.SObjectType) {
             for (Opportunity opp : opps) {
-                if (opp.AccountId != null) {
+                if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
                     accountIds.add(opp.AccountId);
+                    alreadyQueuedForRollupJob.add(opp.AccountId);
                 }
-                if (opp.Primary_Contact__c != null) {
+                if (opp.Primary_Contact__c != null && !alreadyQueuedForRollupJob.contains(opp.Primary_Contact__c)) {
                     contactIds.add(opp.Primary_Contact__c);
+                    alreadyQueuedForRollupJob.add(opp.Primary_Contact__c);
                 }
             }
 
