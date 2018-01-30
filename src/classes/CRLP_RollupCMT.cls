@@ -38,6 +38,14 @@
 public class CRLP_RollupCMT {
 
     /**
+     * @description When this is set to true, the CMT recordname (DeveloperName) value is auto-generated
+     * as a unique random GUID format string. If false, the recordname (DeveloperName) is generated as a 
+     * more friendly formatted string value using the label text. The later is ONLY used when generating
+     * the default Filter Groups, Rules and Rollups. All customer created records will use the unique GUID.
+     */
+    public static Boolean useRandomGeneratedDeveloperName = true;
+
+    /**
      * @description Enum of the supported MetadataType objects (without the __mdt suffix)
      */
     public enum MetadataObject {
@@ -61,7 +69,7 @@ public class CRLP_RollupCMT {
 
         public FilterGroup(String label) {
             this.label = label.trim();
-            this.recordName = createValidRecordName(this.label);
+            this.recordName = generateRecordName(this.label);
             this.rules = new List<FilterRule>();
         }
 
@@ -132,7 +140,7 @@ public class CRLP_RollupCMT {
 
         public FilterRule(String filterGroupRecordName, String label) {
             this.label = label.trim();
-            this.recordName = createValidRecordName(this.label);
+            this.recordName = generateRecordName(this.label);
             this.filterGroupRecordName = filterGroupRecordName;
         }
 
@@ -207,7 +215,7 @@ public class CRLP_RollupCMT {
 
         public Rollup(String label) {
             this.label = label.trim();
-            this.recordName = createValidRecordName(this.label);
+            this.recordName = generateRecordName(this.label);
             this.useFiscalYear = false;
             this.isActive = true;
         }
@@ -284,21 +292,31 @@ public class CRLP_RollupCMT {
     }
 
     /**
-     * @description Utility to convert a Label into a valid 'DeveloperName' quality value for the CMT record
+     * @description Utility to convert a Label into a valid 'DeveloperName' quality value (or unique GUID)
+     * for the CMT record
      * @param label String
      * @return DeveloperName format string
      */
-    private static String createValidRecordName(String label) {
-        // replace all special characters and double underscores
-        String recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+    private static String generateRecordName(String label) {
 
-        //remove leading underscores
-        recordName = recordName.left(1) == '_' ? recordName.substring(1) : recordName;
+        if (useRandomGeneratedDeveloperName == false) {
+            // replace all special characters and double underscores
+            String recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
 
-        //remove trailing underscores
-        recordName = recordName.right(1) == '_' ? recordName.substring(0,recordName.length()-1) : recordName;
+            //remove leading underscores
+            recordName = recordName.left(1) == '_' ? recordName.substring(1) : recordName;
 
-        return recordName;
+            //remove trailing underscores
+            recordName = recordName.right(1) == '_' ? recordName.substring(0, recordName.length() - 1) : recordName;
+
+            return recordName;
+        } else {
+            // Create a GUID format unique string
+            Blob b = Crypto.GenerateAESKey(128);
+            String h = EncodingUtil.ConvertTohex(b);
+            return UserInfo.getUserId().left(15).right(6).toUpperCase() + '-' + h.SubString(8,12) + '-' +
+                    h.SubString(12,16) + '-' + h.SubString(16,20) + '-' + h.substring(20);
+        }
     }
 
     /**
