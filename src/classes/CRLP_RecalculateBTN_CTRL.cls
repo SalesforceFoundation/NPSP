@@ -92,7 +92,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             }
 
             // Execute Contact or Account Soft Credit roll-ups
-            if (this.objType == Account.SObjectType || this.objType == Contact.SObjectType) {
+            if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
                 Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(new List<Id>{ recordId }), batchSize);
             }

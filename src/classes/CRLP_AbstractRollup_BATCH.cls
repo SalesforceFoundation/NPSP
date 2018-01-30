@@ -124,20 +124,8 @@ public abstract class CRLP_AbstractRollup_BATCH {
      * the current active customizable rollups in the org
      */
     private void initSoftCreditRollupTypes() {
-        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
-
-        // Loop through all the Active Rollup Definitions to determine if there are Soft Credit Rollups
-        // definitions for either the Account and/or Contact object
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitions()) {
-            // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
-            // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
-            // the only reliable ObjectField to check against is AmountObject since that will always point
-            // to the PartialSoftCredit object for these types of rollups.
-            if (r.Amount_Object__r.QualifiedApiName == pscObjectName && r.Active__c == true) {
-                this.hasAccountSoftCreditRollups = (this.hasAccountSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Account');
-                this.hasContactSoftCreditRollups = (this.hasContactSoftCreditRollups || r.Summary_Object__r.QualifiedApiName == 'Contact');
-            }
-        }
+        this.hasContactSoftCreditRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType);
+        this.hasAccountSoftCreditRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType);
     }
 
     /**

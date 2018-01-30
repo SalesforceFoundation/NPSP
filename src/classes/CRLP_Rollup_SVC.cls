@@ -212,5 +212,22 @@ public class CRLP_Rollup_SVC {
         return false;
     }
 
+    /**
+     * @description Are there active Soft Credit Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActiveSoftCreditRollupsForSObject(SObjectType sObj) {
+        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pscObjectName) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
+
     public class CRLP_Exception extends Exception {}
 }
