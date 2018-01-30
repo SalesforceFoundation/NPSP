@@ -388,7 +388,8 @@
         if (typeof sforce === "undefined") {
             window.location.replace('/' + component.get('v.hhId'));
         } else {
-            sforce.one.navigateToSObject(component.get('v.hhId'));
+            // using back() instead of navigateToSObject() causes LEX to refresh related lists on the page.
+            sforce.one.back(true);
         }
     },
 
