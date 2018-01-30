@@ -83,8 +83,6 @@
             cmp.set("v.mode", "view");
             console.log('in cancel');
             var cachedRollup = cmp.get("v.cachedRollup");
-            console.log("Cached Rollup summary obj: ");
-            console.log(cmp.get("v.cachedRollup.Summary_Object__r.QualifiedApiName"));
             console.log(cachedRollup);
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", JSON.parse(JSON.stringify(cachedRollup.valueOf())));
@@ -146,34 +144,33 @@
     },
 
     changeSummaryFields: function(cmp, event, helper){
+        //change summary fields to match available detail field types + existing summary object
         if(cmp.get("v.mode")!='view'){
             if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null){
-                //change summary fields to match available detail field types + existing summary object
                 console.log('in change summary field');
                 var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
                 var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                //todo: nulls are evaluating to strings here; do we need a null check?
                 helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
             }
         }
     },
 
-    onChangeOperation: function(cmp, event, helper){
-        console.log('HITTING CHANGEOPERATION FUNCTION');
-        if(cmp.get("v.mode")!='view') {
-            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-                console.log('In change operation FUNCTION');
-                helper.changeOperationsOptions(cmp);
-            }
+    onChangeOperation: function (cmp, event, helper) {
+        //no check for view mode because the recalculation of operation is necessary with label formatting
+        if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            console.log('On change operation');
+            helper.changeOperationsOptions(cmp);
         }
     },
-    onChangeYearlyOperation: function(cmp, event, helper){
-        if(cmp.get("v.mode")!='view') {
-            console.log('HITTING CHANGEYEARLYOBJECT FUNCTION');
-            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
-                helper.changeYearlyOperationsOptions(cmp);
-            }
+    onChangeYearlyOperation: function (cmp, event, helper) {
+        if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            console.log('On change yearly operation');
+            helper.changeYearlyOperationsOptions(cmp);
         }
+    },
+    onSave: function(cmp, event, helper){
+        var activeRollup = cmp.get("v.activeRollup");
+        helper.saveRollup(cmp, activeRollup);
     },
     onSetTemplate: function(cmp, event, helper){
         //set the correct options from the selected template

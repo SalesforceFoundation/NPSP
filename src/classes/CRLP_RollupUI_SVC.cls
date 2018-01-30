@@ -182,9 +182,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         Schema.DescribeFieldResult field = Rollup__mdt.Operation__c.getDescribe();
 
-        for (Schema.PicklistEntry f : field.getPicklistValues())
-            rollupOperations.put(f.getValue(),f.getLabel());
-
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            rollupOperations.put(f.getValue(), f.getLabel());
+        }
         return rollupOperations;
     }
 
@@ -199,9 +199,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         Schema.DescribeFieldResult field = Rollup__mdt.Yearly_Operation_Type__c.getDescribe();
 
-        for (Schema.PicklistEntry f : field.getPicklistValues())
-            yearlyOperations.put(f.getValue(),f.getLabel());
-
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            yearlyOperations.put(f.getValue(), f.getLabel());
+        }
         return yearlyOperations;
     }
 
@@ -283,6 +283,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'allocationLabel' => Schema.SObjectType.Allocation__c.getLabel(),
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
+                'availableRollupTypes' => Label.CRLP_AvailableRollupType,
                 'cancel' => Label.stgBtnCancel,
                 'checkboxTrue' => Label.stgCheckboxTrue,
                 'checkboxFalse' => Label.stgCheckboxFalse,

@@ -34,7 +34,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.getRollup}"/>
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.getRollup}"/>
     <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
-    <aura:handler name="change" value="{!v.mode}" action="{!c.changeMode}"/>
+    <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
     <!-- events we fire -->
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
@@ -50,7 +50,6 @@
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}"
                   action="{!c.onChangeYearlyOperation}"/>
-    <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
 
     <!--activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
@@ -225,7 +224,7 @@
                                                          value="{!v.activeRollup.Integer__c}"
                                                          required="false"
                                                          readonly="{!v.isReadOnly}"
-                                                         pattern="(100)|[1-9]\d?"
+                                                         pattern="^([^.0-]|[^.0-][0-9]+|[0])$"
                                                          messageWhenPatternMismatch="{!v.labels.integerError}"/>
                                     </aura:if>
                                 </lightning:layoutItem>
@@ -266,7 +265,7 @@
                             <!--TODO: this button needs an onclick function to save stuff-->
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
                             <aura:if isTrue="{!or(v.mode=='clone', v.mode=='edit')}">
-                                <lightning:button label="{!v.labels.save}" variant="brand"/>
+                                <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"/>
                             </aura:if>
                             <aura:if isTrue="{!v.mode=='create'}">
                                 <lightning:button label="{!v.labels.next}" variant="brand" onclick="{!c.onSetTemplate}"/>

@@ -84,8 +84,6 @@
                     }
                 } else {
                     cmp.set("v.isReadOnly", true);
-                    //disabled to use changeOperationsOptions instead
-                    //this.resetAllOperationsOptions(cmp);
                 }
                 //this checks that fields are set; this action only needs to be done once per rollup
                 if ($A.util.isEmpty(cmp.get("v.objectDetails"))) {
@@ -97,7 +95,7 @@
     },
 
     changeOperationsOptions: function(cmp){
-
+        console.log("in helper changeOperationsOptions");
         var operation = cmp.get("v.activeRollup.Operation__c");
         console.log(operation);
         var renderMap = cmp.get("v.renderMap");
@@ -109,14 +107,15 @@
             || operation == 'Best_Year_Total'
             || operation == 'Sum'
             || operation == 'Average') {
-            //enable amount object and fields
+            //enable amount field
             renderMap["amount"] = true;
         } else if (operation == 'First'
             || operation == 'Last'
             || operation == 'Years_Donated'
             || operation == 'Donor_Streak'
-            || operation == 'Count') {
-            //disable amount object and fields
+            || operation == 'Count'
+            || operation == null) {
+            //disable amount field
             renderMap["amount"] = false;
             cmp.set("v.activeRollup.Amount_Field__r.Label", cmp.get("v.labels.na"));
             cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
@@ -146,6 +145,10 @@
             //disable fiscal year and enable integer
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = true;
+        } else {
+            //default to not showing these fields
+            renderMap["useFiscalYear"] = false;
+            renderMap["integer"] = false;
         }
         cmp.set("v.renderMap",renderMap);
 
@@ -294,15 +297,6 @@
                 //need to reset all fields to match the selected objects
                 this.resetAllFields(cmp);
 
-                //this converts values to a user-friendly format
-                //todo: determine if necessary and how to do this so that the selected value of the lightning select tags work
-                if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
-                    //cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
-                }
-                if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
-                    //cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
-                }
-
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
@@ -328,5 +322,8 @@
             }
         }
         return label;
+    },
+    saveRollup: function(cmp, activeRollup){
+
     }
 })

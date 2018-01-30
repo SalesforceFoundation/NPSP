@@ -628,6 +628,14 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_AvailableRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
+        <value>Available Rollup Types</value>
+    </labels>
+    <labels>
         <fullName>CRLP_NoRollupType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

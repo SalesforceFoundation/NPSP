@@ -499,6 +499,7 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>CRLP_CancelEvent</members>
         <members>CRLP_CreateRollup</members>
         <members>CRLP_FilterGroupRow</members>
         <members>CRLP_ModeChanged</members>
@@ -1057,6 +1058,7 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CRLP_AvailableRollupType</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>

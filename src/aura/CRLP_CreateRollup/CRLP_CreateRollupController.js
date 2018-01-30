@@ -2,21 +2,21 @@
     doInit: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
         var templateList = [{label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
-            name: 'Opportunity to Account Hard Credit', summaryObject: 'Account', detailObject: 'Opportunity'}
+            summaryObject: 'Account', detailObject: 'Opportunity'}
             , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
-                , name: 'Opportunity to Account Soft Credit', summaryObject: 'Account', detailObject: 'npe01__OppPayment__c'}
+                , summaryObject: 'Account', detailObject: 'npe01__OppPayment__c'}
             , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                , name: 'Opportunity to Contact Hard Credit', summaryObject: 'Account', detailObject: 'Partial_Soft_Credit__c'}
+                , summaryObject: 'Account', detailObject: 'Partial_Soft_Credit__c'}
             , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
-                , name: 'Opportunity to Contact Soft Credit', summaryObject: 'Contact', detailObject: 'Opportunity'}
+                , summaryObject: 'Contact', detailObject: 'Opportunity'}
             , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
-                , name: 'Payment to Account Hard Credit', summaryObject: 'Contact', detailObject: 'Partial_Soft_Credit__c'}
+                , summaryObject: 'Contact', detailObject: 'Partial_Soft_Credit__c'}
             , {label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                , name: 'Payment to Contact Hard Credit', summaryObject: 'Contact', detailObject: 'npe01__OppPayment__c'}
+                , summaryObject: 'Contact', detailObject: 'npe01__OppPayment__c'}
             , {label: labels.allocationLabel + ' -> ' + labels.gauLabel
-                , name: 'Allocation to GAU', summaryObject: 'General_Accounting_Unit__c', detailObject: 'Allocation__c'}
+                , summaryObject: 'General_Accounting_Unit__c', detailObject: 'Allocation__c'}
         ];
-        var columns = [{label: labels.rollupType, fieldName: 'name', type: 'text'},
+        var columns = [{label: labels.rollupType, fieldName: 'label', type: 'text'},
             {label: labels.summaryObject, fieldName: 'summaryObject', type: 'text'},
             {label: labels.detailObject, fieldName: 'detailObject', type: 'text'}
         ];
