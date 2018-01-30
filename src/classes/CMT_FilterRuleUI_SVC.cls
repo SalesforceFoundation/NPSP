@@ -190,7 +190,6 @@ public class CMT_FilterRuleUI_SVC {
                 return true;
             } else if (value.length() == 10) {
                 try {
-                    System.Debug(value);
                     Date dt = Date.valueOf(value);
                     return true;
                 } catch (Exception ex) {
@@ -198,7 +197,6 @@ public class CMT_FilterRuleUI_SVC {
                 }
             } else {
                 try {
-                    System.Debug(value);
                     DateTime dt = DateTime.valueOf(value);
                     return true;
                 } catch (Exception ex) {

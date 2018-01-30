@@ -6,7 +6,7 @@
 */
 public class CRLP_Debug_UTIL {
 
-    private static final Boolean isEnabled = true;
+    private static final Boolean isEnabled = false;
 
     private static List<String> currentRollupState = new List<String>();
 

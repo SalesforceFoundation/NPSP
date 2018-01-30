@@ -151,10 +151,10 @@ public class CMT_FilterRule {
         Boolean included = compare.isIncluded(record, this);
         if (!included) {
             // TODO Remove the debug statements once all testing is finalized
-            System.Debug(LoggingLevel.Error, '>>> THIS FAILED <<<');
-            System.Debug(LoggingLevel.Error, '>>> ' + this.objectType.getDescribe().getName() + '.' + this.field.getDescribe().getName());
-            System.Debug(LoggingLevel.Error, '>>> ' + this.operation);
-            System.Debug(LoggingLevel.Error, '>>> ' + this.constant);
+//            System.Debug(LoggingLevel.Error, '>>> THIS FAILED <<<');
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.objectType.getDescribe().getName() + '.' + this.field.getDescribe().getName());
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.operation);
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.constant);
         }
         return included;
     }

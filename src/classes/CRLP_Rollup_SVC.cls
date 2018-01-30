@@ -39,6 +39,9 @@
 * are stored in the CRLP_RollupProcessor_SVC class.
 */
 public class CRLP_Rollup_SVC {
+
+    private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
+
     /**
      * @description Interface class that the each of the 5 handler classes will implement
      */
@@ -112,9 +115,10 @@ public class CRLP_Rollup_SVC {
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
                 Rollup__mdt r = rollup.rollupsMdt[ns];
                 Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                SoapType summaryFieldType = summaryField.getSoapType();
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
-                if (summaryField.getSoapType() == SoapType.STRING && (origValue != null || newValue != null)) {
+                if (summaryFieldType == SoapType.STRING && (origValue != null || newValue != null)) {
                     // Handle an empty string as null to prevent unecessary DML updates
                     String origString = (origValue != null ? (String)origValue : null);
                     String newString = (newValue != null ? (String)newValue : null);
@@ -123,18 +127,17 @@ public class CRLP_Rollup_SVC {
                     if (origString != newString) {
                         hasValueChanged = true;
                     }
+                } else if (DO_NOT_UPDATE_NULL_TO_ZERO == false && summaryFieldType == SoapType.DOUBLE) {
+                    // If the value in the object is null and the updated value is something other than null or zero,
+                    // then the record has been changed. Otherwise, don't update a NULL value to zero or vice-versa.
+                    Double origNumber = (origValue != null ? (Double)origValue : 0);
+                    Double newNumber = (newValue != null ? (Double)newValue : 0);
+                    if (origNumber != newNumber) {
+                        hasValueChanged = true;
+                    }
                 } else if (origValue != newValue) {
                     hasValueChanged = true;
                 }
-                /*if (rollup.fldType == SoapType.DOUBLE) {
-                    // If the value in the object is null and the updated value is something other than null or zero,
-                    // then the record has been changed
-                    if (origValue == null && newValue != null & (Double)newValue != 0) {
-                        hasValueChanged = true;
-                    } else if (origValue != null && (Double)origValue != (Double)newValue) {
-                        hasValueChanged = true;
-                    }
-                }*/
                 if (hasValueChanged) {
                     break;
                 }
