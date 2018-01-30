@@ -136,6 +136,14 @@ private class CRLP_RecalculateBTN_TEST {
 
         Test.stopTest();
 
+        Integer expectedJobCount = 3;
+        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType)) {
+            expectedJobCount++;
+        }
+        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType)) {
+            expectedJobCount++;
+        }
+
         // validate that both the standard and the partial soft credit jobs were submitted
         system.assertEquals(5, [SELECT Count() FROM AsyncApexJob], 'Five Queueable jobs should been executed');
     }
