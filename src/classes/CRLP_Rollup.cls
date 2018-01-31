@@ -296,7 +296,9 @@ public class CRLP_Rollup {
         else if (operation == CRLP_Operation.RollupType.BEST_YEAR || operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
             Double maxVal = 0;
             String bestYr = null;
-            for (String yr : this.sumByYear.keySet()) {
+            List<String> years = new List<String>( this.sumByYear.keySet() );
+            years.sort();
+            for (String yr : years) {
                 if (this.sumByYear.get(yr) > maxVal) {
                     bestYr = yr;
                     maxVal = this.sumByYear.get(yr);
