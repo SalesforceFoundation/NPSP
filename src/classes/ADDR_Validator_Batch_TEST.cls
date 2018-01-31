@@ -125,6 +125,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
 
         Integer batchSize = 100;
 
+        UTIL_Debug.disableDebugLogging();
         TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         
