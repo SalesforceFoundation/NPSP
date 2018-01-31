@@ -154,9 +154,10 @@
      * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried
      * child objects and filtered by the parent record id's
      * @param summaryRecordIds Set<Id>
+     * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * @return SOQL
      */
-    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds) {
+    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
         SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
         SObjectType mainObject;
         String detailKeyField;
@@ -166,13 +167,17 @@
         if (objType == Account.SObjectType) {
             // Opportunity and Payment to Account
             mainObject = Opportunity.SObjectType;
-            childObjects.add(npe01__OppPayment__c.SObjectType);
+            if (includeChildPayments == true) {
+                childObjects.add(npe01__OppPayment__c.SObjectType);
+            }
             detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
 
         } else if (objType == Contact.SObjectType) {
             // Opportunity and Payment to Contact
             mainObject = Opportunity.SObjectType;
-            childObjects.add(npe01__OppPayment__c.SObjectType);
+            if (includeChildPayments == true) {
+                childObjects.add(npe01__OppPayment__c.SObjectType);
+            }
             detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
         }
 

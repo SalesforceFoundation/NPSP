@@ -227,16 +227,18 @@ public class CRLP_RollupProcessor_SVC {
     /**
      * @description For given set of Summary records, returns a List of the related Detail records.
      * @param summaryRecords List<SObject>
+     * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
+     * This is passed through to the getFullDetailsQueryForSummaryRecords() method
      * @return List<SObject> detailRecords to roll up to the summary records
      */
-    public static List<SObject> getDetailRecordsFromParentRecords(List<SObject> summaryRecords) {
+    public static List<SObject> getDetailRecordsFromParentRecords(List<SObject> summaryRecords, Boolean includeChildPayments) {
         // Get the parent record Id's
         Set<Id> summaryRecordIds = new Set<Id>();
         for (SObject s : summaryRecords) {
             summaryRecordIds.add((Id)s.get('Id'));
         }
 
-        String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds);
+        String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
 
         // Force the details query to sort by Ascending CreatedDate so that the records are process
         // in the order in which they were created in the database. Thus the 'first' is truly the first

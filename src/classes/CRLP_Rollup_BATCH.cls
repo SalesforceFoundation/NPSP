@@ -108,7 +108,8 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
         this.batchIteration++;
         try {
             // Get the detail records for the current set of Summary Records
-            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+            Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
+            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments);
 
             // Build the processing options instance
             CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
