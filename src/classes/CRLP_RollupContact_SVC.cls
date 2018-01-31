@@ -78,7 +78,7 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
             for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
                 CRLP_Rollup rollup = this.rollups[nsr];
 
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
                 if (rollup.detailObject == oppObjectName) {
@@ -90,7 +90,7 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
                     }
 
                 } else if (rollup.detailObject == pmtObjectName) {
-                    // Process rollups from the Payment to the Account
+                    // Process rollups from the Payment to the Contact
 
                     List<npe01__OppPayment__c> payments = opp.npe01__OppPayment__r;
                     for (npe01__OppPayment__c pmt : payments) {

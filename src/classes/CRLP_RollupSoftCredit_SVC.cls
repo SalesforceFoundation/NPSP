@@ -84,7 +84,7 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
             Opportunity opp = psc.Opportunity__r;
 
             for (CRLP_Rollup rollup : this.rollups) {
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Does this row pass the evaluation?
                 if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, psc }, filterGroupId)) {

@@ -70,7 +70,7 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
             Opportunity opp = alloc.Opportunity__r;
 
             for (CRLP_Rollup rollup : this.rollups) {
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
                 List<SObject> detailRows = new List<SObject>{ opp, alloc };

@@ -229,5 +229,23 @@ public class CRLP_Rollup_SVC {
         return false;
     }
 
+
+    /**
+     * @description Are there active Payment Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActivePaymentRollupsForSObject(SObjectType sObj) {
+        String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pmtObjectName) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
+
     public class CRLP_Exception extends Exception {}
 }

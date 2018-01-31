@@ -75,7 +75,7 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
             Opportunity opp = opps[n];
 
             for (CRLP_Rollup rollup : this.rollups) {
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
                 if (rollup.detailObject == oppObjectName) { 
