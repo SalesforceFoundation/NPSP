@@ -158,8 +158,9 @@ public class CRLP_Rollup {
         // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
         // types cannot be combined with other rollups of different types/days. Group these together
         // where the NumberOfDays is the same.
-        if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                && this.daysBack != otherMdtRollup.Integer__c) {
+        if (otherMdtRollup.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
+                && (this.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
+                    || this.daysBack != otherMdtRollup.Integer__c)) {
             return false;
         }
 
