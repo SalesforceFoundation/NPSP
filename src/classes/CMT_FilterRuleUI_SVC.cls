@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group CMT Filter Rules
 * @description Service Class for Filter Rules as it pertains the custom User Interface where Filter Rules are maintained
 */

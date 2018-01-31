@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Virtual class that all Rollup Source Object Handlers will extend from. Implements only the specific

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Rollup Operation Services:
@@ -63,6 +63,7 @@ public class CRLP_Operation_SVC {
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
         Rollup__mdt firstRollup = rollup.rollupsMdt[0];
+        // these values should be the same for every rollup definition in the CRLP_Rollup instance
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
