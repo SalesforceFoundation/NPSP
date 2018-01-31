@@ -314,8 +314,8 @@ public class CRLP_RollupCMT {
             // Create a GUID format unique string
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
-            return UserInfo.getUserId().left(15).right(6).toUpperCase() + '-' + h.SubString(8,12) + '-' +
-                    h.SubString(12,16) + '-' + h.SubString(16,20) + '-' + h.substring(20);
+            return 'C' + UserInfo.getUserId().left(15).right(6).toUpperCase() + '_' + h.SubString(8,12) + '_' +
+                    h.SubString(12,16) + '_' + h.SubString(16,20) + '_' + h.substring(20);
         }
     }
 
