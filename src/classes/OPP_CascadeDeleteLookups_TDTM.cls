@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Utilities
+ * @group Cascade Delete
  * @description Cascade deletion extension for Opportunity object.
  */
 public with sharing class OPP_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
