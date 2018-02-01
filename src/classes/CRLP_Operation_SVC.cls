@@ -118,8 +118,7 @@ public class CRLP_Operation_SVC {
                 String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
                 try {
                     fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                } catch (Exception ex) {
-                }
+                } catch (Exception ex) { }
                 amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurr, rollup.currCode);
             }
         }
@@ -134,6 +133,19 @@ public class CRLP_Operation_SVC {
 
             Object resultVal = (rollup.detailObject == oppObjectName ?
                     oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
+
+            // If the result field is a currency type field and multi-currency is enabled in the org
+            // then convert it to the target currency
+            if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
+                    UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                // Convert the Amount to the currency of the target record
+                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
+                try {
+                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
+                } catch (Exception ex) { }
+                resultVal = UTIL_CurrencyConversion.convertAmount((Decimal)resultVal, dateValue, fromCurr, rollup.currCode);
+            }
+
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
                 Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);

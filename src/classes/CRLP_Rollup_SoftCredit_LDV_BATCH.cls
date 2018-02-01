@@ -316,6 +316,9 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                         Role_Name__c = ocr.Role,
                         Amount__c = opp.Amount
                 );
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    matchedPSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                }
             }
             pscDetailRecords.add(matchedPSC);
         }

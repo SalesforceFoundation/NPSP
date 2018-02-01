@@ -44,6 +44,7 @@ public class CRLP_Rollup {
     public List<Rollup__mdt> rollupsMdt;
     public String resultFieldName;
     public SoapType resultFieldType;
+    public DisplayType resultFieldDisplaytype;
     public Boolean useFiscalYear;
     public String filterGroup;
     public String detailObject;
@@ -95,6 +96,7 @@ public class CRLP_Rollup {
             if (rollupMdt.Detail_Field__c !=  null) {
                 DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
                 this.resultFieldType = resultField.getSoapType();
+                this.resultFieldDisplaytype = resultField.getType();
                 this.resultFieldName = resultField.getName();
             }
             if (rollupMdt.Date_Field__c !=  null) {
