@@ -30,7 +30,7 @@
 /**
  * @author Salesforce.org
  * @date 2017
- * @group Utilities
+ * @group Cascade Delete
  * @description Cascade deletion and undeletion Domain Classes
  */
 
@@ -38,10 +38,22 @@ public class CDL_CascadeDeleteLookups {
 
     @TestVisible
     private static final String HTML_TEXT_CHILD_RECORDS_FORMAT = '<li><a href="#" onclick="window.open(\'\'/{0}\'\', \'\'\'\');return false;" target="_blank">{1}</a></li>';
-    @TestVisible private static Boolean LIGHTNING_CONTEXT;
 
     /** @description The single instance of the CascadeDelete. */
     private static CascadeDelete cascadeDelete;
+
+    /*******************************************************************************************************
+    * @description Gets the current user Theme Context (Lightning Experience or Classic).
+    * @return Boolean.
+    ********************************************************************************************************/
+    public static Boolean isLightningContext {
+        get {
+            return (isLightningContext == null)
+                ? USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()
+                : isLightningContext;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description Gets a single instance of the CascadeDelete.
@@ -292,7 +304,7 @@ public class CDL_CascadeDeleteLookups {
                 return '';
             }
 
-            if (isLightningContext()) {
+            if (CDL_CascadeDeleteLookups.isLightningContext) {
                 for (String errorType : childrenByErrorType.keySet()) {
                     result.add(errorType + ' (' + getPlainTextChildrenList(childrenByErrorType.get(errorType)) + ')');
                 }
@@ -333,17 +345,6 @@ public class CDL_CascadeDeleteLookups {
             }
             
             return String.join(result, ', ');
-        }
-
-        /*******************************************************************************************************
-        * @description Get the current user Theme Context (Lightning Experience or Classic).
-        * @return Boolean.
-        ********************************************************************************************************/
-        private Boolean isLightningContext() {
-            if (LIGHTNING_CONTEXT != null) {
-                return LIGHTNING_CONTEXT;
-            }
-            return USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile();
         }
     }
 }
