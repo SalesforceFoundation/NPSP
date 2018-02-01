@@ -1,7 +1,6 @@
 ({
     setObjectAndFieldDependencies: function(cmp) {
         //set list of objects and get data type for all
-        console.log('is objDetails empty?? '+$A.util.isEmpty(cmp.get("v.objectDetails")));
         if($A.util.isEmpty(cmp.get("v.objectDetails"))) {
 
             console.log("In the helper function");
@@ -25,7 +24,6 @@
 
             var action = cmp.get("c.getFieldsByDataType");
             action.setParams({objectNames: objectList});
-            console.log('obj list: '+objectList);
 
             action.setCallback(this, function (response) {
                 var state = response.getState();

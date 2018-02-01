@@ -10,15 +10,15 @@
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
-    <div class="slds-p-horizontal--large">
+    <div class="slds-p-horizontal_large">
         <lightning:layout multipleRows="true">
             <lightning:layoutItem size="12" largeDeviceSize="8">
                 <lightning:layout multipleRows="true">
-                    <lightning:layoutItem size="12" class="slds-p-bottom--medium">
+                    <lightning:layoutItem size="12" class="slds-p-bottom_medium">
                         <!--todo: get custom language from Sarah/Docs-->
                         <h2>To get started, select a rollup template or select none to customize your own</h2>
                     </lightning:layoutItem>
-                    <lightning:layoutItem size="12" class="slds-p-bottom--large" smallDeviceSize="6">
+                    <lightning:layoutItem size="12" class="slds-p-bottom_large" smallDeviceSize="6">
                         <lightning:select aura:id="templateSelect"
                                           onchange="{!c.setTemplate}"
                                           label="{!v.labels.selectOne}"
@@ -31,14 +31,18 @@
                     </lightning:layoutItem>
                 </lightning:layout>
                 <lightning:layoutItem size="12">
-                    <h3 class="slds-p-bottom--small slds-text-heading_small">{!v.labels.availableRollupTypes}</h3>
+                    <h3 class="slds-p-bottom_small slds-text-heading_small">{!v.labels.availableRollupTypes}</h3>
                     <lightning:datatable data="{!v.templates}"
                                          columns="{!v.columns}"
-                                         class="slds-text-body_small slds-no-row-hover"
-                                         hideCheckboxColumn="true"/>
+                                         onrowselection="{!c.setTemplate}"
+                                         class="slds-text-body_medium slds-no-row-hover slds-cell-shrink"
+                                         keyField="label"
+                                         maxRowSelection="1"/>
                 </lightning:layoutItem>
             </lightning:layoutItem>
         </lightning:layout>
     </div>
+
+
 
 </aura:component>

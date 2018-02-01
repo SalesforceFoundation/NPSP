@@ -79,7 +79,7 @@
             <!--END NEW ROLLUP-->
             <!--START FORM-->
             <div aria-labelledby="rollupdetail">
-                <form class="slds-form--stacked">
+                <form class="slds-form_stacked">
                     <lightning:layout>
                         <lightning:layoutItem size="12" largeDeviceSize="8">
 
@@ -260,7 +260,7 @@
         <lightning:layout>
             <lightning:layoutItem size="12" largeDeviceSize="8">
                 <aura:if isTrue="{!v.mode!='view'}">
-                    <div class="slds-p-around--large">
+                    <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
                             <!--TODO: this button needs an onclick function to save stuff-->
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>

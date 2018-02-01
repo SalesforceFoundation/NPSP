@@ -25,21 +25,19 @@
 
     <!-- markup -->
     <!--BEGIN BREADCRUMB-->
-    <div class="slds-p-horizontal--large slds-p-top--large">
+    <div class="slds-p-horizontal_large slds-p-top_large">
         <lightning:breadcrumbs>
             <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
             <aura:if isTrue="{!or(v.isFilterGroupsGrid,v.isRollupDetail)}">
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
         </lightning:breadcrumbs>
-        <!--Detail Mode: {!v.detailMode}<br/>
-        ActiveRollupId: {!v.activeRollupId}-->
 
     </div>
     <!--END BREADCRUMB-->
 
     <!--BEGIN HEADER-->
-    <div class="slds-p-around--large">
+    <div class="slds-p-around_large">
         <!--BEGIN TITLE-->
         <lightning:layout>
             <lightning:layoutItem largeDeviceSize="{!v.width}" size="12">
@@ -52,7 +50,7 @@
                             <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
                         </aura:if>
                         <aura:if isTrue="{!v.isRollupDetail}">
-                            <p class="slds-text-heading--label">{!v.labels.rollupLabel}</p>
+                            <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
                             <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
                                 <h1 class="slds-page-header__title" title="{!v.activeRollup.MasterLabel}">{!v.activeRollup.MasterLabel}</h1>
                                 <!--Else show mode header-->
@@ -103,7 +101,7 @@
 
     <!--BEGIN ROLLUPS GRID-->
     <aura:if isTrue="{!v.isRollupsGrid}">
-        <div class="slds-p-horizontal--large slds-p-bottom--large">
+        <div class="slds-p-horizontal_large slds-p-bottom_large">
             <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
                 <table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
@@ -126,7 +124,7 @@
 
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
-        <div class="slds-p-horizontal--large slds-p-bottom--large">
+        <div class="slds-p-horizontal_large slds-p-bottom_large">
             <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
                 <table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
@@ -148,7 +146,7 @@
 
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
-        <div class="slds-p-bottom--large">
+        <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{!v.activeRollupId}"
                            mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}"
                            filterGroups="{!v.filterGroupList}"/>

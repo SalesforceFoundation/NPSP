@@ -52,7 +52,7 @@
         }
     },
 
-    changeMode: function (cmp, event, helper) {
+    onChangeMode: function (cmp, event, helper) {
         helper.changeMode(cmp);
     },
 
