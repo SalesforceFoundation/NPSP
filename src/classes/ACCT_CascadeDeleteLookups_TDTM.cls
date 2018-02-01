@@ -181,7 +181,8 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
         * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
-            return new SecondCascadeUndeleteLoader(relatedRecurringDonations);
+            List<npe03__Recurring_Donation__c> undeletedRecurringDonations = getUndeletedRecurringDonations(relatedRecurringDonations);
+            return new SecondCascadeUndeleteLoader(undeletedRecurringDonations);
 
         }
 
@@ -218,6 +219,21 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
                 WHERE npe4__ReciprocalRelationship__c IN :contactsReciprocalRelationships
                 AND IsDeleted = TRUE
                 ALL ROWS
+            ];
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the Undeleted Recurring Donations to be passed to the SecondCascadeUndeleteLoader.
+        * This query is run to make sure the SecondCascadeUndeleteLoader gets only the Recurring Donations that were
+        * successfully undeleted.
+        * @param List<npe03__Recurring_Donation__c> The Recurring Donations that are supposed to be undeleted.
+        * @return List<npe03__Recurring_Donation__c> The Recurring Donations that are successfully undeleted.
+        ********************************************************************************************************/
+        private List<npe03__Recurring_Donation__c> getUndeletedRecurringDonations(List<npe03__Recurring_Donation__c> relatedRecurringDonations) {
+            return [
+                SELECT Name, npe03__Organization__c, npe03__Contact__r.AccountId
+                FROM npe03__Recurring_Donation__c
+                WHERE Id IN :relatedRecurringDonations
             ];
         }
     }
