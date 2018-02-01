@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Recurring Donations
 */
 @isTest
@@ -41,55 +41,42 @@ private class RD_CascadeDeleteLookups_TEST {
     * Then undeletes recurring donation, which undeletes opportunities and allocation. Verifies results.
     */
     static testMethod void testRDCascade(){
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(1);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(1);
+        insert accounts;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        List<Opportunity> testRDOpportunities = new List<Opportunity>();
-        testRDOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.createRDOpportunities(testRecurringDonations, UTIL_UnitTestData_TEST.getClosedLostStage()));
-        insert testRDOpportunities;
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
+        rdOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(recurringDonations, UTIL_UnitTestData_TEST.getClosedLostStage()));
+        insert rdOpportunities;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
 
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
-        insert testAllocations;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        insert allocations;
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         Test.startTest();
-        delete testRecurringDonations;
+        delete recurringDonations;
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<Opportunity> deletedRDOpportunities = [
-            SELECT Id 
-            FROM Opportunity 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testRDOpportunities.size(), deletedRDOpportunities.size(), 'The Opportunities should be cascade deleted with the recurring donations.');
+        List<Opportunity> deletedRDOpportunities = CDL_CascadeDeleteLookups_TEST.getDeletedOpportunities();
+        System.assertEquals(rdOpportunities.size(), deletedRDOpportunities.size(), 'The Opportunities should be cascade deleted with the recurring donations.');
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
+        System.assertEquals(allocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when recurring donation is deleted.');
 
-        undelete testRecurringDonations;
+        undelete recurringDonations;
 
         List<Opportunity> undeletedRDOpportunities = [
             SELECT Id 
@@ -98,11 +85,7 @@ private class RD_CascadeDeleteLookups_TEST {
         ];
         System.assertEquals(deletedRDOpportunities.size(), undeletedRDOpportunities.size(), 'The deleted Recurring Donation Opportunities should be cascade undeleted.');
 
-        List<Allocation__c> undeletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c
-            WHERE IsDeleted = false
-        ];
+        List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'The Recurring Donation Allocations should be cascade undeleted.');
     }
 
@@ -111,28 +94,28 @@ private class RD_CascadeDeleteLookups_TEST {
     * exception is thrown.
     */
     static testMethod void testRDDeleteException(){
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(1);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(1);
+        insert accounts;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        List<Opportunity> testRDOpportunities = new List<Opportunity>();
-        testRDOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.createRDOpportunities(testRecurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
-        insert testRDOpportunities;
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
+        rdOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(recurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
+        insert rdOpportunities;
 
         Exception caughException;
-        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonations[0].Name);
-        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(recurringDonations[0].Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, rdOpportunities[0].Id, rdOpportunities[0].Name);
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         Test.startTest();
         try{
-            delete testRecurringDonations;
+            delete recurringDonations;
         } catch (Exception ex) {
             caughException = ex;
         }
@@ -149,46 +132,46 @@ private class RD_CascadeDeleteLookups_TEST {
     * not be deleted. The other one should be deleted, and its Closed Lost Opportunity deleted.
     */
     static testMethod void testRDDeleteWithMixExceptionAndSuccess(){
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(2);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(2);
+        insert accounts;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        List<Opportunity> testRDOpportunities = new List<Opportunity>();
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
         
         //Create a Closed Won Opportunity for the first Recurring Donation.
-        testRDOpportunities.add(
-            CDL_CascadeDeleteLookups_TEST.createRDOpportunities(
-                new List<npe03__Recurring_Donation__c>{testRecurringDonations[0]}, 
+        rdOpportunities.add(
+            CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(
+                new List<npe03__Recurring_Donation__c>{recurringDonations[0]}, 
                 UTIL_UnitTestData_TEST.getClosedWonStage()
             )[0]
         );
         //Create a Closed Lost Opportunity for the first Recurring Donation.
-        testRDOpportunities.add(
-            CDL_CascadeDeleteLookups_TEST.createRDOpportunities(
-                new List<npe03__Recurring_Donation__c>{testRecurringDonations[1]}, 
+        rdOpportunities.add(
+            CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(
+                new List<npe03__Recurring_Donation__c>{recurringDonations[1]}, 
                 UTIL_UnitTestData_TEST.getClosedLostStage()
             )[0]
         );
-        insert testRDOpportunities;
+        insert rdOpportunities;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
-        insert testAllocations;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        insert allocations;
 
         TDTM_TriggerHandler.disableTDTM = false;
 
-        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonations[0].Name);
-        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(recurringDonations[0].Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, rdOpportunities[0].Id, rdOpportunities[0].Name);
 
         Test.startTest();
-        List<Database.DeleteResult> deleteResults = Database.delete(testRecurringDonations, false);
+        List<Database.DeleteResult> deleteResults = Database.delete(recurringDonations, false);
         Test.stopTest();
 
         Set<String> errorMessages = new Set<String>();
@@ -203,24 +186,14 @@ private class RD_CascadeDeleteLookups_TEST {
         System.assert(errorMessages.isEmpty() == false, 'An exception should be caught.');
         System.assert(errorMessages.contains(expectedError.getMessage()), 'Exception message is not the one expected');
 
-        List<npe03__Recurring_Donation__c> nonDeletedRecurringDonations = [
-            SELECT Id
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = false
-            AND Id = :testRecurringDonations[0].Id
-        ];
+        List<npe03__Recurring_Donation__c> nonDeletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getNonDeletedRecurringDonations();
         List<Opportunity> nonDeletedRDOpportunities = [
             SELECT Id 
             FROM Opportunity 
             WHERE IsDeleted = false
-            AND npe03__Recurring_Donation__c = :testRecurringDonations[0].Id
+            AND npe03__Recurring_Donation__c = :recurringDonations[0].Id
         ];
-        List<Allocation__c> nonDeletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c
-            WHERE IsDeleted = false
-            AND Recurring_Donation__c = :testRecurringDonations[0].Id
-        ];
+        List<Allocation__c> nonDeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(1, nonDeletedRecurringDonations.size(), 'The RD testRecurringDonation[0] should not be deleted.');
         System.assertEquals(1, nonDeletedRDOpportunities.size(), 'The testRecurringDonation[0] Opportunity should not be deleted.');
         System.assertEquals(1, nonDeletedAllocations.size(), 'The testRecurringDonation[0] Allocation should not be deleted.');
@@ -229,7 +202,7 @@ private class RD_CascadeDeleteLookups_TEST {
             SELECT Id
             FROM npe03__Recurring_Donation__c
             WHERE IsDeleted = true
-            AND Id = :testRecurringDonations[1].Id
+            AND Id = :recurringDonations[1].Id
             ALL ROWS
         ];
         List<Opportunity> deletedRDOpportunities = [
@@ -238,12 +211,7 @@ private class RD_CascadeDeleteLookups_TEST {
             WHERE IsDeleted = true
             ALL ROWS
         ];
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c
-            WHERE IsDeleted = true
-            ALL ROWS
-        ];
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
         System.assertEquals(1, deletedRecurringDonations.size(), 'The RD testRecurringDonation[1] should be deleted.');
         System.assertEquals(1, deletedRDOpportunities.size(), 'The testRecurringDonation[1] Opportunity should be deleted.');
         System.assertEquals(1, deletedAllocations.size(), 'The testRecurringDonation[1] Allocation should be deleted.');
@@ -254,30 +222,30 @@ private class RD_CascadeDeleteLookups_TEST {
     * exception is thrown.
     */
     static testMethod void testRDDeleteException_LightningThemeContext(){
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(1);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(1);
+        insert accounts;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        List<Opportunity> testRDOpportunities = new List<Opportunity>();
-        testRDOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.createRDOpportunities(testRecurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
-        insert testRDOpportunities;
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
+        rdOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(recurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
+        insert rdOpportunities;
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         Exception caughException;
-        CDL_CascadeDeleteLookups.LIGHTNING_CONTEXT = true;
-        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonations[0].Name);
-        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+        CDL_CascadeDeleteLookups.isLightningContext = true;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(recurringDonations[0].Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, rdOpportunities[0].Id, rdOpportunities[0].Name);
 
 
         Test.startTest();
         try{
-            delete testRecurringDonations;
+            delete recurringDonations;
         } catch (Exception ex) {
             caughException = ex;
         }
@@ -285,7 +253,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         System.assertNotEquals(null, caughException, 'An exception should be caught.');
         System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
-        System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id) == false, 'Exception message should not contain the closed won opportunity Id.');
+        System.assert(caughException.getMessage().contains(rdOpportunities[0].Id) == false, 'Exception message should not contain the closed won opportunity Id.');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
     }
 
@@ -294,29 +262,29 @@ private class RD_CascadeDeleteLookups_TEST {
     * exception is thrown.
     */
     static testMethod void testRDDeleteException_ClassicThemeContext(){
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(1);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(1);
+        insert accounts;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        List<Opportunity> testRDOpportunities = new List<Opportunity>();
-        testRDOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.createRDOpportunities(testRecurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
-        insert testRDOpportunities;
+        List<Opportunity> rdOpportunities = new List<Opportunity>();
+        rdOpportunities.addAll(CDL_CascadeDeleteLookups_TEST.buildRDOpportunities(recurringDonations, UTIL_UnitTestData_TEST.getClosedWonStage()));
+        insert rdOpportunities;
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         Exception caughException;
-        CDL_CascadeDeleteLookups.LIGHTNING_CONTEXT = false;
-        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(testRecurringDonations[0].Name);
-        expectedError.addChildError(Label.ClosedWonOpportunities, testRDOpportunities[0].Id, testRDOpportunities[0].Name);
+        CDL_CascadeDeleteLookups.isLightningContext = false;
+        CDL_CascadeDeleteLookups.Error expectedError = new CDL_CascadeDeleteLookups.Error(recurringDonations[0].Name);
+        expectedError.addChildError(Label.ClosedWonOpportunities, rdOpportunities[0].Id, rdOpportunities[0].Name);
 
         Test.startTest();
         try{
-            delete testRecurringDonations;
+            delete recurringDonations;
         } catch (Exception ex) {
             caughException = ex;
         }
@@ -324,7 +292,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         System.assertNotEquals(null, caughException, 'An exception should be caught.');
         System.assert(caughException.getMessage().contains(expectedError.getMessage()), 'Exception message is not the one expected');
-        System.assert(caughException.getMessage().contains(testRDOpportunities[0].Id), 'Exception message should contain the closed won opportunity Id.');
+        System.assert(caughException.getMessage().contains(rdOpportunities[0].Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(caughException.getMessage().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
     }
 }

@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Campaigns
 */
 @isTest
@@ -40,49 +40,34 @@ private class CAM_CascadeDeleteLookups_TEST {
     * @description Deletes the Campaigns which deletes the related Allocations. Verifies results.
     * Then undeletes the Campaigns, which undeletes the Allocations. Verifies results.
     */
-    static testMethod void testCampaignsCascadeDelete(){
+    static testMethod void testCampaignCascadeDelete(){
         Integer maxRecords = 1;
 
-        List<Campaign> testCampaigns = CDL_CascadeDeleteLookups_TEST.createCampaigns(maxRecords);
-        insert testCampaigns;
+        List<Campaign> campaigns = CDL_CascadeDeleteLookups_TEST.buildCampaigns(maxRecords);
+        insert campaigns;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createCampaignAllocations(testGAU, testCampaigns));
-        insert testAllocations;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildCampaignAllocations(generalAccountingUnit, campaigns));
+        insert allocations;
 
         Test.startTest();
-        delete testCampaigns;
+        delete campaigns;
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when campaign is deleted.');
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
+        System.assertEquals(allocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when campaign is deleted.');
 
-        undelete testCampaigns;
+        undelete campaigns;
 
-        errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<Allocation__c> undeletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = false
-        ];
+        List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(deletedAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade undeleted when campaign is deleted.');
     }
 }

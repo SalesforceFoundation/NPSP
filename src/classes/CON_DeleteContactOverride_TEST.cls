@@ -65,7 +65,7 @@ private class CON_DeleteContactOverride_TEST {
         insert con;
 
         list<Contact> queryCon = getContactList(con.Id);
-        system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-created household.');
+        system.assertNotEquals(null, queryCon[0].AccountId, 'The contact should have an auto-buildd household.');
         system.assert(queryCon[0].Account.npe01__SYSTEMIsIndividual__c, 'The household should have the system flag set.');
 
         Contact con2 = new Contact(LastName='foo', FirstName='Mr.', AccountId=querycon[0].AccountId);
@@ -325,52 +325,52 @@ private class CON_DeleteContactOverride_TEST {
     */
     static testMethod void testContactDeleteExceptionWithOverride(){
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
-        Account testAccount = new Account(Name = 'testAccount');
-        insert testAccount;
+        Account actualAccount = new Account(Name = 'TEST_ACCOUNT');
+        insert actualAccount;
 
-        Contact testContact = new Contact(LastName = 'TEST_CONTACT', AccountId = testAccount.Id);
-        insert testContact;
+        Contact actualContact = new Contact(LastName = 'TEST_CONTACT', AccountId = actualAccount.Id);
+        insert actualContact;
 
-        npe03__Recurring_Donation__c testRecurringDonation = CDL_CascadeDeleteLookups_TEST.createContactRDs(
-            new List<Contact>{testContact}
+        npe03__Recurring_Donation__c recurringDonation = CDL_CascadeDeleteLookups_TEST.buildContactRDs(
+            new List<Contact>{actualContact}
         )[0];
-        insert testRecurringDonation;
+        insert recurringDonation;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(new List<Contact>{testContact});
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{actualContact});
+        insert relationships;
 
         //org account for opportunity attribution
-        Account testOrgAccount = new Account(Name = 'TEST_ORG_ACCOUNT');
-        insert testOrgAccount;
+        Account orgAccount = new Account(Name = 'TEST_ORG_ACCOUNT');
+        insert orgAccount;
 
         Opportunity closedWonOpp = new Opportunity(
             Amount = 8,
             Name = 'TEST_OPPORTUNITY1',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today(),
-            Primary_Contact__c = testContact.Id
+            Primary_Contact__c = actualContact.Id
         );
         insert closedWonOpp;
 
-        Opportunity testOrgOpportunity = new Opportunity(
+        Opportunity orgOpportunity = new Opportunity(
             Amount = 8,
-            AccountId = testOrgAccount.Id,
+            AccountId = orgAccount.Id,
             Name = 'TEST_OPPORTUNITY2',
             StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
             CloseDate = System.today(),
-            Primary_Contact__c = testContact.Id
+            Primary_Contact__c = actualContact.Id
         );
-        insert testOrgOpportunity;
+        insert orgOpportunity;
 
-        Case testCase = new Case(
-            AccountId = testAccount.Id,
-            ContactId = testContact.Id
+        Case actualCase = new Case(
+            AccountId = actualAccount.Id,
+            ContactId = actualContact.Id
         );
-        insert testCase;
+        insert actualCase;
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
-        ApexPages.currentPage().getParameters().put('Id', testContact.Id);
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(testContact));
+        ApexPages.currentPage().getParameters().put('Id', actualContact.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(actualContact));
 
         Test.startTest();
         ctrl.processDelete();
@@ -379,29 +379,16 @@ private class CON_DeleteContactOverride_TEST {
         System.assert(ApexPages.hasMessages(), 'An exception should be caught and added to page messages.');
         System.assert(ApexPages.getMessages()[0].getDetail().contains(closedWonOpp.Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(testOrgOpportunity.Id), 'Exception message should contain the org opportunity Id.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(orgOpportunity.Id), 'Exception message should contain the org opportunity Id.');
         System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.OrganizationalOpportunities), 'Exception message should mention Organizational Opportunities.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(testCase.Id), 'Exception message should contain the Case Id.');
+        System.assert(ApexPages.getMessages()[0].getDetail().contains(actualCase.Id), 'Exception message should contain the Case Id.');
         System.assert(ApexPages.getMessages()[0].getDetail().contains(Case.SObjectType.getDescribe().getLabelPlural()), 'Exception message should mention Cases.');
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getDeletedRecurringDonations();
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
 
         System.assertEquals(0, deletedRecurringDonations.size(), 'The Contact Recurring Donation should NOT be cascade deleted because there is a validation error');
         System.assertEquals(0, deletedRelationships.size(), 'Contact Relationships should NOT be deleted because there is an exception.');
@@ -413,69 +400,51 @@ private class CON_DeleteContactOverride_TEST {
     */
     static testMethod void testContactDeleteWithOverride(){
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
-        Account testAccount = new Account(Name = 'ConAccount');
-        insert testAccount;
+        Account actualAccount = new Account(Name = 'TEST_ACCOUNT');
+        insert actualAccount;
 
-        Contact testContact = new Contact(LastName = 'foo', AccountId = testAccount.Id);
-        insert testContact;
+        Contact actualContact = new Contact(LastName = 'TEST_CONTACT', AccountId = actualAccount.Id);
+        insert actualContact;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(new List<Contact>{testContact});
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{actualContact});
+        insert relationships;
 
         TDTM_TriggerHandler.disableTDTM = true;
 
-        npe03__Recurring_Donation__c testRecurringDonation = CDL_CascadeDeleteLookups_TEST.createContactRDs(
-            new List<Contact>{testContact}
+        npe03__Recurring_Donation__c recurringDonation = CDL_CascadeDeleteLookups_TEST.buildContactRDs(
+            new List<Contact>{actualContact}
         )[0];
-        insert testRecurringDonation;
+        insert recurringDonation;
 
-        Opportunity testOrgOpportunity = new Opportunity(
+        Opportunity orgOpportunity = new Opportunity(
             Amount = 8,
-            AccountId = testAccount.Id,
-            Name = 'TEST_OPPORTUNITY2',
+            AccountId = actualAccount.Id,
+            Name = 'TEST_OPPORTUNITY',
             StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
             CloseDate = System.today(),
-            Primary_Contact__c = testContact.Id
+            Primary_Contact__c = actualContact.Id
         );
-        insert testOrgOpportunity;
+        insert orgOpportunity;
 
         TDTM_TriggerHandler.disableTDTM = false;
 
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
-        ApexPages.currentPage().getParameters().put('Id', testContact.Id);
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(testContact));
+        ApexPages.currentPage().getParameters().put('Id', actualContact.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(actualContact));
 
         Test.startTest();
         ctrl.processDelete();
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
-        List<Opportunity> deletedRDOpportunities = [
-            SELECT Id 
-            FROM Opportunity 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getDeletedRecurringDonations();
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
+        List<Opportunity> deletedRDOpportunities = CDL_CascadeDeleteLookups_TEST.getDeletedOpportunities();
 
         System.assertEquals(1, deletedRecurringDonations.size(), 'The Contact Recurring Donation should be cascade deleted when Contact is deleted.');
-        System.assertEquals(testRelationships.size() * 2, deletedRelationships.size(), 'Contact relationships should be deleted when the Contacts are deleted.');
+        System.assertEquals(relationships.size() * 2, deletedRelationships.size(), 'Contact relationships should be deleted when the Contacts are deleted.');
         System.assertEquals(1, deletedRDOpportunities.size(), 'The Opportunities should be cascade deleted.');
     }
         
@@ -484,57 +453,57 @@ private class CON_DeleteContactOverride_TEST {
     */
     static testMethod void testAccountDeleteExceptionWithOverride(){
         //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
-        Account testAccount = new Account(
+        Account actualAccount = new Account(
             Name = 'TESTACCOUNT',
             npe01__SYSTEMIsIndividual__c = true
         );
-        insert testAccount;
+        insert actualAccount;
 
-        Contact testContact1 = new Contact(
+        Contact actualContact1 = new Contact(
             LastName = 'TESTCONTACT1', 
-            AccountId = testAccount.Id
+            AccountId = actualAccount.Id
         );
-        Contact testContact2 = new Contact(
+        Contact actualContact2 = new Contact(
             LastName = 'TESTCONTACT2', 
-            AccountId = testAccount.Id
+            AccountId = actualAccount.Id
         );
-        insert new List<Contact>{testContact1, testContact2};
+        insert new List<Contact>{actualContact1, actualContact2};
 
         Opportunity closedWonOpp = new Opportunity(
             Amount = 8,
-            AccountId = testAccount.Id,
+            AccountId = actualAccount.Id,
             Name = 'TEST_OPP',
             StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
             CloseDate = System.today()
         );
         insert closedWonOpp;
 
-        Case testCase = new Case(
-            AccountId = testAccount.Id
+        Case actualCase = new Case(
+            AccountId = actualAccount.Id
         );
-        insert testCase;
+        insert actualCase;
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(new List<Contact>{testContact1}));
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(new List<Account>{testAccount}));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(new List<Contact>{actualContact1}));
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(new List<Account>{actualAccount}));
+        insert recurringDonations;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(new List<Account>{testAccount});
-        insert testOpportunities;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(new List<Account>{actualAccount});
+        insert opportunities;
 
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
-        insert testAllocations;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, opportunities));
+        insert allocations;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(new List<Contact>{testContact1});
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(new List<Contact>{actualContact1});
+        insert relationships;
         
         Test.setCurrentPage(Page.CON_DeleteContactOverride);
-        ApexPages.currentPage().getParameters().put('Id', testContact1.Id);
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(testContact1));
+        ApexPages.currentPage().getParameters().put('Id', actualContact1.Id);
+        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(actualContact1));
 
         Test.startTest();
         ctrl.deleteAccount();
@@ -543,37 +512,19 @@ private class CON_DeleteContactOverride_TEST {
         System.assert(ApexPages.hasMessages(), 'An exception should be caught and added to page messages.');
         System.assert(String.valueOf(ApexPages.getMessages()).contains(closedWonOpp.Id), 'Exception message should contain the closed won opportunity Id.');
         System.assert(String.valueOf(ApexPages.getMessages()).contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
-        System.assert(String.valueOf(ApexPages.getMessages()).contains(testCase.Id), 'Exception message should contain the Case Id.');
+        System.assert(String.valueOf(ApexPages.getMessages()).contains(actualCase.Id), 'Exception message should contain the Case Id.');
         System.assert(String.valueOf(ApexPages.getMessages()).contains(Case.SObjectType.getDescribe().getLabelPlural()), 'Exception message should mention Cases.');
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getDeletedRecurringDonations();
         System.assertEquals(0, deletedRecurringDonations.size(), 'Contact and Account Recurring Donation should NOT be cascade deleted.');
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
         System.assertEquals(0, deletedAllocations.size(), 'Allocation should NOT be cascade deleted when recurring donations');
 
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'The relationships created for Contact should NOT be deleted');
     }
 

@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Contacts
 */
 @isTest
@@ -40,40 +40,28 @@ private class CON_CascadeDeleteLookups_TEST {
     * @description Deletes contact and verifies it does not cascade delete the Relationships
     * Verifies results.
     */
-    static testMethod void testContactsCascadeDelete(){
+    static testMethod void testContactCascadeDelete(){
         Integer maxRecords = 1;
 
-        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
-        insert testContacts;
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(maxRecords);
+        insert contacts;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
         Test.startTest();
-        delete testContacts;
+        delete contacts;
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
-        System.assertEquals(testRelationships.size() * 2, deletedRelationships.size(), 'Both relationships should be deleted when the Contact is deleted.');
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
+        System.assertEquals(relationships.size() * 2, deletedRelationships.size(), 'Both relationships should be deleted when the Contact is deleted.');
 
-        undelete testContacts;
+        undelete contacts;
 
-        List<npe4__Relationship__c> undeletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = false
-        ];
+        List<npe4__Relationship__c> undeletedRelationships = CDL_CascadeDeleteLookups_TEST.getNonDeletedRelationships();
         System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships should be undeleted when the Contact is undeleted.');
     }
 
@@ -81,26 +69,18 @@ private class CON_CascadeDeleteLookups_TEST {
     * @description Verifies that the losing contact in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testContactMergeNoCascade(){
-        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(2);
-        insert testContacts;
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(2);
+        insert contacts;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
-        merge testContacts[0] testContacts[1];
+        merge contacts[0] contacts[1];
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
     }
 }

@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Opportunities
 */
 @isTest
@@ -45,37 +45,28 @@ private class OPP_CascadeDeleteLookups_TEST {
     static testMethod void testOppCascade() {
         Integer maxRecords = 1;
 
-        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(maxRecords);
-        insert testAccounts;
+        List<Account> accounts = CDL_CascadeDeleteLookups_TEST.buildAccounts(maxRecords);
+        insert accounts;
 
-        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
-        insert testOpportunities;
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(accounts);
+        insert opportunities;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
-        insert testAllocations;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, opportunities));
+        insert allocations;
 
         Test.startTest();
-        delete testOpportunities;
+        delete opportunities;
         Test.stopTest();
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when the Opportunity is deleted.');
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
+        System.assertEquals(allocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when the Opportunity is deleted.');
 
-        undelete testOpportunities;
+        undelete opportunities;
 
-        List<Allocation__c> undeletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = false
-        ];
+        List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted when the Opportunity is deleted.');
     }
 }

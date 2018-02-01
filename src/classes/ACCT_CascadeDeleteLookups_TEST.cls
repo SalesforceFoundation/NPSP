@@ -30,109 +30,76 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Accounts
 */
 @isTest
 private class ACCT_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Tests cascade delete: deletes accounts, which deletes recurring dontations allocations 
+    * @description Tests cascade delete: deletes accounts, which deletes recurring donations allocations 
     * and relationships. 
     * Verifies results. Then undeletes accounts, which undeletes recurring donations allocations and relationships.
     */
-    static testMethod void testAccountsCascadeGrandchildren() {
+    static testMethod void testAccountCascadeGrandchildren() {
         Integer maxRecords = 1;
 
-        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(maxRecords);
-        insert testContacts;
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(maxRecords);
+        insert contacts;
 
         //Retrieve auto created HH Accounts
-        List<Account> testAccounts = [
+        List<Account> accounts = [
             SELECT Name 
             FROM Account 
-            WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :testContacts)
+            WHERE Id IN (SELECT AccountId FROM Contact WHERE Id IN :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(testContacts));
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
-        insert testOpportunities;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(accounts);
+        insert opportunities;
 
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
-        insert testAllocations;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, opportunities));
+        insert allocations;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
         Test.startTest();
-        delete testAccounts;
+        delete accounts;
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testRecurringDonations.size(), deletedRecurringDonations.size(), 'Recurring Donations should be cascade deleted when Account is deleted.');
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getDeletedRecurringDonations();
+        System.assertEquals(recurringDonations.size(), deletedRecurringDonations.size(), 'Recurring Donations should be cascade deleted when Account is deleted.');
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
-        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when Account is deleted.');
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
+        System.assertEquals(allocations.size(), deletedAllocations.size(), 'Allocation should be cascade deleted when Account is deleted.');
 
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
-        System.assertEquals(testRelationships.size() * 2, deletedRelationships.size(), 'The two relationships created for the Contact should be deleted');
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
+        System.assertEquals(relationships.size() * 2, deletedRelationships.size(), 'The two relationships created for the Contact should be deleted');
 
-        undelete testAccounts;
+        undelete accounts;
 
-        errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> undeletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c 
-            WHERE IsDeleted = false
-        ];
+        List<npe03__Recurring_Donation__c> undeletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getNonDeletedRecurringDonations();
         System.assertEquals(deletedRecurringDonations.size(), undeletedRecurringDonations.size(), 'Recurring Donations should be cascade undeleted when Account is undeleted.');
 
-        List<Allocation__c> undeletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c
-            WHERE IsDeleted = false
-        ];
+        List<Allocation__c> undeletedAllocations = CDL_CascadeDeleteLookups_TEST.getNonDeletedAllocations();
         System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted when Account is undeleted.');
 
-        List<npe4__Relationship__c> undeletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = false
-        ];
+        List<npe4__Relationship__c> undeletedRelationships = CDL_CascadeDeleteLookups_TEST.getNonDeletedRelationships();
         System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships for the Contact should be undeleted when Account is undeleted.');
     }
 
@@ -141,66 +108,48 @@ private class ACCT_CascadeDeleteLookups_TEST {
     * Verifies results: The losing account in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testAccountMergeNoCascade() {
-        List<Contact> testContacts = CDL_CascadeDeleteLookups_TEST.createContacts(2);
-        insert testContacts;
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(2);
+        insert contacts;
 
         //Retrieve auto created HH Accounts
-        List<Account> testAccounts = [
+        List<Account> accounts = [
             SELECT Name 
             FROM Account 
-            WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :testContacts)
+            WHERE Id IN (SELECT AccountId FROM Contact WHERE Id = :contacts)
         ];
 
-        List<npe03__Recurring_Donation__c> testRecurringDonations = new List<npe03__Recurring_Donation__c>();
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createContactRDs(testContacts));
-        testRecurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.createOrganizationalRDs(testAccounts));
-        insert testRecurringDonations;
+        List<npe03__Recurring_Donation__c> recurringDonations = new List<npe03__Recurring_Donation__c>();
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildContactRDs(contacts));
+        recurringDonations.addAll(CDL_CascadeDeleteLookups_TEST.buildOrganizationalRDs(accounts));
+        insert recurringDonations;
 
-        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
-        insert testGAU;
-        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
-        insert testOpportunities;
+        General_Accounting_Unit__c generalAccountingUnit = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert generalAccountingUnit;
+        List<Opportunity> opportunities = CDL_CascadeDeleteLookups_TEST.buildOpportunities(accounts);
+        insert opportunities;
 
-        List<Allocation__c> testAllocations = new List<Allocation__c>();
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createRDAllocations(testGAU, testRecurringDonations));
-        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
-        insert testAllocations;
+        List<Allocation__c> allocations = new List<Allocation__c>();
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, opportunities));
+        insert allocations;
 
-        List<npe4__Relationship__c> testRelationships = CDL_CascadeDeleteLookups_TEST.createRelationships(testContacts);
-        insert testRelationships;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
         Test.startTest();
-        merge testAccounts[0] testAccounts[1];
+        merge accounts[0] accounts[1];
         Test.stopTest();
 
-        List<Error__c> errors = [
-            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
-            FROM Error__c
-        ];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> deletedRecurringDonations = [
-            SELECT Id 
-            FROM npe03__Recurring_Donation__c
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
+        List<npe03__Recurring_Donation__c> deletedRecurringDonations = CDL_CascadeDeleteLookups_TEST.getDeletedRecurringDonations();
         System.assertEquals(0, deletedRecurringDonations.size(), 'Recurring Donations should not be deleted as the result of losing a merge.');
 
-        List<Allocation__c> deletedAllocations = [
-            SELECT Id 
-            FROM Allocation__c 
-            WHERE IsDeleted = true 
-            ALL ROWS
-        ];
+        List<Allocation__c> deletedAllocations = CDL_CascadeDeleteLookups_TEST.getDeletedAllocations();
         System.assertEquals(0, deletedAllocations.size(), 'Allocations should not be deleted as the result of losing a merge.');
 
-        List<npe4__Relationship__c> deletedRelationships = [
-            SELECT Id 
-            FROM npe4__Relationship__c
-            WHERE IsDeleted = true 
-            ALL ROWS 
-        ];
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
         System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
     }
 }
