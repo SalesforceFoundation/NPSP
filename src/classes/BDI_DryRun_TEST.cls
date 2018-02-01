@@ -291,8 +291,8 @@ public with sharing class BDI_DryRun_TEST {
 
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington'));
-        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
+        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
         insert listConExisting;
 
         List<DataImport__c> listDI = new List<DataImport__c>();
@@ -339,8 +339,8 @@ public with sharing class BDI_DryRun_TEST {
 
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
-        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington'));
-        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington'));
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
+        listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
         insert listConExisting;
 
         List<DataImport__c> listDI = new List<DataImport__c>();
