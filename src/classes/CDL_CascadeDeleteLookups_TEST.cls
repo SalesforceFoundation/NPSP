@@ -30,7 +30,7 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Utilities for the Cascade Delete Test Classes
 */
 @isTest
@@ -41,7 +41,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param Integer The maximum records to create.
     * @return List<Account> The created Accounts.
     ********************************************************************************************************/
-    public static List<Account> createAccounts(Integer maxRecords) {
+    public static List<Account> buildAccounts(Integer maxRecords) {
         List<Account> result = new List<Account>();
         for (Integer i = 0; i < maxRecords; i++) {
             result.add(new Account(Name = 'Account' + i));
@@ -54,7 +54,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param Integer The maximum records to create.
     * @return List<Contact> The created Contacts.
     ********************************************************************************************************/
-    public static List<Contact> createContacts(Integer maxRecords) {
+    public static List<Contact> buildContacts(Integer maxRecords) {
         List<Contact> result = new List<Contact>();
         for (Integer i = 0; i < maxRecords; i++) {
             result.add(new Contact(LastName = 'CONTACT' + i));
@@ -67,7 +67,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Contact> The Contacts records that are used to create the Recurring Donations.
     * @return List<npe03__Recurring_Donation__c> The created Contact Recurring Donations.
     ********************************************************************************************************/
-    public static List<npe03__Recurring_Donation__c> createContactRDs(List<Contact> testContacts) {
+    public static List<npe03__Recurring_Donation__c> buildContactRDs(List<Contact> testContacts) {
         List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
         for (Contact testContact : testContacts) {
             result.add(
@@ -90,7 +90,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Account> The Accounts records that are used to create the Recurring Donations.
     * @return List<npe03__Recurring_Donation__c> The created Organizational Recurring Donations.
     ********************************************************************************************************/
-    public static List<npe03__Recurring_Donation__c> createOrganizationalRDs(List<Account> testAccounts) {
+    public static List<npe03__Recurring_Donation__c> buildOrganizationalRDs(List<Account> testAccounts) {
         List<npe03__Recurring_Donation__c> result = new List<npe03__Recurring_Donation__c>();
         for (Account testAccount : testAccounts) {
             result.add(
@@ -113,7 +113,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Account> The Accounts records that are used to create the Opportunities.
     * @return List<Opportunity> The created Opportunities.
     ********************************************************************************************************/
-    public static List<Opportunity> createOpportunities(List<Account> testAccounts) {
+    public static List<Opportunity> buildOpportunities(List<Account> testAccounts) {
         List<Opportunity> result = new List<Opportunity>();
         for (Account testAccount : testAccounts) {
             result.add(
@@ -134,7 +134,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<npe03__Recurring_Donation__c> The Recurring Donations that are used to create the Opportunities.
     * @return List<Opportunity> The created Opportunities.
     ********************************************************************************************************/
-    public static List<Opportunity> createRDOpportunities(List<npe03__Recurring_Donation__c> testRecurringDonations, String stageName) {
+    public static List<Opportunity> buildRDOpportunities(List<npe03__Recurring_Donation__c> testRecurringDonations, String stageName) {
         List<Opportunity> result = new List<Opportunity>();
         for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
             result.add(
@@ -157,7 +157,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<npe03__Recurring_Donation__c> The Recurring Donations records that are used to create the Allocations.
     * @return List<Allocation__c> The created Allocations.
     ********************************************************************************************************/
-    public static List<Allocation__c> createRDAllocations(General_Accounting_Unit__c testGAU,  List<npe03__Recurring_Donation__c> testRecurringDonations) {
+    public static List<Allocation__c> buildRDAllocations(General_Accounting_Unit__c testGAU,  List<npe03__Recurring_Donation__c> testRecurringDonations) {
         List<Allocation__c> result = new List<Allocation__c>();
         for (npe03__Recurring_Donation__c testRecurringDonation : testRecurringDonations) {
             result.add(
@@ -177,7 +177,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Opportunity> The Opportunities records that are used to create the Allocations.
     * @return List<Allocation__c> The created Allocations.
     ********************************************************************************************************/
-    public static List<Allocation__c> createOpportunityAllocations(General_Accounting_Unit__c testGAU,  List<Opportunity> testOpportunities) {
+    public static List<Allocation__c> buildOpportunityAllocations(General_Accounting_Unit__c testGAU,  List<Opportunity> testOpportunities) {
         List<Allocation__c> result = new List<Allocation__c>();
         for (Opportunity testOpportunity : testOpportunities) {
             result.add(
@@ -196,7 +196,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Contact> The Contacts records that are used to create the Relationships.
     * @return List<npe4__Relationship__c> The created Relationships.
     ********************************************************************************************************/
-    public static List<npe4__Relationship__c> createRelationships(List<Contact> testContacts) {
+    public static List<npe4__Relationship__c> buildRelationships(List<Contact> testContacts) {
         List<npe4__Relationship__c> result = new List<npe4__Relationship__c>();
 
         Map<Id, Contact> testContactsWithFriends = new Map<Id, Contact>();
@@ -223,7 +223,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param Integer The maximum records to create.
     * @return List<Campaign> The created Campaigns.
     ********************************************************************************************************/
-    public static List<Campaign> createCampaigns(Integer maxRecords) {
+    public static List<Campaign> buildCampaigns(Integer maxRecords) {
         List<Campaign> result = new List<Campaign>();
         for (Integer i = 0; i < maxRecords; i++) {
             result.add(new Campaign(Name = 'CAMP' + i));
@@ -237,7 +237,7 @@ public class CDL_CascadeDeleteLookups_TEST {
     * @param List<Campaign> The Campaigns records that are used to create the Allocations.
     * @return List<Allocation__c> The created Allocations.
     ********************************************************************************************************/
-    public static List<Allocation__c> createCampaignAllocations(General_Accounting_Unit__c testGAU,  List<Campaign> testCampaigns) {
+    public static List<Allocation__c> buildCampaignAllocations(General_Accounting_Unit__c testGAU,  List<Campaign> testCampaigns) {
         List<Allocation__c> result = new List<Allocation__c>();
         for (Campaign testCampaign : testCampaigns) {
             result.add(
@@ -249,5 +249,116 @@ public class CDL_CascadeDeleteLookups_TEST {
             );
         }
         return result;
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the deleted Recurring Donations.
+    * @return List<npe03__Recurring_Donation__c> The List of deleted Recurring Donations.
+    ********************************************************************************************************/
+    public static List<npe03__Recurring_Donation__c> getDeletedRecurringDonations() {
+        return [
+            SELECT Id 
+            FROM npe03__Recurring_Donation__c
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the non deleted Recurring Donations.
+    * @return List<npe03__Recurring_Donation__c> The List of non deleted Recurring Donations.
+    ********************************************************************************************************/
+    public static List<npe03__Recurring_Donation__c> getNonDeletedRecurringDonations() {
+        return [
+            SELECT Id 
+            FROM npe03__Recurring_Donation__c 
+            WHERE IsDeleted = false
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the deleted Allocations.
+    * @return List<Allocation__c> The List of deleted Allocations.
+    ********************************************************************************************************/
+    public static List<Allocation__c> getDeletedAllocations() {
+        return [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the non deleted Allocations.
+    * @return List<Allocation__c> The List of non deleted Allocations.
+    ********************************************************************************************************/
+    public static List<Allocation__c> getNonDeletedAllocations() {
+        return [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = false
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the deleted Relationships.
+    * @return List<npe4__Relationship__c> The List of deleted Relationships.
+    ********************************************************************************************************/
+    public static List<npe4__Relationship__c> getDeletedRelationships() {
+        return [
+            SELECT Id 
+            FROM npe4__Relationship__c
+            WHERE IsDeleted = true 
+            ALL ROWS 
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the non deleted Relationships.
+    * @return List<npe4__Relationship__c> The List of deleted Relationships.
+    ********************************************************************************************************/
+    public static List<npe4__Relationship__c> getNonDeletedRelationships() {
+        return [
+            SELECT Id 
+            FROM npe4__Relationship__c
+            WHERE IsDeleted = false
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the deleted Opportunities.
+    * @return List<Opportunity> The List of deleted Opportunities.
+    ********************************************************************************************************/
+    public static List<Opportunity> getDeletedOpportunities() {
+        return [
+            SELECT Id 
+            FROM Opportunity
+            WHERE IsDeleted = true 
+            ALL ROWS 
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the non deleted Opportunities.
+    * @return List<Opportunity> The List of deleted Opportunities.
+    ********************************************************************************************************/
+    public static List<Opportunity> getNonDeletedOpportunities() {
+        return [
+            SELECT Id 
+            FROM Opportunity
+            WHERE IsDeleted = false
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the errors.
+    * @return List<Error__c> The List of errors.
+    ********************************************************************************************************/
+    public static List<Error__c> getErrors() {
+        return [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
+        ];
     }
 }
