@@ -91,7 +91,8 @@ public class RD_RecurringDonations {
 
     /*******************************************************************************************************
     * @description holds the current custom field mappings used when creating opps for the RD.
-    */ 
+    */
+    @testVisible
     public static map<string, npe03__Custom_Field_Mapping__c> customFieldMappingSettings = UTIL_ListCustomSettingsFacade.getMapCustomFieldMappings();
     
     /*******************************************************************************************************
@@ -1213,5 +1214,40 @@ public class RD_RecurringDonations {
             }
         }
         return calcDate;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns true if the RD changes should trigger recalculation of the child opportunities
+    * @param new The updated Recurring Donation
+    * @param old The original Recurring Donation before updates
+    * @return boolean
+    */
+    @testVisible
+    private static Boolean needsRecalculation(npe03__Recurring_Donation__c newRD, npe03__Recurring_Donation__c oldRD) {
+        Boolean needsRecalculation = false;
+
+        if(newRD.npe03__Organization__c != oldRD.npe03__Organization__c
+                || newRD.npe03__Contact__c != oldRD.npe03__Contact__c
+                || newRD.npe03__Amount__c != oldRD.npe03__Amount__c
+                || newRD.npe03__Installment_Period__c != oldRD.npe03__Installment_Period__c
+                || newRD.npe03__Installments__c != oldRD.npe03__Installments__c
+                || newRD.Always_Use_Last_Day_Of_Month__c != oldRD.Always_Use_Last_Day_Of_Month__c
+                || newRD.npe03__Schedule_Type__c != oldRD.npe03__Schedule_Type__c
+                || newRD.npe03__Open_Ended_Status__c != oldRD.npe03__Open_Ended_Status__c
+                || newRD.npe03__Next_Payment_Date__c != oldRD.npe03__Next_Payment_Date__c
+                || newRD.npe03__Recurring_Donation_Campaign__c != oldRD.npe03__Recurring_Donation_Campaign__c
+                ) {
+            needsRecalculation = true;
+        }
+
+        for (string s : customFieldMappingSettings.keySet()) {
+            npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
+            if(newRD.get(cfm.npe03__Recurring_Donation_Field__c) != oldRD.get(cfm.npe03__Recurring_Donation_Field__c)) {
+                needsRecalculation = true;
+                break;
+            }
+        }
+
+        return needsRecalculation;
     }
 }
