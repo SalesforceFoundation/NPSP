@@ -1,7 +1,8 @@
 ({
     doInit: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
-        var templateList = [{label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
+        var templateList = [{label: labels.noRollupType, summaryObject: labels.na, detailObject: labels.na}
+            , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
             summaryObject: 'Account', detailObject: 'Opportunity'}
             , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
                 , summaryObject: 'Account', detailObject: 'npe01__OppPayment__c'}
@@ -25,23 +26,8 @@
         cmp.set("v.columns", columns);
     },
     setTemplate: function(cmp, event, helper){
-        /*var index = cmp.find("templateSelect").get("v.value");
-        var templateItem;
-
-        if(index != 'null'){
-            templateItem = cmp.get("v.templates")[index];
-            cmp.set("v.selectedTemplate", templateItem);
-            console.log("template set");
-            console.log("v.selectedTemplate");
-        } else {
-            console.log("template not null");
-        }
-        cmp.set("v.selectedTemplate", selectedRow);*/
-
         //intended for use with radio buttons, otherwise first selected row will be selected
-        console.log('Setting template');
         var selected = event.getParam('selectedRows');
-        console.log(selected);
         var selectedRow = selected[0];
         if(selectedRow === cmp.get("v.templates")[0]){
             selectedRow = null;

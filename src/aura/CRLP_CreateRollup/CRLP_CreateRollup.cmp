@@ -16,18 +16,7 @@
                 <lightning:layout multipleRows="true">
                     <lightning:layoutItem size="12" class="slds-p-bottom_medium">
                         <!--todo: get custom language from Sarah/Docs-->
-                        <h2>To get started, select a rollup template or select none to customize your own</h2>
-                    </lightning:layoutItem>
-                    <lightning:layoutItem size="12" class="slds-p-bottom_large" smallDeviceSize="6">
-                        <lightning:select aura:id="templateSelect"
-                                          onchange="{!c.setTemplate}"
-                                          label="{!v.labels.selectOne}"
-                                          name="{!v.labels.selectOne}">
-                            <option value="null" text="{!v.labels.noRollupType}"/>
-                            <aura:iteration items="{!v.templates}" var="option" indexVar="index">
-                                <option value="{!index}" text="{!option.label}"/>
-                            </aura:iteration>
-                        </lightning:select>
+                        <h2>To get started, select a rollup template or select '{!v.labels.noRollupType}' to customize your own.</h2>
                     </lightning:layoutItem>
                 </lightning:layout>
                 <lightning:layoutItem size="12">

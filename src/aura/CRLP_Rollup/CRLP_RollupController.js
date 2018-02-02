@@ -20,17 +20,10 @@
                     //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
                     cmp.set("v.activeRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
                     cmp.set("v.cachedRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
-                    if (!$A.util.isUndefined(cmp.get("v.activeRollup.Yearly_Operation_Type__c"))) {
-                        //cmp.set("v.activeRollup.Yearly_Operation_Type__c", cmp.get("v.activeRollup.Yearly_Operation_Type__c").replace(/_/g, ' '));
-                    }
-                    if (!$A.util.isUndefined(cmp.get("v.activeRollup.Operation__c"))) {
-                        //cmp.set("v.activeRollup.Operation__c", cmp.get("v.activeRollup.Operation__c").replace(/_/g, ' '));
-                    }
+
                     //change mode needs to be fired here because the sibling change of mode isn't being registered
                     helper.changeMode(cmp);
-                    //moved these into the callback so the slow load doesn't happen.
-                    //need to consider an error message if the callback fails.
-                    //the way this is now, if it fails, it'll stay on the grid cmp
+
                 }
                 else if (state === "ERROR") {
                     var errors = response.getError();
