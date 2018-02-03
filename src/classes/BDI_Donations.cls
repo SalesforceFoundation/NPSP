@@ -553,6 +553,7 @@ public class BDI_Donations {
         setPmtFields.add('npe01__Payment_Amount__c');
         setPmtFields.add('npe01__Payment_Date__c');
         setPmtFields.add('npe01__Scheduled_Date__c');
+        setPmtFields.add('npe01__Paid__c');
 
         // need to include any Pmt fields we may update, so we can compare against them
         setPmtFields.addAll(mapDIFieldToPmtField.values());
