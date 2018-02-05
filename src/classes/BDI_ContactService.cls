@@ -137,11 +137,11 @@ public with sharing class BDI_ContactService {
     */
     private void verifyContactData() {
         for (DataImport__c di: bdi.listDI) {
-            if (isContactSpecified(di, 'Contact1') && di.Contact1_Lastname__c == null && di.Contact1Imported__c == null) {
+            if (isContactSpecified(di, 'Contact1') && string.isBlank(di.Contact1_Lastname__c) && di.Contact1Imported__c == null) {
                 bdi.LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact1ImportStatus__c');
                 continue;
             }
-            if (isContactSpecified(di, 'Contact2') && di.Contact2_Lastname__c == null && di.Contact2Imported__c == null) {
+            if (isContactSpecified(di, 'Contact2') && string.isBlank(di.Contact2_Lastname__c) && di.Contact2Imported__c == null) {
                 di.Contact2_Lastname__c = di.Contact1_Lastname__c;
                 if (di.Contact2_Lastname__c == null && di.Contact1Imported__c == null)
                     bdi.LogBDIError(di, label.bdiErrorInvalidLastname, 'Contact2ImportStatus__c');
