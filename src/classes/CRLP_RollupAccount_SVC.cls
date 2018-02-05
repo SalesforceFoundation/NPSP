@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Rollup Services unique to the Account roll-ups from Opportunity and Payment objects
@@ -46,8 +46,9 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(Account.SObjectType)) {
-            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType)) {
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType);
+        if (rlps != null) {
+            for (Rollup__mdt r : rlps) {
                 if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
                         && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
                     addRollupDefinition(r);
@@ -69,11 +70,12 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
     public override void processRollups(List<SObject> details) {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
-        for (Sobject s : details) {
+        List<Opportunity> opps = (List<Opportunity>) details;
+        for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
+            Opportunity opp = opps[n];
 
-            Opportunity opp = (Opportunity)s;
             for (CRLP_Rollup rollup : this.rollups) {
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
                 if (rollup.detailObject == oppObjectName) { 
@@ -86,7 +88,8 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
                 } else if (rollup.detailObject == pmtObjectName) {
                     // Process rollups from the Payment to the Account
 
-                    for (npe01__OppPayment__c pmt : opp.npe01__OppPayment__r) {
+                    List<npe01__OppPayment__c> payments = opp.npe01__OppPayment__r;
+                    for (npe01__OppPayment__c pmt : payments) {
                         if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
                             CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
                         }

@@ -6,6 +6,8 @@
 */
 public class CRLP_Debug_UTIL {
 
+    private static final Boolean isEnabled = false;
+
     private static List<String> currentRollupState = new List<String>();
 
     public static void clearCurrentRollupState() {
@@ -13,38 +15,46 @@ public class CRLP_Debug_UTIL {
     }
 
     public static void setCurrentRollupState(String state) {
-        UTIL_Debug.debug('===== setCurrentRollupState(' + state + ')');
-        currentRollupState.add(state);
+        if (isEnabled) {
+            UTIL_Debug.debug('===== setCurrentRollupState(' + state + ')');
+            currentRollupState.add(state);
+        }
     }
 
     public static void amendLastCurrentRollupState(String state) {
-        String lastStateVal = currentRollupState[currentRollupState.size()-1];
-        UTIL_Debug.debug('===== setCurrentRollupState(' + lastStateVal + ' ' + state + ')');
-        currentRollupState[currentRollupState.size()-1] = lastStateVal + ' ' + state;
+        if (isEnabled) {
+            String lastStateVal = currentRollupState[currentRollupState.size() - 1];
+            UTIL_Debug.debug('===== setCurrentRollupState(' + lastStateVal + ' ' + state + ')');
+            currentRollupState[currentRollupState.size() - 1] = lastStateVal + ' ' + state;
+        }
     }
 
     public static void setCurrentRollupState(String state, CRLP_Rollup rollup) {
-        String rollupData = '';
-        for (Rollup__mdt rcmt : rollup.rollupsMdt) {
-            rollupData += rcmt.DeveloperName + '-' + rcmt.Operation__c + ';';
+        if (isEnabled) {
+            String rollupData = '';
+            for (Rollup__mdt rcmt : rollup.rollupsMdt) {
+                rollupData += rcmt.DeveloperName + '-' + rcmt.Operation__c + ';';
+            }
+            currentRollupState.add(state + ' ==> Rollup(' + rollupData.removeEnd(';') + ')');
         }
-        currentRollupState.add(state + ' ==> Rollup(' + rollupData.removeEnd(';') + ')');
     }
 
     public static String getCurrentRollupState() {
         String val = '';
-        for (Integer n=currentRollupState.size()-1; n>=0; n--) {
-            if (!currentRollupState[n].startsWith(' ')) {
-                val += '* ' + currentRollupState[n] + '\n';
-            } else {
-                val += '  ' + currentRollupState[n] + '\n';
+        if (isEnabled) {
+            for (Integer n = currentRollupState.size() - 1; n >= 0; n--) {
+                if (!currentRollupState[n].startsWith(' ')) {
+                    val += '* ' + currentRollupState[n] + '\n';
+                } else {
+                    val += '  ' + currentRollupState[n] + '\n';
+                }
             }
         }
         return val;
     }
 
     public static String getRollupCurrentValues(CRLP_Rollup r) {
-        return '==================================' +
+        return (!isEnabled ? '' : '==================================' +
                 '\n* # of MDT records=' + r.rollupsMdt.size() +
                 '\n* resultFieldName=' + r.resultFieldName + '/' + r.resultFieldType +
                 '\n* yearlyOperation=' + r.yearlyOperation +
@@ -62,14 +72,18 @@ public class CRLP_Debug_UTIL {
                 '\n* countByYear=' + JSON.serialize(r.countByYear) +
                 '\n* textValue=' + JSON.serialize(r.textValue) +
                 '\n* numValue=' + JSON.serialize(r.numValue) +
+                '\n* dateValue=' + JSON.serialize(r.dateValue) +
+                '\n* dateTimeValue=' + JSON.serialize(r.dateTimeValue) +
                 '\n* idValue=' + JSON.serialize(r.idValue) +
-                '\n==================================';
+                '\n==================================');
     }
 
     public static String getRollupState(List<CRLP_Rollup> rollups) {
         String theState = '';
-        for (CRLP_Rollup r : rollups) {
-            theState += getRollupCurrentValues(r) + '\n';
+        if (isEnabled) {
+            for (CRLP_Rollup r : rollups) {
+                theState += getRollupCurrentValues(r) + '\n';
+            }
         }
         return theState;
     }

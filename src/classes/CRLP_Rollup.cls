@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Wrapper class of properties to be tracked for each rollup across all of the Detail records.
@@ -44,10 +44,13 @@ public class CRLP_Rollup {
     public List<Rollup__mdt> rollupsMdt;
     public String resultFieldName;
     public SoapType resultFieldType;
+    public DisplayType resultFieldDisplaytype;
     public Boolean useFiscalYear;
+    public String filterGroup;
     public String detailObject;
     public String amountObject;
     public String dateObject;
+    public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
     public String yearlyOperation;
     public Integer daysBack;
@@ -89,12 +92,17 @@ public class CRLP_Rollup {
             this.amountObject = rollupMdt.Amount_Object__r.QualifiedApiName;
             this.dateObject = rollupMdt.Date_Object__r.QualifiedApiName;
             this.detailObject = rollupMdt.Detail_Object__r.QualifiedApiName;
+            this.filterGroup = rollupMdt.Filter_Group__c;
             if (rollupMdt.Detail_Field__c !=  null) {
                 DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
                 this.resultFieldType = resultField.getSoapType();
+                this.resultFieldDisplaytype = resultField.getType();
                 this.resultFieldName = resultField.getName();
             }
-
+            if (rollupMdt.Date_Field__c !=  null) {
+                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rollupMdt.Date_Field__r.QualifiedApiName);
+                this.dateFieldType = dateField.getSoapType();
+            }
             // Year and Date/Day related details
             this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
             this.yearlyOperation = rollupMdt.Yearly_Operation_Type__c;
@@ -138,24 +146,25 @@ public class CRLP_Rollup {
 
     /**
      * @description Determine if the passed Rollup__mdt record has the identical key properties to this
-     * Rollup instance: FilterGroup, UseFiscalYear, Summary Object, Detail Field,
-     * Amount Field and Date Field.
+     * Rollup instance: FilterGroup, Summary Object, Detail Field, Amount Field, Date Field, and UseFiscalYear.
      * @param Rollup__mdt
      * @return True or False
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
                 'Filter_Group__c','Summary_Object__c','Detail_Field__c',
-                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c', 'Yearly_Operation_Type__c'
+                'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
         };
         if (this.rollupsMdt == null) {
             return true;
         }
 
         // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
-        // types cannot be combined with other rollups of different types/days.
-        if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                && this.daysBack != otherMdtRollup.Integer__c) {
+        // types cannot be combined with other rollups of different types/days. Group these together
+        // where the NumberOfDays is the same.
+        if (otherMdtRollup.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
+                && (this.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
+                    || this.daysBack != otherMdtRollup.Integer__c)) {
             return false;
         }
 
@@ -178,12 +187,15 @@ public class CRLP_Rollup {
         // Instantiate this with the first Rollup__mdt record. All records have the same
         // value in the Use_Fiscal_Year__c field.
         fiscalYrs = new CRLP_FiscalYears(this.useFiscalYear);
-        UTIL_Debug.debug('> Rollup=' + this);
 
         // Get the rolled up value for each Rollup__mdt record
-        for (Rollup__mdt r : this.rollupsMdt) {
+        for (Integer ns=0, listSize=rollupsMdt.size(); ns<listSize; ns++) {
+            Rollup__mdt r = this.rollupsMdt[ns];
             Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
-            rtnValues.put(targetField.getName(), determineRollupValue(r, targetField));
+            Object val = determineRollupValue(r, targetField);
+            if (val != null) {
+                rtnValues.put(r.Summary_Field__r.QualifiedApiName, val);
+            }
         }
 
         return rtnValues;
@@ -201,16 +213,15 @@ public class CRLP_Rollup {
 
         CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
 
-        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
-                '/' + fldType + ' for ' + operation);
-
+//        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
+//                '/' + fldType + ' for ' + operation);
 
         // ================================================================
         // Yearly Operation Type - Get the Sum/Min/Max for the specified number of years back to use
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( this.yearlyOperation == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - r.Integer__c.intValue();
@@ -222,27 +233,14 @@ public class CRLP_Rollup {
                 maxForSpecifiedYear += minByYear.get(yrString);
                 countForSpecifiedYear += countByYear.get(yrString);
             }
-            CRLP_Debug_UTIL.amendLastCurrentRollupState('Yr=' + yrString + ' / Sum=' + sumForSpecifiedYear);
-        }
-
-        // ================================================================
-        // First/Last Donation Date or DateTime
-        // ================================================================
-        if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.FIRST) {
-            resultValue = minDate;
-        } else if (fldType == SoapType.DATE && operation == CRLP_Operation.RollupType.LAST) {
-            resultValue = maxDate;
-        } else if (fldType == SoapType.DATETIME && operation == CRLP_Operation.RollupType.FIRST) {
-            resultValue = minDateTime;
-        } else if (fldType == SoapType.DATETIME && operation == CRLP_Operation.RollupType.LAST) {
-            resultValue = maxDateTime;
+//            CRLP_Debug_UTIL.amendLastCurrentRollupState('Yr=' + yrString + ' / Sum=' + sumForSpecifiedYear);
         }
 
         // ================================================================
         // First/Last ,such as "Last Gift Amount"
         // This could be an Id or pretty much any other field that can be stored as 'text'
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
+        if (operation == CRLP_Operation.RollupType.FIRST || operation == CRLP_Operation.RollupType.LAST) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
@@ -300,7 +298,9 @@ public class CRLP_Rollup {
         else if (operation == CRLP_Operation.RollupType.BEST_YEAR || operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
             Double maxVal = 0;
             String bestYr = null;
-            for (String yr : this.sumByYear.keySet()) {
+            List<String> years = new List<String>( this.sumByYear.keySet() );
+            years.sort();
+            for (String yr : years) {
                 if (this.sumByYear.get(yr) > maxVal) {
                     bestYr = yr;
                     maxVal = this.sumByYear.get(yr);
@@ -311,7 +311,7 @@ public class CRLP_Rollup {
             } else {
                 if (bestYr == null || fldType == SoapType.STRING) {
                     resultValue = bestYr;
-                } else /*if (fldType == SoapType.DOUBLE)*/ {
+                } else {
                     resultValue = Integer.valueOf(bestYr);
                 }
             }
@@ -335,7 +335,7 @@ public class CRLP_Rollup {
             Integer streakLength = 0;
 
             Integer currentYear = fiscalYrs.getYear(System.today());
-            if (currentYear != Integer.valueOf(yearlySorted[yearlySorted.size() - 1])) {
+            if (yearlySorted.size() != 0 && currentYear != Integer.valueOf(yearlySorted[yearlySorted.size() - 1])) {
                 // if they haven't donated this year, start counting last year
                 currentYear--;
             }
@@ -369,7 +369,7 @@ public class CRLP_Rollup {
             }
         }
 
-        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
+//        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
     }
 }

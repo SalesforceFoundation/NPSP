@@ -81,12 +81,12 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             if (hasLDVAccounts) {
                 batchSizeAcct = CRLP_Rollup_SVC.getLDVBatchSize(Account.SObjectType);
                 batchSizeCntct = CRLP_Rollup_SVC.getLDVBatchSize(Contact.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(Account.SObjectType), batchSizeAcct);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType), batchSizeCntct);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(Account.SObjectType), batchSizeAcct);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(Contact.SObjectType), batchSizeCntct);
                 this.numJobSubmitted += 2;
             }
 
-            Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
+            Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
             this.numJobSubmitted++;
 
         }

@@ -85,6 +85,10 @@
             <translation><!-- Greater or Equal --></translation>
         </picklistValues>
         <picklistValues>
+            <masterLabel>In List</masterLabel>
+            <translation><!-- In List --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Is Included</masterLabel>
             <translation><!-- Is Included --></translation>
         </picklistValues>
@@ -103,6 +107,10 @@
         <picklistValues>
             <masterLabel>Not Equals</masterLabel>
             <translation><!-- Not Equals --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Not In List</masterLabel>
+            <translation><!-- Not In List --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Starts With</masterLabel>

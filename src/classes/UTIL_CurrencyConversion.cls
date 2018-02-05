@@ -44,6 +44,7 @@ public class UTIL_CurrencyConversion {
     private static Boolean forceConvertToUseOrgDefaultRate = false;
 
     private static final Integer RATE_DECIMAL_PLACES = 6;
+    private static final Integer AMT_DECIMAL_MULTIPLIER = 1000000;    // based on the number of zeros (i.e., 2 decimal places=100)
 
     /**
      * @description Returns the proper effective rate to use based on the date and the from/to currencies
@@ -89,7 +90,7 @@ public class UTIL_CurrencyConversion {
      * @param dt - Effective Date to use for conversion (or null to use the current date)
      * @param fromCurr - The currency to convert from
      * @param toCurr - The currency to convert to.
-     * @return Amount converted to the toCurr using the applied effective date
+     * @return Amount converted to the toCurr using the applied effective date rounded to two decimal places
      */
     public static Decimal convertAmount(Decimal amt, Date dt, String fromCurr, String toCurr) {
         if (!UTIL_Currency.getInstance().isMultiCurrencyOrganization() || fromCurr == toCurr) {
@@ -97,9 +98,9 @@ public class UTIL_CurrencyConversion {
         } else {
             Decimal effRate = getExchangeRate(dt, fromCurr, toCurr);
             Integer decimalPlaces = UTIL_CurrencyCache.getInstance().getCurrDecimalPlaces(toCurr);
-            Decimal convertedToCorp = amt.divide(effRate, RATE_DECIMAL_PLACES, System.RoundingMode.HALF_UP) * 100;
+            Decimal convertedToCorp = amt.divide(effRate, RATE_DECIMAL_PLACES, System.RoundingMode.HALF_UP) * AMT_DECIMAL_MULTIPLIER;
             Decimal convertedToTarget = Decimal.ValueOf(convertedToCorp.Round( System.RoundingMode.HALF_UP));
-            return convertedToTarget.divide(100, decimalPlaces, System.RoundingMode.HALF_UP);
+            return convertedToTarget.divide(AMT_DECIMAL_MULTIPLIER, decimalPlaces, System.RoundingMode.HALF_UP);
         }
     }
 

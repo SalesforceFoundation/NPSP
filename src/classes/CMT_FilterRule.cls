@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group CMT Filter Rules
 * @description Instance class for a single Filter Rule. Handles actions for that specific Filter Rule, such as
 * evaluating the rule against a specified SObject record.
@@ -151,10 +151,10 @@ public class CMT_FilterRule {
         Boolean included = compare.isIncluded(record, this);
         if (!included) {
             // TODO Remove the debug statements once all testing is finalized
-            System.Debug(LoggingLevel.Error, '>>> THIS FAILED <<<');
-            System.Debug(LoggingLevel.Error, '>>> ' + this.objectType.getDescribe().getName() + '.' + this.field.getDescribe().getName());
-            System.Debug(LoggingLevel.Error, '>>> ' + this.operation);
-            System.Debug(LoggingLevel.Error, '>>> ' + this.constant);
+//            System.Debug(LoggingLevel.Error, '>>> THIS FAILED <<<');
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.objectType.getDescribe().getName() + '.' + this.field.getDescribe().getName());
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.operation);
+//            System.Debug(LoggingLevel.Error, '>>> ' + this.constant);
         }
         return included;
     }
@@ -338,7 +338,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue.equals(compVal.trim())) {
+                    if (fieldValue != null && fieldValue.equals(compVal.trim())) {
                         found = true;
                         break;
                     }
@@ -389,10 +389,6 @@ public class CMT_FilterRule {
             } else if (rule.operation == FilterOperation.NOT_EQUALS) {
                 return fieldValue != compareValue;
 
-            } else if (fieldValue == null) {
-                // A null value in the the field can't be compared using any of the remaining operations
-                return false;
-
             } else if (rule.operation == FilterOperation.STARTS_WITH) {
                 compareValue = (compareValue == null ? '' : compareValue);
                 return fieldValue.startsWithIgnoreCase(compareValue);
@@ -436,7 +432,7 @@ public class CMT_FilterRule {
                 List<String> selectedValues = compareValue.split(';');
                 Boolean found = false;
                 for (String compVal : selectedValues) {
-                    if (fieldValue.equalsIgnoreCase(compVal.trim())) {
+                    if (fieldValue != null && fieldValue.equalsIgnoreCase(compVal.trim())) {
                         found = true;
                         break;
                     }

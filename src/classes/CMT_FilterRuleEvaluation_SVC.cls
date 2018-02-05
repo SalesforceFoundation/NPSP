@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group CMT Filter Rules
 * @description Service class to handle evaluating CMT Filter Rules (i.e., all Rules within a specified Filter Group)
 */
@@ -64,7 +64,7 @@ public class CMT_FilterRuleEvaluation_SVC {
         // Build a unique key of a concatenation of the Id's of all the detail rows.
         String cacheKey = filterGroupId + '.';
         for (SObject record : detailRows) {
-            cacheKey += (String)record.get('Id');
+            cacheKey += record.Id;
         }
         // If this set of detail rows has already been evaluated for this filter group, return the cached result
         if (cachedFilterEvalResults.containsKey(cacheKey)) {
@@ -82,8 +82,6 @@ public class CMT_FilterRuleEvaluation_SVC {
         }
 
         List<CMT_FilterRule> rulesToEvaluate = mapOfFilterRulesByGroupId.get(filterGroupId);
-
-        CRLP_Debug_UTIL.setCurrentRollupState('Evaluate Filter Group for ' + cacheKey + ' against ' + filterGroupId);
 
         for (SObject record : detailRows) {
             SObjectType objType = record.getSObjectType();

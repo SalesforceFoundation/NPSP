@@ -52,7 +52,7 @@ public with sharing class STG_PanelAlloBatch_CTRL extends STG_Panel {
             rollup.runRollups();
         } else {
             Integer batchSizeLDV = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-            Database.executeBatch(new CRLP_Rollup_BATCH_LDV(General_Accounting_Unit__c.SObjectType), batchSizeLDV);
+            Database.executeBatch(new CRLP_Rollup_LDV_BATCH(General_Accounting_Unit__c.SObjectType), batchSizeLDV);
         }
         return null;
     }

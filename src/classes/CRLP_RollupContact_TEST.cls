@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Opportunity/Payment to Contact Rollups
 */
@@ -76,7 +76,7 @@ private class CRLP_RollupContact_TEST {
         // Create a single Rollup that uses the above Filter Group
         // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
-                CMT_UnitTestData_TEST.createRollupRecord('Donor Total Donations All Time', filterGroupId1,
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
 
@@ -84,10 +84,20 @@ private class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__AverageAmount__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Donor Donations Last 2 Years', filterGroupId1,
+                CMT_UnitTestData_TEST.createRollupRecord('Donations Last 2 Years', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
+                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Count Donations Last 365 Days', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__OppsClosedLastNDays__c', CRLP_Operation.RollupType.COUNT, 'Amount',
+                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -179,7 +189,7 @@ private class CRLP_RollupContact_TEST {
         }
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
@@ -190,7 +200,7 @@ private class CRLP_RollupContact_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
-        Decimal totalDonations = 0, total2YearsAgo = 0;
+        Decimal totalDonations = 0, total2YearsAgo = 0, last365Days = 0;
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
@@ -211,6 +221,9 @@ private class CRLP_RollupContact_TEST {
             totalDonations += amt;
             if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
                 total2YearsAgo += amt;
+            }
+            if (closeDate.addMonths(n).daysBetween(Date.Today()) <= 365) {
+                last365Days += amt;
             }
             String donationYr = closeDate.addMonths(n).year().format().replace(',','');
             donationYears.add(donationYr);
@@ -261,7 +274,7 @@ private class CRLP_RollupContact_TEST {
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType));
         } else if (tt == TestType.TestLDV) {
-            database.executeBatch(new CRLP_Rollup_BATCH_LDV(Contact.SObjectType));
+            database.executeBatch(new CRLP_Rollup_LDV_BATCH(Contact.SObjectType));
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{conId})));
         }
@@ -278,6 +291,7 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
+        System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
         System.assertEquals('New', c.Department);
 
         // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in

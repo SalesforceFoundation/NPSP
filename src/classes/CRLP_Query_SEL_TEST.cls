@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,11 +29,11 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Selectors
 * @description Unit Test for the Rollup Results selector class
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_Query_SEL_TEST {
 
     /**

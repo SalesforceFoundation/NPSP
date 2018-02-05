@@ -1,6 +1,6 @@
 <apex:page standardController="General_Accounting_Unit__c" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
     <apex:slds />
-    <div class="slds">
+    <div class="slds-scope">
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.General_Accounting_Unit__c.Label }"
                                parentRecordName="{!$ObjectType.General_Accounting_Unit__c.Name }"

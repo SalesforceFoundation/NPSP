@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Opportunity/Payment to Account Rollups
 */
@@ -174,7 +174,7 @@ private class CRLP_RollupAccount_TEST {
         }
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
@@ -258,7 +258,7 @@ private class CRLP_RollupAccount_TEST {
         } else if (tt == TestType.TestBatch) {
             database.executeBatch(new CRLP_Rollup_BATCH(new List<Id>{acctId}));
         } else if (tt == TestType.TestLDV) {
-            database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{acctId}));
+            database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{acctId}));
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{acctId})));
         }

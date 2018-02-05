@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service class for general rollup operations. Includes the interface for the per-rollup-type
@@ -40,6 +40,8 @@
 */
 public class CRLP_Rollup_SVC {
 
+    private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
+
     /**
      * @description Interface class that the each of the 5 handler classes will implement
      */
@@ -47,6 +49,8 @@ public class CRLP_Rollup_SVC {
         void processRollups(List<SObject> details);
         void setRecordId(Id objectId);
         void setRollupsList(List<CRLP_Rollup> rollups);
+        void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode);
+        List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
     }
 
@@ -64,6 +68,13 @@ public class CRLP_Rollup_SVC {
     }
 
     /**
+     * @description Rather than recreate the empty Summary SObject every time, we'll cache an empty version
+     * of the record with no Id. This will be cloned each time and the Id set before returning the record.
+     * Testing shows that caching an empty SObject and cloning is nearly 10 times faster than recreating each time.
+     */
+    private static Map<SObjectType, SObject> cachedEmptyObjects = new Map<SObjectType, SObject>();
+
+    /**
      * @description Creates an empty target (summmary) SObject with all of the specific rollup target fields
      * set to null, but only for the specific rollups passed as a parameter.
      * TODO: Support extending this for archived records.
@@ -72,13 +83,18 @@ public class CRLP_Rollup_SVC {
      * @return An empty SObject.
      */
     public static SObject createEmptyResultObject(Id objectId, List<CRLP_Rollup> rollups) {
-        SObject emptyObject = UTIL_Describe.getPrototypeObject(objectId.getSobjectType().getDescribe().getName());
-        emptyObject.put('Id', objectId);
-        for (CRLP_Rollup rollup : rollups) {
-            for (Rollup__mdt r : rollup.rollupsMdt) {
-                emptyObject.put(r.Summary_Field__r.QualifiedApiName, null);
+        SObjectType objType = objectId.getSobjectType();
+        if (!cachedEmptyObjects.containsKey(objType)) {
+            SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
+            for (CRLP_Rollup rollup : rollups) {
+                for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                    emptyObject.put(rollup.rollupsMdt[ns].Summary_Field__r.QualifiedApiName, null);
+                }
             }
+            cachedEmptyObjects.put(objType, emptyObject);
         }
+        SObject emptyObject = cachedEmptyObjects.get(objType).clone(false, true);
+        emptyObject.put('Id', objectId);
         return emptyObject;
     }
 
@@ -96,22 +112,32 @@ public class CRLP_Rollup_SVC {
                 List<CRLP_Rollup> rollups) {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
-            for (Rollup__mdt r : rollup.rollupsMdt) {
+            for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                Rollup__mdt r = rollup.rollupsMdt[ns];
                 Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                SoapType summaryFieldType = summaryField.getSoapType();
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
-                if (origValue != newValue) {
-                    hasValueChanged = true;
-                }
-                /*if (rollup.fldType == SoapType.DOUBLE) {
-                    // If the value in the object is null and the updated value is something other than null or zero,
-                    // then the record has been changed
-                    if (origValue == null && newValue != null & (Double)newValue != 0) {
-                        hasValueChanged = true;
-                    } else if (origValue != null && (Double)origValue != (Double)newValue) {
+                if (summaryFieldType == SoapType.STRING && (origValue != null || newValue != null)) {
+                    // Handle an empty string as null to prevent unecessary DML updates
+                    String origString = (origValue != null ? (String)origValue : null);
+                    String newString = (newValue != null ? (String)newValue : null);
+                    origString = (String.isEmpty(origString) ? null : origString);
+                    newString = (String.isEmpty(newString) ? null : newString);
+                    if (origString != newString) {
                         hasValueChanged = true;
                     }
-                }*/
+                } else if (DO_NOT_UPDATE_NULL_TO_ZERO == false && summaryFieldType == SoapType.DOUBLE) {
+                    // If the value in the object is null and the updated value is something other than null or zero,
+                    // then the record has been changed. Otherwise, don't update a NULL value to zero or vice-versa.
+                    Double origNumber = (origValue != null ? (Double)origValue : 0);
+                    Double newNumber = (newValue != null ? (Double)newValue : 0);
+                    if (origNumber != newNumber) {
+                        hasValueChanged = true;
+                    }
+                } else if (origValue != newValue) {
+                    hasValueChanged = true;
+                }
                 if (hasValueChanged) {
                     break;
                 }
@@ -185,4 +211,41 @@ public class CRLP_Rollup_SVC {
         } catch (Exception ex){ }
         return false;
     }
+
+    /**
+     * @description Are there active Soft Credit Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActiveSoftCreditRollupsForSObject(SObjectType sObj) {
+        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pscObjectName) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
+
+
+    /**
+     * @description Are there active Payment Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActivePaymentRollupsForSObject(SObjectType sObj) {
+        String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pmtObjectName) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
+
+    public class CRLP_Exception extends Exception {}
 }

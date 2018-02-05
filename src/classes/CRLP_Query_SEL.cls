@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for relevant summary/target fields for use by the Rollup Engine
@@ -67,6 +67,7 @@
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
         // to the Set of strings (enforcing uniqueness)
+        String contactRelField = UTIL_Namespace.StrAllNSPrefix('Contact__c');
         Set<String> queryFields = new Set<String>{'Id'};
         for (DescribeFieldResult dfr : allFieldsToQuery) {
             if (dfr.isAccessible()) {
@@ -82,8 +83,8 @@
                     queryFields.add('LastModifiedBy.Alias');
                 } else if (dfr.getName() == 'ContactId') {
                     queryFields.add('Contact.AccountId');
-                } else if (dfr.getName() == UTIL_Namespace.StrAllNSPrefix('Contact__c')) {
-                    queryFields.add(UTIL_Namespace.StrAllNSPrefix('Contact__r') + '.AccountId');
+                } else if (dfr.getName() == contactRelField) {
+                    queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
                 }
             }
         }
@@ -126,7 +127,7 @@
                 mainSoql += ',' + SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             }
 
-        } else {
+        } else if (detailObject == Opportunity.SObjectType) {
             // ====================================================================================================
             // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
             // ====================================================================================================
@@ -153,9 +154,10 @@
      * @description Build a complete SOQL query string from a set of Summary Record Ids, including the requried
      * child objects and filtered by the parent record id's
      * @param summaryRecordIds Set<Id>
+     * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * @return SOQL
      */
-    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds) {
+    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
         SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
         SObjectType mainObject;
         String detailKeyField;
@@ -165,13 +167,17 @@
         if (objType == Account.SObjectType) {
             // Opportunity and Payment to Account
             mainObject = Opportunity.SObjectType;
-            childObjects.add(npe01__OppPayment__c.SObjectType);
+            if (includeChildPayments == true) {
+                childObjects.add(npe01__OppPayment__c.SObjectType);
+            }
             detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
 
         } else if (objType == Contact.SObjectType) {
             // Opportunity and Payment to Contact
             mainObject = Opportunity.SObjectType;
-            childObjects.add(npe01__OppPayment__c.SObjectType);
+            if (includeChildPayments == true) {
+                childObjects.add(npe01__OppPayment__c.SObjectType);
+            }
             detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
         }
 

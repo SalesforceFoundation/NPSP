@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,20 +29,21 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Operation Services
+* @description Rollup Operation Services:
+* Called by the RollupHandler service class instance for each Source record and each active rollup that
+* passes the filter. For example, there may be 10 instances of the CRLP_Rollup class created for 10 rollups
+* from Opportunity to Account. Each instances doOperation() method will get called once to do the rollup from
+* the Detail/Attribution records to the Source record - though the values are actually stored in the CRLP_Rollup
+* instance until ready to be written to the Sobject.
+*
 */
 public class CRLP_Operation_SVC {
 
-/*
-Called by the RollupHandler service class instance for each Source record and each active rollup that
-passes the filter. For example, there may be 10 instances of the CRLP_Rollup class created for 10 rollups
-from Opportunity to Account. Each instances doOperation() method will get called once to do the rollup from
-the Detail/Attribution records to the Source record - though the values are actually stored in the CRLP_Rollup
-instance until ready to be written to the Sobject.
- */
+    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
+    private static final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
 
     /**
      * @description Perform the rollup operation based on the details in the CRLP_Rollup_SVC.Rollup instance
@@ -62,21 +63,30 @@ instance until ready to be written to the Sobject.
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
         Rollup__mdt firstRollup = rollup.rollupsMdt[0];
+        // these values should be the same for every rollup definition in the CRLP_Rollup instance
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
-        Date dateValue, resultFieldDate;
-        Datetime resultFieldDateTime;
-        Double amountValue = 0, resultFieldAmount = 0;
+
+        Date dateValue;
+        DateTime dateTimeValue;
+        Double amountValue = null;
         String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
+        // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
+        // Since the Date is almost always the CloseDate field, hardcoding this performance tweak.
         SObject dateSObject = detailSObject;
-        if (rollup.dateObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
-            dateSObject = oppSObject;
+        if (rollup.dateObject == oppObjectName && dateField == 'CloseDate') {
+            dateValue = oppSObject.CloseDate;
         }
-        if (dateField != null && dateSObject.get(dateField) != null) {
-            dateValue = (Date) dateSObject.get(dateField);
+        if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
+            if (rollup.dateFieldType == SoapType.DATE) {
+                dateValue = (Date) dateSObject.get(dateField);
+            } else if (rollup.dateFieldType == SoapType.DATETIME) {
+                dateTimeValue = (DateTime) dateSObject.get(dateField);
+                dateValue = dateTimeValue.date();
+            }
         }
 
         // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
@@ -91,10 +101,11 @@ instance until ready to be written to the Sobject.
 
         // Get the Amount value from the appropriate object
         SObject amtSObject = detailSObject;
-        if (rollup.AmountObject != objName && UTIL_Describe.getSObjectType(rollup.dateObject) == Opportunity.SObjectType) {
-            amtSObject = oppSObject;
+        // Hardcoding this performance tweak similar to the Opportunity.CloseDate field above
+        if (rollup.AmountObject == oppObjectName && amtField == 'Amount') {
+            amountValue = oppSObject.Amount;
         }
-        if (amtField != null && amtSObject.get(amtField) != null) {
+        if (amountValue == null && amtField != null && amtSObject.get(amtField) != null) {
             amountValue = (Double) amtSObject.get(amtField);
         }
 
@@ -107,8 +118,7 @@ instance until ready to be written to the Sobject.
                 String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
                 try {
                     fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                } catch (Exception ex) {
-                }
+                } catch (Exception ex) { }
                 amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurr, rollup.currCode);
             }
         }
@@ -119,25 +129,59 @@ instance until ready to be written to the Sobject.
         // If there is a result field retrieve it's value and convert as required
         // There is only one Rollup__mdt record when a Result Object/Field is involved.
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
-        if (rollup.resultFieldType != null && rollup.detailObject == objName) {
+        if (rollup.resultFieldType != null && (rollup.detailObject == objName || rollup.detailObject == oppObjectName)) {
 
-            Object resultVal = detailSObject.get(rollup.resultFieldName);
-            for (Rollup__mdt r : rollup.rollupsMdt) {
+            Object resultVal = (rollup.detailObject == oppObjectName ?
+                    oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
+
+            // If the result field is a currency type field and multi-currency is enabled in the org
+            // then convert it to the target currency
+            if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
+                    UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                // Convert the Amount to the currency of the target record
+                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
+                try {
+                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
+                } catch (Exception ex) { }
+                resultVal = UTIL_CurrencyConversion.convertAmount((Decimal)resultVal, dateValue, fromCurr, rollup.currCode);
+            }
+
+            for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                Rollup__mdt r = rollup.rollupsMdt[ns];
                 CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
-                if (operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+
+                if (dateTimeValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateTimeValue < rollup.minDateTime || rollup.minDateTime == null)) {
                     // Operation = FIRST (always based on a date)
+                    // Only want to use < as the operator for the date comparison so it only retrieves the first
+                    // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LAST && (dateValue > rollup.maxDate || rollup.maxDate == null)) {
+                } else if (dateTimeValue != null && operation == CRLP_Operation.RollupType.LAST && (dateTimeValue >= rollup.maxDateTime || rollup.maxDateTime == null)) {
                     // Operation = LAST (always based on a date)
+                    // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
+                    // result value from whatever record makes up the 'last' record' by date
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
-                    // Operation = SMALLEST (always based on an amount)
+                } else if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                    // Operation = FIRST (always based on a date)
+                    // Only want to use < as the operator for the date comparison so it only retrieves the first
+                    // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (operation == CRLP_Operation.RollupType.LARGEST && amountValue > rollup.maxValue) {
-                    // Operation = LARGEST (always based on an amount)
+                } else if (dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
+                    // Operation = LAST (always based on a date)
+                    // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
+                    // result value from whatever record makes up the 'last' record' by date
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
+
+                } else if (amountValue != null && operation == CRLP_Operation.RollupType.SMALLEST && (amountValue < rollup.minValue || rollup.minValue == 0)) {
+                    // Operation = SMALLEST (always based on an amount, but the result field might actually be a date)
+                    // This should get the first Opp with the smallest amount (in case there is more than one with the same amount)
+                    setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
+
+                } else if (amountValue != null && operation == CRLP_Operation.RollupType.LARGEST && (amountValue >= rollup.maxValue || rollup.maxValue == 0)) {
+                    // Operation = LARGEST (always based on an amount, but the result field might actually be a date)
+                    // This should get the last Opp with the largest amount (in case there is more than one with the same amount)
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
                 }
@@ -157,16 +201,25 @@ instance until ready to be written to the Sobject.
 
         String theYear;
 
-        // Set the First/Last Date values
+        // Set the First/Last Date values; excluding Opportunities with a null Date or a null Amount
         if (dateValue != null) {
-            theYear = fiscalYrs.getYear(dateValue).format().replace(',','');
+            theYear = fiscalYrs.getYear(dateValue).format().replace(',', '');
             if (rollup.minDate == null || rollup.minDate > dateValue) {
                 rollup.minDate = dateValue;
             }
             if (rollup.maxDate == null || rollup.maxDate < dateValue) {
                 rollup.maxDate = dateValue;
             }
-
+            if (dateTimeValue != null) {
+                if (rollup.minDateTime == null || rollup.minDateTime > dateTimeValue) {
+                    rollup.minDateTime = dateTimeValue;
+                }
+                if (rollup.maxDateTime == null || rollup.maxDateTime < dateTimeValue) {
+                    rollup.maxDateTime = dateTimeValue;
+                }
+            }
+        }
+        if (dateValue != null && amountValue != null) {
             if (rollup.sumByYear.containsKey(theYear)) {
                 rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);

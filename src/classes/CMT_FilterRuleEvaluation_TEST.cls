@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Custom Metadata Types
 * @description Tests for CMT Filter Rule related actions
 */
@@ -119,7 +119,7 @@ private class CMT_FilterRuleEvaluation_TEST {
     static testMethod void test_evaluateFilterRules() {
         mockFilterCMTValues();
 
-        Contact c = new Contact(FirstName = 'UNITTEST', LastName = 'UNITTEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, AccountId, FirstName, LastName FROM Contact LIMIT 1];
 
@@ -150,13 +150,11 @@ private class CMT_FilterRuleEvaluation_TEST {
 
         Test.startTest();
 
-        // TODO M.SMITH, 01/03/2017 - TEMPORARILY COMMENT THIS OUT FOR BUILDS TO COMPLETE. NOT FAILING LOCALLY. NEED TO FIGURE OUT WHAT HAPPENED.
-        // System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
-        // System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
-        //         new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId2));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{o}, filterGroupId1));
+         System.AssertEquals(True, CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(
+                 new List<SObject>{o, o.OpportunityContactRoles[0]}, filterGroupId2));
 
         // TODO Add more tests
-
     }
 
 }

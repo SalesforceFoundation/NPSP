@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups Scheduler for all Batch Rollup Jobs
@@ -79,7 +79,6 @@ public class CRLP_RollupScheduler implements Schedulable {
                 // For Account & Contact rollups, only execute the batch job if there is at least one Account
                 // record with the minimum number of attached Opportunities.
                 Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
-                // TODO Is this query properly optimized for selectivity??
                 hasLDVAccounts = [SELECT Count() FROM Account
                         WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode
                         LIMIT 1] > 0;
@@ -89,9 +88,9 @@ public class CRLP_RollupScheduler implements Schedulable {
 
             // If there is at least one LDV Account to roll up, execute this batch job
             if (this.rollupObjectType == Partial_Soft_Credit__c.SObjectType) {
-                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), batchSize);
+                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), batchSize);
             } else if (hasLDVAccounts) {
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(this.rollupObjectType), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(this.rollupObjectType), batchSize);
             }
         }
     }
