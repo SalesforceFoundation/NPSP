@@ -84,14 +84,16 @@ public class CRLP_RollupQueueable implements System.Queueable {
     public static void runRollupsForIds(List<Id> summaryRecordIds) {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
 
-        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-        options.mode = CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV;
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonLDV;
         options.parentObjType = objType;
         options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         } else if (objType == Contact.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         }
 
         // Query the parent records
@@ -101,7 +103,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Get the detail records for the current set of Summary Records
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
-        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments);
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments, options);
 
         // Call the method to do the actual rollups. This returns only records that require updating
         List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);

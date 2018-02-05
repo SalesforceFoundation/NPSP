@@ -46,14 +46,9 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType);
-        if (rlps != null) {
-            for (Rollup__mdt r : rlps) {
-                if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                        && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
-                    addRollupDefinition(r);
-                }
-            }
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.RollupTypeFilter.All)) {
+            addRollupDefinition(r);
         }
     }
 

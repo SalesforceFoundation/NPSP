@@ -106,7 +106,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }
@@ -184,7 +184,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }
@@ -285,7 +285,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }

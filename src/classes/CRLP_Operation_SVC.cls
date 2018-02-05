@@ -67,10 +67,11 @@ public class CRLP_Operation_SVC {
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
+//        System.debug('>>>> doRollupOperation() for ' + oppSObject.Primary_Contact__c + ' ' + objName + ' / ' + firstRollup.Summary_Field__r.QualifiedApiName);
 
         Date dateValue;
         DateTime dateTimeValue;
-        Double amountValue = null;
+        Decimal amountValue = null;
         String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
@@ -106,7 +107,7 @@ public class CRLP_Operation_SVC {
             amountValue = oppSObject.Amount;
         }
         if (amountValue == null && amtField != null && amtSObject.get(amtField) != null) {
-            amountValue = (Double) amtSObject.get(amtField);
+            amountValue = (Decimal) amtSObject.get(amtField);
         }
 
         // If the amount is not null or zero, then convert to the Account currency as required
@@ -131,19 +132,27 @@ public class CRLP_Operation_SVC {
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
         if (rollup.resultFieldType != null && (rollup.detailObject == objName || rollup.detailObject == oppObjectName)) {
 
-            Object resultVal = (rollup.detailObject == oppObjectName ?
-                    oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
+            Object resultVal;
+            // If the ResultField (DetailField) is the same as the Amount Field, then just get the value that
+            // was retrieved/converted in the code block above. Otherwise retrieve and convert as required.
+            if (rollup.resultFieldName == amtField && rollup.detailObject == oppObjectName) {
+                resultVal = amountValue;
+            } else {
+                resultVal = (rollup.detailObject == oppObjectName ?
+                        oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
 
-            // If the result field is a currency type field and multi-currency is enabled in the org
-            // then convert it to the target currency
-            if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
-                    UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                // Convert the Amount to the currency of the target record
-                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
-                try {
-                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                } catch (Exception ex) { }
-                resultVal = UTIL_CurrencyConversion.convertAmount((Decimal)resultVal, dateValue, fromCurr, rollup.currCode);
+                // If the result field is a currency type field and multi-currency is enabled in the org
+                // then convert it to the target currency
+                if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
+                        UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                    // Convert the Amount to the currency of the target record
+                    String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
+                    try {
+                        fromCurr = (String) detailSObject.get('CurrencyIsoCode');
+                    } catch (Exception ex) {
+                    }
+                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurr, rollup.currCode);
+                }
             }
 
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
@@ -256,7 +265,7 @@ public class CRLP_Operation_SVC {
         } else if (resultFieldType == SoapType.ID) {
             rollup.idValue[arrayPosition] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
-            rollup.numValue[arrayPosition] = Double.valueOf(resultVal);
+            rollup.numValue[arrayPosition] = (Decimal)resultVal;
         } else {
             rollup.textValue[arrayPosition] = String.valueOf(resultVal);
         }

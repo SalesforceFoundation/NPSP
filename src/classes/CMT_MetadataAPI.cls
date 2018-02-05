@@ -74,7 +74,7 @@ public class CMT_MetadataAPI {
             customMd.label = recordLabel;
         }
 
-        addFieldsToMedataObject(customMd, fldValues);
+        addFieldsToMetadataObject(customMd, fldValues);
         cmtUpsertQueue.add(customMd);
     }
 
@@ -84,7 +84,7 @@ public class CMT_MetadataAPI {
      * @param fldValues Key-Value pair map of fields/values
      * @return Updated CustomMetadata object instance with the fields added to the values collection
      */
-    public static Metadata.CustomMetadata addFieldsToMedataObject(Metadata.CustomMetadata md, Map<String,Object> fldValues) {
+    public static Metadata.CustomMetadata addFieldsToMetadataObject(Metadata.CustomMetadata md, Map<String,Object> fldValues) {
         Metadata.CustomMetadataValue customField;
         for (String k : fldValues.keySet()) {
             customField = new Metadata.CustomMetadataValue();
@@ -139,7 +139,7 @@ public class CMT_MetadataAPI {
      */
     public static void deployMetadata(String jobId, List<List<Metadata.CustomMetadata>> nestedMetadata) {
 
-        // Add all queued up metadaa updates to the deployment container
+        // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
         for (Metadata.CustomMetadata md: nestedMetadata[0]) {
             system.debug('deployMetadata > ' + md.fullName);
@@ -187,7 +187,7 @@ public class CMT_MetadataAPI {
 
             Boolean isSuccess = (result != null ? result.status == Metadata.DeployStatus.Succeeded : false);
             Map<String, String> statusMap = new Map<String, String>{ this.jobId => (result != null ? result.status.name() : 'Unknown') };
-            // If the staus is not Success, collect all errors into a string that can be written as the status
+            // If the status is not Success, collect all errors into a string that can be written as the status
             if (result != null && result.status != Metadata.DeployStatus.Succeeded) {
                 String errMsg = '';
                 for (Integer n=0; n < result.details.componentFailures.size(); n++) {

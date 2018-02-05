@@ -78,9 +78,9 @@ public class CRLP_Rollup {
     public DateTime[] dateTimeValue;
 
     // Maps of rolled up stats by year; where the map key is the year (fiscal or calendar) from the specified date field
-    public Map<String, Double> sumByYear;
-    public Map<String, Double> minByYear;
-    public Map<String, Double> maxByYear;
+    public Map<String, Decimal> sumByYear;
+    public Map<String, Decimal> minByYear;
+    public Map<String, Decimal> maxByYear;
     public Map<String, Integer> countByYear;
 
     /** @description Constructor */
@@ -123,9 +123,9 @@ public class CRLP_Rollup {
         this.minDate = this.maxDate = null;
         this.minDateTime = this.maxDateTime = null;
 
-        this.minByYear = new Map<String, Double>();
-        this.maxByYear = new Map<String, Double>();
-        this.sumByYear = new Map<String, Double>();
+        this.minByYear = new Map<String, Decimal>();
+        this.maxByYear = new Map<String, Decimal>();
+        this.sumByYear = new Map<String, Decimal>();
         this.countByYear = new Map<String, Integer>();
 
         this.textValue = new List<String>{ null, null, null, null };
@@ -162,20 +162,40 @@ public class CRLP_Rollup {
         // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
         // types cannot be combined with other rollups of different types/days. Group these together
         // where the NumberOfDays is the same.
-        if (otherMdtRollup.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                && (this.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                    || this.daysBack != otherMdtRollup.Integer__c)) {
-            return false;
+
+        Boolean isSameRollupGroup = true;
+
+        // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
+        // consider them in the same group
+        String daysBackOperation = CRLP_Operation.YearlyOperationType.DAYS_BACK.name();
+        if ((this.yearlyOperation == daysBackOperation && (otherMdtRollup.Yearly_Operation_Type__c != daysBackOperation ||
+                this.daysBack != otherMdtRollup.Integer__c)) ||
+                (otherMdtRollup.Yearly_Operation_Type__c == daysBackOperation && this.yearlyOperation != daysBackOperation)
+                ) {
+            isSameRollupGroup = false;
+        }
+
+        // The Amount and Detail fields do not matter for Count operations, so remove them from the
+        // grouping matching logic if this Rollup is a Count OR there is only one MDT record in the
+        // instance and that one is a Count.
+        if (otherMdtRollup.Operation__c == CRLP_Operation.RollupType.COUNT.name()
+                || (this.rollupsMdt.size() == 1 && this.rollupsMdt[0].Operation__c == CRLP_Operation.RollupType.COUNT.name())) {
+            matchingFields.remove('Amount_Field__c');
+            matchingFields.remove('Detail_Field__c');
         }
 
         Rollup__mdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
             if (rollupItem.get(fld) != otherMdtRollup.get(fld)) {
-                return false;
+                isSameRollupGroup = false;
             }
         }
-        return true;
+        return isSameRollupGroup;
     }
+
+    public Long getTargetFieldTime = 0;
+    public Long determineValueTime = 0;
+    public Long setTargetValue = 0;
 
     /**
      * @description Returns the appropriate return for this rollup based on the rollup operation type
@@ -224,7 +244,7 @@ public class CRLP_Rollup {
         Boolean useYearsAgoValue = ( r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
-            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - r.Integer__c.intValue();
+            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.Integer__c.intValue();
             String yrString = getThisYear.format().replace(',','');
             // If the map of sums by year include the specified year, then get the Sum/Min/Max
             if (sumByYear.containsKey(yrString)) {
@@ -296,7 +316,7 @@ public class CRLP_Rollup {
         // Best Year or Best Year Total
         // ================================================================
         else if (operation == CRLP_Operation.RollupType.BEST_YEAR || operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
-            Double maxVal = 0;
+            Decimal maxVal = 0;
             String bestYr = null;
             List<String> years = new List<String>( this.sumByYear.keySet() );
             years.sort();

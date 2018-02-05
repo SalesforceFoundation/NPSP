@@ -38,62 +38,6 @@
 public class CRLP_RollupProcessor_SVC {
 
     /**
-     * @description The processing mode for the calling batch operation - normal or LDV mode. In LDV mode,
-     * the List<CRLP_Rollup> collection is saved back into the ProcessingOptions class so that it can be
-     * kept in a stateful var in the calling batch job; allowing rollups for a single parent record to extend
-     * beyond a single batch iteration
-     */
-    public Enum ProcessingMode {
-        NonLDV, LDV
-    }
-
-    /**
-     * @description To aid in performance, the rollup operations can be limited to the following:
-     * - All : All rollups for the parent are processed.
-     * - DaysAgoOnly : Only Rollups using "Days Ago" (i.e., "Last N Days") are processed
-     * - NonDaysAgoOnly : Only Rollups NOT using "Days Ago" are processed
-     * - MembershipOnly : Only Rollups that target a Membership field
-     */
-    public Enum RollupsMode {
-        All, DaysAgoOnly, NonDaysAgoOnly, MembershipsOnly, NonMembershipsOnly
-    }
-
-    /**
-     * @description Processing Options to use for the startRollupsProcess
-     * These are set by the calling Batch or Queueable job to define how the rollups will be processed.
-     */
-    public class ProcessingOptions {
-        public ProcessingMode mode = ProcessingMode.NonLDV;  // default to non-ldv mode
-        public RollupsMode rollupTypesToProcess = RollupsMode.All;  // default to all rollups, but can narrow the scope
-
-        public SObjectType parentObjType;   // Summary object (Account, Contact, GAU)
-        public SObjectType detailObjType;   // Used when working with Soft Credits to have a way to know what the detail object is
-        public String parentKeyField;       // Used to know how to get the Id of the Parent record from the supplied detail record
-        public Boolean preventDupeOppsInRollup = false; // Used with Account Soft Credit rollups
-
-        /**
-         * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
-         * The value is saved as a stateful var in the calling batch process
-         */
-        public Id lastParentIdProcessed;
-
-        public Boolean lastParentIdRemovedFromUpdatesList = false;
-
-        /**
-        * @description Stateful rollups collection for LDV Mode. Needs to stay in ProcessingOptions to allow for passing
-        * between various service methods with the rest of the processing options
-        */
-        public Map<Id, List<CRLP_Rollup>> mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
-
-        /**
-         * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
-         * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
-         * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
-         */
-        public Map<Id,Set<Id>> mapOfProcessedOppIdsByAcctId = new Map<Id,Set<Id>>();
-    }
-
-    /**
      * @description The main work engine for roll-up activities. This method is called from both batch jobs
      * as well as from queuable jobs (via a trigger operation). Accepts a collection of summary OR detail records
      * and a ProcessingOptions object instance that defines the parameters to use for the rollup work.
@@ -102,7 +46,8 @@ public class CRLP_RollupProcessor_SVC {
      * @param options ProcessingOptions
      * @return List<SObject> Records that require updating.
      */
-    public static List<SObject> startRollupProcess(List<SObject> summaryRecords, List<SObject> detailRecords, ProcessingOptions options) {
+    public static List<SObject> startRollupProcess(List<SObject> summaryRecords, List<SObject> detailRecords,
+            CRLP_RollupProcessingOptions.ProcessingOptions options) {
 
         // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
         // If this is the case, need to parse out the two components to use
@@ -187,7 +132,7 @@ public class CRLP_RollupProcessor_SVC {
         // passed through multiple batch iterations. The 'final' record will be handled by the finish() method of
         // the LDV Batch job.
         options.lastParentIdRemovedFromUpdatesList = false;
-        if (options.mode == ProcessingMode.LDV && options.lastParentIdProcessed != null &&
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.lastParentIdProcessed != null &&
                 recordsToUpdate.containsKey(options.lastParentIdProcessed)) {
             recordsToUpdate.remove(options.lastParentIdProcessed);
             options.lastParentIdRemovedFromUpdatesList = true;
@@ -231,7 +176,8 @@ public class CRLP_RollupProcessor_SVC {
      * This is passed through to the getFullDetailsQueryForSummaryRecords() method
      * @return List<SObject> detailRecords to roll up to the summary records
      */
-    public static List<SObject> getDetailRecordsFromParentRecords(List<SObject> summaryRecords, Boolean includeChildPayments) {
+    public static List<SObject> getDetailRecordsFromParentRecords(List<SObject> summaryRecords, Boolean includeChildPayments,
+            CRLP_RollupProcessingOptions.ProcessingOptions options) {
         // Get the parent record Id's
         Set<Id> summaryRecordIds = new Set<Id>();
         for (SObject s : summaryRecords) {
@@ -239,6 +185,21 @@ public class CRLP_RollupProcessor_SVC {
         }
 
         String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
+
+        // Identify a common filter that can be applied to the main query to reduce the number of records queried
+        String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryRecords[0].getSObjectType(),
+                Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(options.rollupJobType, options.rollupTypesToProcess));
+        if (!String.isEmpty(addlFilter)) {
+            String orderBy;
+            if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
+                orderBy = detailsQuery.split('ORDER BY')[1];
+                detailsQuery = detailsQuery.split('ORDER BY')[0];
+            }
+            detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + addlFilter;
+            if (orderBy != null) {
+                detailsQuery += ' ORDER BY ' + orderBy;
+            }
+        }
 
         // Force the details query to sort by Ascending CreatedDate so that the records are process
         // in the order in which they were created in the database. Thus the 'first' is truly the first
@@ -268,34 +229,31 @@ public class CRLP_RollupProcessor_SVC {
      * modified within this method.
      * @return an updated Summary SObject if it differs from the parent; otherwise it returns null.
      */
-    public static SObject completeRollupForParent(SObject parent, List<SObject> detailRecords, ProcessingOptions options) {
+    public static SObject completeRollupForParent(SObject parent, List<SObject> detailRecords,
+            CRLP_RollupProcessingOptions.ProcessingOptions options) {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
         Id parentId = parent.Id;
 
-        CRLP_VRollupHandler handler = handlersMapByType.get(parent.getSobjectType());
+
+        CRLP_VRollupHandler handler = handlersMapByType.get(parent.getSObjectType());
         if (handler == null) {
-            Type handlerClassType = getHanderClassType(parent.getSobjectType(), options.detailObjType);
+            Type handlerClassType = getHanderClassType(parent.getSObjectType(), options.detailObjType);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
             if (UserInfo.isMultiCurrencyOrganization()) {
                 handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
             }
-            handlersMapByType.put(parent.getSobjectType(), handler);
+            handlersMapByType.put(parent.getSObjectType(), handler);
         }
 
         // Set the Id of the summary object. This method will also reset and load the appropriate rollup mdt records
         handler.setRecordId(parentId);
 
-        // If a new set of Rollup records were initialized for the handler; and a rollup filtering type
-        // was set to limit which types of rollups will be processed, call this method to remove any rollups
-        // from the list that don't meet the filter type
-        handler.filterRollups(options.rollupTypesToProcess);
-
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (options.mode == ProcessingMode.LDV && options.mapOfRollupsByParentId != null &&
-                options.mapOfRollupsByParentId.containsKey(parentId)) {
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.mapOfRollupsByParentId != null &&
+                options.getUpdatedMapOfRollupsByParentId().containsKey(parentId)) {
             CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
             handler.setRollupsList(options.mapOfRollupsByParentId.get(parentId));
         }
@@ -306,7 +264,7 @@ public class CRLP_RollupProcessor_SVC {
         }
 
         // Save the rollup from the Handler instance into the processing options instance
-        if (options.mode == ProcessingMode.LDV) {
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV) {
             options.mapOfRollupsByParentId.put(parentId, fullyCloneList(handler.getRollupsList()));
             options.lastParentIdProcessed = parentId;
         }

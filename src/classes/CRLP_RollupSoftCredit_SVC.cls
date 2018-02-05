@@ -50,20 +50,16 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      */
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
-        SObjectType targetObjType = this.objectId.getSobjectType();
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType);
-        if (rlps != null) {
-            for (Rollup__mdt r : rlps) {
-                // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
-                // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
-                // the only reliable ObjectField to check against is AmountObject since that will always point
-                // to the PartialSoftCredit object for these types of rollups.
-                if (r.Amount_Object__r.QualifiedApiName == pscObjectName) {
-                    addRollupDefinition(r);
-                }
-            }
+        CRLP_RollupProcessingOptions.RollupType rollupType = (this.objectId.getSobjectType() == Account.SObjectType ?
+                CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit : CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+                rollupType, CRLP_RollupProcessingOptions.RollupTypeFilter.All)) {
+            addRollupDefinition(r);
         }
     }
+
+    // TODO Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
+    // TODO For SoftCredits need to include OCR's where isPrimary=True and Opp.Account.SYSTEM_IsIndividual=false
 
     /**
      * @description Primary action method. Called for each record of summaryObject with a list of the detail objects

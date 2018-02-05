@@ -76,18 +76,25 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
                 detailObjectType = Allocation__c.SObjectType;
                 keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
 
             } else if (this.summaryObjectType == Account.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.AccountId.getName();
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
 
             } else if (this.summaryObjectType == Contact.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+
             }
             query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
+
+            this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
+                    CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
 
             // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
             if (detailObjectType == Opportunity.SObjectType) {
@@ -96,6 +103,14 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             if (this.recordIds != null && this.recordIds.size() > 0) {
                 query += (query.endsWith(' WHERE ') ? '' : ' AND ') + keyField + ' IN :recordIds';
             }
+
+            // Identify a common filter that can be applied to the main query to reduce the number of records queried
+            String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
+                    this.statefulCacheOfRollupsToBeProcessed.get(this.summaryObjectType));
+            if (!String.isEmpty(addlFilter)) {
+                query += (query.endsWith(' WHERE ') ? '' : ' AND ') + addlFilter;
+            }
+
             if (query.endsWith(' WHERE ')) {
                 query = query.removeEnd(' WHERE ');
             }
@@ -134,7 +149,7 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
 
         try {
             // Build the processing options instance
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+            CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
 
             Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
             Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
@@ -169,10 +184,10 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
-            this.lastParentIdProcessed = options.lastParentIdProcessed;
-            this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
-            this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
-            this.statefulRollupsById.put(this.lastParentIdProcessed, options.mapOfRollupsByParentId.get(this.lastParentIdProcessed));
+            this.lastParentIdProcessed = options.getLastParentIdProcessed();
+            this.statefulRollupsById.put(firstParentId, options.getUpdatedMapOfRollupsByParentId().get(firstParentId));
+            this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
+            this.statefulRollupsById.put(this.lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(this.lastParentIdProcessed));
 
             // Remember which batch iteration this parent was last NOT updated
             if (options.lastParentIdRemovedFromUpdatesList == true) {
@@ -203,7 +218,7 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             // Handle the final parent record in the LDV job
             if (this.parentIdsNotCommittedWithBatch != null && !this.parentIdsNotCommittedWithBatch.isEmpty()) {
                 // Build the processing options instance
-                CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+                CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
 
                 // Get the Summary (target) records for the final record to be processed
                 Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();

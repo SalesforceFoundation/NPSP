@@ -240,4 +240,148 @@
         return addlQuery;
     }
 
+    /**
+     * @description For a given query against a specific detail SObject, and a set of active Rollup__mdt records that
+     * will be processed for those detail records, identify a common Where clause fragment that can be used to
+     * limit the records queried by the main batch job engine. For example, if all the Rollups use a Filter Group that
+     * filters for IsWon=True, the main query where clause can be improved by adding "WHERE IsWon=TRUE" to the query.
+     * This can be used to drastically improve performance of the batch jobs by severely limiting the number of
+     * records queried and processed by the rollups engine.
+     *
+     * This is pretty complex, so the matching logic is limited to the following common fields only:
+     * - IsWon
+     * - IsClosed
+     * - RecordTypeId
+     *
+     * And the following operations: EQUALS, NOT EQUALS, IN LIST, NOT IN LIST
+     *
+     * @param summaryObjectType If the main object is something other than Opportunity, this is the field
+     * in the detail object needed to get the Opportunity (ex: "Opportunity__r")
+     * @param detailObjectType The detail object being queried
+     * @param rollups Collection of filtered Rollup__mdt records (or null)
+     * @return A string to append to the main query's WHERE clause (without the "WHERE")
+     */
+    public static String buildCommonQueryFilterOnOpportunity(SObjectType summaryObjectType, SObjectType detailObjectType) {
+        return buildCommonQueryFilterOnOpportunity(summaryObjectType, detailObjectType, null);
+    }
+    public static String buildCommonQueryFilterOnOpportunity(SObjectType summaryObjectType, SObjectType detailObjectType,
+                List<Rollup__mdt> rollups) {
+
+        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+
+        // Attempt to further limit the number of records queried by building a common filter that
+        // is shared across all the Filter Groups used by the Rollups that will be processed.
+        if (rollups == null || rollups.isEmpty()) {
+            rollups = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
+        }
+        if (rollups == null) {
+            return '';
+        }
+
+        for (Integer n=0; n<rollups.size(); n++) {
+            if ((detailObjectType == Partial_Soft_Credit__c.SObjectType && rollups[n].Amount_Object__r.QualifiedApiName != pscObjectName) ||
+                    (detailObjectType != Partial_Soft_Credit__c.SObjectType && rollups[n].Amount_Object__r.QualifiedApiName == pscObjectName)) {
+                rollups.remove(n);
+                n--;
+            }
+        }
+
+        // Get a list of the applied FilterGroupId's
+        Set<Id> filterGroupIds = new Set<Id>();
+        for (Rollup__mdt r : rollups) {
+            filterGroupIds.add(r.Filter_Group__c);
+        }
+
+        // If there are not rollups or no filter groups, just exit out
+        if (filterGroupIds.size() == 0) {
+            return '';
+        }
+
+        // Determine the parent Opportunity foreign key relationship field.
+        String parentRelationshipPrefix;
+        if (detailObjectType == Allocation__c.SObjectType) {
+            parentRelationshipPrefix = SObjectType.Allocation__c.fields.Opportunity__c.getName().replace('__c', '__r');
+        } else if (detailObjectType == Partial_Soft_Credit__c.SObjectType) {
+            parentRelationshipPrefix = 'Opportunity';
+        }
+
+        // The following loop will confirm that all Filter Groups use the same Rule for the same field
+        // If the Rule is used across all Filter Groups, the Integer value in the Map will match the
+        // total number of rules
+        Map<String, Integer> countOfRuleUsage = new Map<String, Integer>{
+                'IsWon' => 0, 'IsClosed' => 0, 'RecordTypeId' => 0 };
+        Map<String,String> targetFieldAndOperator = new Map<String, String>();
+        Map<String,String> targetFieldAndConstant = new Map<String, String>();
+        for (Id fg : filterGroupIds) {
+
+            for (Filter_Rule__mdt rule : CMT_FilterRule_SEL.getFilterRulesByGroup().get(fg)) {
+                String fieldName = rule.Field__r.QualifiedApiName;
+                if (countOfRuleUsage.containsKey(fieldName)) {
+                    countOfRuleUsage.put(fieldName, countOfRuleUsage.get(fieldName)+1);
+                    // Next compare the Constant value for each of the rules. If the value is the same across
+                    // each of the Rules for this field, the value will is stored in the targetFieldAndConstant map.
+                    // If the value doesn't match though, the countOfRuleUsage map value is decremented to indicate
+                    // that the Rule for the field isn't used consistently across all Filter Groups
+                    if (!targetFieldAndConstant.containsKey(fieldName)) {
+                        targetFieldAndConstant.put(fieldName, rule.Constant__c);
+                        targetFieldAndOperator.put(fieldName, rule.Operator__c);
+                    } else if (targetFieldAndConstant.get(fieldName) != rule.Constant__c ||
+                            targetFieldAndOperator.get(fieldName) != rule.Operator__c) {
+                        countOfRuleUsage.put(fieldName, countOfRuleUsage.get(fieldName)-1);
+                    }
+                }
+            }
+        }
+
+        List<String> whereClauses = new List<String>();
+        for (String fieldName : countOfRuleUsage.keySet()) {
+            if (countOfRuleUsage.get(fieldName) == filterGroupIds.size()) {
+                String whereClause = fieldName;
+                // If the field is RecordTypeId, switch it to RecordType.DeveloperName to match the
+                // constant values used which are DeveloperName values.
+                if (fieldName == 'RecordTypeId') {
+                    whereClause = 'RecordType.DeveloperName';
+                }
+                whereClause = (!String.isEmpty(parentRelationshipPrefix) ? parentRelationshipPrefix + '.' : '') + whereClause;
+
+                if (targetFieldAndOperator.get(fieldName) == CMT_FilterRule.FilterOperation.EQUALS.name()) {
+                    if (fieldName.startsWith('Is')) {
+                        whereClause += ' = ' + targetFieldAndConstant.get(fieldName);
+                    } else {
+                        whereClause += ' = \'' + targetFieldAndConstant.get(fieldName) + '\'';
+                    }
+
+                } else if (targetFieldAndOperator.get(fieldName) == CMT_FilterRule.FilterOperation.NOT_EQUALS.name()) {
+                    if (fieldName.startsWith('Is')) {
+                        whereClause += ' != ' + targetFieldAndConstant.get(fieldName);
+                    } else {
+                        whereClause += ' != \'' + targetFieldAndConstant.get(fieldName) + '\'';
+                    }
+
+                } else if (targetFieldAndOperator.get(fieldName) == CMT_FilterRule.FilterOperation.IN_LIST.name()) {
+                    whereClause += ' IN (';
+                    for (String v : targetFieldAndConstant.get(fieldName).split(';')) {
+                        whereClause += '\'' + v + '\',';
+                    }
+                    whereClause =  whereClause.removeEnd(',') + ')';
+
+                } else if (targetFieldAndOperator.get(fieldName) == CMT_FilterRule.FilterOperation.NOT_IN_LIST.name()) {
+                    whereClause += ' NOT IN (';
+                    for (String v : targetFieldAndConstant.get(fieldName).split(';')) {
+                        whereClause += '\'' + v + '\',';
+                    }
+                    whereClause =  whereClause.removeEnd(',') + ')';
+
+                } else {
+                    whereClause = null;
+                }
+
+                if (whereClause != null) {
+                    whereClauses.add(whereClause);
+                }
+            }
+        }
+
+        return String.join(whereClauses, ' AND ');
+    }
 }

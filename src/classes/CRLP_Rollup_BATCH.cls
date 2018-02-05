@@ -87,6 +87,14 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                 query += ' LIMIT 0';
             }
 
+            if (this.summaryObjectType == Account.SObjectType) {
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+            } else if (this.summaryObjectType == Contact.SObjectType) {
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+            }
+            this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
+                    CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
+
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
@@ -107,15 +115,13 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
 
         this.batchIteration++;
         try {
-            // Get the detail records for the current set of Summary Records
-            Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
-            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments);
 
-            // Build the processing options instance
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+            CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
             options.detailObjType = Opportunity.SObjectType;
 
-// options.rollupTypesToProcess = CRLP_RollupProcessor_SVC.RollupsMode.DateBasedOnly;
+            // Get the detail records for the current set of Summary Records
+            Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
+            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments, options);
 
             // Call the method to do the actual rollups. This returns only records that require updating
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);

@@ -186,4 +186,92 @@ public class CRLP_Rollup_SEL {
         }
         return soql.removeEnd(',');
     }
+
+    /** @description Static cache of filtered rollups by RollupType and Applied Filter */
+    private static Map<String, List<Rollup__mdt>> cachedRollupsByTypeAndFilter = new Map<String, List<Rollup__mdt>>();
+
+    /**
+     * @description Used to populate the cache with the saved value from the Batch stateful property.
+     * @param rollupType Enum of the job type (AccountHardCredit, ContactHardCredit, etc.)
+     * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
+     * @param rollups List of Rollup__mdt records to store
+     */
+    public static void stuffRollupsByTypeCache(CRLP_RollupProcessingOptions.RollupType rollupType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, List<Rollup__mdt> rollups) {
+        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), rollups);
+    }
+
+    /**
+     * @description Return a list of Rollup__mdt records based on the Rollup Job Type (Account Hard Credit, etc.)
+     * and the Rollup Type Filter (if there is one defined). This is called by each of the Rollup Job Handler
+     * classes as well as the initial batch class.
+     * @param rollupType Enum of the job type (AccountHardCredit, ContactHardCredit, etc.)
+     * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
+     * @return List<Rollup__mdt>
+     */
+    public static List<Rollup__mdt> getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType rollupType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter) {
+
+        // If the list exists in the cache, just return it
+        if (cachedRollupsByTypeAndFilter != null && cachedRollupsByTypeAndFilter.containsKey(rollupType.name() + typeFilter.name())) {
+            return cachedRollupsByTypeAndFilter.get(rollupType.name() + typeFilter.name());
+        }
+
+        List<Rollup__mdt> filteredRollups = new List<Rollup__mdt>();
+
+        String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
+        String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+
+        // Determine the correct base summary object based on the Rollup Type
+        SObjectType summaryObjectType;
+        if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            summaryObjectType = Account.SObjectType;
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            summaryObjectType = Contact.SObjectType;
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            summaryObjectType = General_Accounting_Unit__c.SObjectType;
+        }
+
+        // Retrieve all the Rollup Definitions for the summary object
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
+        if (rlps != null) {
+            // Loop through each Rollup__mdt and determine whether the record should be included based on the
+            // Rollup Type Job AND the Type Filter if there is one.
+            for (Rollup__mdt r : rlps) {
+                Boolean includeRollupDefinition=false;
+                if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                        rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                            && r.Amount_Object__r.QualifiedApiName != pscObjectName);
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                    includeRollupDefinition = true;
+                }
+                if (includeRollupDefinition) {
+                    if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
+                            r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                        includeRollupDefinition = false;
+                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
+                            r.Yearly_Operation_Type__c != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                        includeRollupDefinition = false;
+                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
+                            !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
+                        includeRollupDefinition = false;
+                    }
+                }
+                if (includeRollupDefinition) {
+                    filteredRollups.add(r);
+                }
+            }
+        }
+
+        // Save the list in the cache
+        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), filteredRollups);
+        return filteredRollups;
+    }
 }

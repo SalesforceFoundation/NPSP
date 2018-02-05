@@ -39,6 +39,12 @@ public abstract class CRLP_AbstractRollup_BATCH {
     /** @description Set to True if the batch job is of an LDV type; where the primary object is the detail */
     protected Boolean isLdvBatchJob = false;
 
+    /** @description The default filter to apply to Rollups type records for the processing */
+    protected CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+
+    /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
+    protected CRLP_RollupProcessingOptions.RollupType jobType;
+
     /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
      * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
      * the parent record multiple times, the code will keep uncommited rollup data in the stateful var for up to
@@ -53,14 +59,23 @@ public abstract class CRLP_AbstractRollup_BATCH {
     * @description Stateful collection of Rollups used to hold Rollups for Contacts and Accounts that
     * span beyond a single batch iteration
     */
-    protected Map<Id, List<CRLP_Rollup>> statefulRollupsById;
+    protected Map<Id, List<CRLP_Rollup>> statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
+
+    /** @description This is built one time at the start of the batch process and then re-used throughout
+     * the rest of the batch processing logic. It's implemented as a Map<SObjectType> to support the Soft Credit
+     * LDV job where both Account and Contact rollups are processed by the same job. This data is passed in the
+     * ProcessingOptions collection to the processor. It's also used to pre-generate the SOQL used to retrieve
+     * summary or detail records rather than build that in every single batch iteration. Basically this collection
+     * is injected into the CRLP_Rollup_SEL cache to significantly simplify and narrow the pr
+     */
+    protected Map<SObjectType, List<Rollup__mdt>> statefulCacheOfRollupsToBeProcessed = new Map<SObjectType, List<Rollup__mdt>>();
 
     /**
-    * @description This list is effectively the keyset of statefulRollupsById, but it's used to keep the list of
-    * Id's in a specific sequence so that element 0 can be dropped when the 1000th element is added. When dropped,
-    * that key is also removed from the statefulRollupsById map. The intent is to keep the heap size for the stateful
-    * Map of CRLP_Rollup data limited to avoid a governor limit when dealing with millions of records.
-    */
+     * @description This list is effectively the keyset of statefulRollupsById, but it's used to keep the list of
+     * Id's in a specific sequence so that element 0 can be dropped when the 1000th element is added. When dropped,
+     * that key is also removed from the statefulRollupsById map. The intent is to keep the heap size for the stateful
+     * Map of CRLP_Rollup data limited to avoid a governor limit when dealing with millions of records.
+     */
     protected List<Id> statefulListOfSavedIds;
 
     /**
@@ -147,18 +162,20 @@ public abstract class CRLP_AbstractRollup_BATCH {
     }
 
     /********************************************************************************************************
-     * @description Create an instance of the CRLP_RollupProcessor_SVC.ProcessingOptions class to use with the
+     * @description Create an instance of the CRLP_RollupProcessingOptions.ProcessingOptions class to use with the
      * CRLP_RollupProcessor_SVC.startRollupProcess() calls.
-     * @return CRLP_RollupProcessor_SVC.ProcessingOptions
+     * @return CRLP_RollupProcessingOptions.ProcessingOptions
      */
-    protected CRLP_RollupProcessor_SVC.ProcessingOptions initOptionsInstance() {
-        CRLP_RollupProcessor_SVC.ProcessingOptions options = new CRLP_RollupProcessor_SVC.ProcessingOptions();
-        options.mode = (this.isLdvBatchJob ? CRLP_RollupProcessor_SVC.ProcessingMode.LDV : CRLP_RollupProcessor_SVC.ProcessingMode.NonLDV);
+    protected CRLP_RollupProcessingOptions.ProcessingOptions initOptionsInstance() {
+        CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
+        options.mode = (this.isLdvBatchJob ? CRLP_RollupProcessingOptions.BatchJobMode.LDV : CRLP_RollupProcessingOptions.BatchJobMode.NonLDV);
         options.detailObjType = Opportunity.SObjectType;    // the default type
         options.parentObjType = this.summaryObjectType;
+        options.rollupJobType = this.jobType;
+        options.rollupTypesToProcess = this.jobFilter;
 
-        options.mapOfRollupsByParentId = this.statefulRollupsById;
-        options.mapOfProcessedOppIdsByAcctId = this.statefulMapOfOppIdsByAcct;
+        options.setMapOfRollupsByParentId(this.statefulRollupsById);
+        options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct);
 
         if (this.summaryObjectType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
@@ -167,6 +184,13 @@ public abstract class CRLP_AbstractRollup_BATCH {
         } else if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             options.detailObjType = Allocation__c.SObjectType;
+        }
+
+        // Retrieve and store the cached list of Rollup__mdt records into the Rollups Processor
+        // so that the list never changes throughout the life of the batch job
+        if (this.statefulCacheOfRollupsToBeProcessed.containsKey(this.summaryObjectType)) {
+            CRLP_Rollup_SEL.stuffRollupsByTypeCache(this.jobType, this.jobFilter,
+                    this.statefulCacheOfRollupsToBeProcessed.get(this.summaryObjectType));
         }
 
         return options;
