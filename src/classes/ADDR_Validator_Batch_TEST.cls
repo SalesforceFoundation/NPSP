@@ -123,12 +123,15 @@ public with sharing class ADDR_Validator_Batch_TEST {
     public static testmethod void multipleValidAddresses() {
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
 
+        Integer batchSize = 100;
+
+        UTIL_Debug.disableDebugLogging();
         TDTM_DefaultConfig.startTestDataInit();
     	createDefaultSettings();
         
         //create contacts
         List<Contact> contacts = new List<Contact>();
-        for(integer i = 0; i< 200; i++) {
+        for(integer i = 0; i< batchSize; i++) {
 	        Contact contact = new contact(firstname='Test', lastname='Person' + i);
 	        contact.MailingStreet = 'multiple-address';
 	        contact.MailingCity = 'Cupertino';
@@ -142,7 +145,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         //check households got created for contacts
         List<Id> AccountIDs = new List<Id>();
         List<Contact> contactsWithAccId = [select Account.Id from Contact where Id IN :contacts];
-        System.assertEquals(200, contactsWithAccId.size());
+        System.assertEquals(batchSize, contactsWithAccId.size());
         for(Contact c : contactsWithAccId) {    
 	        Id accountId = c.Account.Id;
 	        System.assertNotEquals(null, accountId);
@@ -151,7 +154,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         
         //check address records got created for households, but have not yet been verified
         List<Address__c> addresses = [select Verified__c from Address__c where Household_Account__c IN :AccountIDs];
-        System.assertEquals(200, addresses.size());
+        System.assertEquals(batchSize, addresses.size());
         for(Address__c addr : addresses) {
         	System.assertEquals(false, addr.Verified__c);
         }
@@ -166,7 +169,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
         //check address records were verified
         addresses = [select MailingStreet__c, MailingState__c, MailingPostalCode__c, Verified__c 
                     from Address__c where Household_Account__c IN :AccountIDs];
-        System.assertEquals(200, addresses.size());
+        System.assertEquals(batchSize, addresses.size());
         Integer i = 1;
         for(Address__c addr : addresses) {
         	UTIL_Debug.debug(LoggingLevel.WARN, '****Asserting address record #' + i);
