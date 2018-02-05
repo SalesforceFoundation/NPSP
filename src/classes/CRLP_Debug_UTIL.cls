@@ -11,7 +11,9 @@ public class CRLP_Debug_UTIL {
     private static List<String> currentRollupState = new List<String>();
 
     public static void clearCurrentRollupState() {
-        currentRollupState.clear();
+        if (isEnabled) {
+            currentRollupState.clear();
+        }
     }
 
     public static void setCurrentRollupState(String state) {
@@ -54,7 +56,7 @@ public class CRLP_Debug_UTIL {
     }
 
     public static String getRollupCurrentValues(CRLP_Rollup r) {
-        return (!isEnabled ? '' : '==================================' +
+        return (!isEnabled ? '' :
                 '\n* # of MDT records=' + r.rollupsMdt.size() +
                 '\n* resultFieldName=' + r.resultFieldName + '/' + r.resultFieldType +
                 '\n* yearlyOperation=' + r.yearlyOperation +
@@ -75,7 +77,7 @@ public class CRLP_Debug_UTIL {
                 '\n* dateValue=' + JSON.serialize(r.dateValue) +
                 '\n* dateTimeValue=' + JSON.serialize(r.dateTimeValue) +
                 '\n* idValue=' + JSON.serialize(r.idValue) +
-                '\n==================================');
+                '\n==================================' );
     }
 
     public static String getRollupState(List<CRLP_Rollup> rollups) {

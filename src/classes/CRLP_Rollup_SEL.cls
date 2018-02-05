@@ -70,14 +70,17 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Summary object and a list of
      * all rollups for each Summary object
      */
+    private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsBySummaryType() {
-        Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Summary_Object__r.QualifiedApiName).getSObjectType();
-            if (!rollupsBySummaryType.containsKey(objType)) {
-                rollupsBySummaryType.put(objType, new List<Rollup__mdt>());
+        if (rollupsBySummaryType == null) {
+            rollupsBySummaryType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Summary_Object__r.QualifiedApiName).getSObjectType();
+                if (!rollupsBySummaryType.containsKey(objType)) {
+                    rollupsBySummaryType.put(objType, new List<Rollup__mdt>());
+                }
+                rollupsBySummaryType.get(objType).add(rollup);
             }
-            rollupsBySummaryType.get(objType).add(rollup);
         }
         return rollupsBySummaryType;
     }
@@ -86,14 +89,17 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Detail object and a list of
      * all rollups for each Detail object
      */
+    private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsByDetailType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsByDetailType() {
-        Map<Schema.SObjectType, List<Rollup__mdt>> rollupsByDetailType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Detail_Object__r.QualifiedApiName).getSObjectType();
-            if (!rollupsByDetailType.containsKey(objType)) {
-                rollupsByDetailType.put(objType, new List<Rollup__mdt>());
+        if (rollupsByDetailType == null) {
+            rollupsByDetailType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Detail_Object__r.QualifiedApiName).getSObjectType();
+                if (!rollupsByDetailType.containsKey(objType)) {
+                    rollupsByDetailType.put(objType, new List<Rollup__mdt>());
+                }
+                rollupsByDetailType.get(objType).add(rollup);
             }
-            rollupsByDetailType.get(objType).add(rollup);
         }
         return rollupsByDetailType;
     }
@@ -102,13 +108,16 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the FilterGroup Id and a list of
      * all rollups for each FilterGroup
      */
+    private static Map<Id, List<Rollup__mdt>> rollupsByFilterGroup;
     public static Map<Id, List<Rollup__mdt>> getRollupsByFilterGroup() {
-        Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = new Map<Id, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            if (!rollupsByFilterGroup.containsKey(rollup.Filter_Group__c)) {
-                rollupsByFilterGroup.put(rollup.Filter_Group__c, new List<Rollup__mdt>());
+        if (rollupsByFilterGroup == null) {
+            rollupsByFilterGroup = new Map<Id, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                if (!rollupsByFilterGroup.containsKey(rollup.Filter_Group__c)) {
+                    rollupsByFilterGroup.put(rollup.Filter_Group__c, new List<Rollup__mdt>());
+                }
+                rollupsByFilterGroup.get(rollup.Filter_Group__c).add(rollup);
             }
-            rollupsByFilterGroup.get(rollup.Filter_Group__c).add(rollup);
         }
         return rollupsByFilterGroup;
     }

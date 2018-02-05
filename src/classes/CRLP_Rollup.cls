@@ -188,6 +188,7 @@ public class CRLP_Rollup {
         for (String fld : matchingFields) {
             if (rollupItem.get(fld) != otherMdtRollup.get(fld)) {
                 isSameRollupGroup = false;
+                break;
             }
         }
         return isSameRollupGroup;
