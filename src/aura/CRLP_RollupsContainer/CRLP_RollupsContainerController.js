@@ -15,8 +15,6 @@
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
 
-                console.log(model.operations);
-
                 var ops = [];
                 for(var i in model.operations){
                     ops.push({name: i, label: model.operations[i]});
@@ -29,13 +27,13 @@
                 }
                 cmp.set("v.yearlyOperations", yOps);
 
-                var cols = [model.labels.name
-                            , model.labels.summaryObject
-                            , model.labels.detailObject
-                            , model.labels.creditType
-                            , model.labels.operation
-                            , model.labels.filterGroupLabel
-                            , model.labels.active
+                var cols = [{label: model.labels.name, name: 'rollupName'}
+                            , {label: model.labels.summaryObject, name: 'summaryObject'}
+                            , {label: model.labels.detailObject, name: 'detailObject'}
+                            , {label: model.labels.creditType, name: 'creditType'}
+                            , {label: model.labels.operation, name: 'operation'}
+                            , {label: model.labels.filterGroupLabel, name: 'filterGroupName'}
+                            , {label: model.labels.active, name: 'active'}
                             ];
                 cmp.set("v.columns", cols);
 
@@ -62,10 +60,10 @@
         //sets the filter group grid to be displayed, resets the column labels, and changes the breadcrumbs
         cmp.set("v.isFilterGroupsGrid",true);
         var labels = cmp.get("v.labels");
-        var cols = [labels.name
-            , labels.filterGroupDescription
-            , labels.countOf+' '+labels.filterGroupLabelPlural
-            , labels.countOf+' '+labels.rollupLabelPlural
+        var cols = [{label: labels.name, name: 'label'}
+            , {label: labels.filterGroupDescription, name: 'description'}
+            , {label: labels.countOf+' '+labels.filterGroupLabelPlural, name: 'countFilterRules'}
+            , {label: labels.countOf+' '+labels.rollupLabelPlural, name: 'countRollups'}
             ];
         cmp.set("v.columns", cols);
         cmp.set("v.isRollupsGrid", false);
@@ -111,5 +109,11 @@
         //changes the mode from the edit or clone buttons
         var name = event.getSource().get("v.name");
         cmp.set("v.detailMode", name);
+    },
+
+    sortByColumns: function(cmp, event, helper){
+        var fieldName = event.getParam('fieldName');
+        var sortDirection = event.getParam('sortDirection');
+        helper.sortData(cmp, fieldName, sortDirection);
     },
 })

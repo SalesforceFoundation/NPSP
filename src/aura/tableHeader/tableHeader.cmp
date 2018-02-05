@@ -1,15 +1,31 @@
 <aura:component description="tableHeader">
     <!-- public attributes -->
     <aura:attribute name="hasAction" type="boolean" default="true"/>
-    <aura:attribute name="columns" type="List"/>
-    <aura:attribute name="labels" type="Map"/>
+    <aura:attribute name="columns" type="List" description="Columns for table header."/>
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="sortedColumn" type="Map" default="{columnName: 'none', direction: 'asc'}" description="Map of sorted column name and sorted direction"/>
+
+    <!-- events we fire -->
+    <aura:registerEvent name="SortEvent" type="c:CRLP_SortEvent"/>
 
     <!-- markup -->
     <thead>
         <tr class="slds-text-title_caps">
             <aura:iteration var="column" items="{!v.columns}">
                 <th class="slds-col" scope="col">
-                    <div class="slds-truncate" title="{!column}">{!column}</div>
+                    <div class="slds-truncate" title="{!column.label}">
+                        {!column.label}
+                        <!--todo: add custom label-->
+                        <lightning:buttonIcon
+                                aura:id="columnSort"
+                                class="buttonIcon slds-float_right"
+                                iconName="utility:arrowdown"
+                                alternativeText="Sort"
+                                onclick="{!c.sortColumn}"
+                                name="{!column.name}"
+                                size="x-small"
+                                title="Sort"/>
+                    </div>
                 </th>
             </aura:iteration>
             <aura:if isTrue="{!v.hasAction}">

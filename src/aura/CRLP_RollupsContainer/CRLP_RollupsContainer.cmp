@@ -21,6 +21,7 @@
     <!-- handleRollupSelect handles the bubbling up from the RollupRow; avoid setting activeRollupId elsewhere-->
     <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.handleRollupSelect}" />
     <aura:handler event="c:CRLP_CancelEvent" action="{!c.handleRollupCancelEvent}"/>
+    <aura:handler event="c:CRLP_SortEvent" action="{!c.sortByColumns}"/>
 
 
     <!-- markup -->
