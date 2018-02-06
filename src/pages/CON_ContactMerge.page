@@ -14,7 +14,7 @@
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <div class="slds">
+    <div class="slds-scope">
 
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">

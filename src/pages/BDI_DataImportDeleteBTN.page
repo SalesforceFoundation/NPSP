@@ -10,7 +10,7 @@
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <div class="slds slds-p-bottom_x-large">
+    <div class="slds-scope slds-p-bottom_x-large">
         <apex:form id="idForm" styleClass="slds-p-bottom_x-large">
     
         <c:UTIL_PageMessages />
