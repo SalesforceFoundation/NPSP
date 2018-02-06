@@ -1224,7 +1224,6 @@ public class RD_RecurringDonations {
     */
     @testVisible
     private static Boolean needsRecalculation(npe03__Recurring_Donation__c newRD, npe03__Recurring_Donation__c oldRD) {
-        Boolean needsRecalculation = false;
 
         if(newRD.npe03__Organization__c != oldRD.npe03__Organization__c
                 || newRD.npe03__Contact__c != oldRD.npe03__Contact__c
@@ -1237,17 +1236,16 @@ public class RD_RecurringDonations {
                 || newRD.npe03__Next_Payment_Date__c != oldRD.npe03__Next_Payment_Date__c
                 || newRD.npe03__Recurring_Donation_Campaign__c != oldRD.npe03__Recurring_Donation_Campaign__c
                 ) {
-            needsRecalculation = true;
+            return true;
         }
 
-        for (string s : customFieldMappingSettings.keySet()) {
+        for (String s : customFieldMappingSettings.keySet()) {
             npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
             if(newRD.get(cfm.npe03__Recurring_Donation_Field__c) != oldRD.get(cfm.npe03__Recurring_Donation_Field__c)) {
-                needsRecalculation = true;
-                break;
+                return true;
             }
         }
 
-        return needsRecalculation;
+        return false;
     }
 }

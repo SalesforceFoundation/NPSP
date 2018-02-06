@@ -1189,22 +1189,22 @@ public class RD_RecurringDonations_TEST {
     //test closing an opportunity for an open recurring donation
     static testMethod void testNeedsRecalculation() {
         Account a1 = new Account();
-        a1.Name = 'test Individual';
+        a1.Name = 'Test Acc 1';
         insert a1;
 
         Contact c1 = new Contact();
-        c1.FirstName = 'test';
-        c1.LastName = 'contact';
+        c1.FirstName = 'Test';
+        c1.LastName = 'Contact 1';
         c1.AccountId = a1.Id;
         insert c1;
 
         Account a2 = new Account();
-        a2.Name = 'test Individual';
+        a2.Name = 'Test Acc 2';
         insert a2;
 
         Contact c2 = new Contact();
-        c2.FirstName = 'test';
-        c2.LastName = 'contact';
+        c2.FirstName = 'Test';
+        c2.LastName = 'Contact 2';
         c2.AccountId = a2.Id;
         insert c2;
 
@@ -1229,62 +1229,62 @@ public class RD_RecurringDonations_TEST {
 
         npe03__Recurring_Donation__c r2 = r1.clone(false,false,false,false);
         // Exact match
-        system.assertEquals(false,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(false,RD_RecurringDonations.needsRecalculation(r1,r2), 'These RDs should be an exact match.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Date_Established__c = date.newinstance(2001,1,1);
         // "Date Established" is not a significant change that requires recalc
-        system.assertEquals(false,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(false,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Date Established is not a significant change that requires recalculation');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Installments__c = 3;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Number of Installments is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Organization__c = a2.id;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Account is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Amount__c = 10;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Amount is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Installment_Period__c = 'Quarterly';
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Installment Period is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Next_Payment_Date__c = system.today().toStartOfMonth().addDays(1);
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Next Payment Date is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationDivideValue;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Schedule Type is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Open_Ended_Status__c = null;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Open Ended Status is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         Campaign campaign = new Campaign(Name='Test Campaign', isActive=true);
         insert campaign;
         r2.npe03__Recurring_Donation_Campaign__c = campaign.Id;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Campaign is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.Always_Use_Last_Day_Of_Month__c = true;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Always Use Last Day of Month field is a significant change that should require recalculation.');
 
         r2 = r1.clone(false,false,false,false);
         r2.Name = 'Test2';
-        // Name was including in a Custom Field Mapping, so it should trigger recalc
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        // Name was included in a Custom Field Mapping, so it should trigger recalc
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Name was included in a Custom Field Mapping, so updating Name is a significant change that should require recalculation.');
 
         //switch r1 from org to contact, then change the contact
         r1.npe03__Organization__c = null;
         r1.npe03__Contact__c = c1.Id;
         r2 = r1.clone(false,false,false,false);
         r2.npe03__Contact__c = c2.Id;
-        system.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2));
+        System.assertEquals(true,RD_RecurringDonations.needsRecalculation(r1,r2), 'Updating the Contact is a significant change that should require recalculation.');
 
     }
 
