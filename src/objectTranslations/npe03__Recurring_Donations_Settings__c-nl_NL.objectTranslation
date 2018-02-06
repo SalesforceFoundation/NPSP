@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <plural>false</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <plural>true</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits. --></help>
+        <label><!-- Recurring Donation Batch Size --></label>
+        <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>Indien aangevinkt, alle opportunities voor terugkerende donaties zal de campagne op de terugkerende donatie gebruiken. Anders, heeft alleen de eerste opportunity een campagne.</help>
+        <label><!-- Add Campaign to All Opportunites --></label>
+        <name>npe03__Add_Campaign_to_All_Opportunites__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu gecontroleerd in de Trigger Configuratie pagina van de NPSP settings</help>
+        <label><!-- DEPRECATED-Disable_Donations_trigger --></label>
+        <name>npe03__DISABLE_Donations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Trigger gedrag wordt nu gecontroleerd in de Trigger Configuratie pagina van de NPSP settings</help>
+        <label><!-- DEPRECATED-Disable_RD_trigger --></label>
+        <name>npe03__DISABLE_RecurringDonations_trigger__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Nieuwe versies van het Nonprofit Starter Pakket zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe03__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Vervangen door de notificatie instellingen in het Systeem Fout instellingen paneel.</help>
+        <label><!-- DEPRECATED-Error Email Notifications --></label>
+        <name>npe03__Error_Email_Notifications__c</name>
+    </fields>
+    <fields>
+        <help>De datum en tijd van de laatste batch update van terugkerende donaties.</help>
+        <label><!-- Last Batch Run --></label>
+        <name>npe03__Last_Batch_Run__c</name>
+    </fields>
+    <fields>
+        <help>Beperkt het totale aantal donaties gemaakt voor niet doorlopende terugkerende donaties. Standaard is 50. Grotere waarden kunnen resulteren in DML fouten.</help>
+        <label><!-- Maximum Donations --></label>
+        <name>npe03__Maximum_Donations__c</name>
+    </fields>
+    <fields>
+        <help>Aantal terugkerende donaties die niet succesvol geüpdatet zijn in de laatste batch operatie.</help>
+        <label><!-- Number of Failures --></label>
+        <name>npe03__Number_of_Failures__c</name>
+    </fields>
+    <fields>
+        <help>Aantal terugkerende donaties die succesvol geüpdatet zijn in de laatste batch run.</help>
+        <label><!-- Number of Successes --></label>
+        <name>npe03__Number_of_Successes__c</name>
+    </fields>
+    <fields>
+        <help>Bepaalt het gedrag van elke overgebleven open Opportunities wanneer de status van een doorlopende terugkerende donatie veranderd wordt naar gesloten.</help>
+        <label><!-- Open Opportunity Behavior on RD Close --></label>
+        <name>npe03__Open_Opportunity_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>Aantal maanden vanaf vandaag waard aan open opp wanneer er gebruik wordt gemaakt van terugkerende donaties. LET OP: Verminderen van deze waarde resulteert in het verwijderen van extra opp. Verhogen zal een batch proces starten om opp toe te voegen.</help>
+        <label><!-- Opportunity Forecast Months --></label>
+        <name>npe03__Opportunity_Forecast_Months__c</name>
+    </fields>
+    <fields>
+        <help>Opportunity Record Type die gebruikt wordt wanneer terugkerende donatie opportunities gemaakt worden.</help>
+        <label><!-- Opportunity Record Type --></label>
+        <name>npe03__Record_Type__c</name>
+    </fields>
+    <fields>
+        <help>AFGEKEURD. Nieuwe versies van het Nonprofit Starter Pakket zullen automatisch worden geïnstalleerd.</help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe03__Update_Check_Interval__c</name>
+    </fields>
+    <gender><!-- Neuter --></gender>
+</CustomObjectTranslation>
