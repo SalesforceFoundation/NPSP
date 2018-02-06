@@ -18,10 +18,7 @@
             }
             cmp.set("v.sortedColumn.direction", direction);
         } else {
-            //default position is pointing down, so need to check if active column needs resetting
-            if(sortedColumn.direction != 'asc'){
-                helper.resetColumn(cmp);
-            }
+            helper.resetColumn(cmp, sortedColumn.columnName, columnName);
             direction = 'asc';
             var newSortedColumn = {columnName: columnName, direction: direction};
             cmp.set("v.sortedColumn", newSortedColumn);

@@ -26,7 +26,7 @@
                                          onrowselection="{!c.setTemplate}"
                                          class="slds-text-body_medium slds-no-row-hover slds-cell-shrink"
                                          keyField="label"
-                                         maxRowSelection="1"/>
+                                         /><!--TODO: commenting out until after spring release for build issues: maxRowSelection="1"-->
                 </lightning:layoutItem>
             </lightning:layoutItem>
         </lightning:layout>

@@ -18,13 +18,15 @@
                         <!--todo: add custom label-->
                         <lightning:buttonIcon
                                 aura:id="columnSort"
-                                class="buttonIcon slds-float_right"
+                                class="buttonIcon slds-m-around_xx-small"
                                 iconName="utility:arrowdown"
                                 alternativeText="Sort"
                                 onclick="{!c.sortColumn}"
                                 name="{!column.name}"
-                                size="x-small"
-                                title="Sort"/>
+                                size="medium"
+                                title="Sort"
+                                variant="bare"
+                                />
                     </div>
                 </th>
             </aura:iteration>
