@@ -154,17 +154,6 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
             Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
 
-            // Get all parent records to be processed by this batch iteration, being sure to include the
-            // last parent id processed by the previous batch
-            List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords, options.parentKeyField);
-
-            // Get the Summary (target) records for the current set of Detail Records
-            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
-            List<SObject> summaryRecords = database.query(soql);
-
-            // Resequence the Parent (Summary) records to be in the exact order of the detail records
-            // using the defined parent Id
-            summaryRecords = resequenceSummaryRecords(parentIds, summaryRecords);
 
             // For the GAU object, strip out any detail records where the key field is NULL. This is better
             // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
@@ -179,6 +168,17 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             } else {
                 updatedDetailRecords = detailRecords;
             }
+
+            // Get all parent records to be processed by this batch iteration
+            List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, updatedDetailRecords, options.parentKeyField);
+
+            // Get the Summary (target) records for the current set of Detail Records
+            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
+            List<SObject> summaryRecords = database.query(soql);
+
+            // Resequence the Parent (Summary) records to be in the exact order of the detail records
+            // using the defined parent Id
+            summaryRecords = resequenceSummaryRecords(parentIds, summaryRecords);
 
             // Call the method to do the actual rollups. This returns only records that require updating
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);

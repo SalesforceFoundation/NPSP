@@ -39,7 +39,7 @@ public class CRLP_RollupProcessor_SVC {
 
     /**
      * @description The main work engine for roll-up activities. This method is called from both batch jobs
-     * as well as from queuable jobs (via a trigger operation). Accepts a collection of summary OR detail records
+     * as well as from queuable jobs (via a trigger operation). Accepts a collection of summary AND detail records
      * and a ProcessingOptions object instance that defines the parameters to use for the rollup work.
      * @param summaryRecords Summary Records
      * @param detailRecords Detail Records for the related Summary Records
@@ -71,12 +71,6 @@ public class CRLP_RollupProcessor_SVC {
                 mapOfDetailsByParentId.put(parentId, new List<SObject>());
             }
             mapOfDetailsByParentId.get(parentId).add(dtl);
-        }
-
-        if (summaryRecords == null) {
-            Set<Id> parentIds = mapOfDetailsByParentId.keySet();
-            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
-            summaryRecords = database.query(soql);
         }
 
         SObjectType detailObjectType = (detailRecords != null && !detailRecords.isEmpty() ? detailRecords[0].getSObjectType() : null);
