@@ -123,9 +123,6 @@ public class BDI_Donations {
             if (mapDIFieldToPmtField == null) {
                 mapDIFieldToPmtField = BDI_DataImportService.mapFieldsForDIObject('Payment', 'npe01__OppPayment__c', 
                     BDI_DataImportService.listStrDataImportFields);
-                // special case Donation fields we defaultly map to Opp fields, but we will use with Payments too!
-                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Amount__c').toLowercase(), 'npe01__Payment_Amount__c');
-                mapDIFieldToPmtField.put(UTIL_Namespace.StrTokenNSPrefix('Donation_Date__c').toLowercase(), 'npe01__Payment_Date__c');
             }
             return mapDIFieldToPmtField;
         }
@@ -211,7 +208,10 @@ public class BDI_Donations {
             }
         }
 
-        // add any payments to our map
+        // mark any paid Payments we matched
+        markPaidPayments(listDIDonations);
+
+        // add any new payments to our map
         trackPayments(listDIDonations);
         
         // when we mark Payments paid, ensure they will close our Opp.
@@ -475,9 +475,32 @@ public class BDI_Donations {
     }
 
     /*******************************************************************************************************
+    * @description marks Payments that we matched as Paid, and with correct date and amount
+    * @param listDIDonations The DI Records that have donations to import
+    * @return void
+    */
+    public void markPaidPayments(list<DataImport__c> listDIDonations) {
+
+        // mark existing Payments paid.
+        list<ID> listOppId = new list<ID>();
+        for (DataImport__c di : listDIDonations) {
+            // skip di's that already have an error
+            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+                continue;
+            if (di.PaymentImported__c != null) {
+                npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
+                pmt.npe01__Paid__c = true;
+                pmt.npe01__Payment_Amount__c = di.Donation_Amount__c;
+                if (pmt.npe01__Payment_Date__c == null) {
+                    pmt.npe01__Payment_Date__c = di.Donation_Date__c;
+                }
+            }
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Updates our map of DI records to Payments to include the Payments just auto-created
-    * when we created new Opps, or pmt's for matched Opps that we haven't yet tracked.  Also marks
-    * Payments that we matched as Paid.
+    * when we created new Opps, or pmt's for matched Opps that we haven't yet tracked.
     * @param listDIDonations The DI Records that have donations to import
     * @return void
     */ 
@@ -491,29 +514,28 @@ public class BDI_Donations {
                continue;
             if (di.DonationImported__c != null && di.PaymentImported__c == null) {
                 listOppId.add(di.DonationImported__c);
-            } else if (di.PaymentImported__c != null) {
-                npe01__OppPayment__c pmt = mapDIIdToPmt.get(di.Id);
-                pmt.npe01__Paid__c = true;
             }
         }
 
-        // query for the new payments for these new Opps
-        map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
-        for (npe01__OppPayment__c pmt : database.query(strSoqlForPayments())) {
-            mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
-        }
+        // query for the new payments
+        if (listOppId.size() > 0) {
+            map<Id, npe01__OppPayment__c> mapOppIdToPayment = new map<Id, npe01__OppPayment__c>();
+            for (npe01__OppPayment__c pmt : database.query(strSoqlForPayments())) {
+                mapOppIdToPayment.put(pmt.npe01__Opportunity__c, pmt);
+            }
 
-        // store the Payments into our shared map and update their DI record
-        for (DataImport__c di : listDIDonations) {
-            // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
-               continue;
-            if (di.DonationImported__c != null && di.PaymentImported__c == null) {
-                npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
-                if (pmt != null) {
-                    di.PaymentImported__c = pmt.Id;
-                    di.PaymentImportStatus__c = di.DonationImportStatus__c; // could be new or matched
-                    mapDIIdToPmt.put(di.Id, pmt);
+            // store the Payments into our shared map and update their DI record
+            for (DataImport__c di : listDIDonations) {
+                // skip di's that already have an error
+                if (di.Status__c == BDI_DataImport_API.bdiFailed)
+                    continue;
+                if (di.DonationImported__c != null && di.PaymentImported__c == null) {
+                    npe01__OppPayment__c pmt = mapOppIdToPayment.get(di.DonationImported__c);
+                    if (pmt != null) {
+                        di.PaymentImported__c = pmt.Id;
+                        di.PaymentImportStatus__c = di.DonationImportStatus__c; // could be new or matched
+                        mapDIIdToPmt.put(di.Id, pmt);
+                    }
                 }
             }
         }
@@ -524,18 +546,22 @@ public class BDI_Donations {
     * @return String the soql string
     */
     private String strSoqlForPayments() {
-    // the set of Payment fields for our soql
-    set<String> setPmtFields = new set<String>();
-    setPmtFields.add('Id');
-    setPmtFields.add('npe01__Opportunity__c');
+        // the set of Payment fields for our soql
+        set<String> setPmtFields = new set<String>();
+        setPmtFields.add('Id');
+        setPmtFields.add('npe01__Opportunity__c');
+        setPmtFields.add('npe01__Payment_Amount__c');
+        setPmtFields.add('npe01__Payment_Date__c');
+        setPmtFields.add('npe01__Scheduled_Date__c');
+        setPmtFields.add('npe01__Paid__c');
 
-    // need to include any Pmt fields we may update, so we can compare against them
-    setPmtFields.addAll(mapDIFieldToPmtField.values());
+        // need to include any Pmt fields we may update, so we can compare against them
+        setPmtFields.addAll(mapDIFieldToPmtField.values());
 
-    String strSoql = 'SELECT ' + string.join(new list<String>(setPmtFields), ',');
-    strSoql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c in :listOppId';
+        String strSoql = 'SELECT ' + string.join(new list<String>(setPmtFields), ',');
+        strSoql += ' FROM npe01__OppPayment__c WHERE npe01__Opportunity__c in :listOppId';
 
-    return strSoql;
+        return strSoql;
     }
 
     /*******************************************************************************************************
@@ -561,8 +587,9 @@ public class BDI_Donations {
                         if (BDI_DataImportService.isCopiedDIField(di, strDIField, pmt, mapDIFieldToPmtField)) {
                             cPropSet++;
                         }
-                    }                    
-                    if (cPropSet > 0) {
+                    }
+                    // if it's marked paid, we know we need to update it regardless of any copied fields
+                    if (cPropSet > 0 || pmt.npe01__Paid__c) {
                         listPmtUpdate.add(pmt);
                         listDIUpdate.add(di);
                     }
