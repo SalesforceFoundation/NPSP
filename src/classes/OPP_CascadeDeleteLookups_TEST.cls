@@ -31,43 +31,51 @@
 * @author Salesforce.org
 * @date 2016
 * @group Utilities
-* @description Tests for cascade delete of Recurring Donations
+* @description Tests for cascade delete of Opportunities
 */
 @isTest
 private class OPP_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Deletes an opportunity which deletes an allocation. Verifies results.
-    * Then undeletes the opportunity, which undeletes the allocation. Verifies results.
+    * @description Deletes the Opportunities which deletes the related Allocations. 
+    * Then undeletes the Opportunities, which undeletes the Allocations.
+    * Verifies results: All the Allocations should be deleted after the Opportunities are deleted.
+    * Then the Allocations will be undeleted after the Opportunities are undeleted.
     */
-    static testMethod void testOppCascade(){
-        Account org = new Account(Name='org');
-        insert org;
+    static testMethod void testOppCascade() {
+        Integer maxRecords = 200;
 
-        Opportunity orgOpp = new Opportunity(
-            Amount = 8,
-            AccountId = org.id,
-            Name = 'foo',
-            StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
-            CloseDate = System.today()
-        );
-        insert orgOpp;
+        List<Account> testAccounts = CDL_CascadeDeleteLookups_TEST.createAccounts(maxRecords);
+        insert testAccounts;
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
-        Allocation__c alloForInsert = new Allocation__c(Opportunity__c=orgOpp.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
-        insert alloForInsert;
+        List<Opportunity> testOpportunities = CDL_CascadeDeleteLookups_TEST.createOpportunities(testAccounts);
+        insert testOpportunities;
+
+        General_Accounting_Unit__c testGAU = new General_Accounting_Unit__c(Name = 'TEST_GAU');
+        insert testGAU;
+        List<Allocation__c> testAllocations = new List<Allocation__c>();
+        testAllocations.addAll(CDL_CascadeDeleteLookups_TEST.createOpportunityAllocations(testGAU, testOpportunities));
+        insert testAllocations;
 
         Test.startTest();
-        delete orgOpp;
+        delete testOpportunities;
         Test.stopTest();
 
-        List<Allocation__c> deletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=true ALL ROWS];
-        System.assertEquals(1, deletedAllo.size(), 'Allocation should be cascade deleted when opportunity is deleted.');
+        List<Allocation__c> deletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c
+            WHERE IsDeleted = true 
+            ALL ROWS
+        ];
+        System.assertEquals(testAllocations.size(), deletedAllocations.size(), 'Allocations should be cascade deleted when opportunities are deleted.');
 
-        undelete orgOpp;
+        undelete testOpportunities;
 
-        List<Allocation__c> undeletedAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id AND IsDeleted=false ALL ROWS];
-        System.assertEquals(1, undeletedAllo.size(), 'Allocation should be cascade undeleted.');
+        List<Allocation__c> undeletedAllocations = [
+            SELECT Id 
+            FROM Allocation__c 
+            WHERE IsDeleted = false
+        ];
+        System.assertEquals(deletedAllocations.size(), undeletedAllocations.size(), 'Allocations should be cascade undeleted.');
     }
 }

@@ -955,15 +955,14 @@ public without sharing class RLLP_OppRollup {
 
         // fill in summary totals
         obj.put('npo02__TotalMembershipOppAmount__c', amt);
-        obj.put('npo02__NumberOfMembershipOpps__c', cnt);
-        obj.put('npo02__LastMembershipDate__c', (date)(r.get('LastCloseDate')));
-        obj.put('npo02__LastMembershipAmount__c', lastAmt);
-        obj.put('npo02__MembershipJoinDate__c', (date)(r.get('FirstStartDate')));
+        obj.put('npo02__NumberOfMembershipOpps__c', cnt);               
+        obj.put('npo02__LastMembershipDate__c', (date)(r.get('LastCloseDate')));                
+        obj.put('npo02__LastMembershipAmount__c', lastAmt);                 
+        obj.put('npo02__LastMembershipLevel__c', lastMemberLevel);              
+        obj.put('npo02__LastMembershipOrigin__c', lastMemberOrigin);                
+        obj.put('npo02__MembershipJoinDate__c', (date)(r.get('FirstStartDate'))); 
         obj.put('npo02__MembershipEndDate__c', (date)(r.get('LastEndDate')));
-        // Force an empty string ("") to null to ensure the comparison to the db field matches.
-        obj.put('npo02__LastMembershipLevel__c', (String.isEmpty(lastMemberLevel) ? null : lastMemberLevel));
-        obj.put('npo02__LastMembershipOrigin__c', (String.isEmpty(lastMemberOrigin) ? null : lastMemberOrigin));
-    }
+    }   
     
     /*******************************************************************************************************
     * @description Method writes soft credit rollup fields from AggregateResults to an object needing rollups.
