@@ -46,7 +46,6 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
     /**
      * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
-     * TODO Partial Soft Credits?
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).

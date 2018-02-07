@@ -91,28 +91,35 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                 this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
 
             }
-            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
+            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects);
 
             this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
                     CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
 
+            List<String> whereClauses = new List<String>();
             // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
             if (detailObjectType == Opportunity.SObjectType) {
-                query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode';
+                whereClauses.add('Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode');
             }
+
+            // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
+            if (this.summaryObjectType == Contact.SObjectType) {
+                whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
+            }
+
             if (this.recordIds != null && this.recordIds.size() > 0) {
-                query += (query.endsWith(' WHERE ') ? '' : ' AND ') + keyField + ' IN :recordIds';
+                whereClauses.add(keyField + ' IN :recordIds');
             }
 
             // Identify a common filter that can be applied to the main query to reduce the number of records queried
             String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
                     this.statefulCacheOfRollupsToBeProcessed.get(this.summaryObjectType));
             if (!String.isEmpty(addlFilter)) {
-                query += (query.endsWith(' WHERE ') ? '' : ' AND ') + addlFilter;
+                whereClauses.add(addlFilter);
             }
 
-            if (query.endsWith(' WHERE ')) {
-                query = query.removeEnd(' WHERE ');
+            if (!whereClauses.isEmpty()) {
+                query += ' WHERE ' + String.join(whereClauses, ' AND ');
             }
             query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
 

@@ -58,9 +58,6 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
         }
     }
 
-    // TODO Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
-    // TODO For SoftCredits need to include OCR's where isPrimary=True and Opp.Account.SYSTEM_IsIndividual=false
-
     /**
      * @description Primary action method. Called for each record of summaryObject with a list of the detail objects
      * being rolled-up to that summary object. The instance of this class was instantiated with the Summary object.

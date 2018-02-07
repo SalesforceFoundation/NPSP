@@ -164,7 +164,7 @@ public class CRLP_RollupProcessor_SVC {
     }
 
     /**
-     * @description For given set of Summary records, returns a List of the related Detail records.
+     * @description For given set of Summary records, returns a List of the related Detail records (always Opportunity?)
      * @param summaryRecords List<SObject>
      * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * This is passed through to the getFullDetailsQueryForSummaryRecords() method
@@ -174,32 +174,38 @@ public class CRLP_RollupProcessor_SVC {
             CRLP_RollupProcessingOptions.ProcessingOptions options) {
         // Get the parent record Id's
         Set<Id> summaryRecordIds = new Set<Id>();
+        SObjectType objType;
         for (SObject s : summaryRecords) {
-            summaryRecordIds.add((Id)s.get('Id'));
+            summaryRecordIds.add(s.Id);
+            if (objType == null) {
+                objType = s.Id.getSobjectType();
+            }
         }
 
         String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
+
+        String orderBy;
+        if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
+            detailsQuery = detailsQuery.split('ORDER BY')[0];
+            orderBy = detailsQuery.split('ORDER BY')[1];
+        }
 
         // Identify a common filter that can be applied to the main query to reduce the number of records queried
         String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryRecords[0].getSObjectType(),
                 Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(options.rollupJobType, options.rollupTypesToProcess));
         if (!String.isEmpty(addlFilter)) {
-            String orderBy;
-            if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
-                orderBy = detailsQuery.split('ORDER BY')[1];
-                detailsQuery = detailsQuery.split('ORDER BY')[0];
-            }
             detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + addlFilter;
-            if (orderBy != null) {
-                detailsQuery += ' ORDER BY ' + orderBy;
-            }
         }
 
+        // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
+        if (objType == Contact.SObjectType) {
+            detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + ' Account.npe01__SYSTEMIsIndividual__c != false';
+        }
         // Force the details query to sort by Ascending CreatedDate so that the records are process
         // in the order in which they were created in the database. Thus the 'first' is truly the first
         // and the last is truly the last.
-        if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
-            detailsQuery += ', CreatedDate ASC';
+        if (orderBy != null) {
+            detailsQuery += ' ORDER BY ' + orderBy + ', CreatedDate ASC';
         } else {
             detailsQuery += ' ORDER BY CreatedDate ASC';
         }

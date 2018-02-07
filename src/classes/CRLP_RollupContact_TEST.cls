@@ -195,6 +195,9 @@ private class CRLP_RollupContact_TEST {
         Id acctId = c.AccountId;
         Id conId = c.Id;
 
+        Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
@@ -242,6 +245,18 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = conId,
                 RecordTypeId = rtId
         ));
+
+        // create one closed opportunity to ensure it's not included in our rollups
+        opps.add(new Opportunity (
+                Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
+                AccountId = orgAcct.Id,
+                Amount = 50000,
+                CloseDate = Date.Today().addDays(-30),
+                StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
+                Primary_Contact__c = conId,
+                RecordTypeId = rtId
+        ));
+
         insert opps;
 
         // Mark two payments as written off; though only one should be rolled up
