@@ -61,8 +61,10 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
         try {
 	    	isRunningBatch = true;
 	        
-	        //call the batch job, processing 50 at a time 
-	        Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
+	        // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
+            RD_RecurringDonations_BATCH rdb = new RD_RecurringDonations_BATCH();
+            Id batchInstanceId = Database.executeBatch(rdb, rdb.batchSize);
+	         
         }
         catch(Exception e) {
             Database.rollback(sp);

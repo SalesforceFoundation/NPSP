@@ -4,7 +4,7 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
     
     <apex:form >
-    <div class="slds">
+    <div class="slds-scope">
 
         <apex:variable var="headerSubtitle" value="{! SUBSTITUTE($Label.mtchItems, '{0}', TEXT(numberOfSoftCredits))}" />
         <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="Opportunity"
