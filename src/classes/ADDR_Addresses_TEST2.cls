@@ -93,6 +93,14 @@ public with sharing class ADDR_Addresses_TEST2 {
         ADDR_Addresses_TEST.initTestAddr(cAddr);
         listAddrT = ADDR_Addresses_TEST.listAddrT;
     }
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
     
     /*********************************************************************************************************
     @description
@@ -660,6 +668,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         found match becomes Default
     **********************************************************************************************************/            
     static testMethod void newDupeAccountAddrNonDefault() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddrNonDefault') return;
         
         // this creates a default Address for each HH
@@ -719,6 +730,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         found match becomes Default
     **********************************************************************************************************/            
     static testMethod void newDupeContactAddrNonDefault() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddrNonDefault') return;
         
         // this creates a default Address for each HH
@@ -781,6 +795,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         only the contact gets the new Address
     **********************************************************************************************************/            
     static testMethod void updateConAddrWithOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithOverride') return;
         
         // this creates a default Address for each HH
@@ -863,6 +880,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         only the contact gets the new Address
     **********************************************************************************************************/            
     static testMethod void updateConAddrWithExternalOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
         
         // this creates a default Address for each HH
@@ -936,6 +956,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         new contacts get the default hh address
     **********************************************************************************************************/            
     static testMethod void insertConWithNoAddrToExistingHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertConWithNoAddrToExistingHH') return;
         
         // this creates a default Address for each HH
@@ -970,6 +993,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         all contacts and hh get the new default hh address from the new contacts
     **********************************************************************************************************/            
     static testMethod void insertConWithAddrToExistingHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertConWithAddrToExistingHH') return;
         
         // this creates a default Address for each HH
@@ -1014,6 +1040,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         new contacts point at the default address
     **********************************************************************************************************/            
     static testMethod void insertConWithDefaultAddrToExistingHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertConWithDefaultAddrToExistingHH') return;
         
         // this creates a default Address for each HH
@@ -1063,6 +1092,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         the HH Account gets the new multiline address
     **********************************************************************************************************/            
     static testMethod void insertContactWithMultilineStreetAddress() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithMultilineStreetAddress') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -1146,6 +1178,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         new Addresss has multiline street split into Street and Street2 fields
     **********************************************************************************************************/            
     static testMethod void updateAccMultilineStreetAddr() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddr') return;
         
         // this creates a default Address for each HH
@@ -1195,6 +1230,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         new Addresss has multiline street split into Street and Street2 fields
     **********************************************************************************************************/            
     static testMethod void updateAccMultilineStreetAddrNL() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddrNL') return;
         
         // this creates a default Address for each HH
@@ -1243,6 +1281,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         account address matches address object address
     **********************************************************************************************************/            
     static testMethod void newOrgAccounts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newOrgAccounts') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1284,6 +1325,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         contact addresses not updated
     **********************************************************************************************************/            
     static testMethod void updateOrgAccounts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateOrgAccounts') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1405,6 +1449,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         Contact addresses set
     **********************************************************************************************************/            
     static testMethod void testDisabledHHAccountAddr() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testDisabledHHAccountAddr') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1447,6 +1494,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         HH and Contacts get updated to empty address fields
     **********************************************************************************************************/            
     static testMethod void clearConAddrExisting() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'clearConAddrExisting') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1515,6 +1565,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         contact's address fields correctly set
     **********************************************************************************************************/            
     static testMethod void setConAddrOverrideAndLookupOnNewContact() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'setConAddrOverrideAndLookupOnNewContact') return;
         
         // this creates a default Address for each HH
@@ -1550,6 +1603,9 @@ public with sharing class ADDR_Addresses_TEST2 {
         contact address matches address object address
     **********************************************************************************************************/            
     static testMethod void updateOrgContactToHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
         
         Account acc = new Account(Name='Org Account');
@@ -1582,6 +1638,9 @@ public with sharing class ADDR_Addresses_TEST2 {
     * household is created and the contact address matches the new HH Account Address and new Address created
     **********************************************************************************************************/            
     static testMethod void updateHHContactToNewHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
         
         // this creates a default Address for each HH

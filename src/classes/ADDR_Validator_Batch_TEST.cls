@@ -39,6 +39,14 @@ public with sharing class ADDR_Validator_Batch_TEST {
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
     
     public static void createDefaultSettings() {
     	// use the household account model
@@ -58,6 +66,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidAddress() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
 
     	TDTM_DefaultConfig.startTestDataInit();
@@ -121,9 +132,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidAddresses() {
-    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
 
         Integer batchSize = 100;
+    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
 
         UTIL_Debug.disableDebugLogging();
         TDTM_DefaultConfig.startTestDataInit();
@@ -182,6 +195,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidZipcode() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
 
         TDTM_DefaultConfig.startTestDataInit();
@@ -227,6 +243,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidAddressessZipcodes() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
 
         TDTM_DefaultConfig.startTestDataInit();

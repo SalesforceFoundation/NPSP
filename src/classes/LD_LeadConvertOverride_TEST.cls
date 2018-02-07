@@ -42,15 +42,29 @@ private class LD_LeadConvertOverride_TEST {
     private static string strTestOnly = '*';
 
     /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
+    /*******************************************************************************************************
     * @description Runs newLead_Conversion_Test with the 1x1 account model
     */
     static testMethod void newLeadConversion_TestOne2One(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         newLeadConversion_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
     * @description Runs newLead_Conversion_Test with the Household account model
     */
     static testMethod void newLeadConversion_TestHHAccount(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         newLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -441,6 +455,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionHHObj with the 1x1 account model
     */
     static testMethod void newLeadConversionHHObjOne2One(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         newLeadConversionHHObj(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -520,6 +537,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the 1x1 account model
     */
     static testMethod void newNativeLeadConversion_TestOne2One(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestOne2One') return;
         newNativeLeadConversion_Test(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -527,6 +547,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Household account model
     */
     static testMethod void newNativeLeadConversion_TestHHAccount(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestHHAccount') return;
         newNativeLeadConversion_Test(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
@@ -534,6 +557,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Individual account model
     */
     static testMethod void newNativeLeadConversion_TestBucketAccount(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestBucketAccount') return;
         newNativeLeadConversion_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
@@ -704,6 +730,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Household account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestHHAccountOppOCR(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         newLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -794,18 +823,27 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs mergeLeadConversion_TestOppOCR with the 1x1 account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestOne2OneOppOCR(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         mergeLeadConversion_TestOppOCR(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
     * @description Runs mergeLeadConversion_TestOppOCR with the Household account model and verify  Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestHHAccountOppOCR(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         mergeLeadConversion_TestOppOCR(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************
     * @description Runs mergeLeadConversion_TestOppOCR with the Individual account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void mergeLeadConversion_TestBucketAccountOppOCR(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         mergeLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -900,12 +938,18 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversion_TestOppAFF with the 1x1 account model and verify Opp created for affiliation.
     */
     static testMethod void newLeadConversion_TestOne2OneOppAFF(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         newLeadConversion_TestOppAFF(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     /*******************************************************************************************************
     * @description Runs newLeadConversion_TestOppAFF with the Household account model and verify Opp created for affiliation.
     */
     static testMethod void newLeadConversion_TestHHAccountOppAFF(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         newLeadConversion_TestOppAFF(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
     /*******************************************************************************************************

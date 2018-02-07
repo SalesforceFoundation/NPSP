@@ -42,9 +42,20 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     private static string strTestOnly = '*';
 
     /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
+    /*******************************************************************************************************
     * @description Tests the conversion process for 1to1 Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversion1to1(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -108,6 +119,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
     */
     public testmethod static void testAccountConversionBucket(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
 
         //setup bucket model and test account creation
@@ -164,6 +178,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with a single address
     */
     public testMethod static void testSingleContactAddress(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
 
         //setup individual model and test account creation
@@ -213,6 +230,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with two addresses
     */
     public testMethod static void test2ContactAddresses(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
 
         //setup individual model and test account creation
@@ -286,6 +306,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     * @description Tests the conversion process for Contacts with two addresses, but address verification disabled
     */
     public testMethod static void testContactDisableAddresses(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testContactDisableAddresses') return;
 
         //setup individual model and test account creation

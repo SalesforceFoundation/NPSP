@@ -44,6 +44,14 @@ private with sharing class BDI_DataImport_TEST2 {
     */
     private static string strTestOnly = '*';
 
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     /*********************************************************************************************************
     * @description operation: 
     *    import matching contacts within multiple di records in the same batch, using different email fields 
@@ -184,6 +192,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIDuplicateEmailExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailExistingContacts') return;
             
          // existing contacts
@@ -234,6 +245,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIOverlappingEmailExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingEmailExistingContacts') return;
             
          // existing contacts
@@ -282,6 +296,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIOverlappingPhoneExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingPhoneExistingContacts') return;
             
          // existing contacts
@@ -333,6 +350,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
             
          // existing contacts
@@ -375,6 +395,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDISalesforceIdMatchingExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingContacts') return;
             
          // existing contacts
@@ -419,6 +442,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched or created
     **********************************************************************************************************/            
     static testMethod void ManyDISalesforceIdMatchingExistingAndNewContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingAndNewContacts') return;
             
          // existing contacts
@@ -471,6 +497,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched or created
     **********************************************************************************************************/            
     static testMethod void OneDISalesforceIdMatchingExistingAndNewContact() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'OneDISalesforceIdMatchingExistingAndNewContact') return;
             
          // existing contacts
@@ -517,6 +546,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    contact moved to specified account
     **********************************************************************************************************/            
     static testMethod void SingleDISalesforceIdMatchingExistingHousehold() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'SingleDISalesforceIdMatchingExistingHousehold') return;
             
          // existing contacts
@@ -638,6 +670,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    all contacts matched
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingNewAndExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
             
          // existing contacts
@@ -1277,6 +1312,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    addresses without errors are created
     **********************************************************************************************************/            
     static testMethod void ManyDITestAddressDataErrorHandling() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestAddressDataErrorHandling') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -1450,6 +1488,9 @@ private with sharing class BDI_DataImport_TEST2 {
     *    error logged on correct data import record
     **********************************************************************************************************/            
     static testMethod void testInvalidAddressHandling() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();

@@ -41,6 +41,14 @@ public class HH_HouseholdNaming_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
     
     /*********************************************************************************************************
     * @description Test method for batch
@@ -358,6 +366,9 @@ public class HH_HouseholdNaming_TEST {
         Names for specified Account/Households are updated.
     **********************************************************************************************************/  
     private static testMethod void testUpdateNamesIsAppliedToSpecifiedHHsOnly() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupHHNamingSettings();
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
@@ -415,6 +426,9 @@ public class HH_HouseholdNaming_TEST {
     * @description tests that case sensitive name changes on contacts update the Household name and greetings
     */
     public static testMethod void testCaseChanges() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testCaseChanges') return;
   
         Contact con = new Contact(firstname='joe', lastname='smith');
@@ -443,6 +457,9 @@ public class HH_HouseholdNaming_TEST {
     * @description tests name ordering since we changed to not force primary first
     */
     public static testMethod void testNamingOrder2() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testNamingOrder2') return;
   
         Contact con0 = new Contact(FirstName='c0', LastName='smith');
@@ -657,6 +674,9 @@ public class HH_HouseholdNaming_TEST {
         Contacts with null Account and null Household are not selected.
     **********************************************************************************************************/  
     private static testMethod void testGetHouseholdContactsReturnsDataForSpecifiedHHOnly() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR
         ));   

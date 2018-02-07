@@ -42,6 +42,15 @@ private with sharing class HH_NameSpec_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     
         
     /*********************************************************************************************************
@@ -645,6 +654,9 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNaming() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNaming') return;
 
         Contact c1 = new Contact(
@@ -713,6 +725,9 @@ private with sharing class HH_NameSpec_TEST {
         names that were previously customized do not get updated
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingWithCustom() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -815,6 +830,9 @@ private with sharing class HH_NameSpec_TEST {
         HH Name, Formal Greeting, and Informal Greeting are correct
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingManyHH() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
         
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();

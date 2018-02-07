@@ -36,6 +36,14 @@
 @isTest
 public with sharing class HH_Households_TEST {
 	
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     /*********************************************************************************************************
     * @description Tests default constructor
     */
@@ -719,6 +727,8 @@ public with sharing class HH_Households_TEST {
     * @description tests that case sensitive name changes on contacts update the Household name and greetings
     */
     public static testMethod void testCaseChanges() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests
             (new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true));

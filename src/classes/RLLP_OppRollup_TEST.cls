@@ -42,6 +42,14 @@ public with sharing class RLLP_OppRollup_TEST {
     * If you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
     
     /** @description Today's date. */
     static Date datToday = System.Today();
@@ -128,6 +136,9 @@ public with sharing class RLLP_OppRollup_TEST {
     * @description Runs testGivingRollupProcessor test method for the One to One account processor.
     */
     static testMethod void testGivingRollupOne2One(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupOne2One') return;
         testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -135,6 +146,9 @@ public with sharing class RLLP_OppRollup_TEST {
     * @description Runs testGivingRollupProcessor test method for the household account processor.
     */
     static testMethod void testGivingRollupHHAccount(){
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupHHAccount') return;
         testGivingRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }

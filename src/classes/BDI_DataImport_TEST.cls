@@ -44,6 +44,15 @@ public with sharing class BDI_DataImport_TEST {
     */
     private static string strTestOnly = '*';
     
+
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     /*******************************************************************************************************
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
@@ -270,6 +279,9 @@ public with sharing class BDI_DataImport_TEST {
     *        two contacts matched
     **********************************************************************************************************/            
     static testMethod void OneDITwoExistingContacts() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoExistingContacts') return;
             
         // existing contacts
@@ -489,6 +501,9 @@ public with sharing class BDI_DataImport_TEST {
     *        no accounts created, just matched
     **********************************************************************************************************/            
     static testMethod void TwoDIExistingAccountsSalesforceId() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
             
         list<Account> listAcc = new list<Account>();
@@ -572,6 +587,9 @@ public with sharing class BDI_DataImport_TEST {
     *        affiliations created between contacts and accounts
     **********************************************************************************************************/            
     static testMethod void TwoDIAffiliations() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIAffiliations') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -622,6 +640,9 @@ public with sharing class BDI_DataImport_TEST {
     *        hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddresses() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddresses') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -680,6 +701,9 @@ public with sharing class BDI_DataImport_TEST {
     *        hh accounts' billing address set
     **********************************************************************************************************/
     static testMethod void TwoDIExistingHomeAddresses() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingHomeAddresses') return;
 
         // existing contacts
@@ -742,6 +766,9 @@ public with sharing class BDI_DataImport_TEST {
     *        hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void ManyDISameHomeAddresses() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'ManyDISameHomeAddresses') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -825,6 +852,9 @@ public with sharing class BDI_DataImport_TEST {
     *    hh accounts' billing address set
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
             
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -879,6 +909,9 @@ public with sharing class BDI_DataImport_TEST {
     *        address matched
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddresses() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddresses') return;
             
         // existing contacts
@@ -935,6 +968,9 @@ public with sharing class BDI_DataImport_TEST {
     *       contact addresses updated
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
             
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -988,6 +1024,9 @@ public with sharing class BDI_DataImport_TEST {
     *       hh account's rollups updated
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonations() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonations') return;
             
         list<DataImport__c> listDI = new list<DataImport__c>();
@@ -1134,6 +1173,9 @@ public with sharing class BDI_DataImport_TEST {
     *    opportunities added to campaigns
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonationsAndCampaigns() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationsAndCampaigns') return;
         
         list<Campaign> listC = new list<Campaign>();

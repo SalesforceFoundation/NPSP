@@ -37,12 +37,22 @@
 ***/
 @isTest
 private class TDTM_Config_API_Test {
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
 
     /*********************************************************************************************************
     * @description Test that an individual trigger can be disabled in the current code execution context
     */
     @isTest
     static void test_disable_trigger_in_context() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         TDTM_DefaultConfig.startTestDataInit();
         Test.startTest();
 
@@ -72,6 +82,9 @@ private class TDTM_Config_API_Test {
     */
     @isTest
     static void test_disable_for_specific_user() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         // disable this one trigger
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getDefaultRecords();
         for (Trigger_Handler__c th : handlers) {

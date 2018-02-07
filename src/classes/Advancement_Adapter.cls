@@ -30,21 +30,39 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group TDTM
-* @group-content ../../ApexDocContent/TDTM.htm
-* @description Provides an adapter for other packages to be able to inject customizations into NPSP.
+* @group
+* @group-content
+* @description Provides an adapter for Advancement package to be able to inject customizations into NPSP and provide API to inject to other project.
 **/
 
-//@TODO: is this a good name for this class? Is the TDTM prefix correct? Later on we may want it to be an adaptor for additional functionality.
-global virtual with sharing class TDTM_Adapter {
+global virtual with sharing class Advancement_Adapter {
 
     /**
-     * @description To be called by the NPSP TDTM trigger dispatcher. It returns the combined HEDA+NPSP TDTM configuration
-     * as Trigger Handler records.
+     * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger handlers records (since they conflict with HEDA version)
+     * and return the rest
      *
      * @return List<Trigger_Handler__c> The TDTM configuration.
      */
     global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
         return TDTM_Config_API.getDefaultRecords();
+    }
+
+    /**
+     * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
+     * Expose this API for Advancement to inject the rollup functionality into HEDA code base
+     *
+     * @return none
+     */
+    global static void rollupAccounts(list<Id> listAccountId) {
+        //This function is copied from NPSP ACCT_IndividualAccounts_TDTM
+        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
+            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
+            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() +
+                    ' where id IN :listAccountId'));
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAccounts(amap);
+        } else {
+            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountId));
+        }
     }
 }

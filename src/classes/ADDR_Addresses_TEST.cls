@@ -142,6 +142,14 @@ public with sharing class ADDR_Addresses_TEST {
         );
     }
 
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     /*********************************************************************************************************
     @description
         create N new default Addresses for N Households (with M Contacts)
@@ -179,6 +187,9 @@ public with sharing class ADDR_Addresses_TEST {
         the contact gets the new Address
     **********************************************************************************************************/
     static testMethod void insertContactWithAddress() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -226,6 +237,9 @@ public with sharing class ADDR_Addresses_TEST {
         the household account gets the new Address
     **********************************************************************************************************/
     static testMethod void insertContactWithAddressRecreateAccount() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressRecreateAccount') return;
 
         TDTM_DefaultConfig.startTestDataInit();
@@ -267,6 +281,9 @@ public with sharing class ADDR_Addresses_TEST {
         the contact gets the new Address
     **********************************************************************************************************/
     static testMethod void insertContactWithAddressOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressOverride') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettings();
@@ -524,6 +541,9 @@ public with sharing class ADDR_Addresses_TEST {
         contact's address updated, but not overriden; the household accounts address remains unchanged
     **********************************************************************************************************/
     static testMethod void setConAddrNoOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'setConAddrNoOverride') return;
 
         // this creates a default Address for each HH
@@ -707,6 +727,9 @@ public with sharing class ADDR_Addresses_TEST {
         contacts' Mailing address fields updated to the Address Override's fields.
     **********************************************************************************************************/
     static testMethod void updateAddrOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateAddrOverride') return;
 
         // this creates a default Address for each HH
@@ -770,6 +793,9 @@ public with sharing class ADDR_Addresses_TEST {
         contacts' Mailing address fields updated to the HH default address
     **********************************************************************************************************/
     static testMethod void clearAddrOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'clearAddrOverride') return;
 
         // this creates a default Address for each HH
@@ -832,6 +858,9 @@ public with sharing class ADDR_Addresses_TEST {
         new default address created
     **********************************************************************************************************/
     static testMethod void clearAddrOverrideNewAddr() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'clearAddrOverrideNewAddr') return;
 
         // this creates a default Address for each HH
@@ -891,6 +920,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get new Address
     **********************************************************************************************************/
     static testMethod void updateConAddrNew() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrNew') return;
 
         // this creates a default Address for each HH
@@ -954,6 +986,9 @@ public with sharing class ADDR_Addresses_TEST {
         contact gets new address
     **********************************************************************************************************/
     static testMethod void updateConAddrMarkOverride() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
 
         // this creates a default Address for each HH
@@ -1189,6 +1224,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get updated Address
     **********************************************************************************************************/
     static testMethod void updateConAddrExisting() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExisting') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1254,6 +1292,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get updated Address
     **********************************************************************************************************/
     static testMethod void updateConAddrExistingAddrType() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingAddrType') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1329,6 +1370,9 @@ public with sharing class ADDR_Addresses_TEST {
         Contact's "Primary Address Type" is the same as the Address' "Address Type".
     **********************************************************************************************************/
     static testMethod void addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1389,6 +1433,9 @@ public with sharing class ADDR_Addresses_TEST {
         Contact's "Primary Address Type" is the same as the Address' "Address Type".
     **********************************************************************************************************/
     static testMethod void addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1440,6 +1487,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get updated Address
     **********************************************************************************************************/
     static testMethod void updateConAddrExistingCaseOnly() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingCaseOnly') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
@@ -1538,6 +1588,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get new Address
     **********************************************************************************************************/
     static testMethod void updateAccAddrNew() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateAccAddrNew') return;
 
         // this creates a default Address for each HH
@@ -1598,6 +1651,9 @@ public with sharing class ADDR_Addresses_TEST {
         HH and Contacts get updated Address
     **********************************************************************************************************/
     static testMethod void updateAccAddrExisting() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'updateAccAddrExisting') return;
 
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(

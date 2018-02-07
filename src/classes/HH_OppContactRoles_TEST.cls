@@ -42,7 +42,18 @@ private class HH_OppContactRoles_TEST {
     */
     private static string strTestOnly = '*';
 
+    /*******************************************************************************************************
+    * @description determine if Advancement package is installed
+    */
+    private static boolean isAdvInstalled() {
+        Advancement_Info adv = new Advancement_Info();
+        return adv.useAdv;
+    }
+
     private static testMethod void opportunityWithHouseholdOne2One() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdOne2One') return;
         opportunityWithHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -51,6 +62,9 @@ private class HH_OppContactRoles_TEST {
         opportunityWithHousehold(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdHHAccount() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdHHAccount') return;
         opportunityWithHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
@@ -136,6 +150,9 @@ private class HH_OppContactRoles_TEST {
 
 
     private static testMethod void opportunityWithHouseholdNoRolesOne2One() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesOne2One') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -144,6 +161,9 @@ private class HH_OppContactRoles_TEST {
         opportunityWithHouseholdNoRoles(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdNoRolesHHAccount() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesHHAccount') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
@@ -209,10 +229,16 @@ private class HH_OppContactRoles_TEST {
     
     
     private static testMethod void opportunityWithNoHouseholdOne2One() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdOne2One') return;
         opportunityWithNoHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithNoHouseholdHHAccount() {
+        //skip the test if Advancement is installed
+        if(isAdvInstalled()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithNoHouseholdHHAccount') return;
         opportunityWithNoHousehold(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }
