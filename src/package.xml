@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -139,6 +139,7 @@
         <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_RollupSoftCredit_SVC</members>
         <members>CRLP_RollupSoftCredit_TEST</members>
+        <members>CRLP_RollupUI_SVC</members>
         <members>CRLP_Rollup_BATCH</members>
         <members>CRLP_Rollup_LDV_BATCH</members>
         <members>CRLP_Rollup_SEL</members>
@@ -292,6 +293,7 @@
         <members>STG_PanelContactRoles_CTRL</members>
         <members>STG_PanelContacts_CTRL</members>
         <members>STG_PanelCreatePayments_CTRL</members>
+        <members>STG_PanelCustomizableRollup_CTRL</members>
         <members>STG_PanelERR_CTRL</members>
         <members>STG_PanelErrorLog_CTRL</members>
         <members>STG_PanelHealthCheck_CTRL</members>
@@ -423,6 +425,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
         <members>HH_ManageHH</members>
@@ -448,6 +451,7 @@
         <members>STG_PanelContactRoles</members>
         <members>STG_PanelContacts</members>
         <members>STG_PanelCreatePayments</members>
+        <members>STG_PanelCustomizableRollup</members>
         <members>STG_PanelERR</members>
         <members>STG_PanelErrorLog</members>
         <members>STG_PanelHealthCheck</members>
@@ -502,6 +506,16 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>CRLP_CancelEvent</members>
+        <members>CRLP_CreateRollup</members>
+        <members>CRLP_FilterGroupRow</members>
+        <members>CRLP_ModeChanged</members>
+        <members>CRLP_Rollup</members>
+        <members>CRLP_RollupApp</members>
+        <members>CRLP_RollupRow</members>
+        <members>CRLP_RollupsContainer</members>
+        <members>CRLP_SelectField</members>
+        <members>CRLP_SortEvent</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -524,6 +538,7 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
+        <members>tableHeader</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
@@ -1008,6 +1023,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CMT_FilterNew</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -1051,6 +1067,15 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CRLP_AvailableRollupType</members>
+        <members>CRLP_CreditType</members>
+        <members>CRLP_HardCredit</members>
+        <members>CRLP_NoRollupType</members>
+        <members>CRLP_Return</members>
+        <members>CRLP_RollupNew</members>
+        <members>CRLP_RollupSummary</members>
+        <members>CRLP_RollupType</members>
+        <members>CRLP_SoftCredit</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>
         <members>CascadeDeletionErrorLightning</members>
@@ -1519,10 +1544,12 @@
         <members>statusCompleted</members>
         <members>statusInProgress</members>
         <members>statusNotStarted</members>
+        <members>stgActive</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
+        <members>stgBtnClone</members>
         <members>stgBtnCreateAutoRel</members>
         <members>stgBtnCreateMapping</members>
         <members>stgBtnCreateRDPeriod</members>
@@ -1544,6 +1571,10 @@
         <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
+        <members>stgCheckboxFalse</members>
+        <members>stgCheckboxTrue</members>
+        <members>stgCountOf</members>
+        <members>stgCreate</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
@@ -1705,6 +1736,7 @@
         <members>stgLabelLeadSettings</members>
         <members>stgLabelLvlAssignBatchTitle</members>
         <members>stgLabelMembershipSettings</members>
+        <members>stgLabelName</members>
         <members>stgLabelNewAutoRel</members>
         <members>stgLabelNewPaymentMapping</members>
         <members>stgLabelNewRDFieldMap</members>
@@ -1746,6 +1778,7 @@
         <members>stgLabelUDRTargetField</members>
         <members>stgLabelUDRTargetFieldHelp</members>
         <members>stgLabelUDRTargetObject</members>
+        <members>stgLabelView</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
@@ -1784,8 +1817,11 @@
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>
         <members>stgNavUserDefinedRollups</members>
+        <members>stgNoObjectsFound</members>
+        <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgSelectOne</members>
         <members>stgTools</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
@@ -1793,6 +1829,98 @@
     <types>
         <members>CustomLabels</members>
         <name>CustomLabels</name>
+    </types>
+    <types>
+        <members>Filter_Group.ClosedWon_RecordType_not_Membership</members>
+        <members>Filter_Group.Memberships_Only</members>
+        <members>Filter_Rule.ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.ClosedWonOpps_SoftCreditRoles</members>
+        <members>Filter_Rule.Membership_ClosedWonOpps_IsWon</members>
+        <members>Filter_Rule.RecordType_Equals_Membership</members>
+        <members>Filter_Rule.RecordType_not_Membership</members>
+        <members>Rollup.Account_Average_Gift</members>
+        <members>Rollup.Account_Best_Gift_Year</members>
+        <members>Rollup.Account_Best_Gift_Year_Total</members>
+        <members>Rollup.Account_Count_All_Gifts</members>
+        <members>Rollup.Account_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Count_Gifts_Last_Year</members>
+        <members>Rollup.Account_Count_Gifts_This_Year</members>
+        <members>Rollup.Account_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_First_Gift_Date</members>
+        <members>Rollup.Account_Largest_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Amount</members>
+        <members>Rollup.Account_Last_Gift_Date</members>
+        <members>Rollup.Account_Last_Membership_Amount</members>
+        <members>Rollup.Account_Last_Membership_Date</members>
+        <members>Rollup.Account_Last_Membership_Level</members>
+        <members>Rollup.Account_Last_Membership_Origin</members>
+        <members>Rollup.Account_Membership_End_Date</members>
+        <members>Rollup.Account_Membership_Join_Date</members>
+        <members>Rollup.Account_Number_of_Memberships</members>
+        <members>Rollup.Account_Smallest_Gift_Amount</members>
+        <members>Rollup.Account_Total_Gifts</members>
+        <members>Rollup.Account_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Account_Total_Gifts_Last_Year</members>
+        <members>Rollup.Account_Total_Gifts_This_Year</members>
+        <members>Rollup.Account_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Account_Total_Membership_Amount</members>
+        <members>Rollup.Contact_Average_Gift</members>
+        <members>Rollup.Contact_Best_Gift_Year</members>
+        <members>Rollup.Contact_Best_Gift_Year_Total</members>
+        <members>Rollup.Contact_Count_All_Gifts</members>
+        <members>Rollup.Contact_Count_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Count_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Count_Gifts_This_Year</members>
+        <members>Rollup.Contact_Count_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Contact_First_Gift_Date</members>
+        <members>Rollup.Contact_Largest_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Amount</members>
+        <members>Rollup.Contact_Last_Gift_Date</members>
+        <members>Rollup.Contact_Last_Membership_Amount</members>
+        <members>Rollup.Contact_Last_Membership_Date</members>
+        <members>Rollup.Contact_Last_Membership_Level</members>
+        <members>Rollup.Contact_Last_Membership_Origin</members>
+        <members>Rollup.Contact_Membership_End_Date</members>
+        <members>Rollup.Contact_Membership_Join_Date</members>
+        <members>Rollup.Contact_Number_of_Memberships</members>
+        <members>Rollup.Contact_Smallest_Gift_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Count_All</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Count_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Count_Two_Years_Ago</members>
+        <members>Rollup.Contact_SoftCredit_First_Amount</members>
+        <members>Rollup.Contact_SoftCredit_First_Date</members>
+        <members>Rollup.Contact_SoftCredit_Largest_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Amount</members>
+        <members>Rollup.Contact_SoftCredit_Last_Date</members>
+        <members>Rollup.Contact_SoftCredit_Last_N_Days</members>
+        <members>Rollup.Contact_SoftCredit_Last_Year</members>
+        <members>Rollup.Contact_SoftCredit_This_Year</members>
+        <members>Rollup.Contact_SoftCredit_Total</members>
+        <members>Rollup.Contact_SoftCredit_Two_Years_Ago</members>
+        <members>Rollup.Contact_Total_Gifts</members>
+        <members>Rollup.Contact_Total_Gifts_Last_365_Days</members>
+        <members>Rollup.Contact_Total_Gifts_Last_Year</members>
+        <members>Rollup.Contact_Total_Gifts_This_Year</members>
+        <members>Rollup.Contact_Total_Gifts_Two_Years_Ago</members>
+        <members>Rollup.Contact_Total_of_Memberships</members>
+        <members>Rollup.GAU_Average_Allocation</members>
+        <members>Rollup.GAU_Count_Allocations_All_Time</members>
+        <members>Rollup.GAU_Count_Allocations_Last_365_Days</members>
+        <members>Rollup.GAU_Count_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Count_Allocations_This_Year</members>
+        <members>Rollup.GAU_Count_Allocations_Two_Years_Ago</members>
+        <members>Rollup.GAU_First_Allocation_Date</members>
+        <members>Rollup.GAU_Largest_Allocation</members>
+        <members>Rollup.GAU_Last_Allocation_Date</members>
+        <members>Rollup.GAU_Smallest_Allocation</members>
+        <members>Rollup.GAU_Total_Allocations_All_Time</members>
+        <members>Rollup.GAU_Total_Allocations_Last_365_Days</members>
+        <members>Rollup.GAU_Total_Allocations_Last_Year</members>
+        <members>Rollup.GAU_Total_Allocations_This_Year</members>
+        <members>Rollup.GAU_Total_Allocations_Two_Years_Ago</members>
+        <name>CustomMetadata</name>
     </types>
     <types>
         <members>Addr_Verification_Settings__c</members>

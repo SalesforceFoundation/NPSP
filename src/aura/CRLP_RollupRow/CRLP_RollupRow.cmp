@@ -1,0 +1,52 @@
+<aura:component description="CRLP_RollupRow">
+    <!-- public attributes -->
+    <aura:attribute name="rollup" type="Object" required="true" description="All available fields on the rollup item to be displayed in the row."/>
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="activeRollupId" type="Object" description="The ID of the record to be set in the controller and bubbled up."/>
+    <aura:attribute name="mode" type="String" description="The mode to be set in the controller and bubbled up depending on the choice made in the row."/>
+
+    <!--<aura:registerEvent name="modeChanged" type="c:CRLP_ModeChanged"/>-->
+
+    <!--markup-->
+    <tr class="slds-hint-parent">
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.rollupName}">
+                <a href="javascript:void(0);" onclick="{!c.setActiveRollupId}" >
+                    {!v.rollup.rollupName}
+                </a>
+            </div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.summaryObject}">{!v.rollup.summaryObject}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.detailObject}">{!v.rollup.detailObject}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.creditType}">{!v.rollup.creditType}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.operation}">{!v.rollup.operation}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.filterGroupName}">{!v.rollup.filterGroupName}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.rollup.active}">
+                <aura:if isTrue="{!v.rollup.active}">
+                    <lightning:icon iconName="utility:check" size="x-small"/>
+                </aura:if>
+            </div>
+        </td>
+        <td>
+            <div title="Actions">
+                <lightning:buttonMenu menuAlignment="right" alternativeText="{!v.labels.action}" onselect="{!c.handleMenuSelect}">
+                    <lightning:menuItem label="{!v.labels.edit}" value="edit" />
+                    <lightning:menuItem label="{!v.labels.clone}" value="clone" />
+                    <lightning:menuItem label="{!v.labels.delete}" value="delete" />
+                </lightning:buttonMenu>
+            </div>
+        </td>
+    </tr>
+    <!--end markup-->
+</aura:component>

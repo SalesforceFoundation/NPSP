@@ -64,12 +64,41 @@ private class RLLP_OppRollupBATCH_TEST {
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor'
             )
         );
+
+        // Create one UDR for each object - Account, Contact, Households
+        list<npo02__User_Rollup_Field_Settings__c> testURFS = new list<npo02__User_Rollup_Field_Settings__c>();
+
+        npo02__User_Rollup_Field_Settings__c testUserRollup1 = new npo02__User_Rollup_Field_Settings__c();
+        testUserRollup1.npo02__Target_Field__c = 'Birthdate';
+        testUserRollup1.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup1.npo02__Object_Name__c = 'Contact';
+        testUserRollup1.npo02__Field_Action__c = 'MAX';
+        testUserRollup1.Name = 'TestRollup8675309';
+        testURFS.add(TestUserRollup1);
+
+        npo02__User_Rollup_Field_Settings__c testUserRollup2 = new npo02__User_Rollup_Field_Settings__c();
+        testUserRollup2.npo02__Target_Field__c = 'NumberOfEmployees';
+        testUserRollup2.npo02__Source_Field__c = 'FiscalYear';
+        testUserRollup2.npo02__Object_Name__c = 'Account';
+        testUserRollup2.npo02__Field_Action__c = 'MAX';
+        testUserRollup2.Name = 'TestRollup2';
+        testURFS.add(testUserRollup2);
+
+        npo02__User_Rollup_Field_Settings__c testUserRollup3 = new npo02__User_Rollup_Field_Settings__c();
+        testUserRollup3.npo02__Target_Field__c = 'npo02__LastCloseDate__c';
+        testUserRollup3.npo02__Source_Field__c = 'CloseDate';
+        testUserRollup3.npo02__Object_Name__c = 'npo02__Household__c';
+        testUserRollup3.npo02__Field_Action__c = 'MAX';
+        testUserRollup3.Name = 'TestRollup3';
+        testURFS.add(testUserRollup3);
+
+        insert testURFS;
     }
     
     static testMethod void testOppAcctRollupBatch() {
-    	if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
-    	setup();
-    	
+        if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
+        setup();
+
         //The record type is an optional parameter when creating opps
         String giftRecordTypeNameForTests = UTIL_RecordTypes.getRecordTypeNameForGiftsTests(Opportunity.sObjectType);
          
@@ -84,15 +113,18 @@ private class RLLP_OppRollupBATCH_TEST {
                 giftRecordTypeNameForTests, null);   
         insert opps;
     
-        RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
+//        RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
              
         Test.startTest(); 
-        id batchProcessId = Database.executeBatch(batch);
+        id batchProcessId = Database.executeBatch(new RLLP_OppAccRollup_BATCH());
         Test.stopTest();
         
         Id acctId = [select AccountId from Contact where Id = :contact.Id][0].AccountId;
         Account acct = [select Id, npo02__TotalOppAmount__c from Account where Id = :acctId];
         System.assertEquals(acct.npo02__TotalOppAmount__c, giftAmount);
+
+        AsyncApexJob job = [SELECT Id, Status, ExtendedStatus, NumberOfErrors FROM AsyncApexJob WHERE Id = :batchProcessId];
+        System.assertEquals(0, job.NumberOfErrors, 'The batch job should have zero errors\n' + job);
     }
 
     static testMethod void testOppContactRollupBatch() {
@@ -152,8 +184,8 @@ private class RLLP_OppRollupBATCH_TEST {
         //give soft credit to contact2
         OpportunityContactRole[] oppRoles = new OpportunityContactRole[]{}; 
         for(Opportunity opp : opps) {
-        	oppRoles.add(new OpportunityContactRole(ContactId = contact18.Id, OpportunityId = opp.Id, 
-        	               Role = 'Influencer')); 
+            oppRoles.add(new OpportunityContactRole(ContactId = contact18.Id, OpportunityId = opp.Id,
+                           Role = 'Influencer'));
         }
         insert oppRoles;
         
