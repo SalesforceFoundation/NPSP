@@ -1,6 +1,6 @@
 <apex:page standardController="Contact" extensions="CON_DeleteContactOverride_CTRL" action="{!processDelete}" id="delContactPage">
     <apex:slds />
-    <apex:form styleClass="slds" id="delForm">
+    <apex:form styleclass="slds-scope" id="delForm">
         <apex:outputPanel rendered="{!sforceNav == null}" id="display">
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader headerLabel="{!$ObjectType.Contact.Label}"

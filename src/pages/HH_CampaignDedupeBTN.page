@@ -9,7 +9,7 @@
         }
     </style>
 
-    <div class="slds">
+    <div class="slds-scope">
 
         <!-- PAGE HEADER -->
         <apex:form id="pgHeader">
