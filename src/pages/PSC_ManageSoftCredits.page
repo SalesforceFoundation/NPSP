@@ -28,12 +28,18 @@
                 </div>                                            
                 <div class="slds-col slds-align-middle" id="total">
                     <label class="slds-form-element__label" for="txtOppAmount">{!$Label.pscManageSoftCreditsOppAmount}</label><br/>
-                    <apex:outputField id="txtOppAmount" value="{!opp.Amount}" />
-                </div>    
+                    <span class="slds-form-element__addon">{!currencySymbol}</span>
+                    <apex:outputText value="{0, number, ###,##0.00}" id="txtOppAmount">
+                        <apex:param value="{!opp.Amount}"/>
+                    </apex:outputText>
+                </div>
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalSelected">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtPSCAmountPercent">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
-                        <apex:outputField id="txtPSCAmountPercent" value="{!oppTotalSoftCredit.Amount}" />
+                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                        <apex:outputText value="{0, number, ###,##0.00}" id="txtPSCAmountPercent">
+                            <apex:param value="{!oppTotalSoftCredit.Amount}"/>
+                        </apex:outputText>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtPSCAmount">{!$Label.pscManageSoftCreditsPSCAmount}</label><br/>
@@ -43,7 +49,10 @@
                 <apex:outputPanel styleClass="slds-col slds-align-middle" id="totalUn">
                     <apex:outputPanel rendered="{!isAmount}">
                         <label class="slds-form-element__label" for="txtUnaccounted">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>
-                        <apex:outputField id="txtUnaccounted" value="{!oppTotalUnaccounted.Amount}" />  
+                        <span class="slds-form-element__addon">{!currencySymbol}</span>
+                        <apex:outputText value="{0, number, ###,##0.00}" id="txtUnaccounted">
+                            <apex:param value="{!oppTotalUnaccounted.Amount}"/>
+                        </apex:outputText>
                     </apex:outputPanel>
                     <apex:outputPanel rendered="{!NOT(isAmount)}">
                         <label class="slds-form-element__label" for="txtUnaccountedPercent">{!$Label.pscManageSoftCreditsUnaccounted}</label><br/>

@@ -45,7 +45,11 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
     public List<SelectOption> contactRoles {get; private set;}
     /** @description Row number sent back by page for delete row method.*/
     public integer rowNumber {get;set;}
-    
+
+    /** @description The currency symbol or ISO code of the related record or org default */
+    @TestVisible
+    private String currencySymbol;
+
     /*******************************************************************************************************
     * @description temporary Opp to hold the current Total Soft Credit Amount and currency
     */
@@ -435,5 +439,21 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
             this.fullCredit = ocr.Id != null;
         }
     }
-    
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(opp.Id);
+        }
+        return currencySymbol;
+    }
+
 }
