@@ -140,7 +140,6 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppCampMembers}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBDE}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavUserDefinedRollups}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">Enable CRLP</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
@@ -285,10 +284,6 @@
 
                 <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
                     <apex:include pageName="STG_PanelUserRollup" />
-                </div>
-
-                <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
-                    <apex:include pageName="STG_PanelCustomizableRollup" />
                 </div>
 
                 <!-- Recurring Donations -->

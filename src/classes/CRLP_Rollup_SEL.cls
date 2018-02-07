@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Selector class for Rollup definition custom metadata.
@@ -50,12 +50,10 @@ public class CRLP_Rollup_SEL {
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
-                                Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
-                                Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
-                                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
-                                Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
+                                Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
+                                Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
                         FROM Rollup__mdt
-                        ORDER BY Summary_Object__c, MasterLabel];
+                        ORDER BY Summary_Object__c];
             }
             return cachedRollups;
         } private set;

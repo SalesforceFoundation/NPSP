@@ -148,7 +148,7 @@
 
     </script>
     <apex:form id="theForm">
-        <div class="slds">
+        <div class="slds-scope">
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"

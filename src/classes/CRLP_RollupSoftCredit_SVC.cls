@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,10 +29,10 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Soft Credit roll-ups TO both Contact and Household Account
+* @description Rollup Services unique to the Contact Soft Credit roll-ups TO both Contact and Account.
 * The Partial_Soft_Credit__c object is used for all Soft Credit Rollups as a Proxy for OpportunityContactRole
 * which isn't supported as a selectable Entity in the Rollup__mdt object.
 * A Single Instance of this class will be for EITHER the Account or the Contact, but NOT BOTH AT THE SAME TIME!
@@ -51,8 +51,9 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
         SObjectType targetObjType = this.objectId.getSobjectType();
-        if (CRLP_Rollup_SEL.getRollupsBySummaryType().containsKey(targetObjType)) {
-            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType)) {
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType);
+        if (rlps != null) {
+            for (Rollup__mdt r : rlps) {
                 // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
                 // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
                 // the only reliable ObjectField to check against is AmountObject since that will always point
@@ -77,10 +78,13 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
     public override void processRollups(List<SObject> details) {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
-        for (Partial_Soft_Credit__c psc : (List<Partial_Soft_Credit__c>)details) {
+        List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
+        for (Integer n=0, listSize=pscs.size(); n<listSize; n++) {
+            Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
+
             for (CRLP_Rollup rollup : this.rollups) {
-                Id filterGroupId = rollup.rollupsMdt[0].Filter_Group__c;
+                Id filterGroupId = rollup.filterGroup;
 
                 // Does this row pass the evaluation?
                 if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, psc }, filterGroupId)) {

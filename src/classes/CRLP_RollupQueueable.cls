@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Service class for Queueable (ASynchronous) roll-up operations on any supported Object.
@@ -100,7 +100,8 @@ public class CRLP_RollupQueueable implements System.Queueable {
         List<SObject> summaryRecords = database.query(soql);
 
         // Get the detail records for the current set of Summary Records
-        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords);
+        Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments);
 
         // Call the method to do the actual rollups. This returns only records that require updating
         List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);

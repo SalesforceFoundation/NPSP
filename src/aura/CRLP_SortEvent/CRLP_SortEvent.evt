@@ -1,4 +1,0 @@
-<aura:event type="APPLICATION" description="CRLP_SortEvent">
-    <aura:attribute name="fieldName" type="String" description="Name of the field to sort by"/>
-    <aura:attribute name="sortDirection" type="String" description="Enum direction to sort: asc or dsc"/>
-</aura:event>

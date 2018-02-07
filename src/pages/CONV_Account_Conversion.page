@@ -12,7 +12,7 @@
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
 
-    <div class="slds">
+    <div class="slds-scope">
 
         <div id="all_content">
 
@@ -206,7 +206,7 @@
 
         </div>
 
-        <div class="slds">
+        <div class="slds-scope">
             <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
                 <div class="slds-modal__container">
                     <div class="slds-modal__header">

@@ -13,7 +13,7 @@
     </style>
             
     <apex:form >
-      <div class="slds">
+      <div class="slds-scope">
     
         <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11_120" iconCategory="custom"
                 cancelAction="{!cancel}" saveAction="{!save}" saveAndNewAction="{!saveAndNew}" showSaveAndNewBtn="true"/>

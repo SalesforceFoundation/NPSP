@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Virtual class that all Rollup Source Object Handlers will extend from. Implements only the specific
@@ -66,7 +66,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      * This collection may be saved in a stateful var in the LDV Batch Job to support calling the Handler multiple
      * times over multiple iterations of a batch job.
      */
-    public List<CRLP_Rollup> rollups = new List<CRLP_Rollup>();
+    protected List<CRLP_Rollup> rollups = new List<CRLP_Rollup>();
 
     // ===================================================================================================
     // Class methods that must be overriden by classes that extend this class.
@@ -98,9 +98,13 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public void setRecordId(Id objectId) {
         this.objectId = objectId;
-        this.rollups.clear();
-        // This will call the method in the class that extends this class, not the empty virtual method below.
-        initRollup();
+        if (this.rollups.size() == 0) {
+            // This will call the method in the class that extends this class, not the empty virtual method above.
+            initRollup();
+        } else {
+            // clear all the rolled up values in the current instances of any CRLP_Rollup objects
+            resetAllRollups();
+        }
     }
 
     /**
@@ -111,6 +115,13 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public void setRollupsList(List<CRLP_Rollup> rollups) {
         this.rollups = rollups;
+    }
+
+    /**
+     * @return Returns the current collection of List<CRLP_Rollup>
+     */
+    public List<CRLP_Rollup> getRollupsList() {
+        return this.rollups;
     }
 
     /**
@@ -132,7 +143,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
             Map<String,Object> results = rollup.getFinalValues();
             CRLP_Debug_UTIL.setCurrentRollupState(CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
-                CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
+                //CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
                 this.record.put(fld, results.get(fld));
             }
         }
@@ -147,6 +158,56 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         for (CRLP_Rollup r : this.rollups) {
             r.resetValues();
         }
+    }
+
+    /**
+     * @description Filters the list of built CRLP_Rollup instances to either All, DateBased or NonDateBased
+     * to reduce the actual number of rollups being calculated at once.
+     * @param rollupProcessingMode All, DaysAgoOnly, NonDaysAgoOnly, MembershipsOnly, or NonMembershipsOnly enum
+     */
+    public void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode) {
+        if (rollupProcessingMode != CRLP_RollupProcessor_SVC.RollupsMode.All) {
+            List<CRLP_Rollup> filteredRollups = new List<CRLP_Rollup>();
+            for (CRLP_Rollup r : this.rollups) {
+                if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.DaysAgoOnly &&
+                        r.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                    filteredRollups.add(r);
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonDaysAgoOnly &&
+                        r.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                    filteredRollups.add(r);
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.MembershipsOnly) {
+                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
+                    for (Rollup__mdt rlp : r.rollupsMdt) {
+                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
+                        if (summaryField != null && summaryField.contains('Membership')) {
+                            rlps.add(rlp);
+                        }
+                    }
+                    if (!rlps.isEmpty()) {
+                        r.rollupsMdt = rlps;
+                        filteredRollups.add(r);
+                    }
+
+                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonMembershipsOnly) {
+                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
+                    for (Rollup__mdt rlp : r.rollupsMdt) {
+                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
+                        if (summaryField != null && !summaryField.contains('Membership')) {
+                            rlps.add(rlp);
+                        }
+                    }
+                    if (!rlps.isEmpty()) {
+                        r.rollupsMdt = rlps;
+                        filteredRollups.add(r);
+                    }
+
+                }
+            }
+            this.rollups = filteredRollups;
+        }
+        return;
     }
 
     /**

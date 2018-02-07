@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group CMT Filter Rules
 * @description Service Class for Filter Rules as it pertains the custom User Interface where Filter Rules are maintained
 */
@@ -190,7 +190,6 @@ public class CMT_FilterRuleUI_SVC {
                 return true;
             } else if (value.length() == 10) {
                 try {
-                    System.Debug(value);
                     Date dt = Date.valueOf(value);
                     return true;
                 } catch (Exception ex) {
@@ -198,7 +197,6 @@ public class CMT_FilterRuleUI_SVC {
                 }
             } else {
                 try {
-                    System.Debug(value);
                     DateTime dt = DateTime.valueOf(value);
                     return true;
                 } catch (Exception ex) {

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Controller Extension for the recalculate button on the Account, Contact, and GAU objects
@@ -88,13 +88,13 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             } else {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(this.objType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(new List<Id>{ recordId }), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ recordId }), batchSize);
             }
 
             // Execute Contact or Account Soft Credit roll-ups
-            if (this.objType == Account.SObjectType || this.objType == Contact.SObjectType) {
+            if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(new List<Id>{ recordId }), batchSize);
+                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(new List<Id>{ recordId }), batchSize);
             }
 
         } else {

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group CMT Filter Rules
 * @description Selector class for FilterGroups and FilterRule Custom Metadata Type objects
 */
@@ -44,11 +44,7 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Group__mdt> cachedFilterGroups {
         get {
             if (cachedFilterGroups == null) {
-                cachedFilterGroups = [SELECT Id
-                        , MasterLabel
-                        , DeveloperName
-                        , Description__c
-                        , (SELECT Id FROM Filter_Rules__r)
+                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Description__c
                         FROM Filter_Group__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY MasterLabel];
@@ -151,12 +147,5 @@ public without sharing class CMT_FilterRule_SEL {
             soql += dfr.getName() + ',';
         }
         return soql.removeEnd(',');
-    }
-
-    /**
-    * @description Return a simple list of all Rollup definition CMT records
-    */
-    public static List<Filter_Group__mdt> getFilterGroups() {
-        return cachedFilterGroups;
     }
 }

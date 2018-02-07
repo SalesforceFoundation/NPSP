@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Rollup Operation Services Classes
 */
@@ -90,9 +90,9 @@ private class CRLP_Rollup_SVC_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
 
         // Create two test Account records
-        Account a1 = new Account(Name = 'UNITTEST');
+        Account a1 = new Account(Name = 'UNITTEST-123');
         insert a1;
-        Account a2 = new Account(Name = 'UNITTEST');
+        Account a2 = new Account(Name = 'UNITTEST-456');
         insert a2;
         Id a1Id = a1.Id, a2Id = a2.Id;
 

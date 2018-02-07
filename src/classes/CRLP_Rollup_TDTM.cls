@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Customizable Rollups for TDTM
@@ -38,10 +38,15 @@
 public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
     /**
+     * @description Static collection of Account/Contact/Allocation Id's that have already been submitted
+     * to a rollup job in the current execution context. This prevents them from being submitted twice
+     */
+    private static Set<Id> alreadyQueuedForRollupJob = new Set<Id>();
+
+    /**
      * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
      * TODO Partial Soft Credits?
-     * TODO Prevent the queuable action from being run multiple times as the Opportunity, Payment and Allocation records are inserted
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -118,7 +123,6 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
     /**
      * @description For a give set of records that were inserted/updated/deleted/undeleted, determine the
      * parent Account/Contact/GAU Id's that require rolling up to and initiate the jobs that do those rollups
-     * TODO - Add LDV support on the Account/Contact object
      * @param detailRecordsToRollup
      */
     private static void executeRollupsForSpecifiedRecords(List<SObject> detailRecordsToRollup) {
@@ -126,6 +130,13 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
+
+        // Unit Tests cannot chain queuable rollups, so all rollups are done real-time. As such,
+        // don't use this static set to prevent rollups from running multiple times on the same
+        // record.
+        if (Test.isRunningTest()) {
+            alreadyQueuedForRollupJob.clear();
+        }
 
         List<Opportunity> opps = new List<Opportunity>();
         if (detailObjType == Opportunity.SObjectType) {
@@ -152,35 +163,38 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             List<Id> gauIds = new List<Id>();
             for (SObject s  : detailRecordsToRollup) {
                 Allocation__c alloc = (Allocation__c)s;
-                if (alloc.Opportunity__c != null) {
+                if (alloc.Opportunity__c != null && !alreadyQueuedForRollupJob.contains(alloc.Opportunity__c)) {
                     gauIds.add(alloc.General_Accounting_Unit__c);
+                    alreadyQueuedForRollupJob.add(alloc.Opportunity__c);
                 }
             }
 
-            // Don't submit the batch job when unit tests are running
-            if (!Test.isRunningTest() && !accountIds.isEmpty()) {
+            // Don't submit the batch job when unit tests are running or if this is being called from
+            // a batch, queueable or future method
+            if (!Test.isRunningTest() && !gauIds.isEmpty() && !System.isBatch() && !System.isQueueable() && !System.isFuture()) {
                 Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_BATCH_LDV(gauIds), batchSize);
+                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(gauIds), batchSize);
             }
         }
 
         // If there are Opportunities, get the Account and/or Contact Ids to roll up to
         if (detailObjType != Allocation__c.SObjectType) {
             for (Opportunity opp : opps) {
-                if (opp.AccountId != null) {
+                if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
                     accountIds.add(opp.AccountId);
+                    alreadyQueuedForRollupJob.add(opp.AccountId);
                 }
-                if (opp.Primary_Contact__c != null) {
+                if (opp.Primary_Contact__c != null && !alreadyQueuedForRollupJob.contains(opp.Primary_Contact__c)) {
                     contactIds.add(opp.Primary_Contact__c);
+                    alreadyQueuedForRollupJob.add(opp.Primary_Contact__c);
                 }
             }
 
             // Execute the roll-ups in real-time instead of asynchronously in the following cases:
             // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
             // - Called from a Batch Job, @Future or Queueable context
-            //  || System.isBatch() || System.isFuture() || System.isQueueable()
             Integer numTotalSummaryObjects = accountIds.size() + contactIds.size();
-            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)) {
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
                 // Immediate execution
                 if (!accountIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(accountIds);

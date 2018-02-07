@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Soft Credit to Account/Contact Rollups
 */
@@ -88,29 +88,33 @@ private class CRLP_RollupSoftCredit_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
                         'Largest_Soft_Credit_Amount__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c') + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Date of Largest', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
+                        'Largest_Soft_Credit_Date__c', CRLP_Operation.RollupType.LARGEST, 'CloseDate') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - First Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToContact,
                         'First_Soft_Credit_Date__c', CRLP_Operation.RollupType.FIRST, 'CloseDate') + ',' +
 
                 /* ACCOUNT SOFT-CREDIT ROLL-UPS (there are no packaged soft credit fields, so using hard credit fields to test) */
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Total', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Count All', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, '') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Last Amount', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__LastOppAmount__c', CRLP_Operation.RollupType.LAST, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - Largest Amount', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Account: Soft Credits - First Date', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.SoftCreditToAccount,
+                        CMT_UnitTestData_TEST.RollupRecordType.ContactSoftCreditToAccount,
                         'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.FIRST, 'CloseDate') +
 
                 ']';
@@ -160,18 +164,18 @@ private class CRLP_RollupSoftCredit_TEST {
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
 
         // Create two additional family members
-        Contact c2 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-1', AccountId = c.AccountId);
-        Contact c3 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-2', AccountId = c.AccountId);
+        Contact c2 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-1', AccountId = c.AccountId);
+        Contact c3 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-2', AccountId = c.AccountId);
 
         // Create one more Contact that is used to test filters
-        Contact c4 = new Contact(LastName = 'UNITTEST', FirstName = 'TEST-3');
+        Contact c4 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-3');
 
         insert new List<Contact>{ c2, c3, c4 };
 
@@ -187,7 +191,7 @@ private class CRLP_RollupSoftCredit_TEST {
         Integer cnt = 100;
         String bestGiftYear;
         Set<String> donationYears = new Set<String>();
-        Date lastCloseDate;
+        Date lastCloseDate, largestGiftDate;
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
@@ -207,6 +211,7 @@ private class CRLP_RollupSoftCredit_TEST {
             donationYears.add(donationYr);
             if (amt == maxAmt) {
                 bestGiftYear = donationYr;
+                largestGiftDate = closeDate.addMonths(n);
             }
             lastCloseDate = closeDate.addMonths(n);
         }
@@ -230,7 +235,7 @@ private class CRLP_RollupSoftCredit_TEST {
                 'There should be 300 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
-        database.executeBatch(new CRLP_Rollup_BATCH_PSC_LDV(), 600);
+        database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), 600);
         Test.stopTest();
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
@@ -242,6 +247,7 @@ private class CRLP_RollupSoftCredit_TEST {
         System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
         System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
         System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
+        System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
         System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
         System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
 

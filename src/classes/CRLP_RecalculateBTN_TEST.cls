@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Selectors
 * @description Unit Test for the Account/Contact Recalculate Rollups button controller
 */
@@ -42,7 +42,7 @@ private class CRLP_RecalculateBTN_TEST {
      */
     static testMethod void test_nopermissions() {
         // Insert a dummy Contact
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
         // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
@@ -79,9 +79,16 @@ private class CRLP_RecalculateBTN_TEST {
         Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
         insert c;
 
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
+        insert gau;
+
         Test.startTest();
 
         CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
+        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+        ctlr.buttonClick();
+
+        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
         System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
         ctlr.buttonClick();
 
@@ -101,13 +108,17 @@ private class CRLP_RecalculateBTN_TEST {
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
                         Rollups_LDV_Batch_Size__c = 200,
                         Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Contact_Batch_Size__c = 20
+                        Rollups_Contact_Batch_Size__c = 20,
+                        Rollups_Allocation_Batch_Size__c = 400
                 ));
 
         // Insert a dummy Contact
         Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
         insert c;
         Account a = [SELECT Id FROM Account LIMIT 1];
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
+        insert gau;
 
         Test.startTest();
 
@@ -119,10 +130,23 @@ private class CRLP_RecalculateBTN_TEST {
         System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
         ctlr.buttonClick();
 
+        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
+        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+        ctlr.buttonClick();
+
         Test.stopTest();
 
+        Integer expectedJobCount = 3;
+        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType)) {
+            expectedJobCount++;
+        }
+        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType)) {
+            expectedJobCount++;
+        }
+
         // validate that both the standard and the partial soft credit jobs were submitted
-        system.assertEquals(4, [SELECT Count() FROM AsyncApexJob], 'Four Queueable jobs should been executed');
+        system.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob],
+                expectedJobCount + ' Queueable jobs should been executed');
     }
 
 }
