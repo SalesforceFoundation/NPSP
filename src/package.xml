@@ -304,11 +304,11 @@
         <members>UTIL_Currency_TEST</members>
         <members>UTIL_CustomSettingsFacade</members>
         <members>UTIL_CustomSettings_API</members>
+        <members>UTIL_DMLService</members>
+        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_Debug</members>
         <members>UTIL_Describe</members>
         <members>UTIL_Describe_TEST</members>
-        <members>UTIL_DMLService</members>
-        <members>UTIL_DMLService_TEST</members>
         <members>UTIL_IScheduled</members>
         <members>UTIL_JobProgress_CTRL</members>
         <members>UTIL_JobProgress_CTRL_TEST</members>
@@ -879,6 +879,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
@@ -1958,6 +1959,12 @@
         <members>npe03__Recurring_Donation__c-iw</members>
         <members>npe03__Recurring_Donation__c-ja</members>
         <members>npe03__Recurring_Donation__c-nl_NL</members>
+        <members>npe03__Recurring_Donations_Settings__c-de</members>
+        <members>npe03__Recurring_Donations_Settings__c-es</members>
+        <members>npe03__Recurring_Donations_Settings__c-fr</members>
+        <members>npe03__Recurring_Donations_Settings__c-iw</members>
+        <members>npe03__Recurring_Donations_Settings__c-ja</members>
+        <members>npe03__Recurring_Donations_Settings__c-nl_NL</members>
         <members>npe4__Relationship_Settings__c-de</members>
         <members>npe4__Relationship_Settings__c-es</members>
         <members>npe4__Relationship_Settings__c-fr</members>

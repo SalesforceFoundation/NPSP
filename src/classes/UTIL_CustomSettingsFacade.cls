@@ -538,6 +538,7 @@ public without sharing class UTIL_CustomSettingsFacade {
             rds.npe03__Enable_Update_Check__c = true;
             //rds.npe03__Error_Email_Notifications__c = 'All Sys Admins'; *This field has been moved to the ERR_Settings__c custom setting
             rds.npe03__Maximum_Donations__c = 50;
+            rds.Recurring_Donation_Batch_Size__c = 50;
             rds.npe03__Opportunity_Forecast_Months__c = 12;
             rds.npe03__Update_Check_Interval__c = 90;
             rds.npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name();
@@ -771,7 +772,8 @@ public without sharing class UTIL_CustomSettingsFacade {
         recurringDonationsSettings.npe03__Maximum_Donations__c = mySettings.npe03__Maximum_Donations__c;
         recurringDonationsSettings.npe03__Open_Opportunity_Behavior__c = mySettings.npe03__Open_Opportunity_Behavior__c;
         recurringDonationsSettings.npe03__Add_Campaign_to_All_Opportunites__c = mySettings.npe03__Add_Campaign_to_All_Opportunites__c;
-        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;  
+        recurringDonationsSettings.npe03__Error_Email_Notifications__c = mySettings.npe03__Error_Email_Notifications__c;
+        recurringDonationsSettings.Recurring_Donation_Batch_Size__c = mySettings.Recurring_Donation_Batch_Size__c;  
         orgRecurringDonationsSettings = recurringDonationsSettings;
         return recurringDonationsSettings;
     }
