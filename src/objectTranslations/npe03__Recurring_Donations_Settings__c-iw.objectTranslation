@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
+    <caseValues>
+        <article>None</article>
+        <plural>false</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>false</plural>
+        <value><!-- הRecurring Donations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>None</article>
+        <plural>true</plural>
+        <value><!-- Recurring Donations Settings --></value>
+    </caseValues>
+    <caseValues>
+        <article>Definite</article>
+        <plural>true</plural>
+        <value><!-- הRecurring Donations Settings --></value>
+    </caseValues>
+    <fields>
+        <help><!-- The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits. --></help>
+        <label><!-- Recurring Donation Batch Size --></label>
+        <name>Recurring_Donation_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help>אם אפשרות זו מסומנת, כל ההזדמנויות לתרומות חוזרות ישתמשו במבצע בתרומה החוזרת. אחרת, רק ההזדמנות הראשונה תקבל את המבצע.</help>
+        <label><!-- Add Campaign to All Opportunites --></label>
+        <name>npe03__Add_Campaign_to_All_Opportunites__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_Donations_trigger --></label>
+        <name>npe03__DISABLE_Donations_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. Trigger behavior now controlled in the Trigger Configuration page of NPSP Settings. --></help>
+        <label><!-- DEPRECATED-Disable_RD_trigger --></label>
+        <name>npe03__DISABLE_RecurringDonations_trigger__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Enable Update Check --></label>
+        <name>npe03__Enable_Update_Check__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED.  Replaced by the notification settings in the System Error settings panel. --></help>
+        <label><!-- DEPRECATED-Error Email Notifications --></label>
+        <name>npe03__Error_Email_Notifications__c</name>
+    </fields>
+    <fields>
+        <help>התאריך והשעה של עדכון האצווה האחרון של תרומות חוזרות.</help>
+        <label><!-- Last Batch Run --></label>
+        <name>npe03__Last_Batch_Run__c</name>
+    </fields>
+    <fields>
+        <help>הגבלת המספר הכולל של תרומות שניתן ליצור עבור תרומות חוזרות ללא סיום פתוח. ערך ברירת המחדל הוא 50.  ערכים גדולים יותר עלולים לגרום לבעיות DML.</help>
+        <label><!-- Maximum Donations --></label>
+        <name>npe03__Maximum_Donations__c</name>
+    </fields>
+    <fields>
+        <help>מספר התרומות החוזרות שהעדכון שלהן נכשל בפעולת האצווה האחרונה.</help>
+        <label><!-- Number of Failures --></label>
+        <name>npe03__Number_of_Failures__c</name>
+    </fields>
+    <fields>
+        <help>מספר התרומות החוזרות שהעדכון שלהן בוצע בהצלחה בהפעלת האצווה האחרונה.</help>
+        <label><!-- Number of Successes --></label>
+        <name>npe03__Number_of_Successes__c</name>
+    </fields>
+    <fields>
+        <help>קובע את ההתנהגות של כל ההזדמנויות שנותרו פתוחות כאשר תרומה חוזרת עם סיום פתוח עוברת למצב סגור.</help>
+        <label><!-- Open Opportunity Behavior on RD Close --></label>
+        <name>npe03__Open_Opportunity_Behavior__c</name>
+    </fields>
+    <fields>
+        <help>מספר החודשים מהיום הנוכחי ליצירת הזדמנויות פתוחות, בעת שימוש בתרומות חוזרות עם סיום פתוח. אזהרה: הקטנת ערך זה תגרום למחיקת הזדמנויות נוספות.  הגדלתו תביא להפעלת תהליך אצווה להוספת הזדמנויות</help>
+        <label><!-- Opportunity Forecast Months --></label>
+        <name>npe03__Opportunity_Forecast_Months__c</name>
+    </fields>
+    <fields>
+        <help>סוג רשומת ההזדמנות המשמש בעת יצירה של הזדמנויות תרומה חוזרת.</help>
+        <label><!-- Opportunity Record Type --></label>
+        <name>npe03__Record_Type__c</name>
+    </fields>
+    <fields>
+        <help><!-- DEPRECATED. New versions of the Nonprofit Success Pack will be automatically installed. --></help>
+        <label><!-- DEPRECATED-Update Check Interval --></label>
+        <name>npe03__Update_Check_Interval__c</name>
+    </fields>
+    <gender><!-- Masculine --></gender>
+</CustomObjectTranslation>

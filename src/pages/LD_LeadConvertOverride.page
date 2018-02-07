@@ -29,7 +29,7 @@
         }
     </style>
 
-    <div class="slds">
+    <div class="slds-scope">
         <apex:form id="pbEdit" styleClass="slds-form_stacked">
             <div class="hide-when-modal-open">
 
