@@ -588,102 +588,6 @@
         <value>omit</value>
     </labels>
     <labels>
-        <fullName>ClosedWonOpportunities</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ClosedWonOpportunities</shortDescription>
-        <value>Closed Won Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>CMT_FilterNew</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>New filter group button</shortDescription>
-        <value>New Filter Group</value>
-    </labels>
-    <labels>
-        <fullName>ConfirmDeleteAccount</fullName>
-        <categories>Error, Delete</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_CreditType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Credit Type</shortDescription>
-        <value>Credit Type</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_HardCredit</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Hard Credit</shortDescription>
-        <value>Hard Credit</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_AvailableRollupType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
-        <value>Available Rollup Types</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_NoRollupType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
-        <value>No Rollup Type</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_Return</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Breadcrumb text to return to NPSP settings</shortDescription>
-        <value>Back to NPSP Settings</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_RollupNew</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Create new rollup button</shortDescription>
-        <value>New Rollup</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_RollupSummary</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Rollup Summary Page Title</shortDescription>
-        <value>Customizable Rollup Summaries</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_RollupType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Type of custom rollup</shortDescription>
-        <value>Rollup Type</value>
-    </labels>
-    <labels>
-        <fullName>CRLP_SoftCredit</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Soft Credit</shortDescription>
-        <value>Soft Credit</value>
-    </labels>
-    <labels>
         <fullName>CascadeDeletionError</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -698,6 +602,22 @@
         <protected>true</protected>
         <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
+    </labels>
+    <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteAccount</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
         <fullName>DeleteAccount</fullName>
@@ -4381,14 +4301,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Not Started</value>
     </labels>
     <labels>
-        <fullName>stgActive</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgActive</shortDescription>
-        <value>Active</value>
-    </labels>
-    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -4419,14 +4331,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnClearErrorLog</shortDescription>
         <value>Clear Error Log</value>
-    </labels>
-    <labels>
-        <fullName>stgBtnClone</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgBtnClone</shortDescription>
-        <value>Clone</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateAutoRel</fullName>
@@ -4595,38 +4499,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnSave</shortDescription>
         <value>Save</value>
-    </labels>
-    <labels>
-        <fullName>stgCheckboxTrue</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>For alternative text when a boolean is selected.</shortDescription>
-        <value>Selected</value>
-    </labels>
-    <labels>
-        <fullName>stgCheckboxFalse</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>For alternative text when a boolean is not selected.</shortDescription>
-        <value>Not Selected</value>
-    </labels>
-    <labels>
-        <fullName>stgCountOf</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgCountOf</shortDescription>
-        <value>Count of</value>
-    </labels>
-    <labels>
-        <fullName>stgCreate</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCreate</shortDescription>
-        <value>Create</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -5769,7 +5641,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelActionColumn</shortDescription>
-        <value>Actions</value>
+        <value>Action</value>
     </labels>
     <labels>
         <fullName>stgLabelAddressVerification</fullName>
@@ -5994,14 +5866,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelMembershipSettings</shortDescription>
         <value>Membership Settings</value>
-    </labels>
-    <labels>
-        <fullName>stgLabelName</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelName</shortDescription>
-        <value>Name</value>
     </labels>
     <labels>
         <fullName>stgLabelNewAutoRel</fullName>
@@ -6332,28 +6196,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Target Object</value>
     </labels>
     <labels>
-        <fullName>stgLabelView</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgLabelView</shortDescription>
-        <value>View</value>
-    </labels>
-    <labels>
         <fullName>stgLinkDelete</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLinkDelete</shortDescription>
         <value>Del</value>
-    </labels>
-    <labels>
-        <fullName>stgNoObjectsFound</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>No records of an object found. Pass in the object's plural label.</shortDescription>
-        <value>No {0} found.</value>
     </labels>
     <labels>
         <fullName>stgNPSPGuideImportData</fullName>
@@ -6652,14 +6500,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>User Defined Rollups</value>
     </labels>
     <labels>
-        <fullName>stgNotApplicable</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgNotApplicable</shortDescription>
-        <value>N/A</value>
-    </labels>
-    <labels>
         <fullName>stgOppNamingDescription</fullName>
         <categories>Settings, OppNaming</categories>
         <language>en_US</language>
@@ -6674,14 +6514,6 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
-    </labels>
-    <labels>
-        <fullName>stgSelectOne</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>stgSelectOne</shortDescription>
-        <value>Select one</value>
     </labels>
     <labels>
         <fullName>stgTools</fullName>
