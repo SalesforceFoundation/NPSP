@@ -177,8 +177,7 @@ public class CRLP_Rollup_SEL {
     public static void validateReferencedFields(Map<String, Schema.DescribeFieldResult> referencedFields, String objName) {
         for (String fld : referencedFields.keySet()) {
             if (referencedFields.get(fld) == null) {
-                // TODO Should this just do an Assert(false) for unit testing or should this throw an exception/log an error?
-                system.assert(false, '>> Field ' + fld + ' not found in allFields collection for ' + objName);
+                throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + fld + ' not found in allFields collection for ' + objName);
             }
         }
     }

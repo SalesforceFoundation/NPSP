@@ -123,8 +123,7 @@ public without sharing class CMT_FilterRule_SEL {
                 if (allFields.containsKey(fldName)) {
                     referencedFields.put(fr.Field__c, allFields.get(fldName));
                 } else {
-                    // TODO Handle fields not found
-                    system.assert(false, '>> Field ' + fldName + ' not found in allFields collection for ' + objName);
+                    throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + fldName + ' not found in allFields collection for ' + objName);
                 }
             }
         }
