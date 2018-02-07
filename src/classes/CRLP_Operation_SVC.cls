@@ -62,7 +62,10 @@ public class CRLP_Operation_SVC {
         CRLP_Debug_UTIL.setCurrentRollupState('doRollupOperation() for ' + oppSObject.Id + ' ' + objName, rollup);
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
+
+        // Get the the first rollup in the list.
         Rollup__mdt firstRollup = rollup.rollupsMdt[0];
+
         // these values should be the same for every rollup definition in the CRLP_Rollup instance
         String dateField = firstRollup.Date_Field__r.QualifiedApiName;
         String amtField = firstRollup.Amount_Field__r.QualifiedApiName;

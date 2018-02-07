@@ -81,6 +81,7 @@ public class CRLP_DefaultConfigBuilder {
     private static final String pscAmountFld = 'Partial_Soft_Credit__c.Amount__c';
     private static final String oppAmountFld = 'Opportunity.Amount';
     private static final String oppCloseDateFld = 'Opportunity.CloseDate';
+    private static final String opportunityObject = 'Opportunity';
 
     /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
      * following set of rollup properties
@@ -91,11 +92,11 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Account Hard Credit ======== */
             'Account.npo02__AverageAmount__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Account.npo02__FirstCloseDate__c' =>
                     new List<String>{ oppCloseDateFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Account.npo02__LargestAmount__c' =>
@@ -133,25 +134,25 @@ public class CRLP_DefaultConfigBuilder {
             'Account.npo02__LastMembershipAmount__c' =>
                     new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', '', '' },
             'Account.npo02__LastMembershipDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', '', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', '', '' },
             'Account.npo02__LastMembershipLevel__c' =>
-                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__LastMembershipOrigin__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__MembershipEndDate__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_End_Date__c', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_End_Date__c', FilterGroup_Membership, opportunityObject, 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
             'Account.npo02__MembershipJoinDate__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_Start_Date__c', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_Start_Date__c', 'First', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_Start_Date__c', FilterGroup_Membership, opportunityObject, 'Opportunity.npe01__Membership_Start_Date__c', 'First', 'All_Time', '' },
             'Account.npo02__NumberOfMembershipOpps__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
 
             /* ======== Contact Hard Credit ======== */
             'Contact.npo02__AverageAmount__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Contact.npo02__FirstCloseDate__c' =>
                     new List<String>{ oppCloseDateFld, FilterGroup_Donations_Contacts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Contact.npo02__LargestAmount__c' =>
@@ -221,29 +222,29 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.npo02__TotalMembershipOppAmount__c' =>
                     new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
             'Contact.npo02__NumberOfMembershipOpps__c' =>
-                    new List<String>{ 'Opportunity', FilterGroup_Membership, 'Opportunity', 'Opportunity', 'Count', '', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Membership, opportunityObject, opportunityObject, 'Count', '', '' },
             'Contact.npo02__MembershipEndDate__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_End_Date__c', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_End_Date__c', FilterGroup_Membership, opportunityObject, 'Opportunity.npe01__Membership_End_Date__c', 'Last', 'All_Time', '' },
             'Contact.npo02__MembershipJoinDate__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_Start_Date__c', FilterGroup_Membership, 'Opportunity', 'Opportunity.npe01__Membership_Start_Date__c', 'First', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_Start_Date__c', FilterGroup_Membership, opportunityObject, 'Opportunity.npe01__Membership_Start_Date__c', 'First', 'All_Time', '' },
             'Contact.npo02__LastMembershipAmount__c' =>
                     new List<String>{ oppAmountFld, FilterGroup_Membership, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__LastMembershipDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__LastMembershipLevel__c' =>
-                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Member_Level__c', FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__LastMembershipOrigin__c' =>
-                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, 'Opportunity', oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ 'Opportunity.npe01__Membership_Origin__c', FilterGroup_Membership, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
 
             /* ======== Allocation to GAU ======== */
-            'General_Accounting_Unit__c.Average_Allocation__c' =>
-                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'General_Accounting_Unit__c.First_Allocation_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, opportunityObject, oppCloseDateFld, 'First', 'All_Time', '' },
+            'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, opportunityObject, oppCloseDateFld, 'Last', 'All_Time', '' },
             'General_Accounting_Unit__c.Largest_Allocation__c' =>
                     new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
-            'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'General_Accounting_Unit__c.Smallest_Allocation__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c' =>
                     new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysAllocString },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c' =>
@@ -252,8 +253,8 @@ public class CRLP_DefaultConfigBuilder {
                     new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
             'General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c' =>
                     new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
-            'General_Accounting_Unit__c.Smallest_Allocation__c' =>
-                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+            'General_Accounting_Unit__c.Average_Allocation__c' =>
+                    new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'General_Accounting_Unit__c.Total_Allocations__c' =>
                     new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
             'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
@@ -422,10 +423,6 @@ public class CRLP_DefaultConfigBuilder {
                     new List<String>{ 'Contact Memberships: Last Origin', 'Latest Membership Origin where the Contact is the Opportunity Primary Contact' },
 
             /* ======== Allocation to GAU ======== */
-            'General_Accounting_Unit__c.Total_Allocations__c' =>
-                    new List<String>{ 'GAU: Total Allocations All Time', 'Total of all Allocation Amounts to this GAU' },
-            'General_Accounting_Unit__c.Average_Allocation__c' =>
-                    new List<String>{ 'GAU: Average Allocation', 'Average of all Allocation Amounts to this GAU' },
             'General_Accounting_Unit__c.First_Allocation_Date__c' =>
                     new List<String>{ 'GAU: First Allocation Date', 'Date of the first Opportunity with an Allocation to this GAU' },
             'General_Accounting_Unit__c.Last_Allocation_Date__c' =>
@@ -444,6 +441,10 @@ public class CRLP_DefaultConfigBuilder {
                     new List<String>{ 'GAU: Count Allocations This Year', 'Count of all Allocation Amounts in the current calendar year to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Two_Years_Ago__c' =>
                     new List<String>{ 'GAU: Count Allocations Two Years Ago', 'Count of all Allocation Amounts two calendar years ago to this GAU' },
+            'General_Accounting_Unit__c.Average_Allocation__c' =>
+                    new List<String>{ 'GAU: Average Allocation', 'Average of all Allocation Amounts to this GAU' },
+            'General_Accounting_Unit__c.Total_Allocations__c' =>
+                    new List<String>{ 'GAU: Total Allocations All Time', 'Total of all Allocation Amounts to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
                     new List<String>{ 'GAU: Total Allocations Last ' + LastNDaysAllocString + ' Days', 'Total of all Allocation Amounts in the last ' + LastNDaysAllocString + ' days to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_Year__c' =>
