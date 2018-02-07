@@ -24,7 +24,7 @@
         }
     </style>
 
-    <div class="slds">
+    <div class="slds-scope">
         <apex:form >
 
             <!-- PAGE HEADER -->

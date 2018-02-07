@@ -3,7 +3,7 @@
     <apex:slds />
     <apex:stylesheet value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/npsp-common.css')}" />
 
-    <div class="slds">
+    <div class="slds-scope">
         <apex:form id="idForm" html-novalidate="novalidate">
 
             <!-- PAGE HEADER -->

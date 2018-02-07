@@ -17,7 +17,7 @@
         </style>
 
         <!-- start with a spinner here until lightning loads -->
-        <div class="slds initialSpinner">
+        <div class="slds-scope initialSpinner">
             <div class="slds-spinner_container" style="z-index:999;" > <!-- fixes bug on some browsers where z-order from SLDS was an expression with an error -->
                 <div class="slds-spinner_brand slds-spinner slds-spinner_medium" style="position:fixed;top:30%;" aria-hidden="false" role="alert">
                     <div class="slds-spinner__dot-a"></div>
