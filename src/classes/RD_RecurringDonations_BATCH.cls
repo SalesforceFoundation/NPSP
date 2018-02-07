@@ -55,6 +55,12 @@ Schedulable {
     * @description Count of RD's that hit errors while processing
     */ 
     public Integer failuresCount = 0;
+
+    /*******************************************************************************************************
+    * @description Batch size for Apex Job. Uses default of 50 if Custom Setting is null.
+    */
+    public Integer batchSize = (UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c <> null) ? UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue() : 50;
+
     
     /*******************************************************************************************************
     * @description Class constructor
@@ -69,7 +75,7 @@ Schedulable {
     * @description Executes the RD Batch process.
     */ 
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new RD_RecurringDonations_BATCH(), 50); 
+        Database.executeBatch(new RD_RecurringDonations_BATCH(), batchSize); 
     }
     
     /*******************************************************************************************************
