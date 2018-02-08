@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>NPSP Customizable Rollup definitions</description>
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>true</defaultValue>
@@ -251,5 +252,14 @@
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>
-    <visibility>Protected</visibility>
+    <validationRules>
+        <fullName>Validate_Summary_Object</fullName>
+        <active>true</active>
+        <errorConditionFormula>NOT(OR( Summary_Object__r.DeveloperName == &quot;Account&quot;, 
+    Summary_Object__r.DeveloperName == &quot;Contact&quot;,
+   Summary_Object__r.DeveloperName == &quot;General_Accounting_Unit&quot;,
+   Summary_Object__r.DeveloperName == &quot;npsp__General_Accounting_Unit&quot;))</errorConditionFormula>
+        <errorMessage>The Summary Object must be Account, Contact or General Accounting Unit</errorMessage>
+    </validationRules>
+    <visibility>Public</visibility>
 </CustomObject>
