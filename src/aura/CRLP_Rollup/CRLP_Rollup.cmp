@@ -1,0 +1,282 @@
+<aura:component description="CRLP_Rollup" controller="CRLP_RollupUI_SVC">
+
+    <!-- public attributes -->
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="activeRollupId" type="Id"/>
+    <aura:attribute name="activeRollup" type="Map"
+                    description="The active rollup displayed. Only populated from Clone, View and Edit."/>
+    <aura:attribute name="cachedRollup" type="Map"
+                    description="The queried rollup with its original fields as they are on the server."/>
+    <aura:attribute name="mode" type="String"
+                    description="The current mode of the component. Options are: view, edit, clone, or create."/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="true"
+                    description="Determines if fields should be read-only. This only applies to View."/>
+    <aura:attribute name="renderMap" type="Map"
+                    default="{useFiscalYear: true, integer: true, amount: true}"
+                    description="Dependent disabling of fields. If true, field should be rendered." access="public"/>
+    <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
+    <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
+    <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
+    <aura:attribute name="selectedOperationLabel" type="String"/>
+    <aura:attribute name="selectedYearlyOperationLabel" type="String"/>
+    <aura:attribute name="selectedTemplate" type="String"/>
+
+    <!-- private attributes -->
+    <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
+    <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
+    <aura:attribute name="detailFields" type="List" description="Dependent list of detail fields" access="private"/>
+    <aura:attribute name="summaryObjects" type="List" description="Dependent list of summary objects" access="private"/>
+    <aura:attribute name="summaryFields" type="List" description="Dependent list of summary fields" access="private"/>
+    <aura:attribute name="amountFields" type="List" description="Dependent list of amount fields" access="private"/>
+    <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
+
+    <!-- events we handle -->
+    <aura:handler name="init" value="{!this}" action="{!c.getRollup}"/>
+    <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.getRollup}"/>
+    <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
+    <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
+
+    <!-- events we fire -->
+    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
+
+    <!--these control the dynamic value binding of objects to fields-->
+    <!--todo: can/should we minimize this into only tracking v.activeRollup?-->
+    <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                  action="{!c.onChangeDetailObject}"/>
+    <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
+                  action="{!c.changeSummaryFields}"/>
+    <aura:handler name="change" value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
+                  action="{!c.changeSummaryFields}"/>
+    <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
+    <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}"
+                  action="{!c.onChangeYearlyOperation}"/>
+
+    <!--activeRollup:<br/>
+    Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
+    Detail Field API Name:    {!v.activeRollup.Detail_Object__r.Label}<br/>
+    Summary Object API Name: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Field API Name: {!v.activeRollup.Summary_Field__r.QualifiedApiName}<br/>
+    <br/>
+    cachedRollup:<br/>
+    Detail Object API Name:    {!v.cachedRollup.Detail_Object__r.QualifiedApiName}<br/>
+    Detail Field API Name:    {!v.cachedRollup.Detail_Field__r.QualifiedApiName}<br/>
+    Summary Object API Name: {!v.cachedRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>
+-->
+    <!--yearly Op Label: {!v.selectedYearlyOperationLabel}<br/>
+    yearly Op : {!v.activeRollup.Yearly_Operation_Type__c}<br/>
+    Op Label: {!v.selectedOperationLabel}<br/>
+    Op : {!v.activeRollup.Operation__c}-->
+
+    <!-- markup -->
+
+    <!--BEGIN NEW ROLLUP-->
+    <aura:if isTrue="{!v.mode == 'create'}">
+        <c:CRLP_CreateRollup labels="{!v.labels}" mode="{!v.mode}" selectedTemplate="{!v.selectedTemplate}"/>
+
+        <aura:set attribute="else">
+
+            <!--END NEW ROLLUP-->
+            <!--START FORM-->
+            <div aria-labelledby="rollupdetail">
+                <form class="slds-form_stacked">
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" largeDeviceSize="8">
+
+                            <lightning:layout multipleRows="true" verticalAlign="start">
+                                <lightning:layoutItem padding="around-medium" smallDeviceSize="6" size="12">
+                                    <lightning:input aura:id="nameInput"
+                                                     label="{!v.labels.rollupLabel + v.labels.rollupName}"
+                                                     name="{!v.labels.rollupLabel + v.labels.rollupName}"
+                                                     value="{!v.activeRollup.MasterLabel}"
+                                                     required="{! !v.isReadOnly}"
+                                                     readonly="{!v.isReadOnly}"/>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem padding="around-medium" smallDeviceSize="6" size="12">
+                                    <aura:if isTrue="{!v.isReadOnly}">
+                                        <!--todo: how can this be screen-readable?-->
+                                        <ui:outputCheckbox value="{!v.activeRollup.Active__c}" class="rollupCheckbox"
+                                                           altChecked="{!v.labels.active + ' ' + v.labels.checkboxTrue}"
+                                                           altUnchecked="{!v.labels.active + ' ' + v.labels.checkboxFalse}"/>
+                                        <span class="slds-form-element__label rollupCheckbox">{!v.labels.active}</span>
+                                        <aura:set attribute="else">
+                                            <lightning:input aura:id="activeCheckbox"
+                                                             type="checkbox"
+                                                             label="{!v.labels.active}"
+                                                             checked="{!v.activeRollup.Active__c}"/>
+                                        </aura:set>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+
+                            <lightning:layout multipleRows="true" verticalAlign="start">
+                                <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
+                                    <lightning:textarea aura:id="descriptionInput"
+                                                        label="{!v.labels.description}"
+                                                        name="{!v.labels.description}"
+                                                        value="{!v.activeRollup.Description__c}"
+                                                        readonly="{!v.isReadOnly}"/>
+                                </lightning:layoutItem>
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="detailObject"
+                                                    fieldName="{!v.labels.detailObject}"
+                                                    entityLabel="{!v.activeRollup.Detail_Object__r.Label}"
+                                                    apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                                                    options="{!v.detailObjects}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                                    mediumDeviceSize="3"
+
+                                />
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="detailField"
+                                                    fieldName="{!v.labels.detailField}"
+                                                    entityLabel="{!v.activeRollup.Detail_Field__r.Label}"
+                                                    apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
+                                                    options="{!v.detailFields}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    mediumDeviceSize="3"
+                                />
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="dateField"
+                                                    fieldName="{!v.labels.dateField}"
+                                                    entityLabel="{!v.activeRollup.Date_Object__r.Label+': '+v.activeRollup.Date_Field__r.Label}"
+                                                    apiName="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
+                                                    options="{!v.dateFields}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    objectLabel="{!v.activeRollup.Date_Object__r.Label + ': '}"
+                                                    mediumDeviceSize="{!(v.renderMap.amount) ? 3 : 6}"
+                                />
+                                <aura:if isTrue="{!v.renderMap.amount}">
+                                    <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                        auraId="amountField"
+                                                        fieldName="{!v.labels.amountField}"
+                                                        entityLabel="{!v.activeRollup.Amount_Field__r.Label}"
+                                                        apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
+                                                        options="{!v.amountFields}"
+                                                        selectLabel="{!v.labels.selectOne}"
+                                                        mediumDeviceSize="3"
+
+                                    />
+                                </aura:if>
+                            </lightning:layout>
+
+                            <lightning:layout multipleRows="true" verticalAlign="start">
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="summaryObject"
+                                                    fieldName="{!v.labels.summaryObject}"
+                                                    entityLabel="{!v.activeRollup.Summary_Object__r.Label}"
+                                                    apiName="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
+                                                    options="{!v.summaryObjects}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                                    mediumDeviceSize="3"
+                                />
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="summaryField"
+                                                    fieldName="{!v.labels.summaryField}"
+                                                    entityLabel="{!v.activeRollup.Summary_Field__r.Label}"
+                                                    apiName="{!v.activeRollup.Summary_Field__r.QualifiedApiName}"
+                                                    options="{!v.summaryFields}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                                    mediumDeviceSize="3"
+                                />
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="filterGroup"
+                                                    fieldName="{!v.labels.filterGroupLabel}"
+                                                    entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
+                                                    apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
+                                                    options="{!v.filterGroups}"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                />
+                            </lightning:layout>
+
+                            <lightning:layout multipleRows="true" verticalAlign="start">
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="operation"
+                                                    fieldName="{!v.labels.operation}"
+                                                    entityLabel="{!v.selectedOperationLabel}"
+                                                    apiName="{!v.activeRollup.Operation__c}"
+                                                    options="{!v.operations}"
+                                                    mediumDeviceSize="3"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                />
+                                <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                    auraId="yearlyOperation"
+                                                    fieldName="{!v.labels.yearlyOperationType}"
+                                                    entityLabel="{!v.selectedYearlyOperationLabel}"
+                                                    apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                                    options="{!v.yearlyOperations}"
+                                                    mediumDeviceSize="3"
+                                                    selectLabel="{!v.labels.selectOne}"
+                                                    isRequired="true"
+                                />
+                                <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
+                                                      size="12">
+                                    <!--TODO: add validity checks for numbers-->
+                                    <!--TODO: verify numbers can be cleared with fixed to W-4540937-->
+                                    <aura:if isTrue="{!v.renderMap.integer}">
+                                        <lightning:input aura:id="integerInput"
+                                                         label="{!v.selectedYearlyOperationLabel + ' ' + v.labels.integer}"
+                                                         value="{!v.activeRollup.Integer__c}"
+                                                         required="false"
+                                                         readonly="{!v.isReadOnly}"
+                                                         pattern="^([^.0-]|[^.0-][0-9]+|[0])$"
+                                                         messageWhenPatternMismatch="{!v.labels.integerError}"/>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                                <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
+                                                      size="12">
+                                    <aura:if isTrue="{!v.renderMap.useFiscalYear}">
+                                        <aura:if isTrue="{!v.isReadOnly}">
+                                        <!--todo: how can this be screen-readable?-->
+                                            <ui:outputCheckbox value="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                                               class="rollupCheckbox"
+                                                               altChecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxTrue}"
+                                                               altUnchecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxFalse}"/>
+                                            <span class="slds-form-element__label rollupCheckbox">{!v.labels.useFiscalYear}</span>
+                                            <aura:set attribute="else">
+                                                <lightning:input aura:id="fiscalYearCheckbox"
+                                                                 type="checkbox"
+                                                                 label="{!v.labels.useFiscalYear}"
+                                                                 checked="{!v.activeRollup.Use_Fiscal_Year__c}"/>
+                                            </aura:set>
+                                        </aura:if>
+                                    </aura:if>
+                                </lightning:layoutItem>
+                            </lightning:layout>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </form>
+            </div>
+        </aura:set>
+    </aura:if>
+
+    <!--START FORM BUTTONS-->
+    <div>
+        <lightning:layout>
+            <lightning:layoutItem size="12" largeDeviceSize="8">
+                <aura:if isTrue="{!v.mode!='view'}">
+                    <div class="slds-p-around_large">
+                        <lightning:layout horizontalAlign="end">
+                            <!--TODO: this button needs an onclick function to save stuff-->
+                            <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
+                            <aura:if isTrue="{!or(v.mode=='clone', v.mode=='edit')}">
+                                <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"/>
+                            </aura:if>
+                            <aura:if isTrue="{!v.mode=='create'}">
+                                <lightning:button label="{!v.labels.next}" variant="brand" onclick="{!c.onSetTemplate}"/>
+                            </aura:if>
+                        </lightning:layout>
+                    </div>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <!--END BUTTONS-->
+    <!-- end markup -->
+
+</aura:component>

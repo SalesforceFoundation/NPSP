@@ -1,0 +1,33 @@
+<aura:component description="CRLP_FilterGroupRow">
+    <!-- public attributes -->
+    <aura:attribute name="filterGroup" type="Object" required="true"/>
+    <aura:attribute name="labels" type="Map"/>
+
+    <!--markup-->
+    <tr class="slds-hint-parent">
+        <td>
+            <div class="slds-truncate" title="{!v.filterGroup.label}">
+                <!--<a href="javascript:void(0);" onclick="{!c.clickLink}" data-id="{!v.filterGroup.relatedId}"></a>-->
+                    {!v.filterGroup.label}
+            </div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.filterGroup.description}">{!v.filterGroup.description}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.filterGroup.countFilterRules}">{!v.filterGroup.countFilterRules}</div>
+        </td>
+        <td>
+            <div class="slds-truncate" title="{!v.filterGroup.countRollups}">{!v.filterGroup.countRollups}</div>
+        </td>
+        <td>
+            <div title="Actions">
+                <lightning:buttonMenu menuAlignment="right" alternativeText="{!v.labels.action}" onselect="{!c.handleMenuSelect}">
+                    <lightning:menuItem label="{!v.labels.edit}" value="{!v.labels.edit}" />
+                    <lightning:menuItem label="{!v.labels.clone}" value="{!v.labels.clone}"/>
+                    <lightning:menuItem label="{!v.labels.delete}" value="{!v.labels.delete}" />
+                </lightning:buttonMenu>
+            </div>
+        </td>
+    </tr>
+</aura:component>
