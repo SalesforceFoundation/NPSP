@@ -177,7 +177,8 @@ public with sharing class ACCT_CascadeDeleteLookups_TDTM extends CDL_CascadeDele
 
         /*******************************************************************************************************
         * @description Retrieves the next children records group to be undeleted. In this case, there is another
-        * group of children records to undelete.
+        * group of children records (Allocations) to undelete. To retrieve the Allocations, the logic needs the 
+        * the Recurring Donations undeleted (from the load method).
         * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
         ********************************************************************************************************/
         public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {

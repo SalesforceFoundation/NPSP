@@ -47,7 +47,7 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
     * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
     ********************************************************************************************************/
     protected override CDL_CascadeDeleteLookups.CascadeUndeleteLoader getCascadeUndeleteLoader() {
-        return new CascadeUndeleteLoader();
+        return new FirstCascadeUndeleteLoader();
     }
 
     /*******************************************************************************************************
@@ -91,37 +91,79 @@ public with sharing class RD_CascadeDeleteLookups_TDTM extends CDL_CascadeDelete
     }
 
     /*******************************************************************************************************
-    * @description Class that retrieves the children of the undeleted Recurring Donations.
+    * @description Class that retrieves the first children group of the undeleted Recurring Donations.
     ********************************************************************************************************/
-    class CascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+    class FirstCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+
+        private List<Opportunity> relatedOpportunities;
+
+        /******************************************************************************************************
+        * @description The Constructor of FirstCascadeUndeleteLoader.
+        */
+        FirstCascadeUndeleteLoader() {
+            this.relatedOpportunities = new List<Opportunity>();
+        }
 
         /*******************************************************************************************************
-        * @description Retrieves the related Opportunities and Allocations of the undeleted Recurring Donations.
+        * @description Retrieves the related Opportunities of the undeleted Recurring Donations.
         * @param Set<Id> The Ids of the undeleted Recurring Donations.
-        * @return List<SObject> Undeleted Recurring Donations's Opportunities and Allocations.
+        * @return List<SObject> Undeleted Recurring Donations's Opportunities.
         ********************************************************************************************************/
         public List<SObject> load(Set<Id> recurringDonationIds) {
-            List<SObject> result = new List<SObject>();
-
-            List<Opportunity> relatedOpportunities = [
+            relatedOpportunities = [
                 SELECT Name
                 FROM Opportunity
                 WHERE npe03__Recurring_Donation__c IN :recurringDonationIds
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
-            result.addAll((List<SObject>) relatedOpportunities);
 
-            List<Allocation__c> relatedAllocations = [
+            return relatedOpportunities;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the next children records group to be undeleted. In this case, there is another
+        * group of children records (Allocations) to undelete. To retrieve the Allocations, the logic needs the 
+        * the Opportunities undeleted (from the load method).
+        * @return CDL_CascadeDeleteLookups.CascadeUndeleteLoader.
+        ********************************************************************************************************/
+        public CDL_CascadeDeleteLookups.CascadeUndeleteLoader next() {
+            List<Opportunity> undeletedOpportunities = [
+                SELECT Name
+                FROM Opportunity
+                WHERE Id IN :relatedOpportunities
+            ];
+            return new SecondCascadeUndeleteLoader(undeletedOpportunities);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Class that retrieves the second children group of the undeleted Recurring Donations.
+    ********************************************************************************************************/
+    class SecondCascadeUndeleteLoader implements CDL_CascadeDeleteLookups.CascadeUndeleteLoader {
+        private List<Opportunity> relatedOpportunities;
+
+        /*********************************************************************************************************
+        * @description The Constructor of SecondCascadeUndeleteLoader.
+        * @param List<Opportunity> The Opportunities. 
+        */
+        SecondCascadeUndeleteLoader(List<Opportunity> relatedOpportunities) {
+            this.relatedOpportunities = relatedOpportunities;
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the related Allocations of the undeleted Recurring Donations.
+        * @param Set<Id> The Ids of the undeleted Recurring Donations.
+        * @return List<SObject> Undeleted Recurring Donations's Allocations.
+        ********************************************************************************************************/
+        public List<SObject> load(Set<Id> recurringDonationIds) {
+            return [
                 SELECT Id, Opportunity__c, Opportunity__r.npe03__Recurring_Donation__c
                 FROM Allocation__c
                 WHERE (Recurring_Donation__c IN :recurringDonationIds OR Opportunity__c IN :relatedOpportunities)
                 AND IsDeleted = TRUE
                 ALL ROWS
             ];
-            result.addAll((List<SObject>) relatedAllocations);
-
-            return result;
         }
 
         /*******************************************************************************************************

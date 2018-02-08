@@ -59,6 +59,7 @@ private class RD_CascadeDeleteLookups_TEST {
 
         List<Allocation__c> allocations = new List<Allocation__c>();
         allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildRDAllocations(generalAccountingUnit, recurringDonations));
+        allocations.addAll(CDL_CascadeDeleteLookups_TEST.buildOpportunityAllocations(generalAccountingUnit, rdOpportunities));
         insert allocations;
 
         TDTM_TriggerHandler.disableTDTM = false;
