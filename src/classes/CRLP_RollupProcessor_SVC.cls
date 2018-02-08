@@ -170,7 +170,7 @@ public class CRLP_RollupProcessor_SVC {
      * This is passed through to the getFullDetailsQueryForSummaryRecords() method
      * @return List<SObject> detailRecords to roll up to the summary records
      */
-    public static List<SObject> getDetailRecordsFromParentRecords(List<SObject> summaryRecords, Boolean includeChildPayments,
+    public static List<SObject> getDetailOppRecordsForParentRecords(List<SObject> summaryRecords, Boolean includeChildPayments,
             CRLP_RollupProcessingOptions.ProcessingOptions options) {
         // Get the parent record Id's
         Set<Id> summaryRecordIds = new Set<Id>();

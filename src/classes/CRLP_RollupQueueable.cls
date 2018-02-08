@@ -103,7 +103,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Get the detail records for the current set of Summary Records
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
-        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments, options);
+        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
         // Call the method to do the actual rollups. This returns only records that require updating
         List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
