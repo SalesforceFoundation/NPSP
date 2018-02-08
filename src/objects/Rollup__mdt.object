@@ -252,14 +252,5 @@
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>
-    <validationRules>
-        <fullName>Validate_Summary_Object</fullName>
-        <active>true</active>
-        <errorConditionFormula>NOT(OR( Summary_Object__r.DeveloperName == &quot;Account&quot;, 
-    Summary_Object__r.DeveloperName == &quot;Contact&quot;,
-   Summary_Object__r.DeveloperName == &quot;General_Accounting_Unit&quot;,
-   Summary_Object__r.DeveloperName == &quot;npsp__General_Accounting_Unit&quot;))</errorConditionFormula>
-        <errorMessage>The Summary Object must be Account, Contact or General Accounting Unit</errorMessage>
-    </validationRules>
     <visibility>Public</visibility>
 </CustomObject>
