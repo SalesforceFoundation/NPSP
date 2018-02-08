@@ -13,6 +13,7 @@
 
                 cmp.set("v.labels", model.labels);
                 cmp.set("v.rollupList", model.items);
+                cmp.set("v.cachedRollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
 
                 var ops = [];
@@ -71,8 +72,28 @@
         var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");
     },
 
+    displayNewRollupForm: function (cmp, event, helper) {
+        //toggle grid and detail views, set detail mode to create
+        //resets the active rollup to ensure there is no leftover data
+        cmp.set("v.isRollupsGrid", false);
+        cmp.set("v.isRollupDetail", true);
+        cmp.set("v.detailMode", "create");
+        cmp.set("v.activeRollup", {});
+    },
+
     displayRollupsGrid: function(cmp, event, helper){
         //sets the rollups grid to be displayed, resets the column labels
+        helper.displayRollupsGrid(cmp);
+    },
+
+    filterBySummaryObject: function(cmp, event, helper){
+        //filters visible rollups by the summary object picklist
+        var object = cmp.find("selectSummaryObject").get("v.value");
+        helper.filterData(cmp, object);
+    },
+
+    handleRollupCancelEvent: function(cmp, event, helper){
+        //switches to rollup grid after hearing cancel event from rollup detail
         helper.displayRollupsGrid(cmp);
     },
 
@@ -89,20 +110,6 @@
             cmp.set("v.width", 12);
         }
 
-    },
-
-    handleRollupCancelEvent: function(cmp, event, helper){
-        //switches to rollup grid after hearing cancel event from rollup detail
-        helper.displayRollupsGrid(cmp);
-    },
-
-    displayNewRollupForm: function (cmp, event, helper) {
-        //toggle grid and detail views, set detail mode to create
-        //resets the active rollup to ensure there is no leftover data
-        cmp.set("v.isRollupsGrid", false);
-        cmp.set("v.isRollupDetail", true);
-        cmp.set("v.detailMode", "create");
-        cmp.set("v.activeRollup", {});
     },
 
     setMode: function(cmp, event, helper) {

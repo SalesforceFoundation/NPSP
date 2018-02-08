@@ -122,7 +122,9 @@ public with sharing class CRLP_RollupUI_SVC {
             } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
                 item.creditType = Label.CRLP_HardCredit;
             } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
-                item.creditType = Label.stgNotApplicable;
+                item.creditType = Label.CRLP_HardCredit;
+            } else {
+                item.creditType = Label.CRLP_HardCredit;
             }
             item.detailObject = mdtList[i].Detail_Object__r.Label;
             item.summaryObject = mdtList[i].Summary_Object__r.Label;

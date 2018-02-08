@@ -1,6 +1,7 @@
 <aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="Object[]" access="public" description="List of custom items to fill the rollup grid."/>
+    <aura:attribute name="cachedRollupList" type="Object[]" access="public" description="Cached version of rollupList to use when filtering rollups."/>
     <aura:attribute name="filterGroupList" type="Object[]" access="public" description="List of custom items to fill the filter groups grid"/>
     <aura:attribute name="columns" type="List" access="public" description="Columns for both grids."/>
     <aura:attribute name="activeRollupId" type="Id" description="ID of the selected rollup to display in rollup detail. Should only be set in child component to avoid onchange confusion."/>
@@ -85,11 +86,11 @@
                 <lightning:layout>
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
-                            <lightning:select name="selectObject" label="Select Rollup Type" variant="label-hidden">
+                            <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type" variant="label-hidden" onchange="{!c.filterBySummaryObject}">
                                 <option value="All">Select All</option>
                                 <option value="Account">Account</option>
                                 <option value="Contact">Contact</option>
-                                <option value="GAU">GAU</option>
+                                <option value="General Accounting Unit">GAU</option>
                             </lightning:select>
                         </lightning:layoutItem>
                     </aura:if>
