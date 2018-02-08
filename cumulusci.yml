@@ -19,16 +19,12 @@ project:
     dependencies:
         # npo02 (includes npe01)
         - github: https://github.com/SalesforceFoundation/Households
-          tag: rel/3.8
         # npe03
         - github: https://github.com/SalesforceFoundation/Recurring_Donations
-          tag: rel/3.11
         # npe4
         - github: https://github.com/SalesforceFoundation/Relationships
-          tag: rel/3.7
         # npe5
         - github: https://github.com/SalesforceFoundation/Affiliations
-          tag: rel/3.6
 
 tasks:
     download_ldv_tests:
