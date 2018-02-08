@@ -5,7 +5,7 @@
     <label>STG_DataBoundMultiSelect</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>7</minorNumber>
+        <minorNumber>6</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
@@ -25,7 +25,7 @@
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>9</minorNumber>
+        <minorNumber>8</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexComponent>
