@@ -6,7 +6,7 @@
     <label>RD_AddDonationsBTN</label>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>6</minorNumber>
+        <minorNumber>7</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
@@ -26,7 +26,7 @@
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>8</minorNumber>
+        <minorNumber>9</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
 </ApexPage>
