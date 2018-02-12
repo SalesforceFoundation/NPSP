@@ -68,20 +68,23 @@
             console.log("In changeMode");
 
             //for create we don't need to set anything yet since mode will be changed to clone before viewing page
-            if(mode != 'create') {
+            if(mode != "create") {
                 //check operations to appropriately set "N/A" for date/amount field values
                 this.changeOperationsOptions(cmp);
-                this.changeYearlyOperationsOptions(cmp);
+                this.changeYearlyOperationsOptions(cmp, false);
 
                 //set readonly fields if mode is View, else allow user to make changes
-                if (mode != "view") {
+                if (mode === "view") {
+                    cmp.set("v.isReadOnly", true);
+                } else {
                     cmp.set("v.isReadOnly", false);
                     this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
                     if (!$A.util.isEmpty(cmp.get("v.objectDetails"))) {
                         this.resetAllFields(cmp);
                     }
-                } else {
-                    cmp.set("v.isReadOnly", true);
+                }
+                if(mode === "clone"){
+                    cmp.set("v.activeRollupId", null);
                 }
                 //this checks that fields are set; this action only needs to be done once per rollup
                 if ($A.util.isEmpty(cmp.get("v.objectDetails"))) {
@@ -126,15 +129,18 @@
 
     },
 
-    changeYearlyOperationsOptions: function(cmp){
+    changeYearlyOperationsOptions: function(cmp, isOnChange){
         console.log("in helper changeYearlyOperationsOptions");
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
-        //todo: is this ok for translation?
         if (operation == 'All_Time') {
-            //disable fiscal year and integer
+            //disable fiscal year and integer and reset values
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = false;
+            if(isOnChange){
+                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
+                cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+            }
         } else if (operation == 'Years_Ago') {
             //enable fiscal year and integer
             renderMap["useFiscalYear"] = true;
@@ -143,10 +149,17 @@
             //disable fiscal year and enable integer
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = true;
+            if(isOnChange){
+                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
+            }
         } else {
-            //default to not showing these fields
+            //default to not showing these fields and reset values
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = false;
+            if(isOnChange){
+                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
+                cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+            }
         }
         cmp.set("v.renderMap",renderMap);
 

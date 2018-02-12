@@ -216,16 +216,17 @@
                                 />
                                 <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                                       size="12">
-                                    <!--TODO: add validity checks for numbers-->
-                                    <!--TODO: verify numbers can be cleared with fixed to W-4540937-->
                                     <aura:if isTrue="{!v.renderMap.integer}">
                                         <lightning:input aura:id="integerInput"
+                                                         type="{!v.isReadOnly ? 'text' : 'number'}"
+                                                         class="integerInputField"
                                                          label="{!v.selectedYearlyOperationLabel + ' ' + v.labels.integer}"
                                                          value="{!v.activeRollup.Integer__c}"
-                                                         required="false"
                                                          readonly="{!v.isReadOnly}"
-                                                         pattern="^([^.0-]|[^.0-][0-9]+|[0])$"
-                                                         messageWhenPatternMismatch="{!v.labels.integerError}"/>
+                                                         min="0"
+                                                         step="1"
+                                                         messageWhenRangeUnderflow="{!v.labels.integerError}"
+                                                         messageWhenStepMismatch="{!v.labels.integerError}"/>
                                     </aura:if>
                                 </lightning:layoutItem>
                                 <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"

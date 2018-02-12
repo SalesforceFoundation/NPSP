@@ -38,6 +38,22 @@
                             ];
                 cmp.set("v.columns", cols);
 
+                /*var actions = [{label: 'Edit', name:'edit'}
+                    , {label: 'Clone', name:'clone'}
+                    , {label: 'Delete', name:'delete'}
+                    ];
+
+                var cols = [{label: model.labels.name, fieldName: 'rollupName', type: 'string', sortable: 'true'}
+                            , {label: model.labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
+                            , {label: model.labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
+                            , {label: model.labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true'}
+                            , {label: model.labels.operation, fieldName: 'operation', type: 'string', sortable: 'true'}
+                            , {label: model.labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
+                            , {label: model.labels.active, fieldName: 'active', type: 'string', sortable: 'true'}
+                            //, {type: 'action', typeAttributes: { rowActions: actions } }
+                            ];*/
+                cmp.set("v.columns", cols);
+
                 cmp.set("v.isRollupsGrid",true);
                 cmp.set("v.isFilterGroupsGrid",false);
             }
@@ -66,6 +82,14 @@
             , {label: labels.countOf+' '+labels.filterGroupLabelPlural, name: 'countFilterRules'}
             , {label: labels.countOf+' '+labels.rollupLabelPlural, name: 'countRollups'}
             ];
+
+        /* //lightning datatable
+        var cols = [{label: labels.name, fieldName: 'label', type: 'string', sortable: 'true'}
+            , {label: labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
+            , {label: labels.countOf+' '+labels.filterGroupLabelPlural, fieldName: 'countFilterRules', type: 'string', sortable: 'true'}
+            , {label: labels.countOf+' '+labels.rollupLabelPlural, fieldName: 'countRollups', type: 'string', sortable: 'true'}
+            ];
+        */
         cmp.set("v.columns", cols);
         cmp.set("v.isRollupsGrid", false);
 
@@ -98,7 +122,7 @@
     },
 
     handleRollupSelect: function(cmp, event, helper) {
-        /**called when the activeRollupId changes, specifically in the rollupRow
+        /**called when the activeRollupId changes in the rollupRow
          * switches the display to the detail view and sets the width for the buttons
          * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");

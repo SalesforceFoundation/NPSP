@@ -105,6 +105,11 @@
     <aura:if isTrue="{!v.isRollupsGrid}">
         <div class="slds-p-horizontal_large slds-p-bottom_large">
             <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
+                <!--<lightning:datatable data="{!v.rollupList}"
+                                     columns="{!v.columns}"
+                                     keyField="rollupName"
+                                     onsort="{!c.sortByColumns}"
+                                     hideCheckboxColumn="true"/>-->
                 <table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
@@ -149,9 +154,9 @@
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom_large">
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{!v.activeRollupId}"
-                           mode="{!v.detailMode}" operations="{!v.operations}" yearlyOperations="{!v.yearlyOperations}"
-                           filterGroups="{!v.filterGroupList}"/>
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRollup}" activeRollupId="{#v.activeRollupId}"
+                           mode="{!v.detailMode}" operations="{#v.operations}" yearlyOperations="{#v.yearlyOperations}"
+                           filterGroups="{#v.filterGroupList}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

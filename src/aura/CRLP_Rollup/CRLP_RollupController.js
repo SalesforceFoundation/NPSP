@@ -49,24 +49,13 @@
         helper.changeMode(cmp);
     },
 
-    setModeEdit: function(cmp, event, helper) {
-        //resetting mode here kicks off changeMode
-        cmp.set("v.mode", "edit");
-        console.log("In setModeEdit");
-    },
-
-    setModeClone: function(cmp, event, helper) {
-        //resetting mode here kicks off changeMode
-        cmp.set("v.mode", "clone");
-    },
-
     onCancel: function(cmp, event, helper) {
         //options for cancel: return to rollup summaries or return to view
         //first checks to see if mode is clone and bubbles up an Id of 0 to parent to trigger handleRollupSelect
         //else resets mode to view to become display-only and resets rollup values
         console.log(cmp.get("v.activeRollupId"));
         if((cmp.get("v.mode") == 'clone' || cmp.get("v.mode") == 'create') && cmp.get("v.activeRollupId") == null){
-            console.log("changing active rollup ID");
+            console.log("cancel event rollup cmp");
             //set off an event here
             var event = $A.get("e.c:CRLP_CancelEvent");
             event.setParams({});
@@ -158,7 +147,7 @@
     onChangeYearlyOperation: function (cmp, event, helper) {
         if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
             console.log('On change yearly operation');
-            helper.changeYearlyOperationsOptions(cmp);
+            helper.changeYearlyOperationsOptions(cmp, true);
         }
     },
     onSave: function(cmp, event, helper){
