@@ -54,15 +54,6 @@ global virtual with sharing class Advancement_Adapter {
      * @return none
      */
     global static void rollupAccounts(list<Id> listAccountId) {
-        //This function is copied from NPSP ACCT_IndividualAccounts_TDTM
-        if (listAccountId.size() == 1 || system.isFuture() || system.isBatch()) {
-            RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
-            map<id, Account> amap = new map<id, account>((list<Account>)Database.query(oppRollupUtil.buildAccountQuery() +
-                    ' where id IN :listAccountId'));
-            RLLP_OppRollup rg = new RLLP_OppRollup();
-            rg.rollupAccounts(amap);
-        } else {
-            RLLP_OppRollup.rollupAccountsFuture(new set<Id>(listAccountId));
-        }
+        ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccountId);
     }
 }
