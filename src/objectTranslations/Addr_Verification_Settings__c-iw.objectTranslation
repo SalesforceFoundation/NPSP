@@ -46,6 +46,11 @@
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
+        <help><!-- Prevents the Cicero API from overwriting Addresses during verification. --></help>
+        <label><!-- Prevent Address Overwrite --></label>
+        <name>Prevent_Address_Overwrite__c</name>
+    </fields>
+    <fields>
         <help>מסמן כתובות רב-משמעיות כבלתי חוקיות, כאשר ה-API מחזיר יותר מכתובת אחת. אם אפשרות זו אינה מסומנת, Salesforce תקבל את הכתובת הראשונה שהוצעה בתור הכתובת החוקית.</help>
         <label>דחה כתובות רב-משמעיות</label>
         <name>Reject_Ambiguous_Addresses__c</name>

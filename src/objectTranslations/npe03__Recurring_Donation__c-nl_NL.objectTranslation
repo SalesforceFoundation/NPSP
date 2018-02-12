@@ -8,6 +8,11 @@
         <plural>true</plural>
         <value><!-- Recurring Donations --></value>
     </caseValues>
+    <fields>
+        <help>Indien aangevinkt zullen alle toekomstige maandelijkse en kwartaal Donatie Termijnen op de laatste dag van de maand gezet worden, ongeacht de datum in het  &quot;Volgende Donatiedatum&quot; veld. Dit geldt alleen voor maandelijks of per kwartaal.</help>
+        <label>Gebruik altijd laatste dag van de maand</label>
+        <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
     <gender><!-- Neuter --></gender>
     <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
     <quickActions>
