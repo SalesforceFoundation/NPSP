@@ -3,12 +3,12 @@
     <apiVersion>37.0</apiVersion>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>7</minorNumber>
+        <minorNumber>9</minorNumber>
         <namespace>npe01</namespace>
     </packageVersions>
     <packageVersions>
         <majorNumber>3</majorNumber>
-        <minorNumber>11</minorNumber>
+        <minorNumber>12</minorNumber>
         <namespace>npe03</namespace>
     </packageVersions>
     <status>Active</status>
