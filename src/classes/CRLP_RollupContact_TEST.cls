@@ -93,6 +93,10 @@ private class CRLP_RollupContact_TEST {
                         'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
 
+                CMT_UnitTestData_TEST.createRollupRecord('Count Donations', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, null) + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppsClosedLastNDays__c', CRLP_Operation.RollupType.COUNT, 'Amount',
@@ -198,6 +202,15 @@ private class CRLP_RollupContact_TEST {
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
+
+        // Insert a single test Contact that will have no Opportunities, but should end up getting
+        // processed and this field cleared.
+        Contact c2 = UTIL_UnitTestData_TEST.getContact();
+        c2.npo02__NumberOfClosedOpps__c = 100;  // force to a value that should be cleared to 0 since there are no opps for it
+
+        Contact c3 = UTIL_UnitTestData_TEST.getContact();
+        c3.npo02__NumberOfClosedOpps__c = null; // force this to null and will verify that it remains as null at the end
+        insert new List<Contact>{ c2, c3 };
 
         Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
         insert orgAcct;
@@ -321,5 +334,21 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), c.Description.split(';').size(), 'The list of donated years should match');
+
+        // THe batch process will query all Contacts, but these 2 are special circumstances to validate
+        if (tt == TestType.TestBatch) {
+            // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
+            Id c2Id = c2.Id;
+            conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+            c2 = database.query(conQuery);
+            System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
+
+            // Contact3.npo02__NumberOfClosedOpps__c was set to null and has attached opps, so it remain as
+            // null (vs. being reset to 0).
+            Id c3Id = c3.Id;
+            conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
+            c3 = database.query(conQuery);
+            System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
+        }
     }
 }

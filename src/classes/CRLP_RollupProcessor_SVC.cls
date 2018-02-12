@@ -201,6 +201,12 @@ public class CRLP_RollupProcessor_SVC {
         if (objType == Contact.SObjectType) {
             detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + ' Account.npe01__SYSTEMIsIndividual__c != false';
         }
+
+        // Sort the records by the parent key field
+        if (options.parentKeyField != null && orderBy == null) {
+            orderBy = options.parentKeyField;
+        }
+
         // Force the details query to sort by Ascending CreatedDate so that the records are process
         // in the order in which they were created in the database. Thus the 'first' is truly the first
         // and the last is truly the last.

@@ -37,6 +37,17 @@
 public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
         implements Database.Batchable<SObject>, Database.Stateful {
 
+    // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
+    // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
+    // are included in the queries/processing to ensure the values are reset accordingly. Now, the assumption here
+    // is that these 2 fields are inclusive of the types of values that might have been incremented at some point
+    // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
+    // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
+    // modified the filters to somehow change those meaning. This is a good 99.9% check though.
+    private List<String> fieldsToCheckForNonZero = new List<String>{
+            'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
+    };
+
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
@@ -127,12 +138,57 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
 
             // Get the detail records for the current set of Summary Records
             Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
-            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
+            List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-            // Call the method to do the actual rollups. This returns only records that require updating
-            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+            // ================
+            // Only need to do this for Contacts because the Account main query is already filtered for
+            // Number_of_Opportunities__c > 0 or npo02__NumberOfClosedOpps__c > 0 or npo02__NumberOfMembershipOpps__c > 0
+            // It's not possible to do this on the Contact because there is no direct rollup count of attached
+            // opportunities by the Opportunity.Primary_Contact__c field on the Contact and an inner join
+            // subquery will not work with an OR condition.
+            if (this.summaryObjectType == Contact.SObjectType) {
+                Set<Id> parentsWithDetails = new Set<Id>(); // which parent records have details
+                for (SObject dtl : detailRecords) {
+                    // Is there a parent object to retrieve?
+                    SObject dtlRecord = dtl;
+                    Id parentId = (Id) dtlRecord.get(options.parentKeyField);
+                    parentsWithDetails.add(parentId);
+                }
 
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                // These 2 fields have to be included in every query.
+                Set<Id> summaryRecordsToRemove = new Set<Id>();
+                for (SObject parentRecord : summaryRecords) {
+                    if (!parentsWithDetails.contains(parentRecord.Id)) {
+                        // no details, but are the any of the key fields not zero/null?
+                        Boolean hasPreviousValues = false;
+                        try {
+                            for (String f : fieldsToCheckForNonZero) {
+                                if (parentRecord.get(f) != null && (Double) parentRecord.get(f) > 0) {
+                                    hasPreviousValues = true;
+                                }
+                            }
+                        } catch (Exception ex) {}
+                        if (hasPreviousValues == false) {
+                            summaryRecordsToRemove.add(parentRecord.Id);
+                        }
+                    }
+                }
+                for (Integer n = 0; n < summaryRecords.size(); n++) {
+                    if (summaryRecordsToRemove.contains(summaryRecords[n].Id)) {
+                        summaryRecords.remove(n);
+                    }
+                }
+            }
+            // ================
+
+            // Are there any summary records left to process?
+            if (summaryRecords.size() > 0) {
+                // Call the method to do the actual rollups. This returns only records that require updating
+                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, options);
+
+                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+            }
+
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
