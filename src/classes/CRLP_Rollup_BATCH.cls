@@ -83,8 +83,18 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                     UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
 
             // Build a query string of the target Summary object.
-            String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
-                    ' WHERE ' + fldRelatedOppsCnt + ' < :maxRelatedOppsForNonLDVMode';
+            String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType);
+
+            // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
+            if (this.summaryObjectType == Contact.SObjectType) {
+                for (String f : fieldsToCheckForNonZero) {
+                    if (!query.containsIgnoreCase(f)) {
+                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+                    }
+                }
+            }
+
+            query += ' WHERE ' + fldRelatedOppsCnt + ' < :maxRelatedOppsForNonLDVMode';
 
             // Add additional query filters as needed
             if (this.recordIds != null && this.recordIds.size() > 0) {
@@ -98,8 +108,8 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                     ' OR npo02__NumberOfClosedOpps__c > 0 OR npo02__NumberOfMembershipOpps__c > 0)';
             }
 
+            // If there are no active rollups for the object type, then force the query to return zero records.
             if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
-                // If there are no active rollups for the object type, then force the query to return zero records.
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
             }
@@ -140,46 +150,38 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
             Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
             List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-            // ================
-            // Only need to do this for Contacts because the Account main query is already filtered for
-            // Number_of_Opportunities__c > 0 or npo02__NumberOfClosedOpps__c > 0 or npo02__NumberOfMembershipOpps__c > 0
-            // It's not possible to do this on the Contact because there is no direct rollup count of attached
-            // opportunities by the Opportunity.Primary_Contact__c field on the Contact and an inner join
-            // subquery will not work with an OR condition.
+            // Strip out summary records where there are no detial records to process.
+            // This is not needed for Accounts because the main query on Account already includes this filter.
             if (this.summaryObjectType == Contact.SObjectType) {
+
                 Set<Id> parentsWithDetails = new Set<Id>(); // which parent records have details
-                for (SObject dtl : detailRecords) {
-                    // Is there a parent object to retrieve?
-                    SObject dtlRecord = dtl;
-                    Id parentId = (Id) dtlRecord.get(options.parentKeyField);
-                    parentsWithDetails.add(parentId);
+
+                // The Contact object is always rolling up from Opportunities so no need to use the generic SObject
+                List<Opportunity> opps = (List<Opportunity>) detailRecords;
+                for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
+                    parentsWithDetails.add(opps[n].Primary_Contact__c);
                 }
 
                 // These 2 fields have to be included in every query.
-                Set<Id> summaryRecordsToRemove = new Set<Id>();
-                for (SObject parentRecord : summaryRecords) {
-                    if (!parentsWithDetails.contains(parentRecord.Id)) {
-                        // no details, but are the any of the key fields not zero/null?
-                        Boolean hasPreviousValues = false;
-                        try {
-                            for (String f : fieldsToCheckForNonZero) {
-                                if (parentRecord.get(f) != null && (Double) parentRecord.get(f) > 0) {
-                                    hasPreviousValues = true;
-                                }
+                List<SObject> newSummaryRecords = new List<SObject>();
+                for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
+                    SObject parentRecord = summaryRecords[n];
+                    Boolean processParentRecord = parentsWithDetails.contains(parentRecord.Id);
+                    if (!processParentRecord) {
+                        // no details, but are the any of these key fields not zero/null?
+                        for (String f : fieldsToCheckForNonZero) {
+                            if (parentRecord.get(f) != null && (Double) parentRecord.get(f) > 0) {
+                                processParentRecord = true;
+                                break;
                             }
-                        } catch (Exception ex) {}
-                        if (hasPreviousValues == false) {
-                            summaryRecordsToRemove.add(parentRecord.Id);
                         }
                     }
-                }
-                for (Integer n = 0; n < summaryRecords.size(); n++) {
-                    if (summaryRecordsToRemove.contains(summaryRecords[n].Id)) {
-                        summaryRecords.remove(n);
+                    if (processParentRecord) {
+                        newSummaryRecords.add(parentRecord);
                     }
                 }
+                summaryRecords = newSummaryRecords;
             }
-            // ================
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
