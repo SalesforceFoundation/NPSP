@@ -72,8 +72,8 @@
         <name>User_Managed__c</name>
     </fields>
     <fields>
-        <help><!-- Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users. --></help>
-        <label><!-- Usernames to Exclude --></label>
+        <help>Puntkomma gescheiden lijst van SF gebruikersnamen waar deze trigger niet voor wordt afgevuurd. Laat leeg om te gebruiken voor alle gebruikers.</help>
+        <label>Gebruikersnamen om uit te sluiten</label>
         <name>Usernames_to_Exclude__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

@@ -116,7 +116,7 @@
         <name>Campaign_Member_Status__c</name>
     </fields>
     <fields>
-        <label><!-- Contact1 Import Status --></label>
+        <label>Contactpersoon1 Import Status</label>
         <name>Contact1ImportStatus__c</name>
     </fields>
     <fields>
@@ -223,7 +223,7 @@
         <name>Contact1_Work_Phone__c</name>
     </fields>
     <fields>
-        <label><!-- Contact2 Import Status --></label>
+        <label>Contactpersoon2 Import Status</label>
         <name>Contact2ImportStatus__c</name>
     </fields>
     <fields>
@@ -396,12 +396,12 @@
         <name>Donation_Name__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
-        <label><!-- Donation Possible Matches --></label>
+        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Opportunity matches voor een Donatie.</help>
+        <label>Donatie Mogelijke Matches</label>
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>De naam van het Opportunity Record Type die gebruikt wordt voor de donatie. Gebruik standaard Record Type indien leeggelaten.</help>
+        <help>Opportunity.RecordTypeId</help>
         <label>Donatie Record Type Naam</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
@@ -470,17 +470,17 @@
         <name>ImportedDate__c</name>
     </fields>
     <fields>
-        <help><!-- an optional NPSP Data Import Batch this record belongs to --></help>
+        <help>Een optionele NPSP Data Import Batch waar dit record bij hoort</help>
         <label><!-- NPSP Data Import Batch --></label>
         <name>NPSP_Data_Import_Batch__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <label><!-- Payment Import Status --></label>
+        <label>Betaling Import Status</label>
         <name>PaymentImportStatus__c</name>
     </fields>
     <fields>
-        <label><!-- Payment Imported --></label>
+        <label>Betaling Geïmporteerd</label>
         <name>PaymentImported__c</name>
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
@@ -495,8 +495,8 @@
         <name>Payment_Method__c</name>
     </fields>
     <fields>
-        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation. --></help>
-        <label><!-- Payment Possible Matches --></label>
+        <help>Een kommagescheiden lijst met ID&apos;s voor de eerste 10 mogelijke Betaling matches voor een Donatie.</help>
+        <label>Betaling Mogelijke Matches</label>
         <name>Payment_Possible_Matches__c</name>
     </fields>
     <fields>
