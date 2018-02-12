@@ -49,4 +49,14 @@
         <label><!-- Donation Matching Rule --></label>
         <name>Donation_Matching_Rule__c</name>
     </fields>
+    <fields>
+        <help><!-- The developer name of an Apex class that implements the BDI_IPostProcess interface for NPSP Data Import records. --></help>
+        <label><!-- Post Process Implementing Class --></label>
+        <name>Post_Process_Implementing_Class__c</name>
+    </fields>
+    <fields>
+        <help><!-- When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch. --></help>
+        <label><!-- Calculate Donation Rollups with Batch --></label>
+        <name>Run_Opportunity_Rollups_while_Processing__c</name>
+    </fields>
 </CustomObjectTranslation>
