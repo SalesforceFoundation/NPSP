@@ -40,8 +40,7 @@
 public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
         implements Database.Batchable<SObject>, Database.Stateful {
 
-    /** @description The last Parent Id processed by the batch job */
-    private Id lastParentIdProcessed;
+    private Id theGAUId = 'a0ZJ000000AtaiUMAR';
 
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
@@ -158,6 +157,8 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             // Build the processing options instance
             CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
 
+            Id lastParentIdProcessed = null; // reset the value
+
             Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
             Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
 
@@ -191,20 +192,29 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
-            this.lastParentIdProcessed = options.getLastParentIdProcessed();
+            lastParentIdProcessed = options.getLastParentIdProcessed();
             this.statefulRollupsById.put(firstParentId, options.getUpdatedMapOfRollupsByParentId().get(firstParentId));
             this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
-            this.statefulRollupsById.put(this.lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(this.lastParentIdProcessed));
+            if (lastParentIdProcessed != null) {
+                this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
+            }
 
             // Remember which batch iteration this parent was last NOT updated
             if (options.lastParentIdRemovedFromUpdatesList == true) {
-                this.parentIdsNotCommittedWithBatch.put(this.lastParentIdProcessed, this.batchIteration);
+                this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
             }
 
             // Handle dml on the records to be updated
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
             if (updatedRecords != null) {
                 this.totalRecordsModified += updatedRecords.size();
+                // If the record was committed and the Id is in the parentIdsNotCommittedWithBatch collection
+                // that tracks the last batch iteration by Id, remove it from that collection now that it's committed.
+                for (SObject s : updatedRecords) {
+                    if (this.parentIdsNotCommittedWithBatch.containsKey(s.Id)) {
+                        this.parentIdsNotCommittedWithBatch.remove(s.Id);
+                    }
+                }
             }
 
         } catch (Exception ex) {

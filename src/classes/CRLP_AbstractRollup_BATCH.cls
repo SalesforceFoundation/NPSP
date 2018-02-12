@@ -53,7 +53,7 @@ public abstract class CRLP_AbstractRollup_BATCH {
      * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
      * for heap size.
      */
-    protected Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 30;
+    protected Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 50;
 
     /**
     * @description Stateful collection of Rollups used to hold Rollups for Contacts and Accounts that

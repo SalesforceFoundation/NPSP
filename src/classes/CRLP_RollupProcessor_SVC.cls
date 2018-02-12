@@ -235,7 +235,6 @@ public class CRLP_RollupProcessor_SVC {
         // has changed or not.
         Id parentId = parent.Id;
 
-
         CRLP_VRollupHandler handler = handlersMapByType.get(parent.getSObjectType());
         if (handler == null) {
             Type handlerClassType = getHanderClassType(parent.getSObjectType(), options.detailObjType);
@@ -252,21 +251,23 @@ public class CRLP_RollupProcessor_SVC {
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.mapOfRollupsByParentId != null &&
-                options.getUpdatedMapOfRollupsByParentId().containsKey(parentId)) {
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.getUpdatedMapOfRollupsByParentId() != null &&
+                options.getUpdatedMapOfRollupsByParentId().get(parentId) != null) {
             CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
-            handler.setRollupsList(options.mapOfRollupsByParentId.get(parentId));
+            handler.setRollupsList(options.getUpdatedMapOfRollupsByParentId().get(parentId));
         }
 
         // Don't both calling the processRollups() method if there are no details to roll up
         if (detailRecords != null && !detailRecords.isEmpty()) {
             handler.processRollups(detailRecords);
-        }
 
-        // Save the rollup from the Handler instance into the processing options instance
-        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV) {
-            options.mapOfRollupsByParentId.put(parentId, fullyCloneList(handler.getRollupsList()));
+            // only set the lastParentId when there are actually detail records
             options.lastParentIdProcessed = parentId;
+
+            // Save the rollup data from the Handler instance into the processing options instance
+            if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV) {
+                options.mapOfRollupsByParentId.put(parentId, fullyCloneList(handler.getRollupsList()));
+            }
         }
 
         // Build an updated SObject parent record with the calculated rollups
