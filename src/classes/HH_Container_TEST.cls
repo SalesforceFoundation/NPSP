@@ -41,14 +41,6 @@ private class HH_Container_TEST {
     private static npo02__Household__c hhO;
     private static Contact conA;
     private static Contact conO;
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
     
     /*********************************************************************************************************
     * @description initializes test data of a Household Account and a Household Object
@@ -212,7 +204,7 @@ private class HH_Container_TEST {
     */
     public static testMethod void testGetAddresses() { 
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         initTestData();
 
@@ -433,7 +425,7 @@ private class HH_Container_TEST {
     **********************************************************************************************************/ 
     private static testMethod void saveShouldAddRemovedContactToNewHousehold() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         Integer accountSize = 2;
         Account[] accounts = buildAccounts(accountSize);
@@ -559,7 +551,7 @@ private class HH_Container_TEST {
     public static testMethod void testAddContactAddresses() { 
         
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         initTestData();
 

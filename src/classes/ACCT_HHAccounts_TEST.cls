@@ -42,14 +42,6 @@ private with sharing class ACCT_HHAccounts_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
     
     	
     /*********************************************************************************************************
@@ -63,7 +55,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
     	if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccounts') return;
     	
@@ -110,7 +102,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void NewContactsEmptyHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'NewContactsEmptyHHAccounts') return;
 
@@ -196,7 +188,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void NewContactsNonEmptyHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'NewContactsNonEmptyHHAccounts') return;
 
@@ -278,7 +270,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void NewContactsNoAccountsWithHHObj() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'NewContactsNoAccountsWithHHObj') return;
 
@@ -338,7 +330,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
      static testMethod void UpdateContactsMergeHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'UpdateContactsMergeHHAccounts') return;
 
@@ -426,7 +418,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
      static testMethod void UpdateContactsSplitHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'UpdateContactsSplitHHAccounts') return;
 
@@ -529,7 +521,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
      static testMethod void DeleteContactsFromHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'DeleteContactsFromHHAccounts') return;
 
@@ -601,7 +593,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void UndeleteContactsFromHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'UndeleteContactsFromHHAccounts') return;
 
@@ -696,7 +688,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/    
     static testmethod void UpdateOneToOneAndBucketContactsToHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'UpdateOneToOneAndBucketContactsToHHAccounts') return;
 
@@ -777,7 +769,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/                
     static testMethod void changeContactOwners() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'changeContactOwners') return;
         
@@ -1014,7 +1006,7 @@ private with sharing class ACCT_HHAccounts_TEST {
     **********************************************************************************************************/            
     static testMethod void addContactCheckNumberHHMembers() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'addContactCheckNumberHHMembers') return;
 

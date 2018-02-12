@@ -44,14 +44,6 @@ private class CON_DoNotContact_TEST {
     private static string strTestOnly = '*';
 
     /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
-
-    /*******************************************************************************************************
     * @description Marks a sole contact in household as Deceased, verifies DoNotCall and HasOptedOutOfEmail
     * are set, but naming exclusions aren't set. Removes deceased flag, verifies DoNotCall and HasOptedOutOfEmail
     * have been removed, and naming exclusions are still not set.
@@ -96,7 +88,7 @@ private class CON_DoNotContact_TEST {
     */
     static testMethod void testDeceasedInHousehold() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testDeceasedInHousehold') return;
 

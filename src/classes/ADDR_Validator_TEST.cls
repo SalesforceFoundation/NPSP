@@ -40,14 +40,6 @@ public with sharing class ADDR_Validator_TEST {
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
 
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
-
     private static boolean hasAsyncAddrTriggers() {
         return TDTM_DefaultConfig.ADDR_Address_TDTM_TestAsync ||
             TDTM_DefaultConfig.ADDR_Contact_TDTM_TestAsync ||
@@ -71,7 +63,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAddress() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactAddress') return;
         
@@ -119,7 +111,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactInvalidAddress() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactInvalidAddress') return;
         
@@ -153,7 +145,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test400() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test400') return;
         
@@ -187,7 +179,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test401() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test401') return;
         
@@ -221,7 +213,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test402() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test402') return;
         
@@ -255,7 +247,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test500() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test500') return;
         
@@ -289,7 +281,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAmbiguousAddress() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactAmbiguousAddress') return;
         
@@ -325,7 +317,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactZipOnly() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactZipOnly') return;
         
@@ -364,7 +356,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactCityAndStateOnly() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactCityAndStateOnly') return;
         
@@ -463,7 +455,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void dontValidatePreviouslyValidatedAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'dontValidatePreviouslyValidatedAddresses') return;
         

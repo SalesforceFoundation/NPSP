@@ -142,14 +142,6 @@ public with sharing class ADDR_Addresses_TEST {
         );
     }
 
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
-
     /*********************************************************************************************************
     @description
         create N new default Addresses for N Households (with M Contacts)
@@ -188,7 +180,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void insertContactWithAddress() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddress') return;
 
@@ -238,7 +230,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void insertContactWithAddressRecreateAccount() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressRecreateAccount') return;
 
@@ -282,7 +274,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void insertContactWithAddressOverride() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithAddressOverride') return;
 
@@ -542,7 +534,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void setConAddrNoOverride() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'setConAddrNoOverride') return;
 
@@ -728,7 +720,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateAddrOverride() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateAddrOverride') return;
 
@@ -794,7 +786,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void clearAddrOverride() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'clearAddrOverride') return;
 
@@ -859,7 +851,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void clearAddrOverrideNewAddr() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'clearAddrOverrideNewAddr') return;
 
@@ -921,7 +913,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateConAddrNew() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrNew') return;
 
@@ -987,7 +979,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateConAddrMarkOverride() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrMarkOverride') return;
 
@@ -1225,7 +1217,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateConAddrExisting() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExisting') return;
 
@@ -1293,7 +1285,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateConAddrExistingAddrType() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingAddrType') return;
 
@@ -1371,7 +1363,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'addExistingContactToNewHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
 
@@ -1434,7 +1426,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'addNewContactToHouseholdShouldSyncPrimaryAddressTypeWithAddressType') return;
 
@@ -1488,7 +1480,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateConAddrExistingCaseOnly() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrExistingCaseOnly') return;
 
@@ -1589,7 +1581,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateAccAddrNew() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateAccAddrNew') return;
 
@@ -1652,7 +1644,7 @@ public with sharing class ADDR_Addresses_TEST {
     **********************************************************************************************************/
     static testMethod void updateAccAddrExisting() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateAccAddrExisting') return;
 

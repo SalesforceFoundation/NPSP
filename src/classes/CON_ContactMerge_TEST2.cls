@@ -42,25 +42,17 @@ private class CON_ContactMerge_TEST2 {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
     
     static testMethod void merge3OneToOneOne2One(){
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneOne2One') return;
         merge3OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge3OneToOneHHAccount(){
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'merge3OneToOneHHAccount') return;
         merge3OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
@@ -169,7 +161,7 @@ private class CON_ContactMerge_TEST2 {
     
     static testMethod void merge2OneToOneInSameAccountOne2One(){
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneInSameAccountOne2One') return;
         merge2OneToOneInSameAccount(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -544,7 +536,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOne2One() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOne2One') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
@@ -574,7 +566,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeOrgToOne2One() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOrgToOne2One') return;
         testNamesAndOppsMerge(null, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
@@ -586,7 +578,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToOrg() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, null);
@@ -607,7 +599,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToHH() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
@@ -619,7 +611,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeHHToOne2One() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
@@ -649,7 +641,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeBucketToOne2One() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
@@ -661,7 +653,7 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeOne2OneToBucket() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);

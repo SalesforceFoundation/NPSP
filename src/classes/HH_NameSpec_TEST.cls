@@ -42,16 +42,6 @@ private with sharing class HH_NameSpec_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
-
-    
         
     /*********************************************************************************************************
     @description
@@ -655,7 +645,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNaming() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNaming') return;
 
@@ -726,7 +716,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingWithCustom() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
@@ -831,7 +821,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingManyHH() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
         

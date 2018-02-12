@@ -91,59 +91,16 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      */
     public static list<Trigger_Handler__c> listTH {
         get {
-
-            Advancement_Info adv = new Advancement_Info();
-
-            if(adv.useAdv && adv.apiNPSP != null) {
-
-                listTH = adv.apiNPSP.getDefaultTdtmConfigNpspRecords(listTH);
-
+            if(Advancement_Info.useAdv() && Advancement_Info.getApiNPSP() != null) {
+                listTH = adv.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
             } else {
                 if (listTH == null) {
                     listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
                             Trigger_Action__c from Trigger_Handler__c order by Load_Order__c];
                 }
             }
-
             return listTH;
         }
         set;
     }
-
-/********* old implementation ****************
-    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
-        ToRunOnObjectAction toRun = objectActionQueried(objectName, action);
-        if(toRun != null) {
-            return toRun.classesToCall;
-        } else {
-            List<SObject> classesToCall =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, 
-                Trigger_Action__c from Trigger_Handler__c where Active__c = true and Object__c = :objectName and 
-                Trigger_Action__c includes ( :action.name() ) order by Load_Order__c];
-            toRun = new ToRunOnObjectAction(objectName, action, classesToCall);
-            classesQueried.add(toRun);
-            return classesToCall;
-        }
-    }
-    
-    private static ToRunOnObjectAction objectActionQueried(String objectName, TDTM_Runnable.Action action) {
-        for(ToRunOnObjectAction toRun : classesQueried) {
-            if(toRun.objectName == objectName && toRun.action == action) {
-              return toRun;
-            }
-        }
-        return null;
-    }
-    
-    private class ToRunOnObjectAction {
-        private String objectName;
-        private TDTM_Runnable.Action action;
-        private List<SObject> classesToCall;
-        
-        ToRunOnObjectAction(String objectName, TDTM_Runnable.Action action, List<SObject> classesToCall) {
-            this.objectName = objectName;
-            this.action = action;
-            this.classesToCall = classesToCall;
-        }
-    }
-***************/
 }

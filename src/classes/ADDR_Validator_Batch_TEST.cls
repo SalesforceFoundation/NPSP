@@ -39,14 +39,6 @@ public with sharing class ADDR_Validator_Batch_TEST {
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
     
     public static void createDefaultSettings() {
     	// use the household account model
@@ -67,7 +59,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidAddress() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
 
@@ -133,7 +125,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         Integer batchSize = 100;
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
@@ -196,7 +188,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidZipcode() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
 
@@ -244,7 +236,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddressessZipcodes() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
 

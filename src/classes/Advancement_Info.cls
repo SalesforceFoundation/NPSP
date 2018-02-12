@@ -36,10 +36,11 @@
 **/
 public with sharing class Advancement_Info {
 
-    public Boolean useAdv = false;
-    public Advancement_Adapter apiNPSP = null;
+    private static Boolean useAdv = false;
+    private static Advancement_Adapter apiNPSP = null;
+    private static Boolean setupCalled = false;
 
-    public Advancement_Info() {
+    private static void setup() {
         //Check if Advancement is installed and enabled.
         try {
             List<SObject> advSettings = Database.query('select Use_Advancement__c, API_NPSP_Class__c from Advancement_Setting__mdt');
@@ -58,5 +59,19 @@ public with sharing class Advancement_Info {
         } catch(Exception e) {
             // Advancement not installed. Nothing to do
         }
+    }
+
+    public static Boolean useAdv() {
+        if(!setupCalled) {
+            setup();
+        }
+        return useAdv;
+    }
+
+    public static Advancement_Adapter getApiNPSP() {
+        if(!setupCalled) {
+            setup();
+        }
+        return apiNPSP;
     }
 }

@@ -44,15 +44,6 @@ public with sharing class BDI_DataImport_TEST {
     */
     private static string strTestOnly = '*';
     
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
-
     /*******************************************************************************************************
     * @description creates a new di record for tests
     * @param firstname the firstname to specify for Contact1
@@ -280,7 +271,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void OneDITwoExistingContacts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'OneDITwoExistingContacts') return;
             
@@ -502,7 +493,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIExistingAccountsSalesforceId() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccountsSalesforceId') return;
             
@@ -588,7 +579,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIAffiliations() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIAffiliations') return;
             
@@ -641,7 +632,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddresses') return;
             
@@ -702,7 +693,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/
     static testMethod void TwoDIExistingHomeAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingHomeAddresses') return;
 
@@ -767,7 +758,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void ManyDISameHomeAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDISameHomeAddresses') return;
             
@@ -853,7 +844,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIHomeAddressesAddrMgmtOff() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIHomeAddressesAddrMgmtOff') return;
             
@@ -910,7 +901,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddresses() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddresses') return;
             
@@ -969,7 +960,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIMixedAddressesAddrMgmtOff() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIMixedAddressesAddrMgmtOff') return;
             
@@ -1025,7 +1016,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonations() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonations') return;
             
@@ -1174,7 +1165,7 @@ public with sharing class BDI_DataImport_TEST {
     **********************************************************************************************************/            
     static testMethod void TwoDIWithDonationsAndCampaigns() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'TwoDIWithDonationsAndCampaigns') return;
         

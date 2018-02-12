@@ -61,14 +61,6 @@ private with sharing class ACCT_AccountMerge_TEST {
                 Organizational_Account_Addresses_Enabled__c = true
                 ));
     }
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
     
     /*******************************************************************************************************
     * @description Merge two Household Accounts and verify: 
@@ -80,7 +72,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeTwoHHAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoHHAccounts') return;
         integer cHH;
@@ -162,7 +154,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeThreeHHAccountsManyAddr() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeHHAccountsManyAddr') return;
         integer cHH;
@@ -239,7 +231,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeTwoOne2OneAccounts() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoOne2OneAccounts') return;
         
@@ -300,7 +292,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeThreeOrgAccountsManyAddr() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeOrgAccountsManyAddr') return;
         

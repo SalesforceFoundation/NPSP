@@ -41,14 +41,6 @@ private class OPP_OpportunityContactRoles_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
-
-    /*******************************************************************************************************
-    * @description determine if Advancement package is installed
-    */
-    private static boolean isAdvInstalled() {
-        Advancement_Info adv = new Advancement_Info();
-        return adv.useAdv;
-    }
  
     /*******************************************************************************************************
     * @description Role values to use in settings.
@@ -146,7 +138,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForOneToOneContact() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneContact') return;
 
@@ -217,7 +209,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForOneToOneAccount() {
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneAccount') return;
 
@@ -480,7 +472,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void avoidDuplicateCRs(){
         //skip the test if Advancement is installed
-        if(isAdvInstalled()) return;
+        if(Advancement_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'avoidDuplicateCRs') return;
         
