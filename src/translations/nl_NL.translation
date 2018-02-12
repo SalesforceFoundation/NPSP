@@ -5,119 +5,125 @@
         <name>Nonprofit_CRM</name>
     </customApplications>
     <customLabels>
-        <label><!-- Addr Id Error --></label>
+        <label>Auth ID kan niet leeg zijn.</label>
         <name>Addr_Id_Error</name>
     </customLabels>
     <customLabels>
-        <label><!-- Batch Address Verification Not Supported --></label>
+        <label>De gespecificeerde dienst ondersteunt geen Batch Adresverificatie.</label>
         <name>Addr_No_Batch</name>
     </customLabels>
     <customLabels>
-        <label><!-- Pending verification --></label>
+        <label>Verificatie in afwachting</label>
         <name>Addr_Pending_Verification</name>
     </customLabels>
     <customLabels>
-        <label><!-- DEPRECATED - Addr Settings API Title --></label>
+        <label>VEROUDERD - API Account Settings</label>
         <name>Addr_Settings_API_Body</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings API Title --></label>
+        <label>Verificatie API Account Instellingen</label>
         <name>Addr_Settings_API_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- DEPRECATED - Addr Settings Intro Body --></label>
+        <label>VEROUDERD</label>
         <name>Addr_Settings_Intro_Body</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Intro Body --></label>
+        <label>De Adres Verificatie API zorgt voor adresverificatie bij invoer van adressen. Ook zorgt de API voor standaardisatie van adressen.</label>
         <name>Addr_Settings_Intro_Body1</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Intro Body --></label>
+        <label>&lt;br/&gt;Om te beginnen:&lt;br/&gt;&lt;br/&gt;
+1. Open een derde-partij adres verificatie account. (Sommigen zijn gratis voor nonprofits.)&lt;br/&gt;
+2. In uw adres verificatie dienst, creëer de benodigde authenticatie ID en/of token.&lt;br/&gt;
+3. Ga terug naar de instellingen pagina, klik op de Wijzig knop bovenaan, en plak de ID en/of token in de juiste velden.&lt;br/&gt;
+4. Voltooi de overige velden en klik op Opslaan.  De hulptekst geeft meer informatie. Als u meer informatie nodig heeft, bekijk &lt;a href=&quot;https://powerofus.force.com/NPSP_Address_Verification&quot;&gt;NPSP documentatie&lt;/a&gt;.</label>
         <name>Addr_Settings_Intro_Body2</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Intro Title --></label>
+        <label>Introductie</label>
         <name>Addr_Settings_Intro_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Notice --></label>
+        <label>Adresverificatie werkt alleen voor adressen die vanaf dit moment gemaakt worden.</label>
         <name>Addr_Settings_Notice</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Test Body --></label>
+        <label>Om de Secret Key Pair te testen, voer een US Postcode in:</label>
         <name>Addr_Settings_Test_Body</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Test Response Title --></label>
+        <label>API Antwoord</label>
         <name>Addr_Settings_Test_Response_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Settings Test Title --></label>
+        <label>Test Mijn Instellingen</label>
         <name>Addr_Settings_Test_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Skip Verified --></label>
+        <label>Sla vorige geverifieerde records over</label>
         <name>Addr_Skip_Verified</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Token Error --></label>
+        <label>Auth Token kan niet leeg zijn.</label>
         <name>Addr_Token_Error</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Unauthorized Endpoint --></label>
+        <label>Onbevoegd eindpunt. Voeg dit eindpunt toe aan de lijst met bevoegde Remote Sites.</label>
         <name>Addr_Unauthorized_Endpoint</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Valid Key Pair --></label>
+        <label>De Secret Key Pair is geldig.</label>
         <name>Addr_Valid_Key_Pair</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verification Batch Body --></label>
+        <label>&lt;p&gt;Klik Verifieer Alle Adressen om alle adressen in de organisatie te verifiëren.
+        Dit proces gebruikt de instellingen hierboven.&lt;/p&gt;
+ &lt;br/&gt;</label>
         <name>Addr_Verification_Batch_Body</name>
     </customLabels>
     <customLabels>
-        <label><!-- No Batch Support --></label>
+        <label>De geselecteerde dienst ondersteunt geen Batch Adresvalidatie.</label>
         <name>Addr_Verification_Batch_Not_Supported</name>
     </customLabels>
     <customLabels>
-        <label><!-- Batches of 100 --></label>
+        <label>SmartyStreets zal adressen verifiëren in batches van 100.</label>
         <name>Addr_Verification_Batch_SmartyStreets_Message</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verification Batch Status --></label>
+        <label>Massa Verificatie Status</label>
         <name>Addr_Verification_Batch_Status</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verification Batch Title --></label>
+        <label>Massa Verifieer Bestaande Adressen</label>
         <name>Addr_Verification_Batch_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Unable to load verification class when visiting settings page --></label>
+        <label>Er trad een error op bij het laden van de validatie klasse {0}</label>
         <name>Addr_Verification_Cant_Load_Class</name>
     </customLabels>
     <customLabels>
-        <label><!-- Verification required --></label>
+        <label>Verificatie nodig</label>
         <name>Addr_Verification_Required</name>
     </customLabels>
     <customLabels>
-        <label><!-- No address verification class defined --></label>
+        <label>Adresverificatie klasse niet gedefinieerd in de instellingen. Kan adresvalidatie niet uitvoeren.</label>
         <name>Addr_Verification_Undefined_Class</name>
     </customLabels>
     <customLabels>
-        <label><!-- Wrong address verification class --></label>
+        <label>Er bestaat geen klasse met deze naam. Kan adresvalidatie niet uitvoeren.</label>
         <name>Addr_Verification_Wrong_Class</name>
     </customLabels>
     <customLabels>
-        <label><!-- Wrong address verification interface --></label>
+        <label>De adresvalidatie klasse is niet geïmplementeerd in de verplichte interface. Kan adresvalidatie niet uitvoeren.</label>
         <name>Addr_Verification_Wrong_Interface</name>
     </customLabels>
     <customLabels>
-        <label><!-- Address Successfully Verified --></label>
+        <label>Geverifieerd</label>
         <name>Addr_Verified</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verify Endpoint --></label>
+        <label>Voer het eindpunt URL in.</label>
         <name>Addr_Verify_Endpoint</name>
     </customLabels>
     <customLabels>
@@ -125,563 +131,681 @@
         <name>Addr_Verify_Google_Help</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verify Settings --></label>
+        <label>Controleer of uw gegevens zijn ingevoerd.</label>
         <name>Addr_Verify_Settings</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addr Verifying --></label>
+        <label>Verifiëren Adressen.</label>
         <name>Addr_Verifying</name>
     </customLabels>
     <customLabels>
-        <label><!-- Address Not Found --></label>
+        <label>Adres niet gevonden</label>
         <name>Address_Not_Found</name>
     </customLabels>
     <customLabels>
-        <label><!-- {value} is not configured as a valid Country in your Organization. --></label>
+        <label>{0}&apos; is niet geconfigureerd als een geldigd land in deze Organsatie.</label>
         <name>Address_StateCountry_Invalid_Error</name>
     </customLabels>
     <customLabels>
-        <label><!-- Address Verification Limit --></label>
+        <label>Er kunnen niet meer dan 100 adressen tegelijk geverifieerd worden.</label>
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <label><!-- Risk Accepted --></label>
+        <label>Ik accepteer het risico op dataverlies of inconsistentie door het gebruik van deze functionaliteit.</label>
         <name>CONV_Accept_Risk</name>
     </customLabels>
     <customLabels>
-        <label><!-- Account Field --></label>
+        <label>Account Veld</label>
         <name>CONV_Account_Field</name>
     </customLabels>
     <customLabels>
-        <label><!-- Account Field For Old HH ID --></label>
+        <label>Account Veld voor Oud Huishouden Id</label>
         <name>CONV_Account_Field_For_Old_HH_ID</name>
     </customLabels>
     <customLabels>
-        <label><!-- Activites Reparented --></label>
+        <label>Activiteiten en Taken verbonden met Accounts volgens het Eén-op-Eén of het Individu Model worden overgezet naar een nieuw Huishouden Account</label>
         <name>CONV_Activities_Reparented</name>
     </customLabels>
     <customLabels>
-        <label><!-- Address Overrides --></label>
+        <label>Adresoverschrijvingen worden ingesteld voor Contactpersonen die een ander Adres hebben dan het Huishouden waar zij bij horen.</label>
         <name>CONV_Address_Overrides_Set</name>
     </customLabels>
     <customLabels>
-        <label><!-- Addresses Mapped --></label>
+        <label>Adressen gemapped van een bestaande Huishouden en Contactpersonen naar een nieuw Adres objecten, daarna verbonden aan de Contactpersoon en Huishouden Account</label>
         <name>CONV_Addresses_Mapped</name>
     </customLabels>
     <customLabels>
-        <label><!-- All Data Backed Up --></label>
+        <label>Er is een back-up gemaakt van mijn data via Setup | Data Management | Export Data</label>
         <name>CONV_All_Backed_Up</name>
     </customLabels>
     <customLabels>
-        <label><!-- CONV_All_Dup_Rules_Disabled --></label>
+        <label>Alle Data.com Duplicatenbeheer Regels zijn uitgeschakeld.</label>
         <name>CONV_All_Dup_Rules_Disabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- All Households Selected --></label>
+        <label>Alle bestaande Huishoudens met hun Contactpersonen zijn geselecteerd.</label>
         <name>CONV_All_Households_Selected</name>
     </customLabels>
     <customLabels>
-        <label><!-- All Required Removed --></label>
+        <label>Alle verplichte velden beperkingen zijn weggehaald.</label>
         <name>CONV_All_Required_Removed</name>
     </customLabels>
     <customLabels>
-        <label><!-- All Triggers disabled --></label>
+        <label>Alle NPSP triggers zijn uitgeschakeld (Aangepaste triggers zijn niet uitgeschakeld voor deze functie, schakel deze ook uit, uit veiligheidsoverwegingen)</label>
         <name>CONV_All_Triggers_Disabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- All Users Logged Out --></label>
+        <label>Alle gebruikers zijn uitgelogd uit deze Organisatie.</label>
         <name>CONV_All_Users_Logged_Out</name>
     </customLabels>
     <customLabels>
-        <label><!-- All WFR and VR Disabled --></label>
+        <label>Alle werkstroomregels en validatieregels zijn uitgeschakeld.</label>
         <name>CONV_All_WFR_Disabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- Batching Explanation --></label>
+        <label>Deze functionaliteit zal alle bestaande Contactpersonen en Huishoudens verwerken in batches van 200 Huishoudens tegelijkertijd, waarbij wordt geprobeerd deze om te zetten in Huishouden Accounts. Mogelijke errors resulteren in mislukte batches, terwijl andere succesvol zijn. Dit kan zorgen voor inconsistentie in de data. Als dit gebeurt, moet dit onmiddelijk opgelost worden door de conversie functionaliteit opnieuw te draaien. De volgende acties worden in de Batch Opdracht met deze functionaliteit uitgevoerd:</label>
         <name>CONV_Batching_Explanation</name>
     </customLabels>
     <customLabels>
-        <label><!-- Begin Conversion --></label>
+        <label>Start Conversie Proces</label>
         <name>CONV_Begin</name>
     </customLabels>
     <customLabels>
-        <label><!-- Cancel --></label>
+        <label>Annuleer</label>
         <name>CONV_Cancel</name>
     </customLabels>
     <customLabels>
-        <label><!-- Configuration Options --></label>
+        <label>Configuratie Opties</label>
         <name>CONV_Configuration_Options</name>
     </customLabels>
     <customLabels>
-        <label><!-- Contacts Attached to Household --></label>
+        <label>Contactpersonen worden ontkoppeld van hun Eén-op-Eén of Individu Account en verbonden aan een nieuw gemaakt Huishouden Account.</label>
         <name>CONV_Contacts_Attached</name>
     </customLabels>
     <customLabels>
-        <label><!-- Account Model Conversion Progress --></label>
+        <label>Account Model Conversie Progressie</label>
         <name>CONV_Conversion_Process</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fundamental Changes --></label>
+        <label>U staat op het punt fundamentele wijzigingen aan te brengen aan uw Salesforce data en data model. Rapporten, Dashboards en meer zijn mogelijk gewijzigd door deze veranderingen. Salesforce.com en Salesforce.org zijn niet verantwoordelijk voor data of data integriteit verlies. Wilt u nog steeds doorgaan?</label>
         <name>CONV_Fundamental_Changes</name>
     </customLabels>
     <customLabels>
-        <label><!-- Important Information Header --></label>
+        <label>Belangrijke Informatie</label>
         <name>CONV_Important_Info_Header</name>
     </customLabels>
     <customLabels>
-        <label><!-- Local Expert --></label>
+        <label>Ik heb mijn locale Salesforce expert geraadpleegd.</label>
         <name>CONV_Local_Expert</name>
     </customLabels>
     <customLabels>
-        <label><!-- Master Address Set --></label>
+        <label>Hoofd Huishouden Adres is ingesteld wanneer er geen bestaat op basis van adresfrequentie of Contactpersoon gegevens</label>
         <name>CONV_Master_Address_Set</name>
     </customLabels>
     <customLabels>
-        <label><!-- New Affiliations Created --></label>
+        <label>Niet-Eén-op-Eén Account verbindingen met Contactpersonen worden verwijderd, nieuwe Verwante Organisaties aangemaakt en Contactpersoon Primaire Verwante Organisatie wordt ingesteld</label>
         <name>CONV_New_Affiliations</name>
     </customLabels>
     <customLabels>
-        <label><!-- New Households Created --></label>
+        <label>Nieuwe Huishouden Accounts worden gecreërd voor elk bestaand Huishouden</label>
         <name>CONV_New_Households_Created</name>
     </customLabels>
     <customLabels>
-        <label><!-- Non-NPSP Apps --></label>
+        <label>Alle niet-NPSP applicaties zijn tijdelijk gedeïnstalleerd of uitgeschakeld</label>
         <name>CONV_Non_NPSP_Apps</name>
     </customLabels>
     <customLabels>
-        <label><!-- Old Household Objects --></label>
+        <label>Vorige Huishouden objecten blijven bestaan en moeten handmatig verwijderd worden na het verifiëren van de resultaten van het conversieproces.</label>
         <name>CONV_Old_Household_Objects</name>
     </customLabels>
     <customLabels>
-        <label><!-- Only Household Contacts --></label>
+        <label>Ik ben mij ervan bewust dat deze functionaliteit alleen werkt voor Contactpersonen met een verbonden Huishouden</label>
         <name>CONV_Only_Household_Contacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- Opportunities Reparented --></label>
+        <label>Opportunities worden verplaatst van het Eén-op-Eén of Individu Account en verbonden aan het nieuwe Huishouden Account en Contactpersonen</label>
         <name>CONV_Opportunities_Reparented</name>
     </customLabels>
     <customLabels>
-        <label><!-- Original HH Id --></label>
+        <label>Optioneel kan een aangepast veld gebruikt worden om het originele Huishouden object Id voor het nieuwe Huishouden Account op te slaan. Dit kan handig zijn waneer opzoekrelaties van onderliggende records hersteld moeten worden. Alleen ongebruikte aangepaste tekstvelden mogen hiervoor gebruikt worden.</label>
         <name>CONV_Original_HH_Id</name>
     </customLabels>
     <customLabels>
-        <label><!-- Page Description --></label>
+        <label>Deze pagina is ontworpen ter ondersteuning van het converteren van een Eén-op-Eén of Individu Account Model naar een nieuw Huishouden Account Model.</label>
         <name>CONV_Page_Description</name>
     </customLabels>
     <customLabels>
-        <label><!-- Page Title --></label>
+        <label>Account Model Conversie Functionaliteit</label>
         <name>CONV_Page_Title</name>
     </customLabels>
     <customLabels>
-        <label><!-- Permanent Change Info --></label>
+        <label>Dit is een permanente verandering. Raadpleeg een lokaal expert voor u verder gaat. Nadat de conversie voltooid is, zal de database functionaliteit tijdelijk uitgeschakeld zijn om eventuele wijziging van bestaande data te voorkomen. Salesforce.com en Salesforce.org zijn niet verantwoordelijk voor enige vorm van dataverlies, wijzigingen, of fouten die optreden ten gevolge van deze handeling. Ga verder op eigen risico. Voor aanvang van dit proces, controleer of de volgende stappen zijn ondernomen:</label>
         <name>CONV_Permanent_Change</name>
     </customLabels>
     <customLabels>
-        <label><!-- Primary Contacts Set --></label>
+        <label>Primair Contactpersoon waarde is bij alle Huishoudens ingevuld</label>
         <name>CONV_Primary_Contacts_Set</name>
     </customLabels>
     <customLabels>
-        <label><!-- Proceed --></label>
+        <label>Ga verder met Conversie</label>
         <name>CONV_Proceed</name>
     </customLabels>
     <customLabels>
-        <label><!-- Record Ownership Transferred --></label>
+        <label>Alle record eigenaarschap is verplaatst van elke inactieve gebruiker</label>
         <name>CONV_Record_Ownership_Transferred</name>
     </customLabels>
     <customLabels>
-        <label><!-- Reload --></label>
+        <label>Herlaad de Converter</label>
         <name>CONV_Reload</name>
     </customLabels>
     <customLabels>
-        <label><!-- Selected Field Not Able to Hold ID --></label>
+        <label>Het geselecteerde veld is niet in staat het Huishouden Id op te nemen. Selecteer een ander Account veld.</label>
         <name>CONV_Selected_Field_Bad</name>
     </customLabels>
     <customLabels>
-        <label><!-- Selected Field Not Verified for Id --></label>
+        <label>Een error trad op tijdens het controleren van het geselecteerde Account veld. Het geselecteerde veld kan niet worden geverifieerd. Zonder deze verificatie kan niet worden vastgesteld of de veld mapping en daarmee de conversie succesvol zal zijn. Ga verder op eigen risico, of kies een ander veld om het Huishouden Id in op te slaan.</label>
         <name>CONV_Selected_Field_Verification_Failure</name>
     </customLabels>
     <customLabels>
-        <label><!-- Tested in Sandbox --></label>
+        <label>Het conversieproces is getest in een nieuwe sandbox.</label>
         <name>CONV_Tested_in_Sandbox</name>
     </customLabels>
     <customLabels>
-        <label><!-- Triggers ReEnabled --></label>
+        <label>Alle NPSP triggers zijn opnieuw ingeschakeld. Eventuele aangepaste triggers moeten handmatig worden ingeschakeld.</label>
         <name>CONV_Triggers_Reenabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- Warning --></label>
+        <label>Waarschuwing!</label>
         <name>CONV_Warning</name>
     </customLabels>
     <customLabels>
-        <label><!-- What This Tool Does --></label>
+        <label>Wat deze functionaliteit doet</label>
         <name>CONV_What_This_Tool_Does</name>
     </customLabels>
     <customLabels>
-        <label><!-- CampaignMemberStatusOmit --></label>
+        <label>weglaten</label>
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CascadeDeletionError --></label>
+        <label>Uw poging om {0} te verwijderen is mislukt, omdat deze is verbonden aan de volgende records. Verwijder of verbind deze records aan andere records en probeer opnieuw.</label>
         <name>CascadeDeletionError</name>
     </customLabels>
     <customLabels>
-        <label><!-- ClosedWonOpportunities --></label>
+        <label><!-- Cascade Deletion Error Message In Lightning Experience --></label>
+        <name>CascadeDeletionErrorLightning</name>
+    </customLabels>
+    <customLabels>
+        <label>Gesloten Gewonnen Opportunities</label>
         <name>ClosedWonOpportunities</name>
     </customLabels>
     <customLabels>
-        <label><!-- ConfirmDeleteAccount --></label>
+        <label>{0} is het enige Contactpersoon in het {1} Account. Het verwijderen van deze Contactpersoon laat een leeg Account achter. Wil je in plaats daarvan {1} verwijderen?</label>
         <name>ConfirmDeleteAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPAddDependentTask --></label>
+        <label><!-- DeleteAccount --></label>
+        <name>DeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteContactLeaveAccount --></label>
+        <name>DeleteContactLeaveAccount</name>
+    </customLabels>
+    <customLabels>
+        <label>Voeg Afhankelijke Taak toe</label>
         <name>EPAddDependentTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- Engagement Plan&apos;s Add Task button label --></label>
+        <label>Voeg Taak toe</label>
         <name>EPAddTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPDeleteTask --></label>
+        <label>Verwijder Taak</label>
         <name>EPDeleteTask</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTasks --></label>
+        <label>Beheren Activiteitenplan Taken</label>
         <name>EPManageTasks</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPManageTemplate --></label>
+        <label>Beheren Activiteitenplan Ontwerp</label>
         <name>EPManageTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskDependency --></label>
+        <label>Activiteitenplan Taakafhankelijkheden mogen geen vicieuze cirkel veroorzaken.</label>
         <name>EPTaskDependency</name>
     </customLabels>
     <customLabels>
-        <label><!-- EPTaskTemplate --></label>
+        <label>Activiteitenplan Taken kunnen alleen afhankelijk zijn van andere Activiteitenplan Taken die onderdeel zijn van hetzelfde Activiteitenplan Ontwerp.</label>
         <name>EPTaskTemplate</name>
     </customLabels>
     <customLabels>
-        <label><!-- to, as in &quot;Add depend task to task 1&quot; --></label>
+        <label>Tot</label>
         <name>EPTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- ErrorEmailMessage --></label>
+        <label>Onderstaande foutmeldingen ontstonden tijdens het uitvoeren van NPSP Batch opdrachten, of op een tijd dat het niet mogelijk was de foutmeldingen te tonen aan de gebruiker. Het is waarschijnlijk dat NPSP probeerde velden te berekenen op Account en Contactpersonen, maar niet in staat was deze op te slaan.</label>
         <name>ErrorEmailMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- HiddenForSecurity --></label>
+        <label>Verborgen uit veiligheid</label>
         <name>HiddenForSecurity</name>
     </customLabels>
     <customLabels>
-        <label><!-- NameRequired --></label>
+        <label>Er zijn geplande opdrachten in het eigendom van een inactieve gebruiker. Bekijk de geplande opdrachten en verzeker dat alle opdrachten in het bezit zijn van een actieve gebruiker.</label>
+        <name>InactiveScheduledJobsOwnerErrMsg</name>
+    </customLabels>
+    <customLabels>
+        <label>Onderwerp is een verplicht veld.</label>
         <name>NameRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- OrganizationalOpportunities --></label>
+        <label>Organisatie Opportunities</label>
         <name>OrganizationalOpportunities</name>
     </customLabels>
     <customLabels>
-        <label><!-- Confirm --></label>
+        <label>Succes</label>
         <name>PageMessagesConfirm</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error --></label>
+        <label>Fout</label>
         <name>PageMessagesError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Fatal --></label>
+        <label>Fout</label>
         <name>PageMessagesFatal</name>
     </customLabels>
     <customLabels>
-        <label><!-- Warning --></label>
+        <label>Waarschuwing</label>
         <name>PageMessagesWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - Create --></label>
+        <label>Creëer Nieuwe Relatie</label>
         <name>REL_Create_New_Relationship</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - Former --></label>
+        <label>Voormalig</label>
         <name>REL_Former</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - No Relationship --></label>
+        <label>Er zijn geen relaties voor deze Contactpersoon.</label>
         <name>REL_No_Relationships</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - Re-center --></label>
+        <label>Maak dit Contactperoon het middelpunt</label>
         <name>REL_RECenter</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - Return to Contact --></label>
+        <label>Ga terug naar Contactpersoon</label>
         <name>REL_Return_to_Contact</name>
     </customLabels>
     <customLabels>
-        <label><!-- Relationship Viewer - View Contact Record --></label>
+        <label>Bekijk Contactpersoon Record</label>
         <name>REL_View_Contact_Record</name>
     </customLabels>
     <customLabels>
-        <label><!-- RecurringDonationAccountAndContactError --></label>
+        <label>Salesforce.org Webinars en Evenementen</label>
+        <name>RP_CustomerJourneyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Duik dieper in Salesforce en leer alles om succesvol te worden.</label>
+        <name>RP_DeeperParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label>3. Duik Dieper</label>
+        <name>RP_DeeperSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Introductie</label>
+        <name>RP_GettingStarted</name>
+    </customLabels>
+    <customLabels>
+        <label>Updates worden automatisch verwerkt; geen installatie nodig!</label>
+        <name>RP_GitHubSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Laatste Release Notes</label>
+        <name>RP_GitHubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Introductie Salesforce voor Nonprofits</label>
+        <name>RP_NpspLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Product Name --></label>
+        <name>RP_ProductNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Uitgave:</label>
+        <name>RP_ReleaseGitHub</name>
+    </customLabels>
+    <customLabels>
+        <label>Lees de volledige release notes&gt;</label>
+        <name>RP_ReleaseNotesLink</name>
+    </customLabels>
+    <customLabels>
+        <label>Om van alle voordelen van de nieuwe functionaliteit gebruik te maken opde Introductiepagina, zorg dat de Externe Site actief is. Ga naar Setup, zoek op Instellingen voor externe sites, klik op Bewerken naast SFDOEndpoints. Zorg dat Actief staat aangevinkt en klik op Opslaan.</label>
+        <name>RP_Remote_Site_Settings_Deactivated</name>
+    </customLabels>
+    <customLabels>
+        <label>Hub Community Wekelijkse Kantooruren</label>
+        <name>RP_SalesforceOrgLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>U heeft nu toegang tot ALLE krachtige functionaliteit van de Salesforce Enterprise Edition EN de mogelijkheid om beter donateurs te beheren met het Nonprofit Success Pack. Laten we beginnen.</label>
+        <name>RP_SubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Welkom bij Salesforce en het</label>
+        <name>RP_Title</name>
+    </customLabels>
+    <customLabels>
+        <label>Begin met Salesforce en NPSP Trailmix</label>
+        <name>RP_TrailheadLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Maak kennis met het Nonprofit Success Pack door het leren van de basis van Salesforce en donateur- en vrijwilligersbeheer.</label>
+        <name>RP_TrailheadParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label>1. Leer met Trailhead</label>
+        <name>RP_TrailheadSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label>Krijg hulp van onze actieve community met mede NPSP-gebruikers, of neem contact op met Salesforce.org.</label>
+        <name>RP_USParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Hub Link --></label>
+        <name>RP_UsHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>2. Word lid van de Community</label>
+        <name>RP_UsSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Youtube Videos --></label>
+        <name>RP_Videos</name>
+    </customLabels>
+    <customLabels>
+        <label>NPSP Product Documentatie</label>
+        <name>RP_WebinarLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Bekijk meer op ons youtube kanaal&gt;</label>
+        <name>RP_YoutubeChannel</name>
+    </customLabels>
+    <customLabels>
+        <label>Terugkerende Donaties hebben of een Organisatie, of een Contactpersoon, maar niet beide.</label>
         <name>RecurringDonationAccountAndContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Saved --></label>
+        <label>Opgeslagen.</label>
         <name>Saved</name>
     </customLabels>
     <customLabels>
-        <label><!-- Settings not Saved --></label>
+        <label>Instellingen niet opgeslagen</label>
         <name>Settings_not_Saved</name>
     </customLabels>
     <customLabels>
-        <label><!-- SmartyStreets Help Test --></label>
+        <label>Zorg ervoor dat u zowel de Auth ID en Auth Token hebt ingevoerd, die u gekregen hebt van SmartyStreets. U kunt deze vinden in uw SmartyStreets API Keys pagina.</label>
         <name>SmartyStreets_Help_Text</name>
     </customLabels>
     <customLabels>
-        <label><!-- Zip Not Found --></label>
+        <label>Postcode niet gevonden</label>
         <name>Zip_Not_Found</name>
     </customLabels>
     <customLabels>
-        <label><!-- Zipcode Verification Limit --></label>
+        <label>U kunt niet meer dan 100 postcodes tegelijkertijd controleren.</label>
         <name>Zipcode_Verification_Limit</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrCiceroMissingAPIKey --></label>
+        <label>De Cicero API Key moet ingesteld worden in de Auth Token instellingen in de Adresverificatie Instellingen.</label>
         <name>addrCiceroMissingAPIKey</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrCopyConAddBtnHHObjOnly --></label>
+        <label>Deze knop ondersteunt alleen Contactpersonen met een Huishouden, niet Huishouden Accounts.</label>
         <name>addrCopyConAddBtnHHObjOnly</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrGeneralSettings --></label>
+        <label>Algemene Adres Instellingen</label>
         <name>addrGeneralSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrHHAccountOnly --></label>
+        <label>Adresobjecten worden alleen ondersteunt op Huishouden Account en Organisatie Accounts (indien ingeschakeld).</label>
         <name>addrHHAccountOnly</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrHHAddressAlwaysDefault --></label>
+        <label>Het Huishouden Adres zal gekopieerd worden naar alle adressen zonder Overschrijving.</label>
         <name>addrHHAddressAlwaysDefault</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrSeasonalOverlap --></label>
+        <label>Seizoensadressen mogen geen overlap hebben met andere seizoensadressen in het Huishouden.</label>
         <name>addrSeasonalOverlap</name>
     </customLabels>
     <customLabels>
-        <label><!-- addrSeasonalPartial --></label>
+        <label>Bij een Seizoensadres moeten of alle of geen velden ingevuld zijn.</label>
         <name>addrSeasonalPartial</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloAddRow --></label>
+        <label>Voeg Rij toe</label>
         <name>alloAddRow</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloAddRowAtPosition --></label>
+        <label>Voeg Rij toe aan Positie</label>
         <name>alloAddRowAtPosition</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloAmountOrPercent --></label>
+        <label>Elke Toewijzing moet een toegekend bedrag of percentage hebben.</label>
         <name>alloAmountOrPercent</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloBatchCreateDefault --></label>
+        <label>Batch Creëer Standaard Toewijzingen</label>
         <name>alloBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloBatchDefaultInfo --></label>
+        <label>Deze functionaliteit voert een Batch proces uit dat standaard Toewijzingen aanmaakt voor all bestaande Opportunities, behalve Opportunities die zijn uitgesloten in de Bestemming Toewijzingen Rollup Instellingen. 
+&lt;br/&gt;
+&lt;br/&gt;
+Om deze functionaliteit uit te voeren, moet standaard Toewijzingen ingeschakeld zijn en een standaard  Bestemming geselecteerd. De Batch hoeft maar eenmalig uitgevoerd te worden na inschakeling van standaard Toewijzingen, alle nieuwe Opportunities krijgen de standaard Toewijzing na inschakeling. 
+&lt;br/&gt;
+&lt;br/&gt;
+Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Bestemming Toewijzingen.</label>
         <name>alloBatchDefaultInfo</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloBtnCancel --></label>
+        <label>Annuleer</label>
         <name>alloBtnCancel</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloBtnSaveAndClose --></label>
+        <label>Opslaan</label>
         <name>alloBtnSaveAndClose</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloCampaignExceedsOppAmount --></label>
+        <label>Uw Campagne Toewijzingen zijn niet gecreërd. Campagne Toewijzingen voor de Opportunity hebben het Opportunity Bedrag overschreden.</label>
         <name>alloCampaignExceedsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloCantAllocateNothing --></label>
+        <label>Het is alleen mogelijk Toewijzingen aan te maken voor Opportunities met een positief Bedrag.</label>
         <name>alloCantAllocateNothing</name>
     </customLabels>
     <customLabels>
-        <label><!-- Default Allocations are enabled, but no default GAU is selected. --></label>
+        <label>Standaard Toewijzingen zijn ingeschakeld. Selecteer een standaard Bestemming.</label>
         <name>alloDefaultGAUMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloDefaultNotPercent --></label>
+        <label>De standaard Toewijzing kan niet gebaseerd zijn op een percentage.</label>
         <name>alloDefaultNotPercent</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloDeleteRow --></label>
+        <label>Verwijder</label>
         <name>alloDeleteRow</name>
     </customLabels>
     <customLabels>
-        <label><!-- The allocations for this opportunity are greater than the amount of the opportun --></label>
+        <label>De Toewijzingen moeten worden bijgewerkt om het Opportunity Bedrag te verminderen. De Toewijzingen voor deze Opportunity zijn op dit moment groter dan het Opportunity Bedrag.</label>
         <name>alloExceedsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloManageCampaignAllocations --></label>
+        <label>Beheer Campagne Toewijzingen</label>
         <name>alloManageCampaignAllocations</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloManageOppAllocations --></label>
+        <label>Beheer Opportunity Toewijzingen</label>
         <name>alloManageOppAllocations</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloManageRecurringDonationAllocations --></label>
+        <label>Beheer Terugkerende Donatie Toewijzingen</label>
         <name>alloManageRecurringDonationAllocations</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloModifyCurrency --></label>
+        <label>De valuta van Toewijzingen kunnen niet direct gewijzigd worden. De valuta wordt bijgewerkt wanneer de valuta van de Opportunity, Campagne of Terugkerende Donatie wordt gewijzigd.</label>
         <name>alloModifyCurrency</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloNegativeAmount --></label>
+        <label>Toewijzingen kunnen geen negatief bedrag bevatten.</label>
         <name>alloNegativeAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloNegativePercent --></label>
+        <label>Toewijzingen kunnen geen negatief percentage bevatten.</label>
         <name>alloNegativePercent</name>
     </customLabels>
     <customLabels>
-        <label><!-- Percent based Allocations cannot exceed 100%. --></label>
+        <label><!-- alloObjectUnsupported --></label>
+        <name>alloObjectUnsupported</name>
+    </customLabels>
+    <customLabels>
+        <label>Percentage gebaseerde Toewijzingen kunnen niet de 100% overschrijden.</label>
         <name>alloPercentExceed100</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloRemainder --></label>
+        <label>Restant:</label>
         <name>alloRemainder</name>
     </customLabels>
     <customLabels>
-        <label><!-- Each Allocation must have a single parent object: Opportunity, Recurring Donatio --></label>
+        <label>Elke Toewijzing moet een ouderobject hebben: Opportunity Terugkerende Donatie of een Campagne.</label>
         <name>alloSingleParent</name>
     </customLabels>
     <customLabels>
-        <label><!-- Opportunity Allocation totals must not exceed the amount of the Opportunity. --></label>
+        <label>Opportunity Toewijzing totalen kunnen niet het Bedrag van de Opportunity overschrijden.</label>
         <name>alloTotalExceedsOppAmt</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloTotals --></label>
+        <label>Totalen:</label>
         <name>alloTotals</name>
     </customLabels>
     <customLabels>
-        <label><!-- alloUnallocated --></label>
+        <label>Niet toegewezen</label>
         <name>alloUnallocated</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiAccountCustomIdError --></label>
+        <label>Het Account Aangepaste Unieke ID instelling {0} moet matchende velden hebben in de NPSP Data Import object  met de API Namen {1} en {2}.</label>
         <name>bdiAccountCustomIdError</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiBatchException --></label>
+        <label>Een foutmelding ontstond tijdens het proces. Deze status was de eerst gevonden fout:</label>
         <name>bdiBatchException</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for BestMatchOrCreate behavior --></label>
+        <label>Beste Match of Creëer - Importeer een record als het een bestaande record matcht; als er geen gevonden is creêer dan een nieuw record.</label>
         <name>bdiBehaviorBestMatchOrCreate</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for DoNotMatch behavior --></label>
+        <label>Match Niet - Matching wordt niet uitgevoerd; nieuwe records worden aangemaakt.</label>
         <name>bdiBehaviorDoNotMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for ExactMatchOrCreate behavior --></label>
+        <label>Enkele Match of Creëer - Importeer een record als het één match heeft gevonden, creëer een nieuw record als dit niet het geval is.</label>
         <name>bdiBehaviorExactMatchOrCreate</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for RequireBestMatch behavior --></label>
+        <label>Beste Match - Importeer alleen als er ten minste één record gevonden is en werk de best gematchte record bij.</label>
         <name>bdiBehaviorRequireBestMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for RequireExactMatch behavior --></label>
+        <label>Enkele Match - Importeer alleen als er één match gevonden is.</label>
         <name>bdiBehaviorRequireExactMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- settings label for RequireNoMatch behavior --></label>
+        <label>Geen Match - Importeer alleen als er geen match gevonden wordt.</label>
         <name>bdiBehaviorRequireNoMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiBtnClose --></label>
+        <label>Gesloten</label>
         <name>bdiBtnClose</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiComplete --></label>
+        <label>Voltooid</label>
         <name>bdiComplete</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiCompleteWithErrors --></label>
+        <label>Fouten</label>
         <name>bdiCompleteWithErrors</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactCustomIdError --></label>
+        <label>Het Contactpersoon Aangepaste Unieke ID instelling veld {0} moet matchende velden hebben in de NPSP Data Import object  met de API Namen {1} en {2}.</label>
         <name>bdiContactCustomIdError</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactMatchEmail --></label>
+        <label>Alleen E-mail</label>
         <name>bdiContactMatchEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactMatchFnameEmail --></label>
+        <label>Voornaam en E-mail</label>
         <name>bdiContactMatchFnameEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactMatchFnameLname --></label>
+        <label>Voornaam en Achternaam</label>
         <name>bdiContactMatchFnameLname</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactMatchFnameLnameEmail --></label>
+        <label>Voornaam, Achternaam en E-mail</label>
         <name>bdiContactMatchFnameLnameEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- Data Importer Contact matching option for Fname, Lname, Phone --></label>
+        <label>Voornaam, Achternaam en Telefoonnummer</label>
         <name>bdiContactMatchFnameLnamePhone</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiContactMatchLnameEmail --></label>
+        <label>Achternaam en E-mail</label>
         <name>bdiContactMatchLnameEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiCreated --></label>
+        <label>Gecreërd</label>
         <name>bdiCreated</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterConfigTitle --></label>
+        <label>Configuratie Opties</label>
         <name>bdiDataImporterConfigTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterDescription --></label>
+        <label>De NPSP Data Importer helpt bij het eenvoudig importeren van data in het Nonprofit Success Pack.</label>
         <name>bdiDataImporterDescription</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoLine1 --></label>
+        <label>Elke importrecord kan twee Contactpersonen, twee Organisaties, een optioneel Huisadres en een optionele donatie bevatten.</label>
         <name>bdiDataImporterInfoLine1</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoLine2 --></label>
+        <label>Salesforce probeert bestaande Contactpersonen en Organisaties te matchen en bij te werken, om het aantal dubbele records te minimaliseren.</label>
         <name>bdiDataImporterInfoLine2</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoLine2b --></label>
+        <label>Om adresverificatie limieten te voorkomen, verifieert de NPSP Data Importer geen adressen via de verificatie dienst die is ingesteld in de NPSP Instellingen.</label>
         <name>bdiDataImporterInfoLine2b</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoLine3 --></label>
+        <label>Salesforce houdt bij welke data import problemen veroorzaakt. De records die mislukt zijn, kunnen na wijziging alsnog geïmporteerd worden.</label>
         <name>bdiDataImporterInfoLine3</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoLine4 --></label>
+        <label>De data import start mogelijk niet direct, afhankelijk van de huidige activiteit in Salesforce.</label>
         <name>bdiDataImporterInfoLine4</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterInfoTitle --></label>
+        <label>Belangrijke Informatie</label>
         <name>bdiDataImporterInfoTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDataImporterNumToProcess --></label>
+        <label>Aantal Data Import records die verwerkt moeten worden:</label>
         <name>bdiDataImporterNumToProcess</name>
     </customLabels>
     <customLabels>
@@ -689,403 +813,455 @@
         <name>bdiDataImporterTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiDonation --></label>
+        <label>Donaties</label>
         <name>bdiDonation</name>
     </customLabels>
     <customLabels>
-        <label><!-- error displayed in Data Importer if no donation matching rules set --></label>
+        <label>Wanneer Donatie matching is ingeschakeld, moeten een of meer velden geselecteerd worden in een Donatie Matching Regel.</label>
         <name>bdiDonationMatchingRuleEmpty</name>
     </customLabels>
     <customLabels>
-        <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
+        <label>Batch Naam is een verplicht veld.</label>
+        <name>bdiErrorBatchNameRequired</name>
+    </customLabels>
+    <customLabels>
+        <label>De opzoekwaarde in Geïmporteerde Donatie, of Geïmporteerde Betaling is niet geldig.</label>
         <name>bdiErrorDonationLookupMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- error message if the donation matched multiple opps --></label>
+        <label>De Donatie Informatie is gematcht met meerdere Opportunities, dus kon niet worden geïmporteerd. Het Donatie Mogelijke Matches veld bevat de Salesforce Id&apos;s van de gematchte Opportunities.</label>
         <name>bdiErrorDonationMultiMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when no matching donation found, and a match is required --></label>
+        <label>Geen matchende donatie gevonden.</label>
         <name>bdiErrorDonationNoMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- error message if the donation matched opp(s), but behavior required no match --></label>
+        <label>De Donatie Informatie is gematcht met een of meer Opportunities, maar volgens de instellingen mogen er geen matchen zijn, dus zijn de records niet geïmporteerd. Het Donatie Mogelijke Matches veld bevat de Salesforce Id&apos;s van de gematchte Opportunities.</label>
         <name>bdiErrorDonationRequireNoMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiErrorInvalidCampaignName --></label>
+        <label>Ongeldige Donatie Campagne Naam</label>
         <name>bdiErrorInvalidCampaignName</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiErrorInvalidDonor --></label>
+        <label>Ongeldige Donatie Donateur</label>
         <name>bdiErrorInvalidDonor</name>
     </customLabels>
     <customLabels>
-        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <label>De Apex klasse {0} is niet gevonden of ondersteunt niet de {1} interface.</label>
         <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiErrorInvalidLastname --></label>
+        <label>Achternaam moet gespecificeerd worden.</label>
         <name>bdiErrorInvalidLastname</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiErrorInvalidOppRTName --></label>
+        <label>Ongeldige Recordtype Naam</label>
         <name>bdiErrorInvalidOppRTName</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiErrorNonHHAccountContact --></label>
+        <label>Een bestaand Contactpersoon gematched uit een niet-Huishouden Account, wat niet ondersteunt wordt.</label>
         <name>bdiErrorNonHHAccountContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- error message if the donation matched multiple pmts --></label>
+        <label>De Donatie informatie is gematcht tegen verschillende Betalingen, dus wordt niet geïmporteerd. Het Betaling Mogelijke Matches veld bevat Salesforce Id&apos;s van de gematchte Betalingen.</label>
         <name>bdiErrorPaymentMultiMatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiFailed --></label>
+        <label>Mislukt</label>
         <name>bdiFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiHouseholdModelRequired --></label>
+        <label>De NPSP Data Importer werkt alleen met een Huishouden Account Model.</label>
         <name>bdiHouseholdModelRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiIgnored --></label>
+        <label>Genegeerd</label>
         <name>bdiIgnored</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiImported --></label>
+        <label>Geïmporteerd</label>
         <name>bdiImported</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when the importData() API is given a invalid Batch ID. --></label>
+        <label>De NPSP Data Import Batch Id {0} is ongeldig.</label>
         <name>bdiInvalidBatchId</name>
     </customLabels>
     <customLabels>
-        <label><!-- error message if the Donation Matching Behavior is invalid --></label>
+        <label>{0} is ongeldige Donatie Matching Gedrag</label>
         <name>bdiInvalidDonationMatchingBehavior</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiMatched --></label>
+        <label>Gematched</label>
         <name>bdiMatched</name>
     </customLabels>
     <customLabels>
-        <label><!-- status on a bdi object to specify it was matched from an ambiguous set --></label>
+        <label>Beste Match Gebruikt</label>
         <name>bdiMatchedBest</name>
     </customLabels>
     <customLabels>
-        <label><!-- BDI status when matching an object by its Salesforce ID --></label>
+        <label>Gematched met Id</label>
         <name>bdiMatchedId</name>
     </customLabels>
     <customLabels>
-        <label><!-- status on a bdi object when no matching record found --></label>
+        <label>Geen Gematched</label>
         <name>bdiMatchedNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when numeric settings set to negative number --></label>
+        <label>{0} moet een positief nummer zijn.</label>
         <name>bdiPositiveNumber</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiRecordsFailed --></label>
+        <label>Records mislukt:</label>
         <name>bdiRecordsFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiRecordsImported --></label>
+        <label>Records geïmporteerd:</label>
         <name>bdiRecordsImported</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiRecordsProcessed --></label>
+        <label>Records verwerkt:</label>
         <name>bdiRecordsProcessed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiRunBtn --></label>
+        <label>Begin Data Import Proces</label>
         <name>bdiRunBtn</name>
     </customLabels>
     <customLabels>
-        <label><!-- section label for contact matching rules in bDI --></label>
+        <label>Contactpersoon en Account Matching</label>
         <name>bdiSettingsSectionContactMatching</name>
     </customLabels>
     <customLabels>
-        <label><!-- section label for Donation Matching in BDI Settings --></label>
+        <label>Donatie Matching</label>
         <name>bdiSettingsSectionDonationMatching</name>
     </customLabels>
     <customLabels>
-        <label><!-- section label for Extensibility in BDI Settings --></label>
+        <label>Rekbaarheid</label>
         <name>bdiSettingsSectionExtensibility</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiStatus --></label>
+        <label>Huidige Status:</label>
         <name>bdiStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiStatusProcessed --></label>
+        <label>{0} van de {1} batches verwerkt</label>
         <name>bdiStatusProcessed</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiStatusProcessing --></label>
+        <label>momenteel wordt batch {0} verwerkt van {1} totaal batches</label>
         <name>bdiStatusProcessing</name>
     </customLabels>
     <customLabels>
-        <label><!-- bdiTime --></label>
+        <label>Tijd:</label>
         <name>bdiTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- button label on the Remove Contact popup --></label>
+        <label>Verwijder</label>
         <name>btnRemove</name>
     </customLabels>
     <customLabels>
-        <label><!-- campaignMemberStatusDefault --></label>
+        <label>CampagnelidStatusStandaard</label>
         <name>campaignMemberStatusDefault</name>
     </customLabels>
     <customLabels>
-        <label><!-- campaignMemberStatusNonResponded --></label>
+        <label>CampagnelidStatusNietGereageerd</label>
         <name>campaignMemberStatusNonResponded</name>
     </customLabels>
     <customLabels>
-        <label><!-- campaignMemberStatusResponded --></label>
+        <label>CampagnelidStatusGereageerd</label>
         <name>campaignMemberStatusResponded</name>
     </customLabels>
     <customLabels>
-        <label><!-- Used when NPSP hits an error trying to create an account for a contact --></label>
+        <label>Mislukt om een Account te maken voor Contactpersoon {0} {1}. {2}</label>
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
-        <label><!-- conMergeErrNoPersonAccounts --></label>
+        <label><!-- conMergeBtnLabel --></label>
+        <name>conMergeBtnLabel</name>
+    </customLabels>
+    <customLabels>
+        <label>Persoon Accounts worden niet ondersteund.</label>
         <name>conMergeErrNoPersonAccounts</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanCantEdit --></label>
+        <label><!-- conMergeFoundContacts --></label>
+        <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitle --></label>
+        <name>conMergePageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitleDetail --></label>
+        <name>conMergePageTitleDetail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSearchPlaceholder --></label>
+        <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectAll --></label>
+        <name>conMergeSelectAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectContact --></label>
+        <name>conMergeSelectContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectedContacts --></label>
+        <name>conMergeSelectedContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeStageComplete --></label>
+        <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeWinnerAsstText --></label>
+        <name>conMergeWinnerAsstText</name>
+    </customLabels>
+    <customLabels>
+        <label>Het is niet mogelijk dit Activiteitenplan aan een nieuw object toe te wijzen. Creëer een nieuw Activiteitenplan.</label>
         <name>engagementPlanCantEdit</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanNoLookups --></label>
+        <label>Een opzoek object moet gevuld zijn voor elk Activiteitenplan.</label>
         <name>engagementPlanNoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- engagementPlanTwoLookups --></label>
+        <label>Er kan maar één opzoek object gevuld zijn per Activiteitenplan.</label>
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionRequiredField --></label>
+        <label>Verplichte velden ontbreken:</label>
         <name>exceptionRequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- exceptionValidationRule --></label>
+        <label>Een validatieregel weerhoudt de record van opslaan:</label>
         <name>exceptionValidationRule</name>
     </customLabels>
     <customLabels>
-        <label><!-- flsError --></label>
+        <label>U heeft geen recht {0} aan te passen.</label>
         <name>flsError</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthButtonRun --></label>
+        <label>Voer Gezondheidscontrole uit</label>
         <name>healthButtonRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAccOne2OneNoContacts --></label>
+        <label>Er zijn {0} Eén-op-Eén Accounts zonder Contactpersonen.</label>
         <name>healthDetailsAccOne2OneNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAccountModel --></label>
+        <label><!-- healthDetailsAccountDefaultRTInvalid --></label>
+        <name>healthDetailsAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTIssue --></label>
+        <name>healthDetailsAccountDefaultRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label>Er is geen geldig Account Model gespecificeerd.</label>
         <name>healthDetailsAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAccountProcessor --></label>
+        <label>Het Account Model is ingesteld op {0}, maar de Gezondheidscontrole heeft uitgewezen dat er een mix isvan Account typen.</label>
         <name>healthDetailsAccountProcessor</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAccountRTIssue --></label>
+        <label>Van {0} Account records met het Recordtype {1}  zijn de Systeemvelden niet correct ingevoerd.</label>
         <name>healthDetailsAccountRTIssue</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAutoRelCampaignTypeMissing --></label>
+        <label>Campagne Type moet gespecificeerd worden voor het automatisch aanmaken van Relaties voor Campagneleden.</label>
         <name>healthDetailsAutoRelCampaignTypeMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAutoRelFieldsMissing --></label>
+        <label>Automatisch Gemaakte Relaties heeft een geldig Object, Veld en Relatie Type nodig.</label>
         <name>healthDetailsAutoRelFieldsMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsAutoRelInvalidLookupField --></label>
+        <label>Veld {0} is geen opzoek veld.</label>
         <name>healthDetailsAutoRelInvalidLookupField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsBadRDField --></label>
+        <label>Terugkerende Donatie veld {0} bestaat niet.</label>
         <name>healthDetailsBadRDField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsBadReportId --></label>
+        <label>Ongeldig Rapport {0} gespecificeerd.</label>
         <name>healthDetailsBadReportId</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsContactData --></label>
+        <label>Er zijn {0} Contactpersonen zonder Account.</label>
         <name>healthDetailsContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsDuplicateAcctRT --></label>
+        <label>U kunt niet hetzelfde Account Recordtype specificeren voor het Huishouden Account Recordtype en het Eén-op-Eén Recordtype.</label>
         <name>healthDetailsDuplicateAcctRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsGenderField --></label>
+        <label>Geslachtveld {0} bestaat niet op Contactpersoon.</label>
         <name>healthDetailsGenderField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsHHAccountModel --></label>
+        <label>Bij het gebruik van het Huishouden Account Model, moeten Huishouden Regels worden ingesteld op Geen Contactpersonen.</label>
         <name>healthDetailsHHAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsHHActNoContacts --></label>
+        <label>Er zijn {0} Huishouden Accounts zonder Contactpersonen.</label>
         <name>healthDetailsHHActNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsHHObNoContacts --></label>
+        <label>Er zijn {0} Huishouden objecten zonder Contactpersonen.</label>
         <name>healthDetailsHHObNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidCMField --></label>
+        <label>Campagnelid veld {0} bestaat niet.</label>
         <name>healthDetailsInvalidCMField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidContactField --></label>
+        <label>Contactpersoon veld {0} bestaat niet.</label>
         <name>healthDetailsInvalidContactField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidErrorChatterGroup --></label>
+        <label>Ongeldige Chatter Groep {0}.</label>
         <name>healthDetailsInvalidErrorChatterGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidErrorRecipient --></label>
+        <label>Ongeldige Foutmelding Ontvanger.</label>
         <name>healthDetailsInvalidErrorRecipient</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidErrorUser --></label>
+        <label>Ongeldige Gebruiker {0}.</label>
         <name>healthDetailsInvalidErrorUser</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Niveau {0} verwijst naar een ongeldig nummeriek veld {1} op {2}.</label>
         <name>healthDetailsInvalidFieldNumeric</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidFiscalYears --></label>
+        <label>Fiscaal Jaar Rollups worden niet ondersteunt als de organisatie Aangepast Fiscaal Jaar gebruikt.</label>
         <name>healthDetailsInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Niveau {0} verwijst naar een ongeldig veld {1} op {2}.</label>
         <name>healthDetailsInvalidLevelField</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check error if a Level refers to an invalid field --></label>
+        <label>Niveau {0} verwijst naar een ongeldig Niveau opzoek veld {1} op {2}.</label>
         <name>healthDetailsInvalidLevelFieldReference</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidObjectField --></label>
+        <label>{0} veld {1} bestaat niet.</label>
         <name>healthDetailsInvalidObjectField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidOppField --></label>
+        <label>Opportunity veld {0} bestaat niet.</label>
         <name>healthDetailsInvalidOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidOppStage --></label>
+        <label>De Opportunity fase {0} bestaat niet of is niet actief.</label>
         <name>healthDetailsInvalidOppStage</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidPaymentField --></label>
+        <label>Betaling veld {0} bestaat niet.</label>
         <name>healthDetailsInvalidPaymentField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidRDCustomPeriod --></label>
+        <label>Aangepaste Termijn Periode {0} is niet ingesloten in de keuzelijstwaarden voor het Terugkerende Donatie veld Termijn Periode.</label>
         <name>healthDetailsInvalidRDCustomPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidRDCustomPeriodPIcklist --></label>
+        <label>Terugkerende Donatie Termijn Periode keuzelijstwaarde {0} is niet een geldig Aangepast Termijn Periode.</label>
         <name>healthDetailsInvalidRDCustomPeriodPIcklist</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidRecordtypeId --></label>
+        <label>Recordtype Id {0} is niet geldig.</label>
         <name>healthDetailsInvalidRecordtypeId</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidRecordtypeName --></label>
+        <label>Recordtype Naam {0} is niet geldig.</label>
         <name>healthDetailsInvalidRecordtypeName</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsInvalidScheduledJob --></label>
+        <label>Het record {0} in de Schedulable__c object is niet geldig.</label>
         <name>healthDetailsInvalidScheduledJob</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsMailingListReportMissing --></label>
+        <label>Het NPSP_Campagne_Huishouden_Verzendlijst rapport ontbreekt. Deze wordt gebruikt voor de Huishouden Verzendlijst knop.</label>
         <name>healthDetailsMailingListReportMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsMissingOppPayments --></label>
+        <label>{0} Opportunities welke Betalingen zouden moeten hebben, hebben er geen.</label>
         <name>healthDetailsMissingOppPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsNothingScheduled --></label>
+        <label>De NPSP standaard geplande klassen zijn niet ingepland.</label>
         <name>healthDetailsNothingScheduled</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCR --></label>
+        <label>{0} en {1} kunnen niet dezelfde Rol waarde hebben.</label>
         <name>healthDetailsOCR</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRDupPrimary --></label>
+        <label>Er zijn {0} Opportunities gevonden die meer dan één Opportunity Contactpersoon Rol als Primair ingesteld hebben.</label>
         <name>healthDetailsOCRDupPrimary</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRDupPrimaryValid --></label>
+        <label>Geen Opportunities zijn gevonden met meerdere Primaire Opportunity Contactpersoon Rollen.</label>
         <name>healthDetailsOCRDupPrimaryValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsResolution --></label>
+        <label>Op de NPSP Instellingen tab, klik Donaties | Contactpersoon Rollen en wijzig de bovenstaande instellingen waardes.</label>
         <name>healthDetailsOCRSettingsResolution</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsOCRSettingsValid --></label>
+        <label>NPSP Opportunity Contactpersoon Rollen instellingen zijn geldig.</label>
         <name>healthDetailsOCRSettingsValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsPaymentMappingBadDataTypes --></label>
+        <label>Betaling veld {0} en Opportunity veld {1} zijn geen verenigbare data typen.</label>
         <name>healthDetailsPaymentMappingBadDataTypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsRDFieldsBadDatatypes --></label>
+        <label>Terugkerende Donatie veld {0} en Opportunity veld {1} zijn geen verenigbare data typen.</label>
         <name>healthDetailsRDFieldsBadDatatypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsRelReciprocalInvalid --></label>
+        <label>Wederkerige Relatie {0} zou een waarde moeten hebben in elk van de velden voor Man, Vrouw en Neutraal.</label>
         <name>healthDetailsRelReciprocalInvalid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsSaveAcctFailed --></label>
+        <label>Niet in staat een nieuw Account te creëeren.</label>
         <name>healthDetailsSaveAcctFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsSaveOppsFailed --></label>
+        <label>Niet in staat een nieuwe Opportunities te creëeren.</label>
         <name>healthDetailsSaveOppsFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsScheduleJobs --></label>
+        <label>Eén of meer van de Opportunity Rollup, Terugkerende Donatie en Seizoensadres opdrachten ontbreken uit het Schedulable__c object.</label>
         <name>healthDetailsScheduleJobs</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsTriggerHandlerDuplicate --></label>
+        <label>Trigger Handler {0} op object {1} met dezelfde Handler velden wordt meerdere malen herhaald en beïnvloed NPSP gedrag.</label>
         <name>healthDetailsTriggerHandlerDuplicate</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsTriggerHandlerMismatch --></label>
+        <label>Trigger Handler {0} op object {1} matcht niet met de standaard NPSP configuratie.</label>
         <name>healthDetailsTriggerHandlerMismatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsTriggerHandlerMissing --></label>
+        <label>Trigger Handler {0} op object {1} ontbreekt en beïnvloed NPSP gedrag.</label>
         <name>healthDetailsTriggerHandlerMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsUDFBadDatatypes --></label>
+        <label>Opportunity veld {0} en {1} veld zijn verenigbare data typen.</label>
         <name>healthDetailsUDFBadDatatypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthDetailsValidRDCustomPeriod --></label>
+        <label>Terugkerende Donatie Aangepaste Termijn Periode zijn geldig.</label>
         <name>healthDetailsValidRDCustomPeriod</name>
     </customLabels>
     <customLabels>
@@ -1093,599 +1269,627 @@
         <name>healthLabelAccountData</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelAccountDefaultRT --></label>
+        <name>healthLabelAccountDefaultRT</name>
+    </customLabels>
+    <customLabels>
         <label><!-- healthLabelAccountModelData --></label>
         <name>healthLabelAccountModelData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelAccountRTIssueValid --></label>
+        <label>Account systeemvelden zijn goed ingesteld voor alle Huishouden Accounts en Eén-op-Eén Accounts.</label>
         <name>healthLabelAccountRTIssueValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelAllTestsPassed --></label>
+        <label>Alle Gezondheidscontrole testen zijn geslaagd.</label>
         <name>healthLabelAllTestsPassed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelAutoRelValid --></label>
+        <label>Automatische Relaties geldig.</label>
         <name>healthLabelAutoRelValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelContactData --></label>
+        <label>Contactpersoon Data</label>
         <name>healthLabelContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelErrorRecipientValid --></label>
+        <label>Foutmelding Ontvanger geldig.</label>
         <name>healthLabelErrorRecipientValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelFailed --></label>
+        <label>Mislukt</label>
         <name>healthLabelFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelFiscalYearsValid --></label>
+        <label>Aangepast Fiscaal Jaar niet in gebruik.</label>
         <name>healthLabelFiscalYearsValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelHHAccData --></label>
+        <label>Huishouden Account Data</label>
         <name>healthLabelHHAccData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelHHData --></label>
+        <label>Huishouden Data</label>
         <name>healthLabelHHData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelHHObjData --></label>
+        <label>Huishouden Object Data</label>
         <name>healthLabelHHObjData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelIntro --></label>
+        <label>Gezondheidscontrole kijkt of alle NPSP Instellingen goed staan en geen problemen veroorzaken bij Account gerelateerde data. Na afloop zijn de resultaten te bekijken , inclusief gedetailleerde informatie over fouten.</label>
         <name>healthLabelIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelLastRun --></label>
+        <label>Laatste uitvoer: {0}</label>
         <name>healthLabelLastRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelNoMissingOppPayments --></label>
+        <label>Alle Opportunities met Betalingen hebben te verwachte Betalingen.</label>
         <name>healthLabelNoMissingOppPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelNone --></label>
+        <label>(geen)</label>
         <name>healthLabelNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelOCRCheck --></label>
+        <label>Opportunity Contactpersoon Rollen</label>
         <name>healthLabelOCRCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelOCRSettings --></label>
+        <label>Opportunity Contactpersoon Rollen Instellingen</label>
         <name>healthLabelOCRSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelOppPayments --></label>
+        <label>Opportunity Betalingen</label>
         <name>healthLabelOppPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelPassed --></label>
+        <label>Geslaagd</label>
         <name>healthLabelPassed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelPaymentMappingsValid --></label>
+        <label>Betaling Mapping geldig.</label>
         <name>healthLabelPaymentMappingsValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelRDOppsValid --></label>
+        <label>Nieuwe Opportunities kunnen opgeslagen worden.</label>
         <name>healthLabelRDOppsValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelRDValid --></label>
+        <label>Terugkerende Donatie Veld Mapping geldig.</label>
         <name>healthLabelRDValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelRelReciprocalValid --></label>
+        <label>Wederkerige Relaties geldig.</label>
         <name>healthLabelRelReciprocalValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelScheduler --></label>
+        <label>NPSP Standaard Planner</label>
         <name>healthLabelScheduler</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelSchedulerValid --></label>
+        <label>NPSP terugkerende opdrachten zijn ingepland.</label>
         <name>healthLabelSchedulerValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelShowPassedTests --></label>
+        <label>Toon Geslaagde Testen</label>
         <name>healthLabelShowPassedTests</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelTime --></label>
+        <label>Opsporingstijd in seconden: {0}</label>
         <name>healthLabelTime</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelTriggerHandlerCheck --></label>
+        <label>Trigger Configuratie</label>
         <name>healthLabelTriggerHandlerCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelTriggerHandlersValid --></label>
+        <label>Triggers zijn geconfigureerd voor NPSP standaard triggers.</label>
         <name>healthLabelTriggerHandlersValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelUDFValid --></label>
+        <label>Gebuiker Gedefinieerde Rollups geldig.</label>
         <name>healthLabelUDFValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check title for Levels --></label>
+        <label>Niveaus</label>
         <name>healthLabelVerifyLevels</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check message when all Levels verify ok --></label>
+        <label>Alle veldreferenties op alle Niveaus zijn geldig.</label>
         <name>healthLabelVerifyLevelsSuccess</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthLabelWarning --></label>
+        <label>Waarschuwing</label>
         <name>healthLabelWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthPaymentAutoCloseStageInvalid --></label>
+        <label>De geselecteerde Opportunity Fase die gebruikt moet worden wanneer alle Betalingen betaald zijn. De fase moet een actieve Gesloten/Gewonnen fase zijn.</label>
         <name>healthPaymentAutoCloseStageInvalid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank --></label>
+        <label>Of selecteer geen Opportunity fase (en schakel deze functionaliteit uit) of verander de instelling om een actieve Gesloten/Gewonnen Opportunity Fase te gebruiken.</label>
         <name>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthPaymentAutoCloseStageValid --></label>
+        <label>Of er is geen Opportunity Fase geselecteerd, of de geselecteerde fase is een actieve Gesloten/Gewonnen fase.</label>
         <name>healthPaymentAutoCloseStageValid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAccOne2OneNoContacts --></label>
+        <label>Overweeg om de ongebruikte Eén-op-Eén Accounts te verwijderen om ruimte te besparen.</label>
         <name>healthSolutionAccOne2OneNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAccountModel --></label>
+        <label><!-- healthSolutionAccountDefaultRTInvalid --></label>
+        <name>healthSolutionAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTIssue --></label>
+        <name>healthSolutionAccountDefaultRTIssue</name>
+    </customLabels>
+    <customLabels>
+        <label>Alle Accounts moeten gebruik maken van hetzelfde Account Model. Bekijk alle Accounts en hun type door het uitvoeren van  &lt;b&gt;Afzonderlijke  Accounts met Account Type&lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder.</label>
         <name>healthSolutionAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAccountRTIssue --></label>
+        <label>Voor Huishouden Accounts, zorg dat npe01__SYSTEM_AccountType__c is &apos;Huishouden Account&apos;. Voor Eén-op-Eén Accounts, zorg dat npe01__SYSTEM_AccountType__c is &apos;Eén-op-Eén Individu&apos;. Zorg er ook voor dat voor beide, npe01__SYSTEMISINDIVIDUAL__c waar is.</label>
         <name>healthSolutionAccountRTIssue</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAutoRelFieldsMissing --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder het ongeldige Automatische Aangemaakte Relatie record.</label>
         <name>healthSolutionAutoRelFieldsMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAutoRelInvalidCMField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Campagnelid veld toe of verwijder de Automatisch Aangemaakte Relatie record.</label>
         <name>healthSolutionAutoRelInvalidCMField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAutoRelInvalidContactField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Contactpersoon veld toe of verwijder de Automatisch Aangemaakte Relatie record.</label>
         <name>healthSolutionAutoRelInvalidContactField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionAutoRelInvalidLookupField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder het Automatische Aangemaakte Relatie record.</label>
         <name>healthSolutionAutoRelInvalidLookupField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionBadRDField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Terugkerende Donatie veld toe of verwijder de Terugkerende Donatie Veld Mapping record.</label>
         <name>healthSolutionBadRDField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionContactData --></label>
+        <label>Bekijk deze Contactpersonen door het uitvoeren van het &lt;b&gt;Contactpersonen zonder  Accounts&lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder.</label>
         <name>healthSolutionContactData</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionEditSetting --></label>
+        <label>Op de NPSP Instellingen tab, klik {1} | {2} en wijzig de {0} instelling.</label>
         <name>healthSolutionEditSetting</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionHHAccNoContacts --></label>
+        <label>Overweeg om deze ongebruikte Huishouden Accounts te verwijderen om ruimte te besparen. Bekijk de Huishouden Accounts door het uitvoeren van het &lt;b&gt;Lege huishouden Accounts&lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder.</label>
         <name>healthSolutionHHAccNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionHHObjNoContacts --></label>
+        <label>Overweeg het verwijderen van deze ongebruikte Huishouden objecten om ruimte te besparen. Als de omzetting naar een Huishouden Account model voltooid is, kan de data op deze objecten verwijderd worden. Bekijk de Huishouden objecten door het uitvoeren van het &lt;b&gt;Lege huishouden Objecten&lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder.</label>
         <name>healthSolutionHHObjNoContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidFiscalYears --></label>
+        <label>Omdat Salesforce het aangepaste fiscaal jaar niet kan uitzetten, gebruiken NPSP Rollups het kalenderjaar.</label>
         <name>healthSolutionInvalidFiscalYears</name>
     </customLabels>
     <customLabels>
-        <label><!-- Health Check Solution for an invalid Level field --></label>
+        <label>Ga naar de Niveaus Tab, en werk de ongeldige veldreferentie bij op Niveau {0}.</label>
         <name>healthSolutionInvalidLevelField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidOppField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Opportunity veld toe, of verwijder het Betaling Mapping record.</label>
         <name>healthSolutionInvalidOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidOppStage --></label>
+        <label>Voeg deze Opportunity Fase waarde toe in Salesforce Set-up.</label>
         <name>healthSolutionInvalidOppStage</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidPaymentField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Betaling veld toe, of verwijder het Betaling Mapping record.</label>
         <name>healthSolutionInvalidPaymentField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidRDCustomPeriod --></label>
+        <label>Voeg deze Terugkerende Donatie Termijn Periode keuzelijstwaarde toe in Set-up.</label>
         <name>healthSolutionInvalidRDCustomPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidRDCustomPeriodPicklist --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg de ontbrekende Terugkerende Donatie Termijn Period toe, of verwijder de keuzelijstwaarde uit het Termijn Periode veld.</label>
         <name>healthSolutionInvalidRDCustomPeriodPicklist</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidScheduledJob --></label>
+        <label>U moet het record bijwerken om een geldige Klasse te hebben die de UTIL_MasterSchedulableHelper.UTIL_IRecurring interface implementeert.</label>
         <name>healthSolutionInvalidScheduledJob</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionInvalidUDFObjectField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende veld toe, of verwijder het Gebruiker Rollup record.</label>
         <name>healthSolutionInvalidUDFObjectField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionMailingListReportMissing --></label>
+        <label>Creëer een rapport gebaseerd op Campagne met Contactpersonen, waar lidstatus geen Duplicaat bevat. Specificeer dit rapport op de {0} &gt; {1} tab in NPSP Instellingen.</label>
         <name>healthSolutionMailingListReportMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionMissingOppPayments --></label>
+        <label>Bekijk de Opportunities door het uitvoeren van het &lt;b&gt;Opportunities zonder Betalingen&lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder. Let op dat u een filter criteria moet toevoegen voor Opportunity Typen en Opportunity Recordtypen die  uitgesloten zijn in NPSP Betalingen Instellingen.  U kunt deze maken via de Creëer Ontbrekende Betalingen knop op NPSP Instellingen &gt; Bulk Data Processen &gt; Creëer Ontbrekende Betalingen.</label>
         <name>healthSolutionMissingOppPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionNothingScheduled --></label>
+        <label>U moet de NPSP standaard ingeplande klassen inplannen om deze te kunnen uitvoeren.</label>
         <name>healthSolutionNothingScheduled</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionOCRDupPrimary --></label>
+        <label>Het hebben van meerdere OpportunityContactpersoonRollen gemarkeerd als Primair kan onjuiste berekeningen veroorzaken bij Opportunity Rollups, zoals Totaal Giften. Bekijk de Opportunities door het uitvoeren van het &lt;b&gt;Opportunities met Primaire Contactpersoon Rollen &lt;/b&gt; rapport in de NPSP Gezondheidscontrole rapport folder en door het kijken naar de records met twee of meer Primaire Contactpersoon Rollen.</label>
         <name>healthSolutionOCRDupPrimary</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionOCRException --></label>
+        <label>Met meer dan 50.000 Opportunities en Opportunity Contactpersoon Rollen, kunnen foutafhandelingen met soql limieten veilig worden genegeerd.</label>
         <name>healthSolutionOCRException</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionPaymentMappingBadDataTypes --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder het Betaling Mapping record.</label>
         <name>healthSolutionPaymentMappingBadDataTypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionRDBadOppField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Opportunity veld toe, of verwijder de Terugkerende Donatie Veld Mapping record.</label>
         <name>healthSolutionRDBadOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionRDFieldsBadDatatypes --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder de Terugkerende Donatie Veld Mapping record.</label>
         <name>healthSolutionRDFieldsBadDatatypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionRelReciprocalInvalid --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder de Wederkerige Relatie record en maak een nieuwe aan met de nodige informatie.</label>
         <name>healthSolutionRelReciprocalInvalid</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionSaveOppsFailed --></label>
+        <label>Zorg ervoor dat Validatieregels, Verplichte velden of Werkstroomregels het opslaan van een Opportunity of Account niet voorkomen.</label>
         <name>healthSolutionSaveOppsFailed</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionScheduleJobs --></label>
+        <label>Alle NPSP geplande klassen moeten records hebben in Schedulable__c om deze functionaliteit correct te laten functioneren.</label>
         <name>healthSolutionScheduleJobs</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionTriggerHandlerMismatch --></label>
+        <label>Als de Trigger Handlers niet matchen met de standaard NPSP configuratie, zal de functionaliteit in NPSP anders of niet werken. Wijzigingen mogen alleen gedaan worden door iemand met kennis van de NPSP Trigger Handlers.</label>
         <name>healthSolutionTriggerHandlerMismatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionUDFBadDatatypes --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en verwijder het Gebruiker Rollup record.</label>
         <name>healthSolutionUDFBadDatatypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- healthSolutionUDFOppField --></label>
+        <label>Op de NPSP Instellingen tab, klik {0} | {1} en voeg het ontbrekende Opportunity veld toe, of verwijder de Gebruiker Rollup record.</label>
         <name>healthSolutionUDFOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupLabelReturnToCmp --></label>
+        <label>Keer terug naar Campagne</label>
         <name>hhCmpDedupLabelReturnToCmp</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupeBatchMessage --></label>
+        <label>Door de grootte van de Campagne zal het proces om leden van het Huishouden te vinden gedaan worden in Batches, en kan een paar minuten duren om te voltooien. Als het proces is voltooid, klik dan op de koppeling om het rapport te openen.</label>
         <name>hhCmpDedupeBatchMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupeBatchProgressTitle --></label>
+        <label>Campagne Huishouden Ontdubbeling</label>
         <name>hhCmpDedupeBatchProgressTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupeLabelOpenReport --></label>
+        <label>Open Rapport</label>
         <name>hhCmpDedupeLabelOpenReport</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupeNoReport --></label>
+        <label>Rapport kon niet gevonden worden. Creëer een rapport met de Rapport Unieke Naam  &apos;NPSP_Campaign_Household_Mailing_List&apos;. Let op: Rapporttype is Campagne met Contactpersonen. Het Lidstatus filter bevat niet &apos;Duplicaat&apos;.</label>
         <name>hhCmpDedupeNoReport</name>
     </customLabels>
     <customLabels>
-        <label><!-- hhCmpDedupeStatus --></label>
+        <label>Dubbel Huishouden</label>
         <name>hhCmpDedupeStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- isARequiredField --></label>
+        <label>is een verplicht veld.</label>
         <name>isARequiredField</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for First link in list view --></label>
+        <label>Eerste</label>
         <name>labelListViewFirst</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for Last link in list view --></label>
+        <label>Laatste</label>
         <name>labelListViewLast</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for Next link in list view --></label>
+        <label>Volgende</label>
         <name>labelListViewNext</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for page info in list view --></label>
+        <label>&amp;nbsp;&amp;nbsp;&amp;nbsp;Pagina {0} van {1} &amp;nbsp;&amp;nbsp;({2} records)</label>
         <name>labelListViewPageInfo</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for Previous link in list view --></label>
+        <label>Vorige</label>
         <name>labelListViewPrevious</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for the loading... message used in some pages --></label>
+        <label>Laden...</label>
         <name>labelMessageLoading</name>
     </customLabels>
     <customLabels>
-        <label><!-- label for Show More on list views --></label>
+        <label>Toon meer</label>
         <name>labelShowMore</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblAddressOverride --></label>
+        <label>(adresoverschrijving)</label>
         <name>lblAddressOverride</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddAllHHMembers --></label>
+        <label>Voeg Alle Leden Toe</label>
         <name>lblBtnAddAllHHMembers</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblBtnAddContact --></label>
+        <label>Voeg {0} toe</label>
         <name>lblBtnAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCCardExcludeFrom --></label>
+        <label>Sluit uit van:</label>
         <name>lblCCardExcludeFrom</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCity --></label>
+        <label>Plaats</label>
         <name>lblCity</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCloned --></label>
+        <label>Gekloond</label>
         <name>lblCloned</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblCountry --></label>
+        <label>Land</label>
         <name>lblCountry</name>
     </customLabels>
     <customLabels>
-        <label><!-- caption of Remove Contact popup --></label>
+        <label>Verwijder Contactpersoon</label>
         <name>lblDeleteContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- prompt for the Remove Contact Popup --></label>
+        <label>Wilt u dit Contactpersoon verwijderen uit het Huishouden bij Opslaan?</label>
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- autocomplete&apos;s label for &quot;smith in Contacts&quot; --></label>
+        <label><!-- lblExtendedStatus --></label>
+        <name>lblExtendedStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>in Contactpersonen</label>
         <name>lblFindInContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- string displayed in the autocomplete control when empty --></label>
+        <label>Vind een Contactpersoon of voeg een Contactpersoon toe aan het Huishouden</label>
         <name>lblFindOrAddContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFirstName --></label>
+        <label>Voornaam</label>
         <name>lblFirstName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblFormalGreeting --></label>
+        <label>Formele Begroeting</label>
         <name>lblFormalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHousehold --></label>
+        <label>Huishouden</label>
         <name>lblHousehold</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblHouseholdName --></label>
+        <label>Huishouden Naam</label>
         <name>lblHouseholdName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblInformalGreeting --></label>
+        <label>Informele Begroeting</label>
         <name>lblInformalGreeting</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblLastName --></label>
+        <label>Achternaam moet gespecificeerd worden.</label>
         <name>lblLastName</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHPrompt --></label>
+        <label>{0} is een Huishouden met andere leden. Wilt u alleen {0} toevoegen, of alle leden van het Huishouden?</label>
         <name>lblMergeHHPrompt</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblMergeHHTitle --></label>
+        <label>Voeg Huishoudens Samen</label>
         <name>lblMergeHHTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblNPSPSettings --></label>
+        <label>NPSP Instellingen</label>
         <name>lblNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- error displayed when required perms missing to add a contact and its household --></label>
+        <label>U moet rechten hebben om bij te werken en te verwijderen op Huishoudens (Accounts) om een bestaand Contactpersoon toe te voegen aan een Huishouden.</label>
         <name>lblNoHHMergePermissions</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblPostalCode --></label>
+        <label>Postcode</label>
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblRequired --></label>
+        <label><!-- lblProgress --></label>
+        <name>lblProgress</name>
+    </customLabels>
+    <customLabels>
+        <label>Verplicht</label>
         <name>lblRequired</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblSalutation --></label>
+        <label>Begroeting</label>
         <name>lblSalutation</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblState --></label>
+        <label>Provincie</label>
         <name>lblState</name>
     </customLabels>
     <customLabels>
-        <label><!-- lblStreet --></label>
+        <label><!-- lblStatus --></label>
+        <name>lblStatus</name>
+    </customLabels>
+    <customLabels>
+        <label>Straat</label>
         <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label>U bent hier:</label>
+        <name>lblYouAreHere</name>
     </customLabels>
     <customLabels>
         <label><!-- leadConvertAccountName --></label>
         <name>leadConvertAccountName</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAffilationName --></label>
+        <label>Verwante Organisatie</label>
         <name>leadConvertAffilationName</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAffiliateExistingAccount --></label>
+        <label>Creëer Verwante Organisatie met Bestaande:</label>
         <name>leadConvertAffiliateExistingAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAffiliateNewAccount --></label>
+        <label>Creëer Verwante Organisatie met Nieuw Account:</label>
         <name>leadConvertAffiliateNewAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAffiliatedAccount --></label>
+        <label>Verwante Organisatie</label>
         <name>leadConvertAffiliatedAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAttachBucketAccount --></label>
+        <label>Koppel aan Individu Bucket Account</label>
         <name>leadConvertAttachBucketAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAttachExistingAccount --></label>
+        <label>Koppel aan Bestaande:</label>
         <name>leadConvertAttachExistingAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAutocreateHHAccount --></label>
+        <label>Creëer Huishouden Account</label>
         <name>leadConvertAutocreateHHAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertAutocreateOne2OneAccount --></label>
+        <label>Creëer Eén-op-Eén Account</label>
         <name>leadConvertAutocreateOne2OneAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertBtnCancel --></label>
+        <label>Annuleer</label>
         <name>leadConvertBtnCancel</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertBtnConvert --></label>
+        <label>Converteer</label>
         <name>leadConvertBtnConvert</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertContactAccount --></label>
+        <label>Contactpersoon Account</label>
         <name>leadConvertContactAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertContactSelection --></label>
+        <label>Selecteer een optie in de Contactpersoon box.</label>
         <name>leadConvertContactSelection</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertCreateAccount --></label>
+        <label>Creëer Nieuw Account:</label>
         <name>leadConvertCreateAccount</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertCreateNewContact --></label>
+        <label>Creëer Nieuwe:</label>
         <name>leadConvertCreateNewContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertMergeExistingContact --></label>
+        <label>Voeg Samen Met Bestaande:</label>
         <name>leadConvertMergeExistingContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertNewOpp --></label>
+        <label>Creëer geen nieuwe {0} bij conversie.</label>
         <name>leadConvertNewOpp</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertOwner --></label>
+        <label>Recordeigenaar</label>
         <name>leadConvertOwner</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertPageTitle --></label>
+        <label>Converteer Lead:</label>
         <name>leadConvertPageTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertRecordTypeWarning --></label>
+        <label>Het standaard Account Recordtype voor uw Profiel is hetzelfde Recordtype ingevuld in de Account Model NPSP Instellingen, wat verschillende data problemen kan veroorzaken. Het is aan te raden het Account Recordtype standaard voor alle profielen aan te passen.</label>
         <name>leadConvertRecordTypeWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertSectionTitle --></label>
+        <label>Converteer Lead</label>
         <name>leadConvertSectionTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertSendEmail --></label>
+        <label>Verstuur E-mail naar de Eigenaar</label>
         <name>leadConvertSendEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertStatus --></label>
+        <label>Geconverteerde Status</label>
         <name>leadConvertStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- leadConvertViewContactError --></label>
+        <label>U kunt alleen bestaande Contactpersonen bekijken.</label>
         <name>leadConvertViewContactError</name>
     </customLabels>
     <customLabels>
-        <label><!-- Save &amp; New button on the Level Edit page --></label>
+        <label>Opslaan en Nieuw</label>
         <name>lvlBtnSaveAndNew</name>
     </customLabels>
     <customLabels>
-        <label><!-- Error when the Level has the same lookup field  specified for level and previous --></label>
+        <label>Er moeten verschillende opzoekvelden op {0} gespecificeerd worden voor Niveau Veld en Vorig Niveau Veld.</label>
         <name>lvlErrorDuplicateLookups</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when a name of a level is duplicated --></label>
+        <label>Niveau naam {0} bestaat al. Namen voor hetzelfde Doel en Niveau Veld moeten uniek zijn.</label>
         <name>lvlErrorDuplicateName</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when Level Assignment fails to save its current or previous level --></label>
+        <label>Veld {0} gespecificeerd in Niveau {1} is een ongeldige opzoek waardevoor een Niveau object.</label>
         <name>lvlErrorInvalidLookupField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if level&apos;s source field isn&apos;t valid --></label>
+        <label>Veld {0} gespecificeerd in Niveau {1} is een ongeldig nummeriek veld.</label>
         <name>lvlErrorInvalidSourceField</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if the Level Minimum is &gt; than Level Maximum --></label>
+        <label>Het Minimum Bedrag moet minder zijn dat het Maximum Bedrag op niveau {0}.</label>
         <name>lvlErrorMinGTMax</name>
     </customLabels>
     <customLabels>
-        <label><!-- error when we detect the minimum amount overlaps another level --></label>
+        <label>Het Minimum Bedrag en Maximun Bedrag van Niveau {0} overlapt met het Minimum Bedrag en Maximum Bedrag van Niveau {1}.</label>
         <name>lvlErrorMinOverlap</name>
     </customLabels>
     <customLabels>
-        <label><!-- error if both min and max are empty on a level --></label>
+        <label>Het {0} niveau moet of een Minimum of een Maximum Bedrag hebben.</label>
         <name>lvlErrorNoMinMax</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchBtnSearch --></label>
+        <label>Zoek</label>
         <name>mtchBtnSearch</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchCloseDateEnd --></label>
+        <label>Sluitingsdatum Einde</label>
         <name>mtchCloseDateEnd</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchCloseDateStart --></label>
+        <label>Sluitingsdatum Start</label>
         <name>mtchCloseDateStart</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchFindMatchedGiftsSectionHeader --></label>
+        <label>Vind Gematchte Giften</label>
         <name>mtchFindMatchedGiftsSectionHeader</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchFindMoreGifts --></label>
+        <label>Vind Meer Giften</label>
         <name>mtchFindMoreGifts</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchFindMoreGiftsInfo --></label>
+        <label>Vul één of meer filters in, en klik op Zoek.</label>
         <name>mtchFindMoreGiftsInfo</name>
     </customLabels>
     <customLabels>
@@ -1693,63 +1897,67 @@
         <name>mtchItems</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchSearchCriteriaEmpty --></label>
+        <label>Vul één of meer filters in, om te kunnen zoeken.</label>
         <name>mtchSearchCriteriaEmpty</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchSelectCbxTitle --></label>
+        <label>Selecteer</label>
         <name>mtchSelectCbxTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchTotalMatchingGift --></label>
+        <label>Totaal Gematchte Giften</label>
         <name>mtchTotalMatchingGift</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchTotalSelected --></label>
+        <label>Totaal Geselecteerd</label>
         <name>mtchTotalSelected</name>
     </customLabels>
     <customLabels>
-        <label><!-- mtchTotalUnaccounted --></label>
+        <label>Totaal NIet Gespecificeerd</label>
         <name>mtchTotalUnaccounted</name>
     </customLabels>
     <customLabels>
-        <label><!-- oppInstallmentsOf --></label>
+        <label>van</label>
         <name>oppInstallmentsOf</name>
     </customLabels>
     <customLabels>
-        <label><!-- oppNamingBoth --></label>
+        <label>Beide</label>
         <name>oppNamingBoth</name>
     </customLabels>
     <customLabels>
-        <label><!-- oppNamingIndividual --></label>
+        <label>Contactpersoon Donaties</label>
         <name>oppNamingIndividual</name>
     </customLabels>
     <customLabels>
-        <label><!-- oppNamingOrganizational --></label>
+        <label>Organisatie Donaties</label>
         <name>oppNamingOrganizational</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardBtnCalcPayments --></label>
+        <label>U kunt betaling valuta niet direct wijzigen. De valuta is van een betaling wordt bijgewerkt als de Opportunity valuta wordt gewijzigd.</label>
+        <name>pmtModifyCurrency</name>
+    </customLabels>
+    <customLabels>
+        <label>Bereken Betalingen</label>
         <name>pmtWizardBtnCalcPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardBtnCreatePayments --></label>
+        <label>Creëer Betalingen</label>
         <name>pmtWizardBtnCreatePayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardBtnRemovePaidPayments --></label>
+        <label>Verwijder Betaalde Betalingen</label>
         <name>pmtWizardBtnRemovePaidPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardClosedLost --></label>
+        <label>Let op: Deze Opportunity is gemarkeerd als Gesloten Verloren. Om Betalingen te creëeren, wijzig eerst de Opportunity record en verander de status naar een Open of Gesloten Gewonnen fase.</label>
         <name>pmtWizardClosedLost</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardCreateSchedule --></label>
+        <label>Creëer een Betaling Planning</label>
         <name>pmtWizardCreateSchedule</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardFirstPaymentDate --></label>
+        <label>Datum Eerste Betaling</label>
         <name>pmtWizardFirstPaymentDate</name>
     </customLabels>
     <customLabels>
@@ -1757,135 +1965,147 @@
         <name>pmtWizardInterval</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardMsgNoOppFound --></label>
+        <label><!-- pmtWizardMonth --></label>
+        <name>pmtWizardMonth</name>
+    </customLabels>
+    <customLabels>
+        <label>Geen Opportunity gevonden.</label>
         <name>pmtWizardMsgNoOppFound</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardNoUnpaidAmount --></label>
+        <label>Let op: Deze Opportunity heeft geen onbetaald bedrag. Om een betaling te maken, verander eerst het Opportunity record en vul een bedrag in of klik op de knop om bestaande betalingen te verwijderen. Als de Opportunity gesloten is, moet deze heropend worden.</label>
         <name>pmtWizardNoUnpaidAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardNoWriteoffAmount --></label>
+        <label>Let op: Deze Opportunity heeft geen onbetaald bedrag. Om betalingen af te schrijven, wijzig eerst het Opportunity record en vul een bedrag in of verwijder bestaande betalingen.</label>
         <name>pmtWizardNoWriteoffAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardNumberOfPayments --></label>
+        <label># Betalingen</label>
         <name>pmtWizardNumberOfPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardPaymentNumber --></label>
+        <label>Betaling Nummer</label>
         <name>pmtWizardPaymentNumber</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardPaymentsDisabled --></label>
+        <label>NPSP Betalingen zijn niet ingeschakeld. Om de Betaling Planning Wizard te gebruiken, schakel NPSP Betalingen in.</label>
         <name>pmtWizardPaymentsDisabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardPaymentsDisabledTitle --></label>
+        <label>NPSP Betalingen niet ingeschakeld.</label>
         <name>pmtWizardPaymentsDisabledTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardSectionTitle --></label>
+        <label>Huidige Opportunity Informatie</label>
         <name>pmtWizardSectionTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardSectionWriteoff --></label>
+        <label>Schrijf Overblijvend Saldo Af</label>
         <name>pmtWizardSectionWriteoff</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardSectionWriteoffPayments --></label>
+        <label>Schrijf Betalingen Af</label>
         <name>pmtWizardSectionWriteoffPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardSubtitle --></label>
+        <label>Creëer een of meerdere Betalingen voor deze Opportunity</label>
         <name>pmtWizardSubtitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardToBeCreated --></label>
+        <label>Te Creëren Betalingen</label>
         <name>pmtWizardToBeCreated</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardWarning --></label>
+        <label>Waarschuwing</label>
         <name>pmtWizardWarning</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardWriteoffDate --></label>
+        <label><!-- pmtWizardWeek --></label>
+        <name>pmtWizardWeek</name>
+    </customLabels>
+    <customLabels>
+        <label>Welke datum zou u willen gebruiken?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
-        <label><!-- pmtWizardWriteoffMessage --></label>
+        <label>U staat op het punt om {0} van de totaal {1} Betalingen af te schrijven.</label>
         <name>pmtWizardWriteoffMessage</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscDeleteRow --></label>
+        <label><!-- pmtWizardYear --></label>
+        <name>pmtWizardYear</name>
+    </customLabels>
+    <customLabels>
+        <label>Verwijder Rij</label>
         <name>pscDeleteRow</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsAdd --></label>
+        <label>Voeg een andere Soft Credit toe</label>
         <name>pscManageSoftCreditsAdd</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsAmount --></label>
+        <label>Bedrag</label>
         <name>pscManageSoftCreditsAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsAmountMissing --></label>
+        <label>Voer overal een Soft Credit Bedrag in.</label>
         <name>pscManageSoftCreditsAmountMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsAmountOrPercent --></label>
+        <label>Bedrag of Percentage</label>
         <name>pscManageSoftCreditsAmountOrPercent</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsCantChangeCurrency --></label>
+        <label>U kunt gedeeltelijke Soft Credits valuta niet direct wijzigen. De valuta van een gedeeltelijke Soft Credit wordt bijgewerkt wanneer de valuta van de Opportunity verandert.</label>
         <name>pscManageSoftCreditsCantChangeCurrency</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsFull --></label>
+        <label>Vol</label>
         <name>pscManageSoftCreditsFull</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsInvalidContact --></label>
+        <label>{0} is de Primaire Contactpersoon voor deze Opportunity. U kunt geen Soft Credit toevoegen op deze Contactpersoon.</label>
         <name>pscManageSoftCreditsInvalidContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsNoRoles --></label>
+        <label>Er zijn geen Rollen vastgesteld voor Soft Credit Rollen.</label>
         <name>pscManageSoftCreditsNoRoles</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsOppAmount --></label>
+        <label>Totaal Bedrag</label>
         <name>pscManageSoftCreditsOppAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsPSCAmount --></label>
+        <label>Soft Credit Bedrag</label>
         <name>pscManageSoftCreditsPSCAmount</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsPartial --></label>
+        <label>Gedeeltelijk</label>
         <name>pscManageSoftCreditsPartial</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsPercent --></label>
+        <label>Percentage</label>
         <name>pscManageSoftCreditsPercent</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsPrimaryDonor --></label>
+        <label>Primaire Donateur</label>
         <name>pscManageSoftCreditsPrimaryDonor</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsReconcileFail --></label>
+        <label>Totaal Soft Credit Bedrag moet minder of gelijk zijn dan het Opportunity Bedrag. Vink &apos;Sta Soft Credit Bedrag meer dan Totaal Bedrag toe&apos; aan om te overschrijven.</label>
         <name>pscManageSoftCreditsReconcileFail</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsRestrictions --></label>
+        <label>Soft Credit Beperkingen</label>
         <name>pscManageSoftCreditsRestrictions</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsRoleMissing --></label>
+        <label>U moet een Rol Naam voor alle Soft Credits opgeven.</label>
         <name>pscManageSoftCreditsRoleMissing</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsTitle --></label>
+        <label>Beheer Soft Credits</label>
         <name>pscManageSoftCreditsTitle</name>
     </customLabels>
     <customLabels>
@@ -1893,723 +2113,804 @@
         <name>pscManageSoftCreditsType</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsUnaccounted --></label>
+        <label>Totaal NIet Gespecificeerd</label>
         <name>pscManageSoftCreditsUnaccounted</name>
     </customLabels>
     <customLabels>
-        <label><!-- pscManageSoftCreditsValidateTotals --></label>
+        <label>Sta Soft Credit Bedrag meer dan Totaal Bedrag toe</label>
         <name>pscManageSoftCreditsValidateTotals</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentFailedStatus --></label>
+        <label>E-mail Ontvangstbevestiging Niet Gestuurd</label>
         <name>sendAcknowledgmentFailedStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentFailureReasons --></label>
+        <label>De volgende records hebben geen ontvangstbevestiging. Ontvangstbevestigingen kunnen mislukken als er geen werkstroomregel is geactiveerd die de ontvangstbevestiging stuurt, of als de records niet voldoen aan de criteria om de werkstroomregel af te vuren.</label>
         <name>sendAcknowledgmentFailureReasons</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentFireStatus --></label>
+        <label>E-mail Ontvangstbevestiging Nu</label>
         <name>sendAcknowledgmentFireStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentNoneSelected --></label>
+        <label>U moet een of meer Opportunities selecteren voordat u op E-mail Ontvangstbevestigingen klikt.</label>
         <name>sendAcknowledgmentNoneSelected</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentNumberNoEmail --></label>
+        <label>{0} ontvangstbevestigingen zijn niet verzonden.</label>
         <name>sendAcknowledgmentNumberNoEmail</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentNumberSent --></label>
+        <label>{0} ontvangstbevestigingen verzonden.</label>
         <name>sendAcknowledgmentNumberSent</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentPageTitle --></label>
+        <label>E-mail Ontvangstbevestigingen</label>
         <name>sendAcknowledgmentPageTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentReturnLinkLabel --></label>
+        <label>Ga terug naar Opportunity</label>
         <name>sendAcknowledgmentReturnLinkLabel</name>
     </customLabels>
     <customLabels>
-        <label><!-- sendAcknowledgmentSucceeded --></label>
+        <label>Ontvangst Bevestigd</label>
         <name>sendAcknowledgmentSucceeded</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusCompleted --></label>
+        <label>Voltooid</label>
         <name>statusCompleted</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusInProgress --></label>
+        <label>In Progressie</label>
         <name>statusInProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- statusNotStarted --></label>
+        <label>Niet Gestart</label>
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgAddrGeneralSettingsIntro --></label>
+        <label>Huishouden en Organisatie Account Beheer laat u meerdere adressen toevoegen aan een Account en stelt standaard adressen en seizoensadressen in.</label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgAddrMustChooseClass --></label>
+        <label>U moet een verificatie dienst kiezen om automatische verificatie in te schakelen.</label>
         <name>stgAddrMustChooseClass</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCancel --></label>
+        <label>Annuleer</label>
         <name>stgBtnCancel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnClearErrorLog --></label>
+        <label>Leeg Foutmeldingslogboek</label>
         <name>stgBtnClearErrorLog</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateAutoRel --></label>
+        <label>Creëer Automatische Relatie</label>
         <name>stgBtnCreateAutoRel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateMapping --></label>
+        <label>Creëer Aangepaste Mapping</label>
         <name>stgBtnCreateMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateRDPeriod --></label>
+        <label>Creëer Aangepaste Termijn Periode</label>
         <name>stgBtnCreateRDPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateRelReciprocal --></label>
+        <label>Creëer Wederkerige Relatie</label>
         <name>stgBtnCreateRelReciprocal</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateTH --></label>
+        <label>Creëer Trigger Handler</label>
         <name>stgBtnCreateTH</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnCreateUDR --></label>
+        <label>Creëer Rollup</label>
         <name>stgBtnCreateUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnEdit --></label>
+        <label>Wijzig</label>
         <name>stgBtnEdit</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnHHAutoName --></label>
+        <label>Ververs Alle Huishouden Namen</label>
         <name>stgBtnHHAutoName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewAutoRel --></label>
+        <label>Nieuwe Automatische Relatie</label>
         <name>stgBtnNewAutoRel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewONS --></label>
+        <label>Nieuwe Opportunity Naam</label>
         <name>stgBtnNewONS</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewPaymentMap --></label>
+        <label>Nieuwe Betaling Veld Mapping</label>
         <name>stgBtnNewPaymentMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewRDFieldMap --></label>
+        <label>Nieuwe Aangepaste Veld Mapping</label>
         <name>stgBtnNewRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewRDPeriod --></label>
+        <label>Nieuwe Aangepaste Termijn Periode</label>
         <name>stgBtnNewRDPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewRelReciprocal --></label>
+        <label>Nieuwe Wederkerige Relatie</label>
         <name>stgBtnNewRelReciprocal</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewTH --></label>
+        <label>Nieuwe Trigger Handler</label>
         <name>stgBtnNewTH</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnNewUDR --></label>
+        <label>Nieuwe Gebruiker Gedefinieerde Rollup</label>
         <name>stgBtnNewUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnRDCreateNewMap --></label>
+        <label>Creëer Aangepaste Veld Mapping</label>
         <name>stgBtnRDCreateNewMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnRefreshOpportunityNames --></label>
+        <label>Ververs Alle Opportunity Namen</label>
         <name>stgBtnRefreshOpportunityNames</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnRefreshPrimaryContacts --></label>
+        <label>Ververs Alle Opportunity Primaire Contactpersonen</label>
         <name>stgBtnRefreshPrimaryContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnRunBatch --></label>
+        <label>Voer Batch Uit</label>
         <name>stgBtnRunBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgBtnSave --></label>
+        <label>Opslaan</label>
         <name>stgBtnSave</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDocumentation --></label>
+        <label>Documentatie</label>
         <name>stgDocumentation</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgDontAutoScheduleHelpText --></label>
+        <label>Wanneer aangevinkt, zal NPSP niet automatisch standaard terugkerende opdrachten inplannen. 
+&lt;br/&gt; 
+&lt;br/&gt; 
+Deze terugkerende opdrachten berekenen rollups, werken Terugkerende Donaties en seizoensadressen bij.</label>
         <name>stgDontAutoScheduleHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorINaming --></label>
+        <label>Implementatie Klasse implementeert niet de HH_INaming interface.</label>
         <name>stgErrorINaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorInvalidClass --></label>
+        <label>Ongeldige Implementatie Klasse.</label>
         <name>stgErrorInvalidClass</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgErrorInvalidNameFormat --></label>
+        <label>Fout in {0}:{1}</label>
         <name>stgErrorInvalidNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHHNameRefreshTitle --></label>
+        <label>Ververs Huishouden Namen</label>
         <name>stgHHNameRefreshTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAccountModel --></label>
+        <label>Het Account Model gebruikt door het Nonprofit Success Pack. Deze optie bepaalt wat er gebeurt wanneer een Contactpersoon wordt gecreërd met een lege Account veldwaarde. WAARSCHUWING: Het geselecteerde Recordtype voor het Account Model moet niet gebruikt worden als het standaard Account Recordtype voor een Profiel in de organisatie. Het gebruiken van hetzelfde Recordtype kan verschillende problemen veroorzaken.</label>
         <name>stgHelpAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAlloFiscalYearRollups --></label>
+        <label>Wanneer aangevinkt, zal deze optie fiscaal jaar instellingen inschakelen, in plaats van kalenderjaar instellingen, voor Toewijzing rollup totalen.</label>
         <name>stgHelpAlloFiscalYearRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAlloNDayValue --></label>
+        <label>Stelt de waarde in voor &apos;N dagen&apos; rollups, waar &apos;N&apos; het aantal dagen is van vandaag tot in het verleden. Deze waarde is standaard ingesteld over de laatste 365 dagen.</label>
         <name>stgHelpAlloNDayValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAutoAffil --></label>
+        <label>Wanneer geselecteerd zorgt deze optie ervoor dat Salesforce Verwante Organisaties voor Contactpersonen verbindt aan Organisatie Accounts aanmaakt of bijwerkt wanneer het Account veld op Contactpersoon of het Primaire Verwante Organisatie veld verandert.</label>
         <name>stgHelpAutoAffil</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAutoRelCampaignRT --></label>
+        <label>Lijst van geschikte Campagne Typen voor dit Campagnelid. (Leeg voor Contactpersonen)</label>
         <name>stgHelpAutoRelCampaignRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAutoRelField --></label>
+        <label>Het veld dat de automatische aanmaking triggert.</label>
         <name>stgHelpAutoRelField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAutoRelObject --></label>
+        <label>Het Salesforce object geassocieerd met de Automatisch Aangemaakte Relatie.</label>
         <name>stgHelpAutoRelObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpAutoRelType --></label>
+        <label>Het Relatie Type dat aangemaakt moet worden tussen twee Contactpersonen (of Campagneleden).</label>
         <name>stgHelpAutoRelType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBDEAllowBlankOppNames --></label>
+        <label>Wanneer ingesteld, de Batch Data Invoer zal nooit Opportunities een naam geven, ook niet als de naam leeg is.</label>
         <name>stgHelpBDEAllowBlankOppNames</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBDEOppNaming --></label>
+        <label>Deze instelling genereert automatisch een record naam voor door batch ingevoerde Opportunities gebaseerd op de waarde van de ingevoerde velden.</label>
         <name>stgHelpBDEOppNaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBatchAlloRollup --></label>
+        <label>Deze functionaliteit berekent rollup totalen voor alle Gesloten Opportunities met Toewijzingen en werkt de betreffende Bestemming records bij.
+Dit proces kan enige tijd in beslag nemen, maar deze pagina kan veilig gesloten worden en het proces werkt verder op de achtergrond.</label>
         <name>stgHelpBatchAlloRollup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBatchCreateDefault --></label>
+        <label>Deze knop start een batch proces dat standaard Toewijzingen voor alle Opportunities aanmaakt, behalve de Opportunities uitgesloten in de Toewijzingen Rollup Instellingen. Standaard toewijzingen moeten ingeschakeld zijn en een standaard Bestemming geselecteerd.</label>
         <name>stgHelpBatchCreateDefault</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBatchOppRollup --></label>
+        <label>Deze functionaliteit berekent rollup totalen voor alle Gesloten Opportunities  en werkt de betreffende Contactpersonen en Accounts bij.
+Dit proces kan enige tijd in beslag nemen, maar deze pagina kan veilig gesloten worden en het proces werkt verder op de achtergrond.</label>
         <name>stgHelpBatchOppRollup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBtnHHNaming --></label>
+        <label>&lt;b&gt;WAARSCHUWING:&lt;/b&gt; Deze knop activeert Automatische Huishouden Naamgeving en vult uw bestaande Huishouden Namen, Formele en Informele Begroetingen  met nieuwe namen, zoals gekozen in het formaat. &lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;Dit is een onomkeerbaar proces.&lt;/b&gt; Het is mogelijk de Automatische Huishouden Naamgeving uit te schakelen, maar de namen blijven bestaan. &lt;br/&gt;&lt;br/&gt;
+
+Voor het starten van dit proces, wordt aangeraden het volgende uit te schakelen:
+&lt;br/&gt;
+&lt;br/&gt;
+ Aangepaste Validatieregels&lt;br/&gt;
+ Werkstroomregels &lt;br/&gt;
+ Processamensteller&lt;br/&gt;
+ Stromen&lt;br/&gt;
+ Aangepaste Triggers&lt;br/&gt;
+
+&lt;br/&gt;
+Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpBtnHHNaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpBtnOppNaming --></label>
+        <label>&lt;b&gt;WAARSCHUWING:&lt;/b&gt; Deze knop activeert Batch Opportunity Hernoemen, en zal alle Opportunity Namen volgens het gekozen formaat hernoemen. Alle Opportunity Namen worden hernoemd, behalve degenen met het Opportunity Naam Formaat &quot;Niet Hernoemen&quot;.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;Dit is een onomkeerbaar proces.&lt;/b&gt; Het is mogelijk de Automatische Huishouden Naamgeving uit te schakelen, maar de namen blijven bestaan. &lt;br/&gt;&lt;br/&gt;
+
+Voor het starten van dit proces, wordt aangeraden het volgende uit te schakelen:
+&lt;br/&gt;
+&lt;br/&gt;
+ Aangepaste Validatieregels&lt;br/&gt;
+ Werkstroomregels &lt;br/&gt;
+ Processamensteller&lt;br/&gt;
+ Stromen&lt;br/&gt;
+ Aangepaste Triggers&lt;br/&gt;
+
+&lt;br/&gt;
+Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpBtnOppNaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpChatterGroup --></label>
+        <label>Chatter Groep waar foutmeldingen geplaatst kunnen worden.</label>
         <name>stgHelpChatterGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpCiceroAddrVerification --></label>
+        <label>Zorg dat de Cicero API Key in de Auth Token instellingen veld is ingevuld. De API Key is te vinden op uw Cicero Mijn Profiel pagina op cicero.azavea.com</label>
         <name>stgHelpCiceroAddrVerification</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpContactRTExcluded --></label>
+        <label>Het Contactpersoon Recordtype dat automatisch uitgesloten moet worden van het aanmaken van Lid Huishouden Contactpersoon Rol.</label>
         <name>stgHelpContactRTExcluded</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpCreateMissingPayments --></label>
+        <label>&lt;b&gt;WAARSCHUWING:&lt;/b&gt; Deze knop activeert Batch Betaling Creëeren. Een betaling wordt aangemaakt voor elke Opportunity zonder Betaling welke: 
+&lt;br/&gt;
+&lt;br/&gt; 
+Een bedrag hebben groter dan nul&lt;br/&gt; 
+Niet gemarkeerd is als Creëer Geen Automatische Betaling&lt;br/&gt; 
+Niet uitgesloten wordt in de Donaties | Betalingen instellingen&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;Dit is een onomkeerbaar proces.&lt;/b&gt;
+Voor het starten van dit proces, wordt aangeraden het volgende uit te schakelen:
+&lt;br/&gt;
+&lt;br/&gt;
+ Aangepaste Validatieregels&lt;br/&gt;
+ Werkstroomregels &lt;br/&gt;
+ Processamensteller&lt;br/&gt;
+ Stromen&lt;br/&gt;
+ Aangepaste Triggers&lt;br/&gt;
+
+&lt;br/&gt;
+Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpDefaultAllocationsEnabled --></label>
+        <label>Schakelt het automatisch creëeren en beheren in van Bestemming Toewijzing records aan de standaard Bestemming. Deze functionaliteit zorgt voor een betere rapportage op de Bestemming, maar gebruikt meer data.</label>
         <name>stgHelpDefaultAllocationsEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpDefaultGAU --></label>
+        <label>Wanneer standaard Toewijzingen zijn ingeschakeld, maakt het systeem een Bestemming Toewijzing aan voor alle nieuwe Opportunities die niet zijn uitgesloten van de Bestemming Toewijzingen Rollup Instellingen en wijst deze toe aan deze Bestemming. Let op: Dit betreft niet de bestaande Opportunities zonder Toewijzing.</label>
         <name>stgHelpDefaultGAU</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpDisableHHAccountAddr --></label>
+        <label>Wanneer geselecteerd, wordt Adresbeheer uitgeschakeld voor Huishouden Accounts.</label>
         <name>stgHelpDisableHHAccountAddr</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpEnableSoftCreditRollups --></label>
+        <label>Rolt Gesloten/Gewonnen Opportunity totalen op naar Contactpersoon records op basis van de toegewezen Opportunity Contactpersoon Rollen. Soft Credit rollups worden uitgevoerd gedurende de nacht, maar kunnen handmatig worden uitgevoerd van Rollup Donaties Batch instellingen.</label>
         <name>stgHelpEnableSoftCreditRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpErrorLog --></label>
+        <label>Het Foutmeldingslogboek toont een gedetailleerde lijst met fouten om te kunnen oplossen. Fouten worden alleen geregistreerd als de Error Handling en de Store Errors opties ingeschakeld zijn.</label>
         <name>stgHelpErrorLog</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpErrorNotifyOn --></label>
+        <label>Vink dit aan wanneer het systeem voor bepaalde fouten meldingen moet plaatsen.</label>
         <name>stgHelpErrorNotifyOn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpErrorNotifyTo --></label>
+        <label>Selecteer het type gebruiker dat de melding moet ontvangen.</label>
         <name>stgHelpErrorNotifyTo</name>
     </customLabels>
     <customLabels>
-        <label><!-- displayed in the Example household names box --></label>
+        <label>&lt;b&gt;LET OP:&lt;/b&gt; De voorbeelden hierboven kunnen geen andere velden weergeven dan Voornaam, Achternaam of Aanhef.</label>
         <name>stgHelpExampleHHNames</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpFGFormat --></label>
+        <label>Het Formaat dat gebruikt wordt voor de Formele Begroeting.</label>
         <name>stgHelpFGFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpFiscalYearRollups --></label>
+        <label>Wanneer aangevinkt, schakelt deze optie fiscaal jaar instellingen in, in plaats van kalenderjaar instellingen, voor Opportunity Rollup totalen.</label>
         <name>stgHelpFiscalYearRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHAccountRTID --></label>
+        <label>Het Account Recordtype dat gebruikt moet worden voor nieuwe Accounts, als het Huishouden Account Model hierboven is geselecteerd. U kunt het standaard Huishouden Account Recordtype kiezen, of een ander Recordtype. Als u --Geen-- selecteert, dan wordt het standaard Account Recordtype gebruikt van de gebruiker die het Contactpersoon (en het geassiocieerde Account) creëert.</label>
         <name>stgHelpHHAccountRTID</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHExcludedRT --></label>
+        <label>Specificeert welke Contactpersoon record wordt uitgesloten van het maken van een Huishouden object. (Dit geldt alleen voor Eén-op-Eén of Individu Account Model)</label>
         <name>stgHelpHHExcludedRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHMailingListReport --></label>
+        <label>Het Huishouden Verzendlijst Rapport ontdubbelt een Campagne met meerdere Contactpersonen uit hetzelfde Huishouden om te voorkomen dat dezelfde mailing dubbel naar hetzelfde adres verstuurd wordt. NPSP heeft een rapport genaamd &quot;NPSP Campagne Huishouden Verzendlijst&quot;. Als dit rapport is hernoemd, of verwijderd, maak dan een rapport aan met Campagne met Contactpersonen aan met een filter voor: Lidstatus bevat niet &quot;Duplicaat&quot;.</label>
         <name>stgHelpHHMailingListReport</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHNameFormat --></label>
+        <label>Het formaat dat gebruikt wordt voor de Huishouden Naam.</label>
         <name>stgHelpHHNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHNaming --></label>
+        <label>Wanneer geselecteerd, worden automatisch namen gemaakt voor Huishouden Accounts, gebaseerd op de Contactpersonen in het Huishouden. Ook worden er Formele en Informele Begroetingen gemaakt.</label>
         <name>stgHelpHHNaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHOCROn --></label>
+        <label>Creëert automatisch Contactpersoon Rollen voor leden van het Huishouden met de Opportunity Primaire Contactpersoon.</label>
         <name>stgHelpHHOCROn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHObjectOverview --></label>
+        <label>Om meer te weten te komen over het aangeraden Huishouden Account Model, bekijk de &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentatie&lt;/a&gt;.</label>
         <name>stgHelpHHObjectOverview</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHHRules --></label>
+        <label>Specificeert voor welke Contactpersonen aparte Huishouden objecten worden gemaakt. (Dit geldt alleen voor Eén-op-Eén of Individu Account Model)</label>
         <name>stgHelpHHRules</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpHealthCheck --></label>
+        <label>Gebruik &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelHealthCheck&apos;);return false;&quot;&gt;Gezondheidscontrole&lt;/a&gt; om de NPSP configuratie te controleren!</label>
         <name>stgHelpHealthCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpIGFormat --></label>
+        <label>Het formaat dat gebruikt wordt voor de Informele Begroeting.</label>
         <name>stgHelpIGFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpINamingClass --></label>
+        <label>De Apex Klasse dat de HH_INaming interface voor Huishouden naamgeving implementeert.</label>
         <name>stgHelpINamingClass</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpLeadConvert --></label>
+        <label>Specificeert het standaard gedrag voor het maken van Opportunities bij het converteren van Lead naar Contactpersoon. Wanneer niets is geselecteerd, zal een Opportunity niet automatisch worden aangemaakt. Voor meer informatie, bekijk de &lt;a href=&quot;https://powerofus.force.com/NPSP_Leads&quot; target=&quot;_blank&quot;&gt;NPSP Documentatie&lt;/a&gt;.</label>
         <name>stgHelpLeadConvert</name>
     </customLabels>
     <customLabels>
-        <label><!-- help text displayed on the Level Assignment Batch page --></label>
+        <label>Deze functionaliteit berekent Niveau Toewijzingen voor alle betreffende objecten. Dit proces kan even duren, maar de pagina kan veilig gesloten worden en het proces zal op de achtergrond worden verwerkt.
+&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;BELANGRIJK:&lt;/b&gt; Niveaus worden vaak berekent aan de hand van andere bulk data preocessen. Voer deze eerst uit.</label>
         <name>stgHelpLvlAssignBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpMatchedDonorRole --></label>
+        <label>De Contactpersoon Rol die gebruikt wordt voor gematchte donateurs. Aangeraden wordt &quot;Gematchte Donateur&quot;.</label>
         <name>stgHelpMatchedDonorRole</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpMaxPayments --></label>
+        <label>Bepaalt het maximum aantal Betalingen die gepland mogen worden voor een Opportunity. Als er geen waarde wordt opgegeven, is de standaardwaarde 12.</label>
         <name>stgHelpMaxPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpMembershipGracePeriod --></label>
+        <label>Het aantal dagen respijtperiode nadat een Lidmaatschap is geëindigd, na dit aantal dagen verandert de Lidmaatschap Status van Respijtperiode naar Verlopen. Standaard is 30 dagen.</label>
         <name>stgHelpMembershipGracePeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpMembershipRT --></label>
+        <label>Het Recordtype dat gebruikt wordt voor Lidmaatschap Donaties. Aangeraden wordt Lidmaatschap. Opportunities met dit Recordtype rollen gescheiden op van andere Opportunity Recordtypen.</label>
         <name>stgHelpMembershipRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPDoc --></label>
+        <label>NPSP Documentatie</label>
         <name>stgHelpNPSPDoc</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNPSPSettings --></label>
+        <label>Configureer het Nonprofit Success Pack zo, dat het voldoet aan de wensen van uw organisatie. U kunt ook de gezondheid van uw Salesforce omgeving in de gaten houden of Batch Processen uitvoeren om data bij te werken.</label>
         <name>stgHelpNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNameConnector --></label>
+        <label>Specificeert de naam of het karakter (zoals &amp;) dat gebruikt wordt om namen aan elkaar te koppelen.</label>
         <name>stgHelpNameConnector</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNameOverrun --></label>
+        <label>Specificeert de tekst die gebruikt wordt om lange lijsten met namen te vervangen.</label>
         <name>stgHelpNameOverrun</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNewRDFieldMap --></label>
+        <label>Selecteer eerst het Terugkerende Donatie veld dat gemapt moet worden. Selecteer daarna het Opportunity veld waarnaar gemapt moet worden. Het geselecteerde Terugkerende Donatie veld verschijnt op alle Opportunities van de Terugkerende Donatie.
+
+BELANGRIJK: Beide velden moeten van hetzelfde data type zijn.</label>
         <name>stgHelpNewRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNewUDR --></label>
+        <label>Selecteer het Opportunity veld en de betreffende rollup operatie, en selecteer daarna het object en veld waarnaar deze moet oprollen.</label>
         <name>stgHelpNewUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpNoUDR --></label>
+        <label>Er zijn geen Gebruiker Gedefinieerde Rollups aangemaakt</label>
         <name>stgHelpNoUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOCR --></label>
+        <label>Soft Credits, Contactpersoon Rollen en Matching Giften zijn in belangrijke mate met elkaar verbonden. Voor het wijzigen van deze instellingen, bekijk de &lt;a href=&quot;https://powerofus.force.com/NPSP_SCMG&quot; target=&quot;_blank&quot;&gt;NPSP Documentatie&lt;/a&gt;.</label>
         <name>stgHelpOCR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOCRDefaultRole --></label>
+        <label>De standaard Contactpersoon Rol die wordt toegewezen aan de Primaire Contactpersoon voor de Opportunity.</label>
         <name>stgHelpOCRDefaultRole</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOCRRoleForHH --></label>
+        <label>De Contactpersoon Rol die gebruikt wordt voor leden van het Huishouden.</label>
         <name>stgHelpOCRRoleForHH</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOneToOneRTID --></label>
+        <label>Het Account Recordtype dat gebruikt moet worden voor nieuwe Accounts, als het Eén-op-Eén Account Model hierboven is geselecteerd. NPSP heeft geen standaard Recordtype voor Eén-op-Eén Accounts, dus moet er een gemaakt worden (bijvoorbeeld &quot;Individu&quot;) voordat u dit model kiest. U kunt het standaard Huishouden Account Recordtype kiezen, of een ander Recordtype. Als u --Geen-- selecteert, dan wordt het standaard Account Recordtype gebruikt van de gebruiker die het Contactpersoon (en het geassiocieerde Account) creëert.</label>
         <name>stgHelpOneToOneRTID</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppNamingAttribution --></label>
+        <label>Bepaalt of deze instellingen gelden voor Contactpersoon Donaties, Organisatie Donaties, of beide.</label>
         <name>stgHelpOppNamingAttribution</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppNamingDateFormat --></label>
+        <label>Het datum formaat dat gebruikt wordt voor alle Datum en Datum/Tijd velden die gebruikt worden in het Opportunity Naam Formaat.</label>
         <name>stgHelpOppNamingDateFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppNamingFormat --></label>
+        <label>Het Opportunity Naam Formaat. Kies &quot;Anders&quot; om een eigen formaat te creëeren. Bekijk de &lt;a href=&quot;https://powerofus.force.com/NPSP_Opp_Names&quot; target=&quot;_blank&quot;&gt;NPSP Documentatie&lt;/a&gt; voor details.</label>
         <name>stgHelpOppNamingFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppNamingRecTypes --></label>
+        <label>De Opportunity Recordtypen waar de Opportunity Naam voor geldt. Klik op Control of Command en selecteer de Recordtypen. Bij --Geen-- geldt de naam voor alle Recordtypen.</label>
         <name>stgHelpOppNamingRecTypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppRecTypesNoPayments --></label>
+        <label>Er worden geen automatische Betalingen gemaakt voor de geselecteerde Opportunity Recordtypen. Klik op Control of Command en selecteer de Recordtypen.</label>
         <name>stgHelpOppRecTypesNoPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOppTypesNoPayments --></label>
+        <label>Er worden geen automatische Betalingen gemaakt voor Opportunities met deze waarde als Type.</label>
         <name>stgHelpOppTypesNoPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOrgAccountAddressMgmt --></label>
+        <label>Schakelt Adresbeheer in voor Organisatie Accounts.</label>
         <name>stgHelpOrgAccountAddressMgmt</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpOverrunCount --></label>
+        <label>Het aantal Contactpersonen dat wordt genoemd bij naam en begroetingen. Na dit aantal worden de namen overschreven door de Naam Overschrijving waarde.</label>
         <name>stgHelpOverrunCount</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPaymentMapOppField --></label>
+        <label>Het Opportunity veld om van te kopiëren.</label>
         <name>stgHelpPaymentMapOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPaymentMapPaymentField --></label>
+        <label>Het Betaling veld om naar te kopiëren.</label>
         <name>stgHelpPaymentMapPaymentField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPaymentMapping --></label>
+        <label>Selecteer een Opportunity veld en selecteer dan het Betaling veld waar deze naar gemapt moet worden. LET OP: Het veld op Opportunity en Betaling moeten hetzelfde data type hebben.</label>
         <name>stgHelpPaymentMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPaymentMappings --></label>
+        <label>Map velden zodat waardes van Opportunity automatisch gekopieerd worden naar Betaling. Mapping geldt voor Automatische Gemaakte Betalingen of Betalingen via de Betaling Planner.</label>
         <name>stgHelpPaymentMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPaymentsEnabled --></label>
+        <label>Wanneer ingeschakeld, worden automatisch Betalingen aangemaakt voor nieuwe Opportunities (Donaties).</label>
         <name>stgHelpPaymentsEnabled</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPowerOfUsHub --></label>
+        <label>Heeft u vragen? De Hub heeft antwoorden! Probeer de &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Group&quot; target=&quot;_blank&quot;&gt;Nonprofit Success Pack&lt;/a&gt; groep voor vragen over NPSP en de &lt;a href=&quot;https://powerofus.force.com/HUB_System_Admin_Group&quot; target=&quot;_blank&quot;&gt;System Administrators&lt;/a&gt; groep voor vragen over Salesforce configuratie.&lt;br/&gt;&lt;br/&gt;Blijf op de hoogte met de laatste NPSP release notes in de &lt;a href=&quot;https://powerofus.force.com/HUB_NPSP_Release_Group&quot; target=&quot;_blank&quot;&gt;NPSP Release Announcements&lt;/a&gt; groep.</label>
         <name>stgHelpPowerOfUsHub</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpPrimaryContactBatch --></label>
+        <label>&lt;b&gt;WAARSCHUWING:&lt;/b&gt; Deze knop activeert een batch die Opportunities bijwerkt door het verversen van het Primaire Contactpersoon veld. De records waar het veld Primaire Contactpersoon niet gelijk is aan de Opportunity Contactpersoon Rol gemarkeerd als Primair worden bijgewerkt. &lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;Dit is een onomkeerbaar proces.&lt;/b&gt;
+Voor het starten van dit proces, wordt aangeraden het volgende uit te schakelen:
+&lt;br/&gt;
+&lt;br/&gt;
+ Aangepaste Validatieregels&lt;br/&gt;
+ Werkstroomregels &lt;br/&gt;
+ Processamensteller&lt;br/&gt;
+ Stromen&lt;br/&gt;
+ Aangepaste Triggers&lt;br/&gt;
+
+&lt;br/&gt;
+Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpPrimaryContactBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDAddCampaign --></label>
+        <label>Wanneer geselecteerd, voeg de Campagne toe die is ingesteld voor de Terugkerende Donatie aan alle gerelateerde Opportunities. Als deze optie niet is geselecteerd, verschijnt de Campagne alleen op de eerste Opportunity van de Terugkerende Donatie.</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDBatch --></label>
+        <label>Deze functionaliteit voert een batch proces uit voor alle doorlopende Terugkerende Donaties, en gebaseerd op het aantal Opportunity Prognose Maanden:
+&lt;br/&gt;
+&lt;br/&gt; 
+Creëert nieuwe Opportunities&lt;br/&gt;
+Werkt het aantal Termijnen en Betaald Bedrag bij&lt;br/&gt;
+&lt;br/&gt;
+Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het proces zal verder gaan op de achtergrond.</label>
         <name>stgHelpRDBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDDisableScheduling --></label>
+        <label>Schakelt de planning uit van de Terugkerende Donaties gedurende de nacht.</label>
         <name>stgHelpRDDisableScheduling</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDFailures --></label>
+        <label>Het aantal Terugkerende Donaties die niet succesvol zijn bijgewerkt in de laatste batch uitvoering.</label>
         <name>stgHelpRDFailures</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDFieldMap --></label>
+        <label>Met deze instelling kunnen velden gemapt worden van het Terugkerende Donatie record naar de Opportunities van de Terugkerende Donatie.</label>
         <name>stgHelpRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDFieldMapOppField --></label>
+        <label>niet langer in gebruik.</label>
         <name>stgHelpRDFieldMapOppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDFieldMapRDField --></label>
+        <label>niet langer in gebruik.</label>
         <name>stgHelpRDFieldMapRDField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDLastRun --></label>
+        <label>De datum en tijd van de laatste batch bijwerking van Terugkerende Donaties.</label>
         <name>stgHelpRDLastRun</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDMaxDonations --></label>
+        <label>Beperkt het totaal aantal donaties (termijnen) van Terugkerende Donaties met een Einddatum. Standaard is 50.</label>
         <name>stgHelpRDMaxDonations</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDOpenOppBehavior --></label>
+        <label>Bepaalt wat het systeem moet doen met alle openstaande Opportunities bij het sluiten van een doorlopende Terugkerende Donatie.</label>
         <name>stgHelpRDOpenOppBehavior</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDOppForecastMonths --></label>
+        <label>Aantal maanden&apos;s waarde aan open Opportunities gemaakt voor doorlopende Terugkerende Donaties. De standaard is 12, dus na elke maand wordt er een nieuwe aangemaakt.</label>
         <name>stgHelpRDOppForecastMonths</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDOppRT --></label>
+        <label>Het Opportunity Recordtype toegewezen aan de Opportunities van de Terugkerende Donatie.</label>
         <name>stgHelpRDOppRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDPeriodFrequency --></label>
+        <label>De hoeveelheid tijd die de Aangepaste Termijn Periode overspant.</label>
         <name>stgHelpRDPeriodFrequency</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDPeriodName --></label>
+        <label>De naam van de nieuwe Aangepaste Termijn Periode</label>
         <name>stgHelpRDPeriodName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDPeriodType --></label>
+        <label>Het type tijdsperiode dat de Aangepaste Termijn Periode overspant.</label>
         <name>stgHelpRDPeriodType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRDSuccesses --></label>
+        <label>Aantal Terugkerende Donaties succesvol bijgewerkt in de laatste batch uitvoer.</label>
         <name>stgHelpRDSuccesses</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRecDon --></label>
+        <label>Deze instelling creëert aangepaste termijn periodes voor Terugkerende Donaties, anders dan de standaard termijn periode in NPSP.</label>
         <name>stgHelpRecDon</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelAutoCreatedDup --></label>
+        <label>NPSP ontdubbelt Automatisch Aangemaakte Relaties automatisch. Selecteer deze optie om dit uit te schakelen, waardoor meerdere Relaties van hetzelfde Type bestaan tussen twee Contactpersonen.</label>
         <name>stgHelpRelAutoCreatedDup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelFieldSyncToggle --></label>
+        <label>Selecteer deze optie om aangepaste Relatievelden tussen twee met een Relatie verbonden Contactpersonen te synchroniseren.</label>
         <name>stgHelpRelFieldSyncToggle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelGenderField --></label>
+        <label>Aangepast veld dat het geslacht bepaalt van een Contactpersoon. Het systeem gebruikt deze waarde om de Wederkerige Relatie te bepalen.</label>
         <name>stgHelpRelGenderField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelReciprocalFemale --></label>
+        <label>De waarde die gebruikt wordt als het Contactpersoon Geslacht veld Vrouw is, of als de Aanhef dit aangeeft.</label>
         <name>stgHelpRelReciprocalFemale</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelReciprocalMale --></label>
+        <label>De waarde die gebruikt wordt als het Contactpersoon Geslacht veld Man is, of als de Aanhef dit aangeeft.</label>
         <name>stgHelpRelReciprocalMale</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelReciprocalMethod --></label>
+        <label>Bepaalt de methode die gebruikt wordt voor het maken van Wederkerige Relaties. Bekijk de &lt;a href=&quot;https://powerofus.force.com/NPSP_Relationships_Settings&quot; target=&quot;_blank&quot;&gt;NPSP Documentatie&lt;/a&gt; voor meer informatie.</label>
         <name>stgHelpRelReciprocalMethod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelReciprocalName --></label>
+        <label>De naam van de Relatie. Dit is de waarde van het Type dat de gebruiker selecteert bij het maken van de Relatie tussen Contactpersonen.</label>
         <name>stgHelpRelReciprocalName</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelReciprocalNeutral --></label>
+        <label>De waarde die gebruikt wordt wanneer het geslacht niet bepaald kan worden op basis van Geslacht veld of Aanhef.</label>
         <name>stgHelpRelReciprocalNeutral</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRelSyncFields --></label>
+        <label>De aangepaste Relatie velden die niet gesynchroniseerd moeten worden tussen twee Contactpersonen in een Relatie. Klik Control of Command om meerdere velden te selecteren.</label>
         <name>stgHelpRelSyncFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpReviewErrorLog --></label>
+        <label><!-- Respect the settings on a Duplicate Rule that control allowing duplicates. --></label>
+        <name>stgHelpRespectDuplicateRuleSettings</name>
+    </customLabels>
+    <customLabels>
+        <label>Bekijk de &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;Foutlogboeken&lt;/a&gt; om te zien of er problemen zijn.</label>
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupBatchSize --></label>
+        <label>Het aantal records dat per keer verwerkt zal worden bij het berekenen van donateur statistieken. De standaard grootte is 200. Verminder dit aantal als Opportunity Rollups mislukken door systeem limieten.</label>
         <name>stgHelpRollupBatchSize</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeAccountOppRT --></label>
+        <label>Opportunities met de geselecteerde Recordtypen worden niet ingesloten in rollups naar het Account. Klik Control of Command om meerdere Recordtypen te selecteren.</label>
         <name>stgHelpRollupExcludeAccountOppRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeAccountOppType --></label>
+        <label>Opportunities met deze waarde in de Type keuzelijst worden niet ingesloten in de rollups naar het Account.</label>
         <name>stgHelpRollupExcludeAccountOppType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeAlloOppRecType --></label>
+        <label>Bestemming Toewijzingen van Opportunities met de geselecteerde Recordtypen worden niet ingesloten bij het oprollen naar het Bestemming record.</label>
         <name>stgHelpRollupExcludeAlloOppRecType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeAlloOppType --></label>
+        <label>Bestemming Toewijzingen van Opportunities met de waarde in het Type keuzelijst worden niet ingesloten bij het oprollen naar het Bestemming record.</label>
         <name>stgHelpRollupExcludeAlloOppType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeContactOppRT --></label>
+        <label>Opportunities met de geselecteerde Recordtypen worden niet ingesloten in rollups naar het Contactpersoon. Klik Control of Command om meerdere Recordtypen te selecteren.</label>
         <name>stgHelpRollupExcludeContactOppRT</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupExcludeContactOppType --></label>
+        <label>Opportunities met deze waarde in de Type keuzelijst worden niet ingesloten in de rollups naar het Contactpersoon.</label>
         <name>stgHelpRollupExcludeContactOppType</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupNDayValue --></label>
+        <label>Stelt de waarde in voor &apos;N dagen&apos; rollups, waar &apos;N&apos; het aantal dagen is van vandaag tot in het verleden. Deze waarde is standaard ingesteld over de laatste 365 dagen.</label>
         <name>stgHelpRollupNDayValue</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpRollupPrimaryContact --></label>
+        <label>Wanneer deze optie is geselecteerd, wordt donateur data altijd opgerold naar de Primaire Contactpersoon van de Opportunity, en de bijbehorende Huishouden Account record, ook als de Opportunity niet van een individu (Bijv. een bedrijf, stichting etc.) komt. Wanneer niet geselecteerd, en het Account van de Opportunity is een organisatie, zal alleen de organisatie de data ontvangen.</label>
         <name>stgHelpRollupPrimaryContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpSalesforceSetup --></label>
+        <label>Wilt u de pagina layout, velden of gebruikers aanpassen? Probeer de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pagina&apos;s.</label>
         <name>stgHelpSalesforceSetup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpSimpleAddrChangeIsUpdate --></label>
+        <label>Een simpele adreswijziging is een verandering (zoals een spelfout of het verwijderen van een spatie) aan het adresveld van een Account of Contactpersoon. Als deze optie is geselecteerd, zullen deze veranderingen worden bijgewerkt in het bestaande adres en zal er geen nieuw Adres object worden aangemaakt.</label>
         <name>stgHelpSimpleAddrChangeIsUpdate</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpSoftCreditRoles --></label>
+        <label>Opportunity Contactpersoon Rollen die ingesloten moeten worden in de Soft Credit rollups. Klik Control of Command om meerdere Rollen te selecteren.</label>
         <name>stgHelpSoftCreditRoles</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpStoreErrorsOn --></label>
+        <label>Vink dit aan om fouten op te slaan in de database.</label>
         <name>stgHelpStoreErrorsOn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTDTM --></label>
+        <label>Trigger Handlers bevat logica die nodig is om uit te voeren voor een bepaalde trigger event.</label>
         <name>stgHelpTDTM</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHActive --></label>
+        <label>Laat zien dat de Trigger Handler actief is en zal uitgevoerd worden wanneer er voldaan wordt aan de Trigger Actie criteria.</label>
         <name>stgHelpTHActive</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHAsync --></label>
+        <label>Laat zien dat de After Events van deze trigger handler asynchroon moeten worden uitgevoerd. WAARSCHUWING: Als de gespecificeerde Apex Klasse asynchrone verwerking niet ondersteunt en dit selectievakje is geselecteerd, kan de klasse niet juist werkt.</label>
         <name>stgHelpTHAsync</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHClass --></label>
+        <label>De Apex Klasse die moet worden uitgevoerd.</label>
         <name>stgHelpTHClass</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHLoadOrder --></label>
+        <label>De volgorde in welke de trigger moet worden uitgevoerd. Als de records die met deze trigger worden verwerkt gerelateerde records hebben, zorgt deze volgorde ervoor dat de records correct worden aangemaakt en bijgewerkt.</label>
         <name>stgHelpTHLoadOrder</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHObject --></label>
+        <label>Het object gerelateerd aan deze trigger handler.</label>
         <name>stgHelpTHObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTHTriggerAction --></label>
+        <label>Acties die deze trigger afvuren. Klik Control of Command om meerdere Acties te selecteren.</label>
         <name>stgHelpTHTriggerAction</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTriggerHandlers --></label>
+        <label>Deze triggers controleren de kern functionaliteiten in het Nonprofit Success Pack, wees voorzichig met het aanpassen.</label>
         <name>stgHelpTriggerHandlers</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpTriggerHandlersAsync --></label>
+        <label>Het markeren van Trigger Handlers om Asynchroon uit te voeren kan onbedoelde gevolgen hebben, en moeten daarom volledig getest worden voor deze worden uitgerold.</label>
         <name>stgHelpTriggerHandlersAsync</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpUDROperation --></label>
+        <label>Bepaalt hoe het veld opgerold moet worden. Alleen geldige operaties voor de geselecteerde Opportunity worden vermeld.</label>
         <name>stgHelpUDROperation</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpUDROppField --></label>
+        <label>Het Opportunity veld dat opgerold moet worden.</label>
         <name>stgHelpUDROppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgHelpUDRTargetObject --></label>
+        <label>Het object waar de rollup informatie zal verschijnen.</label>
         <name>stgHelpUDRTargetObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgInstallScriptError --></label>
+        <label>Uw installatie was succesvol, maar er is een klein probleem geconstateerd. Om het probleem op te lossen, ga naar de NPSP Instellingen pagina. 
+
+Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack applicatie. Als deze tab niet te zien is, selecteer het Nonprofit Success Pack van de appstarter.</label>
         <name>stgInstallScriptError</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelActionColumn --></label>
+        <label>Actie</label>
         <name>stgLabelActionColumn</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAddressVerification --></label>
+        <label>Adres Instellingen</label>
         <name>stgLabelAddressVerification</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAfflSettings --></label>
+        <label>Verwante Organisaties Instellingen</label>
         <name>stgLabelAfflSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAllRecordTypes --></label>
+        <label>- alle Recordtypen -</label>
         <name>stgLabelAllRecordTypes</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAlloBatchProgress --></label>
+        <label>Rullup Toewijzingen Batch Progressie</label>
         <name>stgLabelAlloBatchProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAllocationsRollupSettings --></label>
+        <label>Bestemming Toewijzingen Rollup Instellingen</label>
         <name>stgLabelAllocationsRollupSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAllocationsSettings --></label>
+        <label>Standaard Toewijzingen Instellingen</label>
         <name>stgLabelAllocationsSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAreYouSure --></label>
+        <label>Weet u het zeker?</label>
         <name>stgLabelAreYouSure</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelAutoContactRoles --></label>
+        <label>Automatische Contactpersoon Rollen</label>
         <name>stgLabelAutoContactRoles</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelBDESettings --></label>
+        <label>Batch Data Invoer Instellingen</label>
         <name>stgLabelBDESettings</name>
     </customLabels>
     <customLabels>
@@ -2617,131 +2918,131 @@
         <name>stgLabelBatchStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelCreateMissingPayments --></label>
+        <label>Creëer Ontbrekende Betalingen</label>
         <name>stgLabelCreateMissingPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelCurrentUDR --></label>
+        <label>Huidige Gebruiker Gedefinieerde Rollups</label>
         <name>stgLabelCurrentUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelDoNotRename --></label>
+        <label>- niet hernoemen -</label>
         <name>stgLabelDoNotRename</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelErrorNotify --></label>
+        <label>Foutmelding Instellingen</label>
         <name>stgLabelErrorNotify</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelExamplesFGFormat --></label>
+        <label>Voorbeelden voor Formele Begroeting Formaat</label>
         <name>stgLabelExamplesFGFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelExamplesHHNameFOrmat --></label>
+        <label>Voorbeelden voor Huishouden Naam Formaat</label>
         <name>stgLabelExamplesHHNameFOrmat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelExamplesIGFormat --></label>
+        <label>Voorbeelden voor Informele Begroeting Formaat</label>
         <name>stgLabelExamplesIGFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHGeneral --></label>
+        <label>Algemene Instellingen</label>
         <name>stgLabelHHGeneral</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHNaming --></label>
+        <label>Huishouden Naam Instellingen</label>
         <name>stgLabelHHNaming</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHNamingProgress --></label>
+        <label>Naamgeving Activatie Progressie</label>
         <name>stgLabelHHNamingProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHOCR --></label>
+        <label>Huishouden Opportunity Contactpersoon Rollen</label>
         <name>stgLabelHHOCR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHObject --></label>
+        <label>Huishouden Object</label>
         <name>stgLabelHHObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHHSettings --></label>
+        <label>Huishouden Instellingen</label>
         <name>stgLabelHHSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHonoreeNotificationHelpText --></label>
+        <label>Creëer automatische Opportunity Contactpersoon Rollen voor Gehonoreerden en Melding Ontvangende Contactpersonen.</label>
         <name>stgLabelHonoreeNotificationHelpText</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelHonoreeNotificationOCR --></label>
+        <label>Gehonoreerde en Melding Ontvangende Opportunity Contactpersoon Rollen</label>
         <name>stgLabelHonoreeNotificationOCR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelLeadSettings --></label>
+        <label>Lead Instellingen</label>
         <name>stgLabelLeadSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- menu title for the Level Assignment Batch in NPSP Settings --></label>
+        <label>Niveau Toewijzing Batch</label>
         <name>stgLabelLvlAssignBatchTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelMembershipSettings --></label>
+        <label>Lidmaatschap Instellingen</label>
         <name>stgLabelMembershipSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewAutoRel --></label>
+        <label>Nieuwe Automatische Relatie</label>
         <name>stgLabelNewAutoRel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewPaymentMapping --></label>
+        <label>Nieuwe Betaling Veld Mapping</label>
         <name>stgLabelNewPaymentMapping</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewRDFieldMap --></label>
+        <label>Nieuwe Aangepaste Veld Mapping</label>
         <name>stgLabelNewRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewRelReciprocal --></label>
+        <label>Nieuwe Wederkerige Relatie</label>
         <name>stgLabelNewRelReciprocal</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewTH --></label>
+        <label>Nieuwe Trigger Handler</label>
         <name>stgLabelNewTH</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNewUDR --></label>
+        <label>Nieuwe Gebruiker Gedefinieerde Rollup</label>
         <name>stgLabelNewUDR</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelNone --></label>
+        <label>--Geen--</label>
         <name>stgLabelNone</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelONS --></label>
+        <label>Opportunity Naam Instellingen</label>
         <name>stgLabelONS</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppBatchProgress --></label>
+        <label>Rollup Donaties Batch Progressie</label>
         <name>stgLabelOppBatchProgress</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppCampMembers --></label>
+        <label>Campagneleden</label>
         <name>stgLabelOppCampMembers</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppNamingRefreshTitle --></label>
+        <label>Ververs Opportunity Namen</label>
         <name>stgLabelOppNamingRefreshTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppNamingSettings --></label>
+        <label>Opportunity Namen</label>
         <name>stgLabelOppNamingSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppPrimaryContactTitle --></label>
+        <label>Ververs Oppportunity Primaire Contactpersoon</label>
         <name>stgLabelOppPrimaryContactTitle</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppRollupRT --></label>
+        <label>Opportunity Rollup Recordtypen</label>
         <name>stgLabelOppRollupRT</name>
     </customLabels>
     <customLabels>
@@ -2749,75 +3050,75 @@
         <name>stgLabelOppRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOppUpdatePrimaryContact --></label>
+        <label>Batch Bijwerken Primaire Contactpersoon</label>
         <name>stgLabelOppUpdatePrimaryContact</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOther --></label>
+        <label>anders</label>
         <name>stgLabelOther</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOtherDateFormat --></label>
+        <label>Ander Datum Formaat</label>
         <name>stgLabelOtherDateFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOtherFormalGreetingFormat --></label>
+        <label>Ander Formele Begroeting Formaat</label>
         <name>stgLabelOtherFormalGreetingFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOtherHHNameFormat --></label>
+        <label>Ander Huishouden Naam Formaat</label>
         <name>stgLabelOtherHHNameFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOtherInformalGreetingFormat --></label>
+        <label>Ander Informele Begroeting Formaat</label>
         <name>stgLabelOtherInformalGreetingFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelOtherOpportunigyNamingFormat --></label>
+        <label>Ander Opportunity Naamgeving Formaat</label>
         <name>stgLabelOtherOpportunigyNamingFormat</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelPaymentMapNoValidFields --></label>
+        <label>Geen Geldig Veld Beschikbaar</label>
         <name>stgLabelPaymentMapNoValidFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelPaymentSettings --></label>
+        <label>Betalingen Instellingen</label>
         <name>stgLabelPaymentSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRDFieldMap --></label>
+        <label>Aangepaste Veld Mapping</label>
         <name>stgLabelRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRDNewPeriod --></label>
+        <label>Nieuwe Termijn Periode</label>
         <name>stgLabelRDNewPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRDPeriod --></label>
+        <label>Aangepaste Termijn Periode</label>
         <name>stgLabelRDPeriod</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRDSettings --></label>
+        <label>Terugkerende Donatie Instellingen</label>
         <name>stgLabelRDSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRDStatus --></label>
+        <label>Bijwerken Terugkerende Donatie Opportunities</label>
         <name>stgLabelRDStatus</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRelSettings --></label>
+        <label>Algemene Instellingen</label>
         <name>stgLabelRelSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelRelationshipSyncNoValidFields --></label>
+        <label>Geen Geldig Veld Beschikbaar</label>
         <name>stgLabelRelationshipSyncNoValidFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelSelectChatterGroup --></label>
+        <label>Selecteer Chatter Groep</label>
         <name>stgLabelSelectChatterGroup</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelSoftCredit --></label>
+        <label>Soft Credit Instellingen</label>
         <name>stgLabelSoftCredit</name>
     </customLabels>
     <customLabels>
@@ -2825,47 +3126,47 @@
         <name>stgLabelTriggerHandlers</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelTypeAhead --></label>
+        <label>Begin met typen...</label>
         <name>stgLabelTypeAhead</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRNoOppFields --></label>
+        <label>Geen geldige Opportunity velden gevonden.</label>
         <name>stgLabelUDRNoOppFields</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDROp --></label>
+        <label>Rollup Operatie</label>
         <name>stgLabelUDROp</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDROppField --></label>
+        <label>Opportunity Veld</label>
         <name>stgLabelUDROppField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRTargetField --></label>
+        <label>Doel Veld</label>
         <name>stgLabelUDRTargetField</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRTargetFieldHelp --></label>
+        <label>Het aangepaste veld op het doel object dat de aangepaste rollup informatie zal weergeven. Dit veld moet van hetzelfde data type zijn als het veld waarvan opgerold wordt.</label>
         <name>stgLabelUDRTargetFieldHelp</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLabelUDRTargetObject --></label>
+        <label>Doel Object</label>
         <name>stgLabelUDRTargetObject</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgLinkDelete --></label>
+        <label>Verw</label>
         <name>stgLinkDelete</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPGuideImportData --></label>
+        <label>NPSP Gids voor Importeren Data</label>
         <name>stgNPSPGuideImportData</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPSettings --></label>
+        <label>Nonprofit Success Pack Applicatie Instellingen</label>
         <name>stgNPSPSettings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNPSPSettingsTitle --></label>
+        <label>Nonprofit Success Pack Instellingen</label>
         <name>stgNPSPSettingsTitle</name>
     </customLabels>
     <customLabels>
@@ -2877,59 +3178,59 @@
         <name>stgNavAccountModel</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavAddressVerification --></label>
+        <label>Adressen</label>
         <name>stgNavAddressVerification</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavAffiliations --></label>
+        <label>Verwante Organisaties</label>
         <name>stgNavAffiliations</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavAllocations --></label>
+        <label>Bestemming Toewijzingen</label>
         <name>stgNavAllocations</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavBDE --></label>
+        <label>Batch Data Invoer</label>
         <name>stgNavBDE</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavBulkProcesses --></label>
+        <label>Bulk Data Processen</label>
         <name>stgNavBulkProcesses</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavConnections --></label>
+        <label>Verbindingen</label>
         <name>stgNavConnections</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavContactRoles --></label>
+        <label>Contactpersoon Rollen</label>
         <name>stgNavContactRoles</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavContacts --></label>
+        <label>Contactpersonen</label>
         <name>stgNavContacts</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavDonations --></label>
+        <label>Donaties</label>
         <name>stgNavDonations</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavDonorStatistics --></label>
+        <label>Donatie Statistieken</label>
         <name>stgNavDonorStatistics</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavErrorLog --></label>
+        <label>Foutmeldingslogboek</label>
         <name>stgNavErrorLog</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavErrorNotify --></label>
+        <label>Foutmeldingen</label>
         <name>stgNavErrorNotify</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavHealthCheck --></label>
+        <label>Gezondheidscontrole</label>
         <name>stgNavHealthCheck</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavHouseholds --></label>
+        <label>Huishouden</label>
         <name>stgNavHouseholds</name>
     </customLabels>
     <customLabels>
@@ -2937,75 +3238,75 @@
         <name>stgNavLeads</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavMembership --></label>
+        <label>Lidmaatschap</label>
         <name>stgNavMembership</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavPaymentMappings --></label>
+        <label>Betaling Mappingen</label>
         <name>stgNavPaymentMappings</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavPayments --></label>
+        <label>Betalingen</label>
         <name>stgNavPayments</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavPeople --></label>
+        <label>Mensen</label>
         <name>stgNavPeople</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRDBatch --></label>
+        <label>Terugkerende Donaties Batch</label>
         <name>stgNavRDBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRDFieldMap --></label>
+        <label>Terugkerende Donatie Aangepast Veld Mappingen</label>
         <name>stgNavRDFieldMap</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRDInstallmentPeriods --></label>
+        <label>Terugkerende Donatie Aangepaste Termijn Periode</label>
         <name>stgNavRDInstallmentPeriods</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRecurringDonations --></label>
+        <label>Terugkerende Donaties</label>
         <name>stgNavRecurringDonations</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRelAutoCreate --></label>
+        <label>Automatisch Aangemaakte Relaties</label>
         <name>stgNavRelAutoCreate</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRelReciprocal --></label>
+        <label>Wederkerige Relatie Instellingen</label>
         <name>stgNavRelReciprocal</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRelationships --></label>
+        <label>Relaties</label>
         <name>stgNavRelationships</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRollupAlloBatch --></label>
+        <label>Rollup Toewijzingen Batch</label>
         <name>stgNavRollupAlloBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavRollupBatch --></label>
+        <label>Rollup Donaties Batch</label>
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavSchedule --></label>
+        <label>Proces Planner</label>
         <name>stgNavSchedule</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavSystem --></label>
+        <label>Systeem Functies</label>
         <name>stgNavSystem</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavTriggerConfig --></label>
+        <label>Trigger Configuratie</label>
         <name>stgNavTriggerConfig</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgNavUserDefinedRollups --></label>
+        <label>Gebruiker Gedefinieerde Rollups</label>
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgOppNamingDescription --></label>
+        <label>Bij het maken van een Opportunity, wordt de Naam automatisch gevuld door de standaard naamgeving. Deze kan aangepast worden door het maken van aangepaste Opportunity Namen.</label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
@@ -3013,11 +3314,11 @@
         <name>stgPowerOfUsHub</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgTools --></label>
+        <label>Functies</label>
         <name>stgTools</name>
     </customLabels>
     <customLabels>
-        <label><!-- stgValidationHHAccountHHRules --></label>
+        <label>Het Account Model is ingesteld op &apos;Huishouden Account&apos;, waardoor Huishouden Regels ingesteld moeten zijn op &apos;Geen Contactpersonen&apos;. Bij het gebruik van Huishouden Accounts, is het niet nodig een extra Huishouden Object te hebben.</label>
         <name>stgValidationHHAccountHHRules</name>
     </customLabels>
     <customTabs>

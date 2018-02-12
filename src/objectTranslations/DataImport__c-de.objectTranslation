@@ -433,7 +433,7 @@
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>Der Name des Opportunity-Datensatztyps, der für die Spende verwendet werden soll Verwendet den Standarddatensatztyp, falls das Feld leer ist.</help>
+        <help>Opportunity.RecordTypeId</help>
         <label>Spende Name für Datensatztyp</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
