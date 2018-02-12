@@ -47,7 +47,7 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      */
     public override void initRollup() {
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.RollupTypeFilter.All)) {
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, this.jobFilter)) {
             addRollupDefinition(r);
         }
     }

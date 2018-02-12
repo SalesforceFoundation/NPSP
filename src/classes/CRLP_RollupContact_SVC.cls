@@ -47,7 +47,7 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      */
     public override void initRollup() {
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.RollupTypeFilter.All)) {
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, this.jobFilter)) {
             addRollupDefinition(r);
         }
     }

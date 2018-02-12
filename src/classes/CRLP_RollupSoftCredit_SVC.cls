@@ -52,8 +52,7 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
         CRLP_RollupProcessingOptions.RollupType rollupType = (this.objectId.getSobjectType() == Account.SObjectType ?
                 CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit : CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
-                rollupType, CRLP_RollupProcessingOptions.RollupTypeFilter.All)) {
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
             addRollupDefinition(r);
         }
     }

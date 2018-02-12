@@ -45,6 +45,12 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
         this.isLdvBatchJob = false;
     }
 
+    public CRLP_Rollup_BATCH(SObjectType objType, CRLP_RollupProcessingOptions.RollupTypeFilter jobTypeFilter) {
+        super(objType);
+        this.isLdvBatchJob = false;
+        this.jobFilter = jobTypeFilter;
+    }
+
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */

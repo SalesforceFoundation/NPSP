@@ -61,6 +61,9 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     /* @description The currency code of the target object if multi-currency is enabled. */
     protected String currCode;
 
+    /** @description The default filter to apply to Rollups type records for the processing */
+    protected CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+
     /**
      * @description Collection of all Rollups for the current instance of the Rollup Handler (by Summary Object record)
      * This collection may be saved in a stateful var in the LDV Batch Job to support calling the Handler multiple
@@ -105,6 +108,10 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
             // clear all the rolled up values in the current instances of any CRLP_Rollup objects
             resetAllRollups();
         }
+    }
+
+    public void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        this.jobFilter = jobFilter;
     }
 
     /**

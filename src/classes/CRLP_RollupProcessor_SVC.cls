@@ -247,6 +247,7 @@ public class CRLP_RollupProcessor_SVC {
         }
 
         // Set the Id of the summary object. This method will also reset and load the appropriate rollup mdt records
+        handler.setRollupTypeFilter(options.rollupTypesToProcess);
         handler.setRecordId(parentId);
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than

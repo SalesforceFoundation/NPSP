@@ -61,6 +61,31 @@ public class CRLP_RollupProcessingOptions {
         MembershipsOnly // Only rolups with "Membership" in the Summary Field Name
     }
 
+    public Enum RollupSchedule {
+        Daily,
+        Weekly_Friday,
+        Weekly_Sunday,
+        Month_LastDay,
+        Month_FirstDay,
+        Year_LastDay,
+        Year_FirstDay,
+        Never
+    }
+
+    public static RollupSchedule getRollupScheduleFromString(String schedText) {
+        Map<String,RollupSchedule> scheduleMap = new Map<String, RollupSchedule>{
+                'Daily' => RollupSchedule.Daily,
+                'Weekly on Friday' => RollupSchedule.Weekly_Friday,
+                'Weekly on Sunday' => RollupSchedule.Weekly_Sunday,
+                'First Day of Month' => RollupSchedule.Month_FirstDay,
+                'Last Day of Month' => RollupSchedule.Month_LastDay,
+                'First Day of Year' => RollupSchedule.Year_FirstDay,
+                'Last Day of Year' => RollupSchedule.Year_LastDay,
+                'Never' => RollupSchedule.Never
+        };
+        return scheduleMap.get(schedText);
+    }
+
     /**
      * @description Defines the type of rollups being executed by the specific batch job. This is used with the
      * RollupFilterSetting enum to select the correct Rollup__mdt records to use for the entire rollup operation.
