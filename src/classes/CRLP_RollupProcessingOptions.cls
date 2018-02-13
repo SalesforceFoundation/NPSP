@@ -152,10 +152,22 @@ public class CRLP_RollupProcessingOptions {
         }
 
         /**
-         * @description Set the property
+         * @description Set the property by fully cloning the passed Map so that the Map and the list of elements
+         * in each map value are a complete copy of the passed version. This is necesssary because the processing
+         * job will add every parent id to this map, but the stateful var only needs to retain the first and last
+         * parent id's processed.
          */
         public void setMapOfRollupsByParentId(Map<Id, List<CRLP_Rollup>> theMap) {
-            this.mapOfRollupsByParentId = theMap;
+            this.mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
+            for (Id mapKey : theMap.keySet()) {
+                if (theMap.get(mapKey) != null) {
+                    List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
+                    for (CRLP_Rollup r : theMap.get(mapKey)) {
+                        newList.add(r.clone());
+                    }
+                    this.mapOfRollupsByParentId.put(mapKey, newList);
+                }
+            }
         }
 
         /**

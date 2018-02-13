@@ -189,6 +189,8 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, options);
 
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                this.totalRecordsModified += updatedRecords.size();
+                this.totalCommits++;
             }
 
         } catch (Exception ex) {

@@ -94,6 +94,7 @@ public abstract class CRLP_AbstractRollup_BATCH {
     /** @description Simple counters used to track state */
     protected Integer batchIteration = 0;
     protected Integer totalRecordsModified = 0;
+    protected Integer totalCommits=0;
 
     /** @description Are there Soft Credits to Contact-Account rollups to execute? */
     protected Boolean hasAccountSoftCreditRollups = false;

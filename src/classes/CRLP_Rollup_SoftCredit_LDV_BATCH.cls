@@ -209,6 +209,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
                     if (updatedRecords != null) {
                         this.totalRecordsModified += updatedRecords.size();
+                        this.totalCommits++;
                         // If the record was committed and the Id is in the parentIdsNotCommittedWithBatch collection
                         // that tracks the last batch iteration by Id, remove it from that collection now that it's committed.
                         for (SObject s : updatedRecords) {
@@ -280,6 +281,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     if (!updatedRecords.isEmpty()) {
                         CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
                         this.totalRecordsModified += updatedRecords.size();
+                        this.totalCommits++;
                     }
                 }
 
