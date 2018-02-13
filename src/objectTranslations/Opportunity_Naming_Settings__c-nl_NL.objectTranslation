@@ -25,7 +25,7 @@
     </fields>
     <fields>
         <help>Specificeert het opportunity record type waar dit naamgeving schema voor is.</help>
-        <label><!-- Opportunity Record Types --></label>
+        <label>Opportunity Recordtypen</label>
         <name>Opportunity_Record_Types__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

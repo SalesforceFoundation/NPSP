@@ -327,8 +327,12 @@
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
     <customLabels>
-        <label><!-- CascadeDeletionError --></label>
+        <label><!-- Cascade Deletion Error Message In Classic --></label>
         <name>CascadeDeletionError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Cascade Deletion Error Message In Lightning Experience --></label>
+        <name>CascadeDeletionErrorLightning</name>
     </customLabels>
     <customLabels>
         <label><!-- ClosedWonOpportunities --></label>
@@ -337,6 +341,14 @@
     <customLabels>
         <label><!-- ConfirmDeleteAccount --></label>
         <name>ConfirmDeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteAccount --></label>
+        <name>DeleteAccount</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DeleteContactLeaveAccount --></label>
+        <name>DeleteContactLeaveAccount</name>
     </customLabels>
     <customLabels>
         <label>הוסף משימה תלויה</label>
@@ -381,6 +393,10 @@
     <customLabels>
         <label>מוסתר משיקולי אבטחה</label>
         <name>HiddenForSecurity</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- InactiveScheduledJobsOwnerErrMsg --></label>
+        <name>InactiveScheduledJobsOwnerErrMsg</name>
     </customLabels>
     <customLabels>
         <label>הנושא הוא שדה חובה.</label>
@@ -429,6 +445,98 @@
     <customLabels>
         <label>הצג רשומת איש קשר</label>
         <name>REL_View_Contact_Record</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Customer Journey link --></label>
+        <name>RP_CustomerJourneyLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Paragraph --></label>
+        <name>RP_DeeperParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Deeper Subtitle --></label>
+        <name>RP_DeeperSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Getting Started component title --></label>
+        <name>RP_GettingStarted</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub Subtitle --></label>
+        <name>RP_GitHubSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - GitHub title --></label>
+        <name>RP_GitHubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Npsp Link --></label>
+        <name>RP_NpspLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Product Name --></label>
+        <name>RP_ProductNameLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release GitHub --></label>
+        <name>RP_ReleaseGitHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Release Notes Link --></label>
+        <name>RP_ReleaseNotesLink</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RP Remote Site Settings Deactivated --></label>
+        <name>RP_Remote_Site_Settings_Deactivated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Org Link --></label>
+        <name>RP_SalesforceOrgLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - SubTitle --></label>
+        <name>RP_SubTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Title --></label>
+        <name>RP_Title</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Link --></label>
+        <name>RP_TrailheadLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Paragraph --></label>
+        <name>RP_TrailheadParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Trailhead Subtitle --></label>
+        <name>RP_TrailheadSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Paragraph --></label>
+        <name>RP_USParagraph</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Hub Link --></label>
+        <name>RP_UsHubLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Power of Us Subtitle --></label>
+        <name>RP_UsSubtitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Youtube Videos --></label>
+        <name>RP_Videos</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Webinar Link --></label>
+        <name>RP_WebinarLinkLabel</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Resources Page - Salesforce Foundation Youtube Channel --></label>
+        <name>RP_YoutubeChannel</name>
     </customLabels>
     <customLabels>
         <label>עבור תרומות חוזרות, ניתן לציין רק ארגון או איש קשר, לא שניהם.</label>
@@ -563,6 +671,10 @@
     <customLabels>
         <label>האחוז של הקצאה לא יכול להיות שלילי.</label>
         <name>alloNegativePercent</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- alloObjectUnsupported --></label>
+        <name>alloObjectUnsupported</name>
     </customLabels>
     <customLabels>
         <label>הקצאות המבוססות על אחוזים לא יכולות לחרוג מ-100%.</label>
@@ -713,6 +825,10 @@
         <name>bdiDonationMatchingRuleEmpty</name>
     </customLabels>
     <customLabels>
+        <label><!-- error when a batch is missing a name --></label>
+        <name>bdiErrorBatchNameRequired</name>
+    </customLabels>
+    <customLabels>
         <label><!-- error on BDI record if DonationImported or PaymentImported lookups are invalid --></label>
         <name>bdiErrorDonationLookupMatch</name>
     </customLabels>
@@ -737,7 +853,7 @@
         <name>bdiErrorInvalidDonor</name>
     </customLabels>
     <customLabels>
-        <label><!-- error thrown if specified class doesn&apos;t support BDI_IMatchDonations --></label>
+        <label><!-- error thrown if specified class doesn&apos;t support the given BDI interface --></label>
         <name>bdiErrorInvalidIMatchDonations</name>
     </customLabels>
     <customLabels>
@@ -865,8 +981,48 @@
         <name>conFailedAccountCreate</name>
     </customLabels>
     <customLabels>
+        <label><!-- conMergeBtnLabel --></label>
+        <name>conMergeBtnLabel</name>
+    </customLabels>
+    <customLabels>
         <label>חשבונות אישיים אינם נתמכים.</label>
         <name>conMergeErrNoPersonAccounts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeFoundContacts --></label>
+        <name>conMergeFoundContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitle --></label>
+        <name>conMergePageTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergePageTitleDetail --></label>
+        <name>conMergePageTitleDetail</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSearchPlaceholder --></label>
+        <name>conMergeSearchPlaceholder</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectAll --></label>
+        <name>conMergeSelectAll</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectContact --></label>
+        <name>conMergeSelectContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeSelectedContacts --></label>
+        <name>conMergeSelectedContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeStageComplete --></label>
+        <name>conMergeStageComplete</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- conMergeWinnerAsstText --></label>
+        <name>conMergeWinnerAsstText</name>
     </customLabels>
     <customLabels>
         <label>לא ניתן להקצות תוכנית מעורבות זו לאובייקט חדש. צור תוכנית מעורבות חדשה.</label>
@@ -899,6 +1055,14 @@
     <customLabels>
         <label>קיימים {0} חשבונות &apos;אחד לאחד&apos; ללא אנשי קשר.</label>
         <name>healthDetailsAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTInvalid --></label>
+        <name>healthDetailsAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthDetailsAccountDefaultRTIssue --></label>
+        <name>healthDetailsAccountDefaultRTIssue</name>
     </customLabels>
     <customLabels>
         <label>לא צוין מודל חשבון חוקי.</label>
@@ -1109,6 +1273,10 @@
         <name>healthLabelAccountData</name>
     </customLabels>
     <customLabels>
+        <label><!-- healthLabelAccountDefaultRT --></label>
+        <name>healthLabelAccountDefaultRT</name>
+    </customLabels>
+    <customLabels>
         <label>נתוני מודל חשבון</label>
         <name>healthLabelAccountModelData</name>
     </customLabels>
@@ -1255,6 +1423,14 @@
     <customLabels>
         <label>שקול למחוק חשבונות &apos;אחד לאחד&apos; אלה שאינם בשימוש כדי לחסוך מקום.</label>
         <name>healthSolutionAccOne2OneNoContacts</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTInvalid --></label>
+        <name>healthSolutionAccountDefaultRTInvalid</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- healthSolutionAccountDefaultRTIssue --></label>
+        <name>healthSolutionAccountDefaultRTIssue</name>
     </customLabels>
     <customLabels>
         <label>כל החשבונות שלך צריכים להשתמש באותו מודל חשבון. כדי להציג את כל החשבונות שלך וסוגיהם, הפעל את הדוח &lt;b&gt;חשבונות אישיים לפי סוג חשבון&lt;/b&gt; בתיקיית דוחות בדיקת התקינות של NPSP.</label>
@@ -1485,6 +1661,10 @@
         <name>lblDeleteContactPrompt</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblExtendedStatus --></label>
+        <name>lblExtendedStatus</name>
+    </customLabels>
+    <customLabels>
         <label>באנשי קשר</label>
         <name>lblFindInContacts</name>
     </customLabels>
@@ -1537,6 +1717,10 @@
         <name>lblPostalCode</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblProgress --></label>
+        <name>lblProgress</name>
+    </customLabels>
+    <customLabels>
         <label><!-- lblRequired --></label>
         <name>lblRequired</name>
     </customLabels>
@@ -1549,8 +1733,16 @@
         <name>lblState</name>
     </customLabels>
     <customLabels>
+        <label><!-- lblStatus --></label>
+        <name>lblStatus</name>
+    </customLabels>
+    <customLabels>
         <label>רחוב</label>
         <name>lblStreet</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- lblYouAreHere --></label>
+        <name>lblYouAreHere</name>
     </customLabels>
     <customLabels>
         <label>חשבון</label>
@@ -1745,6 +1937,10 @@
         <name>oppNamingOrganizational</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtModifyCurrency --></label>
+        <name>pmtModifyCurrency</name>
+    </customLabels>
+    <customLabels>
         <label>חשב תשלומים</label>
         <name>pmtWizardBtnCalcPayments</name>
     </customLabels>
@@ -1771,6 +1967,10 @@
     <customLabels>
         <label>מרווח זמן</label>
         <name>pmtWizardInterval</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardMonth --></label>
+        <name>pmtWizardMonth</name>
     </customLabels>
     <customLabels>
         <label>לא נמצאו הזדמנויות.</label>
@@ -1825,12 +2025,20 @@
         <name>pmtWizardWarning</name>
     </customLabels>
     <customLabels>
+        <label><!-- pmtWizardWeek --></label>
+        <name>pmtWizardWeek</name>
+    </customLabels>
+    <customLabels>
         <label>באיזה תאריך ברצונך להשתמש?</label>
         <name>pmtWizardWriteoffDate</name>
     </customLabels>
     <customLabels>
         <label>אתה מתכונן למחוק {0} תשלומים בסכום כולל של {1}.</label>
         <name>pmtWizardWriteoffMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- pmtWizardYear --></label>
+        <name>pmtWizardYear</name>
     </customLabels>
     <customLabels>
         <label>מחק שורה</label>
@@ -2556,6 +2764,10 @@
     <customLabels>
         <label><!-- stgHelpRelSyncFields --></label>
         <name>stgHelpRelSyncFields</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Respect the settings on a Duplicate Rule that control allowing duplicates. --></label>
+        <name>stgHelpRespectDuplicateRuleSettings</name>
     </customLabels>
     <customLabels>
         <label>עיין &lt;a href=&quot;#&quot; onclick=&quot;ShowPanel(&apos;idPanelErrorLog&apos;);return false;&quot;&gt;ביומני השגיאות&lt;/a&gt; כדי לבדוק אם קיימות בעיות.</label>

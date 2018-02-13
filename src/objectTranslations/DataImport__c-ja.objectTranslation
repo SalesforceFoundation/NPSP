@@ -392,7 +392,12 @@
         <name>Donation_Name__c</name>
     </fields>
     <fields>
-        <help>支援に使用する支援レコードタイプの名前。空白のままにした場合、デフォルトのレコードタイプが使用されます。</help>
+        <help><!-- A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation. --></help>
+        <label><!-- Donation Possible Matches --></label>
+        <name>Donation_Possible_Matches__c</name>
+    </fields>
+    <fields>
+        <help>Opportunity.RecordTypeId</help>
         <label>レコードタイプ名(支援)</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
