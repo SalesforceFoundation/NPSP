@@ -9,7 +9,7 @@
         <value><!-- Deliverable --></value>
     </caseValues>
     <fields>
-        <help><!-- The date on which this particular Deliverable is due. --></help>
+        <help>De datum waarop deze Levering verloopt.</help>
         <label>Verloopdatum</label>
         <name>Grant_Deadline_Due_Date__c</name>
     </fields>
@@ -19,7 +19,7 @@
         <name>Grant_Deliverable_Close_Date__c</name>
     </fields>
     <fields>
-        <help><!-- Description of what is required for this deliverable. --></help>
+        <help>Omschrijving wat nodig is voor de Levering.</help>
         <label>Eisen</label>
         <name>Grant_Deliverable_Requirements__c</name>
     </fields>

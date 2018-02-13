@@ -9,8 +9,8 @@
         <value><!-- Error Settings --></value>
     </caseValues>
     <fields>
-        <help><!-- Used to keep track of the most recent execution of the Async job error logger --></help>
-        <label><!-- Async Error Check Last Run --></label>
+        <help>Wordt gebruikt om de meest recente uitvoer van de Async Opdracht Fout Logboek bij te houden</help>
+        <label>Async Fout Controleer Laatste Verwerking</label>
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
@@ -19,8 +19,8 @@
         <name>Disable_Error_Handling__c</name>
     </fields>
     <fields>
-        <help><!-- When checked, NPSP won&apos;t automatically schedule default recurring jobs. These recurring jobs calculate rollups, update recurring donations and seasonal address, and perform error handling. --></help>
-        <label><!-- Don&apos;t Auto Schedule Default NPSP Jobs --></label>
+        <help>Indien ingeschakeld, zal NPSP niet automatisch terugkerende opdrachten uitvoeren. Deze opdrachten bevatten Rollups, adreswijzigingen, bijwerken van teugkerende donaties en foutafhandeling.</help>
+        <label>Plan geen Standaard NPSP Opdrachten</label>
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
@@ -37,6 +37,11 @@
         <help>Selecteer het type gebruiker waar de notificatie naar gestuurd moet worden</help>
         <label>Fout Notificatie Ontvangers</label>
         <name>Error_Notifications_To__c</name>
+    </fields>
+    <fields>
+        <help><!-- Respect the settings on a Duplicate Rule that control whether duplicate records are allowed. To check existing settings, go to Duplicate Rules under Setup. When the Action On Create or Action On Edit fields are set to &quot;Allow,&quot; duplicates will be saved. --></help>
+        <label><!-- Respect Duplicate Rule Settings --></label>
+        <name>Respect_Duplicate_Rule_Settings__c</name>
     </fields>
     <fields>
         <help>Vink aan wanneer je fouten wilt opslaan in de database.</help>
