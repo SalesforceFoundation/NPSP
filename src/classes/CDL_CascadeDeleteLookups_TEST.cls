@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2016
 * @group Cascade Delete
-* @description Utilities for the Cascade Delete Test Classes
+* @description Cascade Delete test data factory.
 */
 @isTest
 public class CDL_CascadeDeleteLookups_TEST {

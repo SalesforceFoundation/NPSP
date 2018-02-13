@@ -48,9 +48,10 @@ public class CDL_CascadeDeleteLookups {
     ********************************************************************************************************/
     public static Boolean isLightningContext {
         get {
-            return (isLightningContext == null)
-                ? USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile()
-                : isLightningContext;
+            if (isLightningContext == null) {
+                isLightningContext = USER_UserService.isUserRunningLightning() || USER_UserService.isUserRunningMobile();
+            }
+            return isLightningContext;
         }
         set;
     }

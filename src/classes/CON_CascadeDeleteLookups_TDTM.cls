@@ -31,7 +31,7 @@
  * @author Salesforce.org
  * @date 2017
  * @group Cascade Delete
- * @description Cascade deletion extension for Opportunity object.
+ * @description Cascade deletion extension for Contact object.
  */
 public with sharing class CON_CascadeDeleteLookups_TDTM extends CDL_CascadeDeleteLookups_TDTM {
 

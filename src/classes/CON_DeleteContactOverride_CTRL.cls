@@ -176,10 +176,10 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     public PageReference deleteContact() {
         if (isDeleteContactOnly()) {
 
-            ContactDelete contactDelete = new ContactDelete(queryContact);
-            contactDelete.validate();
-            contactDelete.deleteOpportunities();
-            contactDelete.deleteRecurringDonations();
+            ContactCascadeDelete cascadeDelete = new ContactCascadeDelete(queryContact);
+            cascadeDelete.validate();
+            cascadeDelete.deleteOpportunities();
+            cascadeDelete.deleteRecurringDonations();
             
             delete queryContact;
 
@@ -210,12 +210,13 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     * on the page and displays error messages.
     */ 
     public PageReference deleteAccount() {
-        Account accForDelete =  [SELECT Id, Name FROM Account WHERE Id = :accountId];
+        Account account =  [SELECT Id, Name FROM Account WHERE Id = :accountId];
         
         try {
-            AccountDelete accountDelete = new AccountDelete(accForDelete);
-            accountDelete.validate();
-            delete accForDelete;
+            AccountCascadeDelete cascadeDelete = new AccountCascadeDelete(account);
+            cascadeDelete.validate();
+
+            delete account;
         } catch (Exception ex){
             if (!hasPageMessages)
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, ex.getMessage()));
@@ -272,7 +273,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that retrieves and validates the children of the Contacts to delete.
     ********************************************************************************************************/
-    class ContactDelete {
+    class ContactCascadeDelete {
 
         private Contact contactToDelete;
         private List<Case> relatedCases;
@@ -284,7 +285,7 @@ public with sharing class CON_DeleteContactOverride_CTRL {
         * Retrieves the Cases, Opportunities and Recurring Donations of the deleted Contacts. 
         * @param Contact The Contact to delete.
         ********************************************************************************************************/
-        public ContactDelete(Contact contactToDelete) {
+        public ContactCascadeDelete(Contact contactToDelete) {
             this.contactToDelete = contactToDelete;
 
             relatedCases = [
@@ -352,16 +353,16 @@ public with sharing class CON_DeleteContactOverride_CTRL {
     /*******************************************************************************************************
     * @description Class that retrieves and validates the children of the Account to delete
     ********************************************************************************************************/
-    class AccountDelete {
+    class AccountCascadeDelete {
         Account accountToDelete;
         private List<Case> relatedCases;
         private List<Opportunity> relatedOpportunities;
 
         /*******************************************************************************************************
-        * @description AccountDelete Constructor.
+        * @description AccountCascadeDelete Constructor.
         * @param Account The Account to delete.
         ********************************************************************************************************/
-        public AccountDelete(Account accountToDelete) {
+        public AccountCascadeDelete(Account accountToDelete) {
             this.accountToDelete = accountToDelete;
 
             relatedCases = [
