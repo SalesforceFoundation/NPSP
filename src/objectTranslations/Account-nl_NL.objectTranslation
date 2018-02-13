@@ -2,7 +2,7 @@
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
         <help>De batch waar deze Account is gemaakt.</help>
-        <label><!-- Batch --></label>
+        <label>Bactch</label>
         <name>Batch__c</name>
         <relationshipLabel><!-- Accounts --></relationshipLabel>
     </fields>
@@ -76,7 +76,7 @@
     </fields>
     <fields>
         <help>E-mail van de matching gift adminstrator van het bedrijf.</help>
-        <label><!-- Matching Gift Email --></label>
+        <label>Matching Gift E-mail</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>

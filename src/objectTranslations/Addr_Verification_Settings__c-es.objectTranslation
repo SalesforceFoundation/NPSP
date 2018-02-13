@@ -34,6 +34,11 @@
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
+        <help><!-- Prevents the Cicero API from overwriting Addresses during verification. --></help>
+        <label><!-- Prevent Address Overwrite --></label>
+        <name>Prevent_Address_Overwrite__c</name>
+    </fields>
+    <fields>
         <help>Marca direcciones ambiguas como invalidas, cuando el API devuelve más de una dirección. Si se deja sin seleccionar, Salesforce aceptará la primera dirección sugerida como dirección valida.</help>
         <label>Rechaza dirección ambigua</label>
         <name>Reject_Ambiguous_Addresses__c</name>
