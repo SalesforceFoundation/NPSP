@@ -508,14 +508,11 @@
     <types>
         <members>CRLP_CancelEvent</members>
         <members>CRLP_CreateRollup</members>
-        <members>CRLP_FilterGroupRow</members>
         <members>CRLP_ModeChanged</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
-        <members>CRLP_RollupRow</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
-        <members>CRLP_SortEvent</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -538,7 +535,6 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
-        <members>tableHeader</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>

@@ -6,7 +6,7 @@
         cmp.set("v.detailMode", null);
         cmp.set("v.activeRollup", null);
 
-        //checks if we're coming from the detail view; if already null the onchange won't fire
+        //checks if we're coming from the detail view
         cmp.set("v.activeRollupId", null);
     },
 

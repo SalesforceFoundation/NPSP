@@ -28,23 +28,13 @@
                 }
                 cmp.set("v.yearlyOperations", yOps);
 
-                /*var cols = [{label: model.labels.name, name: 'rollupName'}
-                            , {label: model.labels.summaryObject, name: 'summaryObject'}
-                            , {label: model.labels.detailObject, name: 'detailObject'}
-                            , {label: model.labels.creditType, name: 'creditType'}
-                            , {label: model.labels.operation, name: 'operation'}
-                            , {label: model.labels.filterGroupLabel, name: 'filterGroupName'}
-                            , {label: model.labels.active, name: 'active'}
-                            ];
-                cmp.set("v.columns", cols);*/
-
                 var actions = [{label: 'Edit', name:'edit'}
                     , {label: 'Clone', name:'clone'}
                     , {label: 'Delete', name:'delete'}
                     ];
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
-                var rcols = [{type: 'action', typeAttributes: { rowActions: actions }}
+                var rollupColumns = [{type: 'action', typeAttributes: { rowActions: actions }}
                             , {label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
                                 , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare'}}
                             , {label: model.labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
@@ -54,16 +44,15 @@
                             , {label: model.labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
                             , {label: model.labels.active, fieldName: 'active', type: 'boolean', sortable: 'true', initialWidth: 100, cellAttributes: {iconName: {fieldName: 'activeIcon'}}}
                             ];
-                cmp.set("v.rollupColumns", rcols);
+                cmp.set("v.rollupColumns", rollupColumns);
 
-                //lightning datatable
-                var fgcols = [{label: model.labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
+                var filterGroupColumns = [{label: model.labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
                     , {label: model.labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.filterGroupLabelPlural, fieldName: 'countFilterRules', type: 'string', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'string', sortable: 'true'}
+                    , {label: model.labels.countOf+' '+model.labels.filterGroupLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true'}
+                    , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true'}
                 ];
 
-                cmp.set("v.filterGroupColumns", fgcols);
+                cmp.set("v.filterGroupColumns", filterGroupColumns);
 
                 cmp.set("v.isRollupsGrid",true);
                 cmp.set("v.isFilterGroupsGrid",false);
@@ -123,27 +112,11 @@
         cmp.set("v.width", 12);
     },
 
-    handleRollupSelect: function(cmp, event, helper) {
-        /**called when the activeRollupId changes in the rollupRow
-         * switches the display to the detail view and sets the width for the buttons
-         * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
-        /* this isn't used ATM
-        var activeRollupId = cmp.get("v.activeRollupId");
-        if(activeRollupId != null){
-            cmp.set("v.isRollupsGrid",false);
-            cmp.set("v.isRollupDetail",true);
-            cmp.set("v.width", 8);
-        } else{
-            cmp.set("v.width", 12);
-        }*/
-
-    },
-
     handleRowAction: function(cmp, event, helper){
+        //handles the selected action in the rollups grid
         var action = event.getParam('action');
         var row = event.getParam('row');
-        console.log(row.id);
-        console.log(action.name);
+
         if(action.name != 'delete'){
             cmp.set("v.detailMode", action.name);
             cmp.set("v.activeRollupId", row.id);
@@ -165,10 +138,11 @@
     },
 
     sortByColumns: function(cmp, event, helper){
+        //sorts the data grid by the field name and current direction
         var col = event.getParam()
         var fieldName = event.getParam('fieldName');
         var sortDirection = event.getParam('sortDirection');
-        console.log('sort direction is ' + sortDirection);
+
         cmp.set("v.sortedBy", fieldName);
         cmp.set("v.sortedDirection", sortDirection);
         helper.sortData(cmp, fieldName, sortDirection);
