@@ -126,7 +126,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Services</masterLabel>
-            <translation><!-- Services --></translation>
+            <translation>Diensten</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -135,18 +135,18 @@
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
-        <help><!-- The account of the company who will match this gift. --></help>
+        <help>Het Account van het bedrijf dat de gift zal matchen.</help>
         <label>Matching Gift Bedrag</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>Gematchte Giften</relationshipLabel>
     </fields>
     <fields>
-        <help><!-- The name of the company who will match this gift. --></help>
+        <help>De naam van het bedrijf dat de gift zal matchen.</help>
         <label>Matching Gift Werkgever</label>
         <name>Matching_Gift_Employer__c</name>
     </fields>
     <fields>
-        <help><!-- The status of this gift being matched. --></help>
+        <help>De Status van de gift die wordt gematcht.</help>
         <label><!-- Matching Gift Status --></label>
         <name>Matching_Gift_Status__c</name>
         <picklistValues>
@@ -163,7 +163,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help><!-- The employer&apos;s matching gift for this employee&apos;s gift. --></help>
+        <help>De werkgevers Matching Gift voor de werknemers Gift.</help>
         <label><!-- Matching Gift --></label>
         <name>Matching_Gift__c</name>
         <relationshipLabel>Gematchte Giften</relationshipLabel>
