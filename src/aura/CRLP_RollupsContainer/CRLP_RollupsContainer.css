@@ -1,7 +1,16 @@
-/**
- * Created by randi.wilson on 12/21/17.
- */
 .THIS {
     /**may want to use tokens instead?**/
     background-color: white;
+}
+.THIS .lightningTable button{
+    border: none;
+    padding: .25em 0em .25em 0em;
+    line-height: 19.5px;
+    text-align: left;
+    font-size: 13px;
+    background-color: transparent;
+}
+.THIS .lightningTable button:hover{
+    text-decoration: underline;
+    background-color: transparent;
 }

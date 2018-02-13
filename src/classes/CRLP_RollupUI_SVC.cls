@@ -42,6 +42,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class RollupTableItem {
         @AuraEnabled public Boolean active;
+        @AuraEnabled public String activeIcon;
         @AuraEnabled public String creditType;
         @AuraEnabled public String detailField;
         @AuraEnabled public String detailObject;
@@ -133,6 +134,11 @@ public with sharing class CRLP_RollupUI_SVC {
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
             item.active = mdtList[i].Active__c;
+            if(item.active){
+                item.activeIcon = 'utility:check';
+            } else {
+                item.activeIcon = 'utility:ban';
+            }
             item.id = mdtList[i].Id;
 
             mdtTableList.add(item);

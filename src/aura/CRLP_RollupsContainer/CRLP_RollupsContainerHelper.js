@@ -6,17 +6,6 @@
         cmp.set("v.detailMode", null);
         cmp.set("v.activeRollup", null);
 
-        var labels = cmp.get("v.labels");
-
-        var cols = [{label: labels.name, name: 'rollupName'}
-            , {label: labels.summaryObject, name: 'summaryObject'}
-            , {label: labels.detailObject, name: 'detailObject'}
-            , {label: labels.creditType, name: 'creditType'}
-            , {label: labels.operation, name: 'operation'}
-            , {label: labels.filterGroupLabel, name: 'filterGroupName'}
-            , {label: labels.active, name: 'active'}
-        ];
-        cmp.set("v.columns", cols);
         //checks if we're coming from the detail view; if already null the onchange won't fire
         cmp.set("v.activeRollupId", null);
     },

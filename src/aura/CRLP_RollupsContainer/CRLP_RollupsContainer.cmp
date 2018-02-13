@@ -3,7 +3,8 @@
     <aura:attribute name="rollupList" type="Object[]" access="public" description="List of custom items to fill the rollup grid."/>
     <aura:attribute name="cachedRollupList" type="Object[]" access="public" description="Cached version of rollupList to use when filtering rollups."/>
     <aura:attribute name="filterGroupList" type="Object[]" access="public" description="List of custom items to fill the filter groups grid"/>
-    <aura:attribute name="columns" type="List" access="public" description="Columns for both grids."/>
+    <aura:attribute name="rollupColumns" type="List" access="public" description="Columns for rollup grids"/>
+    <aura:attribute name="filterGroupColumns" type="List" access="public" description="Columns for filter group grid."/>
     <aura:attribute name="activeRollupId" type="Id" description="ID of the selected rollup to display in rollup detail. Should only be set in child component to avoid onchange confusion."/>
     <aura:attribute name="activeRollup" type="Object" description="Active rollup item to display in rollup detail. Is set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Is set to null once component is hidden."/>
@@ -16,6 +17,8 @@
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container"/>
+    <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
+    <aura:attribute name="sortedDirection" type="String" access="private" description="Sorted direction, either asc or desc"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
@@ -31,7 +34,7 @@
         <lightning:breadcrumbs>
             <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
             <aura:if isTrue="{!or(v.isFilterGroupsGrid,v.isRollupDetail)}">
-                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
+                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleRollupCancelEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
             </aura:if>
         </lightning:breadcrumbs>
 
@@ -105,19 +108,24 @@
     <aura:if isTrue="{!v.isRollupsGrid}">
         <div class="slds-p-horizontal_large slds-p-bottom_large">
             <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
-                <!--<lightning:datatable data="{!v.rollupList}"
-                                     columns="{!v.columns}"
+                <lightning:datatable data="{!v.rollupList}"
+                                     columns="{!v.rollupColumns}"
+                                     class="lightningTable"
                                      keyField="rollupName"
                                      onsort="{!c.sortByColumns}"
-                                     hideCheckboxColumn="true"/>-->
-                <table class="slds-table slds-table_bordered">
+                                     hideCheckboxColumn="true"
+                                     onrowaction="{!c.handleRowAction}"
+                                     sortedBy="{!v.sortedBy}"
+                                     sortedDirection="{!v.sortedDirection}"
+                                     defaultSortDirection="asc"/>
+                <!--<table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
                     <aura:iteration var="rollup" items="{!v.rollupList}">
                         <c:CRLP_RollupRow rollup="{!rollup}" labels="{!v.labels}" activeRollupId="{!v.activeRollupId}" mode="{!v.detailMode}"/>
                     </aura:iteration>
                     </tbody>
-                </table>
+                </table>-->
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
                         {!v.labels.noRollups}
@@ -133,14 +141,22 @@
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
         <div class="slds-p-horizontal_large slds-p-bottom_large">
             <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
-                <table class="slds-table slds-table_bordered">
+                <lightning:datatable data="{!v.filterGroupList}"
+                                     columns="{!v.filterGroupColumns}"
+                                     keyField="filterGroupName"
+                                     onsort="{!c.sortByColumns}"
+                                     hideCheckboxColumn="true"
+                                     sortedBy="{!v.sortedBy}"
+                                     sortedDirection="{!v.sortedDirection}"
+                                     defaultSortDirection="asc"/>
+                <!--<table class="slds-table slds-table_bordered">
                     <c:tableHeader hasAction="true" columns="{!v.columns}" labels="{!v.labels}"/>
                     <tbody>
                     <aura:iteration var="filterGroup" items="{!v.filterGroupList}">
                         <c:CRLP_FilterGroupRow filterGroup="{!filterGroup}" labels="{!v.labels}"/>
                     </aura:iteration>
                     </tbody>
-                </table>
+                </table>-->
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
                         {!v.labels.noFilterGroups}
