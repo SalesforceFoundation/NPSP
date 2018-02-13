@@ -150,7 +150,7 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
             Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
             List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-            // Strip out summary records where there are no detial records to process.
+            // Strip out summary records where there are no detail records to process.
             // This is not needed for Accounts because the main query on Account already includes this filter.
             if (this.summaryObjectType == Contact.SObjectType) {
 

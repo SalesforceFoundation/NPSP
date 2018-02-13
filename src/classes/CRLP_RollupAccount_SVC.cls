@@ -66,10 +66,11 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
         List<Opportunity> opps = (List<Opportunity>) details;
-        for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
+        for (Integer n=0, listSize = opps.size(); n<listSize; n++) {
             Opportunity opp = opps[n];
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)

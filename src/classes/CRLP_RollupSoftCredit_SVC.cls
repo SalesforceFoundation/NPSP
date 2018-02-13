@@ -71,11 +71,12 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
         List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
-        for (Integer n=0, listSize=pscs.size(); n<listSize; n++) {
+        for (Integer n=0, listSize = pscs.size(); n<listSize; n++) {
             Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Does this row pass the evaluation?

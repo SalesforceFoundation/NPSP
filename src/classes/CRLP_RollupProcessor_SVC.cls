@@ -303,9 +303,9 @@ public class CRLP_RollupProcessor_SVC {
 
         // Disable non-User Managed TDTM triggers before the DML operation to improve performance when
         // writing changes to rollups to the target objects.
-        String targetSObject = recordsToUpdate[0].getSObjectType().getDescribe().getName();
+        String targetObjectName = UTIL_Describe.getObjectDescribe(recordsToUpdate[0].getSObjectType()).getName();
         for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
-            if (th.User_Managed__c == false && th.Object__c == targetSObject) {
+            if (th.User_Managed__c == false && th.Object__c == targetObjectName) {
                 th.Active__c = false;
             }
         }

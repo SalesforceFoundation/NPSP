@@ -63,11 +63,12 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
         // This service class is specific to Rollups from the Allocation to the GAU object
 
         List<Allocation__c> allocs = (List<Allocation__c>)details;
-        for (Integer n=0, listSize=allocs.size(); n<listSize; n++) {
+        for (Integer n=0, listSize = allocs.size(); n<listSize; n++) {
             Allocation__c alloc = allocs[n];
             Opportunity opp = alloc.Opportunity__r;
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)

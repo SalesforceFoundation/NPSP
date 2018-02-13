@@ -57,7 +57,7 @@ public class CRLP_Operation_SVC {
      */
     public static void doRollupOperation(CRLP_Rollup rollup, Opportunity oppSObject, SObject detailSObject) {
 
-        String objName = detailSObject.getSObjectType().getDescribe().getName();
+        String objName = UTIL_Describe.getObjectDescribe(detailSObject.getSObjectType()).getName();
 
         CRLP_Debug_UTIL.setCurrentRollupState('doRollupOperation() for ' + oppSObject.Id + ' ' + objName, rollup);
 

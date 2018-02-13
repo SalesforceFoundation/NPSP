@@ -81,13 +81,13 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.AccountId.getName();
-                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
 
             } else if (this.summaryObjectType == Contact.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
                 childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
 
             }
             query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects);
