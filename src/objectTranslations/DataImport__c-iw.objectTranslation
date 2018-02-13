@@ -413,7 +413,7 @@
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>השם של סוג רשומת ההזדמנות שישמש עבור התרומה. אם ריק, המערכת תשתמש בסוג הרשומה המהווה ברירת מחדל.</help>
+        <help>Opportunity.RecordTypeId</help>
         <label>שם סוג רשומת תרומה</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
