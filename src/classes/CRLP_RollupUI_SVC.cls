@@ -41,7 +41,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
     public class RollupTableItem {
-        @AuraEnabled public Boolean active;
+        @AuraEnabled public String active;
         @AuraEnabled public String activeIcon;
         @AuraEnabled public String creditType;
         @AuraEnabled public String detailField;
@@ -133,11 +133,10 @@ public with sharing class CRLP_RollupUI_SVC {
             item.detailField = mdtList[i].Detail_Field__r.Label;
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
-            item.active = mdtList[i].Active__c;
-            if(item.active){
+            if(mdtList[i].Active__c){
                 item.activeIcon = 'utility:check';
             } else {
-                item.activeIcon = 'utility:ban';
+                item.activeIcon = 'utility:close';
             }
             item.id = mdtList[i].Id;
 

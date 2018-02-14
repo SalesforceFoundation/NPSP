@@ -34,15 +34,16 @@
                     ];
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
-                var rollupColumns = [{type: 'action', typeAttributes: { rowActions: actions }}
-                            , {label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
+                var rollupColumns = [{label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
                                 , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare'}}
                             , {label: model.labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
                             , {label: model.labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
                             , {label: model.labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
                             , {label: model.labels.operation, fieldName: 'operation', type: 'string', sortable: 'true', initialWidth: 130}
                             , {label: model.labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
-                            , {label: model.labels.active, fieldName: 'active', type: 'boolean', sortable: 'true', initialWidth: 100, cellAttributes: {iconName: {fieldName: 'activeIcon'}}}
+                            , {label: model.labels.active, fieldName: 'active', type: 'string', sortable: 'true', initialWidth: 100
+                                , cellAttributes: {iconName: {fieldName: 'activeIcon'}}}
+                            , {type: 'action', typeAttributes: { rowActions: actions }}
                             ];
                 cmp.set("v.rollupColumns", rollupColumns);
 

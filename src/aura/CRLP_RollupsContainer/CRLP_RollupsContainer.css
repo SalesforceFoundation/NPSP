@@ -2,7 +2,8 @@
     /**may want to use tokens instead?**/
     background-color: white;
 }
-.THIS .lightningTable button{
+.THIS .lightningTable :not(lightning-button-menu) > button{
+    /*not() selector avoids editing action button*/
     border: none;
     padding: .25em 0em .25em 0em;
     line-height: 19.5px;
