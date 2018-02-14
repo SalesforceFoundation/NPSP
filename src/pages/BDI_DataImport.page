@@ -40,7 +40,7 @@
         }
     </style>
 
-    <div class="slds slds-p-bottom_x-large">
+    <div class="slds-scope slds-p-bottom_x-large">
         <apex:form id="idForm" html-novalidate="novalidate" styleClass="slds-p-bottom_x-large">
 
             <!-- PAGE HEADER -->

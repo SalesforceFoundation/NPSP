@@ -401,7 +401,7 @@
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>El nombre del tipo de registro de la oportunidad a usar para la donación. Utiliza el tipo de registro por defecto si se deja en blanco.</help>
+        <help>Opportunity.RecordTypeId</help>
         <label>Donación Tipo de registro</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>

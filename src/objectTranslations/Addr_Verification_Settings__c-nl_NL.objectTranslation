@@ -34,13 +34,18 @@
         <name>Enable_Automatic_Verification__c</name>
     </fields>
     <fields>
+        <help><!-- Prevents the Cicero API from overwriting Addresses during verification. --></help>
+        <label><!-- Prevent Address Overwrite --></label>
+        <name>Prevent_Address_Overwrite__c</name>
+    </fields>
+    <fields>
         <help>Markeert dubbele adressen als ongeldig, als de API meer dan één adres terugkoppelt. Indien niet geselecteerd, zal Salesforce het eerste gesuggereerde adres als geldig zien.</help>
         <label>Dubbele Adressen Weigeren</label>
         <name>Reject_Ambiguous_Addresses__c</name>
     </fields>
     <fields>
         <help>Melding timeout in seconden</help>
-        <label><!-- Timeout --></label>
+        <label>Time-out</label>
         <name>Timeout__c</name>
     </fields>
     <fields>

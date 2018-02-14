@@ -20,6 +20,11 @@
         <plural>true</plural>
         <value><!-- הRecurring Donations --></value>
     </caseValues>
+    <fields>
+        <help><!-- When checked, all future monthly or quarterly donation installments will be set to the last day of the month, regardless of the actual date in the &quot;Next Donation Date&quot; field. This is ignored when the installment period is not set to Monthly or Quarterly. --></help>
+        <label><!-- Always use last day of month --></label>
+        <name>Always_Use_Last_Day_Of_Month__c</name>
+    </fields>
     <gender><!-- Masculine --></gender>
     <nameFieldLabel><!-- Recurring Donation Name --></nameFieldLabel>
     <quickActions>
