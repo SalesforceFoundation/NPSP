@@ -283,7 +283,7 @@ public class RD_RecurringDonations_TEST {
             npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole
         ));
             
-        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        Id accountId = CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Contact c = new Contact();
         c.FirstName = 'test';
@@ -309,7 +309,9 @@ public class RD_RecurringDonations_TEST {
             WHERE Opportunity.npe03__Recurring_Donation__c = :r1.id
         ];
         system.assertEquals(2,installmentCRs.size());
-        system.assertEquals(system.label.npe03.RecurringDonationContactRole,installmentCRs[0].Role);
+        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(accountId)) {
+            System.assertEquals(system.label.npe03.RecurringDonationContactRole,installmentCRs[0].Role);
+        }
     }
 
     /*********************************************************************************************************

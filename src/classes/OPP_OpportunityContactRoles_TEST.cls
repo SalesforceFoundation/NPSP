@@ -94,7 +94,9 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp2.Id];
         system.assertEquals(con.Id, result[0].ContactId);
-        system.assertEquals(donorRoleforTest, result[0].Role);
+        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.Id)) {
+            system.assertEquals(donorRoleforTest, result[0].Role);
+        }
     }
     
     /*******************************************************************************************************
@@ -158,7 +160,9 @@ private class OPP_OpportunityContactRoles_TEST {
         OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
+        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(createdContacts[0].AccountId)) {
+            system.assertEquals(donorRoleforTest, result[0].Role);
+        }
         system.assertEquals(true, result[0].isPrimary);
         
        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
@@ -226,7 +230,9 @@ private class OPP_OpportunityContactRoles_TEST {
         OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
+        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(createdContacts[0].AccountId)) {
+            system.assertEquals(donorRoleforTest, result[0].Role);
+        }
         system.assertEquals(true, result[0].isPrimary);
         
     }

@@ -162,6 +162,8 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>OPP_AutomatedSoftCreditsService</members>
+        <members>OPP_AutomatedSoftCreditsService_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
