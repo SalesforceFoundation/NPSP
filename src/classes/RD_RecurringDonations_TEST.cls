@@ -567,6 +567,9 @@ public class RD_RecurringDonations_TEST {
         update r1;
         Test.stopTest();
 
+        List<Error__c> errors = [SELECT Id, Full_Message__c FROM Error__c];
+        System.assertEquals(errors.size(),0,errors);
+
         List<Opportunity> postUpdateOpps = [SELECT Id
                                             , Name
                                             , Amount
@@ -577,24 +580,21 @@ public class RD_RecurringDonations_TEST {
                                             WHERE npe03__Recurring_Donation__c = :r1.id
                                             ORDER BY CloseDate];
 
-        // new behavior:
-        // no opportunities were deleted
-        System.assertEquals(postUpdateOpps.size(), originalOpps.size());
-        // the same opportunity records persist
+        System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
+
         for(Integer i; i<postUpdateOpps.size(); i++) {
-            System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id);
-        }
-        // the first 12 opportunities are still open
-        for(Integer i; i<12; i++) {
-            System.assertEquals(system.label.npe03.RecurringDonationStageName,postUpdateOpps[i].StageName);
-        }
-        // opportunities after the first 12 are marked closed lost
-        for(Integer i=12; i<postUpdateOpps.size(); i++) {
-            System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage,postUpdateOpps[i].StageName);
+            System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The same opportunity records should persist.');
         }
 
-        // old behavior:
-        // system.assertEquals(12, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id]);
+        for(Opportunity o : originalOpps) {
+            System.assertEquals(system.label.npe03.RecurringDonationStageName,o.StageName, 'The first 12 opportunities should still be open.');
+        }
+
+        // this 13 integer is fragile -- TODO: refactor with hard-coded start date so it's stable
+        for(Integer i=13; i<postUpdateOpps.size(); i++) {
+            System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage,postUpdateOpps[i].StageName, 'All opportunities after the first 12 should be marked closed lost.');
+        }
+
     }
 
     static testMethod void updateOpenEndedRecurringDonation1an15(){
