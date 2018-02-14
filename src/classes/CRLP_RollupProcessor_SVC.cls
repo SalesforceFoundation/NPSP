@@ -182,7 +182,7 @@ public class CRLP_RollupProcessor_SVC {
             }
         }
 
-        String detailsQuery = CRLP_Query_SEL.getFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
+        String detailsQuery = CRLP_Query_SEL.buildFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
 
         String orderBy;
         if (detailsQuery.containsIgnoreCase('ORDER BY ')) {

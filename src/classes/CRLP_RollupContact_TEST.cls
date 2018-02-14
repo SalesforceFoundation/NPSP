@@ -314,7 +314,7 @@ private class CRLP_RollupContact_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
@@ -339,14 +339,14 @@ private class CRLP_RollupContact_TEST {
         if (tt == TestType.TestBatch) {
             // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
             Id c2Id = c2.Id;
-            conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
             c2 = database.query(conQuery);
             System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
 
             // Contact3.npo02__NumberOfClosedOpps__c was set to null and has attached opps, so it remain as
             // null (vs. being reset to 0).
             Id c3Id = c3.Id;
-            conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
             c3 = database.query(conQuery);
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }

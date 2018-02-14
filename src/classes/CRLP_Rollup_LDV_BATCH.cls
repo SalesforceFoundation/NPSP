@@ -88,7 +88,7 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                 this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
 
             }
-            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects);
+            query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, childObjects);
 
             this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
                     CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
@@ -179,7 +179,7 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, updatedDetailRecords, options.parentKeyField);
 
             // Get the Summary (target) records for the current set of Detail Records
-            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
+            String soql = CRLP_Query_SEL.buildObjectQueryForRollup(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
             List<SObject> summaryRecords = database.query(soql);
 
             // Resequence the Parent (Summary) records to be in the exact order of the detail records
@@ -238,7 +238,7 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
 
                 // Get the Summary (target) records for the final record to be processed
                 Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();
-                String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+                String soql = CRLP_Query_SEL.buildObjectQueryForRollup(options.parentObjType) + ' WHERE Id IN :parentIds';
                 List<SObject> parents = database.query(soql);
 
                 // Call the method to do the actual rollup on this last remaining record, which is basically

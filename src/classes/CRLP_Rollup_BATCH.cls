@@ -83,7 +83,7 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                     UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
 
             // Build a query string of the target Summary object.
-            String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType);
+            String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
             if (this.summaryObjectType == Contact.SObjectType) {

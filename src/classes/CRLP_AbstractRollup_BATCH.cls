@@ -261,12 +261,4 @@ public abstract class CRLP_AbstractRollup_BATCH {
         }
         return parentIds;
     }
-
-    /** @description FOR TESTING ONLY */
-    protected String getHeapSize() {
-        Decimal remainingHeapSize = (Limits.getLimitHeapSize() - Limits.getHeapSize())*1000;
-        Decimal maxHeapSize = Limits.getLimitHeapSize()*1000;
-        Decimal pctUsed = remainingHeapSize.divide(maxHeapSize, 3, System.RoundingMode.HALF_UP)/1000;
-        return pctUsed.format() + '% used of ' + Limits.getLimitHeapSize().format();
-    }
 }

@@ -259,7 +259,7 @@ private class CRLP_RollupSoftCredit_TEST {
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
         Id c2Id = c2.Id;
-        String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
         c2 = database.query(conQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
@@ -271,7 +271,7 @@ private class CRLP_RollupSoftCredit_TEST {
         System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
 
         // Query the Primary Contact (should have NO Soft Credit)
-        conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
         System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
                 'The Total Soft Credits for this contact should be null or zero');
@@ -279,13 +279,13 @@ private class CRLP_RollupSoftCredit_TEST {
         // Query the Contact listed as the primary on an organizational opportunity. This contact
         // has only this one soft credit attributed to them.
         Id c4Id = c4.Id;
-        conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
         c = database.query(conQuery);
         System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
         System.assertEquals(1, c.Number_of_Soft_Credits__c);
 
         // Query the Household
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

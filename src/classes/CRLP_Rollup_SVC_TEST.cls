@@ -99,7 +99,7 @@ private class CRLP_Rollup_SVC_TEST {
         Test.startTest();
 
         // Requery these with the needed fields
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
         a1 = database.query(acctQuery + ' WHERE Id = :a1Id LIMIT 1');
         a2 = database.query(acctQuery + ' WHERE Id = :a2Id LIMIT 1');
 

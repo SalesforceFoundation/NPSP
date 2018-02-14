@@ -90,7 +90,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             List<SObjectType> childObjects = new List<SObjectType>();
             SObjectType detailObjectType = OpportunityContactRole.SObjectType;
 
-            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
+            query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, childObjects) + ' WHERE ';
 
             // If necessary, filter the Detail records by either ContactId or AccountId
             if (this.recordIds != null && this.recordIds.size() > 0) {
@@ -176,7 +176,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     // Get all parent records to be processed by this batch iteration
                     List<Id> parentIds = getUniqueParentIds(sobjType, detailRecords, (sobjType ==  Contact.SObjectType ? 'ContactId' : 'Contact.AccountId'));
 
-                    String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER By Id';
+                    String soql = CRLP_Query_SEL.buildObjectQueryForRollup(options.parentObjType) + ' WHERE Id IN :parentIds ORDER By Id';
                     List<SObject> summaryRecords = database.query(soql);
 
                     // Resequence the Parent (Summary) records to be in the exact order of the detail records
@@ -264,7 +264,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
 
                     // Get the Summary (target) records for the final record to be processed
                     Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();
-                    String soql = CRLP_Query_SEL.getResultsQuery(sobjType) + ' WHERE Id IN :parentIds';
+                    String soql = CRLP_Query_SEL.buildObjectQueryForRollup(sobjType) + ' WHERE Id IN :parentIds';
                     List<SObject> parents = database.query(soql);
 
                     // Call the method to do the actual rollup on this last remaining record, which is basically
@@ -326,7 +326,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
      */
     private List<Partial_Soft_Credit__c> buildPartialSoftCreditRecordsFromOCRs(List<OpportunityContactRole> detailRecords) {
         List<Id> oppIds = getParentIdsFromDetailRecords(detailRecords, 'OpportunityId');
-        String oppQuery = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType,
+        String oppQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType,
                 new List<SObjectType>{ OpportunityContactRole.SObjectType, Partial_Soft_Credit__c.SObjectType }) +
                 ' WHERE ID IN :oppIds';
         Map<Id, Opportunity> oppsMapById = new Map<Id, Opportunity>((List<Opportunity>)database.query(oppQuery));

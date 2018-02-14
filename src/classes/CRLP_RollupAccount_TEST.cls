@@ -265,7 +265,7 @@ private class CRLP_RollupAccount_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

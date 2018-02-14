@@ -98,7 +98,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Query the parent records
         Set<Id> parentIds = new Set<Id>(summaryRecordIds);
-        String soql = CRLP_Query_SEL.getResultsQuery(objType) + ' WHERE Id IN :parentIds';
+        String soql = CRLP_Query_SEL.buildObjectQueryForRollup(objType) + ' WHERE Id IN :parentIds';
         List<SObject> summaryRecords = database.query(soql);
 
         // Get the detail records for the current set of Summary Records

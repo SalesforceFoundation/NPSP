@@ -209,7 +209,7 @@ private class CRLP_RollupGAU_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String gauQuery = CRLP_Query_SEL.getResultsQuery(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';
+        String gauQuery = CRLP_Query_SEL.buildObjectQueryForRollup(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';
         General_Accounting_Unit__c gau = database.query(gauQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

@@ -42,7 +42,7 @@
      * @param resultObject ObjectType being queried
      * @return SOQL query WITHOUT a where clause
      */
-    public static String getResultsQuery(SObjectType resultObject) {
+    public static String buildObjectQueryForRollup(SObjectType resultObject) {
 
         // Start by getting all the fields referenced by any Filter Group or active Rollup
         Set<Schema.DescribeFieldResult> allFieldsToQuery = new Set<DescribeFieldResult>();
@@ -63,6 +63,8 @@
         } else if (resultObject == Opportunity.SObjectType) {
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
+        } else  if (resultObject == npe01__OppPayment__c.SObjectType) {
+            allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
         }
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user
@@ -106,9 +108,9 @@
      * @param childObjects ObjectType[] child objects to be included in the sub-query
      * @return SOQL query WITHOUT a where clause
      */
-    public static String getDetailsQuery(SObjectType detailObject, List<SObjectType> childObjects) {
+    public static String buildDetailObjectQueryForRollup(SObjectType detailObject, List<SObjectType> childObjects) {
         // Get the main SOQL statement for the detail object and parse out the FROM portion
-        String mainSoql = getResultsQuery(detailObject).split(' FROM ')[0];
+        String mainSoql = buildObjectQueryForRollup(detailObject).split(' FROM ')[0];
 
         if (detailObject == OpportunityContactRole.SObjectType || detailObject == Partial_Soft_Credit__c.SObjectType
                     || detailObject == Allocation__c.SObjectType) {
@@ -142,6 +144,11 @@
                     }
                 }
             }
+
+            // always include these two extra fields for Opportunity queries
+            mainSoql += ', Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName();
+            mainSoql += ', Account.npe01__SYSTEMIsIndividual__c';
+
         }
 
         // Append the main object back to the query and return it
@@ -157,7 +164,7 @@
      * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * @return SOQL
      */
-    public static String getFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
+    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
         SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
         SObjectType mainObject;
         String detailKeyField;
@@ -182,7 +189,7 @@
         }
 
         // Get the base query
-        String detailsQuery = CRLP_Query_SEL.getDetailsQuery(mainObject, childObjects);
+        String detailsQuery = CRLP_Query_SEL.buildDetailObjectQueryForRollup(mainObject, childObjects);
 
         // Add the appropriate filtering
         detailsQuery += ' WHERE ' + detailKeyField + ' IN :summaryRecordIds';
@@ -197,7 +204,7 @@
      * @return part of a SOQL string
      */
     private static String buildChildQuery(SObjectType childObject, String relationshipName) {
-        String childQuery = ', (' + getResultsQuery(childObject).split(' FROM ')[0] + + ' FROM ' + relationshipName + ')';
+        String childQuery = ', (' + buildObjectQueryForRollup(childObject).split(' FROM ')[0] + + ' FROM ' + relationshipName + ')';
         return childQuery;
     }
 
