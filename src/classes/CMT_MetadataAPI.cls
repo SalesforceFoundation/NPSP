@@ -32,20 +32,7 @@
 * @date 2018
 * @group Utilities
 * @description Utility methods to handle manipulating CustomMetadataType objects through the Apex MD Api
-* The flow for this is somewhat complex due to the asynchronous nature of these 'deployments'
-* Notes:
-*   - The logic is built to support nested deployments to handle inserting parent / child relationship records
-*   - A Queuable inner class is used to chain nested deployments
-*   - The final status of a metadata deployment can be obtained through SOQL or an Apex metadata call.
-* Flow:
-* 1. deployMetadata() is called with two parameters: A unique "jobId" (some unique string) and List<List<CustomMetaDataObject>>
-* 2. An instance of the MetadataCallBack() inner class is constructed passing the first paramter and element 1+ of the List<List
-* 3. Call Metadata.Operations.enqueueDeployment() with the first element from the List<List>>
-* 4. Salesforce will call MetadataCallBack() asynchronously with the deployment result.
-* 5. If the result is Success and there is more metadata to deploy, return to step 1 passing the two parms included in the
-*       MetadataCallBack() construction.
-* 6. If the result is Success and there is no more metadata to deploy, write the Result.Status to a Custom Settings object
-* 7. If the result is Failure, write the Result.Status and Error Message to a Custom Settings object
+*
 */
 public class CMT_MetadataAPI {
 
@@ -110,45 +97,21 @@ public class CMT_MetadataAPI {
     }
 
     /**
-    * @description Submit any queued up Custom MetadataType operations for deployment as a single aSync job
-    * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom
-    * Settings object
-    * @returns jobId of the callback to know when the process is done. The calling method can monitor this JobId
-    * and query the Error__c object for Context_Type__c = :jobId to find any generate error message.
-    */
-    public static void commitPendingOperations(String jobId) {
-        if (cmtUpsertQueue.size() == 0) {
-            return;
-        }
-
-        List<List<Metadata.CustomMetadata>> nestedMetadata = new List<List<Metadata.CustomMetadata>>();
-        nestedMetadata.add(cmtUpsertQueue);
-
-        deployMetadata(jobId, nestedMetadata);
-
-        // clear the queue
-        cmtUpsertQueue.clear();
-    }
-
-    /**
-     * @description Initiate a deployment of nested custom metadata type records. This allows for dependent metadata
-     * as well as just the ability to split the deployments into smaller chunks. The final status isn't written to
-     * the Custom Settings object until the final deployment or if one of the deployments fail with an error.
+     * @description Initiate a deployment of custom metadata type records.
      * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
-     * @param nestedMetadata List of a List of CustomMetadata objects to deploy
+     * @param mtToDeploy List of CustomMetadata objects to deploy
      */
-    public static void deployMetadata(String jobId, List<List<Metadata.CustomMetadata>> nestedMetadata) {
+    public static void deployMetadata(String jobId, List<Metadata.CustomMetadata> mtToDeploy) {
 
         // Add all queued up metadata updates to the deployment container
         Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
-        for (Metadata.CustomMetadata md: nestedMetadata[0]) {
+        for (Metadata.CustomMetadata md: mtToDeploy) {
             system.debug('deployMetadata > ' + md.fullName);
             mdContainer.addMetadata(md);
         }
-        nestedMetadata.remove(0);
 
         // Setup deploy callback
-        MetadataCallBack callback = new MetadataCallBack(jobId, nestedMetadata);
+        MetadataCallBack callback = new MetadataCallBack(jobId);
 
         // Enqueue custom metadata deployment and return the Job Id
         if (!Test.isRunningTest()) {
@@ -167,21 +130,18 @@ public class CMT_MetadataAPI {
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
         private String jobId;
-        private List<List<Metadata.CustomMetadata>> nextOperation;
 
         /**
          * @description Constructor for Callback Class
          * @param jobId Some unique string value to use when writing the deployment status to the Custom Settings object
-         * @param nextOperation List<CustomMetadata> for next operation if there are any child records to deploy.
          */
-        public MetadataCallBack(String jobId, List<List<Metadata.CustomMetadata>> nextOperation) {
+        public MetadataCallBack(String jobId) {
             this.jobId = jobId;
-            this.nextOperation = nextOperation;
         }
 
         /**
          * @description Method called by salesforce with the result of the Metadata deployment operation status.
-         * This will either write the status to a CustomSettings object, or queue up the next chained deployment operation.
+         * This will write the status of the deployment to a CustomSettings object
          */
         public void handleResult(Metadata.DeployResult result, Metadata.DeployCallbackContext context) {
 
@@ -199,44 +159,11 @@ public class CMT_MetadataAPI {
                 isSuccess = false;
             }
 
-            // If there are more records to deploy, chain the Queuable class to continue the deployment
-            if (isSuccess && this.nextOperation != null && this.nextOperation.size() > 0 && !Test.isRunningTest()) {
-                System.enqueueJob(new QueueableDeployMetadata(this.jobId, this.nextOperation));
-
-            } else {
-                // Otherwise, write the deployment status to the custom settings object
-                Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-                crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
-                if (!Test.isRunningTest()) {
-                    upsert crlpSettings;
-                }
-            }
-        }
-    }
-
-    /**
-     * @description Queueable interface to use with chaining nested custom metadata deployments
-     */
-    public class QueueableDeployMetadata implements System.Queueable {
-        private String jobId;
-        private List<List<Metadata.CustomMetadata>> nextOperation;
-
-        /**
-         * @description Constructor to set up the chained deployment operation
-         * @param jobId Unique string to act as a "jobId" when writing the final deployment status to the Custom Settings
-         * @param nextOperation List of a List of CustomMetadata objects to deploy
-         */
-        public QueueableDeployMetadata(String jobId, List<List<Metadata.CustomMetadata>> nextOperation) {
-            this.jobId = jobId;
-            this.nextOperation = nextOperation;
-        }
-
-        /**
-         * @description Execute the next deployment process by calling back to the custom deployment method in this class
-         */
-        public void execute(QueueableContext qc) {
-            if (this.nextOperation.size() > 0) {
-                CMT_MetadataAPI.deployMetadata(this.jobId, this.nextOperation);
+            // Write the deployment status to the custom settings object
+            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
+            if (!Test.isRunningTest()) {
+                upsert crlpSettings;
             }
         }
     }
