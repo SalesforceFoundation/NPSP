@@ -117,7 +117,7 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(false, Account.SObjectType));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(Account.SObjectType));
         // StopTest to allow the job to execute
         Test.stopTest();
 

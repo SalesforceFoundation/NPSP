@@ -52,7 +52,7 @@ public class CRLP_Operation_SVC {
      * This var is passed by reference and modified directly. There is no method return.
      * @param opp Opportunity SObject. All Roll-ups operate against Opportunity even if the Detail object is
      * Payment, Allocation, OCR or PSC.
-     * @param detailSObject Secondary detail Sobject (Payment, Allocation, etc.); or Opportunity if the detil
+     * @param detailSObject Secondary detail Sobject (Payment, Allocation, etc.); or Opportunity if the detail
      * object is Opportunity.
      */
     public static void doRollupOperation(CRLP_Rollup rollup, Opportunity oppSObject, SObject detailSObject) {
