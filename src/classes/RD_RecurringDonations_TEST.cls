@@ -686,11 +686,16 @@ public class RD_RecurringDonations_TEST {
         FROM Opportunity
         WHERE npe03__Recurring_Donation__c = :r1.id];
 
+        for (Opportunity o : originalOpps) {
+            System.assertEquals(25, originalOpps[0].Amount, 'All originalOpps should be $25.');
+            System.assertEquals(system.label.npe03.RecurringDonationStageName, originalOpps[0].StageName, 'All originalOpps should be Open.');
+        }
         System.debug('+++++ORIGINAL OPP AMOUNTS');
         System.debug(originalOpps[0].Amount+ ' '+originalOpps[0].StageName);
         System.debug(originalOpps[1].Amount+ ' '+originalOpps[1].StageName);
         System.debug(originalOpps[2].Amount+ ' '+originalOpps[2].StageName);
         System.debug(originalOpps[3].Amount+ ' '+originalOpps[3].StageName);
+
         System.debug('+++++POST UPDATE OPP AMOUNTS');
         System.debug(postUpdateOpps[0].Amount+ ' '+postUpdateOpps[0].StageName);
         System.debug(postUpdateOpps[1].Amount+ ' '+postUpdateOpps[1].StageName);
@@ -702,9 +707,16 @@ public class RD_RecurringDonations_TEST {
         for(Integer i; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
+        System.assertEquals(50, postUpdateOpps[0].Amount, 'Opportunity 1 should be $50.');
         System.assertEquals(system.label.npe03.RecurringDonationStageName,postUpdateOpps[0].StageName, 'Opportunity 1 should still be open.');
+
+        System.assertEquals(50, postUpdateOpps[1].Amount, 'Opportunity 2 should be $50.');
         System.assertEquals(system.label.npe03.RecurringDonationStageName,postUpdateOpps[1].StageName, 'Opportunity 2 should still be open.');
+
+        System.assertEquals(25, postUpdateOpps[2].Amount, 'Opportunity 3 should still be $25.');
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[2].StageName, 'Opportunity 3 should be Closed Lost.');
+
+        System.assertEquals(25, postUpdateOpps[3].Amount, 'Opportunity 4 should still be $25.');
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[3].StageName, 'Opportunity 4 should be Closed Lost.');
 
     }
@@ -756,7 +768,11 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(errors.size(),0,errors);
 
         System.assertEquals(4, originalOpps.size(), 'Four opportunities should be created initially.');
-        System.assertEquals(25, originalOpps[0].Amount);
+        for (Opportunity o : originalOpps) {
+            System.assertEquals(25, originalOpps[0].Amount, 'All originalOpps should be $25.');
+            System.assertEquals(system.label.npe03.RecurringDonationStageName, originalOpps[0].StageName, 'All originalOpps should be Open.');
+        }
+
         Test.startTest();
         originalOpps[0].StageName = closedStage;
         update originalOpps[0];
@@ -781,6 +797,7 @@ public class RD_RecurringDonations_TEST {
         System.debug(originalOpps[1].Amount+ ' '+originalOpps[1].StageName);
         System.debug(originalOpps[2].Amount+ ' '+originalOpps[2].StageName);
         System.debug(originalOpps[3].Amount+ ' '+originalOpps[3].StageName);
+
         System.debug('+++++POST UPDATE OPP AMOUNTS');
         System.debug(postUpdateOpps[0].Amount+ ' '+postUpdateOpps[0].StageName);
         System.debug(postUpdateOpps[1].Amount+ ' '+postUpdateOpps[1].StageName);
@@ -792,14 +809,19 @@ public class RD_RecurringDonations_TEST {
         for(Integer i; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
-
+        System.assertEquals(25, postUpdateOpps[0].Amount, 'Opportunity 1 should still be $25.');
         System.assertEquals(closedStage, postUpdateOpps[0].StageName, 'Opportunity 1 should still be Closed Won.');
+
+        System.assertEquals(75, postUpdateOpps[1].Amount, 'Opportunity 2 should be $75.');
         System.assertEquals(system.label.npe03.RecurringDonationStageName,postUpdateOpps[1].StageName, 'Opportunity 2 should still be open.');
+
+        System.assertEquals(25, postUpdateOpps[2].Amount, 'Opportunity 3 should still be $25.');
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[2].StageName, 'Opportunity 3 should be Closed Lost.');
+
+        System.assertEquals(25, postUpdateOpps[3].Amount, 'Opportunity 4 should still be $25.');
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[3].StageName, 'Opportunity 4 should be Closed Lost.');
     }
-
-
+    
     static testMethod void updateOpenEndedRecurringDonationMonthly(){
         if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationMonthly_ModifiedJan2018') return;
 
