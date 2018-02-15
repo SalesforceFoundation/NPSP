@@ -185,8 +185,14 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
+
+                Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+                if (includeChildPayments && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)) {
+                    paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+                }
+
                 // Call the method to do the actual rollups. This returns only records that require updating
-                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, options);
+                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
                 this.totalRecordsModified += updatedRecords.size();

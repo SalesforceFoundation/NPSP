@@ -60,9 +60,11 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Payments for each Opportunity. Split out into a Map by Detail (Opp) Id to
+     * support LDV orgs where querying the payments in an Opportunity sub-query might cause a CPU timeout
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
         List<Opportunity> opps = (List<Opportunity>) details;
@@ -87,10 +89,12 @@ public class CRLP_RollupContact_SVC extends CRLP_VRollupHandler {
                 } else if (rollup.detailObject == pmtObjectName) {
                     // Process rollups from the Payment to the Contact
 
-                    List<npe01__OppPayment__c> payments = opp.npe01__OppPayment__r;
-                    for (npe01__OppPayment__c pmt : payments) {
-                        if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
-                            CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
+                    if (childRecordsByDetailId.get(opp.Id) != null) {
+                        List<npe01__OppPayment__c> payments = childRecordsByDetailId.get(opp.Id);
+                        for (npe01__OppPayment__c pmt : payments) {
+                            if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{opp, pmt}, filterGroupId)) {
+                                CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
+                            }
                         }
                     }
                 }

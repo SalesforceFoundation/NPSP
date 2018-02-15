@@ -57,9 +57,10 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Ignored for GAU rollups
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the Allocation to the GAU object
 
         List<Allocation__c> allocs = (List<Allocation__c>)details;

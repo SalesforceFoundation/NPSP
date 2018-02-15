@@ -46,7 +46,7 @@ public class CRLP_Rollup_SVC {
      * @description Interface class that the each of the 5 handler classes will implement
      */
     public interface IRollupHandler {
-        void processRollups(List<SObject> details);
+        void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId);
         void setRecordId(Id objectId);
         void setRollupsList(List<CRLP_Rollup> rollups);
         void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter);

@@ -103,10 +103,15 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Get the detail records for the current set of Summary Records
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
-        List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
+        List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
+
+        Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+        if (includeChildPayments && (objType == Account.SObjectType || objType == Contact.SObjectType)) {
+            paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+        }
 
         // Call the method to do the actual rollups. This returns only records that require updating
-        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
         // DML and capture any returned DML errors into a Map by Summary Record Id
         CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);

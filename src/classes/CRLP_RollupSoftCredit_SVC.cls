@@ -65,9 +65,10 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Ignored for Soft Credit rollups
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
         List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;

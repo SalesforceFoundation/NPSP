@@ -184,7 +184,7 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     summaryRecords = resequenceSummaryRecords(parentIds, summaryRecords);
 
                     // Call the method to do the actual rollups. This returns only records that require updating
-                    List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, options);
+                    List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, pscDetailRecords, null, options);
 
                     Id lastIdProcessed;
                     if (sobjType == Contact.SObjectType) {
@@ -271,7 +271,8 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     // just to return the updated record
                     List<SObject> updatedRecords = new List<SObject>();
                     for (SObject parent : parents) {
-                        SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+                        SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(),
+                                new Map<Id, List<SObject>>(), options);
                         if (updatedRecord != null) {
                             updatedRecords.add(updatedRecord);
                         }

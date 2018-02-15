@@ -47,7 +47,7 @@ public class CRLP_RollupProcessor_SVC {
      * @return List<SObject> Records that require updating.
      */
     public static List<SObject> startRollupProcess(List<SObject> summaryRecords, List<SObject> detailRecords,
-            CRLP_RollupProcessingOptions.ProcessingOptions options) {
+            Map<Id, List<SObject>> childRecordsByDetailId, CRLP_RollupProcessingOptions.ProcessingOptions options) {
 
         // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
         // If this is the case, need to parse out the two components to use
@@ -108,7 +108,7 @@ public class CRLP_RollupProcessor_SVC {
             // The options.rollups collection will contain the list of CRLP_Rollup records
             // that were processed for this rollup operation. This is needed to determine if the
             // resulting record requires an update.
-            SObject updatedRecord = completeRollupForParent(parent, detailsForParent, options);
+            SObject updatedRecord = completeRollupForParent(parent, detailsForParent, childRecordsByDetailId, options);
 
             // Does the resulting record require an update?
             if (updatedRecord != null) {
@@ -236,7 +236,7 @@ public class CRLP_RollupProcessor_SVC {
      * @return an updated Summary SObject if it differs from the parent; otherwise it returns null.
      */
     public static SObject completeRollupForParent(SObject parent, List<SObject> detailRecords,
-            CRLP_RollupProcessingOptions.ProcessingOptions options) {
+            Map<Id, List<SObject>> childRecordsByDetailId, CRLP_RollupProcessingOptions.ProcessingOptions options) {
         // The Parent record Id has changed, so initiate the rollup and determine if the Summary record
         // has changed or not.
         Id parentId = parent.Id;
@@ -266,7 +266,8 @@ public class CRLP_RollupProcessor_SVC {
 
         // Don't both calling the processRollups() method if there are no details to roll up
         if (detailRecords != null && !detailRecords.isEmpty()) {
-            handler.processRollups(detailRecords);
+
+            handler.processRollups(detailRecords, childRecordsByDetailId);
 
             // only set the lastParentId when there are actually detail records
             options.lastParentIdProcessed = parentId;
@@ -312,6 +313,24 @@ public class CRLP_RollupProcessor_SVC {
 
         // Initiate the DML operation with allOrNone set to false (don't fail the entire batch if one record fails)
         UTIL_DMLService.updateRecordBatchAndLogErrors(recordsToUpdate, ERR_Handler_API.Context.CRLP.name());
+    }
+
+    /**
+     * @description If a query includes a sub-query of child records and that list of children is needed as a
+     * separate collection (specifically with Payments), this will return a Map of list child records with the map
+     * key of the parent record id.
+     * @param details List<SObject>
+     * @param relationshipName Name of the relationship field to use to split the child sub-query
+     * @return Map<Id, List<SObject>>
+     */
+    public static Map<Id, List<SObject>> splitChildRecordsInMapByParentId(List<SObject> details, String relationshipName) {
+        Map<Id, List<SObject>> childrenByParentId = new Map<Id, List<SObject>>();
+        for (SObject d : details) {
+            if (relationshipName != null && d.getSObjects(relationshipName) != null) {
+                childrenByParentId.put(d.Id, d.getSObjects(relationshipName));
+            }
+        }
+        return childrenByParentId;
     }
 
     /**

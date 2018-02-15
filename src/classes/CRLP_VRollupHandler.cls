@@ -88,7 +88,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      * Logic is implemented by the class that extends this virtual class
      */
     public virtual void initRollup() { }
-    public virtual void processRollups(List<SObject> details) { }
+    public virtual void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) { }
 
     // ===================================================================================================
     // Class methods that are NOT overriden by classes that extend this class.

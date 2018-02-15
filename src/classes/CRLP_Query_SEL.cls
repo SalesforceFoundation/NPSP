@@ -49,8 +49,8 @@
         allFieldsToQuery.addAll(CMT_FilterRule_SEL.getReferencedFieldsByObject(resultObject));
         allFieldsToQuery.addAll(CRLP_Rollup_SEL.getReferencedFieldsByObject(resultObject));
 
-        // Force Add these 3 fields if the object is partial soft credit. These may not be directly referenced
-        // in a filter or rollup, but they are needed to support the full OCR/PSC rollup to Account and Contact.
+        // Force Add the following fields for each of the specific objects below. These may not be directly referenced
+        // in a filter or rollup, but they are needed to support related rollup processes.
         if (resultObject == Partial_Soft_Credit__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Opportunity__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getSobjectField().getDescribe());
