@@ -771,23 +771,23 @@ public class RD_RecurringDonations {
         string closedlabel = system.label.npe03.RecurringDonationClosedStatus;        
         
         for (npe03__Recurring_Donation__c r : recurringDonations){
-            npe03__Recurring_Donation__c oldRD = oldRecurringDonations.get(r.id);
 
-            Boolean needsRecalc = needsRecalculation(r,oldRD);
+            Boolean needsRecalc = needsRecalculation(r,oldRecurringDonations.get(r.id));
 
             if (needsRecalc) {
                 if(r.npe03__Open_Ended_Status__c == closedlabel
-                        && oldRD.npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c){
+                        //&& oldRD.npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c
+                    ){
                     // closing an open ended donation
+                    // does it actually matter if it's newly closed? shouldn't it go to the runRecurringDonationClosedActions method regardless?
+                    // TODO: confirm this
                     newlyClosedDonations.add(r);
                 } else if (r.npe03__Open_Ended_Status__c == openlabel) {
                     // open-ended
                     openEndedRDsToRecalculate.add(r);
-                    // reevaluateOpps.add(r.id);
                 } else {
                     // fixed-length
                     fixedLengthRDsToRecalculate.add(r);
-                    // reinsertOpps.add(r);
                 }
             }
         }
@@ -821,6 +821,7 @@ public class RD_RecurringDonations {
                     , AccountID
                     , CloseDate
                     , StageName
+                    , isWon
                     , Recurring_Donation_Installment_Number__c
                     , npe03__Recurring_Donation__c
             FROM Opportunity
@@ -835,7 +836,6 @@ public class RD_RecurringDonations {
             , TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
-        string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
 
         //build a map of recurring donation ID and opps
         Map<Id, List<Opportunity>> RDOppMap = new Map<Id, List<Opportunity>>();
@@ -902,6 +902,7 @@ public class RD_RecurringDonations {
                     updateOppsList.add(o);
 
                     nextDate = getNextDate(nextDate, r);
+                    rdcounter++;
 
                 } else {
                     // extras get closed
@@ -914,6 +915,7 @@ public class RD_RecurringDonations {
                 Opportunity o = newOpportunityOnDate(nextDate,r,rdcounter);
                 insertOppsList.add(o);
                 nextDate = getNextDate(nextDate, r);
+                rdcounter++;
             }
         }
 
@@ -951,26 +953,17 @@ public class RD_RecurringDonations {
         }
 
         if (!updateOppsList.isEmpty()) {
-            List<SObject> oppsToUpdate = new List<SObject>();
-            for (Opportunity o : updateOppsList) {
-                oppsToUpdate.add(new Opportunity(Id = o.Id));
-            }
-            dmlWrapper.objectsToUpdate.addAll(oppsToUpdate);
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateOppsList);
         }
         if (!closeOppsList.isEmpty()) {
+            System.debug('++++++CloseOppsList size: '+closeOppsList.size());
             if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()) {
-                List<SObject> oppsToDelete = new List<SObject>();
-                for (Opportunity o : closeOppsList) {
-                    oppsToDelete.add(new Opportunity(Id = o.Id));
-                }
-                dmlWrapper.objectsToDelete.addAll(oppsToDelete);
+                dmlWrapper.objectsToDelete.addAll((List<SObject>) closeOppsList);
             } else if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()) {
-                List<SObject> oppsToUpdate = new List<SObject>();
                 for (Opportunity o : closeOppsList) {
                     o.StageName = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
-                    oppsToUpdate.add(new Opportunity(Id = o.Id, StageName=o.StageName));
                 }
-                dmlWrapper.objectsToUpdate.addAll(oppsToUpdate);
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>) closeOppsList);
             }
         }
     }
@@ -979,7 +972,168 @@ public class RD_RecurringDonations {
             , List<Opportunity> allOpportunities
             , TDTM_Runnable.DmlWrapper dmlWrapper) {
 
-        // TODO: This method based on above
+        npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
+
+        //build a map of recurring donation ID and opps
+        Map<Id, List<Opportunity>> RDOppMap = new Map<Id, List<Opportunity>>();
+        for (Opportunity o : allOpportunities){
+            if (RDOppMap.containsKey(o.npe03__Recurring_Donation__c)) {
+                List<Opportunity> opps = RDOppMap.get(o.npe03__Recurring_Donation__c);
+                opps.add(o);
+                RDOppMap.put(o.npe03__Recurring_Donation__c, opps);
+            }
+            else {
+                RDOppMap.put(o.npe03__Recurring_Donation__c, new List<Opportunity>{o});
+            }
+        }
+
+        List<Opportunity> updateOppsList = new List<Opportunity>();
+        List<Opportunity> closeOppsList = new List<Opportunity>();
+        List<Opportunity> insertOppsList = new List<Opportunity>();
+
+        // for each RD
+        for (npe03__Recurring_Donation__c r : recurringDonations) {
+
+            Date nextDate = getStartDate(r);
+
+            integer rdcounter = 1;
+            if (r.npe03__Total_Paid_Installments__c > 0) {
+                rdcounter = (integer)r.npe03__Total_Paid_Installments__c + 1;
+            }
+
+            Integer numInstallments = r.npe03__Installments__c.intValue();
+
+            Integer j=0;
+            decimal installmentAmount = r.npe03__Installment_Amount__c;
+
+            decimal paidAmount = 0;
+            if (r.npe03__Paid_Amount__c != null){
+                paidAmount = r.npe03__Paid_Amount__c;
+            }
+
+            // deal with already paid installments.
+            if (r.npe03__Total_Paid_Installments__c != null) {
+                if (r.npe03__Schedule_Type__c != Label.npe03.RecurringDonationMultiplyValue) {
+                    Integer remainingInstallments = numInstallments - r.npe03__Total_Paid_Installments__c.intValue();
+                    Decimal remainingAmount = r.npe03__Amount__c - paidAmount;
+                    if (remainingInstallments > 0)
+                        installmentAmount = remainingAmount / remainingInstallments;
+                }
+            }
+
+            // loop # existing opps until # of installments
+                // if it's not already closedWon
+                    // updating closedate w/ date methods and installment period
+                    // add to updateOppsList
+            // loop # existing opps over # of installments
+                // add to closeOppsList
+            // loop # of installments over # existing opps
+                // new oppty on date using last nextdate from above
+                // add to insertOppsList
+
+            Integer installmentCounter = 1;
+            for (Opportunity o : RDOppMap.get(r.Id)) {
+                if (installmentCounter<=numInstallments) {
+                    if (o.isWon != true) {
+                        System.debug('++++++new nextDate: ' + nextDate);
+                        System.debug('++++++entered i<=numInstallments loop: ' + o);
+                        // fix close dates on existing opportunities
+                        o.CloseDate = nextDate;
+
+                        o.Amount = installmentAmount;
+                        if (r.npe03__Recurring_Donation_Campaign__c != null && rds.npe03__Add_Campaign_to_All_Opportunites__c) {
+                            o.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
+                        }
+
+                        if (r.npe03__Organization__c != null) {
+                            o.AccountID = r.npe03__Organization__c;
+                        }
+
+                        //modify the name
+                        String oName = '';
+                        oName += r.npe03__Donor_Name__c;
+                        oName += ' ';
+                        oName += system.label.npe03.RecurringDonationPrefix;
+                        oName += ' (';
+                        oName += installmentCounter;
+                        oName += ' of ';
+                        oName += numInstallments;
+                        oName += ') ';
+                        oName += o.CloseDate.format();
+                        o.Name = oName;
+
+                        //evaluate any custom field mappings
+                        for (string s : customFieldMappingSettings.keySet()) {
+                            npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
+                            o.put(cfm.npe03__Opportunity_Field__c, r.get(cfm.npe03__Recurring_Donation_Field__c));
+                        }
+
+                        updateOppsList.add(o);
+
+                        nextDate = getNextDate(nextDate, r);
+                    }
+                    installmentCounter++;
+                } else {
+                    // extras get closed
+                    closeOppsList.add(o);
+                }
+            }
+
+            for (Integer i=RDOppMap.get(r.Id).size(); i<numInstallments; i++) {
+                Opportunity o = newOpportunityOnDate(nextDate,r,rdcounter);
+                insertOppsList.add(o);
+                nextDate = getNextDate(nextDate, r);
+            }
+
+        }
+
+        if (!insertOppsList.isEmpty()) {
+            Database.SaveResult[] lsr;
+            list<Database.SaveResult> badSRs = new list<Database.SaveResult>();
+            list<Opportunity> badOpps = new list<Opportunity>();
+
+            lsr = Database.insert(insertOppsList, false);
+
+            set<id> updateRecurringDonationSet = new set<id>();
+            for (Opportunity o : insertOppsList) {
+                updateRecurringDonationSet.add(o.npe03__Recurring_Donation__c);
+            }
+
+            integer i = 0;
+            for (Database.SaveResult s : lsr){
+                if (s.isSuccess() != true){
+                    badSRs.add(s);
+                    badOpps.add(insertOppsList[i]);
+                }
+                i++;
+            }
+
+            if (!badSRs.isEmpty()) {
+                ERR_Handler.Errors errors = ERR_Handler.getErrors(badSRs, badOpps);
+                ERR_Handler.processErrors(errors.errorRecords, ERR_Handler_API.Context.RD.name());
+            }
+
+            if (updateRecurringDonationSet.size() > 1 && !system.isBatch() && !system.isFuture() && !RD_RecurringDonations_BATCH.isBatchButton) {
+                updateRecurringDonationOnOppChangeFuture(updateRecurringDonationSet);
+            } else {
+                updateRecurringDonationOnOppChange(updateRecurringDonationSet, null);
+            }
+        }
+
+        if (!updateOppsList.isEmpty()) {
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateOppsList);
+        }
+        if (!closeOppsList.isEmpty()) {
+            System.debug('++++++CloseOppsList size: '+closeOppsList.size());
+            if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Delete_Open_Opportunities.name()) {
+                dmlWrapper.objectsToDelete.addAll((List<SObject>) closeOppsList);
+            } else if (rds.npe03__Open_Opportunity_Behavior__c == RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()) {
+                for (Opportunity o : closeOppsList) {
+                    o.StageName = system.label.npe03.RecurringDonationClosedLostOpportunityStage;
+                }
+                dmlWrapper.objectsToUpdate.addAll((List<SObject>) closeOppsList);
+            }
+        }
 
     }
 
@@ -1018,6 +1172,7 @@ public class RD_RecurringDonations {
         }
 
         if (listRDNonOpen.size() > 0) {
+            // TODO: update this to use the new methods
             //clear existing open opps and recreate
             delete [select id from Opportunity where npe03__Recurring_Donation__c IN :listRDNonOpen and isClosed = false];
             insertOppsOnRecurringDonationInsert(listRDNonOpen);
