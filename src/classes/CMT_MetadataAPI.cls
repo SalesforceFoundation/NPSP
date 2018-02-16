@@ -122,10 +122,8 @@ public class CMT_MetadataAPI {
     /**
      * @description Inserting or Updating CMT's through the Apex Metadata API is an asynchronous process. This callback
      * class is used to handle the async response from the call to Metadata.Operations.enqueueDeployment().
-     * If there is call is not successfull, an Error__c record is created an passed to the NPSP error handling
-     * class for processing. The Context_Type__c field is used to hold the jobId that was returned by the
-     * upsertCustomMetadata() method. This can be used by the calling method to query the Error__c record to retrieve
-     * any error messages returned by the api call.
+     * If the call is not successfull, the Customizable_Rollup_Settings__c  record is updated
+     * with the result status.
      */
     public class MetadataCallBack implements Metadata.DeployCallBack {
 
