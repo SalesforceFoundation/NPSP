@@ -53,6 +53,12 @@ tasks:
         options:
             path: dev_config/src_managed
 
+    deploy_qa_config:
+        description: Deploys additional fields used for qa purposes only
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/src_qa
+
     deploy_dev_config_delete:
         description: Deploys the metadata deletions for the post install DE org config
         class_path: cumulusci.tasks.salesforce.Deploy
@@ -176,6 +182,59 @@ flows:
                 task: deploy_dev_config_delete
             9:
                 task: deploy_dev_config
+
+    qa_org_namespaced:
+        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to a namespaced org (scratch or packaging)
+        tasks:
+            1:
+                task: unschedule_apex
+            2:
+                task: update_dependencies
+                options:
+                    namespaced_org: True
+            3:
+                task: deploy_pre
+            4:
+                task: deploy
+            5:
+                task: deploy_post
+                options:
+                    unmanaged: False
+                    namespaced_org: True
+            6:
+                task: deploy_dev_config_delete
+            7:
+                task: deploy_dev_config
+            8:
+                task: deploy_qa_config
+            9:
+                task: update_admin_profile
+            10:
+                task: test_data_relationships
+
+    qa_org_prod:
+        description: Deploys the managed package with additional fields for qa
+        tasks:
+            1:
+                task: unschedule_apex
+            2:
+                task: update_dependencies
+            3:
+                task: deploy_pre
+            4:
+                task: install_managed
+            5:
+                task: deploy_post_managed
+            6:
+                task: deploy_dev_config_delete
+            7:
+                task: deploy_dev_config_managed
+            8:
+                task: deploy_qa_config
+            9:
+                task: update_admin_profile
+            10:
+                task: test_data_relationships
 
     release_beta:
         tasks:
