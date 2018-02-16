@@ -28,10 +28,10 @@
                 }
                 cmp.set("v.yearlyOperations", yOps);
 
-                var actions = [{label: 'Edit', name:'edit'}
-                    , {label: 'Clone', name:'clone'}
-                    , {label: 'Delete', name:'delete'}
-                    ];
+                var actions = [{label: model.labels.edit, name:'edit'}
+                    , {label: model.labels.clone, name:'clone'}
+                    , {label: model.labels.delete, name:'delete'}
+                ];
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
                 var rollupColumns = [{label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
@@ -56,8 +56,8 @@
 
                 cmp.set("v.filterGroupColumns", filterGroupColumns);
 
-                cmp.set("v.isRollupsGrid",true);
-                cmp.set("v.isFilterGroupsGrid",false);
+                cmp.set("v.isRollupsGrid",false);
+                cmp.set("v.isFilterGroupsGrid",true);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
@@ -127,6 +127,26 @@
         else if (gridTarget === 'filterGroup' || breadcrumbName === labels.filterGroupLabelPlural) {
             helper.displayFilterGroupsGrid(cmp);
         }
+    },
+
+    handleNavigateEvent: function(cmp, event, helper){
+        //handles the selection of a specific rollup from the filter group view and the return to filter group
+        var id = event.getParam('id');
+        var target = event.getParam('target');
+        if(target === 'rollup'){
+            cmp.set("v.detailMode", 'view');
+            cmp.set("v.activeRecordId", id);
+            cmp.set("v.isRollupDetail", true);
+            cmp.set("v.isFilterGroupDetail", false);
+            cmp.set("v.width", 8);
+        } else if (target === 'filterGroup'){
+            cmp.set("v.detailMode", 'view');
+            cmp.set("v.activeRecordId", id);
+            cmp.set("v.isRollupDetail", false);
+            cmp.set("v.isFilterGroupDetail", true);
+            cmp.set("v.width", 12);
+        }
+
     },
 
     handleRowAction: function(cmp, event, helper){

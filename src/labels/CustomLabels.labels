@@ -612,6 +612,14 @@
         <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
+        <fullName>CRLP_AvailableRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
+        <value>Available Rollup Types</value>
+    </labels>
+    <labels>
         <fullName>CRLP_CreditType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -628,14 +636,6 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
-        <fullName>CRLP_AvailableRollupType</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
-        <value>Available Rollup Types</value>
-    </labels>
-    <labels>
         <fullName>CRLP_NoRollupType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -650,6 +650,14 @@
         <protected>true</protected>
         <shortDescription>Breadcrumb text to return to NPSP settings</shortDescription>
         <value>Back to NPSP Settings</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupsByFilterGroup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Shows rollups using a specific filter group.</shortDescription>
+        <value>Show all rollups that are using this filter group</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupNew</fullName>

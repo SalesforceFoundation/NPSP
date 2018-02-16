@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="CRLP_ViewRollup">
+    <aura:attribute name="id" type="id" description="Id of the intended record."/>
+    <aura:attribute name="target" type="string" description="Intended target component. Options are rollup or filterGroup."/>
+</aura:event>

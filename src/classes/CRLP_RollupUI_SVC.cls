@@ -177,6 +177,23 @@ public with sharing class CRLP_RollupUI_SVC {
 
     }
 
+    /*******************************************************************************************************
+    * @description Queries from the Filter Rule metadata to fetch all operation values.
+    * @return a map of picklist options api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getfilterRuleOperations() {
+
+        Map<String,String> filterRuleOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Filter_Rule__mdt.Operator__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            filterRuleOperations.put(f.getValue(), f.getLabel());
+        }
+        return filterRuleOperations;
+    }
+
 
     /*******************************************************************************************************
     * @description Queries from the Rollup operations to fetch all rollup operation values.
@@ -313,6 +330,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'checkboxTrue' => Label.stgCheckboxTrue,
                 'checkboxFalse' => Label.stgCheckboxFalse,
                 'clone' => Label.stgBtnClone,
+                'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
@@ -324,6 +342,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
+                'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
@@ -340,7 +359,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
+                'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
+                'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
@@ -348,6 +369,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
                 'rollupLabelPlural' => Schema.SObjectType.Rollup__mdt.getLabelPlural(),
                 'rollupNew' => Label.CRLP_RollupNew,
+                'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,

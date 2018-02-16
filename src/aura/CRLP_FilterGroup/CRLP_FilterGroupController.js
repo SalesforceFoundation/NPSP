@@ -13,22 +13,26 @@
                     //note: the parsing is important to avoid a shared reference
                     //todo: try to stringify on server side; only parse on client
                     //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
-                    cmp.set("v.activeFilterGroup", JSON.parse(JSON.stringify(response.getReturnValue())));
-                    cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
+                    var filterGroup = response.getReturnValue();
+                    cmp.set("v.activeFilterGroup", JSON.parse(JSON.stringify(filterGroup)));
+                    cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue(filterGroup))));
 
-                    var actions = [{label: 'Edit', name:'edit'}
-                        , {label: 'Clone', name:'clone'}
-                        , {label: 'Delete', name:'delete'}
+                    var labels = cmp.get("v.labels");
+
+                    var actions = [{label: labels.edit, name:'edit'}
+                        , {label: labels.clone, name:'clone'}
+                        , {label: labels.delete, name:'delete'}
                     ];
 
-                    var filterRuleColumns = [{label: 'Object Type', fieldName: 'objectType', type: 'string', sortable: 'false'}
-                        , {label: 'Target Field', fieldName: 'targetField', type: 'string', sortable: 'false'}
-                        , {label: 'Operation', fieldName: 'operation', type: 'string', sortable: 'false'}
-                        , {label: 'Value(s)', fieldName: 'values', type: 'string', sortable: 'false'}
+                    var filterRuleColumns = [{label: labels.object, fieldName: 'objectType', type: 'string', sortable: 'false'}
+                        , {label: labels.field, fieldName: 'targetField', type: 'string', sortable: 'false'}
+                        , {label: labels.operator, fieldName: 'operation', type: 'string', sortable: 'false'}
+                        , {label: labels.constant, fieldName: 'values', type: 'string', sortable: 'false'}
                         , {type: 'action', typeAttributes: { rowActions: actions }}
                     ];
 
                     cmp.set("v.filterRuleColumns", filterRuleColumns);
+                    helper.filterRollupList(cmp, filterGroup.MasterLabel, labels);
 
                 }
                 else if (state === "ERROR") {
@@ -60,4 +64,14 @@
         //placeholder for on cancel function in !view mode
 
     },
+
+    selectRollup: function(cmp, event, helper){
+        //select rollup for navigation
+        var rollupId = event.getParam('name');
+        if(rollupId != 'title'){
+            var event = $A.get("e.c:CRLP_ViewRollupEvent");
+            event.setParams({id: rollupId, target: 'rollup'});
+            event.fire();
+        }
+    }
 })

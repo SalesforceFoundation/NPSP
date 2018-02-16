@@ -40,6 +40,7 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
+    <!--<aura:registerEvent name="NavigateEvent" type="c:CRLP_ViewRollupEvent"/>-->
 
     <!--these control the dynamic value binding of objects to fields-->
     <!--todo: can/should we minimize this into only tracking v.activeRollup?-->

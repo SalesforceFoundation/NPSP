@@ -13,8 +13,13 @@
     <aura:attribute name="rollupList" type="Object[]" description="List of related rollups for the filter group" access="public"/>
     <aura:attribute name="filterRuleList" type="Object[]" description="List of available filter rules" access="public"/>
     <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
+    <aura:attribute name="rollupItems" type="Object"/>
 
+    <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!-- events we fire -->
+    <aura:registerEvent name="ViewRollupEvent" type="c:CRLP_ViewRollupEvent"/>
 
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
@@ -34,7 +39,7 @@
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="6" size="12">
+                        <lightning:layoutItem padding="around-large" mediumDeviceSize="6" size="12">
                             <lightning:textarea aura:id="descriptionInput"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
@@ -45,20 +50,20 @@
 
                     <!--FILTER GROUP DATATABLE-->
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="6" size="12">
+                        <lightning:layoutItem padding="around-large" mediumDeviceSize="6" size="12">
                             <lightning:datatable data="{!v.filterRuleList}"
                                                  columns="{!v.filterRuleColumns}"
                                                  keyField="id"
                                                  hideCheckboxColumn="true"
                                                  onrowaction="{!c.handleRowAction}"/>
+                            <!--todo: add a button for a new filter rule if no filter rules-->
                         </lightning:layoutItem>
                     </lightning:layout>
 
                     <!--ROLLUP LIST-->
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="12" size="12">
-                            <!--todo: add label for this-->
-                            Show 0 Rollups that are using this filter group
+                        <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
+                            <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 

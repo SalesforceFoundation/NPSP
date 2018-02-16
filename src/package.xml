@@ -514,6 +514,7 @@
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
+        <members>CRLP_ViewRollupEvent</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -1069,6 +1070,7 @@
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
         <members>CRLP_Return</members>
+        <members>CRLP_RollupsByFilterGroup</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
         <members>CRLP_RollupType</members>

@@ -54,10 +54,8 @@
         //options for cancel: return to rollup summaries or return to view
         //first checks to see if mode is clone and bubbles up an Id of 0 to parent to trigger handleRollupSelect
         //else resets mode to view to become display-only and resets rollup values
-        console.log(cmp.get("v.activeRollupId"));
         if((cmp.get("v.mode") == 'clone' || cmp.get("v.mode") == 'create') && cmp.get("v.activeRollupId") == null){
-            console.log("cancel event rollup cmp");
-            //set off an event here
+            //set off cancel event for container
             var event = $A.get("e.c:CRLP_CancelEvent");
             event.setParams({grid: 'rollup'});
             event.fire();
