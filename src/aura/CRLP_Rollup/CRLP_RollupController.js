@@ -22,6 +22,7 @@
                     cmp.set("v.cachedRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
 
                     //change mode needs to be fired here because the sibling change of mode isn't being registered
+                    //TODO: review this since sibling isn't being used now
                     helper.changeMode(cmp);
 
                 }
@@ -58,17 +59,13 @@
             console.log("cancel event rollup cmp");
             //set off an event here
             var event = $A.get("e.c:CRLP_CancelEvent");
-            event.setParams({});
+            event.setParams({grid: 'rollup'});
             event.fire();
         } else {
-            console.log("before changing view");
             cmp.set("v.mode", "view");
-            console.log('in cancel');
             var cachedRollup = cmp.get("v.cachedRollup");
-            console.log(cachedRollup);
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", JSON.parse(JSON.stringify(cachedRollup.valueOf())));
-            console.log('after changing rollup');
         }
     },
 

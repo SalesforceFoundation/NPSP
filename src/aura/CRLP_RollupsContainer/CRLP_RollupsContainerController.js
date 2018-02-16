@@ -51,6 +51,7 @@
                     , {label: model.labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
                     , {label: model.labels.countOf+' '+model.labels.filterGroupLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true'}
                     , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true'}
+                    , {type: 'action', typeAttributes: { rowActions: actions }}
                 ];
 
                 cmp.set("v.filterGroupColumns", filterGroupColumns);
@@ -75,27 +76,32 @@
     },
 
     displayFilterGroupsGrid: function(cmp, event, helper){
-        //sets the filter group grid to be displayed, resets the column labels, and changes the breadcrumbs
-        cmp.set("v.isFilterGroupsGrid",true);
-        var labels = cmp.get("v.labels");
-        cmp.set("v.isRollupsGrid", false);
+        //sets the filter group grid to be displayed
+        helper.displayFilterGroupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "");
-
-        var rollupSummaryTitle = cmp.get("v.labels.rollupSummaryTitle");
     },
 
     displayNewRollupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
-        //resets the active rollup to ensure there is no leftover data
+        //resets the active record to ensure there is no leftover data
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isRollupDetail", true);
         cmp.set("v.detailMode", "create");
-        cmp.set("v.activeRollup", {});
+        cmp.set("v.activeRecord", {});
+    },
+
+    displayNewFilterGroupForm: function (cmp, event, helper) {
+        //toggle grid and detail views, set detail mode to create
+        //resets the active record to ensure there is no leftover data
+        cmp.set("v.isFilterGroupsGrid", false);
+        cmp.set("v.isFilterGroupDetail", true);
+        cmp.set("v.detailMode", "create");
+        cmp.set("v.activeRecord", {});
     },
 
     displayRollupsGrid: function(cmp, event, helper){
-        //sets the rollups grid to be displayed, resets the column labels
+        //sets the rollups grid to be displayed
         helper.displayRollupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "");
@@ -107,10 +113,20 @@
         helper.filterData(cmp, object);
     },
 
-    handleRollupCancelEvent: function(cmp, event, helper){
-        //switches to rollup grid with correct width after hearing cancel event from rollup detail
-        helper.displayRollupsGrid(cmp);
-        cmp.set("v.width", 12);
+    handleCancelEvent: function(cmp, event, helper){
+        //switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
+        //if cancel comes from the breadcrumbs in parent, check for name to toggle grid selection
+        var labels = cmp.get("v.labels");
+        var breadcrumbName = event.getSource().get('v.name');
+        var gridTarget = event.getParam('grid');
+
+        if(gridTarget === 'rollup' || breadcrumbName === labels.rollupSummaryTitle){
+            helper.displayRollupsGrid(cmp);
+            cmp.set("v.width", 12);
+        }
+        else if (gridTarget === 'filterGroup' || breadcrumbName === labels.filterGroupLabelPlural) {
+            helper.displayFilterGroupsGrid(cmp);
+        }
     },
 
     handleRowAction: function(cmp, event, helper){
@@ -120,10 +136,16 @@
 
         if(action.name != 'delete'){
             cmp.set("v.detailMode", action.name);
-            cmp.set("v.activeRollupId", row.id);
-            cmp.set("v.isRollupsGrid", false);
-            cmp.set("v.isRollupDetail", true);
-            cmp.set("v.width", 8);
+            cmp.set("v.activeRecordId", row.id);
+            //check which grid is displayed
+            if(cmp.get("v.isRollupsGrid")){
+                cmp.set("v.isRollupsGrid", false);
+                cmp.set("v.isRollupDetail", true);
+                cmp.set("v.width", 8);
+            } else{
+                cmp.set("v.isFilterGroupsGrid", false);
+                cmp.set("v.isFilterGroupDetail", true);
+            }
         } else {
             var rows = cmp.get("v.rollupList");
             var rowIndex = rows.indexOf(row);

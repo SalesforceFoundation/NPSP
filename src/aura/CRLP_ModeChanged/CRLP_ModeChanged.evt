@@ -1,7 +1,3 @@
-<!--
- - Created by bbreisnes on 2018-01-18.
- -->
-
 <aura:event type="COMPONENT" description="CRLP_ModeChanged">
     <aura:attribute type="String" name="mode" />
 </aura:event>

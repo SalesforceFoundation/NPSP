@@ -1,4 +1,6 @@
 <aura:component description="CRLP_SelectField">
+
+    <!-- private attributes -->
     <aura:attribute name="isReadOnly" type="Boolean"/>
     <aura:attribute name="auraId" type="String" description="Id label to be used for aura:id for view and select"/>
     <aura:attribute name="fieldName" type="String" description="Label for the rollup__mdt field" />
@@ -24,6 +26,7 @@
                                   name="{!v.fieldName}"
                                   value="{!v.apiName}"
                                   required="{!v.isRequired}">
+                    <!--todo: onchange="{!c.changeField}"-->
 
                     <option value="" text="{!v.selectLabel}"/>
 

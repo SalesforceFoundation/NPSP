@@ -1,0 +1,89 @@
+<aura:component description="CRLP_FilterGroup" controller="CRLP_RollupUI_SVC">
+    <!-- public attributes -->
+    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="activeFilterGroupId" type="Id"/>
+    <aura:attribute name="activeFilterGroup" type="Map"
+                    description="The active filter group displayed. Only populated from Clone, View and Edit."/>
+    <aura:attribute name="cachedFilterGroup" type="Map"
+                    description="The active filter group displayed. Only populated from Clone, View and Edit."/>
+    <aura:attribute name="mode" type="String"
+                    description="The current mode of the component. Options are: view, edit, clone, or create."/>
+    <aura:attribute name="isReadOnly" type="Boolean" default="true"
+                    description="Determines if fields should be read-only. This only applies to View."/>
+    <aura:attribute name="rollupList" type="Object[]" description="List of related rollups for the filter group" access="public"/>
+    <aura:attribute name="filterRuleList" type="Object[]" description="List of available filter rules" access="public"/>
+    <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <!--START FORM-->
+    <div aria-labelledby="filterGroupDetail">
+        <form class="slds-form_stacked">
+            <lightning:layout>
+                <lightning:layoutItem size="12">
+
+                    <lightning:layout multipleRows="true" verticalAlign="start">
+                        <lightning:layoutItem padding="horizontal-large" smallDeviceSize="6" size="12">
+                            <lightning:input aura:id="nameInput"
+                                             label="{!v.labels.filterGroupLabel + ' ' + v.labels.name}"
+                                             name="{!v.labels.filterGroupLabel + ' ' + v.labels.name}"
+                                             value="{!v.activeFilterGroup.MasterLabel}"
+                                             required="{! !v.isReadOnly}"
+                                             readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+                    <lightning:layout multipleRows="true" verticalAlign="start">
+                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="6" size="12">
+                            <lightning:textarea aura:id="descriptionInput"
+                                                label="{!v.labels.filterGroupDescription}"
+                                                name="{!v.labels.filterGroupDescription}"
+                                                value="{!v.activeFilterGroup.Description__c}"
+                                                readonly="{!v.isReadOnly}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+                    <!--FILTER GROUP DATATABLE-->
+                    <lightning:layout multipleRows="true" verticalAlign="start">
+                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="6" size="12">
+                            <lightning:datatable data="{!v.filterRuleList}"
+                                                 columns="{!v.filterRuleColumns}"
+                                                 keyField="id"
+                                                 hideCheckboxColumn="true"
+                                                 onrowaction="{!c.handleRowAction}"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+                    <!--ROLLUP LIST-->
+                    <lightning:layout multipleRows="true" verticalAlign="start">
+                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="12" size="12">
+                            <!--todo: add label for this-->
+                            Show 0 Rollups that are using this filter group
+                        </lightning:layoutItem>
+                    </lightning:layout>
+
+                </lightning:layoutItem>
+            </lightning:layout>
+        </form>
+    </div>
+    <!--END FORM-->
+
+    <!--START FORM BUTTONS-->
+    <div>
+        <lightning:layout>
+            <lightning:layoutItem size="12" largeDeviceSize="8">
+                <aura:if isTrue="{!v.mode!='view'}">
+                    <div class="slds-p-around_large">
+                        <lightning:layout horizontalAlign="end">
+                            <!--TODO: this button needs an onclick function to save stuff-->
+                            <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
+                            <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"/>
+                        </lightning:layout>
+                    </div>
+                </aura:if>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+    <!--END BUTTONS-->
+
+</aura:component>

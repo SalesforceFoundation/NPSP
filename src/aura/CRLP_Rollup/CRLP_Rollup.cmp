@@ -36,6 +36,8 @@
     <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
+    <!--<aura:handler event="c:CRLP_ChangeFieldEvent" action="{!c.handleChangeField}"/>-->
+
     <!-- events we fire -->
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
 
@@ -86,8 +88,8 @@
                             <lightning:layout multipleRows="true" verticalAlign="start">
                                 <lightning:layoutItem padding="around-medium" smallDeviceSize="6" size="12">
                                     <lightning:input aura:id="nameInput"
-                                                     label="{!v.labels.rollupLabel + v.labels.rollupName}"
-                                                     name="{!v.labels.rollupLabel + v.labels.rollupName}"
+                                                     label="{!v.labels.rollupLabel + ' ' + v.labels.name}"
+                                                     name="{!v.labels.rollupLabel + ' ' + v.labels.name}"
                                                      value="{!v.activeRollup.MasterLabel}"
                                                      required="{! !v.isReadOnly}"
                                                      readonly="{!v.isReadOnly}"/>

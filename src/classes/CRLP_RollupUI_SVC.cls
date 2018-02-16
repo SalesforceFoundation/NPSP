@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
@@ -62,6 +62,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
+        @AuraEnabled public Id id;
     }
 
     /*******************************************************************************************************
@@ -167,6 +168,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
+            item.id = mdtList[i].Id;
 
             mdtTableList.add(item);
         }
@@ -250,6 +252,24 @@ public with sharing class CRLP_RollupUI_SVC {
         WHERE Id = :id];
 
         return rollup;
+    }
+
+    /*******************************************************************************************************
+    @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
+    * @return a FilterGroup__mdt record and related FilterRule__mdt records.
+    */
+
+    @AuraEnabled
+    public static Filter_Group__mdt getFilterGroupById(Id id) {
+
+        Filter_Group__mdt filterGroup = [SELECT Id
+                , DeveloperName
+                , MasterLabel
+                , Description__c
+        FROM Filter_Group__mdt
+        WHERE Id = :id];
+
+        return filterGroup;
     }
 
     /*******************************************************************************************************
