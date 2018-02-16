@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>Account.A_User_Defined_Rollup_Field__c</members>
         <members>Account.UniqueId__c</members>
+        <members>Contact.A_User_Defined_Rollup_Field__c</members>
         <members>Contact.Gender__c</members>
         <members>Contact.UniqueId__c</members>
         <members>Opportunity.UniqueId__c</members>
