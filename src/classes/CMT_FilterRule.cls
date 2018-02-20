@@ -105,6 +105,8 @@ public class CMT_FilterRule {
     protected Schema.SObjectField field;
     protected FilterOperation operation;
     protected String constant;
+    public String objectName;
+    public Id ruleId;
 
     /**
      * @description Constructor - Instantiate the the appropriate comparison interface class based on the Field SoapType
@@ -112,6 +114,8 @@ public class CMT_FilterRule {
      */
     public CMT_FilterRule(Filter_Rule__mdt filterRule) {
 
+        this.ruleId = filterRule.Id;
+        this.objectName = filterRule.Object__r.QualifiedApiName;
         this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
         this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
         this.constant = filterRule.Constant__c;
@@ -140,6 +144,14 @@ public class CMT_FilterRule {
      */
     public SObjectType getObjectType() {
         return this.objectType;
+    }
+
+    /**
+     * @description Returns a "unique" string that can be used to retrieve a cached version of this result
+     * object+field+operation+constant
+     */
+    public String getCacheKeyPrefix() {
+        return this.objectName + '.' + this.field + '.' + CMT_FilterRuleUI_SVC.getFilterOperations().get(this.operation) + '.' + this.constant;
     }
 
     /**
