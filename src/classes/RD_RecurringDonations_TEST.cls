@@ -690,18 +690,6 @@ public class RD_RecurringDonations_TEST {
             System.assertEquals(25, originalOpps[0].Amount, 'All originalOpps should be $25.');
             System.assertEquals(system.label.npe03.RecurringDonationStageName, originalOpps[0].StageName, 'All originalOpps should be Open.');
         }
-        System.debug('+++++ORIGINAL OPP AMOUNTS');
-        System.debug(originalOpps[0].Amount+ ' '+originalOpps[0].StageName);
-        System.debug(originalOpps[1].Amount+ ' '+originalOpps[1].StageName);
-        System.debug(originalOpps[2].Amount+ ' '+originalOpps[2].StageName);
-        System.debug(originalOpps[3].Amount+ ' '+originalOpps[3].StageName);
-
-        System.debug('+++++POST UPDATE OPP AMOUNTS');
-        System.debug(postUpdateOpps[0].Amount+ ' '+postUpdateOpps[0].StageName);
-        System.debug(postUpdateOpps[1].Amount+ ' '+postUpdateOpps[1].StageName);
-        System.debug(postUpdateOpps[2].Amount+ ' '+postUpdateOpps[2].StageName);
-        System.debug(postUpdateOpps[3].Amount+ ' '+postUpdateOpps[3].StageName);
-
         System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
 
         for(Integer i; i<originalOpps.size(); i++) {
@@ -792,18 +780,6 @@ public class RD_RecurringDonations_TEST {
         FROM Opportunity
         WHERE npe03__Recurring_Donation__c = :r1.id];
 
-        System.debug('+++++ORIGINAL OPP AMOUNTS');
-        System.debug(originalOpps[0].Amount+ ' '+originalOpps[0].StageName);
-        System.debug(originalOpps[1].Amount+ ' '+originalOpps[1].StageName);
-        System.debug(originalOpps[2].Amount+ ' '+originalOpps[2].StageName);
-        System.debug(originalOpps[3].Amount+ ' '+originalOpps[3].StageName);
-
-        System.debug('+++++POST UPDATE OPP AMOUNTS');
-        System.debug(postUpdateOpps[0].Amount+ ' '+postUpdateOpps[0].StageName);
-        System.debug(postUpdateOpps[1].Amount+ ' '+postUpdateOpps[1].StageName);
-        System.debug(postUpdateOpps[2].Amount+ ' '+postUpdateOpps[2].StageName);
-        System.debug(postUpdateOpps[3].Amount+ ' '+postUpdateOpps[3].StageName);
-
         System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
 
         for(Integer i; i<originalOpps.size(); i++) {
@@ -821,7 +797,7 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(25, postUpdateOpps[3].Amount, 'Opportunity 4 should still be $25.');
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[3].StageName, 'Opportunity 4 should be Closed Lost.');
     }
-    
+
     static testMethod void updateOpenEndedRecurringDonationMonthly(){
         if (strTestOnly != '*' && strTestOnly != 'updateOpenEndedRecurringDonationMonthly_ModifiedJan2018') return;
 
@@ -1212,7 +1188,7 @@ public class RD_RecurringDonations_TEST {
         
         system.assertNotEquals(null, r1.id);
         list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__r.id = :r1.id order by CloseDate]);
-        system.assertEquals(1, originalOpps.size());          
+        system.assertEquals(1, originalOpps.size());
         
         Opportunity o1 = originalOpps[0];
         string closedstage = [select masterlabel from opportunitystage where isActive = true and iswon = true and isClosed = true limit 1].masterlabel;
@@ -1227,8 +1203,8 @@ public class RD_RecurringDonations_TEST {
         Test.stopTest();
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
-        originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id = :r1.id]);
-        system.assertEquals(0, originalOpps.size());          
+        originalOpps = new list<Opportunity>([select id, Name,amount,stagename,accountid,CloseDate from Opportunity where isClosed = false and npe03__Recurring_Donation__r.id = :r1.id]);
+        system.assertEquals(0, originalOpps.size());
     }
     
     //test closing an opportunity for an open recurring donation
@@ -1277,7 +1253,24 @@ public class RD_RecurringDonations_TEST {
         Test.startTest();
         //update opp
         update o;
-        //call the update method
+        //re-query the RD for changes after the oppty is updated
+        r1 = [SELECT Id
+                , Name
+                , npe03__Installments__c
+                , npe03__Contact__c
+                , npe03__Amount__c
+                , npe03__Installment_Period__c
+                , npe03__Date_Established__c
+                , npe03__Schedule_Type__c
+                , npe03__Open_Ended_Status__c
+                , npe03__Next_Payment_Date__c
+                , Always_Use_Last_Day_Of_Month__c
+                , npe03__Total_Paid_Installments__c
+                , npe03__Recurring_Donation_Campaign__c
+                , npe03__Organization__c
+                , npe03__Donor_Name__c
+                , OwnerId
+        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
         Test.stopTest();
                 
@@ -1450,7 +1443,7 @@ public class RD_RecurringDonations_TEST {
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
+        list<Opportunity> originalOpps = new list<Opportunity>([select id, stagename, Name,amount,accountid,CloseDate from Opportunity where npe03__Recurring_Donation__c = :r1.id order by CloseDate]);
         system.assertEquals(6, originalOpps.size());          
         
         Opportunity o = originalOpps[0];
@@ -1461,11 +1454,14 @@ public class RD_RecurringDonations_TEST {
         //update opp
         update o;
         //call the update method
+        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];
+        system.assertEquals(5, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
+        system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
-        Test.stopTest();        
-        
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-        
+        Test.stopTest();
+
+        rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];
+
         system.assertEquals(5, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
