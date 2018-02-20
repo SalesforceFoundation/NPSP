@@ -30,8 +30,8 @@
                 console.log('STATE'+state);
                 if (state === "SUCCESS") {
                     console.log('RESPONSE: '+response.getReturnValue());
-                    var response = response.getReturnValue();
-                    cmp.set("v.objectDetails", response);
+                    var data = response.getReturnValue();
+                    cmp.set("v.objectDetails", data);
 
                     this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
 
@@ -63,12 +63,12 @@
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         var mode = cmp.get("v.mode");
         console.log(mode);
-        if(mode != null) {
+        if(mode !== null) {
             console.log("Mode is " + mode);
             console.log("In changeMode");
 
             //for create we don't need to set anything yet since mode will be changed to clone before viewing page
-            if(mode != "create") {
+            if(mode !== "create") {
                 //check operations to appropriately set "N/A" for date/amount field values
                 this.changeOperationsOptions(cmp);
                 this.changeYearlyOperationsOptions(cmp, false);
@@ -102,20 +102,20 @@
         var renderMap = cmp.get("v.renderMap");
         console.log(renderMap);
         //todo: is this ok for translation?
-        if (operation == 'Largest'
-            || operation == 'Smallest'
-            || operation == 'Best_Year'
-            || operation == 'Best_Year_Total'
-            || operation == 'Sum'
-            || operation == 'Average') {
+        if (operation === 'Largest'
+            || operation === 'Smallest'
+            || operation === 'Best_Year'
+            || operation === 'Best_Year_Total'
+            || operation === 'Sum'
+            || operation === 'Average') {
             //enable amount field
             renderMap["amount"] = true;
-        } else if (operation == 'First'
-            || operation == 'Last'
-            || operation == 'Years_Donated'
-            || operation == 'Donor_Streak'
-            || operation == 'Count'
-            || operation == null) {
+        } else if (operation === 'First'
+            || operation === 'Last'
+            || operation === 'Years_Donated'
+            || operation === 'Donor_Streak'
+            || operation === 'Count'
+            || operation === null) {
             //disable amount field
             renderMap["amount"] = false;
             cmp.set("v.activeRollup.Amount_Field__r.Label", cmp.get("v.labels.na"));
@@ -133,7 +133,7 @@
         console.log("in helper changeYearlyOperationsOptions");
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
-        if (operation == 'All_Time') {
+        if (operation === 'All_Time') {
             //disable fiscal year and integer and reset values
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = false;
@@ -141,11 +141,11 @@
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
                 cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
             }
-        } else if (operation == 'Years_Ago') {
+        } else if (operation === 'Years_Ago') {
             //enable fiscal year and integer
             renderMap["useFiscalYear"] = true;
             renderMap["integer"] = true;
-        } else if (operation == 'Days_Back') {
+        } else if (operation === 'Days_Back') {
             //disable fiscal year and enable integer
             renderMap["useFiscalYear"] = false;
             renderMap["integer"] = true;
@@ -176,10 +176,10 @@
         var newSummaryObjects;
         console.log("detail object is " + detailObject);
         //only set if object is selected, otherwise prompt for user to select a detail object
-        if(detailObject == "Allocation__c"){
+        if(detailObject === "Allocation__c"){
             newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
-        } else if(detailObject == "npe01__OppPayment__c" || detailObject == "Partial_Soft_Credit__c"
-            || detailObject == "Opportunity") {
+        } else if(detailObject === "npe01__OppPayment__c" || detailObject === "Partial_Soft_Credit__c"
+            || detailObject === "Opportunity") {
             newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
                 , {label: labels.contactLabel, name: 'Contact'}];
         } else {
@@ -201,14 +201,14 @@
             newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
         }
 
-        if(context=='detail'){
+        if(context === 'detail'){
             cmp.set("v.detailFields", newFields);
-        } else if (context=='summary') {
+        } else if (context === 'summary') {
             cmp.set("v.summaryFields", newFields);
-        } else if (context=='date') {
+        } else if (context === 'date') {
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
-        } else if (context=='amount') {
+        } else if (context === 'amount') {
             newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
             cmp.set("v.amountFields", newFields);
         }
@@ -234,10 +234,10 @@
         var newFields = [];
 
         typeList.forEach(function(type){
-            if (!(type == undefined || type == null)) {
+            if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
                     var datatype = field.type;
-                    if (datatype == type) {
+                    if (datatype === type) {
                         newFields.push(field);
                     }
                 });
@@ -255,14 +255,14 @@
         console.log(summaryObject);
 
         //checks if summary field is set
-        if(allFields != undefined) {
+        if(allFields !== undefined) {
 
             //loop over all detail fields to get the type of selected field
             var detailFields = cmp.get("v.detailFields");
             console.log(detailFields);
             var type;
             for (var i = 0; i < detailFields.length; i++) {
-                if (detailFields[i].name == detailField) {
+                if (detailFields[i].name === detailField) {
                     type = detailFields[i].type;
                     break;
                 }
@@ -270,7 +270,7 @@
             //TODO: maybe check if type is the same to see if need to filter?
             console.log("Type is " + type);
             //if type is undefined, return all fields
-            if(type == undefined){
+            if(type === undefined){
                 newFields = allFields;
             } else {
                 newFields = this.filterFieldsByType(cmp, [type], allFields);
@@ -291,43 +291,10 @@
         cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
     },
 
-    resetRollup: function(cmp) {
-
-        //TODO: refactor this: consider caching rolllup, and review what is necessary
-        var activeRollupId = cmp.get("v.activeRollup.Id");
-        var action = cmp.get("c.getRollupById");
-        action.setParams({id: activeRollupId});
-
-        action.setCallback(this, function (response) {
-            var state = response.getState();
-            if (state === "SUCCESS") {
-                var response = response.getReturnValue();
-                cmp.set("v.activeRollup", response);
-                var activeRollupMap = cmp.get("v.activeRollup");
-
-                //need to reset all fields to match the selected objects
-                this.resetAllFields(cmp);
-
-            }
-            else if (state === "ERROR") {
-                var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
-                }
-            }
-        });
-        $A.enqueueAction(action);
-    },
-
     resetOperationFieldLabel: function(cmp, operation, operationList){
         var label;
         for(var i=0; i<operationList.length; i++){
-            if(operationList[i].name == operation){
+            if(operationList[i].name === operation){
                 label = operationList[i].label;
                 break;
             }

@@ -1,13 +1,50 @@
-<aura:component implements="force:appHostable, flexipage:availableForAllPageTypes" access="GLOBAL" controller="CRLP_RollupUI_SVC">
+<!--
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2018
+  @group Rollups
+  @group-content ../../ApexDocContent/Rollups2.htm
+  @description Lightning Container SPA for the Customizable Rollups UI.
+-->
+
+<aura:component access="GLOBAL" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
     <aura:attribute name="rollupList" type="Object[]" access="public" description="List of custom items to fill the rollup grid."/>
     <aura:attribute name="cachedRollupList" type="Object[]" access="public" description="Cached version of rollupList to use when filtering rollups."/>
     <aura:attribute name="filterGroupList" type="Object[]" access="public" description="List of custom items to fill the filter groups grid."/>
     <aura:attribute name="rollupColumns" type="List" access="public" description="Columns for rollup grid."/>
     <aura:attribute name="filterGroupColumns" type="List" access="public" description="Columns for filter group grid."/>
-    <aura:attribute name="activeRecordId" type="Id" description="ID of the selected record to display in detail view. Is set to null once detail is hidden."/>
-    <aura:attribute name="activeRecord" type="Object" description="Active item to display in detail view. Is set to null once detail is hidden."/>
-    <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Is set to null once component is hidden."/>
+    <aura:attribute name="activeRecordId" type="Id" description="ID of the selected record to display in detail view. Set to null once detail is hidden."/>
+    <aura:attribute name="activeRecord" type="Object" description="Active item to display in detail view. Set to null once detail is hidden."/>
+    <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
     <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label."/>
     <aura:attribute name="yearlyOperations" type="List" description="Map of yearly operations, api name to label."/>
 
@@ -24,7 +61,7 @@
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="c:CRLP_CancelEvent" action="{!c.handleCancelEvent}"/>
-    <aura:handler event="c:CRLP_ViewRollupEvent" action="{!c.handleNavigateEvent}"/>
+    <aura:handler event="c:CRLP_NavigateEvent" action="{!c.handleNavigateEvent}"/>
 
     <!-- markup -->
     <!--BEGIN BREADCRUMB-->
@@ -105,6 +142,7 @@
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
                             <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type" variant="label-hidden" onchange="{!c.filterBySummaryObject}">
+                                <!--todo: change to aura:iteration and retrieve obj from the server. also, label!-->
                                 <option value="All">Select All</option>
                                 <option value="Account">Account</option>
                                 <option value="Contact">Contact</option>

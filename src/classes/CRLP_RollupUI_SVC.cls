@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -107,6 +107,7 @@ public with sharing class CRLP_RollupUI_SVC {
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
+        Map<CRLP_Operation.RollupType, String> operationTypes = CRLP_Operation.getRollupOperationTypes();
 
         for(Integer i=0; i<mdtList.size(); i++){
             RollupTableItem item = new RollupTableItem();
@@ -237,36 +238,7 @@ public with sharing class CRLP_RollupUI_SVC {
     @AuraEnabled
     public static Rollup__mdt getRollupById(Id id) {
 
-        Rollup__mdt rollup = [SELECT Id
-                , DeveloperName
-                , MasterLabel
-                , Active__c
-                , Use_Fiscal_Year__c
-                , Yearly_Operation_Type__c
-                , Description__c
-                , Filter_Group__c
-                , Filter_Group__r.QualifiedApiName
-                , Filter_Group__r.MasterLabel
-                , Operation__c
-                , Integer__c
-                , Summary_Field__r.QualifiedApiName
-                , Summary_Field__r.Label
-                , Summary_Object__r.QualifiedApiName
-                , Summary_Object__r.Label
-                , Detail_Field__r.QualifiedApiName
-                , Detail_Field__r.Label
-                , Detail_Object__r.QualifiedApiName
-                , Detail_Object__r.Label
-                , Amount_Field__r.QualifiedApiName
-                , Amount_Field__r.Label
-                , Amount_Object__r.QualifiedApiName
-                , Amount_Object__r.Label
-                , Date_Field__r.QualifiedApiName
-                , Date_Field__r.Label
-                , Date_Object__r.QualifiedApiName
-                , Date_Object__r.Label
-        FROM Rollup__mdt
-        WHERE Id = :id];
+        Rollup__mdt rollup = CRLP_Rollup_SEL.getRollupsById(Id);
 
         return rollup;
     }

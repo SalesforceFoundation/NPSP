@@ -509,12 +509,11 @@
         <members>CRLP_CancelEvent</members>
         <members>CRLP_CreateRollup</members>
         <members>CRLP_FilterGroup</members>
-        <members>CRLP_ModeChanged</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
-        <members>CRLP_ViewRollupEvent</members>
+        <members>CRLP_NavigateEvent</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -1812,6 +1811,7 @@
         <members>stgNavRelationships</members>
         <members>stgNavRollupAlloBatch</members>
         <members>stgNavRollupBatch</members>
+        <members>stgNavRollups</members>
         <members>stgNavSchedule</members>
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>

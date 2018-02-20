@@ -1,5 +1,4 @@
 ({
-
     getRollup: function(cmp, event, helper) {
         console.log("IN GETROLLUP");
         /**called when the activeRollupId changes, specifically in the rollupRow
@@ -8,7 +7,7 @@
          * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");
 
-        if (activeRollupId != null) {
+        if (activeRollupId !== null) {
             var action = cmp.get("c.getRollupById");
             action.setParams({id: activeRollupId});
 
@@ -54,11 +53,11 @@
         //options for cancel: return to rollup summaries or return to view
         //first checks to see if mode is clone and bubbles up an Id of 0 to parent to trigger handleRollupSelect
         //else resets mode to view to become display-only and resets rollup values
-        if((cmp.get("v.mode") == 'clone' || cmp.get("v.mode") == 'create') && cmp.get("v.activeRollupId") == null){
+        if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
             //set off cancel event for container
-            var event = $A.get("e.c:CRLP_CancelEvent");
-            event.setParams({grid: 'rollup'});
-            event.fire();
+            var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+            cancelEvent.setParams({grid: 'rollup'});
+            cancelEvent.fire();
         } else {
             cmp.set("v.mode", "view");
             var cachedRollup = cmp.get("v.cachedRollup");
@@ -68,9 +67,9 @@
     },
 
     onChangeDetailObject: function(cmp, event, helper){
-        if(cmp.get("v.mode")!='view') {
+        if(cmp.get("v.mode") !== 'view') {
             console.log("hitting changedetailobject");
-            if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+            if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
                 console.log("in changedetailobject function");
                 //set new summary objects based on selected value
                 var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
@@ -95,7 +94,7 @@
                 var detailObjects = cmp.get("v.detailObjects");
 
                 for(var i=0; i<detailObjects.length; i++){
-                    if(detailObjects[i].name == object){
+                    if(detailObjects[i].name === object){
                         objLabel = detailObjects[i].label;
                         break;
                     }
@@ -108,7 +107,7 @@
                 helper.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
 
                 //set date object label and api name based on the selected detail object then reset fields + selected value
-                if(object == 'npe01__OppPayment__c'){
+                if(object === 'npe01__OppPayment__c'){
                     cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
                     cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
                 } else {
@@ -122,8 +121,8 @@
 
     changeSummaryFields: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
-        if(cmp.get("v.mode")!='view'){
-            if(cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null){
+        if(cmp.get("v.mode") !== 'view'){
+            if(cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null){
                 console.log('in change summary field');
                 var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
                 var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
@@ -134,13 +133,13 @@
 
     onChangeOperation: function (cmp, event, helper) {
         //no check for view mode because the recalculation of operation is necessary with label formatting
-        if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+        if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
             console.log('On change operation');
             helper.changeOperationsOptions(cmp);
         }
     },
     onChangeYearlyOperation: function (cmp, event, helper) {
-        if (cmp.get("v.objectDetails") != null && cmp.get("v.activeRollup") != null) {
+        if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
             console.log('On change yearly operation');
             helper.changeYearlyOperationsOptions(cmp, true);
         }
@@ -155,9 +154,9 @@
         var selectedTemplate = cmp.get("v.selectedTemplate");
         console.log(selectedTemplate);
         var detailObj;
-        var summaryObj
+        var summaryObj;
 
-        if(selectedTemplate == 'null' || selectedTemplate == null){
+        if(selectedTemplate === 'null' || selectedTemplate === null){
             console.log('NULL selected template is: ' + selectedTemplate);
             detailObj = null;
             summaryObj = null;

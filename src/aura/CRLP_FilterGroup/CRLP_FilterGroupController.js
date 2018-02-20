@@ -3,7 +3,7 @@
     doInit: function(cmp, event, helper){
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
-        if (activeFilterGroupId != null) {
+        if (activeFilterGroupId !== null) {
             var action = cmp.get("c.getFilterGroupById");
             action.setParams({id: activeFilterGroupId});
 
@@ -68,10 +68,10 @@
     selectRollup: function(cmp, event, helper){
         //select rollup for navigation
         var rollupId = event.getParam('name');
-        if(rollupId != 'title'){
-            var event = $A.get("e.c:CRLP_ViewRollupEvent");
-            event.setParams({id: rollupId, target: 'rollup'});
-            event.fire();
+        if(rollupId !== 'title'){
+            var navEvent = $A.get("e.c:CRLP_NavigateEvent");
+            navEvent.setParams({id: rollupId, target: 'rollup'});
+            navEvent.fire();
         }
     }
 })

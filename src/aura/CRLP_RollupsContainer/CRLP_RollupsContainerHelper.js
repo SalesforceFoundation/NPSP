@@ -31,7 +31,7 @@
             cmp.set("v.rollupList", cachedRollupList);
         } else{
             var filteredRollupList = cachedRollupList.filter(function(rollup){
-               return rollup.summaryObject == object;
+               return rollup.summaryObject === object;
             });
             cmp.set("v.rollupList", filteredRollupList);
         }

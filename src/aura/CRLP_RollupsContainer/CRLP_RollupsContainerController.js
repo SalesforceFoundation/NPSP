@@ -23,8 +23,8 @@
                 cmp.set("v.operations", ops);
 
                 var yOps = [];
-                for(var i in model.yearlyOperations){
-                    yOps.push({name: i, label: model.yearlyOperations[i]});
+                for(var j in model.yearlyOperations){
+                    yOps.push({name: j, label: model.yearlyOperations[j]});
                 }
                 cmp.set("v.yearlyOperations", yOps);
 
@@ -154,7 +154,7 @@
         var action = event.getParam('action');
         var row = event.getParam('row');
 
-        if(action.name != 'delete'){
+        if(action.name !== 'delete'){
             cmp.set("v.detailMode", action.name);
             cmp.set("v.activeRecordId", row.id);
             //check which grid is displayed
@@ -182,7 +182,7 @@
 
     sortByColumns: function(cmp, event, helper){
         //sorts the data grid by the field name and current direction
-        var col = event.getParam()
+        var col = event.getParam();
         var fieldName = event.getParam('fieldName');
         var sortDirection = event.getParam('sortDirection');
 
