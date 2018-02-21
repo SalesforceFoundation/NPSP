@@ -699,7 +699,6 @@ public class RD_RecurringDonations {
         //opps for updating
         list<Opportunity> updateOppsList = new list<Opportunity>();
         
-        // TODO: refactor this loop out into its own method so i can use it elsewhere as well
         //loop through existing opps for each RD and update according to values on the RD
         for (id RDid : RDOppMap.keySet()){
 
