@@ -184,6 +184,7 @@ flows:
                 task: deploy_dev_config
 
     qa_org:
+        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to the target org
             0.5:
                 task: unschedule_apex
             1:
@@ -210,7 +211,7 @@ flows:
                 task: test_data_relationships
 
     qa_org_beta:
-        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to a namespaced org (scratch or packaging)
+        description: Installs the latest beta version with additional fields for qa and all dependencies.  Does not attempt to uninstall a previous beta.
         tasks:
             1:
                 task: update_dependencies
@@ -232,7 +233,7 @@ flows:
                 task: test_data_relationships
 
     qa_org_prod:
-        description: Deploys the managed package with additional fields for qa
+        description: Installs the latest production version with additional fields for qa and all dependencies.
         tasks:
             1:
                 task: update_dependencies
@@ -321,6 +322,8 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_wave:
+            config_file: orgs/beta_wave.json
         browsertest_classic:
             config_file: orgs/browsertest_classic.json
         browsertest_classic_namespaced:
