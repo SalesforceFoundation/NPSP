@@ -786,7 +786,7 @@ public class RD_RecurringDonations {
 
             if (needsRecalc) {
                 if(r.npe03__Open_Ended_Status__c == closedlabel
-                        //&& oldRD.npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c
+                        && oldRecurringDonations.get(r.id).npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c
                     ){
                     // closing an open ended donation
                     // does it actually matter if it's newly closed? shouldn't it go to the runRecurringDonationClosedActions method regardless?
@@ -841,6 +841,13 @@ public class RD_RecurringDonations {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Re-evaluates all open Opportunities of an Open-Ended Recurring Donation when it is updated to require schedule recalculation.
+    * @param recurringDonations The list of RDs to process
+    * @param openOpportunities The list of open Opportunities to process
+    * @param dmlWrapper Object to hold the Opps that need deleting or updating
+    * @return void
+    */
     private static void handleOpenEndedScheduleRecalculation(List<npe03__Recurring_Donation__c> recurringDonations
             , List<Opportunity> openOpportunities
             , TDTM_Runnable.DmlWrapper dmlWrapper) {
@@ -873,7 +880,6 @@ public class RD_RecurringDonations {
         integer forecast_months = (integer)rds.npe03__Opportunity_Forecast_Months__c;
         Date dtForecast =  system.today().toStartOfMonth().addMonths(forecast_months);
 
-        // for each RD
         for (npe03__Recurring_Donation__c r : recurringDonations) {
 
             Date nextDate = getStartDate(r);
@@ -884,49 +890,47 @@ public class RD_RecurringDonations {
             }
 
             // loop the existing opportunities
-            //if(RDOppMap.get(r.Id) != null && !RDOppMap.get(r.Id).isEmpty()) {
-                for (Opportunity o : RDOppMap.get(r.Id)) {
-                    if (nextDate <= dtForecast) {
-                        // fix close dates on existing opportunities
-                        o.CloseDate = nextDate;
+            for (Opportunity o : RDOppMap.get(r.Id)) {
+                if (nextDate <= dtForecast) {
+                    // fix close dates on existing opportunities
+                    o.CloseDate = nextDate;
 
-                        // TODO: are these really all the fields necessary to sync to oppties on an update?
-                        // This is borrowed from roughly line 700
-                        o.Amount = r.npe03__Amount__c;
-                        if (r.npe03__Recurring_Donation_Campaign__c != null && rds.npe03__Add_Campaign_to_All_Opportunites__c) {
-                            o.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
-                        }
-
-                        if (r.npe03__Organization__c != null) {
-                            o.AccountID = r.npe03__Organization__c;
-                        }
-
-                        //modify the name
-                        String oName = '';
-                        oName += r.npe03__Donor_Name__c;
-                        oName += ' ';
-                        oName += system.label.npe03.RecurringDonationPrefix;
-                        oName += ' (' + o.Recurring_Donation_Installment_Number__c + ') ';
-                        oName += o.CloseDate.format();
-                        o.Name = oName;
-
-                        //evaluate any custom field mappings
-                        for (string s : customFieldMappingSettings.keySet()) {
-                            npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
-                            o.put(cfm.npe03__Opportunity_Field__c, r.get(cfm.npe03__Recurring_Donation_Field__c));
-                        }
-
-                        updateOppsList.add(o);
-
-                        nextDate = getNextDate(nextDate, r);
-                        rdcounter++;
-
-                    } else {
-                        // extras get closed
-                        closeOppsList.add(o);
+                    // TODO: are these really all the fields necessary to sync to oppties on an update?
+                    // This is borrowed from roughly line 700
+                    o.Amount = r.npe03__Amount__c;
+                    if (r.npe03__Recurring_Donation_Campaign__c != null && rds.npe03__Add_Campaign_to_All_Opportunites__c) {
+                        o.CampaignId = r.npe03__Recurring_Donation_Campaign__c;
                     }
+
+                    if (r.npe03__Organization__c != null) {
+                        o.AccountID = r.npe03__Organization__c;
+                    }
+
+                    //modify the name
+                    String oName = '';
+                    oName += r.npe03__Donor_Name__c;
+                    oName += ' ';
+                    oName += system.label.npe03.RecurringDonationPrefix;
+                    oName += ' (' + o.Recurring_Donation_Installment_Number__c + ') ';
+                    oName += o.CloseDate.format();
+                    o.Name = oName;
+
+                    //evaluate any custom field mappings
+                    for (string s : customFieldMappingSettings.keySet()) {
+                        npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
+                        o.put(cfm.npe03__Opportunity_Field__c, r.get(cfm.npe03__Recurring_Donation_Field__c));
+                    }
+
+                    updateOppsList.add(o);
+
+                    nextDate = getNextDate(nextDate, r);
+                    rdcounter++;
+
+                } else {
+                    // extras get closed
+                    closeOppsList.add(o);
                 }
-            //}
+            }
 
             // didn't have enough, create more
             while (nextDate < dtForecast) {
@@ -985,6 +989,13 @@ public class RD_RecurringDonations {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Re-evaluates all Opportunities of an Open-Ended Recurring Donation when it is updated to require schedule recalculation.
+    * @param recurringDonations The list of RDs to process
+    * @param allOpportunities The list of all Opportunities to process
+    * @param dmlWrapper Object to hold the Opps that need deleting or updating
+    * @return void
+    */
     private static void handleFixedLengthScheduleRecalculation(List<npe03__Recurring_Donation__c> recurringDonations
             , List<Opportunity> allOpportunities
             , TDTM_Runnable.DmlWrapper dmlWrapper) {
@@ -1020,7 +1031,6 @@ public class RD_RecurringDonations {
 
             Integer numInstallments = r.npe03__Installments__c.intValue();
 
-            Integer j=0;
             decimal installmentAmount = r.npe03__Installment_Amount__c;
 
             decimal paidAmount = 0;
@@ -1037,16 +1047,6 @@ public class RD_RecurringDonations {
                         installmentAmount = remainingAmount / remainingInstallments;
                 }
             }
-
-            // loop # existing opps until # of installments
-                // if it's not already closedWon
-                    // updating closedate w/ date methods and installment period
-                    // add to updateOppsList
-            // loop # existing opps over # of installments
-                // add to closeOppsList
-            // loop # of installments over # existing opps
-                // new oppty on date using last nextdate from above
-                // add to insertOppsList
 
             Integer installmentCounter = 1;
             for (Opportunity o : RDOppMap.get(r.Id)) {
@@ -1187,10 +1187,6 @@ public class RD_RecurringDonations {
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
         if (listRDNonOpen.size() > 0) {
-            // TODO: update this to use the new methods
-            //clear existing open opps and recreate
-            //delete [select id from Opportunity where npe03__Recurring_Donation__c IN :listRDNonOpen and isClosed = false];
-            //insertOppsOnRecurringDonationInsert(listRDNonOpen);
 
             List<Opportunity> opps = [SELECT Id
                     , Amount
@@ -1552,7 +1548,7 @@ public class RD_RecurringDonations {
     @testVisible
     private static Boolean needsRecalculation(npe03__Recurring_Donation__c newRD, npe03__Recurring_Donation__c oldRD) {
 
-        if(newRD.npe03__Organization__c != oldRD.npe03__Organization__c
+        if (newRD.npe03__Organization__c != oldRD.npe03__Organization__c
                 || newRD.npe03__Contact__c != oldRD.npe03__Contact__c
                 || newRD.npe03__Amount__c != oldRD.npe03__Amount__c
                 || newRD.npe03__Installment_Period__c != oldRD.npe03__Installment_Period__c
@@ -1591,7 +1587,6 @@ public class RD_RecurringDonations {
         o.CloseDate = oppCloseDate;
         o.OwnerId = r.OwnerId;
 
-
         if(isMultiCurrency){
             //set the donation currency field to equal the recurring donation currency
             o.put(OppCurrencyField,r.get(RDCurrencyField));
@@ -1604,13 +1599,16 @@ public class RD_RecurringDonations {
         oName += ' ';
         oName += system.label.npe03.RecurringDonationPrefix;
         oName += ' (';
-        oName += string.valueOf(rdcounter);
+        oName += String.valueOf(rdcounter);
+        if(r.npe03__Open_Ended_Status__c == null) {
+            oName += ' of ';
+            oName += String.valueOf(r.npe03__Installments__c);
+        }
         oName += ') ';
         oName += o.CloseDate.format();
         o.Name = oName;
 
         o.Recurring_Donation_Installment_Number__c = rdcounter;
-
 
         if (rds.npe03__Record_Type__c != null){
             o.put('RecordTypeId', rds.npe03__Record_Type__c);
@@ -1623,7 +1621,7 @@ public class RD_RecurringDonations {
         }
 
         //evaluate any custom field mappings
-        for (string s : customFieldMappingSettings.keySet()){
+        for (String s : customFieldMappingSettings.keySet()){
             npe03__Custom_Field_Mapping__c cfm = customFieldMappingSettings.get(s);
             o.put(cfm.npe03__Opportunity_Field__c, r.get(cfm.npe03__Recurring_Donation_Field__c));
         }
