@@ -185,6 +185,7 @@ flows:
 
     qa_org:
         description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to the target org
+        tasks:
             0.5:
                 task: unschedule_apex
             1:
