@@ -657,7 +657,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Shows rollups using a specific filter group.</shortDescription>
-        <value>Show all rollups that are using this filter group</value>
+        <value>Active Rollups Using this Filter Group</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupNew</fullName>
@@ -6008,7 +6008,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>stgLabelName</shortDescription>
+        <shortDescription>Intended for the name of a metadata record and not a person.</shortDescription>
         <value>Name</value>
     </labels>
     <labels>

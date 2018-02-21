@@ -126,8 +126,8 @@
                             <lightning:layout multipleRows="true" verticalAlign="start">
                                 <lightning:layoutItem padding="around-medium" smallDeviceSize="6" size="12">
                                     <lightning:input aura:id="nameInput"
-                                                     label="{!v.labels.rollupLabel + ' ' + v.labels.name}"
-                                                     name="{!v.labels.rollupLabel + ' ' + v.labels.name}"
+                                                     label="{!v.labels.name}"
+                                                     name="{!v.labels.name}"
                                                      value="{!v.activeRollup.MasterLabel}"
                                                      required="{! !v.isReadOnly}"
                                                      readonly="{!v.isReadOnly}"/>

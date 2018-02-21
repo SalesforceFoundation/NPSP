@@ -1,4 +1,5 @@
 <aura:event type="APPLICATION" description="Event used to navigate between components. Fired from rollup and filter group detail and handled in the container.">
     <aura:attribute name="id" type="id" description="Id of the intended record."/>
+    <aura:attribute name="lastId" type="id" description="Id of the previous record."/>
     <aura:attribute name="target" type="string" description="Intended target component. Options are rollup or filterGroup."/>
 </aura:event>

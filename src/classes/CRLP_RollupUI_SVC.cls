@@ -255,6 +255,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 , DeveloperName
                 , MasterLabel
                 , Description__c
+                , (SELECT Id, Constant__c, Field__r.QualifiedAPIName, Object__r.QualifiedAPIName, Operator__c FROM Filter_Rules__r)
         FROM Filter_Group__mdt
         WHERE Id = :id];
 
@@ -274,7 +275,7 @@ public with sharing class CRLP_RollupUI_SVC {
         for(String obj : objectNames){
             List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllLabeledFieldsWithType(obj);
             objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
-            //TODO: filter out fields that can be rolled up before returning
+            //TODO: filter out fields that can't be rolled up before returning
         }
 
         return objNametoFieldTypeMap;
@@ -319,6 +320,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
+                'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'gauLabel' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
@@ -329,6 +332,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel().toLowerCase()}),
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
+                'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
                 'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),

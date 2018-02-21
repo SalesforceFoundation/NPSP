@@ -54,6 +54,7 @@
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
     <aura:attribute name="isFilterGroupDetail" type="Boolean" access="private" description="Determines if Filter Group Detail is shown."/>
+    <aura:attribute name="lastActiveRecordId" type="Id" description="ID of the previous record to save for return."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container width."/>
     <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
     <aura:attribute name="sortedDirection" type="String" access="private" description="Sorted direction, either asc or desc."/>
@@ -68,11 +69,14 @@
     <div class="slds-p-horizontal_large slds-p-top_large">
         <lightning:breadcrumbs>
             <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
-            <aura:if isTrue="{! !v.isRollupsGrid}">
+            <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleCancelEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
                 <aura:if isTrue="{!v.isFilterGroupDetail}">
                     <lightning:breadcrumb label="{!v.labels.filterGroupLabelPlural}" onclick="{!c.handleCancelEvent}" name="{!v.labels.filterGroupLabelPlural}" title="{!v.labels.filterGroupLabelPlural}"/>
                 </aura:if>
+            </aura:if>
+            <aura:if isTrue="{!and(v.isRollupDetail, v.lastActiveRecordId != null)}">
+                <lightning:breadcrumb label="Back to Filter Group" onclick="{!c.returnToFilterGroup}" name="Back to Filter Group" title="Back to Filter Group"/>
             </aura:if>
         </lightning:breadcrumbs>
 
@@ -93,24 +97,42 @@
                             <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
                         </aura:if>
                         <aura:if isTrue="{!v.isRollupDetail}">
-                            <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
-                            <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
-                                <h1 class="slds-page-header__title" title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
-                                <!--Else show mode header-->
-                                <aura:set attribute="else">
-                                    <h1 class="slds-page-header__title" title="{!v.labels.rollupNew}">{!v.labels.rollupNew}</h1>
-                                </aura:set>
-                            </aura:if>
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <lightning:icon iconName="standard:merge" size="medium"
+                                                    alternativeText="Merge Icon"/>
+                                </div>
+                                <div class="slds-media__body">
+                                    <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
+                                    <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
+                                        <h1 class="slds-page-header__title" title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
+                                        <!--Else show mode header-->
+                                        <aura:set attribute="else">
+                                            <h1 class="slds-page-header__title" title="{!v.labels.rollupNew}">{!v.labels.rollupNew}</h1>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </div>
                         </aura:if>
                         <aura:if isTrue="{!v.isFilterGroupDetail}">
-                            <p class="slds-text-heading_label">{!v.labels.filterGroupLabel}</p>
-                            <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
-                                <h1 class="slds-page-header__title" title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
-                                <!--Else show mode header-->
-                                <aura:set attribute="else">
-                                    <h1 class="slds-page-header__title" title="{!v.labels.filterGroupNew}">{!v.labels.filterGroupNew}</h1>
-                                </aura:set>
-                            </aura:if>
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <lightning:icon iconName="action:filter" size="small"
+                                                    alternativeText="Filter Group Icon"/>
+                                </div>
+                                <div class="slds-media__body">
+                                    <p class="slds-text-heading_label ">{!v.labels.filterGroupLabel}</p>
+                                    <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
+                                        <h1 class="slds-page-header__title"
+                                            title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
+                                        <!--Else show mode header-->
+                                        <aura:set attribute="else">
+                                            <h1 class="slds-page-header__title"
+                                                title="{!v.labels.filterGroupNew}">{!v.labels.filterGroupNew}</h1>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </div>
                         </aura:if>
                     </lightning:layoutItem>
                     <!--END TITLE-->

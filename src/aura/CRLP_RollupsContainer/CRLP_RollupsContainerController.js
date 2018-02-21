@@ -49,7 +49,7 @@
 
                 var filterGroupColumns = [{label: model.labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
                     , {label: model.labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.filterGroupLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true'}
+                    , {label: model.labels.countOf+' '+model.labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true'}
                     , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true'}
                     , {type: 'action', typeAttributes: { rowActions: actions }}
                 ];
@@ -119,6 +119,7 @@
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
         var gridTarget = event.getParam('grid');
+        cmp.set("v.lastActiveRecordId", null);
 
         if(gridTarget === 'rollup' || breadcrumbName === labels.rollupSummaryTitle){
             helper.displayRollupsGrid(cmp);
@@ -126,25 +127,28 @@
         }
         else if (gridTarget === 'filterGroup' || breadcrumbName === labels.filterGroupLabelPlural) {
             helper.displayFilterGroupsGrid(cmp);
+            cmp.set("v.width", 12);
         }
     },
 
     handleNavigateEvent: function(cmp, event, helper){
         //handles the selection of a specific rollup from the filter group view and the return to filter group
         var id = event.getParam('id');
+        var lastId = event.getParam('lastId');
         var target = event.getParam('target');
+
+        cmp.set("v.activeRecordId", id);
+        cmp.set("v.detailMode", 'view');
+        cmp.set("v.width", 8);
+
         if(target === 'rollup'){
-            cmp.set("v.detailMode", 'view');
-            cmp.set("v.activeRecordId", id);
+            cmp.set("v.lastActiveRecordId", lastId);
             cmp.set("v.isRollupDetail", true);
             cmp.set("v.isFilterGroupDetail", false);
-            cmp.set("v.width", 8);
         } else if (target === 'filterGroup'){
-            cmp.set("v.detailMode", 'view');
-            cmp.set("v.activeRecordId", id);
+            cmp.set("v.lastActiveRecordId", null);
             cmp.set("v.isRollupDetail", false);
             cmp.set("v.isFilterGroupDetail", true);
-            cmp.set("v.width", 12);
         }
 
     },
@@ -165,6 +169,7 @@
             } else{
                 cmp.set("v.isFilterGroupsGrid", false);
                 cmp.set("v.isFilterGroupDetail", true);
+                cmp.set("v.width", 8);
             }
         } else {
             var rows = cmp.get("v.rollupList");
@@ -172,6 +177,13 @@
             rows.splice(rowIndex, 1);
             cmp.set("v.rollupList", rows);
         }
+    },
+
+    returnToFilterGroup: function(cmp, event, helper){
+        cmp.set("v.activeRecordId", cmp.get("v.lastActiveRecordId"));
+        cmp.set("v.lastActiveRecordId", null);
+        cmp.set("v.isRollupDetail", false);
+        cmp.set("v.isFilterGroupDetail", true);
     },
 
     setMode: function(cmp, event, helper) {

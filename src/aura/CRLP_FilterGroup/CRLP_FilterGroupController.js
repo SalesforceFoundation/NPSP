@@ -13,26 +13,28 @@
                     //note: the parsing is important to avoid a shared reference
                     //todo: try to stringify on server side; only parse on client
                     //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
-                    var filterGroup = response.getReturnValue();
-                    cmp.set("v.activeFilterGroup", JSON.parse(JSON.stringify(filterGroup)));
-                    cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue(filterGroup))));
+                    var data = JSON.parse(JSON.stringify(response.getReturnValue()));
+
+                    cmp.set("v.activeFilterGroup", data);
+                    cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
 
                     var labels = cmp.get("v.labels");
 
-                    var actions = [{label: labels.edit, name:'edit'}
-                        , {label: labels.clone, name:'clone'}
-                        , {label: labels.delete, name:'delete'}
+                    var actions = [{label: labels.edit, name: 'edit'}
+                        , {label: labels.clone, name: 'clone'}
+                        , {label: labels.delete, name: 'delete'}
                     ];
 
-                    var filterRuleColumns = [{label: labels.object, fieldName: 'objectType', type: 'string', sortable: 'false'}
-                        , {label: labels.field, fieldName: 'targetField', type: 'string', sortable: 'false'}
-                        , {label: labels.operator, fieldName: 'operation', type: 'string', sortable: 'false'}
-                        , {label: labels.constant, fieldName: 'values', type: 'string', sortable: 'false'}
+                    var filterRuleColumns = [{label: labels.object, fieldName: 'Object__c', type: 'string', sortable: 'false'}
+                        , {label: labels.field, fieldName: 'Field__c', type: 'string', sortable: 'false'}
+                        , {label: labels.operator, fieldName: 'Operator__c', type: 'string', sortable: 'false'}
+                        , {label: labels.constant, fieldName: 'Constant__c', type: 'string', sortable: 'false'}
                         , {type: 'action', typeAttributes: { rowActions: actions }}
                     ];
 
+                    cmp.set("v.filterRuleList", data.Filter_Rules__r);
                     cmp.set("v.filterRuleColumns", filterRuleColumns);
-                    helper.filterRollupList(cmp, filterGroup.MasterLabel, labels);
+                    helper.filterRollupList(cmp, data.MasterLabel, labels);
 
                 }
                 else if (state === "ERROR") {
@@ -55,6 +57,10 @@
         }
     },
 
+    createFilterRule: function(cmp, event, helper){
+       //placeholder for creating a new filter rule
+    },
+
     onCancel: function(cmp, event, helper){
         //placeholder for on cancel function in !view mode
 
@@ -68,9 +74,10 @@
     selectRollup: function(cmp, event, helper){
         //select rollup for navigation
         var rollupId = event.getParam('name');
+        var filterGroupId = cmp.get("v.activeFilterGroupId");
         if(rollupId !== 'title'){
             var navEvent = $A.get("e.c:CRLP_NavigateEvent");
-            navEvent.setParams({id: rollupId, target: 'rollup'});
+            navEvent.setParams({id: rollupId, target: 'rollup', lastId: filterGroupId});
             navEvent.fire();
         }
     }

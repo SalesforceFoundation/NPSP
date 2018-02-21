@@ -27,19 +27,15 @@
         //only add object to list if there are rollups with matching summary objects
         rollupsBySummaryObj.forEach(function(objList){
            if(objList.list.length > 1){
-               var objList = {label: objList.label, name: "title"
+               var objList = {label: objList.label
+                         , name: "title"
+                         , expanded: false
                          , items: objList.list
                };
                itemList.push(objList);
            }
         });
 
-        var items = [{
-            "label": labels.rollupsByFilterGroup,
-            "name": "title",
-            "expanded": false,
-            "items": itemList
-        }];
-        cmp.set("v.rollupItems", items);
+        cmp.set("v.rollupItems", itemList);
     },
 })

@@ -47,8 +47,8 @@
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
                     description="Determines if fields should be read-only. This only applies to View."/>
-    <aura:attribute name="rollupList" type="Object[]" description="List of related rollups for the filter group" access="public"/>
-    <aura:attribute name="filterRuleList" type="Object[]" description="List of available filter rules" access="public"/>
+    <aura:attribute name="rollupList" type="List" description="List of related rollups for the filter group" access="public"/>
+    <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
     <aura:attribute name="rollupItems" type="Object"/>
 
@@ -67,8 +67,8 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" smallDeviceSize="6" size="12">
                             <lightning:input aura:id="nameInput"
-                                             label="{!v.labels.filterGroupLabel + ' ' + v.labels.name}"
-                                             name="{!v.labels.filterGroupLabel + ' ' + v.labels.name}"
+                                             label="{!v.labels.name}"
+                                             name="{!v.labels.name}"
                                              value="{!v.activeFilterGroup.MasterLabel}"
                                              required="{! !v.isReadOnly}"
                                              readonly="{!v.isReadOnly}"/>
@@ -76,7 +76,7 @@
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="around-large" mediumDeviceSize="6" size="12">
+                        <lightning:layoutItem padding="around-large" mediumDeviceSize="8" size="12">
                             <lightning:textarea aura:id="descriptionInput"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
@@ -85,24 +85,39 @@
                         </lightning:layoutItem>
                     </lightning:layout>
 
-                    <!--FILTER GROUP DATATABLE-->
+                    <!--START FILTER GROUP DATATABLE-->
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="around-large" mediumDeviceSize="6" size="12">
-                            <lightning:datatable data="{!v.filterRuleList}"
-                                                 columns="{!v.filterRuleColumns}"
-                                                 keyField="id"
-                                                 hideCheckboxColumn="true"
-                                                 onrowaction="{!c.handleRowAction}"/>
-                            <!--todo: add a button for a new filter rule if no filter rules-->
+                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
+                            <h3 class="slds-text-heading_label slds-p-bottom_small">{!v.labels.filterRuleLabelPlural}</h3>
+                            <aura:if isTrue="{! !empty(v.filterRuleList)}">
+                                <lightning:datatable data="{!v.filterRuleList}"
+                                                     columns="{!v.filterRuleColumns}"
+                                                     keyField="id"
+                                                     hideCheckboxColumn="true"
+                                                     onrowaction="{!c.handleRowAction}"/>
+                                <aura:set attribute="else">
+                                    <aura:if isTrue="{!and(v.mode != 'view', !empty(v.filterRuleColumns))}">
+                                        <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
+                                        <aura:set attribute="else">
+                                            <ui:message severity="info" closable="false">
+                                                {!v.labels.noFilterRules}
+                                            </ui:message>
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:set>
+                            </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>
+                    <!--END FILTER GROUP DATATABLE-->
 
-                    <!--ROLLUP LIST-->
+                    <!--START ROLLUP LIST-->
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
+                            <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
                             <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
+                    <!--END ROLLUP LIST-->
 
                 </lightning:layoutItem>
             </lightning:layout>
@@ -117,7 +132,6 @@
                 <aura:if isTrue="{!v.mode!='view'}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
-                            <!--TODO: this button needs an onclick function to save stuff-->
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
                             <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"/>
                         </lightning:layout>
