@@ -183,57 +183,74 @@ flows:
             9:
                 task: deploy_dev_config
 
-    qa_org_namespaced:
-        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to a namespaced org (scratch or packaging)
-        tasks:
-            1:
+    qa_org:
+            0.5:
                 task: unschedule_apex
+            1:
+                task: create_package
             2:
                 task: update_dependencies
-                options:
-                    namespaced_org: True
             3:
                 task: deploy_pre
             4:
                 task: deploy
             5:
-                task: deploy_post
-                options:
-                    unmanaged: False
-                    namespaced_org: True
+                task: uninstall_packaged_incremental
             6:
-                task: deploy_dev_config_delete
+                task: deploy_post
             7:
-                task: deploy_dev_config
+                task: deploy_dev_config_delete
             8:
-                task: deploy_qa_config
+                task: deploy_dev_config
             9:
-                task: update_admin_profile
+                task: deploy_qa_config
             10:
+                task: update_admin_profile
+            11:
+                task: test_data_relationships
+
+    qa_org_beta:
+        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to a namespaced org (scratch or packaging)
+        tasks:
+            1:
+                task: update_dependencies
+            2:
+                task: deploy_pre
+            3:
+                task: install_managed_beta
+            4:
+                task: deploy_post_managed
+            5:
+                task: deploy_dev_config_delete
+            6:
+                task: deploy_dev_config_managed
+            7:
+                task: deploy_qa_config
+            8:
+                task: update_admin_profile
+            9:
                 task: test_data_relationships
 
     qa_org_prod:
         description: Deploys the managed package with additional fields for qa
         tasks:
             1:
-                task: unschedule_apex
-            2:
                 task: update_dependencies
-            3:
+            2:
                 task: deploy_pre
-            4:
+            3:
                 task: install_managed
-            5:
+            4:
                 task: deploy_post_managed
-            6:
+            5:
                 task: deploy_dev_config_delete
-            7:
+            6:
                 task: deploy_dev_config_managed
-            8:
+            7:
                 task: deploy_qa_config
-            9:
+            8:
                 task: update_admin_profile
-            10:
+            9:
                 task: test_data_relationships
 
     release_beta:
