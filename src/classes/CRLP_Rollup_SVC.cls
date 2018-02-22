@@ -75,7 +75,7 @@ public class CRLP_Rollup_SVC {
     private static Map<SObjectType, SObject> cachedEmptyObjects = new Map<SObjectType, SObject>();
 
     /**
-     * @description Creates an empty target (summmary) SObject with all of the specific rollup target fields
+     * @description Creates an empty target (summary) SObject with all of the specific rollup target fields
      * set to null, but only for the specific rollups passed as a parameter.
      * TODO: Support extending this for archived records.
      * @param objectId Target object Id.

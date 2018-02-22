@@ -175,7 +175,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Returns all field describe data
     * @param objectName the name of the object to look up
-    * @return Map<String, Schema.DescribeFieldResult> a map of object names to describe file results.
+    * @return Map<String, Schema.DescribeFieldResult> a map of field api names to describe file results.
     */
     public static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
 
@@ -187,10 +187,34 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description Returns the Name field of any given object.
+    * @description Returns a map of field names to data types
     * @param objectName the name of the object to look up
-    * @return String the API name of the Name field
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
+    public static List<Map<String, String>> getAllLabeledFieldsWithType(String objectName) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', dfr.name);
+            fieldObject.put('label', dfr.label);
+            fieldObject.put('type', dfr.getType().Name());
+
+            fieldObjectList.add(fieldObject);
+        }
+
+        return fieldObjectList;
+    }
+
+
+/*******************************************************************************************************
+* @description Returns the Name field of any given object.
+* @param objectName the name of the object to look up
+* @return String the API name of the Name field
+*/
     public static String getNameField(String objectName) {
         String nameField = 'Name';
 

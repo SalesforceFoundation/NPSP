@@ -1,0 +1,15 @@
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" >
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="CRLP Section Enable" pageLabel="CRLP Page Enable" />
+        <div class="slds-grid">
+            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                <p class="slds-text-body--small slds-m-top--x-small">This page controls the enablement of CRLP. Needs a label.</p>
+            </div>
+        </div>
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+            <apex:commandButton id="enableCRLP" value="Enable Customizable Rollups" action="{!enableCRLP}" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="navigate" value="Navigate to Rollup Grid" action="{!navigate}" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+    </apex:form>
+</apex:page>
