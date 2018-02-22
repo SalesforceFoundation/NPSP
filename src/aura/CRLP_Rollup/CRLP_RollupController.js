@@ -147,27 +147,6 @@
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
         helper.saveRollup(cmp, activeRollup);
-    },
-    onSetTemplate: function(cmp, event, helper){
-        //set the correct options from the selected template
-        var labels = cmp.get("v.labels");
-        var selectedTemplate = cmp.get("v.selectedTemplate");
-        console.log(selectedTemplate);
-        var detailObj;
-        var summaryObj;
-
-        if(selectedTemplate === 'null' || selectedTemplate === null){
-            console.log('NULL selected template is: ' + selectedTemplate);
-            detailObj = null;
-            summaryObj = null;
-        } else {
-            detailObj = selectedTemplate.detailObject;
-            summaryObj = selectedTemplate.summaryObject;
-        }
-
-        cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", detailObj);
-        cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", summaryObj);
-        cmp.set("v.mode", "clone");
-    },
+    }
 
 })

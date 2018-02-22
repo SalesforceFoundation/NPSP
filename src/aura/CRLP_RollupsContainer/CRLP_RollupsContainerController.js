@@ -56,8 +56,8 @@
 
                 cmp.set("v.filterGroupColumns", filterGroupColumns);
 
-                cmp.set("v.isRollupsGrid",false);
-                cmp.set("v.isFilterGroupsGrid",true);
+                cmp.set("v.isRollupsGrid",true);
+                cmp.set("v.isFilterGroupsGrid",false);
             }
             else if (state === "ERROR") {
                 var errors = response.getError();

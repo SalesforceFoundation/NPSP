@@ -91,6 +91,9 @@
                     console.log("before set object field dependencies");
                     this.setObjectAndFieldDependencies(cmp);
                 }
+            } else {
+                cmp.set("v.isIncomplete",true);
+                cmp.set("v.isReadOnly", false);
             }
         }
     },
