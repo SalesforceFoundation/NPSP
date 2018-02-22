@@ -133,19 +133,26 @@ public with sharing class CRLP_RollupUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++){
             RollupTableItem item = new RollupTableItem();
 
-            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Allocation__c')) {
                 item.creditType = Label.CRLP_HardCredit;
             } else {
                 item.creditType = Label.CRLP_HardCredit;
@@ -395,6 +402,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'save' => Label.stgBtnSave,
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
+                'selectAll' => Label.conMergeSelectAll,
                 'softCredit' => Label.CRLP_SoftCredit,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
