@@ -200,6 +200,13 @@ public class CRLP_Rollup_SoftCredit_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                     this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
                     this.statefulRollupsById.put(lastIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastIdProcessed));
 
+                    // Track the last time a given ParentId was seen in a batch iteration. This is used to
+                    // clean out the stateful collection after X number of batch iterations where the parent id
+                    // is not seen.
+                    this.lastBatchIterationByParentId.put(firstParentId, this.batchIteration);
+                    this.lastBatchIterationByParentId.put(lastParentId, this.batchIteration);
+                    this.lastBatchIterationByParentId.put(lastIdProcessed, this.batchIteration);
+
                     // Remember which batch iteration this parent was last NOT updated
                     if (options.lastParentIdRemovedFromUpdatesList == true) {
                         this.parentIdsNotCommittedWithBatch.put(lastIdProcessed, this.batchIteration);

@@ -36,6 +36,22 @@
 */
 public abstract class CRLP_AbstractRollup_BATCH {
 
+    /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
+     * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
+     * the parent record multiple times, the code will keep uncommitted rollup data in the stateful var for up to
+     * this number of batch iterations. After that number, the record will be committed to the database. There
+     * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
+     * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
+     * for heap size.
+     */
+    private Integer MAX_BATCHES_TO_HOLD_BEFORE_COMMIT = 50;
+
+    /** @description If a given ParentId has a element in the statefulRollupsById map that has not been updated
+     * in over 500 batch iterations, assume that it will not appear in the collection again and remove it from
+     * map entirely - to reduce heap usage.
+     */
+    private Integer MAX_BATCHES_TO_KEEP_ID_IN_STATEFUL_ROLLUPS_MAP = 500;
+
     /** @description Set to True if the batch job is of an LDV type; where the primary object is the detail */
     protected Boolean isLdvBatchJob = false;
 
@@ -44,16 +60,6 @@ public abstract class CRLP_AbstractRollup_BATCH {
 
     /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
     protected CRLP_RollupProcessingOptions.RollupType jobType;
-
-    /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
-     * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
-     * the parent record multiple times, the code will keep uncommited rollup data in the stateful var for up to
-     * this number of batch iterations. After that number, the record will be committed to the database. There
-     * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
-     * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
-     * for heap size.
-     */
-    protected Integer NUMBER_OF_BATCHES_TO_HOLD_COMMITS = 50;
 
     /**
     * @description Stateful collection of Rollups used to hold Rollups for Contacts and Accounts that
@@ -90,6 +96,7 @@ public abstract class CRLP_AbstractRollup_BATCH {
      * out of sequence.
      */
     protected Map<Id, Integer> parentIdsNotCommittedWithBatch = new Map<Id, Integer>();
+    protected Map<Id, Integer> lastBatchIterationByParentId = new Map<Id, Integer>();
 
     /** @description Simple counters used to track state */
     protected Integer batchIteration = 0;
@@ -175,6 +182,9 @@ public abstract class CRLP_AbstractRollup_BATCH {
         options.rollupJobType = this.jobType;
         options.rollupTypesToProcess = this.jobFilter;
 
+        // Start by cleaning up the stateful data
+        cleanStatefulRollupsList();
+
         options.setMapOfRollupsByParentId(this.statefulRollupsById);
         options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct);
 
@@ -214,7 +224,7 @@ public abstract class CRLP_AbstractRollup_BATCH {
             // handling Salesforce's out of sequence baches while avoiding too many commits for a single record
             for (Id lastId : this.parentIdsNotCommittedWithBatch.keySet()) {
                 if (lastId.getSobjectType() == objType) {
-                    if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > NUMBER_OF_BATCHES_TO_HOLD_COMMITS) {
+                    if (this.batchIteration - this.parentIdsNotCommittedWithBatch.get(lastId) > MAX_BATCHES_TO_HOLD_BEFORE_COMMIT) {
                         if (!uniqueParentIds.contains(lastId)) {
                             parentIds.add(lastId);
                             uniqueParentIds.add(lastId);
@@ -260,5 +270,29 @@ public abstract class CRLP_AbstractRollup_BATCH {
             }
         }
         return parentIds;
+    }
+
+    /**
+     * @description To prevent a heap size issue, no stateful List<Rollup> collection will be kept stateful
+     * for more than a defined number of batch iterations (500). In testing, we're not seeing sorted data
+     * being out of sequence by more than 150 batch iterations, therefore holding them for no more than
+     * 500 should be sufficient to ensure the data isn't cleared too soon while avoiding a heap size error.
+     */
+    protected void cleanStatefulRollupsList() {
+        Integer removeFromBeforeBatchNumber = this.batchIteration - MAX_BATCHES_TO_KEEP_ID_IN_STATEFUL_ROLLUPS_MAP;
+        if (removeFromBeforeBatchNumber > 0) {
+            for (Id parentId : this.statefulRollupsById.keySet()) {
+                if (this.lastBatchIterationByParentId.get(parentId) < removeFromBeforeBatchNumber) {
+                    this.statefulRollupsById.remove(parentId);
+                    this.lastBatchIterationByParentId.remove(parentId);
+                    if (this.parentIdsNotCommittedWithBatch != null && this.parentIdsNotCommittedWithBatch.containsKey(parentId)) {
+                        this.parentIdsNotCommittedWithBatch.remove(parentId);
+                    }
+                    if (this.statefulMapOfOppIdsByAcct != null && this.statefulMapOfOppIdsByAcct.containsKey(parentId)) {
+                        this.statefulMapOfOppIdsByAcct.remove(parentId);
+                    }
+                }
+            }
+        }
     }
 }

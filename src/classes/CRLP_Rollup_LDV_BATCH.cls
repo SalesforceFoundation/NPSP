@@ -208,11 +208,19 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
             if (lastParentIdProcessed != null) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
+                this.lastBatchIterationByParentId.put(lastParentIdProcessed, this.batchIteration);
             }
+
+            // Track the last time a given ParentId was seen in a batch iteration. This is used to
+            // clean out the stateful collection after X number of batch iterations where the parent id
+            // is not seen.
+            this.lastBatchIterationByParentId.put(firstParentId, this.batchIteration);
+            this.lastBatchIterationByParentId.put(lastParentId, this.batchIteration);
 
             // Remember which batch iteration this parent was last NOT updated
             if (options.lastParentIdRemovedFromUpdatesList == true) {
                 this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
+                this.lastBatchIterationByParentId.put(lastParentIdProcessed, this.batchIteration);
             }
 
             // Handle dml on the records to be updated
