@@ -66,6 +66,17 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description a class to hold only the required information from the filter_rule__mdt records for the filter group detail.
+    */
+    public class FilterRulesTableItem{
+        @AuraEnabled public String objectLabel;
+        @AuraEnabled public String fieldLabel;
+        @AuraEnabled public String operator;
+        @AuraEnabled public String constant;
+        @AuraEnabled public Id id;
+    }
+
+    /*******************************************************************************************************
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
@@ -75,6 +86,16 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Map<String, String> operations;
         @AuraEnabled public Map<String, String> yearlyOperations;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the Filter Group and Filter Rules used on the page to minimize server trips.
+    * Filter rules need to be flattened for use within the lightning:datatable.
+    */
+    public class FilterGroupModel {
+        @AuraEnabled public Filter_Group__mdt filterGroup;
+        @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
 
     }
 
@@ -195,6 +216,47 @@ public with sharing class CRLP_RollupUI_SVC {
         return filterRuleOperations;
     }
 
+    /*******************************************************************************************************
+    * @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
+    * @return a FilterGroup__mdt record and related FilterRule__mdt records.
+    */
+
+    @AuraEnabled
+    public static FilterGroupModel getFilterGroupById(Id id) {
+
+        List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
+        Map<String,String> operators = getfilterRuleOperations();
+
+        Filter_Group__mdt filterGroup = [SELECT Id
+                , DeveloperName
+                , MasterLabel
+                , Description__c
+        FROM Filter_Group__mdt
+        WHERE Id = :id];
+
+        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Object__r.MasterLabel FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
+
+        for(Integer i=0; i<mdtList.size(); i++) {
+            FilterRulesTableItem item = new FilterRulesTableItem();
+
+            String c = mdtList[i].Constant__c;
+            item.constant = c.replace(';', '\n');
+            item.operator = operators.get(mdtList[i].Operator__c);
+            item.fieldLabel = mdtList[i].Field__r.MasterLabel;
+            item.objectLabel = mdtList[i].Object__r.MasterLabel;
+            item.id = mdtList[i].id;
+
+            mdtTableList.add(item);
+        }
+
+        FilterGroupModel model = new FilterGroupModel();
+
+        model.filterGroup = filterGroup;
+        model.filterRuleList = mdtTableList;
+
+        return model;
+    }
+
 
     /*******************************************************************************************************
     * @description Queries from the Rollup operations to fetch all rollup operation values.
@@ -241,25 +303,6 @@ public with sharing class CRLP_RollupUI_SVC {
         Rollup__mdt rollup = CRLP_Rollup_SEL.getRollupsById(Id);
 
         return rollup;
-    }
-
-    /*******************************************************************************************************
-    @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
-    * @return a FilterGroup__mdt record and related FilterRule__mdt records.
-    */
-
-    @AuraEnabled
-    public static Filter_Group__mdt getFilterGroupById(Id id) {
-
-        Filter_Group__mdt filterGroup = [SELECT Id
-                , DeveloperName
-                , MasterLabel
-                , Description__c
-                , (SELECT Id, Constant__c, Field__r.QualifiedAPIName, Object__r.QualifiedAPIName, Operator__c FROM Filter_Rules__r)
-        FROM Filter_Group__mdt
-        WHERE Id = :id];
-
-        return filterGroup;
     }
 
     /*******************************************************************************************************
@@ -341,7 +384,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
-                'return' => Label.CRLP_Return,
+                'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
+                'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
                 'rollupLabelPlural' => Schema.SObjectType.Rollup__mdt.getLabelPlural(),
                 'rollupNew' => Label.CRLP_RollupNew,

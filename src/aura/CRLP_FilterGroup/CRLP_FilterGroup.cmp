@@ -94,7 +94,7 @@
                                                      columns="{!v.filterRuleColumns}"
                                                      keyField="id"
                                                      hideCheckboxColumn="true"
-                                                     onrowaction="{!c.handleRowAction}"/>
+                                                     />
                                 <aura:set attribute="else">
                                     <aura:if isTrue="{!and(v.mode != 'view', !empty(v.filterRuleColumns))}">
                                         <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />

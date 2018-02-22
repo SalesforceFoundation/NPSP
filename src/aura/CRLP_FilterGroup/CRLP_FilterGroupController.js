@@ -14,8 +14,7 @@
                     //todo: try to stringify on server side; only parse on client
                     //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
                     var data = JSON.parse(JSON.stringify(response.getReturnValue()));
-
-                    cmp.set("v.activeFilterGroup", data);
+                    cmp.set("v.activeFilterGroup", data.filterGroup);
                     cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
 
                     var labels = cmp.get("v.labels");
@@ -25,16 +24,16 @@
                         , {label: labels.delete, name: 'delete'}
                     ];
 
-                    var filterRuleColumns = [{label: labels.object, fieldName: 'Object__c', type: 'string', sortable: 'false'}
-                        , {label: labels.field, fieldName: 'Field__c', type: 'string', sortable: 'false'}
-                        , {label: labels.operator, fieldName: 'Operator__c', type: 'string', sortable: 'false'}
-                        , {label: labels.constant, fieldName: 'Constant__c', type: 'string', sortable: 'false'}
-                        , {type: 'action', typeAttributes: { rowActions: actions }}
+                    var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
+                        , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
+                        , {label: labels.operator, fieldName: 'operator', type: 'string'}
+                        , {label: labels.constant, fieldName: 'constant', type: 'string'}
                     ];
+                    //todo: add actions back
 
-                    cmp.set("v.filterRuleList", data.Filter_Rules__r);
+                    cmp.set("v.filterRuleList", data.filterRuleList);
                     cmp.set("v.filterRuleColumns", filterRuleColumns);
-                    helper.filterRollupList(cmp, data.MasterLabel, labels);
+                    helper.filterRollupList(cmp, data.filterGroup.MasterLabel, labels);
 
                 }
                 else if (state === "ERROR") {
@@ -59,6 +58,10 @@
 
     createFilterRule: function(cmp, event, helper){
        //placeholder for creating a new filter rule
+    },
+
+    handleRowAction: function(cmp, event, helper){
+        //placeholder for filter rule actions
     },
 
     onCancel: function(cmp, event, helper){

@@ -648,8 +648,8 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Breadcrumb text to return to NPSP settings</shortDescription>
-        <value>Back to NPSP Settings</value>
+        <shortDescription>Breadcrumb text to return to the specified location.</shortDescription>
+        <value>Back to {0}</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupsByFilterGroup</fullName>

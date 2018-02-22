@@ -68,7 +68,7 @@
     <!--BEGIN BREADCRUMB-->
     <div class="slds-p-horizontal_large slds-p-top_large">
         <lightning:breadcrumbs>
-            <lightning:breadcrumb label="{!v.labels.return}" href="/apex/STG_SettingsManager"/>
+            <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="/apex/STG_SettingsManager"/>
             <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
                 <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleCancelEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
                 <aura:if isTrue="{!v.isFilterGroupDetail}">
@@ -76,7 +76,7 @@
                 </aura:if>
             </aura:if>
             <aura:if isTrue="{!and(v.isRollupDetail, v.lastActiveRecordId != null)}">
-                <lightning:breadcrumb label="Back to Filter Group" onclick="{!c.returnToFilterGroup}" name="Back to Filter Group" title="Back to Filter Group"/>
+                <lightning:breadcrumb label="{!v.labels.returnFilterGroup}" onclick="{!c.returnToFilterGroup}" name="{!v.labels.returnFilterGroup}" title="{!v.labels.returnFilterGroup}"/>
             </aura:if>
         </lightning:breadcrumbs>
 
