@@ -99,7 +99,7 @@ private class CRLP_RollupAccount_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '') + ',' +
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, '') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,

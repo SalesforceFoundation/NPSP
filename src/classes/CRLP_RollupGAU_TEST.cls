@@ -95,7 +95,7 @@ private class CRLP_RollupGAU_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Allocations_Last_N_Days__c', CRLP_Operation.RollupType.CURRENT_STREAK, '',
+                        'Total_Allocations_Last_N_Days__c', CRLP_Operation.RollupType.Donor_Streak, '',
                         null, 0) +
                 ']';
 

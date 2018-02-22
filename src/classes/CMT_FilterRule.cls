@@ -40,19 +40,19 @@ public class CMT_FilterRule {
      * @description Enum of valid filter operations. Matches Filter_Rule__mdt.Operation__c
      */
     public Enum FilterOperation {
-        EQUALS,
-        NOT_EQUALS,
-        GREATER,
-        LESS,
-        GREATER_OR_EQUAL,
-        LESS_OR_EQUAL,
-        STARTS_WITH,
-        CONTAINS,
-        DOES_NOT_CONTAIN,
-        IN_LIST,
-        NOT_IN_LIST,
-        IS_INCLUDED,
-        IS_NOT_INCLUDED
+        Equals,
+        Not_Equals,
+        Greater,
+        Less,
+        Greater_or_Equal,
+        Less_or_Equal,
+        Starts_With,
+        Contains,
+        Does_Not_Contain,
+        In_List,
+        Not_In_List,
+        Is_Included,
+        Is_Not_Included
     }
 
     public Enum DateFilterConstant {
@@ -119,8 +119,7 @@ public class CMT_FilterRule {
         this.objectType = UTIL_Describe.getObjectDescribe(filterRule.Object__r.QualifiedApiName).getSObjectType();
         this.field = UTIL_Describe.getFieldDescribe(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName).getSObjectField();
         this.constant = filterRule.Constant__c;
-        String fixedOperator = filterRule.Operator__c.replaceAll(' ', '_');
-        this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(fixedOperator);
+        this.operation = CMT_FilterRuleUI_SVC.getFilterOperationFromString(filterRule.Operator__c);
 
         if (field.getDescribe().getSOAPType() == SoapType.DATETIME && constant != null &&
                 constant.length() == 10 && !CMT_FilterRule.validDateConstants.contains(constant)) {

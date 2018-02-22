@@ -40,24 +40,24 @@ public class CMT_FilterRuleUI_SVC {
     // ============================================================================================
 
     /**
-     * @description Converts the enum strings into friendly strings for the pick-lists. The Enum value
+     * @description Converts the enum strings into api name for picklist values. The Enum value
      * and the String label should exactly match the picklist values in the Filter_Rule__mdt.Operation__c field
      */
     public static Map<CMT_FilterRule.FilterOperation, String> getFilterOperations() {
         return new Map<CMT_FilterRule.FilterOperation, String>{
-                CMT_FilterRule.FilterOperation.EQUALS => 'Equals',
-                CMT_FilterRule.FilterOperation.NOT_EQUALS => 'Not Equals',
-                CMT_FilterRule.FilterOperation.GREATER => 'Greater',
-                CMT_FilterRule.FilterOperation.LESS => 'Less',
-                CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL => 'Greater or Equals',
-                CMT_FilterRule.FilterOperation.LESS_OR_EQUAL => 'Less or Equals',
-                CMT_FilterRule.FilterOperation.STARTS_WITH => 'Starts With',
-                CMT_FilterRule.FilterOperation.CONTAINS => 'Contains',
-                CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN => 'Does Not Contain',
-                CMT_FilterRule.FilterOperation.IN_LIST => 'In',
-                CMT_FilterRule.FilterOperation.NOT_IN_LIST => 'Not In',
-                CMT_FilterRule.FilterOperation.IS_INCLUDED => 'Included',
-                CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED => 'Not Included'
+                CMT_FilterRule.FilterOperation.Equals => 'Equals',
+                CMT_FilterRule.FilterOperation.Not_Equals => 'Not_Equals',
+                CMT_FilterRule.FilterOperation.Greater => 'Greater',
+                CMT_FilterRule.FilterOperation.Less => 'Less',
+                CMT_FilterRule.FilterOperation.Greater_or_Equal => 'Greater_or_Equal',
+                CMT_FilterRule.FilterOperation.Less_or_Equal => 'Less_or_Equal',
+                CMT_FilterRule.FilterOperation.Starts_With => 'Starts_With',
+                CMT_FilterRule.FilterOperation.Contains => 'Contains',
+                CMT_FilterRule.FilterOperation.Does_Not_Contain => 'Does_Not_Contain',
+                CMT_FilterRule.FilterOperation.In_List => 'In_List',
+                CMT_FilterRule.FilterOperation.Not_In_List => 'Not_In_List',
+                CMT_FilterRule.FilterOperation.Is_Included => 'Is_Included',
+                CMT_FilterRule.FilterOperation.Is_Not_Included => 'Is_Not_Included'
         };
     }
 
@@ -114,49 +114,54 @@ public class CMT_FilterRuleUI_SVC {
         Map<CMT_FilterRule.FilterOperation, String> filterOps = getFilterOperations();
         Schema.DisplayType fldType = UTIL_Describe.getFieldDisplaytype(objectName, fieldName);
 
+        Map<String,String> operatorApiNameToLabel = new Map<String, String>();
+        for (Schema.PicklistEntry pl : SObjectType.Filter_Rule__mdt.fields.Operator__c.getPicklistValues()) {
+            operatorApiNameToLabel.put(pl.getValue(), pl.getLabel());
+        }
+
         List<SelectOption> options = new List<SelectOption>();
         if (fldType == Schema.DisplayType.BOOLEAN) {
 
             // Boolean fields only support Equals and Not Equals
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS)));
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS)));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.EQUALS.name())));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_EQUALS.name())));
 
         } else if (fldType == Schema.DisplayType.Reference) {
 
             // Id fields support Equals and Not Equals, IN and Not In
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS) ));
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.IN_LIST)));
-            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST)));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.EQUALS.name()) ));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_EQUALS.name()) ));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.IN_LIST.name())));
+            options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name())));
 
         } else if (fldType == Schema.DisplayType.DATE || fldType == Schema.DisplayType.DATETIME || fldType == Schema.DisplayType.TIME
             || fldType == Schema.DisplayType.DOUBLE || fldType == Schema.DisplayType.INTEGER || fldType == Schema.DisplayType.CURRENCY
             || fldType == Schema.DisplayType.PERCENT) {
 
             // Date, Time and Number fields support Equals, NotEquals, Greater, Less and variations of
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.GREATER.name(), filterOps.get(CMT_FilterRule.FilterOperation.GREATER) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL.name(), filterOps.get(CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.LESS.name(), filterOps.get(CMT_FilterRule.FilterOperation.LESS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.LESS_OR_EQUAL.name(), filterOps.get(CMT_FilterRule.FilterOperation.LESS_OR_EQUAL) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.EQUALS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_EQUALS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.GREATER.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.GREATER.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.GREATER_OR_EQUAL.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.LESS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.LESS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.LESS_OR_EQUAL.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.LESS_OR_EQUAL.name()) ));
 
         } else {
 
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.EQUALS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_EQUALS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.STARTS_WITH.name(), filterOps.get(CMT_FilterRule.FilterOperation.STARTS_WITH) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.CONTAINS.name(), filterOps.get(CMT_FilterRule.FilterOperation.CONTAINS) ));
-            options.add( new SelectOption(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN.name(), filterOps.get(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.EQUALS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.NOT_EQUALS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_EQUALS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.STARTS_WITH.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.STARTS_WITH.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.CONTAINS.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.CONTAINS.name()) ));
+            options.add( new SelectOption(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.DOES_NOT_CONTAIN.name()) ));
 
             // Multi-Select Pick-Lists use "Included" and "Not Included", while all other non-blob text fields
             // can use "In" and "Not In"
             if (fldType == Schema.DisplayType.MULTIPICKLIST) {
-                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_INCLUDED.name(), filterOps.get(CMT_FilterRule.FilterOperation.IS_INCLUDED)));
-                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED.name(), filterOps.get(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED)));
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_INCLUDED.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.IS_INCLUDED.name())));
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.IS_NOT_INCLUDED.name())));
             } else if (fldType != Schema.DisplayType.TEXTAREA) {
-                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.IN_LIST)));
-                options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), filterOps.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST)));
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.IN_LIST.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.IN_LIST.name())));
+                options.add(new SelectOption(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name(), operatorApiNameToLabel.get(CMT_FilterRule.FilterOperation.NOT_IN_LIST.name())));
             }
         }
 
@@ -242,5 +247,16 @@ public class CMT_FilterRuleUI_SVC {
         }
 
         return false;
+    }
+
+    /*
+     * @description Converts a given Enum string to Title (using underscores instead of spaces)
+     */
+    public static String enumToTitleCase(String enumValue) {
+        String rtnString = '';
+        for(String p : enumValue.trim().split('_')){
+            rtnString += p.toLowerCase().capitalize() + '_';
+        }
+        return rtnString.trim().removeEnd('_');
     }
 }

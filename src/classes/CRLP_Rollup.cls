@@ -350,7 +350,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Current Streak (returns the number of years going back from this yer that a donation has been made)
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.CURRENT_STREAK) {
+        else if (operation == CRLP_Operation.RollupType.Donor_Streak) {
             List<String> yearlySorted = new List<String>(this.sumByYear.keySet());
             yearlySorted.sort();
             Integer streakLength = 0;
