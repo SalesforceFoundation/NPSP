@@ -206,8 +206,12 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 // Queueable execution using chained queuable executions for each type of summary object
 
                 List<List<Id>> queueOfSummaryIds = new List<List<Id>>();
-                queueOfSummaryIds.add(accountIds);
-                queueOfSummaryIds.add(contactIds);
+                if (!accountIds.isEmpty()) {
+                    queueOfSummaryIds.add(accountIds);
+                }
+                if (!contactIds.isEmpty()) {
+                    queueOfSummaryIds.add(contactIds);
+                }
 
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
                 // The queueable job will pop the list of Id's off the stack and process them in serial.
