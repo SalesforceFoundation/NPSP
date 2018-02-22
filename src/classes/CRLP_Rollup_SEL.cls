@@ -50,10 +50,12 @@ public class CRLP_Rollup_SEL {
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
-                                Detail_Field__r.QualifiedApiName, Detail_Object__r.QualifiedApiName,
-                                Summary_Field__r.QualifiedApiName, Summary_Object__r.QualifiedApiName
+                                Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
+                                Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
+                                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
+                                Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
                         FROM Rollup__mdt
-                        ORDER BY Summary_Object__c, Operation__c DESC];
+                        ORDER BY Summary_Object__c, MasterLabel];
             }
             return cachedRollups;
         } private set;
