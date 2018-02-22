@@ -33,7 +33,13 @@
 * @description Tests for UTIL_RecordTypeSettingsUpdate
 */
 @isTest
-private class UTIL_RecordTypeSettingsUpdate_TEST {
+public class UTIL_RecordTypeSettingsUpdate_TEST {
+
+    /*******************************************************************************************************
+    * @description An exception class used in UTIL_RecordTypeSettingsUpdate Mock class
+    */
+    private class RecordTypeSettingsUpdateException extends Exception {}
+
     @isTest
     private static void testNullSettingsRemainNull() {
         // if a setting is null, it should remain null after updating
@@ -168,11 +174,15 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     private class NameMappingStub extends UTIL_RecordTypeSettingsUpdate {
         public Map<String, Id> opportunityNameMap;
         public Map<String, Id> contactNameMap;
+        public Map<String, Id> accountNameMap;
+
         private Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
             if (sot == Contact.sObjectType) {
                 return contactNameMap;
             } else if (sot == Opportunity.sObjectType) {
                 return opportunityNameMap;
+            } else if (sot == Account.sObjectType) {
+                return accountNameMap;
             }
             return null;
         }
@@ -187,43 +197,58 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         // getNameToRecordTypeIdMap() method to return a set of test mappings.
 
         Allocations_Settings__c allocationsSettings = new Allocations_Settings__c(
-            Excluded_Opp_RecTypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Excluded_Opp_RecTypes__c = 'FakeOppRTName1;FakeOppRTName2'
         );
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings = new npe01__Contacts_And_Orgs_Settings__c(
-            Opp_RecTypes_Excluded_for_Payments__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Opp_RecTypes_Excluded_for_Payments__c = 'FakeOppRTName1;FakeOppRTName2',
+            npe01__HH_Account_RecordTypeID__c = 'FakeAccRTName1',
+            npe01__One_to_One_RecordTypeID__c = 'FakeAccRTName2'
         );
 
         npo02__Households_Settings__c householdsSettings = new npo02__Households_Settings__c(
-            npo02__Household_Creation_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
-            npo02__Household_OCR_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
-            npo02__Membership_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
-            npo02__Excluded_Account_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
-            npo02__Excluded_Contact_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            npo02__Household_Creation_Excluded_Recordtypes__c = 'FakeConRTName1;FakeConRTName2',
+            npo02__Household_OCR_Excluded_Recordtypes__c = 'FakeConRTName1;FakeConRTName2',
+            npo02__Membership_Record_Types__c = 'FakeOppRTName1;FakeOppRTName2',
+            npo02__Excluded_Account_Opp_Rectypes__c = 'FakeOppRTName1;FakeOppRTName2',
+            npo02__Excluded_Contact_Opp_Rectypes__c = 'FakeOppRTName1;FakeOppRTName2'
         );
+
         Opportunity_Naming_Settings__c opportunityNamingSettings = new Opportunity_Naming_Settings__c(
             Name = 'ons1',
-            Opportunity_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Opportunity_Record_Types__c = 'FakeOppRTName1;FakeOppRTName2'
+        );
+
+        npe03__Recurring_Donations_Settings__c rdSettings = new npe03__Recurring_Donations_Settings__c(
+            npe03__Record_Type__c = 'FakeOppRTName2'
         );
 
         insert allocationsSettings;
         insert contactsAndOrgsSettings;
         insert householdsSettings;
         insert opportunityNamingSettings;
+        insert rdSettings;
 
         Id opportunityRecTypeId1 = '012000000000001';
         Id opportunityRecTypeId2 = '012000000000002';
         Id contactRecTypeId1 = '012000000000003';
         Id contactRecTypeId2 = '012000000000004';
+        Id accountRecTypeId1 = '012000000000005';
+        Id accountRecTypeId2 = '012000000000006';
 
         NameMappingStub stub = new NameMappingStub();
         stub.opportunityNameMap = new Map<String, Id>{
-            'FakeOpportunityRecTypeName1' => opportunityRecTypeId1,
-            'FakeOpportunityRecTypeName2' => opportunityRecTypeId2
+            'FakeOppRTName1' => opportunityRecTypeId1,
+            'FakeOppRTName2' => opportunityRecTypeId2
         };
         stub.contactNameMap = new Map<String, Id>{
-            'FakeContactRecTypeName1' => contactRecTypeId1,
-            'FakeContactRecTypeName2' => contactRecTypeId2
+            'FakeConRTName1' => contactRecTypeId1,
+            'FakeConRTName2' => contactRecTypeId2
+        };
+
+        stub.accountNameMap = new Map<String, Id>{
+            'FakeAccRTName1' => accountRecTypeId1,
+            'FakeAccRTName2' => accountRecTypeId2
         };
 
         String expectedOpportunityIdString = String.join(new List<String>{opportunityRecTypeId1, opportunityRecTypeId2}, ';');
@@ -242,7 +267,9 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         ];
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettingsActual = [
-            SELECT Opp_RecTypes_Excluded_for_Payments__c
+            SELECT Opp_RecTypes_Excluded_for_Payments__c,
+                npe01__HH_Account_RecordTypeID__c,
+                npe01__One_to_One_RecordTypeID__c
             FROM npe01__Contacts_And_Orgs_Settings__c
             WHERE Id = :contactsAndOrgsSettings.Id
         ];
@@ -264,6 +291,12 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
             WHERE Id = :opportunityNamingSettings.Id
         ];
 
+        npe03__Recurring_Donations_Settings__c rdSettingsActual = [
+            SELECT npe03__Record_Type__c
+            FROM npe03__Recurring_Donations_Settings__c
+            WHERE Id = :rdSettings.Id
+        ];
+
         System.assertEquals(
             expectedOpportunityIdString,
             allocationsSettingsActual.Excluded_Opp_RecTypes__c
@@ -272,6 +305,16 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         System.assertEquals(
             expectedOpportunityIdString,
             contactsAndOrgsSettingsActual.Opp_RecTypes_Excluded_for_Payments__c
+        );
+
+        System.assertEquals(
+            accountRecTypeId1,
+            contactsAndOrgsSettingsActual.npe01__HH_Account_RecordTypeID__c
+        );
+
+        System.assertEquals(
+            accountRecTypeId2,
+            contactsAndOrgsSettingsActual.npe01__One_to_One_RecordTypeID__c
         );
 
         System.assertEquals(
@@ -302,6 +345,11 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         System.assertEquals(
             expectedOpportunityIdString,
             opportunityNamingSettingsActual.Opportunity_Record_Types__c
+        );
+
+        System.assertEquals(
+            opportunityRecTypeId2,
+            rdSettingsActual.npe03__Record_Type__c
         );
     }
 
@@ -401,4 +449,42 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
         System.assertEquals(0, stub.runCount);
     }
+
+
+    /*******************************************************************************************************
+    * @description Mock for the UTIL_RecordTypeSettingsUpdate
+    */
+    public class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
+        /*******************************************************************************************************
+        * @description updateSettings() execution counter
+        */
+        public Integer runCount = 0;
+        /*******************************************************************************************************
+        * @description Indicates if an exception should be thrown in updateSettings()
+        */
+        public Boolean throwException = false;
+    
+        /*******************************************************************************************************
+        * @description Sets throwException to true
+        * @return UpdateSettingsMock
+        */
+        public UpdateSettingsMock throwException() {
+            throwException = true;
+            return this;
+        }
+
+        /*******************************************************************************************************
+        * @description Called when UTIL_RecordTypeSettingsUpdate.updateSettings() method is supposed to be called.
+        * Updates counter of the method calls. Throws an exception if requested by the test.
+        * @return void
+        */
+        public override void updateSettings() {
+            runCount++;
+
+            if (throwException) {
+                throw new RecordTypeSettingsUpdateException('Test Exception');
+            }
+        }
+    }
+
 }
