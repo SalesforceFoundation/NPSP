@@ -5,7 +5,7 @@
         <fullName>Constant__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>SubscriberControlled</fieldManageability>
-        <label>Constant</label>
+        <label>Value</label>
         <length>255</length>
         <required>true</required>
         <type>Text</type>
