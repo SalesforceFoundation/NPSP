@@ -1,6 +1,6 @@
 ({
-    getRollup: function(cmp, event, helper) {
-        console.log("IN GETROLLUP");
+    doInit: function(cmp, event, helper) {
+        console.log("In Rollup doInit");
         /**called when the activeRollupId changes, specifically in the rollupRow
          * queries active rollup ID to populate the full active rollup detail
          * switches the display to the detail view and sets the width for the buttons
@@ -42,7 +42,11 @@
 
         } else {
 
+            // creating a new Rollup
+
         }
+
+        helper.setObjectAndFieldDependencies(cmp);
     },
 
     onChangeMode: function (cmp, event, helper) {
@@ -58,6 +62,7 @@
             var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
             cancelEvent.setParams({grid: 'rollup'});
             cancelEvent.fire();
+            console.log('firing cancel event');
         } else {
             cmp.set("v.mode", "view");
             var cachedRollup = cmp.get("v.cachedRollup");
@@ -66,76 +71,59 @@
         }
     },
 
-    onChangeDetailObject: function(cmp, event, helper){
-        if(cmp.get("v.mode") !== 'view') {
-            console.log("hitting changedetailobject");
-            if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
-                console.log("in changedetailobject function");
-                //set new summary objects based on selected value
-                var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
-                console.log('object: ' + object);
-                helper.resetSummaryObjects(cmp, object);
-
-                //set new detail fields based on new selected detail object
-                helper.resetFields(cmp, object, 'detail');
-                cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
-                cmp.set("v.activeRollup.Summary_Object__r.QualifiedApiName", null);
-                cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
-                cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
-
-                //remove summary fields since no summary object is selected
-                var newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
-                cmp.set("v.summaryFields", newFields);
-                console.log("reset summary fields");
-
-                //reset amount fields to match detail
-                //TODO: reset entity label
-                var objLabel;
-                var detailObjects = cmp.get("v.detailObjects");
-
-                for(var i=0; i<detailObjects.length; i++){
-                    if(detailObjects[i].name === object){
-                        objLabel = detailObjects[i].label;
-                        break;
-                    }
-                }
-
-                //change detail object labels to correctly show selected detail object in amount field
-                cmp.set("v.activeRollup.Detail_Object__r.Label", objLabel);
-
-                //filter and reset amount fields
-                helper.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
-
-                //set date object label and api name based on the selected detail object then reset fields + selected value
-                if(object === 'npe01__OppPayment__c'){
-                    cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
-                    cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
-                } else {
-                    cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
-                    cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
-                }
-                helper.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
-            }
-        }
+    /*onChangeDetailObject: function(cmp, event, helper){
+        helper.onChangeSummaryObject(cmp);
     },
+*/
+    onChangeSummaryObject: function(cmp, event, helper){
+        helper.onChangeSummaryObjectHelper(cmp);
 
-    changeSummaryFields: function(cmp, event, helper){
         //change summary fields to match available detail field types + existing summary object
         if(cmp.get("v.mode") !== 'view'){
             if(cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null){
-                console.log('in change summary field');
-                var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+                console.log('in onChangeSummaryObject');
                 var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                helper.filterSummaryFieldsByDetailField(cmp, detailField, summaryObject);
+                helper.resetFields(cmp, cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName"), "summary");
             }
         }
+
+        var labels = cmp.get("v.labels");
+        var templateList = [];
+        if (summaryObject === 'Account') {
+            console.log('adding stuff for Account');
+            //debugger;
+            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
+                    summaryObject: 'Account', name: 'Opportunity'}
+                , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
+                    , summaryObject: 'Account', name: 'npe01__OppPayment__c'}
+                , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Account', name: 'Partial_Soft_Credit__c'});
+        } else if (summaryObject === 'Contact') {
+            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
+                , summaryObject: 'Contact', name: 'Opportunity'}
+            , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Contact', name: 'Partial_Soft_Credit__c'}
+            , {label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Contact', name: 'npe01__OppPayment__c'});
+        } else if (summaryObject === 'General_Accounting_Unit__c') {
+            templateList.push({label: labels.allocationLabel + ' -> ' + labels.gauLabel
+                , summaryObject: 'General_Accounting_Unit__c', name: 'Allocation__c'});
+        }
+
+        cmp.set("v.rollupTypes",templateList);
+        console.log('RollupTypes: '+cmp.get("v.rollupTypes"));
+
+    },
+
+    onChangeSummaryField: function (cmp, event, helper) {
+      helper.updateAllowedOperations(cmp);
     },
 
     onChangeOperation: function (cmp, event, helper) {
         //no check for view mode because the recalculation of operation is necessary with label formatting
         if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
             console.log('On change operation');
-            helper.changeOperationsOptions(cmp);
+            helper.updateDependentOperations(cmp);
         }
     },
     onChangeYearlyOperation: function (cmp, event, helper) {

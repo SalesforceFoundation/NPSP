@@ -50,7 +50,10 @@
     <aura:attribute name="isRequired" type="Boolean" default="" description="Sets the required flag on the field"/>
 
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
-    <!--{!v.apiName}-->
+
+    api name: {!v.apiName}<br/>
+    options: {!v.options}
+
         <aura:if isTrue="{!v.isReadOnly}">
             <lightning:input aura:id="{!v.auraId + 'View'}"
                              label="{!v.fieldName}"
@@ -65,7 +68,7 @@
                                   required="{!v.isRequired}">
                     <!--todo: onchange="{!c.changeField}"-->
 
-                    <option value="" text="{!v.selectLabel}"/>
+                    <option value="" text=""/>
 
                     <aura:iteration items="{!v.options}" var="option">
                         <option value="{!option.name}" text="{!v.objectLabel+option.label}" selected="{!option.name == v.apiName}"/>

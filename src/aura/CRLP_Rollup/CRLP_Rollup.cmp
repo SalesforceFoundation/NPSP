@@ -51,12 +51,15 @@
     <aura:attribute name="renderMap" type="Map"
                     default="{useFiscalYear: true, integer: true, amount: true}"
                     description="Dependent disabling of fields. If true, field should be rendered." access="public"/>
-    <aura:attribute name="operations" type="List" description="Map of rollup operations, api name to label"/>
+    <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label"/>
+    <aura:attribute name="allowedOperations" type="List"
+                    description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
     <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
     <aura:attribute name="selectedYearlyOperationLabel" type="String"/>
-    <aura:attribute name="selectedTemplate" type="String"/>
+    <aura:attribute name="rollupTypes" type="Object[]"/>
+    <aura:attribute name="selectedRollupType" type="Object"/>
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
@@ -69,12 +72,8 @@
     <aura:attribute name="isIncomplete" type="Boolean" description="Controls whether Save button is disabled" access="private" default="false"/>
 
     <!-- events we handle -->
-    <aura:handler name="init" value="{!this}" action="{!c.getRollup}"/>
-    <aura:handler name="change" value="{!v.activeRollupId}" action="{!c.getRollup}"/>
-    <!--note: mode is also listening for edit or clone mode changes from parent cmp-->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
-
-    <!--<aura:handler event="c:CRLP_ChangeFieldEvent" action="{!c.handleChangeField}"/>-->
 
     <!-- events we fire -->
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
@@ -82,16 +81,17 @@
 
     <!--these control the dynamic value binding of objects to fields-->
     <!--todo: can/should we minimize this into only tracking v.activeRollup?-->
-    <aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
-                  action="{!c.onChangeDetailObject}"/>
-    <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
-                  action="{!c.changeSummaryFields}"/>
+    <!--<aura:handler name="change" value="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                  action="{!c.onChangeDetailObject}"/>-->
+<!--    <aura:handler name="change" value="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
+                  action="{!c.changeSummaryFields}"/>-->
+    <aura:handler name="change" value="{!v.activeRollup.Summary_Field__r.QualfiedApiName}"
+                  action="{!c.onChangeSummaryField}"/>
     <aura:handler name="change" value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
-                  action="{!c.changeSummaryFields}"/>
+                  action="{!c.onChangeSummaryObject}"/>
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
     <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}"
                   action="{!c.onChangeYearlyOperation}"/>
-
     <!--activeRollup:<br/>
     Detail Object API Name:    {!v.activeRollup.Detail_Object__r.QualifiedApiName}<br/>
     Detail Field API Name:    {!v.activeRollup.Detail_Object__r.Label}<br/>
@@ -110,6 +110,14 @@
     Op : {!v.activeRollup.Operation__c}-->
 
     <!-- markup -->
+
+    Allowed Ops: {!v.allowedOperations}<br/>
+    Ops: {!v.operations}<br/>
+    Summary Obj: {!v.activeRollup.Summary_Object__r.QualifiedApiName}<br/>
+    Summary Field: {!v.activeRollup.Summary_Field__r.QualfiedApiName}<br/>
+    summary objects: {!v.summaryObjects}<br/>
+    summary fields: {!v.summaryFields}<br/>
+    ROllup Types: {!v.rollupTypes}
 
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
@@ -183,10 +191,10 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="detailObject"
-                                            fieldName="Rollup Type"
-                                            entityLabel="{!v.activeRollup.Detail_Object__r.Label}"
+                                            fieldName="{!v.labels.rollupType}"
+                                            entityLabel="{!v.selectedRollupType.label}"
                                             apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
-                                            options="{!v.detailObjects}"
+                                            options="{!v.rollupTypes}"
                                             selectLabel="{!v.labels.selectOne}"
                                             isRequired="true"
                                             mediumDeviceSize="6"
@@ -199,7 +207,7 @@
                                             apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
                                             options="{!v.filterGroups}"
                                             selectLabel="{!v.labels.selectOne}"
-                                            isRequired="true"
+                                            isRequired="false"
                         />
                     </lightning:layout>
                     <lightning:layout multipleRows="true" verticalAlign="start">
@@ -208,7 +216,7 @@
                                             fieldName="{!v.labels.operation}"
                                             entityLabel="{!v.selectedOperationLabel}"
                                             apiName="{!v.activeRollup.Operation__c}"
-                                            options="{!v.operations}"
+                                            options="{!v.allowedOperations}"
                                             mediumDeviceSize="3"
                                             selectLabel="{!v.labels.selectOne}"
                                             isRequired="true"

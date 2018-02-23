@@ -1,5 +1,7 @@
 ({
     setObjectAndFieldDependencies: function(cmp) {
+        console.log("In setObjectAndFieldDependencies");
+
         //set list of objects and get data type for all
         if($A.util.isEmpty(cmp.get("v.objectDetails"))) {
 
@@ -14,11 +16,11 @@
                 , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}];
             var availableObjects = detailObjects.concat(summaryObjects);
 
-            cmp.set("v.detailObjects", detailObjects);
+            //cmp.set("v.detailObjects", detailObjects);
             cmp.set("v.summaryObjects", summaryObjects);
 
             //put only the object names into a list
-            var objectList = availableObjects.map(function(obj, index, array) {
+            var objectList = availableObjects.map(function (obj, index, array) {
                 return obj.name;
             });
 
@@ -27,13 +29,13 @@
 
             action.setCallback(this, function (response) {
                 var state = response.getState();
-                console.log('STATE'+state);
+                console.log('STATE' + state);
                 if (state === "SUCCESS") {
-                    console.log('RESPONSE: '+response.getReturnValue());
+                    console.log('RESPONSE: ' + response.getReturnValue());
                     var data = response.getReturnValue();
                     cmp.set("v.objectDetails", data);
 
-                    this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
+                    //this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
 
                     console.log('Before calling reset details');
                     //need to reset fields to populate the selected objects
@@ -70,7 +72,7 @@
             //for create we don't need to set anything yet since mode will be changed to clone before viewing page
             if(mode !== "create") {
                 //check operations to appropriately set "N/A" for date/amount field values
-                this.changeOperationsOptions(cmp);
+                this.updateDependentOperations(cmp);
                 this.changeYearlyOperationsOptions(cmp, false);
 
                 //set readonly fields if mode is View, else allow user to make changes
@@ -78,18 +80,13 @@
                     cmp.set("v.isReadOnly", true);
                 } else {
                     cmp.set("v.isReadOnly", false);
-                    this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
+                    //this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
                     if (!$A.util.isEmpty(cmp.get("v.objectDetails"))) {
                         this.resetAllFields(cmp);
                     }
                 }
                 if(mode === "clone"){
                     cmp.set("v.activeRollupId", null);
-                }
-                //this checks that fields are set; this action only needs to be done once per rollup
-                if ($A.util.isEmpty(cmp.get("v.objectDetails"))) {
-                    console.log("before set object field dependencies");
-                    this.setObjectAndFieldDependencies(cmp);
                 }
             } else {
                 cmp.set("v.isIncomplete",true);
@@ -98,7 +95,62 @@
         }
     },
 
-    changeOperationsOptions: function(cmp){
+    //NEW ONE FEB 22
+    onChangeSummaryObjectHelper: function(cmp) {
+        //TODO: do we need this mode check?
+        if(cmp.get("v.mode") !== 'view') {
+            console.log("hitting onChangeSummaryObjectHelper");
+
+            //TODO: set available summary fields based on selected summary object
+
+
+            //set new summary objects based on selected value
+            var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+            console.log('object: ' + object);
+            //this.resetSummaryObjects(cmp, object);
+
+            //set new detail fields based on new selected detail object
+            this.resetFields(cmp, object, 'detail');
+            cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
+
+            //remove summary fields since no summary object is selected
+            var newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
+            cmp.set("v.summaryFields", newFields);
+            console.log("reset summary fields");
+
+            //reset amount fields to match detail
+            //TODO: reset entity label
+            var objLabel;
+            var detailObjects = cmp.get("v.detailObjects");
+
+            for(var i=0; i<detailObjects.length; i++){
+                if(detailObjects[i].name === object){
+                    objLabel = detailObjects[i].label;
+                    break;
+                }
+            }
+
+            //change detail object labels to correctly show selected detail object in amount field
+            cmp.set("v.activeRollup.Detail_Object__r.Label", objLabel);
+
+            //filter and reset amount fields
+            helper.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
+
+            //set date object label and api name based on the selected detail object then reset fields + selected value
+            if(object === 'npe01__OppPayment__c'){
+                cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
+                cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
+            } else {
+                cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
+                cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
+            }
+            helper.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
+        }
+    },
+
+    updateDependentOperations: function(cmp){
         console.log("in helper changeOperationsOptions");
         var operation = cmp.get("v.activeRollup.Operation__c");
         console.log(operation);
@@ -129,6 +181,53 @@
         var operations = cmp.get("v.operations");
         var label = this.resetOperationFieldLabel(cmp, operation, operations);
         cmp.set("v.selectedOperationLabel",label);
+
+    },
+
+    updateAllowedOperations: function(cmp){
+
+        //start with all operations
+        var ops = cmp.get("v.operations");
+        console.log(ops);
+
+        var field = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+
+        var summaryFields = cmp.get("v.summaryFields");
+        console.log(summaryFields);
+        var type;
+        for (var i = 0; i < summaryFields.length; i++) {
+            if (summaryFields[i].name === field) {
+                type = summaryFields[i].type;
+                break;
+            }
+        }
+
+        //create lists of allowed operations
+        var allowedOps = [];
+        allowedOps.push({name: 'Smallest', label: ops['Smallest']});
+        allowedOps.push({name: 'Largest', label: ops['Largest']});
+        allowedOps.push({name: 'First', label: ops['First']});
+        allowedOps.push({name: 'Last', label: ops['Last']});
+
+        if (type === 'NUMBER') {
+            allowedOps.push({name: 'Count', label: ops['Count']});
+            allowedOps.push({name: 'Sum', label: ops['Sum']});
+            allowedOps.push({name: 'Average', label: ops['Average']});
+            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
+            allowedOps.push({name: 'Best_Year_Total', label: ops['Best_Year_Total']});
+            allowedOps.push({name: 'Current_Streak', label: ops['Current_Streak']});
+            allowedOps.push({name: 'Donor_Streak', label: ops['Donor_Streak']});
+        } else if (type === 'CURRENCY'){
+            allowedOps.push({name: 'Sum', label: ops['Sum']});
+            allowedOps.push({name: 'Average', label: ops['Average']});
+            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
+            allowedOps.push({name: 'Best_Year_Total', label: ops['Best_Year_Total']});
+        } else if (type === 'TEXT') {
+            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
+            allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
+        }
+
+        cmp.set("v.allowedOperations", allowedOps);
 
     },
 
@@ -171,7 +270,7 @@
         cmp.set("v.selectedYearlyOperationLabel",label);
     },
 
-    resetSummaryObjects: function(cmp, detailObject){
+    /*resetSummaryObjects: function(cmp, detailObject){
         //todo: add if Necesary check?
         console.log('Fired summary object reset');
         console.log('TEST');
@@ -193,12 +292,13 @@
         cmp.set("v.summaryObjects", newSummaryObjects);
         console.log("End summary object reset");
     },
-
+*/
     resetFields: function(cmp, object, context){
 
-        console.log("Fired field reset for context: "+context);
-        var test = cmp.get("v.objectDetails");
+        console.log("Fired field reset for context ["+context+"] and object ["+object+"]");
         var newFields = cmp.get("v.objectDetails")[object];
+
+        console.log('new fields: '+newFields);
 
         if(newFields === undefined){
             newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
@@ -207,7 +307,9 @@
         if(context === 'detail'){
             cmp.set("v.detailFields", newFields);
         } else if (context === 'summary') {
+            console.log('assigning summary fields');
             cmp.set("v.summaryFields", newFields);
+            console.log('summary fields: '+cmp.get("v.summaryFields"));
         } else if (context === 'date') {
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);

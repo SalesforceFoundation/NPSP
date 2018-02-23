@@ -17,10 +17,10 @@
                 cmp.set("v.filterGroupList", model.filterGroups);
 
                 var ops = [];
-                for(var i in model.operations){
+                /*for(var i in model.operations){
                     ops.push({name: i, label: model.operations[i]});
-                }
-                cmp.set("v.operations", ops);
+                }*/
+                cmp.set("v.operations", model.operations);
 
                 var yOps = [];
                 for(var j in model.yearlyOperations){
