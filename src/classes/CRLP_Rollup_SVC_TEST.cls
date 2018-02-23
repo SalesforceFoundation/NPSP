@@ -44,7 +44,9 @@ private class CRLP_Rollup_SVC_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
-                        Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Account_LDV_Batch_Size__c = 200,
+                        Rollups_Contact_LDV_Batch_Size__c = 200,
+                        Rollups_Soft_Credit_Batch_Size__c = 200,
                         Rollups_Allocation_Batch_Size__c = 400,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20

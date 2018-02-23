@@ -132,7 +132,9 @@ private class CRLP_RollupGAU_TEST {
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Allocation_Batch_Size__c = 400,
-                        Rollups_LDV_Batch_Size__c = 100
+                        Rollups_Account_LDV_Batch_Size__c = 100,
+                        Rollups_Contact_LDV_Batch_Size__c = 100,
+                        Rollups_Soft_Credit_Batch_Size__c = 100
                 )
         );
 

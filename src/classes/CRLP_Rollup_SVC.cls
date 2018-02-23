@@ -164,11 +164,11 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getBatchSize(SObjectType objType) {
-        if (objType == Account.SObjectType) {
+        if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType) {
+        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-        } else if (objType == Allocation__c.SObjectType) {
+        } else if (objType == Allocation__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
         }
         return 200;
@@ -180,10 +180,16 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getLDVBatchSize(SObjectType objType) {
-        if (objType == General_Accounting_Unit__c.SObjectType) {
+        if (objType == General_Accounting_Unit__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+        } else if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
+        } else if (objType == Partial_Soft_Credit__c.SObjectType && customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
         } else {
-            return customizableRollupSettings.Rollups_LDV_Batch_Size__c.intValue();
+            return 500; // the above should all return a value, but this is the default
         }
     }
 
