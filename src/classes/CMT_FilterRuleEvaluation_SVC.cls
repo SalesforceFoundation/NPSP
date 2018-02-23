@@ -87,19 +87,8 @@ public class CMT_FilterRuleEvaluation_SVC {
             SObjectType objType = record.getSObjectType();
             for (CMT_FilterRule rule : rulesToEvaluate) {
                 if (objType == rule.getObjectType()) {
-                    // Not only caching the entire FilterGroup result, we're also caching the
-                    // individual filter rule result to help with performance.
-                    String ruleCacheKey = record.Id + '-' + rule.getCacheKeyPrefix().toLowerCase();
-                    Boolean isIncluded;
-                    if (cachedFilterEvalResults.containsKey(ruleCacheKey)) {
-                        isIncluded = cachedFilterEvalResults.get(ruleCacheKey);
-                    } else {
-                        isIncluded = rule.isIncluded(record);
-                        cachedFilterEvalResults.put(ruleCacheKey, isIncluded);
-                    }
-                    if (!isIncluded) {
+                    if (!rule.isIncluded(record)) {
                         // No reason to continue if any one rule for any one record fails the evaluation
-                        cachedFilterEvalResults.put(cacheKey, false);
                         return false;
                     }
                 }
