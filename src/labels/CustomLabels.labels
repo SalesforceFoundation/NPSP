@@ -774,6 +774,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Warning</value>
     </labels>
     <labels>
+        <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>More ClosedWon donations than Installments</shortDescription>
+        <value>There are more Closed Won Opportunities than the number of Installments defined.</value>
+    </labels>
+    <labels>
         <fullName>REL_Create_New_Relationship</fullName>
         <categories>Relationships, relationship-viewer</categories>
         <language>en_US</language>

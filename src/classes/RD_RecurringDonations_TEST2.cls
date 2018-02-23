@@ -402,17 +402,22 @@ private with sharing class RD_RecurringDonations_TEST2 {
                                         
         Test.startTest();
         insert rdlist;
+        Test.stopTest();
+        list<Opportunity> originalOpps = [select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id];
+        for (Opportunity o : originalOpps) {
+            System.assertEquals(100, o.Amount, 'Amount should be $100.');
+            system.assertNotEquals(null, o.Description, 'Description should be populated.');
+        }
         rdlist[0].npe03__Amount__c = 50;
         rdlist[1].npe03__Amount__c = 50;
         rdlist[1].npe03__Next_Payment_Date__c = system.today().toStartOfMonth().addDays(5);
         update rdlist;
-        Test.stopTest();
 
-        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id]);
-        system.assertEquals(7, originalOpps.size());
-        system.assertEquals(50, originalOpps[0].Amount);
-        system.assertNotEquals(null, originalOpps[0].Description);
-        system.assertNotEquals(null, originalOpps[1].Description);
+        list<Opportunity> updatedOpps = [select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id];
+        system.assertEquals(7, updatedOpps.size());
+        for (Opportunity o : updatedOpps) {
+            System.assertEquals(50, o.Amount, 'Amount should be $50.');
+        }
     }
     static testMethod void tooManyInstallments(){
         if (strTestOnly != '*' && strTestOnly != 'tooManyInstallments') return;
