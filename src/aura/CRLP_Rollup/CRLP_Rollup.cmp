@@ -146,7 +146,7 @@
                                                 name="{!v.labels.description}"
                                                 value="{!v.activeRollup.Description__c}"
                                                 readonly="{!v.isReadOnly}"
-                                                required="true"/>
+                                                required="{!v.isReadOnly ? 'false' : 'true'}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <lightning:layout multipleRows="true" verticalAlign="start">
