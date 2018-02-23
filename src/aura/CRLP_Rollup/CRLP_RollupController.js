@@ -71,70 +71,36 @@
         }
     },
 
-    /*onChangeDetailObject: function(cmp, event, helper){
-        helper.onChangeSummaryObject(cmp);
-    },
-*/
-    onChangeSummaryObject: function(cmp, event, helper){
-        helper.onChangeSummaryObjectHelper(cmp);
-
-        //change summary fields to match available detail field types + existing summary object
-        if(cmp.get("v.mode") !== 'view'){
-            if(cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null){
-                console.log('in onChangeSummaryObject');
-                var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                helper.resetFields(cmp, cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName"), "summary");
-            }
-        }
-
-        var labels = cmp.get("v.labels");
-        var templateList = [];
-        if (summaryObject === 'Account') {
-            console.log('adding stuff for Account');
-            //debugger;
-            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
-                    summaryObject: 'Account', name: 'Opportunity'}
-                , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
-                    , summaryObject: 'Account', name: 'npe01__OppPayment__c'}
-                , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Account', name: 'Partial_Soft_Credit__c'});
-        } else if (summaryObject === 'Contact') {
-            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
-                , summaryObject: 'Contact', name: 'Opportunity'}
-            , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Contact', name: 'Partial_Soft_Credit__c'}
-            , {label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Contact', name: 'npe01__OppPayment__c'});
-        } else if (summaryObject === 'General_Accounting_Unit__c') {
-            templateList.push({label: labels.allocationLabel + ' -> ' + labels.gauLabel
-                , summaryObject: 'General_Accounting_Unit__c', name: 'Allocation__c'});
-        }
-
-        cmp.set("v.rollupTypes",templateList);
-        console.log('RollupTypes: '+cmp.get("v.rollupTypes"));
-
-    },
-
-    onChangeSummaryField: function (cmp, event, helper) {
-      helper.updateAllowedOperations(cmp);
-    },
-
-    onChangeOperation: function (cmp, event, helper) {
-        //no check for view mode because the recalculation of operation is necessary with label formatting
-        if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
-            console.log('On change operation');
-            helper.updateDependentOperations(cmp);
-        }
-    },
-    onChangeYearlyOperation: function (cmp, event, helper) {
-        if (cmp.get("v.objectDetails") !== null && cmp.get("v.activeRollup") !== null) {
-            console.log('On change yearly operation');
-            helper.changeYearlyOperationsOptions(cmp, true);
-        }
-    },
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
         helper.saveRollup(cmp, activeRollup);
+    },
+
+    onSelectValueChange: function(cmp, event, helper){
+        //listens for a message from the select field cmp to trigger a change in the rollup information
+        //fields are IDed by their camel-case names. ex: Summary_Object__c is summaryObject
+        var message = event.getParam("message");
+        var channel = event.getParam("channel");
+        console.log("Message received!");
+        if(channel === 'selectField'){
+            var fieldName = message[0];
+            var value = message[1];
+            console.log("field name is " + fieldName);
+            console.log("value is " + value);
+
+            if(fieldName === 'summaryObject'){
+                helper.onChangeSummaryObjectHelper(cmp);
+            } else if (fieldName === 'summaryField'){
+                helper.updateAllowedOperations(cmp);
+                helper.updateRollupName(cmp);
+            } else if (fieldName === 'rollupType'){
+
+            } else if (fieldName ==='operation'){
+                helper.updateDependentOperations(cmp);
+            } else if(fieldName === 'yearlyOperation'){
+                helper.changeYearlyOperationsOptions(cmp, true);
+            }
+        }
     }
 
 })

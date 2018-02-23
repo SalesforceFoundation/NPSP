@@ -3,6 +3,7 @@
         console.log("In setObjectAndFieldDependencies");
 
         //set list of objects and get data type for all
+        //todo: is this check still necessary?
         if($A.util.isEmpty(cmp.get("v.objectDetails"))) {
 
             console.log("In the helper function");
@@ -35,11 +36,11 @@
                     var data = response.getReturnValue();
                     cmp.set("v.objectDetails", data);
 
-                    //this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
 
                     console.log('Before calling reset details');
-                    //need to reset fields to populate the selected objects
-                    this.resetAllFields(cmp);
+                    //need to reset fields to populate the selected objects -- refactor to see if necessary
+                    //this.resetAllFields(cmp);
+                    this.resetRollupTypes(cmp);
 
                     console.log('Called reset details');
                 }
@@ -80,9 +81,9 @@
                     cmp.set("v.isReadOnly", true);
                 } else {
                     cmp.set("v.isReadOnly", false);
-                    //this.resetSummaryObjects(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"));
                     if (!$A.util.isEmpty(cmp.get("v.objectDetails"))) {
-                        this.resetAllFields(cmp);
+                        //todo: remove this block if unnecesary
+                        // this.resetAllFields(cmp);
                     }
                 }
                 if(mode === "clone"){
@@ -97,57 +98,47 @@
 
     //NEW ONE FEB 22
     onChangeSummaryObjectHelper: function(cmp) {
-        //TODO: do we need this mode check?
-        if(cmp.get("v.mode") !== 'view') {
-            console.log("hitting onChangeSummaryObjectHelper");
+        console.log("hitting onChangeSummaryObjectHelper");
 
-            //TODO: set available summary fields based on selected summary object
+        //set new summary fields based on new selected summary object
+        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        this.resetFields(cmp, summaryObject, 'summary');
+        cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName", null);
+        //cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+        //cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
+        //cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
+        cmp.set("v.activeRollup.MasterLabel", null);
 
+        this.resetRollupTypes(cmp);
 
-            //set new summary objects based on selected value
-            var object = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
-            console.log('object: ' + object);
-            //this.resetSummaryObjects(cmp, object);
+        //reset amount fields to match detail
+        //TODO: reset entity label
+        /**var objLabel;
+         var detailObjects = cmp.get("v.detailObjects");
 
-            //set new detail fields based on new selected detail object
-            this.resetFields(cmp, object, 'detail');
-            cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
-            cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
-            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
-
-            //remove summary fields since no summary object is selected
-            var newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
-            cmp.set("v.summaryFields", newFields);
-            console.log("reset summary fields");
-
-            //reset amount fields to match detail
-            //TODO: reset entity label
-            var objLabel;
-            var detailObjects = cmp.get("v.detailObjects");
-
-            for(var i=0; i<detailObjects.length; i++){
+         for(var i=0; i<detailObjects.length; i++){
                 if(detailObjects[i].name === object){
                     objLabel = detailObjects[i].label;
                     break;
                 }
-            }
+            }**/
 
-            //change detail object labels to correctly show selected detail object in amount field
-            cmp.set("v.activeRollup.Detail_Object__r.Label", objLabel);
+        //change detail object labels to correctly show selected detail object in amount field
+        //cmp.set("v.activeRollup.Detail_Object__r.Label", objLabel);
 
-            //filter and reset amount fields
-            helper.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
+        //filter and reset amount fields
+        //this.resetFields(cmp, cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName"), "amount");
 
-            //set date object label and api name based on the selected detail object then reset fields + selected value
-            if(object === 'npe01__OppPayment__c'){
-                cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
-                cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
-            } else {
-                cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
-                cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
-            }
-            helper.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
+        //set date object label and api name based on the selected detail object then reset fields + selected value
+        /*if(object === 'npe01__OppPayment__c'){
+            cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
+            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
+        } else {
+            cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
+            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
         }
+        this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");**/
+
     },
 
     updateDependentOperations: function(cmp){
@@ -179,7 +170,7 @@
         cmp.set("v.renderMap",renderMap);
 
         var operations = cmp.get("v.operations");
-        var label = this.resetOperationFieldLabel(cmp, operation, operations);
+        var label = this.retreiveFieldLabel(cmp, operation, operations);
         cmp.set("v.selectedOperationLabel",label);
 
     },
@@ -188,12 +179,11 @@
 
         //start with all operations
         var ops = cmp.get("v.operations");
-        console.log(ops);
+        console.log(JSON.stringify(ops));
 
         var field = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
-
         var summaryFields = cmp.get("v.summaryFields");
-        console.log(summaryFields);
+
         var type;
         for (var i = 0; i < summaryFields.length; i++) {
             if (summaryFields[i].name === field) {
@@ -201,6 +191,7 @@
                 break;
             }
         }
+        console.log(type);
 
         //create lists of allowed operations
         var allowedOps = [];
@@ -209,13 +200,12 @@
         allowedOps.push({name: 'First', label: ops['First']});
         allowedOps.push({name: 'Last', label: ops['Last']});
 
-        if (type === 'NUMBER') {
+        if (type === 'DOUBLE' || type === 'INTEGER' || type === 'LONG') {
             allowedOps.push({name: 'Count', label: ops['Count']});
             allowedOps.push({name: 'Sum', label: ops['Sum']});
             allowedOps.push({name: 'Average', label: ops['Average']});
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Best_Year_Total', label: ops['Best_Year_Total']});
-            allowedOps.push({name: 'Current_Streak', label: ops['Current_Streak']});
             allowedOps.push({name: 'Donor_Streak', label: ops['Donor_Streak']});
         } else if (type === 'CURRENCY'){
             allowedOps.push({name: 'Sum', label: ops['Sum']});
@@ -226,6 +216,8 @@
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
         }
+
+        console.log(JSON.stringify(allowedOps));
 
         cmp.set("v.allowedOperations", allowedOps);
 
@@ -266,39 +258,16 @@
         cmp.set("v.renderMap",renderMap);
 
         var yearlyOperations = cmp.get("v.yearlyOperations");
-        var label = this.resetOperationFieldLabel(cmp, operation, yearlyOperations);
+        var label = this.retreiveFieldLabel(cmp, operation, yearlyOperations);
         cmp.set("v.selectedYearlyOperationLabel",label);
     },
 
-    /*resetSummaryObjects: function(cmp, detailObject){
-        //todo: add if Necesary check?
-        console.log('Fired summary object reset');
-        console.log('TEST');
-        var labels = cmp.get("v.labels");
-        var newSummaryObjects;
-        console.log("detail object is " + detailObject);
-        //only set if object is selected, otherwise prompt for user to select a detail object
-        if(detailObject === "Allocation__c"){
-            newSummaryObjects = [{label: labels.gauLabel, name:'General_Accounting_Unit__c'}];
-        } else if(detailObject === "npe01__OppPayment__c" || detailObject === "Partial_Soft_Credit__c"
-            || detailObject === "Opportunity") {
-            newSummaryObjects = [{label: labels.accountLabel, name: 'Account'}
-                , {label: labels.contactLabel, name: 'Contact'}];
-        } else {
-            //todo: add a better label
-            newSummaryObjects = [{name: 'None', label: cmp.get("v.labels.noObjects")}];
-        }
-        console.log(newSummaryObjects);
-        cmp.set("v.summaryObjects", newSummaryObjects);
-        console.log("End summary object reset");
-    },
-*/
     resetFields: function(cmp, object, context){
 
         console.log("Fired field reset for context ["+context+"] and object ["+object+"]");
         var newFields = cmp.get("v.objectDetails")[object];
 
-        console.log('new fields: '+newFields);
+        //console.log('new fields: '+newFields);
 
         if(newFields === undefined){
             newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
@@ -320,19 +289,48 @@
     },
 
     resetAllFields: function(cmp){
-
-        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
-        this.resetFields(cmp, detailObject, 'detail');
+        //todo: refactor to see if/when is even necessary
 
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         this.resetFields(cmp, summaryObject, 'summary');
 
         //detail object is the provided object for amount fields because detail and amount object are ALWAYS the same
-        this.resetFields(cmp, detailObject, 'amount');
+        //this.resetFields(cmp, detailObject, 'amount');
 
-        var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
-        this.resetFields(cmp, dateObject, 'date');
+        //var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+        //this.resetFields(cmp, dateObject, 'date');
     },
+
+    resetRollupTypes: function(cmp){
+
+        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        var labels = cmp.get("v.labels");
+        var templateList = [];
+        if (summaryObject === 'Account') {
+            console.log('adding stuff for Account');
+            //debugger;
+            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
+                    summaryObject: 'Account', name: 'Opportunity'}
+                , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
+                    , summaryObject: 'Account', name: 'npe01__OppPayment__c'}
+                , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Account', name: 'Partial_Soft_Credit__c'});
+        } else if (summaryObject === 'Contact') {
+            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
+                    , summaryObject: 'Contact', name: 'Opportunity'}
+                , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Contact', name: 'Partial_Soft_Credit__c'}
+                , {label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
+                    , summaryObject: 'Contact', name: 'npe01__OppPayment__c'});
+        } else if (summaryObject === 'General_Accounting_Unit__c') {
+            templateList.push({label: labels.allocationLabel + ' -> ' + labels.gauLabel
+                , summaryObject: 'General_Accounting_Unit__c', name: 'Allocation__c'});
+        }
+
+        cmp.set("v.rollupTypes",templateList);
+        console.log('RollupTypes: '+cmp.get("v.rollupTypes"));
+    },
+
     filterFieldsByType: function(cmp, typeList, allFields) {
         //if type is null, no detail field is selected
         console.log("filter fields by type function");
@@ -396,17 +394,37 @@
         cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName",null);
     },
 
-    resetOperationFieldLabel: function(cmp, operation, operationList){
+    retreiveFieldLabel: function(cmp, apiName, entityList){
+        //retreives the label of an entity (field, operation, etc) based on the api name from a list of objects with name and label entries
+        //apiName is the name of the field. ex: 'General_Account_Unit__c'
+        //label is translatable label of the entity. ex: 'General Account Unit'
         var label;
-        for(var i=0; i<operationList.length; i++){
-            if(operationList[i].name === operation){
-                label = operationList[i].label;
+        for(var i=0; i<entityList.length; i++){
+            if(entityList[i].name === apiName){
+                label = entityList[i].label;
                 break;
             }
         }
         return label;
     },
+
     saveRollup: function(cmp, activeRollup){
 
+    },
+
+    updateRollupName: function(cmp){
+        //sets the rollup name with a simple concatenation of the summary object and summary field
+        //todo: can't get this to bubble up to the main page, probably due to the dot notation
+        var summaryObjectAPI = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        var summaryObjects = cmp.get("v.summaryObjects");
+        var summaryObjectName = this.retreiveFieldLabel(cmp, summaryObjectAPI, summaryObjects);
+
+        var summaryFieldAPI = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        var summaryFields = cmp.get("v.summaryFields");
+        var summaryFieldName = this.retreiveFieldLabel(cmp, summaryFieldAPI, summaryFields);
+
+        var label = summaryObjectName + ': ' + summaryFieldName;
+
+        cmp.set("v.activeRollup.MasterLabel", label);
     }
 })

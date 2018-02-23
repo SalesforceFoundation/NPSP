@@ -43,7 +43,7 @@
     <aura:attribute name="rollupColumns" type="List" access="public" description="Columns for rollup grid."/>
     <aura:attribute name="filterGroupColumns" type="List" access="public" description="Columns for filter group grid."/>
     <aura:attribute name="activeRecordId" type="Id" description="ID of the selected record to display in detail view. Set to null once detail is hidden."/>
-    <aura:attribute name="activeRecord" type="Object" description="Active item to display in detail view. Set to null once detail is hidden."/>
+    <aura:attribute name="activeRecord" type="Map" description="Active item to display in detail view. Set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
     <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label."/>
     <aura:attribute name="yearlyOperations" type="List" description="Map of yearly operations, api name to label."/>
