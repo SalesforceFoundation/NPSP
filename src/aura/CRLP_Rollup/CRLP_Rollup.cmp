@@ -179,7 +179,8 @@
                                             mediumDeviceSize="3"
                                             isRequired="true"
                         />
-                        <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                        <aura:if isTrue="{!v.renderMap.useTimeBoundOperation}">
+                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="yearlyOperation"
                                             fieldLabel="{!v.labels.yearlyOperationType}"
                                             entityLabel="{!v.selectedYearlyOperationLabel}"
@@ -187,7 +188,8 @@
                                             options="{!v.yearlyOperations}"
                                             mediumDeviceSize="3"
                                             isRequired="true"
-                        />
+                            />
+                        </aura:if>
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                               size="12">
                             <aura:if isTrue="{!v.renderMap.integer}">

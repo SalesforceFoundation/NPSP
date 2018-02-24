@@ -139,11 +139,14 @@
     },
 
     updateDependentOperations: function(cmp){
-        console.log("in helper changeOperationsOptions");
+        //debugger;
+        console.log("in helper updateDependentOperations");
         var operation = cmp.get("v.activeRollup.Operation__c");
-        console.log(operation);
+        console.log('operation: '+operation);
         var renderMap = cmp.get("v.renderMap");
         console.log(renderMap);
+
+        //AMOUNT FIELD
         //todo: is this ok for translation?
         if (operation === 'Largest'
             || operation === 'Smallest'
@@ -164,6 +167,26 @@
             cmp.set("v.activeRollup.Amount_Field__r.Label", cmp.get("v.labels.na"));
             cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
         }
+
+        //FISCAL YEAR AND TIME BOUND (YEARLY) OPERATION
+        if (operation === 'Donor_Streak'
+            || operation === 'Years_Donated'
+            || operation === 'Best_Year'
+            || operation === 'Best_Year_Total') {
+            renderMap["useFiscalYear"] = true;
+        } else {
+            renderMap["useFiscalYear"] = false;
+        }
+
+        //TODO: this not null check isn't working
+        if (operation !== null &&
+            (operation !== 'Donor_Streak'
+            || operation !== 'Years_Donated')) {
+            renderMap["useTimeBoundOperation"] = true;
+        } else {
+            renderMap["useTimeBoundOperation"] = false;
+        }
+
         cmp.set("v.renderMap",renderMap);
 
         var operations = cmp.get("v.operations");
@@ -209,7 +232,7 @@
             allowedOps.push({name: 'Average', label: ops['Average']});
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Best_Year_Total', label: ops['Best_Year_Total']});
-        } else if (type === 'TEXT') {
+        } else if (type === 'TEXT' || type === 'STRING' || type === 'TEXTAREA') {
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
         }
@@ -238,14 +261,16 @@
             renderMap["integer"] = true;
         } else if (operation === 'Days_Back') {
             //disable fiscal year and enable integer
-            renderMap["useFiscalYear"] = false;
+            //took this out because some operations (not time bound operations) require fiscal year checkbox
+            //renderMap["useFiscalYear"] = false;
             renderMap["integer"] = true;
             if(isOnChange){
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
             }
         } else {
             //default to not showing these fields and reset values
-            renderMap["useFiscalYear"] = false;
+            //took this out because some operations (not time bound operations) require fiscal year checkbox
+            //renderMap["useFiscalYear"] = false;
             renderMap["integer"] = false;
             if(isOnChange){
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
@@ -306,14 +331,14 @@
         if (summaryObject === 'Account') {
             templateList.push({label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
                     summaryObject: 'Account', name: 'Opportunity'}
-                , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
+                , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
                     , summaryObject: 'Account', name: 'npe01__OppPayment__c'}
-                , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
+                , {label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
                     , summaryObject: 'Account', name: 'Partial_Soft_Credit__c'});
         } else if (summaryObject === 'Contact') {
-            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
+            templateList.push({label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
                     , summaryObject: 'Contact', name: 'Opportunity'}
-                , {label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
+                , {label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
                     , summaryObject: 'Contact', name: 'Partial_Soft_Credit__c'}
                 , {label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
                     , summaryObject: 'Contact', name: 'npe01__OppPayment__c'});
@@ -407,8 +432,52 @@
     },
 
     setRollupType: function(cmp){
-        //sets the rollup type based on the detail object and summary object
+        console.log('IN SET ROLLUP TYPE FUNCTION.');
+        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        console.log('summary object: '+summaryObject);
+        console.log('detail object: '+detailObject);
+        var labels = cmp.get("v.labels");
+        var rollupType = new Object();
 
+        if (detailObject === 'Opportunity' && summaryObject === 'Account') {
+            rollupType.name = 'Opportunity';
+            rollupType.summaryObject = 'Account';
+            rollupType.label = labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit;
+
+        } else if (detailObject === 'npe01__OppPayment__c' && summaryObject === 'Account') {
+            rollupType.name = 'npe01__OppPayment__c';
+            rollupType.summaryObject = 'Account';
+            rollupType.label = labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit;
+
+        } else if (detailObject === 'Partial_Soft_Credit__c' && summaryObject === 'Account') {
+            rollupType.name = 'Partial_Soft_Credit__c';
+            rollupType.summaryObject = 'Account';
+            rollupType.label = labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit;
+
+        } else if (detailObject === 'Opportunity' && summaryObject === 'Contact') {
+            rollupType.name = 'Opportunity';
+            rollupType.summaryObject = 'Contact';
+            rollupType.label = labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit;
+
+        } else if (detailObject === 'Partial_Soft_Credit__c' && summaryObject === 'Contact') {
+            rollupType.name = 'Partial_Soft_Credit__c';
+            rollupType.summaryObject = 'Contact';
+            rollupType.label = labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit;
+
+        } else if (detailObject === 'npe01__OppPayment__c' && summaryObject === 'Contact') {
+            rollupType.name = 'npe01__OppPayment__c';
+            rollupType.summaryObject = 'Contact';
+            rollupType.label = labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit;
+
+        } else if (detailObject === 'Allocation__c' && summaryObject === 'General_Accounting_Unit__c') {
+            rollupType.name = 'Allocation__c';
+            rollupType.summaryObject = 'General_Accounting_Unit__c';
+            rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
+        }
+
+        cmp.set("v.selectedRollupType", rollupType);
+        console.log(cmp.get("v.selectedRollupType"));
     },
 
     updateRollupName: function(cmp){
