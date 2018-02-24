@@ -57,21 +57,20 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
     * @return null 
     */
     public PageReference runBatch() {
-    	Savepoint sp = Database.setSavepoint();
+        Savepoint sp = Database.setSavepoint();
         try {
-	    	isRunningBatch = true;
-	        
-	        // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
-            RD_RecurringDonations_BATCH rdb = new RD_RecurringDonations_BATCH();
-            Id batchInstanceId = Database.executeBatch(rdb, rdb.batchSize);
-	         
+            isRunningBatch = true;
+
+            // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
+            Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(), RD_RecurringDonations_BATCH.batchSize);
+
         }
         catch(Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.RD);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));   
         }
-    	return null;
+        return null;
     }
  
 }

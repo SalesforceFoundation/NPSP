@@ -30,162 +30,57 @@
 /**
 * @author Salesforce.org
 * @date 2016
-* @group Utilities
+* @group Cascade Delete
 * @description Tests for cascade delete of Contacts
 */
 @isTest
 private class CON_CascadeDeleteLookups_TEST {
 
     /*********************************************************************************************************
-    * @description Deletes contact without using the override. Does not cascade delete recurring dontation or 
-    * allocation. Verifies results.
+    * @description Deletes contact and verifies it does not cascade delete the Relationships
+    * Verifies results.
     */
-    static testMethod void testContactCascadeWithoutOverride(){
-        Contact con = new Contact(LastName='foo');
-        insert con;
+    static testMethod void testContactCascadeDelete(){
+        Integer maxRecords = 1;
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'test',
-            npe03__Installments__c = 2,
-            npe03__Amount__c = 1,
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c = date.newinstance(1970,6,12),
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Contact__c = con.id
-        );
-        insert rd;
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(maxRecords);
+        insert contacts;
 
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
-        Allocation__c alloForInsert = new Allocation__c(Recurring_Donation__c=rd.id, Amount__c = 4, General_Accounting_Unit__c = gau.id);
-        insert alloForInsert;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
         Test.startTest();
-        delete con;
+        delete contacts;
         Test.stopTest();
 
-        List<Error__c> errors = [SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c FROM Error__c];
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
         System.assertEquals(0, errors.size(), errors);
 
-        List<npe03__Recurring_Donation__c> queryRd = [SELECT Id FROM npe03__Recurring_Donation__c WHERE Id=:rd.Id];
-        System.assertEquals(1, queryRd.size(), 'Recurring Donation shouldn\'t be cascade deleted when Contact is deleted without the override.');
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
+        System.assertEquals(relationships.size() * 2, deletedRelationships.size(), 'Both relationships should be deleted when the Contact is deleted.');
 
-        List<Allocation__c> queryAllo = [SELECT Id FROM Allocation__c WHERE Id=:alloForInsert.Id];
-        System.assertEquals(1, queryAllo.size(), 'Allocation shouldn\'t be cascade deleted when recurring donation is deleted.');
-    }
+        undelete contacts;
 
-    /*********************************************************************************************************
-    * @description Attempts to delete contact with closed/won and org opps, verifies correct exception is thrown.
-    */
-    static testMethod void testContactDeleteExceptionWithOverride(){
-        //use a non-system account for the contact's account, so that the delete override doesn't redirect us to delete the account
-        Account conAccount = new Account(Name='ConAccount');
-        insert conAccount;
-
-        Contact con = new Contact(LastName='foo', AccountId=conAccount.id);
-        insert con;
-
-        //org account for opportunity attribution
-        Account org = new Account(Name='org');
-        insert org;
-
-        Opportunity closedWonOpp = new Opportunity(
-            Amount = 8,
-            Name = 'foo',
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-            CloseDate = System.today(),
-            Primary_Contact__c = con.id
-        );
-        insert closedWonOpp;
-
-        Opportunity orgOpp = new Opportunity(
-            Amount = 8,
-            AccountId = org.id,
-            Name = 'foo',
-            StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
-            CloseDate = System.today(),
-            Primary_Contact__c = con.id
-        );
-        insert orgOpp;
-
-        Test.setCurrentPage(Page.CON_DeleteContactOverride);
-        ApexPages.currentPage().getParameters().put('id', con.id);
-        CON_DeleteContactOverride_CTRL ctrl = new CON_DeleteContactOverride_CTRL(new ApexPages.StandardController(con));
-
-        Test.startTest();
-        ctrl.processDelete();
-        Test.stopTest();
-
-        System.assert(ApexPages.hasMessages(), 'An exception should be caught and added to page messages.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(closedWonOpp.id), 'Exception message should contain the closed won opportunity id.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.ClosedWonOpportunities), 'Exception message should mention Closed Won Opportunities.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(orgOpp.id), 'Exception message should contain the org opportunity id.');
-        System.assert(ApexPages.getMessages()[0].getDetail().contains(Label.OrganizationalOpportunities), 'Exception message should mention Organizational Opportunities.');
-
+        List<npe4__Relationship__c> undeletedRelationships = CDL_CascadeDeleteLookups_TEST.getNonDeletedRelationships();
+        System.assertEquals(deletedRelationships.size(), undeletedRelationships.size(), 'Both relationships should be undeleted when the Contact is undeleted.');
     }
 
     /*********************************************************************************************************
     * @description Verifies that the losing contact in a merge operation doesn't get child records cascade deleted.
     */
     static testMethod void testContactMergeNoCascade(){
+        List<Contact> contacts = CDL_CascadeDeleteLookups_TEST.buildContacts(2);
+        insert contacts;
 
-        Contact conWinner = new Contact(LastName='foo');
-        insert conWinner;
+        List<npe4__Relationship__c> relationships = CDL_CascadeDeleteLookups_TEST.buildRelationships(contacts);
+        insert relationships;
 
-        Contact conLoser = new Contact(LastName='foo');
-        insert conLoser;
+        merge contacts[0] contacts[1];
 
-        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-            Name = 'test',
-            npe03__Installments__c = 2,
-            npe03__Amount__c = 1,
-            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly,
-            npe03__Date_Established__c = date.newinstance(1970,6,12),
-            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
-            npe03__Contact__c = conLoser.id
-        );
-        insert rd;
+        List<Error__c> errors = CDL_CascadeDeleteLookups_TEST.getErrors();
+        System.assertEquals(0, errors.size(), errors);
 
-        merge conWinner conLoser;
-
-        List<npe03__Recurring_Donation__c> rdQuery = [SELECT Id, npe03__Contact__c FROM npe03__Recurring_Donation__c WHERE Id = :rd.id];
-        System.assertEquals(1, rdQuery.size(), 'Recurring Donation should not be deleted as the result of losing a merge.');
-        System.assertEquals(conWinner.id, rdQuery[0].npe03__Contact__c, 'Recurring Donation should be reparented to the winning contact.');
-
-    }
-
-    /*********************************************************************************************************
-    * @description Verifies that deleting a contact with a relationship deletes both relationship objects.
-    */
-    static testMethod void testContactCascadeRelationshipWithoutOverride(){
-
-        Contact con1 = new Contact(LastName='foo1');
-        insert con1;
-
-        Contact con2 = new Contact(LastName='foo2');
-        insert con2;
-
-        npe4__Relationship__c rel = new npe4__Relationship__c(
-              npe4__contact__c = con1.id, 
-              npe4__relatedcontact__c = con2.id, 
-              npe4__Type__c='Friend',
-              npe4__Status__c='Active'
-        );
-        insert rel;
-        
-        List<npe4__Relationship__c> queryRel = [SELECT id FROM npe4__Relationship__c];
-        System.assertEquals(2, queryRel.size(), 'Two relationships should be created: the inserted relationship and its mirror.');
-
-        Test.startTest();
-        delete con1;
-        Test.stopTest();
-
-        queryRel = [SELECT id FROM npe4__Relationship__c WHERE IsDeleted = true ALL ROWS];
-        System.assertEquals(2, queryRel.size(), 'Both relationships should be deleted when the account is deleted.');
-
-        undelete con1;
-
-        queryRel = [SELECT id FROM npe4__Relationship__c];
-        System.assertEquals(2, queryRel.size(), 'Both relationships should be undeleted when contact is undeleted.');
+        List<npe4__Relationship__c> deletedRelationships = CDL_CascadeDeleteLookups_TEST.getDeletedRelationships();
+        System.assertEquals(0, deletedRelationships.size(), 'Relationships should not be deleted as the result of losing a merge.');
     }
 }
