@@ -5223,7 +5223,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RD Batch Size Settings Help Text</shortDescription>
-        <value>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the Recurring Donations batch job is failing due to system limits.</value>
+        <value>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the batch job is failing due to system limits.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
