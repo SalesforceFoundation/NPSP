@@ -63,6 +63,11 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
     
+    /*******************************************************************************************************
+    * @description Resets specific Custom Settings that are updated after 
+    *   Record Type Settings have been fixed.
+    * @return void  
+    */
     public static void reloadCustomSettingsOnRecordTypeCleanup() {
         contactsSettings = null;
         householdsSettings = null;

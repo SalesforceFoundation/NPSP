@@ -78,6 +78,10 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         }
     }
     
+    /*********************************************************************************************************
+    * @description Clean up invalid Record Type Settings
+    * @return void 
+    */
     private void cleanupRecordTypeSettings() {
         try {
             UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();

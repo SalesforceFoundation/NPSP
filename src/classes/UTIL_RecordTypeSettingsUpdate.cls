@@ -276,6 +276,12 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         return idsString;
     }
 
+    /*******************************************************************************************************
+    * @description Determines the Record Type Id based on the name
+     * @param name A Record Type name
+     * @param rtNamesById A mapping of Record Type names to Record Type Ids
+     * @return String An Id if the name is a valid Record Type name, otherwise null.
+    */
     private String getIdFromName(String name, Map<String, Id> rtNamesById) {
         if (String.isBlank(name)) {
             return null;

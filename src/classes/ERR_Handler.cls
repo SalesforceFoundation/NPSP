@@ -264,6 +264,14 @@ public class ERR_Handler {
     }
     
     
+    /*******************************************************************************************************
+    * @description Creates error records from passed in exceptions.
+    *   If the Error Settings is enabled, errors are stored in the database. 
+    *   If the Error Settings has notification enabled, an email notificiation is sent.
+    * @param exceptions List of exceptions.
+    * @param context The context the exception was raised on.
+    * @return void
+    */
     public static void processErrors(List<Exception> exceptions, ERR_Handler_API.Context context) {
         List<Error__c> errors = new List<Error__c>();
         for (Exception e : exceptions) {
@@ -287,7 +295,8 @@ public class ERR_Handler {
             }
 
             if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-               Database.insert(errorRecords, false);
+                UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
+                Database.insert(errorRecords, false);
             }
             //ERR_Notifier takes care of checking the settings itself.
             ERR_Notifier.sendErrorNotifications(context);
@@ -308,6 +317,7 @@ public class ERR_Handler {
         //Putting it into a local string to see if that helps storing the stack trace when we
         //are in a managed package.
         String stackTrace = e.getStackTraceString();
+        UTIL_Debug.debug('****Stack trace: ' + stackTrace);
 
         String message;
         if (String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
