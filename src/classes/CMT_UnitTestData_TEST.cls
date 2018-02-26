@@ -425,7 +425,7 @@ public class CMT_UnitTestData_TEST {
             fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'));
         }
         if (parms.get('Yearly') != null) {
-            fields.add(new CMT_Field('Yearly_Operation_Type__c', CMTFieldType.FldText, ((CRLP_Operation.YearlyOperationType)parms.get('Yearly')).name()));
+            fields.add(new CMT_Field('Time_Bound_Operation_Type__c', CMTFieldType.FldText, ((CRLP_Operation.YearlyOperationType)parms.get('Yearly')).name()));
             fields.add(new CMT_Field('Integer__c', CMTFieldType.FldNumber, parms.get('Integer')));
         }
         if (parms.get('UseFiscal') != null) {

@@ -951,7 +951,7 @@
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
-        <members>Rollup__mdt.Yearly_Operation_Type__c</members>
+        <members>Rollup__mdt.Time_Bound_Operation_Type__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>

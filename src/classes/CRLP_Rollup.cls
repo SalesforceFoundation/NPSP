@@ -105,7 +105,7 @@ public class CRLP_Rollup {
             }
             // Year and Date/Day related details
             this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
-            this.yearlyOperation = rollupMdt.Yearly_Operation_Type__c;
+            this.yearlyOperation = rollupMdt.Time_Bound_Operation_Type__c;
             if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                 this.daysBack = Integer.valueOf(rollupMdt.Integer__c);
             }
@@ -168,9 +168,9 @@ public class CRLP_Rollup {
         // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
         // consider them in the same group
         String daysBackOperation = CRLP_Operation.YearlyOperationType.DAYS_BACK.name();
-        if ((this.yearlyOperation == daysBackOperation && (otherMdtRollup.Yearly_Operation_Type__c != daysBackOperation ||
+        if ((this.yearlyOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
                 this.daysBack != otherMdtRollup.Integer__c)) ||
-                (otherMdtRollup.Yearly_Operation_Type__c == daysBackOperation && this.yearlyOperation != daysBackOperation)
+                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.yearlyOperation != daysBackOperation)
                 ) {
             isSameRollupGroup = false;
         }
@@ -242,7 +242,7 @@ public class CRLP_Rollup {
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.Time_Bound_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.Integer__c.intValue();

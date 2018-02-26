@@ -226,7 +226,7 @@ public class CRLP_RollupCMT {
             this.filterGroupRecordName = rlp.Filter_Group__r.DeveloperName;
             this.description = rlp.Description__c;
             this.operation = rlp.Operation__c;
-            this.yearlyOperationType = rlp.Yearly_Operation_Type__c;
+            this.yearlyOperationType = rlp.Time_Bound_Operation_Type__c;
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
             this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
@@ -263,7 +263,7 @@ public class CRLP_RollupCMT {
                     'Filter_Group__c' => filterGroupRecordName,
                     'Description__c' => this.description,
                     'Operation__c' => operation,
-                    'Yearly_Operation_Type__c' => yearlyOperationType,
+                    'Time_Bound_Operation_Type__c' => yearlyOperationType,
                     'Integer__c' => intValue,
                     'Use_Fiscal_Year__c' => useFiscalYear,
                     'Active__c' => isActive,

@@ -48,7 +48,7 @@ public class CRLP_Rollup_SEL {
                 cachedRollups = [
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
-                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
+                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Time_Bound_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
                                 Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
@@ -264,10 +264,10 @@ public class CRLP_Rollup_SEL {
                 }
                 if (includeRollupDefinition) {
                     if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
-                            r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                            r.Time_Bound_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                         includeRollupDefinition = false;
                     } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
-                            r.Yearly_Operation_Type__c != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+                            r.Time_Bound_Operation_Type__c != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
                         includeRollupDefinition = false;
                     } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
                             !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
