@@ -28,8 +28,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Amount Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups</relationshipLabel>
-        <relationshipName>Rollups</relationshipName>
+        <relationshipLabel>RollupAmount</relationshipLabel>
+        <relationshipName>RollupAmount</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -53,8 +53,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Date Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups1</relationshipLabel>
-        <relationshipName>Rollups1</relationshipName>
+        <relationshipLabel>RollupsDate</relationshipLabel>
+        <relationshipName>RollupsDate</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -75,8 +75,8 @@
         <label>Detail Field</label>
         <metadataRelationshipControllingField>Rollup__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups1</relationshipLabel>
-        <relationshipName>Rollups1</relationshipName>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
+        <relationshipName>RollupsDetail</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -87,8 +87,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Detail Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups3</relationshipLabel>
-        <relationshipName>Rollups3</relationshipName>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
+        <relationshipName>RollupsDetail</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -193,8 +193,8 @@
         <label>Summary Field</label>
         <metadataRelationshipControllingField>Rollup__mdt.Summary_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups2</relationshipLabel>
-        <relationshipName>Rollups2</relationshipName>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
+        <relationshipName>RollupsSummary</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -205,20 +205,11 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Summary Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups4</relationshipLabel>
-        <relationshipName>Rollups4</relationshipName>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
+        <relationshipName>RollupsSummary</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
-    </fields>
-    <fields>
-        <fullName>Use_Fiscal_Year__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Use Fiscal Year</label>
-        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Time_Bound_Operation_Type__c</fullName>
@@ -249,6 +240,15 @@
                 </value>
             </valueSetDefinition>
         </valueSet>
+    </fields>
+    <fields>
+        <fullName>Use_Fiscal_Year__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Use Fiscal Year</label>
+        <type>Checkbox</type>
     </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>
