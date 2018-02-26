@@ -365,15 +365,12 @@ public with sharing class STG_InstallScript_TEST {
 
         String emailBody = logger.buildEmailBody();
 
-        String expectedEmailBody = Label.stgInstallScriptError +
-            '\n\n==========================. \n\nError messages:' +
-            '\nTest Exception 1' +
-            '\nError stack trace: \n' + 
-            '()\n\n'+
-            '\nTest Exception 2' +
-            '\nError stack trace: \n' + 
-            '()\n\n';
-        System.assertEquals(expectedEmailBody, emailBody, 'The email is not constructed as expected');
+        String expectedEmailBodyPrefix = Label.stgInstallScriptError +
+            '\n\n==========================. \n\nError messages:';
+            
+        System.assert(emailBody.startsWith(expectedEmailBodyPrefix), 'The email is not constructed as expected: ' + emailBody);
+        System.assert(emailBody.contains('Test Exception 1'), 'The email should contain the first exception: ' + emailBody);
+        System.assert(emailBody.contains('Test Exception 2'), 'The email should contain the second exception: ' + emailBody);
     }
 
     /*********************************************************************************************************
