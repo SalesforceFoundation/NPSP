@@ -59,7 +59,7 @@ public class CRLP_Debug_UTIL {
         return (!isEnabled ? '' :
                 '\n* # of MDT records=' + r.rollupsMdt.size() +
                 '\n* resultFieldName=' + r.resultFieldName + '/' + r.resultFieldType +
-                '\n* yearlyOperation=' + r.yearlyOperation +
+                '\n* timeBoundOperation=' + r.timeBoundOperation +
                 '\n* theCount=' + r.theCount +
                 '\n* theSum=' + r.theSum +
                 '\n* minvalue=' + r.minValue +

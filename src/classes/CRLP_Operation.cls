@@ -56,7 +56,7 @@ public class CRLP_Operation {
     /**
      * @description Enum of valid Yearly Operation Types supported by the Customizable Rollups Engine
      */
-    public enum YearlyOperationType {
+    public enum TimeBoundOperationType {
         All_Time,
         Years_Ago,
         Days_Back
@@ -105,16 +105,16 @@ public class CRLP_Operation {
      * @param CRLP_Operation.RollupType
      * @return List of valid SelectOptions to display
      */
-    public static List<SelectOption> getAvailableYearlyOperationTypes(String rollupOperation) {
+    public static List<SelectOption> getAvailableTimeBoundOperationTypes(String rollupOperation) {
         List<SelectOption> options = new List<SelectOption>{
-                new SelectOption(YearlyOperationType.ALL_TIME.name(), 'All Time')
+                new SelectOption(TimeBoundOperationType.ALL_TIME.name(), 'All Time')
         };
         if (rollupOperation == CRLP_Operation.RollupType.SUM.name() ||
                 rollupOperation == CRLP_Operation.RollupType.COUNT.name() ||
                 rollupOperation == CRLP_Operation.RollupType.LARGEST.name() ||
                 rollupOperation == CRLP_Operation.RollupType.SMALLEST.name()) {
-            options.add(new SelectOption(YearlyOperationType.YEARS_AGO.name(), 'Years Ago'));
-            options.add(new SelectOption(YearlyOperationType.DAYS_BACK.name(), 'Days Back'));
+            options.add(new SelectOption(TimeBoundOperationType.YEARS_AGO.name(), 'Years Ago'));
+            options.add(new SelectOption(TimeBoundOperationType.DAYS_BACK.name(), 'Days Back'));
         }
         return options;
     }

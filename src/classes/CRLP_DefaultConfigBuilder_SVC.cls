@@ -281,7 +281,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         // 2 = AmountObject.Field,
         // 3 = DateObject.Field,
         // 4 = OperationString,
-        // 5 = YearlyOperationString,
+        // 5 = TimeBoundOperationString,
         // 6 = IntValue
 
         for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
@@ -301,7 +301,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rollup.dateObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[3])[0]);
             rollup.dateField = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[3])[1]);
             rollup.operation = rollupDetails[4];
-            rollup.yearlyOperationType = rollupDetails[5];
+            rollup.timeBoundOperationType = rollupDetails[5];
             rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
             if (!String.isEmpty(rollupDetails[6])) {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);

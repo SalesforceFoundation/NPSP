@@ -296,13 +296,13 @@ public class CMT_UnitTestData_TEST {
      */
     public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
             String summField, CRLP_Operation.RollupType operation, String detailField,
-            CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue) {
+            CRLP_Operation.TimeBoundOperationType timeBoundOperation, Integer intValue) {
 
         return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
                 'Operation' => operation,
                 'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
                 'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : ''),
-                'Yearly' => yearlyOperation,
+                'Yearly' => timeBoundOperation,
                 'Integer' => intValue
             }
         );
@@ -314,13 +314,13 @@ public class CMT_UnitTestData_TEST {
      */
     public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
             String summField, CRLP_Operation.RollupType operation, String detailField,
-            CRLP_Operation.YearlyOperationType yearlyOperation, Integer intValue, Boolean useFiscalYear) {
+            CRLP_Operation.TimeBoundOperationType timeBoundOperation, Integer intValue, Boolean useFiscalYear) {
 
         return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
                 'Operation' => operation,
                 'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
                 'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : ''),
-                'Yearly' => yearlyOperation,
+                'Yearly' => timeBoundOperation,
                 'Integer' => intValue,
                 'UseFiscal' => useFiscalYear
             }
@@ -425,7 +425,7 @@ public class CMT_UnitTestData_TEST {
             fields.add(new CMT_Field('Date_Field__c', CMTFieldType.FldField, 'Opportunity.CloseDate'));
         }
         if (parms.get('Yearly') != null) {
-            fields.add(new CMT_Field('Time_Bound_Operation_Type__c', CMTFieldType.FldText, ((CRLP_Operation.YearlyOperationType)parms.get('Yearly')).name()));
+            fields.add(new CMT_Field('Time_Bound_Operation_Type__c', CMTFieldType.FldText, ((CRLP_Operation.TimeBoundOperationType)parms.get('Yearly')).name()));
             fields.add(new CMT_Field('Integer__c', CMTFieldType.FldNumber, parms.get('Integer')));
         }
         if (parms.get('UseFiscal') != null) {

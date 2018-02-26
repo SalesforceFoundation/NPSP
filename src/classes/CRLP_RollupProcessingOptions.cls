@@ -56,8 +56,8 @@ public class CRLP_RollupProcessingOptions {
      */
     public Enum RollupTypeFilter {
         All,            // All the defined rollups for the target Summary object
-        DaysAgoOnly,    // Only rollups with a YearlyOperationType of "Days Ago"
-        NonDaysAgo,     // Only rollups without a YearlyOperationType of "Days Ago"
+        DaysAgoOnly,    // Only rollups with a TimeBoundOperationType of "Days Ago"
+        NonDaysAgo,     // Only rollups without a TimeBoundOperationType of "Days Ago"
         MembershipsOnly // Only rolups with "Membership" in the Summary Field Name
     }
 

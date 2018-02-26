@@ -71,27 +71,27 @@ private class CRLP_RollupGAU_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Total_Allocations__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Average Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Average_Allocation__c', CRLP_Operation.RollupType.AVERAGE, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Allocations 2 Years Ago', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Total_Allocations_Two_Years_Ago__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Allocation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Largest_Allocation__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Description__c', CRLP_Operation.RollupType.YEARS_DONATED, '',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,

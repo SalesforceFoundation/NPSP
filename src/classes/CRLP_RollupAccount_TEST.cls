@@ -87,7 +87,7 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations Last 2 Years', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,

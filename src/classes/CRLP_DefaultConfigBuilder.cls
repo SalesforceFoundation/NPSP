@@ -86,7 +86,7 @@ public class CRLP_DefaultConfigBuilder {
     /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
      * following set of rollup properties
      * Key=SummaryObject.SummaryField
-     * Value=List<String>{ DetailObject.Field, FilterGroupRecordName, AmountObject.Field, DateObject.Field, OperationString, YearlyOperationString, IntValue }
+     * Value=List<String>{ DetailObject.Field, FilterGroupRecordName, AmountObject.Field, DateObject.Field, OperationString, TimeBoundOperationString, IntValue }
      */
     public static Map<String, List<String>> rollupDetailsBySummaryField = new Map<String, List<String>>{
 

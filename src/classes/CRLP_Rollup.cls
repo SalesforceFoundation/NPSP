@@ -52,7 +52,7 @@ public class CRLP_Rollup {
     public String dateObject;
     public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
-    public String yearlyOperation;
+    public String timeBoundOperation;
     public Integer daysBack;
 
     // Basic counter vars
@@ -105,8 +105,8 @@ public class CRLP_Rollup {
             }
             // Year and Date/Day related details
             this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
-            this.yearlyOperation = rollupMdt.Time_Bound_Operation_Type__c;
-            if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+            this.timeBoundOperation = rollupMdt.Time_Bound_Operation_Type__c;
+            if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
                 this.daysBack = Integer.valueOf(rollupMdt.Integer__c);
             }
 
@@ -159,7 +159,7 @@ public class CRLP_Rollup {
             return true;
         }
 
-        // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
+        // Due to the large variation of possible combinations, Rollups for DAYS_BACK TimeBoundOperation
         // types cannot be combined with other rollups of different types/days. Group these together
         // where the NumberOfDays is the same.
 
@@ -167,10 +167,10 @@ public class CRLP_Rollup {
 
         // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
         // consider them in the same group
-        String daysBackOperation = CRLP_Operation.YearlyOperationType.DAYS_BACK.name();
-        if ((this.yearlyOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
+        String daysBackOperation = CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name();
+        if ((this.timeBoundOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
                 this.daysBack != otherMdtRollup.Integer__c)) ||
-                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.yearlyOperation != daysBackOperation)
+                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.timeBoundOperation != daysBackOperation)
                 ) {
             isSameRollupGroup = false;
         }
@@ -242,7 +242,7 @@ public class CRLP_Rollup {
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( r.Time_Bound_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
             Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.Integer__c.intValue();

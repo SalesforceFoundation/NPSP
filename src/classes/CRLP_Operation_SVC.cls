@@ -95,9 +95,9 @@ public class CRLP_Operation_SVC {
 
         // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
         // operations have to be limited to the specified date range based on the value in daysAgo
-        // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
+        // Due to the large variation of possible combinations, Rollups for DAYS_AGO TimeBoundOperation
         // types cannot be combined with other rollups of different types/days.
-        if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+        if (rollup.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
             if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysBack) {
                 return;
             }

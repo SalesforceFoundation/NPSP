@@ -86,12 +86,12 @@ private class CRLP_RollupContact_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Donations Last 2 Years', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -100,7 +100,7 @@ private class CRLP_RollupContact_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppsClosedLastNDays__c', CRLP_Operation.RollupType.COUNT, 'Amount',
-                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
