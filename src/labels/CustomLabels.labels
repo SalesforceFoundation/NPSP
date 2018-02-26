@@ -5218,6 +5218,14 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
 This process may take some time, but you can close this page and the process will continue in the background.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRDBatchSize</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RD Batch Size Settings Help Text</shortDescription>
+        <value>The number of records to process at a time when running the Recurring Donations batch job. The default size is 50. Reduce to a smaller number if the batch job is failing due to system limits.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRDDisableScheduling</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5496,7 +5504,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRollupPrimaryContact</shortDescription>
-        <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact, and corresponding Household Account or record, even if the Opportunity is not from an individual (i.e., from a company, a foundation, and so on). If left unselected, and the Opportunity&apos;s Account is an organization, only the organization will receive credit for the Opportunity.</value>
+        <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact. Note that only the Account on the Opportunity will receive hard credit. So, if the Account Name on the Opportunity is an Organization, that Organization and the Primary Contact will receive hard credit; the Contact&apos;s Household or 1:1 Account will NOT receive hard credit. If left unselected, and the Opportunity&apos;s Account is an Organization, only the Organization will receive credit for the Opportunity.</value>
     </labels>
     <labels>
         <fullName>stgHelpSalesforceSetup</fullName>
