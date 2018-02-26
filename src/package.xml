@@ -1652,6 +1652,7 @@
         <members>stgHelpPrimaryContactBatch</members>
         <members>stgHelpRDAddCampaign</members>
         <members>stgHelpRDBatch</members>
+        <members>stgHelpRDBatchSize</members>
         <members>stgHelpRDDisableScheduling</members>
         <members>stgHelpRDFailures</members>
         <members>stgHelpRDFieldMap</members>
