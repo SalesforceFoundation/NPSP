@@ -77,18 +77,20 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
     }
-
+    
     private void cleanupRecordTypeSettings() {
         try {
             UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
 
+        } catch(Exception e) {
+            //Do not rollback the transaction so settings before the error are still fixed
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+        } finally {
             //Not only refresh the custom settings  
             STG_Panel.stgService = null; 
-            //but also refresh affected custom settings explicitly since all properties are static! 
+            //but also refresh affected custom settings explicitly since all properties are static. 
             UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
-
-        } catch(Exception e) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
         }
     }
     

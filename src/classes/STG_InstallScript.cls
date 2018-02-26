@@ -77,7 +77,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
     private void executeAction(InstallAction action, ErrorLogger logger) {
 
-    	Savepoint sp = Database.setSavepoint();  
+        Savepoint sp = Database.setSavepoint();  
 
         try {
             if (action == InstallAction.POPULATE_RD_INSTALLMENT_NUMBER) {
@@ -100,7 +100,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
             }
 
         } catch(Exception e) {
-    		Database.rollback(sp);
+            Database.rollback(sp);
             
             logger.add(e);
         } 
@@ -298,7 +298,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
         * @description The constructor
         * @param installContext The install context
         * @param errContext The error handler context
-        * @return void
         */
         public ErrorLogger(InstallContext installContext, ERR_Handler_API.Context errContext) {
             this.installContext = installContext;
