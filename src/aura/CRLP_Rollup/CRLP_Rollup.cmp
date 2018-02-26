@@ -49,16 +49,18 @@
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
                     description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="renderMap" type="Map"
-                    default="{useFiscalYear: true, integer: true, amount: true}"
+                    default="{useFiscalYear: true, amount: true}"
                     description="Dependent disabling of fields. If true, field should be rendered." access="public"/>
     <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="allowedOperations" type="List"
                     description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
+    <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="Object[]" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
     <aura:attribute name="selectedYearlyOperationLabel" type="String"/>
-    <aura:attribute name="rollupTypes" type="Object[]"/>
+    <aura:attribute name="selectedIntegerLabel" type="String"/>
+    <aura:attribute name="rollupTypes" type="List"/>
     <aura:attribute name="selectedRollupType" type="Object"/>
 
     <!-- private attributes -->
@@ -179,32 +181,6 @@
                                             mediumDeviceSize="3"
                                             isRequired="true"
                         />
-                        <aura:if isTrue="{!v.renderMap.useTimeBoundOperation}">
-                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                            auraId="yearlyOperation"
-                                            fieldLabel="{!v.labels.yearlyOperationType}"
-                                            entityLabel="{!v.selectedYearlyOperationLabel}"
-                                            apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
-                                            options="{!v.yearlyOperations}"
-                                            mediumDeviceSize="3"
-                                            isRequired="true"
-                            />
-                        </aura:if>
-                        <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
-                                              size="12">
-                            <aura:if isTrue="{!v.renderMap.integer}">
-                                <lightning:input aura:id="integerInput"
-                                                 type="{!v.isReadOnly ? 'text' : 'number'}"
-                                                 class="integerInputField"
-                                                 label="{!v.selectedYearlyOperationLabel + ' ' + v.labels.integer}"
-                                                 value="{!v.activeRollup.Integer__c}"
-                                                 readonly="{!v.isReadOnly}"
-                                                 min="0"
-                                                 step="1"
-                                                 messageWhenRangeUnderflow="{!v.labels.integerError}"
-                                                 messageWhenStepMismatch="{!v.labels.integerError}"/>
-                            </aura:if>
-                        </lightning:layoutItem>
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                               size="12">
                             <aura:if isTrue="{!v.renderMap.useFiscalYear}">
@@ -227,6 +203,43 @@
                                 </aura:if>
                             </aura:if>
                         </lightning:layoutItem>
+                        <aura:if isTrue="{!v.renderMap.useTimeBoundOperation}">
+                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                auraId="yearlyOperation"
+                                                fieldLabel="{!v.labels.yearlyOperationType}"
+                                                entityLabel="{!v.selectedYearlyOperationLabel}"
+                                                apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                                options="{!v.yearlyOperations}"
+                                                mediumDeviceSize="3"
+                                                isRequired="true"
+                            />
+                        </aura:if>
+                        <aura:if isTrue="{!v.renderMap.integerDays}">
+                            <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
+                                                  size="12">
+                                <lightning:input aura:id="integerInput"
+                                                 type="{!v.isReadOnly ? 'text' : 'number'}"
+                                                 class="integerInputField"
+                                                 label="{!v.selectedYearlyOperationLabel + ' ' + v.labels.integer}"
+                                                 value="{!v.activeRollup.Integer__c}"
+                                                 readonly="{!v.isReadOnly}"
+                                                 min="0"
+                                                 step="1"
+                                                 messageWhenRangeUnderflow="{!v.labels.integerError}"
+                                                 messageWhenStepMismatch="{!v.labels.integerError}"/>
+                            </lightning:layoutItem>
+                        </aura:if>
+                        <aura:if isTrue="{!v.renderMap.integerYears}">
+                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                auraId="integer"
+                                                fieldLabel="{!v.selectedYearlyOperationLabel + ' ' + v.labels.integer}"
+                                                entityLabel="{!v.selectedIntegerLabel}"
+                                                apiName="{!v.activeRollup.Integer__c}"
+                                                options="{!v.integerList}"
+                                                mediumDeviceSize="3"
+                                                isRequired="true"
+                            />
+                        </aura:if>
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">

@@ -39,10 +39,10 @@
                     console.log('Before calling reset details');
                     //need to reset fields to populate the selected objects -- refactor to see if necessary
                     //check operations to appropriately set "N/A" for date/amount field values
-                    this.changeYearlyOperationsOptions(cmp, false);
+                    this.onChangeYearlyOperationsOptions(cmp, false);
                     this.resetAllFields(cmp);
                     this.updateAllowedOperations(cmp);
-                    this.updateDependentOperations(cmp);
+                    this.onChangeOperation(cmp);
                     this.resetRollupTypes(cmp);
                     this.setRollupType(cmp);
 
@@ -138,16 +138,23 @@
 
     },
 
-    updateDependentOperations: function(cmp){
+    onChangeInteger: function(cmp){
+        //stores the selected integer value to be used when the page is in view mode
+        var selectedInteger = cmp.get("v.activeRollup.Integer__c");
+        var integerList = cmp.get("v.integerList");
+        var label = this.retrieveFieldLabel(cmp, selectedInteger, integerList);
+        cmp.set("v.selectedIntegerLabel", label);
+    },
+
+    onChangeOperation: function(cmp){
         //debugger;
-        console.log("in helper updateDependentOperations");
+        console.log("in helper onChangeOperation");
         var operation = cmp.get("v.activeRollup.Operation__c");
         console.log('operation: '+operation);
         var renderMap = cmp.get("v.renderMap");
         console.log(renderMap);
 
-        //AMOUNT FIELD
-        //todo: is this ok for translation?
+        //AMOUNT FIELD RENDERING
         if (operation === 'Largest'
             || operation === 'Smallest'
             || operation === 'Best_Year'
@@ -168,7 +175,7 @@
             cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
         }
 
-        //FISCAL YEAR AND TIME BOUND (YEARLY) OPERATION
+        //FISCAL YEAR AND TIME BOUND (YEARLY) OPERATION RENDERING
         if (operation === 'Donor_Streak'
             || operation === 'Years_Donated'
             || operation === 'Best_Year'
@@ -178,11 +185,12 @@
             renderMap["useFiscalYear"] = false;
         }
 
-        //TODO: this not null check isn't working
-        if (operation !== null &&
-            (operation !== 'Donor_Streak'
-            || operation !== 'Years_Donated')) {
+        if (operation !== '' && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
             renderMap["useTimeBoundOperation"] = true;
+            var timeOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+            if(timeOperation === ''){
+                cmp.set("v.activeRollup.Yearly_Operation_Type__c", 'All_Time');
+            }
         } else {
             renderMap["useTimeBoundOperation"] = false;
         }
@@ -243,14 +251,17 @@
 
     },
 
-    changeYearlyOperationsOptions: function(cmp, isOnChange){
+    onChangeYearlyOperationsOptions: function(cmp, isOnChange){
+        //fires when yearly operations options is changed or when set up
+        //the isOnChange value is a boolean to determine if this is fired during a change (true) or during setup (false)
         console.log("in helper changeYearlyOperationsOptions");
         var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
             //disable fiscal year and integer and reset values
             renderMap["useFiscalYear"] = false;
-            renderMap["integer"] = false;
+            renderMap["integerDays"] = false;
+            renderMap["integerYears"] = false;
             if(isOnChange){
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
                 cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
@@ -258,14 +269,23 @@
         } else if (operation === 'Years_Ago') {
             //enable fiscal year and integer
             renderMap["useFiscalYear"] = true;
-            renderMap["integer"] = true;
+            renderMap["integerDays"] = false;
+            renderMap["integerYears"] = true;
+            this.setIntegerYearList(cmp, 'Years_Ago');
+            //set a default integer of 0
+            if(isOnChange){
+                cmp.set("v.activeRollup.Integer__c", 0);
+            }
         } else if (operation === 'Days_Back') {
             //disable fiscal year and enable integer
             //took this out because some operations (not time bound operations) require fiscal year checkbox
             //renderMap["useFiscalYear"] = false;
-            renderMap["integer"] = true;
+            renderMap["integerDays"] = true;
+            renderMap["integerYears"] = false;
+            //set a default integer of 0 and the default fiscal year
             if(isOnChange){
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
+                cmp.set("v.activeRollup.Integer__c", 0);
             }
         } else {
             //default to not showing these fields and reset values
@@ -478,6 +498,19 @@
 
         cmp.set("v.selectedRollupType", rollupType);
         console.log(cmp.get("v.selectedRollupType"));
+    },
+
+    setIntegerYearList: function(cmp){
+        var integerList = [];
+        var timeLabel = cmp.get("v.selectedYearlyOperationLabel");
+
+        integerList.push({name: 0, label: 'This Year'});
+        integerList.push({name: 1, label: 'Last Year'});
+        for(var i=2; i<21; i++) {
+            integerList.push({name: i, label: i + ' Years Ago'});
+        }
+
+        cmp.set("v.integerList", integerList);
     },
 
     updateRollupName: function(cmp){

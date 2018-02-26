@@ -68,6 +68,7 @@
             var cachedRollup = cmp.get("v.cachedRollup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", JSON.parse(JSON.stringify(cachedRollup.valueOf())));
+            //todo: need to add selected integer/operation/yearly op values here?
         }
     },
 
@@ -96,9 +97,11 @@
             } else if (fieldName === 'rollupType'){
 
             } else if (fieldName ==='operation'){
-                helper.updateDependentOperations(cmp);
+                helper.onChangeOperation(cmp);
             } else if(fieldName === 'yearlyOperation'){
-                helper.changeYearlyOperationsOptions(cmp, true);
+                helper.onChangeYearlyOperationsOptions(cmp, true);
+            } else if(fieldName === 'integer'){
+                helper.onChangeInteger(cmp);
             }
         }
     }
