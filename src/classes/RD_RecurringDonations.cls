@@ -722,9 +722,6 @@ public class RD_RecurringDonations {
     */ 
     public static void handleRecurringDonationUpdate(list<npe03__Recurring_Donation__c> recurringDonations, map<id, npe03__Recurring_Donation__c> oldRecurringDonations, TDTM_Runnable.DmlWrapper dmlWrapper){     
 
-        System.debug('+++++Hitting handleRecurringDonationUpdate');
-        System.debug('+++++passed list size: '+recurringDonations.size());
-
         // list of RDs going from Open-->Closed
         list<npe03__Recurring_Donation__c> newlyClosedDonations = new list<npe03__Recurring_Donation__c>();
 
@@ -746,7 +743,6 @@ public class RD_RecurringDonations {
                     newlyClosedDonations.add(r);
                 } else if (r.npe03__Open_Ended_Status__c == openlabel) {
                     // open-ended
-                    System.debug('+++++putting in RD: '+r);
                     openEndedRDsToRecalculate.put(r.Id, r);
                 } else {
                     // fixed-length
@@ -787,7 +783,6 @@ public class RD_RecurringDonations {
         }
 
         if (!openEndedRDsToRecalculate.isEmpty()) {
-            System.debug('+++++Passing these RDs to handler: '+openEndedRDsToRecalculate.values());
             handleOpenEndedScheduleRecalculation(openEndedRDsToRecalculate.values(), oppsFromOpenRDs, dmlWrapper);
         }
 
@@ -806,8 +801,6 @@ public class RD_RecurringDonations {
     private static void handleOpenEndedScheduleRecalculation(List<npe03__Recurring_Donation__c> recurringDonations
             , List<Opportunity> openOpportunities
             , TDTM_Runnable.DmlWrapper dmlWrapper) {
-
-        System.debug('++++Passed OpenOpportunities.size: '+openOpportunities.size());
 
         npe03__Recurring_Donations_Settings__c rds = UTIL_CustomSettingsFacade.getRecurringDonationsSettings();
 
@@ -836,13 +829,10 @@ public class RD_RecurringDonations {
 
         integer forecast_months = (integer)rds.npe03__Opportunity_Forecast_Months__c;
         Date dtForecast =  system.today().toStartOfMonth().addMonths(forecast_months);
-        SYstem.debug('++++dtForecast: '+dtForecast);
 
         for (npe03__Recurring_Donation__c r : recurringDonations) {
 
             Date nextDate = getStartDate(r);
-
-            System.debug('+++++NextDate: '+nextDate);
 
             integer rdcounter = 1;
             if (r.npe03__Total_Paid_Installments__c > 0) {
@@ -1001,9 +991,7 @@ public class RD_RecurringDonations {
 
             Integer opptyCounter = 1;
             Integer closedOpptyCounter = 0;
-            System.debug('++++Opportunities: '+RDOppMap.get(r.Id));
-            System.debug('++++r.Installments: '+r.npe03__Installments__c);
-            System.debug('++++numInstallments: '+numInstallments);
+
             for (Opportunity o : RDOppMap.get(r.Id)) {
 
                 // first make sure they don't have more closed opportunities
@@ -1011,7 +999,7 @@ public class RD_RecurringDonations {
                 if (o.isWon) {
                     closedOpptyCounter++;
                 }
-                System.debug('+++++ClosedInstallments counter: '+closedOpptyCounter);
+
                 if (numInstallments < closedOpptyCounter) {
                     r.addError(Label.RD_ErrorMoreClosedWonOpportunitiesThanInstallments);
                 }
@@ -1167,7 +1155,6 @@ public class RD_RecurringDonations {
         }
 
         if (!openEndedRDsToRecalculate.isEmpty()) {
-            System.debug('+++++Passing these RDs to handler: '+openEndedRDsToRecalculate.values());
             handleOpenEndedScheduleRecalculation(openEndedRDsToRecalculate.values(), oppsFromOpenRDs, dmlWrapper);
         }
 
@@ -1404,6 +1391,12 @@ public class RD_RecurringDonations {
         return o;
     }
 
+    /*******************************************************************************************************
+    * @description Passes back the name for a given Opportunity belonging to a given Recurring Donation
+    * @param o The Opportunity to name
+    * @param r The parent Recurring Donation
+    * @return String
+    */
     private static String getOpportunityName(Opportunity o, npe03__Recurring_Donation__c r) {
 
         String oName = '';

@@ -445,6 +445,13 @@ public class RD_RecurringDonations_TEST {
         system.assert(cOpp == 52 || cOpp == 53);
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation when its number of installments is increased
+    verify:
+        - Opportunities are added and the initially created Opportunities persist.
+        - Nothing is deleted.
+    **********************************************************************************************************/
     static testMethod void updateFixedLengthRecurringDonationIncrease(){
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
@@ -515,6 +522,15 @@ public class RD_RecurringDonations_TEST {
 
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation when its number of installments is increased
+        and it already has closed Opportunities
+    verify:
+        - Opportunities are added and the initially created Opportunities persist.
+        - Nothing is deleted.
+        - The Closed Won Opportunity is untouched.
+    **********************************************************************************************************/
     static testMethod void updateFixedLengthRecurringDonationIncreaseWithClosedOpps() {
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
@@ -588,6 +604,14 @@ public class RD_RecurringDonations_TEST {
         }
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation when its number of installments is decreased
+    verify:
+        - Opportunities are added and all initially created Opportunities persist.
+        - Nothing is deleted.
+        - Extraneous Opportunities are marked Closed Lost as per Open Opp Behavior setting.
+    **********************************************************************************************************/
     static testMethod void updateFixedLengthRecurringDonationDecrease() {
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
@@ -669,6 +693,16 @@ public class RD_RecurringDonations_TEST {
 
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation when its number of installments is decreased
+        and it already has closed Opportunities
+    verify:
+        - Opportunities are added and all initially created Opportunities persist.
+        - Nothing is deleted.
+        - The Closed Won Opportunity is untouched.
+        - Extraneous Opportunities are marked Closed Lost as per Open Opp Behavior setting.
+    **********************************************************************************************************/
     static testMethod void updateFixedLengthRecurringDonationDecreaseWithClosedOpps() {
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
@@ -753,6 +787,13 @@ public class RD_RecurringDonations_TEST {
         System.assertEquals(system.label.npe03.RecurringDonationClosedLostOpportunityStage, postUpdateOpps[3].StageName, 'Opportunity 4 should be Closed Lost.');
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation with a number of installments less than
+        its number of already-Closed Won Opportunities.
+    verify:
+        - Recurring Donation update disallowed; error thrown to user.
+    **********************************************************************************************************/
     static testMethod void updateFixedLengthRecurringDonationDecreaseWithTooManyClosedOpps() {
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
@@ -1514,6 +1555,11 @@ public class RD_RecurringDonations_TEST {
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
 
+    /*********************************************************************************************************
+    @description
+        Unit test for utility method to see if substantive changes were made to a Recurring Donation
+        requiring schedule recalculation
+    **********************************************************************************************************/
     static testMethod void testNeedsRecalculation() {
         Account a1 = new Account();
         a1.Name = 'testNeedsRecalculation';
