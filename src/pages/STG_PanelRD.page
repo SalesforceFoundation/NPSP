@@ -20,6 +20,16 @@
                 </div>
             </div>
             <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.Recurring_Donation_Batch_Size__c.Label}" for="tbxRDBS" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgRD.Recurring_Donation_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputField value="{!stgService.stgRD.Recurring_Donation_Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxRDBS" html-aria-describedby="{!$Component.tbxRDBSHelp}" styleClass="slds-input" />
+                    <apex:outputPanel id="tbxRDBSHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRDBatchSize}"/>
+                    </apex:outputPanel>
+                </div>
+            </div>
+            <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe03__Recurring_Donations_Settings__c.Fields.npe03__Open_Opportunity_Behavior__c.Label}" for="slOOB" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgRD.npe03__Open_Opportunity_Behavior__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
