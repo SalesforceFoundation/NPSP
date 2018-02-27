@@ -147,8 +147,13 @@ public class CRLP_RollupProcessingOptions {
         /**
          * @description Set the property
          */
-        public void setMapOfProcessedOppIdsByAccountId(Map<Id,Set<Id>> theMap) {
-            this.mapOfProcessedOppIdsByAcctId = theMap;
+        public void setMapOfProcessedOppIdsByAccountId(Map<Id,Set<Id>> theMap, List<Id> parentIds) {
+            this.mapOfProcessedOppIdsByAcctId = new Map<Id, Set<Id>>();
+            for (Id mapKey : parentIds) {
+                if (theMap.containsKey(mapKey)) {
+                    this.mapOfProcessedOppIdsByAcctId.put(mapKey, theMap.get(mapKey));
+                }
+            }
         }
 
         /**
@@ -157,9 +162,9 @@ public class CRLP_RollupProcessingOptions {
          * job will add every parent id to this map, but the stateful var only needs to retain the first and last
          * parent id's processed.
          */
-        public void setMapOfRollupsByParentId(Map<Id, List<CRLP_Rollup>> theMap) {
+        public void setMapOfRollupsByParentId(Map<Id, List<CRLP_Rollup>> theMap, List<Id> parentIds) {
             this.mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
-            for (Id mapKey : theMap.keySet()) {
+            for (Id mapKey : parentIds) {
                 if (theMap.get(mapKey) != null) {
                     List<CRLP_Rollup> newList = new List<CRLP_Rollup>();
                     for (CRLP_Rollup r : theMap.get(mapKey)) {

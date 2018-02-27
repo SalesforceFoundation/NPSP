@@ -158,11 +158,11 @@ public abstract class CRLP_AbstractRollup_BATCH {
      * @param summaryRecords
      * @return a list of Parent (Summary) SObject records in the proper order
      */
-    protected List<SObject> resequenceSummaryRecords(List<Id> parentIds, List<SObject> summaryRecords) {
+    protected List<SObject> queryAndSequenceSummaryRecords(List<Id> parentIds, String soql) {
         // Resequence the Parent (Summary) records to be in the exact order of the detail records
         // using the defined parent Id
         List<SObject> reorderedSummaryRecords = new List<SObject>();
-        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(summaryRecords);
+        Map<Id, SObject> mapOfSummaryRecords = new Map<Id, SObject>(database.query(soql));
         for (Id parentId : parentIds) {
             reorderedSummaryRecords.add(mapOfSummaryRecords.get(parentId));
         }
@@ -184,9 +184,6 @@ public abstract class CRLP_AbstractRollup_BATCH {
 
         // Start by cleaning up the stateful data
         cleanStatefulRollupsList();
-
-        options.setMapOfRollupsByParentId(this.statefulRollupsById);
-        options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct);
 
         if (this.summaryObjectType == Account.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();

@@ -78,10 +78,9 @@ public class CRLP_RollupProcessor_SVC {
 
         // Loop through each of the detail records and call the appropriate handler processing method
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
-
+        Id previousParentIdProcessed = null;
         for (Integer ns=0, listSizeSum=summaryRecords.size(); ns<listSizeSum; ns++) {
-            SObject parent = summaryRecords[ns];
-            Id parentId = parent.Id;
+            Id parentId = summaryRecords[ns].Id;
 
             List<SObject> detailsForParent = mapOfDetailsByParentId.get(parentId);
 
@@ -103,12 +102,20 @@ public class CRLP_RollupProcessor_SVC {
                 detailsForParent = prunedOpps;
             }
 
+            // Heap size is precious. There's no need to keep anything other than the first and last
+            // collection of CRLP_Rollup instances in the stateful options var. The completeRollupForParent()
+            // methods stores everything in this var because it's not sure of which is the first or last.
+            // The block below removes everything from this map that is not the first summary record id.
+            if (ns > 1 && previousParentIdProcessed != null) {
+                options.mapOfRollupsByParentId.remove(previousParentIdProcessed);
+            }
+
             // Call the method to complete the actual rollup operation for this parent.
             // The resulting SObject record is returned.
             // The options.rollups collection will contain the list of CRLP_Rollup records
             // that were processed for this rollup operation. This is needed to determine if the
             // resulting record requires an update.
-            SObject updatedRecord = completeRollupForParent(parent, detailsForParent, childRecordsByDetailId, options);
+            SObject updatedRecord = completeRollupForParent(summaryRecords[ns], detailsForParent, childRecordsByDetailId, options);
 
             // Does the resulting record require an update?
             if (updatedRecord != null) {
@@ -116,6 +123,7 @@ public class CRLP_RollupProcessor_SVC {
             }
 
             CRLP_Debug_UTIL.clearCurrentRollupState();
+            previousParentIdProcessed = parentId;
         }
 
         // Need to ensure the last record isn't removed it if needs to be written. Just not sure
