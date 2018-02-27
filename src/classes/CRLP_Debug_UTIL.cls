@@ -34,8 +34,8 @@ public class CRLP_Debug_UTIL {
     public static void setCurrentRollupState(String state, CRLP_Rollup rollup) {
         if (isEnabled) {
             String rollupData = '';
-            for (Rollup__mdt rcmt : rollup.rollupsMdt) {
-                rollupData += rcmt.DeveloperName + '-' + rcmt.Operation__c + ';';
+            for (CRLP_Rollup.Rollupmdt rcmt : rollup.rollupsMdt) {
+                rollupData += rcmt.summaryObject + '.' + rcmt.summaryField + '-' + rcmt.operation + ';';
             }
             currentRollupState.add(state + ' ==> Rollup(' + rollupData.removeEnd(';') + ')');
         }

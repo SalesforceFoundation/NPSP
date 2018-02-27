@@ -64,11 +64,11 @@ public class CRLP_Operation_SVC {
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
 
         // Get the the first rollup in the list.
-        Rollup__mdt firstRollup = rollup.rollupsMdt[0];
+        CRLP_Rollup.Rollupmdt firstRollup = rollup.rollupsMdt[0];
 
         // these values should be the same for every rollup definition in the CRLP_Rollup instance
-        String dateField = firstRollup.Date_Field__r.QualifiedApiName;
-        String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
+        String dateField = firstRollup.dateField;
+        String amtField = firstRollup.amountField;
 
 //        System.debug('>>>> doRollupOperation() for ' + oppSObject.Primary_Contact__c + ' ' + objName + ' / ' + firstRollup.Summary_Field__r.QualifiedApiName);
 
@@ -159,8 +159,8 @@ public class CRLP_Operation_SVC {
             }
 
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                Rollup__mdt r = rollup.rollupsMdt[ns];
-                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
+                CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
+                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.operation);
 
                 if (dateTimeValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateTimeValue < rollup.minDateTime || rollup.minDateTime == null)) {
                     // Operation = FIRST (always based on a date)

@@ -88,7 +88,7 @@ public class CRLP_Rollup_SVC {
             SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
             for (CRLP_Rollup rollup : rollups) {
                 for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                    emptyObject.put(rollup.rollupsMdt[ns].Summary_Field__r.QualifiedApiName, null);
+                    emptyObject.put(rollup.rollupsMdt[ns].summaryField, null);
                 }
             }
             cachedEmptyObjects.put(objType, emptyObject);
@@ -113,8 +113,8 @@ public class CRLP_Rollup_SVC {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                Rollup__mdt r = rollup.rollupsMdt[ns];
-                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
+                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.summaryObject, r.summaryField);
                 SoapType summaryFieldType = summaryField.getSoapType();
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
