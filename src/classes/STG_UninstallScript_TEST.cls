@@ -39,7 +39,7 @@ public with sharing class STG_UninstallScript_TEST {
     public testmethod static void rununinstall() {
         //The scheduled jobs are being set when the settings page loads
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
-        ctrl.setTriggerSchedConfig();
+        ctrl.onNpspSettingsLoad();
         
         //Check jobs were scheduled
         List<CronTrigger> scheduledJobs = [SELECT Id, CronJobDetail.Id FROM CronTrigger 
