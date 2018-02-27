@@ -1065,6 +1065,8 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CRLP_AdvancedCustomizationHeader</members>
+        <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>

@@ -7,6 +7,7 @@
          * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
         var activeRollupId = cmp.get("v.activeRollupId");
 
+        //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
         if (activeRollupId !== null) {
             var action = cmp.get("c.getRollupById");
             action.setParams({id: activeRollupId});
@@ -90,12 +91,11 @@
             console.log("value is " + value);
 
             if(fieldName === 'summaryObject'){
-                helper.onChangeSummaryObjectHelper(cmp);
+                helper.onChangeSummaryObject(cmp);
             } else if (fieldName === 'summaryField'){
-                helper.updateAllowedOperations(cmp);
-                helper.updateRollupName(cmp);
+                helper.onChangeSummaryField(cmp);
             } else if (fieldName === 'rollupType'){
-
+                helper.onChangeRollupType(cmp);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp);
             } else if(fieldName === 'yearlyOperation'){

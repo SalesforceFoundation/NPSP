@@ -620,6 +620,22 @@
         <value>Available Rollup Types</value>
     </labels>
     <labels>
+        <fullName>CRLP_AdvancedCustomizationHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the advanced customization section on a Rollup__mdt record.</shortDescription>
+        <value>Advanced Customization</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_AdvancedCustomizationText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
+        <value>PLACEHOLDER - text for when/why users may need to use the amount, date, or detail fields.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_CreditType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

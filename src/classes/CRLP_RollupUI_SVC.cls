@@ -323,9 +323,10 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNametoFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String obj : objectNames){
-            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllLabeledFieldsWithType(obj);
+            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllWritableFieldsWithType(obj);
             objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
             //TODO: filter out fields that can't be rolled up before returning
+            //todo: will also need to append the field being used in the list
         }
 
         return objNametoFieldTypeMap;
@@ -345,6 +346,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'accountLabel' => Schema.SObjectType.Account.getLabel(),
                 'action' => Label.stgLabelActionColumn,
                 'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
+                'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
+                'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
                 'allocationLabel' => Schema.SObjectType.Allocation__c.getLabel(),
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
