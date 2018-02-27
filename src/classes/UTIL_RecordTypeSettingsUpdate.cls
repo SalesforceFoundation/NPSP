@@ -229,11 +229,13 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         Map<String, Id> nameMap = new Map<String, Id>();
 
         for (RecordType rt : recordTypes) {
-            nameMap.put(rt.Name, rt.Id);
+            nameMap.put(rt.Name.toLowerCase(), rt.Id);
+
             try {
                 for (sObject rtl : rt.getSobjects('Localization')) {
                     // potentially overwrite existing entry due to ambiguity in naming-- fine
-                    nameMap.put((String) rtl.get('Value'), rt.Id);
+                    String rtlName = (String) rtl.get('Value');
+                    nameMap.put(rtlName.toLowerCase(), rt.Id);
                 }
             } catch (SObjectException e) {
                 // no localizations available
@@ -261,13 +263,37 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         }
 
         List<String> names = nameString.split(';', 0);
+        return resolveNamesToIds(names, nameMap);
+    }
 
+    @TestVisible
+    /*******************************************************************************************************
+    * @description Determines the Record Type Id based on the name
+     * @param name A Record Type name
+     * @param nameMap A mapping of Record Type names to Record Type Ids
+     * @return String An Id if the name is a valid Record Type name, otherwise null.
+    */
+    private String getIdFromName(String name, Map<String, Id> nameMap) {
+        if (name == null) {
+            return null;
+        }
+
+        return resolveNamesToIds(new List<String>{ name }, nameMap);
+    }
+
+    /*******************************************************************************************************
+    * @description Determines the Record Type Ids based on the names
+     * @param names List of valid and invalid names and Ids
+     * @param nameMap A mapping of Record Type names to Record Type Ids
+     * @return String A String containing valid semi-colon separated Record Type Ids
+    */
+    private String resolveNamesToIds(List<String> names, Map<String, Id> nameMap) {
         Set<String> ids = new Set<String>();
         for (String name : names) {
             if (isId(name)) {
                 ids.add(name);
-            } else if (nameMap.containsKey(name)) {
-                ids.add(String.valueOf(nameMap.get(name)));
+            } else if (nameMap.containsKey(name.toLowerCase())) {
+                ids.add(String.valueOf(nameMap.get(name.toLowerCase())));
             }
         }
 
@@ -276,26 +302,6 @@ global virtual class UTIL_RecordTypeSettingsUpdate {
         return idsString;
     }
 
-    /*******************************************************************************************************
-    * @description Determines the Record Type Id based on the name
-     * @param name A Record Type name
-     * @param rtNamesById A mapping of Record Type names to Record Type Ids
-     * @return String An Id if the name is a valid Record Type name, otherwise null.
-    */
-    private String getIdFromName(String name, Map<String, Id> rtNamesById) {
-        if (String.isBlank(name)) {
-            return null;
-        }
-
-        String rtId = null;
-        if (isId(name)) {
-            rtId = name;
-        } else if (rtNamesById.containsKey(name)) {
-            rtId = String.valueOf(rtNamesById.get(name));
-        }
-
-        return rtId;
-    }
 
     /**
      * @description Determine if the given name is an id or not

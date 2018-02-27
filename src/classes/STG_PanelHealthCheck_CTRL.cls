@@ -454,15 +454,14 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     @TestVisible
     private void verifyRecordTypes() {
         checkMultiRecordTypeIds(Opportunity.sObjectType, STG_Panel.stgService.stgAllo.Excluded_Opp_RecTypes__c, 
-            UTIL_Namespace.StrTokenNSPrefix('Allocations_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Excluded_Opp_RecTypes__c'), 
-            Label.stgNavDonations, Label.stgNavAllocations);
+            UTIL_Namespace.StrTokenNSPrefix('Allocations_Settings__c'), UTIL_Namespace.StrTokenNSPrefix('Excluded_Opp_RecTypes__c'), Label.stgNavDonations, Label.stgNavAllocations);
             
         checkRecordTypeId(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c, 
             'npe01__Contacts_And_Orgs_Settings__c', 'npe01__HH_Account_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);
         checkRecordTypeId(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c, 
             'npe01__Contacts_And_Orgs_Settings__c', 'npe01__One_to_One_RecordTypeID__c', Label.stgNavPeople, Label.stgNavAccountModel);  
         checkMultiRecordTypeIds(Opportunity.sObjectType, STG_Panel.stgService.stgCon.Opp_RecTypes_Excluded_for_Payments__c, 
-            'npe01__Contacts_And_Orgs_Settings__c', 'Opp_RecTypes_Excluded_for_Payments__c', Label.stgNavDonations, Label.stgNavPayments);   
+            'npe01__Contacts_And_Orgs_Settings__c', UTIL_Namespace.StrTokenNSPrefix('Opp_RecTypes_Excluded_for_Payments__c'), Label.stgNavDonations, Label.stgNavPayments);   
             
         checkRecordTypeId(Opportunity.sObjectType, STG_Panel.stgService.stgRD.npe03__Record_Type__c, 
             'npe03__Recurring_Donations_Settings__c', 'npe03__Record_Type__c', Label.stgNavRecurringDonations, Label.stgNavRecurringDonations); 
