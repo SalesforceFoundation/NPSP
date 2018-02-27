@@ -57,23 +57,47 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
         // so nothing to do in this method. 
         return null;
     }
-    
+
     /*********************************************************************************************************
-    * @description Action Method that runs the install script to setup TDTM and initializes the 
-    * Schedulables configuration.  Called by the Settings page's action property when it first loads.
+    * @description Action Method that runs the install script to setup TDTM, initializes the 
+    * Schedulables configuration and fixes invalid Record Types. 
+    * Called by the Settings page's action property when it first loads.
     * @return void 
     */
-    public void setTriggerSchedConfig() {
+    public void onNpspSettingsLoad() {
         //Set TDTM config
         STG_InstallScript installScript = new STG_InstallScript();
         installScript.runNewOrgScript();
-        //Set master schedulables config
+
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+
         if (runningUserIsAdmin()) {
+            cleanupRecordTypeSettings();
+
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         }
     }
+    
+    /*********************************************************************************************************
+    * @description Clean up invalid Record Type Settings
+    * @return void 
+    */
+    private void cleanupRecordTypeSettings() {
+        try {
+            UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
 
+        } catch(Exception e) {
+            //Do not rollback the transaction so settings before the error are still fixed
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+
+        } finally {
+            //Not only refresh the custom settings  
+            STG_Panel.stgService = null; 
+            //but also refresh affected custom settings explicitly since all properties are static. 
+            UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
+        }
+    }
+    
     /*******************************************************************************************************
     * @description Returns whether the running user is a System Administrator.
     * @return void
