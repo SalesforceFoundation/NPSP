@@ -35,56 +35,75 @@
 */
 global without sharing class STG_InstallScript implements InstallHandler {
     
+    @TestVisible
+    private enum InstallAction { 
+        POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
+        INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
+        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT 
+    }
+
     /*******************************************************************************************************
     * @description Runs on package install.
     * @param context The install context.
     * @return void
     */
     global void onInstall(InstallContext context) {
-        // Certain install scripts should not cause package installation failure, 
-        // thus if an error occurs, the exception will not be re-thrown.
-        // Otherwise, if the flag is true, any exception thrown during the conversion process 
-        // will cause the complete installation to fail.
-        Boolean rethrowException = false;
-        Savepoint sp = Database.setSavepoint(); 
-        
-        try {             
-            //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
-            if(context.previousVersion() == null) {
-                //only run recurring donations counter script on fresh installs; this also covers upgrades from v2
-                database.executeBatch(new RD_InstallScript_BATCH(), 10); 
+        ErrorLogger logger = new ErrorLogger(context, ERR_Handler_API.Context.STTG);
+                     
+        //First install of Cumulus. NPSP is a requirement to install Cumulus, so we don't need to check if it's installed
+        if (context.previousVersion() == null) {
+            //Populate Recurring Donation Installment Number on Opportunity for fresh installs; 
+            //This also covers upgrades from v2
+            executeAction(InstallAction.POPULATE_RD_INSTALLMENT_NUMBER, logger);
+            
+            executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
+
+        } else if (context.isUpgrade() || context.isPush()) {
+            executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
+        }
+
+        executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
+
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
+            executeAction(InstallAction.CLEANUP_RECORD_TYPE_SETTINGS, logger);
+        }
+
+        if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
+            executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
+        }
+
+        logger.log();
+    }
+
+    private void executeAction(InstallAction action, ErrorLogger logger) {
+
+        Savepoint sp = Database.setSavepoint();  
+
+        try {
+            if (action == InstallAction.POPULATE_RD_INSTALLMENT_NUMBER) {
+                database.executeBatch(new RD_InstallScript_BATCH(), 10);
+
+            } else if (action == InstallAction.RUN_NEW_ORG_SCRIPT) {
                 runNewOrgScript();
-            } else if(context.isUpgrade()) {
+
+            } else if (action == InstallAction.INSERT_TDTM_DEFAULTS) {
                 insertTdtmDefaults(null);
-            } else if(context.isPush()) {
-                insertTdtmDefaults(null);
-            }
 
-            UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
+            } else if (action == InstallAction.ABORT_OLD_SCHEDULED_JOBS) {
+                UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
-            // Stop the package installation process if an exception occurs for the subsequent install scripts
-            rethrowException = true;
-
-            if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 79)) < 0) {
-                // update record type settings ONLY if upgrading from a version prior to 3.78
+            } else if (action == InstallAction.CLEANUP_RECORD_TYPE_SETTINGS) {
                 UTIL_RecordTypeSettingsUpdate.getInstance().updateSettings();
-            }
 
-            if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
-                // update campaign list report settings ONLY if the field is blank or upgrading from a version prior to 3.112
+            } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
                 updateCampaignListReport();
             }
 
         } catch(Exception e) {
             Database.rollback(sp);
-
-            if (rethrowException) {
-                throw e;
-            }
-
-            sendEmailOnInstallError(e, context);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-        }        
+            
+            logger.add(e);
+        } 
     }
 
     /*******************************************************************************************************
@@ -256,35 +275,121 @@ global without sharing class STG_InstallScript implements InstallHandler {
         List<Trigger_Handler__c> handlersToUpdate = [select Active__c, Class__c from Trigger_Handler__c where Class__c 
                                                      IN :handlerSettingsToUpdate];
         for(Trigger_Handler__c handler : handlersToUpdate) {
-            //UTIL_Debug.debug('****Deactivating class: ' + handler.Class__c);
             handler.Active__c = false;
         }
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 
     }
 
+
     /*******************************************************************************************************
-    * @description Sends an email to the user installing the package warning of package installation failure.
-    * @param e Exception thrown during the package installation process.
-    * @param context The installation context.
-    * @return void
+    * @description Collects exceptions. Logs exceptions by sending an email and processing error via ERR_Handler.
     */
-    public static void sendEmailOnInstallError(Exception e, InstallContext context) {
-        try {
-            String userEmail = [Select Id, Email from User where Id =:context.installerID()].Email;  
-            userEmail = UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
-            Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
-            mail.setUseSignature(false);
-            mail.setReplyTo('donotreply@salesforce.org');
-            mail.setSenderDisplayName('Nonprofit Success Pack');
-            mail.setSubject('NPSP Install Errors');
-            String bodyString = Label.stgInstallScriptError;
-            bodyString += '\n\n==========================. \n\n Error message: \n' + e.getMessage() + '\n\n'
-            + 'Error stack trace: \n' + e.getStackTraceString();
-            mail.setPlainTextBody(bodyString);      
-            mail.setToAddresses(new String[]{'errors@salesforce.org', userEmail});
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[]{mail});
-        } catch(Exception e2) {
-            //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+    public class ErrorLogger {
+        /** @description The install context. */
+        InstallContext installContext;
+
+        /** @description The error handler context. */
+        ERR_Handler_API.Context errContext;
+
+        /** @description The list of exceptions. */
+        List<Exception> exceptions = new List<Exception>();
+
+        /*******************************************************************************************************
+        * @description The constructor
+        * @param installContext The install context
+        * @param errContext The error handler context
+        */
+        public ErrorLogger(InstallContext installContext, ERR_Handler_API.Context errContext) {
+            this.installContext = installContext;
+            this.errContext = errContext;
         }
+
+        /*******************************************************************************************************
+        * @description Returns true if the logger has at least one exception stored
+        * @return Boolean
+        */
+        public Boolean hasErrors() {
+            return !exceptions.isEmpty();
+        }
+
+        /*******************************************************************************************************
+        * @description Adds the exception to the list of exceptions
+        * @param e The Exception
+        * @return void
+        */
+        public void add(Exception e) {
+            if (e != null) {
+                exceptions.add(e);
+            }
+        }
+
+        /*******************************************************************************************************
+        * @description Logs the exception by sending an email and processing the errors via ERR_Handler
+        * @return void
+        */
+        public void log() {
+            if (!hasErrors()) {
+                return;
+            }
+
+            sendEmail();
+            ERR_Handler.processErrors(exceptions, errContext);
+        }
+
+        /*******************************************************************************************************
+        * @description Sends an email to the user installing the package notifying them about failed installation steps.
+        * @return void
+        */
+        private void sendEmail() {
+            try {
+                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                mail.setUseSignature(false);
+                mail.setReplyTo('donotreply@salesforce.org');
+                mail.setSenderDisplayName('Nonprofit Success Pack');
+                mail.setSubject('NPSP Install Errors');
+
+                mail.setPlainTextBody(buildEmailBody());  
+
+                mail.setToAddresses(new String[] { 'errors@salesforce.org', getUserEmail() });
+
+                Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+
+            } catch(Exception e) {
+                //Nothing to do here, as we don't want the install script to fail because emails could not be sent.
+            }
+
+        }
+
+        /*******************************************************************************************************
+        * @description Retrieves the installing user email
+        * @return String
+        */
+        private String getUserEmail() {
+            String userEmail = [SELECT Id, Email FROM User WHERE Id =:installContext.installerID()].Email;  
+            return UTIL_Namespace.sandboxEmailToRealEmail(userEmail);
+        }
+
+        /*******************************************************************************************************
+        * @description Builds email body by displaying exception messages and stack traces.
+        * @return String
+        */
+        @TestVisible
+        private String buildEmailBody() {
+            String bodyString = Label.stgInstallScriptError;
+
+            bodyString += String.format(
+                '\n\n==========================. \n\nError message{0}:',
+                new String[] { exceptions.size() == 1 ? '' : 's'}
+            );
+
+            for (Exception e : exceptions) {
+                bodyString += '\n' + e.getMessage() +
+                    '\nError stack trace: \n' + e.getStackTraceString() + 
+                    '\n\n';
+            }
+
+            return bodyString;
+        }
+
     }
 }

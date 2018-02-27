@@ -40,6 +40,42 @@
     */
     public override string idPanel() { return 'idPanelCon'; }
 
+     /*******************************************************************************************************
+    * @description the Household Account Record Type Name
+    */ 
+    public static string strHHAccountRecordTypeLabel {
+    	get {
+    		if (strHHAccountRecordTypeLabel == null) {
+                try {
+                    strHHAccountRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c);
+                } catch(Exception e) {
+                    strHHAccountRecordTypeLabel = null;
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+                }
+    		}
+    		return strHHAccountRecordTypeLabel;
+    	}
+    	private set;
+    }
+       
+    /*******************************************************************************************************
+    * @description the One-to-One Account Record Type Name
+    */ 
+    public static string strOneToOneRecordTypeLabel {
+        get {
+            if (strOneToOneRecordTypeLabel == null) {
+                try {
+                    strOneToOneRecordTypeLabel = UTIL_RecordTypes.GetRecordTypeName(Account.sObjectType, STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c);
+                } catch(Exception e) {
+                    strOneToOneRecordTypeLabel = null;
+                    ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+                }
+            }
+            return strOneToOneRecordTypeLabel;
+        }
+        private set;
+    }    
+
     /*********************************************************************************************************
     * @description Action Method to save the current settings
     * @return null 
