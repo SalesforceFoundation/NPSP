@@ -43,25 +43,17 @@ public class OPP_AutomatedSoftCreditsService {
 
 	/*********************************************************************************************************
     * @description Determines if the Account is an Organization based on its RecordType.
-    * @param oppAccountId The Id of the Opportunity's associated Account.
+    * @param oppAccountRecordTypeId The Record Type Id of the Opportunity's associated Account.
     * @return Boolean
     **********************************************************************************************************/
-    public static Boolean isOrganizationalAccount(Id oppAccountId) {
-    	if (oppAccountId == null) {
+    public static Boolean isOrganizationalAccount(Id oppAccountRecordTypeId) {
+		if (oppAccountRecordTypeId == null) {
     		return false;
     	}
 
-  		Boolean isOrganizationalAccount = false;
-
-  		List<Account> accountDetails = [SELECT Id, Name, RecordTypeId 
-  										FROM Account 
-  										WHERE Id = :oppAccountId];
-
-  		if (!accountDetails.isEmpty()) {
-  			isOrganizationalAccount = ACCOUNT_RECORD_TYPE_ORGANIZATION.equalsIgnoreCase(UTIL_RecordTypes.getRecordTypeName(Account.sobjectType, accountDetails[0].RecordTypeId));
-  		}
-		
-		return isOrganizationalAccount;
+		return (ACCOUNT_RECORD_TYPE_ORGANIZATION.equalsIgnoreCase(UTIL_RecordTypes.getRecordTypeName(Account.sobjectType, oppAccountRecordTypeId))
+				&& !CAO_Constants.isOneToOne()
+				&& !CAO_Constants.isBucketModel());
     }
 
 

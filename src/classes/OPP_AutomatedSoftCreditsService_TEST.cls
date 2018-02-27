@@ -61,7 +61,7 @@ public with sharing class OPP_AutomatedSoftCreditsService_TEST {
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.Id);
+		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.RecordTypeId);
         Test.stopTest();
 
         System.assertEquals(true, isOrganizationalAccount);
@@ -84,7 +84,7 @@ public with sharing class OPP_AutomatedSoftCreditsService_TEST {
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.Id);
+		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.RecordTypeId);
         Test.stopTest();
 
         System.assertEquals(false, isOrganizationalAccount);

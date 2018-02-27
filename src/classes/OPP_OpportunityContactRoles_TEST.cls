@@ -46,6 +46,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Role values to use in settings.
     */    
     private static string donorRoleforTest = 'Donor';
+    private static string softCreditRoleforTest = 'Soft Credit';
     private static string HonoreeRoleforTest = 'Honoree';
     private static string NotificationRecipientRoleforTest = 'Notification Recipient';
 
@@ -56,6 +57,7 @@ private class OPP_OpportunityContactRoles_TEST {
         if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
         
         Account acc = new Account(Name='test77');
+        acc.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.sobjectType, OPP_AutomatedSoftCreditsService.ACCOUNT_RECORD_TYPE_ORGANIZATION);
         insert acc;
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -94,8 +96,10 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp2.Id];
         system.assertEquals(con.Id, result[0].ContactId);
-        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.Id)) {
-            system.assertEquals(donorRoleforTest, result[0].Role);
+        if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.RecordTypeId)) {
+            System.assertEquals(softCreditRoleforTest, result[0].Role);
+        } else {
+           System.assertEquals(donorRoleforTest, result[0].Role);
         }
     }
     
@@ -146,7 +150,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+        Contact[] createdContacts = [select AccountId, Account.RecordTypeId from Contact where Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -160,9 +164,7 @@ private class OPP_OpportunityContactRoles_TEST {
         OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
-        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(createdContacts[0].AccountId)) {
-            system.assertEquals(donorRoleforTest, result[0].Role);
-        }
+        system.assertEquals(donorRoleforTest, result[0].Role);
         system.assertEquals(true, result[0].isPrimary);
         
        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
@@ -181,7 +183,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+        Contact[] createdContacts = [select AccountId, Account.Name from Contact where Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -230,9 +232,7 @@ private class OPP_OpportunityContactRoles_TEST {
         OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
-        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(createdContacts[0].AccountId)) {
-            system.assertEquals(donorRoleforTest, result[0].Role);
-        }
+        system.assertEquals(donorRoleforTest, result[0].Role);
         system.assertEquals(true, result[0].isPrimary);
         
     }
@@ -248,7 +248,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+        Contact[] createdContacts = [select AccountId, Account.Name from Contact where Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
