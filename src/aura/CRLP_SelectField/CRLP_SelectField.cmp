@@ -47,6 +47,7 @@
     <aura:attribute name="mediumDeviceSize" type="Integer" default="6" description="Controls the number of items per row on a medium device"/>
     <aura:attribute name="objectLabel" type="String" default="" description="Optional parameter to concatenate the object label with the field labels"/>
     <aura:attribute name="isRequired" type="Boolean" default="" description="Sets the required flag on the field"/>
+    <aura:attribute name="hasNullOption" type="Boolean" default="true" description="Optional parameter to include the first null option in a list"/>
 
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
         <!--Field Label: {!v.fieldLabel}<br/>
@@ -65,7 +66,9 @@
                                   required="{!v.isRequired}"
                                   onchange="{!c.changeField}">
 
-                    <option value="" text=""/>
+                    <aura:if isTrue="{!v.hasNullOption}">
+                        <option value="" text=""/>
+                    </aura:if>
 
                     <aura:iteration items="{!v.options}" var="option">
                         <option value="{!option.name}" text="{!v.objectLabel+option.label}" selected="{!option.name == v.apiName}"/>

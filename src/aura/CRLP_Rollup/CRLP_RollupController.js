@@ -1,10 +1,8 @@
 ({
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
-        /**called when the activeRollupId changes, specifically in the rollupRow
-         * queries active rollup ID to populate the full active rollup detail
-         * switches the display to the detail view and sets the width for the buttons
-         * called after user returns to grid since activeRollupId is cleared, null check is necessary**/
+         /* queries active rollup ID to populate the full active rollup detail
+         * switches the display to the detail view and sets the width for the buttons**/
         var activeRollupId = cmp.get("v.activeRollupId");
 
         //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
@@ -80,28 +78,33 @@
 
     onSelectValueChange: function(cmp, event, helper){
         //listens for a message from the select field cmp to trigger a change in the rollup information
-        //fields are IDed by their camel-case names. ex: Summary_Object__c is summaryObject
+        //fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
         var message = event.getParam("message");
         var channel = event.getParam("channel");
         console.log("Message received!");
         if(channel === 'selectField'){
             var fieldName = message[0];
             var value = message[1];
+            var label = message[2];
             console.log("field name is " + fieldName);
             console.log("value is " + value);
 
             if(fieldName === 'summaryObject'){
-                helper.onChangeSummaryObject(cmp);
+                helper.onChangeSummaryObject(cmp, value, label);
             } else if (fieldName === 'summaryField'){
-                helper.onChangeSummaryField(cmp);
+                helper.onChangeSummaryField(cmp, label);
             } else if (fieldName === 'rollupType'){
-                helper.onChangeRollupType(cmp);
+                helper.onChangeRollupType(cmp, value, label);
+            } else if (fieldName === 'filterGroup'){
+                helper.onChangeFilterGroup(cmp, label);
             } else if (fieldName ==='operation'){
-                helper.onChangeOperation(cmp);
+                helper.onChangeOperation(cmp, value, label);
             } else if(fieldName === 'yearlyOperation'){
-                helper.onChangeYearlyOperationsOptions(cmp, true);
+                helper.onChangeYearlyOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){
-                helper.onChangeInteger(cmp);
+                helper.onChangeInteger(cmp, label);
+            } else if(fieldName === 'detailField'){
+                helper.onChangeDetailField(cmp, value, label);
             }
         }
     }

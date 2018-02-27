@@ -4,7 +4,8 @@
         //the intended recipient of the message is the rollup component
         var fieldName = cmp.get('v.auraId');
         var value = event.getSource().get("v.value");
-        var message = [fieldName, value];
+        var label = event.getSource().get("v.name");
+        var message = [fieldName, value, label];
         var sendMessage = $A.get('e.ltng:sendMessage');
         sendMessage.setParams({
             'message': message,
