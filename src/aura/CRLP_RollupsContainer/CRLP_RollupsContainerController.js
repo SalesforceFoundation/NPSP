@@ -33,7 +33,7 @@
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
                 var rollupColumns = [{label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
-                                , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare'}}
+                                , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
                             , {label: model.labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
                             , {label: model.labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
                             , {label: model.labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
@@ -47,8 +47,8 @@
 
                 var filterGroupColumns = [{label: model.labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
                     , {label: model.labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true'}
+                    , {label: model.labels.countOf+' '+model.labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true', initialWidth: 200}
+                    , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true', initialWidth: 200}
                     , {type: 'action', typeAttributes: { rowActions: actions }}
                 ];
 

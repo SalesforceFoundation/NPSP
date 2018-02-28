@@ -81,7 +81,6 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
-    <!--<aura:registerEvent name="NavigateEvent" type="c:CRLP_NavigateEvent"/>-->
 
     <!-- markup -->
 

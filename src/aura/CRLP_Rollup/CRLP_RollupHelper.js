@@ -52,11 +52,11 @@
                     }
 
                     //update filter group list to contain none as a first option
+                    //note: unshift can't be used here due to an issue with bound values
                     var filterGroups = cmp.get("v.filterGroups");
-                    if(filterGroups[0].name !== ''){
-                        filterGroups.unshift({"name": '', "label": cmp.get("v.labels.na")});
-                    }
-                    cmp.set("v.filterGroups", filterGroups);
+                    var tempList = [{"name": '', "label": cmp.get("v.labels.na")}];
+                    tempList = tempList.concat(filterGroups);
+                    cmp.set("v.filterGroups", tempList);
 
                     console.log('Called reset details');
                 }
@@ -274,7 +274,7 @@
 
     },
 
-    onChangeRollupType: function (cmp, detailObject, label) {
+    onChangeRollupType: function (cmp, detailObject, rollupLabel) {
         //renders filter group and operation
         //resets fields for the amount, detail and date fields based on the detail object
         var renderMap = cmp.get("v.renderMap");
@@ -288,7 +288,7 @@
         var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
         cmp.set("v.activeRollup.Detail_Object__r.Label", detailLabel);
         //todo: not working yet
-        cmp.set("v.selectedRollupType.label", label);
+        cmp.set("v.selectedRollupType", {label: rollupLabel, name: detailObject});
 
         //reset amount fields
         this.resetFields(cmp, detailObject, 'amount');
@@ -315,11 +315,20 @@
     },
 
     onChangeSummaryField: function(cmp, label) {
-        //render rollupType field, filter allowed operations by field type, and set concatenated rollup name
+        //renders rollupType field, filters allowed operations by field type
+        //sets default rollup type for list of 1, sets concatenated rollup name
         var renderMap = cmp.get("v.renderMap");
         renderMap["rollupType"] = true;
         renderMap["description"] = true;
         cmp.set("v.renderMap", renderMap);
+
+        var rollupTypes = cmp.get("v.rollupTypes");
+        //sets rollup type automatically if there is only 1
+        if(rollupTypes.length === 1){
+            cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", rollupTypes[0].name);
+            cmp.set("v.selectedRollupType", {label: rollupTypes[0].label, name: rollupTypes[0].name});
+            this.onChangeRollupType(cmp, rollupTypes[0].name, rollupTypes[0].label);
+        }
 
         this.updateAllowedOperations(cmp);
         this.updateRollupName(cmp);
@@ -565,6 +574,10 @@
         }
 
         cmp.set("v.rollupTypes", templateList);
+    },
+
+    restructureResponse: function(resp){
+        return JSON.parse(JSON.stringify(resp));
     },
 
     retrieveFieldLabel: function(apiName, entityList){

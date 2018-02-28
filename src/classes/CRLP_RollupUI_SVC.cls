@@ -44,6 +44,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String active;
         @AuraEnabled public String activeIcon;
         @AuraEnabled public String creditType;
+        @AuraEnabled public String description;
         @AuraEnabled public String detailField;
         @AuraEnabled public String detailObject;
         @AuraEnabled public String filterGroupName;
@@ -161,6 +162,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
             item.rollupName = mdtList[i].MasterLabel;
             item.detailField = mdtList[i].Detail_Field__r.Label;
+            item.description = mdtList[i].Description__c;
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
             if(mdtList[i].Active__c){

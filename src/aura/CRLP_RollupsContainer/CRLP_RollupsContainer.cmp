@@ -164,7 +164,6 @@
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
                             <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type" variant="label-hidden" onchange="{!c.filterBySummaryObject}">
-                                <!--todo: change to aura:iteration and retrieve obj from the server.-->
                                 <option value="All">{!v.labels.selectAll}</option>
                                 <option value="Account">{!v.labels.accountLabel}</option>
                                 <option value="Contact">{!v.labels.contactLabel}</option>

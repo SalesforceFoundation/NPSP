@@ -13,11 +13,9 @@
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
-                    //note: the parsing is important to avoid a shared reference
-                    //todo: try to stringify on server side; only parse on client
-                    //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
-                    cmp.set("v.activeRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
-                    cmp.set("v.cachedRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
+                    //note: the duplicate parsing is important to avoid a shared reference
+                    cmp.set("v.activeRollup", helper.restructureResponse(response.getReturnValue()));
+                    cmp.set("v.cachedRollup", helper.restructureResponse(response.getReturnValue()));
 
                     //change mode needs to be fired here because the sibling change of mode isn't being registered
                     //TODO: review this since sibling isn't being used now
@@ -66,7 +64,7 @@
             cmp.set("v.mode", "view");
             var cachedRollup = cmp.get("v.cachedRollup");
             //json shenanigans to avoid shared reference
-            cmp.set("v.activeRollup", JSON.parse(JSON.stringify(cachedRollup.valueOf())));
+            cmp.set("v.activeRollup", helper.restructureResponse(cachedRollup.valueOf()));
             //todo: need to add selected integer/operation/yearly op values here?
         }
     },
