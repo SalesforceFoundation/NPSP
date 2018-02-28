@@ -108,7 +108,7 @@
                                         <h1 class="slds-page-header__title" title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
                                         <!--Else show mode header-->
                                         <aura:set attribute="else">
-                                            <h1 class="slds-page-header__title" title="{!v.labels.rollupNew}">{!v.labels.rollupNew}</h1>
+                                            <h1 class="slds-page-header__title" title="{!v.labels.rollupNew}">{!v.labels.rollupNew + ' ' + v.activeRecord.MasterLabel}</h1>
                                         </aura:set>
                                     </aura:if>
                                 </div>

@@ -15,17 +15,15 @@
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.cachedRollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
-
-                var ops = [];
-                /*for(var i in model.operations){
-                    ops.push({name: i, label: model.operations[i]});
-                }*/
                 cmp.set("v.operations", model.operations);
 
                 var yOps = [];
                 for(var j in model.yearlyOperations){
                     yOps.push({name: j, label: model.yearlyOperations[j]});
                 }
+                yOps.sort(function(a,b){
+                    return a.name > b.name;
+                });
                 cmp.set("v.yearlyOperations", yOps);
 
                 var actions = [{label: model.labels.edit, name:'edit'}
@@ -75,6 +73,12 @@
         $A.enqueueAction(action);
     },
 
+    activeChange: function(cmp){
+        var activeRecord = cmp.get("v.activeRecord");
+        console.log("Active record changed in Parent");
+        console.log(JSON.stringify(activeRecord));
+    },
+
     displayFilterGroupsGrid: function(cmp, event, helper){
         //sets the filter group grid to be displayed
         helper.displayFilterGroupsGrid(cmp);
@@ -85,19 +89,19 @@
     displayNewRollupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
         //resets the active record to ensure there is no leftover data
+        cmp.set("v.activeRecord", {});
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isRollupDetail", true);
         cmp.set("v.detailMode", "create");
-        cmp.set("v.activeRecord", {});
     },
 
     displayNewFilterGroupForm: function (cmp, event, helper) {
         //toggle grid and detail views, set detail mode to create
         //resets the active record to ensure there is no leftover data
+        cmp.set("v.activeRecord", {});
         cmp.set("v.isFilterGroupsGrid", false);
         cmp.set("v.isFilterGroupDetail", true);
         cmp.set("v.detailMode", "create");
-        cmp.set("v.activeRecord", {});
     },
 
     displayRollupsGrid: function(cmp, event, helper){
@@ -200,6 +204,11 @@
 
         cmp.set("v.sortedBy", fieldName);
         cmp.set("v.sortedDirection", sortDirection);
-        helper.sortData(cmp, fieldName, sortDirection);
+        if(cmp.get("v.isRollupsGrid")){
+            helper.sortRollupGrid(cmp, fieldName, sortDirection);
+        } else if (cmp.get("v.isFilterGroupsGrid")){
+            helper.sortFilterGroupGrid(cmp, fieldName, sortDirection);
+        }
+
     },
 })

@@ -245,9 +245,6 @@
         if (operation !== '' && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
             renderMap["timeBoundOperation"] = true;
             var timeOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
-            if (cmp.get("v.mode") === 'create') {
-                cmp.set("v.activeRollup.Yearly_Operation_Type__c", 'All_Time');
-            }
         } else {
             renderMap["timeBoundOperation"] = false;
         }

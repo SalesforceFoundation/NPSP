@@ -37,12 +37,24 @@
         }
     },
 
-    sortData: function(cmp, fieldName, sortDirection){
+    sortData: function(cmp, fieldName, sortDirection, data){
         //sorts data by user's selected field and field direction
-        var data = cmp.get("v.rollupList");
         var reverse = sortDirection !== 'asc';
-        //sorts the rows based on the column header that's clicked and in specified direction
         data.sort(this.sortBy(fieldName, reverse));
+        return data;
+    },
+
+    sortFilterGroupGrid: function(cmp, fieldName, sortDirection){
+        //saves sorted filter group grid data
+        var data = cmp.get("v.filterGroupList");
+        var sortedData = this.sortData(cmp, fieldName, sortDirection, data);
+        cmp.set("v.filterGroupList", data);
+    },
+
+    sortRollupGrid: function(cmp, fieldName, sortDirection){
+        //saves sorted rollup grid data
+        var data = cmp.get("v.rollupList");
+        var sortedData = this.sortData(cmp, fieldName, sortDirection, data);
         cmp.set("v.rollupList", data);
     },
 
