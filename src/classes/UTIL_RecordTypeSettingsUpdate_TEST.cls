@@ -33,132 +33,263 @@
 * @description Tests for UTIL_RecordTypeSettingsUpdate
 */
 @isTest
-private class UTIL_RecordTypeSettingsUpdate_TEST {
+public class UTIL_RecordTypeSettingsUpdate_TEST {
+
+    /*******************************************************************************************************
+    * @description An exception class used in UTIL_RecordTypeSettingsUpdate Mock class
+    */
+    private class RecordTypeSettingsUpdateException extends Exception {}
+
+    /*******************************************************************************************************
+    * @description An 18 char mock Id 
+    */
+    private static Id MOCK_ID_18CHAR = '012410000000RXlAAM';
+
+    /*********************************************************************************************************
+    * @description A 15 char mock Id 
+    */
+    private static Id MOCK_ID_15CHAR = '01241000000N0kX';
+
+    /*********************************************************************************************************
+    @description 
+        Tests null Record Type name mapping to an Id 
+    verify:
+        Null Id should be returned    
+    **********************************************************************************************************/ 
     @isTest
     private static void testNullSettingsRemainNull() {
-        // if a setting is null, it should remain null after updating
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
             null,
             new Map<String, Id>()
         );
 
         Test.stopTest();
 
-        System.assertEquals(null, ids);
+        System.assertEquals(null, ids, 'The null name value should be returned as null');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests blank Record Type name mapping to an Id 
+    verify:
+        Blank Id should be returned    
+    **********************************************************************************************************/ 
     @isTest
     public static void testBlankSettingsRemainBlank() {
-        // if a setting is blank, it should remain blank after updating
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
             '',
             new Map<String, Id>()
         );
 
         Test.stopTest();
 
-        System.assertEquals('', ids);
+        System.assertEquals('', ids, 'The blank name value should be returned as is');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests empty Record Type names mapping to an Id 
+    verify:
+        Empty Record Type names are discarded    
+    **********************************************************************************************************/ 
     @isTest
     public static void testEmptyValuesAreDiscarded() {
-        // After detokenizing, empty values should be discarded
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
             ';;   ;;   ; ',
             new Map<String, Id>()
         );
 
         Test.stopTest();
 
-        System.assertEquals('', ids);
+        System.assertEquals('', ids, 'After detokenizing, empty values should be discarded');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests unknown Record Type name mapping to an Id 
+    verify:
+        Unknown Record Type name is discarded
+    **********************************************************************************************************/ 
     @isTest
     public static void testUnknownRecordTypeNamesAreDiscarded() {
-        // Unknown record type names should be discarded
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
             'UnknownRecordTypeName',
             new Map<String, Id>()
         );
 
         Test.stopTest();
 
-        System.assertEquals('', ids);
+        System.assertEquals('', ids, 'Unknown Record Type names should be discarded');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests Id Record Type name mapping to an Id 
+    verify:
+        Ids are returned as they are
+    **********************************************************************************************************/ 
     @isTest
     public static void testIdsRemainIds() {
-        // If the setting is an id, it should remain an id after updating
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
-            '012410000000RXlAAM;01241000000N0kX',
+        String names = MOCK_ID_18CHAR + ';' + MOCK_ID_15CHAR;
+
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
+            names,
             new Map<String, Id>()
         );
 
         Test.stopTest();
 
-        System.assertEquals('012410000000RXlAAM;01241000000N0kX', ids);
+        System.assertEquals(names, ids, 'Valid Ids in the name should be returned as is regardless if they exist');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests known Record Type name mapping to an Id 
+    verify:
+        Known Record Type name is converted to an Id
+    **********************************************************************************************************/ 
     @isTest
     public static void testKnownRecordTypeNamesAreConverted() {
-        // Unknown record type names should be discarded
         Id knownRecordTypeId = '012000000000001';
+        String name = 'KnownRecordTypeName';
 
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
-            'KnownRecordTypeName',
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(
+            name,
             new Map<String, Id>{
-                'KnownRecordTypeName' => knownRecordTypeId
+                name.toLowerCase() => knownRecordTypeId
             }
         );
 
         Test.stopTest();
 
-        System.assertEquals(knownRecordTypeId, ids);
+        System.assertEquals(knownRecordTypeId, ids, 'The known record type Id should be returned');
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests known Record Type name mapping to an Id 
+    verify:
+        Known Record Type names are converted to Ids. 
+        Unknown Record Type names are discarded.
+        Empty values are discarded.
+    **********************************************************************************************************/ 
     @isTest
     public static void testKitchenSink() {
-        // Combine multiple conditions in one test
+        Map<String, Id> rtIdsByLowerCaseName = new Map<String, Id>{
+            'validname1' => '012000000000001',
+            'validname2' => '012000000000002'
+        };
+        String names = String.format(
+            ';{0}; ;UnknownRecordTypeName;{1};{2};{3};   ;',
+            new String[] { 'validName1', 'validName2', MOCK_ID_18CHAR, MOCK_ID_15CHAR }
+        );
 
-        Id knownRecordTypeId1 = '012000000000001';
-        Id knownRecordTypeId2 = '012000000000002';
         Test.startTest();
 
-        UTIL_RecordTypeSettingsUpdate rtsu = new UTIL_RecordTypeSettingsUpdate();
-        String ids = rtsu.getIdsFromNames(
-            ';KnownRecordTypeName1; ;UnknownRecordTypeName;KnownRecordTypeName2;012410000000RXlAAM;01241000000N0kX;   ;',
-            new Map<String, Id>{
-                'KnownRecordTypeName1' => knownRecordTypeId1,
-                'KnownRecordTypeName2' => knownRecordTypeId2
-            }
-        );
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(names, rtIdsByLowerCaseName);
 
         Test.stopTest();
 
         String expectedRecordTypeIds = String.join(
-            new List<String>{knownRecordTypeId1, knownRecordTypeId2, '012410000000RXlAAM', '01241000000N0kX'},
+            new List<String>{ rtIdsByLowerCaseName.get('validname1'), rtIdsByLowerCaseName.get('validname2'), MOCK_ID_18CHAR, MOCK_ID_15CHAR },
             ';'
         );
 
-        System.assertEquals(expectedRecordTypeIds, ids);
+        System.assertEquals(expectedRecordTypeIds, ids, 'Testing multiple conditions should create expected result');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests case insensitive Record Type names mapping to Ids
+    verify:
+        Record Type names are converted to Ids. 
+    **********************************************************************************************************/
+    @isTest
+    private static void testRecordTypeNamesAreCaseInsensitive() {
+        Map<String, Id> rtIdsByLowerCaseName = new Map<String, Id>{
+            'validname1' => '012000000000001',
+            'validname2' => '012000000000002'
+        };
+
+        String names = String.format(
+            '{0};randomName;{1};;{2};{3};',
+            new String[] { 'validNAME1', 'VaLiDName2', MOCK_ID_18CHAR, MOCK_ID_15CHAR }
+        );
+
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String ids = rtUpdate.getIdsFromNames(names, rtIdsByLowerCaseName);
+
+        String expectedRecordTypeIds = String.join(
+            new List<String>{ rtIdsByLowerCaseName.get('validname1'), rtIdsByLowerCaseName.get('validname2'), MOCK_ID_18CHAR, MOCK_ID_15CHAR },
+            ';'
+        );
+
+        System.assertEquals(expectedRecordTypeIds, ids, 'Record Type names should be case insensitive');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests case insensitive Record Type name mapping to an Id 
+    verify:
+        Record Type name is converted to an Id 
+    **********************************************************************************************************/
+    @isTest
+    private static void testRecordTypeNameIsCaseInsensitive() {
+        Map<String, Id> rtIdsByLowerCaseName = new Map<String, Id>{
+            'validname1' => '012000000000001',
+            'validname2' => '012000000000002'
+        };
+
+        String name = 'validNAME1';
+
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String rtId = rtUpdate.getIdFromName(name, rtIdsByLowerCaseName);
+
+        String expectedRecordTypeId = rtIdsByLowerCaseName.get('validname1');
+
+        System.assertEquals(expectedRecordTypeId, rtId, 'Record Type name should be case insensitive');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Tests Record Type name mapping to an Id when only one name is expected
+    verify:
+        Record Type names are discarded since they (combined) do not map to a valid Record Type name.
+    **********************************************************************************************************/
+    @isTest
+    private static void testValidRecordTypeNamesAreDiscardedIfOneRecordTypeNameIsExpected() {
+        Map<String, Id> rtIdsByLowerCaseName = new Map<String, Id>{
+            'validname1' => '012000000000001',
+            'validname2' => '012000000000002'
+        };
+
+        String name = 'validName1;validName2';
+
+        UTIL_RecordTypeSettingsUpdate rtUpdate = new UTIL_RecordTypeSettingsUpdate();
+        String rtId = rtUpdate.getIdFromName(name, rtIdsByLowerCaseName);
+
+        String expectedRecordTypeId = '';
+
+        System.assertEquals(expectedRecordTypeId, rtId, 'Record Type names should be discarded when one Record Type name is expected');
     }
 
     /**
@@ -168,16 +299,26 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
     private class NameMappingStub extends UTIL_RecordTypeSettingsUpdate {
         public Map<String, Id> opportunityNameMap;
         public Map<String, Id> contactNameMap;
+        public Map<String, Id> accountNameMap;
+
         private Map<String, Id> getNameToRecordTypeIdMap(Schema.SObjectType sot) {
             if (sot == Contact.sObjectType) {
                 return contactNameMap;
             } else if (sot == Opportunity.sObjectType) {
                 return opportunityNameMap;
+            } else if (sot == Account.sObjectType) {
+                return accountNameMap;
             }
             return null;
         }
     }
 
+    /*********************************************************************************************************
+    @description 
+        Tests Record Type Settings update
+    verify:
+        Record Type names are converted to Ids for each applicable Custom Setting.
+    **********************************************************************************************************/
     @isTest
     private static void testUpdateSettings() {
         // we insert some settings with fake record type names and then test to
@@ -187,43 +328,58 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         // getNameToRecordTypeIdMap() method to return a set of test mappings.
 
         Allocations_Settings__c allocationsSettings = new Allocations_Settings__c(
-            Excluded_Opp_RecTypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Excluded_Opp_RecTypes__c = 'FakeOppRTName1;FakeOppRTName2'
         );
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettings = new npe01__Contacts_And_Orgs_Settings__c(
-            Opp_RecTypes_Excluded_for_Payments__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Opp_RecTypes_Excluded_for_Payments__c = 'FakeOppRTName1;FakeOppRTName2',
+            npe01__HH_Account_RecordTypeID__c = 'FakeAccRTName1',
+            npe01__One_to_One_RecordTypeID__c = 'FakeAccRTName2'
         );
 
         npo02__Households_Settings__c householdsSettings = new npo02__Households_Settings__c(
-            npo02__Household_Creation_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
-            npo02__Household_OCR_Excluded_Recordtypes__c = 'FakeContactRecTypeName1;FakeContactRecTypeName2',
-            npo02__Membership_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
-            npo02__Excluded_Account_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2',
-            npo02__Excluded_Contact_Opp_Rectypes__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            npo02__Household_Creation_Excluded_Recordtypes__c = 'FakeConRTName1;FakeConRTName2',
+            npo02__Household_OCR_Excluded_Recordtypes__c = 'FakeConRTName1;FakeConRTName2',
+            npo02__Membership_Record_Types__c = 'FakeOppRTName1;FakeOppRTName2',
+            npo02__Excluded_Account_Opp_Rectypes__c = 'FakeOppRTName1;FakeOppRTName2',
+            npo02__Excluded_Contact_Opp_Rectypes__c = 'FakeOppRTName1;FakeOppRTName2'
         );
+
         Opportunity_Naming_Settings__c opportunityNamingSettings = new Opportunity_Naming_Settings__c(
             Name = 'ons1',
-            Opportunity_Record_Types__c = 'FakeOpportunityRecTypeName1;FakeOpportunityRecTypeName2'
+            Opportunity_Record_Types__c = 'FakeOppRTName1;FakeOppRTName2'
+        );
+
+        npe03__Recurring_Donations_Settings__c rdSettings = new npe03__Recurring_Donations_Settings__c(
+            npe03__Record_Type__c = 'FakeOppRTName2'
         );
 
         insert allocationsSettings;
         insert contactsAndOrgsSettings;
         insert householdsSettings;
         insert opportunityNamingSettings;
+        insert rdSettings;
 
         Id opportunityRecTypeId1 = '012000000000001';
         Id opportunityRecTypeId2 = '012000000000002';
         Id contactRecTypeId1 = '012000000000003';
         Id contactRecTypeId2 = '012000000000004';
+        Id accountRecTypeId1 = '012000000000005';
+        Id accountRecTypeId2 = '012000000000006';
 
         NameMappingStub stub = new NameMappingStub();
         stub.opportunityNameMap = new Map<String, Id>{
-            'FakeOpportunityRecTypeName1' => opportunityRecTypeId1,
-            'FakeOpportunityRecTypeName2' => opportunityRecTypeId2
+            'FakeOppRTName1'.toLowerCase() => opportunityRecTypeId1,
+            'FakeOppRTName2'.toLowerCase() => opportunityRecTypeId2
         };
         stub.contactNameMap = new Map<String, Id>{
-            'FakeContactRecTypeName1' => contactRecTypeId1,
-            'FakeContactRecTypeName2' => contactRecTypeId2
+            'FakeConRTName1'.toLowerCase() => contactRecTypeId1,
+            'FakeConRTName2'.toLowerCase() => contactRecTypeId2
+        };
+
+        stub.accountNameMap = new Map<String, Id>{
+            'FakeAccRTName1'.toLowerCase() => accountRecTypeId1,
+            'FakeAccRTName2'.toLowerCase() => accountRecTypeId2
         };
 
         String expectedOpportunityIdString = String.join(new List<String>{opportunityRecTypeId1, opportunityRecTypeId2}, ';');
@@ -242,7 +398,9 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         ];
 
         npe01__Contacts_And_Orgs_Settings__c contactsAndOrgsSettingsActual = [
-            SELECT Opp_RecTypes_Excluded_for_Payments__c
+            SELECT Opp_RecTypes_Excluded_for_Payments__c,
+                npe01__HH_Account_RecordTypeID__c,
+                npe01__One_to_One_RecordTypeID__c
             FROM npe01__Contacts_And_Orgs_Settings__c
             WHERE Id = :contactsAndOrgsSettings.Id
         ];
@@ -264,6 +422,12 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
             WHERE Id = :opportunityNamingSettings.Id
         ];
 
+        npe03__Recurring_Donations_Settings__c rdSettingsActual = [
+            SELECT npe03__Record_Type__c
+            FROM npe03__Recurring_Donations_Settings__c
+            WHERE Id = :rdSettings.Id
+        ];
+
         System.assertEquals(
             expectedOpportunityIdString,
             allocationsSettingsActual.Excluded_Opp_RecTypes__c
@@ -272,6 +436,16 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         System.assertEquals(
             expectedOpportunityIdString,
             contactsAndOrgsSettingsActual.Opp_RecTypes_Excluded_for_Payments__c
+        );
+
+        System.assertEquals(
+            accountRecTypeId1,
+            contactsAndOrgsSettingsActual.npe01__HH_Account_RecordTypeID__c
+        );
+
+        System.assertEquals(
+            accountRecTypeId2,
+            contactsAndOrgsSettingsActual.npe01__One_to_One_RecordTypeID__c
         );
 
         System.assertEquals(
@@ -302,6 +476,11 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
         System.assertEquals(
             expectedOpportunityIdString,
             opportunityNamingSettingsActual.Opportunity_Record_Types__c
+        );
+
+        System.assertEquals(
+            opportunityRecTypeId2,
+            rdSettingsActual.npe03__Record_Type__c
         );
     }
 
@@ -401,4 +580,42 @@ private class UTIL_RecordTypeSettingsUpdate_TEST {
 
         System.assertEquals(0, stub.runCount);
     }
+
+
+    /*******************************************************************************************************
+    * @description Mock for the UTIL_RecordTypeSettingsUpdate
+    */
+    public class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
+        /*******************************************************************************************************
+        * @description updateSettings() execution counter
+        */
+        public Integer runCount = 0;
+        /*******************************************************************************************************
+        * @description Indicates if an exception should be thrown in updateSettings()
+        */
+        public Boolean throwException = false;
+    
+        /*******************************************************************************************************
+        * @description Sets throwException to true
+        * @return UpdateSettingsMock
+        */
+        public UpdateSettingsMock throwException() {
+            throwException = true;
+            return this;
+        }
+
+        /*******************************************************************************************************
+        * @description Called when UTIL_RecordTypeSettingsUpdate.updateSettings() method is supposed to be called.
+        * Updates counter of the method calls. Throws an exception if requested by the test.
+        * @return void
+        */
+        public override void updateSettings() {
+            runCount++;
+
+            if (throwException) {
+                throw new RecordTypeSettingsUpdateException('Test Exception');
+            }
+        }
+    }
+
 }
