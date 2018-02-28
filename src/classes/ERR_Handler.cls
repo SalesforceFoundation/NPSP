@@ -249,6 +249,7 @@ public class ERR_Handler {
         processError(e, context.name());
     }
 
+
     /*******************************************************************************************************
     * @description Creates an error record from an exception, stores it in the database (if enabled), and sends error
     *              notifications (if enabled).
@@ -260,6 +261,24 @@ public class ERR_Handler {
             Error__c error = createError(e);
             processErrors(new Error__c[]{error}, context);
         }
+    }
+    
+    
+    /*******************************************************************************************************
+    * @description Creates error records from passed in exceptions.
+    *   If the Error Settings is enabled, errors are stored in the database. 
+    *   If the Error Settings has notification enabled, an email notificiation is sent.
+    * @param exceptions List of exceptions.
+    * @param context The context the exception was raised on.
+    * @return void
+    */
+    public static void processErrors(List<Exception> exceptions, ERR_Handler_API.Context context) {
+        List<Error__c> errors = new List<Error__c>();
+        for (Exception e : exceptions) {
+            errors.add(createError(e));
+        }
+        
+        processErrors(errors, context.name());
     }
 
     /*******************************************************************************************************
@@ -276,8 +295,8 @@ public class ERR_Handler {
             }
 
             if (UTIL_CustomSettingsFacade.getErrorSettings().Store_Errors_On__c) {
-               UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
-               Database.insert(errorRecords, false);
+                UTIL_Debug.debug('**** Storing errorRecords: ' + errorRecords);
+                Database.insert(errorRecords, false);
             }
             //ERR_Notifier takes care of checking the settings itself.
             ERR_Notifier.sendErrorNotifications(context);
@@ -294,10 +313,12 @@ public class ERR_Handler {
         error.Datetime__c = System.now();
         error.Error_Type__c = e.getTypeName();
         error.Full_Message__c = e.getMessage();
+
         //Putting it into a local string to see if that helps storing the stack trace when we
         //are in a managed package.
         String stackTrace = e.getStackTraceString();
         UTIL_Debug.debug('****Stack trace: ' + stackTrace);
+
         String message;
         if (String.isBlank(stackTrace) || stackTrace == '('+UTIL_Namespace.getNamespace()+')' || stackTrace == UTIL_Namespace.getNamespace()) {
             message = 'No stacktrace available at the time of saving the record. ';
@@ -305,6 +326,7 @@ public class ERR_Handler {
             message = 'Stacktrace available at the time of saving the record - ';
         }
         error.Stack_Trace__c = message + stackTrace;
+        
         return error;
     }
 

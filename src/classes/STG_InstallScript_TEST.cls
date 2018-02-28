@@ -41,7 +41,7 @@ public with sharing class STG_InstallScript_TEST {
     private static string strTestOnly = '*';
 
     /*******************************************************************************************************
-    * @description An exception class used in UTIL_RecordTypeSettingsUpdate Mock class
+    * @description A test exception class 
     */
     private class STG_InstallException extends Exception {}
     
@@ -128,34 +128,6 @@ public with sharing class STG_InstallScript_TEST {
         
         verifyAllSettingsCreated();
     }
-
-    /*********************************************************************************************************
-    @description 
-        Test onInstall rollback when an exception occurs 
-    verify:
-        The transaction is completely rolled back and there is no partial commit
-    **********************************************************************************************************/ 
-    private static testMethod void testOnInstallRollsBackAllDmlsOnError() {
-        if (strTestOnly != '*' && strTestOnly != 'testOnInstallRollsBackAllDmlsOnError') return;
-
-        UpdateSettingsMock mockUpdateSettings = new UpdateSettingsMock().throwException();
-        UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
-
-        List<Trigger_Handler__c> triggerHandlers = getTriggerHandlers();
-        System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist: ' + triggerHandlers);
-
-        Exception expectedException = null;
-        try {
-            Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
-        } catch (Exception e) {
-            expectedException = e;
-        }
-
-        System.assertNotEquals(null, expectedException, 'An exception should be thrown');
-
-        triggerHandlers = getTriggerHandlers();
-        System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist after failed install: ' + triggerHandlers);
-    }
     
     /** NPSP to TDTM test - If it's the first time we install Cumulus and all the custom DISABLE flag were enabled **/
     public testmethod static void mappingsTest_runScriptCustomConfigOnInstallAllFlags() {
@@ -212,121 +184,13 @@ public with sharing class STG_InstallScript_TEST {
                                                                'HH_OppContactRoles_TDTM'};
         List<Trigger_Handler__c> afterScriptConfig = [select Active__c, Class__c from Trigger_Handler__c where Class__c IN :mappedTdtmClasses];
         for(Trigger_Handler__c handler : afterScriptConfig) {
-            UTIL_Debug.debug('****Is class ' + handler.Class__c + ' still active: ' + handler.Active__c);
-            System.assertEquals(false, handler.Active__c);
+            System.assertEquals(false, handler.Active__c, 'The handler class ' + handler.Class__c + ' should not be active');
         }
         
         //Assert old flags have been properly disabled
         assertNpspFlagsDeactivated();
     }
-    
-    // Helpers
-    ////////////
 
-    /*******************************************************************************************************
-    * @description Mock for the UTIL_RecordTypeSettingsUpdate
-    */
-    private class UpdateSettingsMock extends UTIL_RecordTypeSettingsUpdate {
-        /*******************************************************************************************************
-        * @description updateSettings() execution counter
-        */
-        public Integer runCount = 0;
-        /*******************************************************************************************************
-        * @description Indicates if an exception should be thrown in updateSettings()
-        */
-        public Boolean throwException = false;
-    
-        /*******************************************************************************************************
-        * @description Sets throwException to true
-        * @return UpdateSettingsMock
-        */
-        public UpdateSettingsMock throwException() {
-            throwException = true;
-            return this;
-        }
-
-        /*******************************************************************************************************
-        * @description Called when UTIL_RecordTypeSettingsUpdate.updateSettings() method is supposed to be called.
-        * Updates counter of the method calls. Throws an exception if requested by the test.
-        * @return void
-        */
-        public override void updateSettings() {
-            runCount++;
-
-            if (throwException) {
-                throw new STG_InstallException('Test Exception');
-            }
-        }
-    }
-
-    private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
-        afterScriptConfig.sort();
-        defaultConfig.sort();
-        
-        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
-        for(Integer i = 0; i < defaultConfig.size(); i++) {
-            System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
-            System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
-            System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
-            System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
-            System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
-            //split and sort trigger actions so the test doesn't fail for different orders
-            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
-            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
-            afterTriggerAction.sort();
-            defaultTriggerAction.sort();
-            System.assertEquals(afterTriggerAction, defaultTriggerAction);
-        }
-    }
-
-    private static void setAllNpspFlags(Boolean flagValue) {
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
-        npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
-        npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
-        npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = flagValue;
-        npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = flagValue;
-        
-        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
-        npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
-        npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c = flagValue;
-        npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c = flagValue;
-        npo02Settings.npo02__DISABLE_Households_trigger__c = flagValue;
-        npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
-        
-        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
-        npe03Settings.npe03__DISABLE_Donations_trigger__c = flagValue;
-        npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = flagValue;
-        
-        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
-        npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
-        npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
-        npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
-    }
-    
-    private static void assertNpspFlagsDeactivated() {
-        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
-        System.assertEquals(false, npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c);
-        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c);
-        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c);
-        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c);
-        
-        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
-        System.assertEquals(false, npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c);
-        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c);
-        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c);
-        System.assertEquals(false, npo02Settings.npo02__DISABLE_Households_trigger__c);
-        System.assertEquals(false, npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c);
-        
-        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
-        System.assertEquals(false, npe03Settings.npe03__DISABLE_Donations_trigger__c);
-        System.assertEquals(false, npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c);
-        
-        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
-        System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c);
-        System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c);
-        System.assertEquals(false, npe04Settings.npe4__DISABLE_Relationships_trigger__c);
-    }
-    
     public static testmethod void defaultSettingsCreated() {
         if (strTestOnly != '*' && strTestOnly != 'defaultSettingsCreated') return;
         
@@ -404,6 +268,230 @@ public with sharing class STG_InstallScript_TEST {
         System.assertEquals(50,dataImportSettings.Batch_Size__c);
     }
 
+    /*********************************************************************************************************
+    @description 
+        Test onInstall applies separate independent install actions
+    verify:
+        Successful install actions are applied if another install action results in an error 
+    **********************************************************************************************************/ 
+    private static testMethod void testInstallActionsAreIndependent() {
+        UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
+        UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
+
+        List<Trigger_Handler__c> triggerHandlers = getTriggerHandlers();
+        System.assertEquals(0, triggerHandlers.size(), 'No trigger handler should exist: ' + triggerHandlers);
+
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
+        
+        triggerHandlers = getTriggerHandlers();
+        System.assert(triggerHandlers.size() > 0, 'Thrigger handler should be successful when Record Type Settings cleanup fails: ' + triggerHandlers);
+
+        List<Error__c> errors = getErrors();
+        System.assertEquals(1, errors.size(), 'One exception error should be created for the invalid Record Type settings: ' + errors);
+        System.assertEquals('Test Exception', errors[0].Full_Message__c, 'Error message has not been applied correctly.');
+    }
+    
+    /*********************************************************************************************************
+    @description 
+        Test install on a new org populates Recurring Donation Installment Number
+    verify:
+        Opportunities' Recurring Donation Installment Number is populated.
+    **********************************************************************************************************/ 
+    private static testMethod void testNewInstallSetsRecurringDonationInstallmentNumber() {
+        npe03__Recurring_Donation__c rd = createRecurringDonation();
+        List<Opportunity> opps = getRecurringDonationOpportunities(rd.Id);
+        System.assertEquals(false, opps.isEmpty(), 'At least one Opportunity should be created for the Recurring Donation');
+
+        for (Opportunity opp : opps) {
+            opp.Recurring_Donation_Installment_Number__c = null;
+        }
+        update opps;
+
+        opps = getRecurringDonationOpportunities(rd.Id);
+        for (Opportunity opp : opps) {
+            System.assertEquals(null, opp.Recurring_Donation_Installment_Number__c, 'Recurring Donation Installment Number should be empty');
+        }
+
+        Test.startTest();
+        Test.testInstall(new STG_InstallScript(), null);
+        Test.stopTest();
+
+        opps = getRecurringDonationOpportunities(rd.Id);
+        for (Opportunity opp : opps) {
+            System.assertNotEquals(null, opp.Recurring_Donation_Installment_Number__c, 'Recurring Donation Installment Number should be set by the installation script');
+        }
+
+        List<Error__c> errors = getErrors();
+        System.assertEquals(0, errors.size(), 'No exception error should be created: ' + errors);
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test hasErrors() returns true if the logger has at least one exception stored
+    verify:
+        hasErrors() returns true
+    **********************************************************************************************************/ 
+    private static testMethod void testErrorLoggerHasErrorsReturnsTrue() {
+        STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
+
+        logger.add(new STG_InstallException('Test Exception'));
+
+        System.assert(logger.hasErrors(), 'Logger should return true since it contains one exception');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test hasErrors() returns false if the logger has no exceptions
+    verify:
+        hasErrors() returns false
+    **********************************************************************************************************/ 
+    private static testMethod void testErrorLoggerHasErrorsReturnsFalse() {
+        STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
+
+        System.assert(!logger.hasErrors(), 'Logger should return false since it contains no exception');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test email sent by the logger contains all exceptions
+    verify:
+        The email body contains exception message and stack trace
+    **********************************************************************************************************/ 
+    private static testMethod void testErrorLoggerCorrectlyBuildsEmailBody() {
+        STG_InstallScript.ErrorLogger logger = new STG_InstallScript.ErrorLogger(null, ERR_Handler_API.Context.STTG);
+
+        logger.add(new STG_InstallException('Test Exception 1'));
+        logger.add(new STG_InstallException('Test Exception 2'));
+
+        String emailBody = logger.buildEmailBody();
+
+        String expectedEmailBodyPrefix = Label.stgInstallScriptError +
+            '\n\n==========================. \n\nError messages:';
+            
+        System.assert(emailBody.startsWith(expectedEmailBodyPrefix), 'The email is not constructed as expected: ' + emailBody);
+        System.assert(emailBody.contains('Test Exception 1'), 'The email should contain the first exception: ' + emailBody);
+        System.assert(emailBody.contains('Test Exception 2'), 'The email should contain the second exception: ' + emailBody);
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test exceptions on install are emailed and stored as error handler errors
+    verify:
+        - Exceptions are emailed.
+        - Exception is stored as the error sObject record.
+    **********************************************************************************************************/ 
+    private static testMethod void testExceptionsAreEmailedAndLogged() {
+        Integer emailInvocations = Limits.getEmailInvocations();
+
+        UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
+        UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
+
+        Test.startTest();
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
+        Integer actualEmailInvocations = Limits.getEmailInvocations();
+        Test.stopTest();
+
+        List<Error__c> errors = getErrors();
+        System.assertEquals(1, errors.size(), 'One exception error should be created for the invalid Record Type settings: ' + errors);
+        System.assertEquals('Test Exception', errors[0].Full_Message__c, 'Error message has not been applied correctly.');
+
+        System.assert(actualEmailInvocations > emailInvocations, 'Email Invocations should increase if the email has been sent');
+    }
+
+    /*********************************************************************************************************
+    @description 
+        Test no email is sent and no error is created for the successful install
+    verify:
+        - No email is sent.
+        - No exception is stored as the error sObject record.
+    **********************************************************************************************************/ 
+    private static testMethod void testNoEmailIsSentOrErrorLoggedOnSuccessfulInstall() {
+        Integer emailInvocations = Limits.getEmailInvocations();
+
+        UTIL_RecordTypeSettingsUpdate.instance = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock();
+
+        Test.startTest();
+        Test.testInstall(new STG_InstallScript(), new Version(1,0), false);
+        Integer actualEmailInvocations = Limits.getEmailInvocations();
+        Test.stopTest();
+
+        List<Error__c> errors = getErrors();
+        System.assertEquals(0, errors.size(), 'No exception error should be created: ' + errors);
+
+        System.assertEquals(emailInvocations, actualEmailInvocations, 'Email Invocations should not increase');
+    }
+    
+    // Helpers
+    ////////////
+
+    private static void assertTriggerHandlersEqual(List<Trigger_Handler__c> afterScriptConfig, List<Trigger_Handler__c> defaultConfig) {
+        afterScriptConfig.sort();
+        defaultConfig.sort();
+        
+        System.assertEquals(defaultConfig.size(), afterScriptConfig.size(), 'Number of created trigger handlers should match the number of handlers in TDTM_DefaultConfig.');
+        for(Integer i = 0; i < defaultConfig.size(); i++) {
+            System.assertEquals(afterScriptConfig[i].Class__c, defaultConfig[i].Class__c);
+            System.assertEquals(afterScriptConfig[i].Load_Order__c, defaultConfig[i].Load_Order__c);
+            System.assertEquals(afterScriptConfig[i].Object__c, defaultConfig[i].Object__c);
+            System.assertEquals(afterScriptConfig[i].Active__c, defaultConfig[i].Active__c);
+            System.assertEquals(afterScriptConfig[i].Asynchronous__c, defaultConfig[i].Asynchronous__c);
+            //split and sort trigger actions so the test doesn't fail for different orders
+            List<String> afterTriggerAction = afterScriptConfig[i].Trigger_Action__c.split(';');
+            List<String> defaultTriggerAction = defaultConfig[i].Trigger_Action__c.split(';');
+            afterTriggerAction.sort();
+            defaultTriggerAction.sort();
+            System.assertEquals(afterTriggerAction, defaultTriggerAction);
+        }
+    }
+
+    private static void setAllNpspFlags(Boolean flagValue) {
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c = flagValue;
+        npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c = flagValue;
+        
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+        npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_Households_trigger__c = flagValue;
+        npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c = flagValue;
+        
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+        npe03Settings.npe03__DISABLE_Donations_trigger__c = flagValue;
+        npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c = flagValue;
+        
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+        npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c = flagValue;
+        npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c = flagValue;
+        npe04Settings.npe4__DISABLE_Relationships_trigger__c = flagValue;
+    }
+    
+    private static void assertNpspFlagsDeactivated() {
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        System.assertEquals(false, npe01Settings.npe01__DISABLE_IndividualAccounts_trigger__c);
+        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityAccount_trigger__c);
+        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityContactRoles_trigger__c);
+        System.assertEquals(false, npe01Settings.npe01__DISABLE_OpportunityPayments_trigger__c);
+        
+        npo02__Households_Settings__c npo02Settings = UTIL_CustomSettingsFacade.getOrgHouseholdsSettings();
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_Household_Opportunity_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdAfter_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_HouseholdBefore_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_Households_trigger__c);
+        System.assertEquals(false, npo02Settings.npo02__DISABLE_OpportunityRollup_trigger__c);
+        
+        npe03__Recurring_Donations_Settings__c npe03Settings = UTIL_CustomSettingsFacade.getOrgRecurringDonationsSettings();
+        System.assertEquals(false, npe03Settings.npe03__DISABLE_Donations_trigger__c);
+        System.assertEquals(false, npe03Settings.npe03__DISABLE_RecurringDonations_trigger__c);
+        
+        npe4__Relationship_Settings__c npe04Settings = UTIL_CustomSettingsFacade.getOrgRelationshipSettings();
+        System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipCM_trigger__c);
+        System.assertEquals(false, npe04Settings.npe4__DISABLE_RelationshipContacts_trigger__c);
+        System.assertEquals(false, npe04Settings.npe4__DISABLE_Relationships_trigger__c);
+    }
+
     public static void deleteAllCustomSettings() {
         npe01__Contacts_And_Orgs_Settings__c npe01Settings = npe01__Contacts_And_Orgs_Settings__c.getInstance();
         npo02__Households_Settings__c npo02Settings = npo02__Households_Settings__c.getInstance();
@@ -460,6 +548,43 @@ public with sharing class STG_InstallScript_TEST {
                 Active__c, Asynchronous__c, Class__c, 
                 Load_Order__c, Object__c, Trigger_Action__c 
             FROM Trigger_Handler__c
+        ];
+    }
+
+    private static npe03__Recurring_Donation__c createRecurringDonation() {
+        Account acc = new Account(Name = 'foo');
+        insert acc;
+
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
+            Name = 'foo', 
+            npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly, 
+            npe03__Date_Established__c = date.newinstance(1984,01,29), 
+            npe03__Organization__c = acc.id, 
+            npe03__Amount__c = 20,
+            npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue,
+            npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus
+        );
+
+        insert rd;
+        return rd;
+    }
+
+    private static List<Opportunity> getRecurringDonationOpportunities(Id rdId) {
+        return [
+            SELECT Id, Recurring_Donation_Installment_Number__c 
+            FROM Opportunity 
+            WHERE npe03__Recurring_Donation__c = :rdId
+        ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets errors.
+    * @return List<Error__c> The List of errors.
+    ********************************************************************************************************/
+    public static List<Error__c> getErrors() {
+        return [
+            SELECT Id, Object_Type__c, Full_Message__c, Stack_Trace__c 
+            FROM Error__c
         ];
     }
 }
