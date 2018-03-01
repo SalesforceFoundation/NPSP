@@ -1302,6 +1302,7 @@ public class RD_RecurringDonations_TEST {
                 , npe03__Schedule_Type__c
                 , npe03__Open_Ended_Status__c
                 , npe03__Next_Payment_Date__c
+                , npe03__Last_Payment_Date__c
                 , Always_Use_Last_Day_Of_Month__c
                 , npe03__Total_Paid_Installments__c
                 , npe03__Recurring_Donation_Campaign__c
@@ -1499,6 +1500,7 @@ public class RD_RecurringDonations_TEST {
                 , npe03__Schedule_Type__c
                 , npe03__Open_Ended_Status__c
                 , npe03__Next_Payment_Date__c
+                , npe03__Last_Payment_Date__c
                 , Always_Use_Last_Day_Of_Month__c
                 , npe03__Total_Paid_Installments__c
                 , npe03__Recurring_Donation_Campaign__c
