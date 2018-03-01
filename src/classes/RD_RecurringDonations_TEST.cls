@@ -1487,6 +1487,25 @@ public class RD_RecurringDonations_TEST {
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];
         system.assertEquals(5, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
+
+        //re-query the RD for changes after the oppty is updated
+        r1 = [SELECT Id
+                , Name
+                , npe03__Installments__c
+                , npe03__Contact__c
+                , npe03__Amount__c
+                , npe03__Installment_Period__c
+                , npe03__Date_Established__c
+                , npe03__Schedule_Type__c
+                , npe03__Open_Ended_Status__c
+                , npe03__Next_Payment_Date__c
+                , Always_Use_Last_Day_Of_Month__c
+                , npe03__Total_Paid_Installments__c
+                , npe03__Recurring_Donation_Campaign__c
+                , npe03__Organization__c
+                , npe03__Donor_Name__c
+                , OwnerId
+        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
         Test.stopTest();
 

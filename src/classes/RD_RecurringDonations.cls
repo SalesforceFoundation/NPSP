@@ -773,14 +773,14 @@ public class RD_RecurringDonations {
                 , Recurring_Donation_Installment_Number__c
                 , npe03__Recurring_Donation__c
         FROM Opportunity
-        WHERE npe03__Recurring_Donation__c IN :openEndedRDsToRecalculate.keySet()
+        WHERE (npe03__Recurring_Donation__c IN :openEndedRDsToRecalculate.keySet()
+        AND (IsClosed = False OR (IsClosed = True AND IsWon=False)))
         OR npe03__Recurring_Donation__c IN :fixedLengthRDsToRecalculate.keySet()
         ORDER BY CloseDate ASC];
 
         for (Opportunity o : allOppsToSort) {
             if (openEndedRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)
-                    && o.isClosed == false && o.isWon == false
-                    ) {
+                    && (o.IsClosed == false || (o.IsClosed==True && o.IsWon == False))) {
                 oppsFromOpenRDs.add(o);
             } else if (fixedLengthRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)) {
                 oppsFromFixedLengthRDs.add(o);
@@ -1162,13 +1162,14 @@ public class RD_RecurringDonations {
                 , Recurring_Donation_Installment_Number__c
                 , npe03__Recurring_Donation__c
         FROM Opportunity
-        WHERE npe03__Recurring_Donation__c IN :openEndedRDsToRecalculate.keySet()
+        WHERE (npe03__Recurring_Donation__c IN :openEndedRDsToRecalculate.keySet()
+        AND (IsClosed = False OR (IsClosed = True AND IsWon=False)))
         OR npe03__Recurring_Donation__c IN :fixedLengthRDsToRecalculate.keySet()
         ORDER BY CloseDate ASC];
 
         for (Opportunity o : allOppsToSort) {
             if (openEndedRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)
-                    && o.isClosed == false) {
+                    && (o.IsClosed == false || (o.IsClosed == true && o.IsWon == false))) {
                 oppsFromOpenRDs.add(o);
             } else if (fixedLengthRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)) {
                 oppsFromFixedLengthRDs.add(o);
