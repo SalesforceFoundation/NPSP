@@ -283,8 +283,6 @@ flows:
                 task: update_dependencies
             2:
                 task: install_managed
-            3:
-                task: update_admin_profile
 
 
     test_data_dev_org:
