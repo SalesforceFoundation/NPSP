@@ -276,6 +276,15 @@ flows:
             7:
                 task: deploy_dev_config_managed
 
+    update_prod:
+        description: 'Updates to latest managed release version of every package'
+        tasks:
+            1: 
+                task: update_dependencies
+            2:
+                task: install_prod
+
+
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
         tasks:
