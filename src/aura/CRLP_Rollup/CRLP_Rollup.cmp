@@ -55,6 +55,7 @@
     <aura:attribute name="allowedOperations" type="List"
                     description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
+    <aura:attribute name="summaryObjects" type="List" description="List of summary objects" access="public"/>
     <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="List" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
@@ -67,7 +68,6 @@
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
     <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
     <aura:attribute name="detailFields" type="List" description="Dependent list of detail fields" access="private"/>
-    <aura:attribute name="summaryObjects" type="List" description="Dependent list of summary objects" access="private"/>
     <aura:attribute name="summaryFields" type="List" description="Dependent list of summary fields" access="private"/>
     <aura:attribute name="amountFields" type="List" description="Dependent list of amount fields" access="private"/>
     <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
@@ -91,7 +91,7 @@
                 <lightning:layoutItem size="12" largeDeviceSize="8">
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.mode == 'create'}">
-                            <h3 class="slds-text-heading_label slds-p-horizontal_large">To get started, select a summary object and summary field. This will be the field that receives the rollup information.</h3>
+                            <h3 class="slds-text-heading_label slds-p-horizontal_large">{!v.labels.createSummaryHelpText}</h3>
                         </aura:if>
 
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"

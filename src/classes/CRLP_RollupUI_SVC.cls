@@ -51,6 +51,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
         @AuraEnabled public String summaryObject;
+        @AuraEnabled public String summaryObjectApiName;
         @AuraEnabled public Id id;
 
     }
@@ -160,6 +161,7 @@ public with sharing class CRLP_RollupUI_SVC {
             }
             item.detailObject = mdtList[i].Detail_Object__r.Label;
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
+            item.summaryObjectApiName = mdtList[i].Summary_Object__r.QualifiedApiName;
             item.rollupName = mdtList[i].MasterLabel;
             item.detailField = mdtList[i].Detail_Field__r.Label;
             item.description = mdtList[i].Description__c;
@@ -362,6 +364,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
+                'createSummaryHelpText' => Label.CRLP_CreateRollupSummaryHelpText,
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),

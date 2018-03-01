@@ -12,13 +12,10 @@
                 , {label: labels.partialSoftCreditLabel, name: 'Partial_Soft_Credit__c'}
                 , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
                 , {label: labels.allocationLabel, name: 'Allocation__c'}];
-            var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
-                , {label: labels.contactLabel, name: 'Contact'}
-                , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}];
+            var summaryObjects = cmp.get("v.summaryObjects");
             var availableObjects = detailObjects.concat(summaryObjects);
 
             cmp.set("v.detailObjects", detailObjects);
-            cmp.set("v.summaryObjects", summaryObjects);
 
             //put only the object names into a list
             var objectList = availableObjects.map(function (obj, index, array) {
@@ -48,7 +45,16 @@
                         this.setRollupType(cmp);
                         this.resetAllFields(cmp);
                     } else {
+                        //set active default as true
                         cmp.set("v.activeRollup.Active__c", true);
+                        // check for a summary object filter to see if summary fields need to be set
+                        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+                        var summaryObjects = cmp.get("v.summaryObjects");
+                        var label = this.retrieveFieldLabel(summaryObject, summaryObjects);
+
+                        if(summaryObject != undefined){
+                            this.onChangeSummaryObject(cmp, summaryObject, label);
+                        }
                     }
 
                     //update filter group list to contain none as a first option
@@ -497,8 +503,6 @@
         console.log("Fired field reset for context ["+context+"] and object ["+object+"]");
         var newFields = cmp.get("v.objectDetails")[object];
 
-        //console.log('new fields: '+newFields);
-
         if(newFields === undefined){
             newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
         }
@@ -506,9 +510,7 @@
         if (context === 'detail'){
             cmp.set("v.detailFields", newFields);
         } else if (context === 'summary') {
-            console.log('assigning summary fields');
             cmp.set("v.summaryFields", newFields);
-            console.log('summary fields: '+cmp.get("v.summaryFields"));
         } else if (context === 'date') {
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
@@ -535,8 +537,7 @@
     },
 
     resetRollupTypes: function(cmp){
-        //
-
+        //resets the list of rollup types based on the selected summary object
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         var labels = cmp.get("v.labels");
         var templateList = [];

@@ -636,6 +636,15 @@
         <value>PLACEHOLDER - text for when/why users may need to use the amount, date, or detail fields.</value>
     </labels>
     <labels>
+        <fullName>CRLP_CreateRollupSummaryHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
+        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a description
+        </value>
+    </labels>
+    <labels>
         <fullName>CRLP_CreditType</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

@@ -47,6 +47,7 @@
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
     <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label."/>
     <aura:attribute name="yearlyOperations" type="List" description="Map of yearly operations, api name to label."/>
+    <aura:attribute name="summaryObjects" type="List" description="List summary objects as maps with name and label keys."/>
 
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
@@ -164,10 +165,10 @@
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
                             <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type" variant="label-hidden" onchange="{!c.filterBySummaryObject}">
-                                <option value="All">{!v.labels.selectAll}</option>
-                                <option value="Account">{!v.labels.accountLabel}</option>
-                                <option value="Contact">{!v.labels.contactLabel}</option>
-                                <option value="General Accounting Unit">{!v.labels.gauLabel}</option>
+                                <option value="All" text="{!v.labels.selectAll}"/>
+                                <aura:iteration items="{!v.summaryObjects}" var="obj">
+                                    <option value="{!obj.name}" text="{!obj.label}"/>
+                                </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
                     </aura:if>
@@ -232,7 +233,7 @@
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
                            mode="{!v.detailMode}" operations="{#v.operations}" yearlyOperations="{#v.yearlyOperations}"
-                           filterGroups="{#v.filterGroupList}"/>
+                           filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->
