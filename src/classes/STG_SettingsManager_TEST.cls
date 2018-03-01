@@ -57,18 +57,44 @@ public with sharing class STG_SettingsManager_TEST {
     * @description Tests setting up TDTM and the Schedulables
     * @return void
     */
-    public static testMethod void testSetTriggerSchedConfig() {
-        if (strTestOnly != '*' && strTestOnly != 'testSetTriggerSchedConfig') return;
+    public static testMethod void testRequiredJobsAreScheduledWhenNpspSettingsPageLoads() {
         STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
         
         Test.startTest();
-        ctrl.setTriggerSchedConfig();
+        ctrl.onNpspSettingsLoad();
         Test.stopTest();
                 
-        List<CronTrigger> masterJobs = [select Id, CronJobDetail.Id from CronTrigger where CronJobDetail.Name IN 
-        :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() and CronJobDetail.JobType = '7'];
+        List<CronTrigger> masterJobs = [
+            SELECT Id, CronJobDetail.Id 
+            FROM CronTrigger 
+            WHERE CronJobDetail.Name IN :UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet() AND
+                CronJobDetail.JobType = '7'
+        ];
         System.assertEquals(UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet().size(), masterJobs.size());
+
+        System.assertNotEquals(null, STG_Panel.stgService);
     }
+
+    
+    /*********************************************************************************************************
+    * @description Tests an exception message is displayed if the record type settings update throws an exception
+    * @return void
+    */
+    public static testMethod void testRecordTypeSettingsUpdateExceptionIsDisplayed() {
+        Test.setCurrentPage(Page.STG_SettingsManager);
+
+        STG_SettingsManager_CTRL ctrl = new STG_SettingsManager_CTRL(); 
+
+        UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock mockUpdateSettings = new UTIL_RecordTypeSettingsUpdate_TEST.UpdateSettingsMock().throwException();
+        UTIL_RecordTypeSettingsUpdate.instance = mockUpdateSettings;
+        
+        Test.startTest();
+        ctrl.onNpspSettingsLoad();
+        Test.stopTest();
+
+        UTIL_UnitTestData_TEST.assertPageHasError('Test Exception');
+    }
+
      
     /*********************************************************************************************************
     * @description Tests the DataBoundMultiSelect control used in Settings
@@ -119,8 +145,6 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, STG_Panel.listSORelTypes);
         system.assertNotEquals(null, STG_Panel.listSOCampaignTypes);
         system.assertNotEquals(null, STG_Panel.listSOMailingReportIds);
-        string str = STG_Panel.strHHAccountRecordTypeLabel;
-        string str2 = STG_Panel.strOneToOneRecordTypeLabel;        
     }
     
     /*********************************************************************************************************
@@ -226,13 +250,21 @@ public with sharing class STG_SettingsManager_TEST {
     */
     public static testMethod void testPanelContacts() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelContacts') return;
+
+        String hhAccountRecTypeLabel = STG_PanelContacts_CTRL.strHHAccountRecordTypeLabel;
+        String oneToOneRecordTypeLabel = STG_PanelContacts_CTRL.strOneToOneRecordTypeLabel;  
+
         STG_PanelContacts_CTRL panel = new STG_PanelContacts_CTRL();
         system.assertEquals('idPanelCon', panel.idPanel());
+
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         panel.saveSettings();
+
         system.assertEquals('Household Account', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
+
         STG_Panel.stgService.stgCon.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
         panel.saveSettings();
+
         system.assertEquals('One-to-One', UTIL_CustomSettingsFacade.getOrgContactsSettings().npe01__Account_Processor__c);
     }    
 

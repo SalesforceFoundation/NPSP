@@ -452,4 +452,29 @@ public with sharing class STG_PanelHealthCheck_TEST {
         System.assertEquals(true, String.isNotBlank(panelHealthCheckController.listDR[0].strDetails), 'A System.Exception should be thrown');
         System.assertEquals(null, panelHealthCheckController.listDR[0].strSolution);
     }
+
+    /*********************************************************************************************************
+    @description 
+        Test invalid record types settings are displayed on the Health Check run
+    verify:
+        Each invalid record type setting field has a Defect Result logged
+    **********************************************************************************************************/ 
+    private static testMethod void testVerifyRecordTypes() {
+        STG_PanelHealthCheck_CTRL healthCheck = new STG_PanelHealthCheck_CTRL();
+
+        STG_Panel.stgService.stgAllo.Excluded_Opp_RecTypes__c = 'InvalidRTId1';
+        STG_Panel.stgService.stgCon.npe01__HH_Account_RecordTypeID__c = 'InvalidRTId2';
+        STG_Panel.stgService.stgCon.npe01__One_to_One_RecordTypeID__c = 'InvalidRTId3';
+        STG_Panel.stgService.stgCon.Opp_RecTypes_Excluded_for_Payments__c = 'InvalidRTId4'; 
+        STG_Panel.stgService.stgRD.npe03__Record_Type__c = 'InvalidRTId5'; 
+        STG_Panel.stgService.stgHH.npo02__Household_Creation_Excluded_Recordtypes__c = 'InvalidRTId6'; 
+        STG_Panel.stgService.stgHH.npo02__Household_OCR_Excluded_Recordtypes__c = 'InvalidRTId7'; 
+        STG_Panel.stgService.stgHH.npo02__Excluded_Account_Opp_Rectypes__c = 'InvalidRTId8'; 
+        STG_Panel.stgService.stgHH.npo02__Excluded_Contact_Opp_Rectypes__c = 'InvalidRTId9'; 
+        STG_Panel.stgService.stgHH.npo02__Membership_Record_Types__c = 'InvalidRTId10';
+
+        healthCheck.verifyRecordTypes();
+
+        System.assertEquals(10, healthCheck.listDR.size(), 'A Detect Result should be created for each invalid record type: ' + healthCheck.listDR);  
+    }
 }
