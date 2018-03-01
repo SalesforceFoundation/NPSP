@@ -724,7 +724,7 @@ public class RD_RecurringDonations {
     * @param dmlWrapper Object to store the Opps that need updating
     * @return void
     */ 
-    public static void handleRecurringDonationUpdate(list<npe03__Recurring_Donation__c> recurringDonations, map<id, npe03__Recurring_Donation__c> oldRecurringDonations, TDTM_Runnable.DmlWrapper dmlWrapper){     
+    public static void handleRecurringDonationUpdate(list<npe03__Recurring_Donation__c> recurringDonations, map<id, npe03__Recurring_Donation__c> oldRecurringDonations, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
         // list of RDs going from Open-->Closed
         list<npe03__Recurring_Donation__c> newlyClosedDonations = new list<npe03__Recurring_Donation__c>();
@@ -734,15 +734,15 @@ public class RD_RecurringDonations {
 
         String openlabel = System.label.npe03.RecurringDonationOpenStatus;
         String closedlabel = System.label.npe03.RecurringDonationClosedStatus;
-        
-        for (npe03__Recurring_Donation__c r : recurringDonations){
 
-            Boolean needsRecalc = needsRecalculation(r,oldRecurringDonations.get(r.id));
+        for (npe03__Recurring_Donation__c r : recurringDonations) {
+
+            Boolean needsRecalc = needsRecalculation(r, oldRecurringDonations.get(r.id));
 
             if (needsRecalc) {
-                if(r.npe03__Open_Ended_Status__c == closedlabel
+                if (r.npe03__Open_Ended_Status__c == closedlabel
                         && oldRecurringDonations.get(r.id).npe03__Open_Ended_Status__c != r.npe03__Open_Ended_Status__c
-                    ){
+                        ) {
                     // closing an open ended donation
                     newlyClosedDonations.add(r);
                 } else if (r.npe03__Open_Ended_Status__c == openlabel) {
@@ -754,13 +754,34 @@ public class RD_RecurringDonations {
                 }
             }
         }
-        
-        if (!newlyClosedDonations.isEmpty()){
+
+        if (!newlyClosedDonations.isEmpty()) {
             runRecurringDonationClosedActions(newlyClosedDonations, dmlWrapper);
         }
 
+        prepRecalcOnRdOpportunities(openEndedRDsToRecalculate,fixedLengthRDsToRecalculate,dmlWrapper);
+
+    }
+
+    /*******************************************************************************************************
+    * @description Gathers the relevant Opportunities for the RDs that need recalculating and
+    * dispatches them to the appropriate recalculation handler.
+    * @param openEndedRDsToRecalculate Map of the Open-Ended RDs that need to be recalculated
+    * @param fixedLengthRDsToRecalculate Map of the Fixed-length RDs that need to be recalculated
+    * @param dmlWrapper Object to store the Opps that need updating
+    * @return void
+    */
+    public static void prepRecalcOnRdOpportunities(Map<Id, npe03__Recurring_Donation__c> openEndedRDsToRecalculate
+            , Map<id, npe03__Recurring_Donation__c> fixedLengthRDsToRecalculate
+            , TDTM_Runnable.DmlWrapper dmlWrapper){
+
         List<Opportunity> oppsFromOpenRDs = new List<Opportunity>();
         List<Opportunity> oppsFromFixedLengthRDs = new List<Opportunity>();
+
+        // get all Opportunities that are:
+        // Open or ClosedLost belonging to Open Ended RDs
+        // OR
+        // any stage belonging to Fixed Length RDs
         List<Opportunity> allOppsToSort = [SELECT Id
                 , Amount
                 , Name
@@ -1148,41 +1169,7 @@ public class RD_RecurringDonations {
 
         TDTM_Runnable.DmlWrapper dmlWrapper = new TDTM_Runnable.DmlWrapper();
 
-        List<Opportunity> oppsFromOpenRDs = new List<Opportunity>();
-        List<Opportunity> oppsFromFixedLengthRDs = new List<Opportunity>();
-        List<Opportunity> allOppsToSort = [SELECT Id
-                , Amount
-                , Name
-                , CampaignId
-                , AccountID
-                , CloseDate
-                , StageName
-                , isClosed
-                , isWon
-                , Recurring_Donation_Installment_Number__c
-                , npe03__Recurring_Donation__c
-        FROM Opportunity
-        WHERE (npe03__Recurring_Donation__c IN :openEndedRDsToRecalculate.keySet()
-        AND (IsClosed = False OR (IsClosed = True AND IsWon=False)))
-        OR npe03__Recurring_Donation__c IN :fixedLengthRDsToRecalculate.keySet()
-        ORDER BY CloseDate ASC];
-
-        for (Opportunity o : allOppsToSort) {
-            if (openEndedRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)
-                    && (o.IsClosed == false || (o.IsClosed == true && o.IsWon == false))) {
-                oppsFromOpenRDs.add(o);
-            } else if (fixedLengthRDsToRecalculate.containsKey(o.npe03__Recurring_Donation__c)) {
-                oppsFromFixedLengthRDs.add(o);
-            }
-        }
-
-        if (!openEndedRDsToRecalculate.isEmpty()) {
-            handleOpenEndedScheduleRecalculation(openEndedRDsToRecalculate.values(), oppsFromOpenRDs, dmlWrapper);
-        }
-
-        if (!fixedLengthRDsToRecalculate.isEmpty()) {
-            handleFixedLengthScheduleRecalculation(fixedLengthRDsToRecalculate.values(), oppsFromFixedLengthRDs, dmlWrapper);
-        }
+        prepRecalcOnRdOpportunities(openEndedRDsToRecalculate,fixedLengthRDsToRecalculate,dmlWrapper);
 
         ERR_Handler.Errors errors = TDTM_TriggerHandler.processDMLAllOrNothing(dmlWrapper, false);
 
