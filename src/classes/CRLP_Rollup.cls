@@ -328,7 +328,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Best Year or Best Year Total
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.BEST_YEAR || operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
+        else if (operation == CRLP_Operation.RollupType.Best_Year || operation == CRLP_Operation.RollupType.Best_Year_Total) {
             Decimal maxVal = 0;
             String bestYr = null;
             List<String> years = new List<String>( this.sumByYear.keySet() );
@@ -339,7 +339,7 @@ public class CRLP_Rollup {
                     maxVal = this.sumByYear.get(yr);
                 }
             }
-            if (operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
+            if (operation == CRLP_Operation.RollupType.Best_Year_Total) {
                 resultValue = maxVal;
             } else {
                 if (bestYr == null || fldType == SoapType.STRING) {
@@ -353,7 +353,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Years Donated (semi-colon separated list)
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.YEARS_DONATED) {
+        else if (operation == CRLP_Operation.RollupType.Years_Donated) {
             List<String> years = new List<String>( this.sumByYear.keySet() );
             years.sort();
             resultValue = (!years.isEmpty() ? String.join(years,';') : null);

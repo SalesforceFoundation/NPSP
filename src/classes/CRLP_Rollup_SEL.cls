@@ -132,7 +132,7 @@ public class CRLP_Rollup_SEL {
      * @return List<DescribeFieldResult>
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
-        String objName = objType.getDescribe().getName();
+        String objName = UTIL_Describe.getObjectDescribe(objType).getName();
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
         for (Rollup__mdt rollup : cachedRollups) {

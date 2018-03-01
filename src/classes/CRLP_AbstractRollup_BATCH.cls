@@ -77,14 +77,6 @@ public abstract class CRLP_AbstractRollup_BATCH {
     protected Map<SObjectType, List<Rollup__mdt>> statefulCacheOfRollupsToBeProcessed = new Map<SObjectType, List<Rollup__mdt>>();
 
     /**
-     * @description This list is effectively the keyset of statefulRollupsById, but it's used to keep the list of
-     * Id's in a specific sequence so that element 0 can be dropped when the 1000th element is added. When dropped,
-     * that key is also removed from the statefulRollupsById map. The intent is to keep the heap size for the stateful
-     * Map of CRLP_Rollup data limited to avoid a governor limit when dealing with millions of records.
-     */
-    protected List<Id> statefulListOfSavedIds;
-
-    /**
      * @description Map of Opportunity Id's already processed by Account to avoid duplicating a donation amount
      * to the Account when rolling up soft credits by the Contact.AccountId
      */
@@ -121,7 +113,6 @@ public abstract class CRLP_AbstractRollup_BATCH {
     public CRLP_AbstractRollup_BATCH() {
         this.statefulRollupsById = new Map<Id, List<CRLP_Rollup>>();
         this.statefulMapOfOppIdsByAcct = new Map<Id, Set<Id>>();
-        this.statefulListOfSavedIds = new List<Id>();
         initSoftCreditRollupTypes();
     }
 

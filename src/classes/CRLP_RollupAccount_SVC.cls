@@ -95,6 +95,9 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
                     }
                 }
             }
+
+            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }
     }
 

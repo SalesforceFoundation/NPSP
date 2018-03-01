@@ -86,6 +86,9 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
                 }
             }
+
+            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }
     }
 }
