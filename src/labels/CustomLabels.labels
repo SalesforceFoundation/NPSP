@@ -641,8 +641,105 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
-        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a description
+        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
         </value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupIntroHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
+        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
+        </value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupSummaryObjectHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for summary object.</shortDescription>
+        <value>The object determines which Summary Fields are available for you to roll up data to.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupSummaryFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for summary field.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for description.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for name.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTypeHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for rollup type.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for filter group.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupOperationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for operation.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFiscalYearHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for fiscal year.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTimeBoundOperationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for time bound operation.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupYearsAgoHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for years ago picklist.</shortDescription>
+        <value>TBD</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDaysBackHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for days back integer.</shortDescription>
+        <value>TBD</value>
     </labels>
     <labels>
         <fullName>CRLP_CreditType</fullName>

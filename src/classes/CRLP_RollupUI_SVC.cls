@@ -364,7 +364,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
-                'createSummaryHelpText' => Label.CRLP_CreateRollupSummaryHelpText,
+                'createSummaryHelpText' => Label.CRLP_CreateRollupIntroHelpText,
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),

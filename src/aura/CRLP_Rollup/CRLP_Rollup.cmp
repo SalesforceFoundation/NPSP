@@ -91,7 +91,7 @@
                 <lightning:layoutItem size="12" largeDeviceSize="8">
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.mode == 'create'}">
-                            <h3 class="slds-text-heading_label slds-p-horizontal_large">{!v.labels.createSummaryHelpText}</h3>
+                            <h3 class="slds-p-horizontal_large slds-text-heading_small">{!v.labels.createSummaryHelpText}</h3>
                         </aura:if>
 
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -140,9 +140,6 @@
                                                      value="{!v.activeRollup.MasterLabel}"
                                                      required="false"
                                                      readonly="true"/>
-                                </lightning:layoutItem>
-                                <lightning:layoutItem size="12" mediumDeviceSize="6">
-                                    <h3 class="slds-text-heading_label slds-p-around_large">Information about the immutable name, rollup type and description goes here.</h3>
                                 </lightning:layoutItem>
                             </aura:if>
                             <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
@@ -300,7 +297,7 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+!v.activeRollup.Detail_Field__r.Label}"
+                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Detail_Field__r.Label}"
                                                 apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
@@ -323,11 +320,12 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+!v.activeRollup.Amount_Field__r.Label}"
+                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Amount_Field__r.Label}"
                                                 apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
                                                 options="{!v.amountFields}"
                                                 objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
                                                 mediumDeviceSize="3"
+                                                hasNullOption="false"
                             />
                         </aura:if>
                     </lightning:layout>

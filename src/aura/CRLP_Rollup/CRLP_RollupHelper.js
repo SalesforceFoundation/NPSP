@@ -38,12 +38,14 @@
                     //fields can be lazy loaded if user is creating a new rollup
                     //setup is first called here instead of in change mode to ensure active rollup information is returned from the server
                     if (cmp.get("v.mode") != 'create') {
+                        this.resetAllFields(cmp);
                         this.onChangeYearlyOperationsOptions(cmp, false);
+                        this.onChangeInteger(cmp);
                         this.updateAllowedOperations(cmp);
-                        this.onChangeOperation(cmp);
+                        this.onChangeOperation(cmp, cmp.get("v.activeRollup.Operation__c"));
                         this.resetRollupTypes(cmp);
                         this.setRollupType(cmp);
-                        this.resetAllFields(cmp);
+                        console.log(JSON.stringify(cmp.get("v.activeRollup")));
                     } else {
                         //set active default as true
                         cmp.set("v.activeRollup.Active__c", true);
@@ -136,11 +138,8 @@
         var allFields = cmp.get("v.objectDetails")[detailObject];
         var newFields = [];
 
-        console.log(detailObject);
-
         //loop over all summary fields to get the type of selected field
         var summaryFields = cmp.get("v.summaryFields");
-        console.log(summaryFields);
         var type;
         for (var i = 0; i < summaryFields.length; i++) {
             if (summaryFields[i].name === summaryField) {
@@ -149,7 +148,6 @@
             }
         }
         //TODO: maybe check if type is the same to see if need to filter?
-        console.log("Type is " + type);
         //if type is undefined, return all fields
         if (type === undefined || allFields === undefined) {
             newFields = allFields;
@@ -187,7 +185,7 @@
         //cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
         //cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
         //cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
-        cmp.set("v.activeRollup.MasterLabel", null);
+        cmp.set("v.activeRollup.MasterLabel", cmp.get("v.labels.rollupNew"));
 
         this.resetRollupTypes(cmp);
 
@@ -227,7 +225,7 @@
         cmp.set("v.activeRollup.Filter_Group__r.MasterLabel", label);
     },
 
-    onChangeInteger: function (cmp, label) {
+    onChangeInteger: function (cmp) {
         //stores the selected years back integer value to be used when the page is in view mode
         var selectedInteger = cmp.get("v.activeRollup.Integer__c");
         var integerList = cmp.get("v.integerList");
@@ -238,9 +236,7 @@
     onChangeOperation: function (cmp, operation) {
         //conditionally renders the yearly operation, use fiscal year, amount, date and detail fields
         console.log("in helper onChangeOperation");
-        console.log('operation: ' + operation);
         var renderMap = cmp.get("v.renderMap");
-        console.log(renderMap);
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         renderMap = this.renderAmountField(cmp, operation, renderMap);
@@ -248,11 +244,15 @@
         renderMap = this.renderDetailField(cmp, operation, renderMap);
         renderMap = this.renderFiscalYear(cmp, renderMap);
 
+        //TIME BOUND OPERATION RENDERING
         if (operation !== '' && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
             renderMap["timeBoundOperation"] = true;
             var timeOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
         } else {
             renderMap["timeBoundOperation"] = false;
+            cmp.set(("v.activeRollup.Yearly_Operation_Type__c"), 'All_Time');
+            renderMap["integerDays"] = false;
+            renderMap["integerYears"] = false;
         }
 
         cmp.set("v.renderMap", renderMap);
@@ -293,7 +293,6 @@
         var detailObjects = cmp.get("v.detailObjects");
         var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
         cmp.set("v.activeRollup.Detail_Object__r.Label", detailLabel);
-        //todo: not working yet
         cmp.set("v.selectedRollupType", {label: rollupLabel, name: detailObject});
 
         //reset amount fields
@@ -481,11 +480,12 @@
         var operation = cmp.get("v.activeRollup.Operation__c");
         var yearlyOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
 
-        if (operation === 'Donor_Streak'
+        if ((operation === 'Donor_Streak'
             || operation === 'Years_Donated'
             || operation === 'Best_Year'
             || operation === 'Best_Year_Total'
-            || yearlyOperation === 'Years_Ago') {
+            || yearlyOperation === 'Years_Ago')
+            && operation != '') {
             //enable fiscal year
             renderMap["fiscalYear"] = true;
         } else {
@@ -640,6 +640,11 @@
             rollupType.name = 'Allocation__c';
             rollupType.summaryObject = 'General_Accounting_Unit__c';
             rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
+
+        } else if (detailObject === 'Opportunity' && summaryObject === 'General_Accounting_Unit__c') {
+            rollupType.name = 'Opportunity';
+            rollupType.summaryObject = 'General_Accounting_Unit__c';
+            rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
         }
 
         cmp.set("v.selectedRollupType", rollupType);
@@ -663,7 +668,6 @@
 
         //start with all operations
         var ops = cmp.get("v.operations");
-        console.log(JSON.stringify(ops));
 
         var field = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
         var summaryFields = cmp.get("v.summaryFields");
@@ -675,7 +679,6 @@
                 break;
             }
         }
-        console.log(type);
 
         //create lists of allowed operations
         var allowedOps = [];
@@ -700,8 +703,6 @@
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
         }
-
-        console.log(JSON.stringify(allowedOps));
 
         cmp.set("v.allowedOperations", allowedOps);
 

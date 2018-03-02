@@ -97,6 +97,7 @@
         //resets the active record to ensure there is no leftover data
         //applies filtered summary object to the creation of a new rollup if applicable
         cmp.set("v.activeRecord", {});
+        cmp.set("v.activeRecord.MasterLabel", cmp.get("v.labels.rollupNew"));
         var summaryFilterObject = cmp.find("selectSummaryObject").get("v.value");
         if(summaryFilterObject !== 'All'){
             cmp.set("v.activeRecord.Summary_Object__r.QualifiedApiName", summaryFilterObject);
