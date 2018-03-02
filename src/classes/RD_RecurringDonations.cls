@@ -1344,7 +1344,7 @@ public class RD_RecurringDonations {
             opp.AccountId = r.npe03__Organization__c;
         } else if ( con != null ) {
             opp.AccountId = con.AccountId;
-            opp.npe01__Contact_Id_For_Role__c = con.id;
+            opp.Primary_Contact__c = con.id;
         }
 
         if (rds.npe03__Record_Type__c != null){
