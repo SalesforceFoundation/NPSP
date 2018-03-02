@@ -406,6 +406,10 @@ public class CRLP_Rollup {
         return resultValue;
     }
 
+    /**
+     * @description Wrapper class for the Rollup__mdt CMT records to use in the collection of MDT's within this
+     * outer class and for stateful storage. Uses significantly less heap size than storing a list of Rollup__mdt records.
+     */
     public class Rollupmdt {
         public String operation;
         public String timeBoundOperationType;

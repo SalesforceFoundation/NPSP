@@ -46,14 +46,14 @@ public class CMT_MetadataAPI {
      * @description Queue a Custom MetadataType upsert operation to be submitted later as an ASync operation.
      * @param mdObject MetadataObject name
      * @param recordName Unique record name of the record to insert/update. Required for both insert and update.
-     * @param recordLabel Record label of the record to insert/udpate. Required for insert.
+     * @param recordLabel Record label of the record to insert/update. Required for insert.
      * @param fldValues Map of field names/values to upsert for the specified record.
      */
     public static void upsertCustomMetadata(CRLP_RollupCMT.MetadataObject mdObject, String recordName, String recordLabel, Map<String,Object> fldValues) {
 
         String mdTypeName = mdObject.Name() + '__mdt';
 
-        // Setup custom metadata to be created or udpated in the subscriber org.
+        // Setup custom metadata to be created or updated in the subscriber org.
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
         customMd.fullName = mdTypeName + '.' + recordName;
         if (recordLabel != null) {

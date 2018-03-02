@@ -91,7 +91,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Group.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;
@@ -165,7 +165,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;
@@ -251,7 +251,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;

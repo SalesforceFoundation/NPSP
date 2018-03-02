@@ -176,7 +176,7 @@ public class CRLP_RollupProcessingOptions {
         }
 
         /**
-         * @description Returns the udpated Map of processed Opportunity Id's by the parent Account Id.
+         * @description Returns the updated Map of processed Opportunity Id's by the parent Account Id.
          * Used to expose this value to the LDV Batch Job to retrieve the current setting.
          */
         public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByAccountId() {
@@ -184,33 +184,20 @@ public class CRLP_RollupProcessingOptions {
         }
 
         /**
-         * @description Returns the udpated Map of List<CRLP_Rollup> values by the parent record Id.
+         * @description Returns the updated Map of List<CRLP_Rollup> values by the parent record Id.
          * Used to expose this value to the LDV Batch Job to retrieve the current setting.
          */
         public Map<Id, List<CRLP_Rollup>> getUpdatedMapOfRollupsByParentId() {
             return this.mapOfRollupsByParentId;
         }
 
+        /**
+         * @description Returns the last parent id processed by the RollupsProcessor logic for the given execution scope
+         */
         public Id getLastParentIdProcessed() {
             return this.lastParentIdProcessed;
         }
 
-        /** performance logging **/
-        public Long totalProcessingTime = 0;
-        public Long totalFilterEvalTime = 0;
-        public Long totalRollupTime = 0;
-        public Long startProcessSetupTime = 0;
-        public Long summaryLoopSetupTime = 0;
-        public Long needsUpdateTime = 0;
-        public Long handlerSetupTime = 0;
-        public Long getPopulatedObjectTime = 0;
-        public Long createEmptyObjectTime = 0;
-        public Long getFinalValuesTimes = 0;
-        public Long setEachFieldTime = 0;
-        public Long getTargetFieldTime = 0;
-        public Long determineValueTime = 0;
-        public Long setTargetValue = 0;
-        public String notes = '';
     }
 
 }
