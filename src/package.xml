@@ -1068,10 +1068,10 @@
         <members>CRLP_AdvancedCustomizationHeader</members>
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
-        <members>CRLP_CreateRollupSummaryHelpText</members>
         <members>CRLP_CreateRollupSummaryObjectHelpText</members>
         <members>CRLP_CreateRollupSummaryFieldHelpText</members>
         <members>CRLP_CreateRollupDescriptionHelpText</members>
+        <members>CRLP_CreateRollupIntroHelpText</members>
         <members>CRLP_CreateRollupNameHelpText</members>
         <members>CRLP_CreateRollupTypeHelpText</members>
         <members>CRLP_CreateRollupFilterGroupHelpText</members>
