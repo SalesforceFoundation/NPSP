@@ -224,9 +224,16 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
     public pageReference delRow() {
+        Boolean hasId = listAllo[rowNumber].id != null;
+
         //add to deletion list if the allocation has an id
-        if (listAllo[rowNumber].id!=null)
+        if (hasId) {
+            if (!isDeletable()) {
+                addDelExceptionMessage();
+                return null;
+            }
             listAlloForDelete.add(listAllo[rowNumber]);
+        }
         listAllo.remove(rowNumber);
 
         return null;
@@ -289,6 +296,19 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Returns the thousands separator character in use for the Users current Locale setting */
     public String getThousandsSeparator() {
         return (1000).format().subString(1,2);
+    }
+
+    private Boolean isDeletable() {
+        return UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Allocation__c')).isDeletable();
+    }
+
+    private void addDelExceptionMessage() {
+        ApexPages.addMessage(
+            new ApexPages.Message(
+                    ApexPages.Severity.WARNING,
+                    String.format(
+                        System.Label.exceptionDeletePermission,
+                        new String[]{UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'))})));
     }
 
 }
