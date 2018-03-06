@@ -37,6 +37,15 @@
 */
 public class CRLP_RollupQueueable implements System.Queueable {
 
+    /** @description To prevent a governor limit during the rollup, limit the maximum number of child opps
+     * that can be queried for a given parent. This is a rough calculation based on the number of summary
+     * parent id's passed into the queueable and whether payment rollups are present. Basically, it's dynamic
+     * enough to figure out if it can get away with rolling up in a queuable or not. ApexCpuTimeout is a concern
+     * for this as well, so even if this job can query 40000 records, it won't be able to go through all of them
+     * without timing out.
+     */
+    private static final Integer MAX_ATTACHED_OPPS_FOR_QUEUABLE = 5000;
+
     /** @description List of a list of summary record Id's to roll up to, chaining each group one at a time */
     private List<List<Id>> queueOfSummaryIds;
 
@@ -99,21 +108,44 @@ public class CRLP_RollupQueueable implements System.Queueable {
         // Query the parent records
         Set<Id> parentIds = new Set<Id>(summaryRecordIds);
         String soql = CRLP_Query_SEL.buildObjectQueryForRollup(objType) + ' WHERE Id IN :parentIds';
+        if (!soql.contains('npo02__NumberOfClosedOpps__c')) {
+            soql = soql.replace('SELECT ','SELECT npo02__NumberOfClosedOpps__c,');
+        }
         List<SObject> summaryRecords = database.query(soql);
 
-        // Get the detail records for the current set of Summary Records
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
-        List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-        Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-        if (includeChildPayments && (objType == Account.SObjectType || objType == Contact.SObjectType)) {
-            paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+        // If the summary record has more child opportunities and possibly payments than can be handled in
+        // this queueable (non-async job), remove it from this processing queue
+        Integer maxOppsToAllow = (MAX_ATTACHED_OPPS_FOR_QUEUABLE / summaryRecords.size());
+        if (includeChildPayments) {
+            // If there are payment rollups, then assume at least one payment per opp, which effectively cuts
+            // the max number of records that can be queried in half
+            maxOppsToAllow = maxOppsToAllow / 2;
+        }
+        for (Integer n=0; n<summaryRecords.size(); n++) {
+            if (summaryRecords[n].get('npo02__NumberOfClosedOpps__c') != null &&
+                    (Double)summaryRecords[n].get('npo02__NumberOfClosedOpps__c') > maxOppsToAllow) {
+                summaryRecords.remove(n);
+                n--;
+            }
         }
 
-        // Call the method to do the actual rollups. This returns only records that require updating
-        List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
+        // Are there actually summary records to process?
+        if (!summaryRecords.isEmpty()) {
+            // Get the detail records for the current set of Summary Records
+            List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-        // DML and capture any returned DML errors into a Map by Summary Record Id
-        CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+            Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+            if (includeChildPayments && (objType == Account.SObjectType || objType == Contact.SObjectType)) {
+                paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+            }
+
+            // Call the method to do the actual rollups. This returns only records that require updating
+            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
+
+            // DML and capture any returned DML errors into a Map by Summary Record Id
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+        }
     }
 }

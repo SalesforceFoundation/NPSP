@@ -37,6 +37,9 @@
 */
 public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
+    /** @description Prevent additional Batch or Queueable jobs if there are already this many queued/executing */
+    private static final Integer MAX_ALLOWED_QUEUED_JOBS = 5;
+
     /**
      * @description Static collection of Account/Contact/Allocation Id's that have already been submitted
      * to a rollup job in the current execution context. This prevents them from being submitted twice
@@ -216,7 +219,13 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
                 // The queueable job will pop the list of Id's off the stack and process them in serial.
                 if (!queueOfSummaryIds.isEmpty() && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                    System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                    Integer numExecutingJobs = [SELECT count() FROM AsyncApexJob
+                        WHERE JobType='Queueable' AND (Status = 'Processing' OR Status = 'Preparing' OR Status = 'Holding' OR Status = 'Queued')];
+
+                    // Don't execute the batch if there are already 5 CRLP queueable jobs jobs executing
+                    if (numExecutingJobs < MAX_ALLOWED_QUEUED_JOBS) {
+                        System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                    }
                 }
             }
         }
