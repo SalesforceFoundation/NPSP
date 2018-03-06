@@ -32,7 +32,7 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Customizable Rollups for TDTM
+* @description Customizable Rollups for TDTM on the Opportunity and Payment objects only
 *
 */
 public class CRLP_Rollup_TDTM extends TDTM_Runnable {
@@ -47,7 +47,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
     private static Set<Id> alreadyQueuedForRollupJob = new Set<Id>();
 
     /**
-     * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
+     * @description Trigger Handler on Opportunity and Payment to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
@@ -159,28 +159,10 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             }
             opps = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds];
 
-        } else if (detailObjType == Allocation__c.SObjectType) {
-
-            // If the Allocation records were modified, get the parent GAU Id's to rollup
-            List<Id> gauIds = new List<Id>();
-            for (SObject s  : detailRecordsToRollup) {
-                Allocation__c alloc = (Allocation__c)s;
-                if (alloc.Opportunity__c != null && !alreadyQueuedForRollupJob.contains(alloc.Opportunity__c)) {
-                    gauIds.add(alloc.General_Accounting_Unit__c);
-                    alreadyQueuedForRollupJob.add(alloc.Opportunity__c);
-                }
-            }
-
-            // Don't submit the batch job when unit tests are running or if this is being called from
-            // a batch, queueable or future method
-            if (!Test.isRunningTest() && !gauIds.isEmpty() && !System.isBatch() && !System.isQueueable() && !System.isFuture()) {
-                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(gauIds), batchSize);
-            }
         }
 
         // If there are Opportunities, get the Account and/or Contact Ids to roll up to
-        if (detailObjType != Allocation__c.SObjectType) {
+        if (!opps.isEmpty()) {
             for (Opportunity opp : opps) {
                 if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
                     accountIds.add(opp.AccountId);
