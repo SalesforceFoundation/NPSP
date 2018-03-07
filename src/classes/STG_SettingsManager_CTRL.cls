@@ -40,7 +40,12 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     * @description The controller's constructor 
     */
     public STG_SettingsManager_CTRL() {
-        idPanelCurrent = 'idPanelHome';
+        String landingPage = System.currentPageReference().getParameters().get('panel');
+        if (!String.isBlank(landingPage)) {
+            idPanelCurrent = landingPage;
+        } else {
+            idPanelCurrent = 'idPanelHome';
+        }
     }
 
     /*********************************************************************************************************

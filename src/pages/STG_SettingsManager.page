@@ -39,11 +39,11 @@
 
     // page init function
     j$(function () {
-        ShowPanel(idPanelCurrent);
         var cl = j$('#mynavbar').collapsibleList('.slds-tree__branch', {search: false, animate: false});
         // start with slds-tree-container all collapsed.  couldn't figure out how to call collapseAllHeaders(),
         // but submitting the click on all li's does the trick!
         j$('div',cl).trigger('click');
+        ShowPanel(idPanelCurrent);
     });
 
     function ShowPanel(idPanel) {
@@ -58,6 +58,15 @@
         idPanelCurrent = idPanel;
         node = document.getElementById(idPanelCurrent + 'Nav');
         if (node != null) node.classList.add('slds-is-selected');
+
+        var headerNode = node.parentElement.previousElementSibling;
+        headerNode.classList.remove('collapsed');
+        siblings = node.parentNode.childNodes;
+        for (var i = 0, ii = siblings.length; i < ii; i++) {
+            if(siblings[i].nodeName !== '#text') {
+                siblings[i].style.display = 'block';
+            }
+        }
 
         // scroll the panel into view
         j$('body').scrollTop(0);
