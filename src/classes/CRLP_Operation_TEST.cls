@@ -42,10 +42,10 @@ private class CRLP_Operation_TEST {
     static testMethod void test_static_methods() {
         System.assertNotEquals(0, CRLP_Operation.getRollupOperationTypes().size(),
             'There should be whole bunch of Rollup Operations');
-        System.assertEquals(1, CRLP_Operation.getAvailableYearlyOperationTypes(CRLP_Operation.RollupType.BEST_YEAR.name()).size(),
+        System.assertEquals(1, CRLP_Operation.getAvailableTimeBoundOperationTypes(CRLP_Operation.RollupType.BEST_YEAR.name()).size(),
             'Only AllTime should be valid for a BestYear operation');
-        System.assertEquals(3, CRLP_Operation.getAvailableYearlyOperationTypes(CRLP_Operation.RollupType.SUM.name()).size(),
-                'All YearlyOperation types should be valid for a Sum operation');
+        System.assertEquals(3, CRLP_Operation.getAvailableTimeBoundOperationTypes(CRLP_Operation.RollupType.SUM.name()).size(),
+                'All Time Bound Operation types should be valid for a Sum operation');
         System.assertEquals(1, CRLP_Operation.getAvailableFieldTypesForDetailField(CRLP_Operation.RollupType.SUM).size(),
                 'The Sum Operation Type is only valid for Double type fields');
         System.assertEquals(1, CRLP_Operation.getAvailableFieldTypesForDetailField(CRLP_Operation.RollupType.YEARS_DONATED).size(),

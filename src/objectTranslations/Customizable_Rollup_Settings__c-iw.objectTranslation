@@ -47,11 +47,6 @@
         <name>Rollups_Contact_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Account &amp; Contact object using the LDV Method --></help>
-        <label><!-- Rollups: Account/Contact LDV Batch Size --></label>
-        <name>Rollups_LDV_Batch_Size__c</name>
-    </fields>
-    <fields>
         <help><!-- The maximum number of attached Opportunities on an Account allowed in the non-LDV Roll-up Recalculation Batch Jobs. An account with more than this number of attached Opportunities will always be rolled up using the LDV Roll-Up Engine. --></help>
         <label><!-- Rollups: Limit on Attached Opps for LDV --></label>
         <name>Rollups_Limit_on_Attached_Opps_for_LDV__c</name>

@@ -52,25 +52,29 @@ public class CRLP_Operation_SVC {
      * This var is passed by reference and modified directly. There is no method return.
      * @param opp Opportunity SObject. All Roll-ups operate against Opportunity even if the Detail object is
      * Payment, Allocation, OCR or PSC.
-     * @param detailSObject Secondary detail Sobject (Payment, Allocation, etc.); or Opportunity if the detil
+     * @param detailSObject Secondary detail Sobject (Payment, Allocation, etc.); or Opportunity if the detail
      * object is Opportunity.
      */
     public static void doRollupOperation(CRLP_Rollup rollup, Opportunity oppSObject, SObject detailSObject) {
 
-        String objName = detailSObject.getSObjectType().getDescribe().getName();
+        String objName = UTIL_Describe.getObjectDescribe(detailSObject.getSObjectType()).getName();
 
         CRLP_Debug_UTIL.setCurrentRollupState('doRollupOperation() for ' + oppSObject.Id + ' ' + objName, rollup);
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
-        Rollup__mdt firstRollup = rollup.rollupsMdt[0];
-        // these values should be the same for every rollup definition in the CRLP_Rollup instance
-        String dateField = firstRollup.Date_Field__r.QualifiedApiName;
-        String amtField = firstRollup.Amount_Field__r.QualifiedApiName;
 
+        // Get the the first rollup in the list.
+        CRLP_Rollup.Rollupmdt firstRollup = rollup.rollupsMdt[0];
+
+        // these values should be the same for every rollup definition in the CRLP_Rollup instance
+        String dateField = firstRollup.dateField;
+        String amtField = firstRollup.amountField;
+
+//        System.debug('>>>> doRollupOperation() for ' + oppSObject.Primary_Contact__c + ' ' + objName + ' / ' + firstRollup.Summary_Field__r.QualifiedApiName);
 
         Date dateValue;
         DateTime dateTimeValue;
-        Double amountValue = null;
+        Decimal amountValue = null;
         String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
@@ -91,11 +95,28 @@ public class CRLP_Operation_SVC {
 
         // For Yearly Operations ... When working with DAYS_AGO, all of the Sum/Largest/Smallest
         // operations have to be limited to the specified date range based on the value in daysAgo
-        // Due to the large variation of possible combinations, Rollups for DAYS_AGO YearlyOperation
+        // Due to the large variation of possible combinations, Rollups for DAYS_AGO TimeBoundOperation
         // types cannot be combined with other rollups of different types/days.
-        if (rollup.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
+        if (rollup.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
             if (dateValue == null || dateValue.daysBetween(Date.Today()) > rollup.daysBack) {
                 return;
+            }
+        }
+
+        // Skip updating the SumByYear, MinByYear, MaxByYear rollup vars if they're not needed for the current Rollup
+        Boolean updateByYearVars = true;
+        if (rollup.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+            updateByYearVars = false;
+        } else if (rollup.timeBoundOperation != CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name()) {
+            updateByYearVars = false;
+            for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
+                if (rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Best_Year.name() ||
+                        rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Best_Year_Total.name() ||
+                        rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Years_Donated.name() ||
+                        rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Donor_Streak.name())  {
+                    updateByYearVars = true;
+                    break;
+                }
             }
         }
 
@@ -106,7 +127,7 @@ public class CRLP_Operation_SVC {
             amountValue = oppSObject.Amount;
         }
         if (amountValue == null && amtField != null && amtSObject.get(amtField) != null) {
-            amountValue = (Double) amtSObject.get(amtField);
+            amountValue = (Decimal) amtSObject.get(amtField);
         }
 
         // If the amount is not null or zero, then convert to the Account currency as required
@@ -131,24 +152,32 @@ public class CRLP_Operation_SVC {
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
         if (rollup.resultFieldType != null && (rollup.detailObject == objName || rollup.detailObject == oppObjectName)) {
 
-            Object resultVal = (rollup.detailObject == oppObjectName ?
-                    oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
+            Object resultVal;
+            // If the ResultField (DetailField) is the same as the Amount Field, then just get the value that
+            // was retrieved/converted in the code block above. Otherwise retrieve and convert as required.
+            if (rollup.resultFieldName == amtField && rollup.detailObject == oppObjectName) {
+                resultVal = amountValue;
+            } else {
+                resultVal = (rollup.detailObject == oppObjectName ?
+                        oppSObject.get(rollup.resultFieldName) : detailSObject.get(rollup.resultFieldName));
 
-            // If the result field is a currency type field and multi-currency is enabled in the org
-            // then convert it to the target currency
-            if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
-                    UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                // Convert the Amount to the currency of the target record
-                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
-                try {
-                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                } catch (Exception ex) { }
-                resultVal = UTIL_CurrencyConversion.convertAmount((Decimal)resultVal, dateValue, fromCurr, rollup.currCode);
+                // If the result field is a currency type field and multi-currency is enabled in the org
+                // then convert it to the target currency
+                if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
+                        UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+                    // Convert the Amount to the currency of the target record
+                    String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
+                    try {
+                        fromCurr = (String) detailSObject.get('CurrencyIsoCode');
+                    } catch (Exception ex) {
+                    }
+                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurr, rollup.currCode);
+                }
             }
 
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                Rollup__mdt r = rollup.rollupsMdt[ns];
-                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
+                CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
+                CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.operation);
 
                 if (dateTimeValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateTimeValue < rollup.minDateTime || rollup.minDateTime == null)) {
                     // Operation = FIRST (always based on a date)
@@ -219,7 +248,7 @@ public class CRLP_Operation_SVC {
                 }
             }
         }
-        if (dateValue != null && amountValue != null) {
+        if (updateByYearVars == true && dateValue != null && amountValue != null) {
             if (rollup.sumByYear.containsKey(theYear)) {
                 rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);
@@ -256,7 +285,7 @@ public class CRLP_Operation_SVC {
         } else if (resultFieldType == SoapType.ID) {
             rollup.idValue[arrayPosition] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
-            rollup.numValue[arrayPosition] = Double.valueOf(resultVal);
+            rollup.numValue[arrayPosition] = (Decimal)resultVal;
         } else {
             rollup.textValue[arrayPosition] = String.valueOf(resultVal);
         }

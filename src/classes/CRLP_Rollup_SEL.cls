@@ -48,7 +48,7 @@ public class CRLP_Rollup_SEL {
                 cachedRollups = [
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
-                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Yearly_Operation_Type__c,
+                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Time_Bound_Operation_Type__c,
                                 Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
                                 Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
                                 Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
@@ -72,14 +72,17 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Summary object and a list of
      * all rollups for each Summary object
      */
+    private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsBySummaryType() {
-        Map<Schema.SObjectType, List<Rollup__mdt>> rollupsBySummaryType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Summary_Object__r.QualifiedApiName).getSObjectType();
-            if (!rollupsBySummaryType.containsKey(objType)) {
-                rollupsBySummaryType.put(objType, new List<Rollup__mdt>());
+        if (rollupsBySummaryType == null) {
+            rollupsBySummaryType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Summary_Object__r.QualifiedApiName).getSObjectType();
+                if (!rollupsBySummaryType.containsKey(objType)) {
+                    rollupsBySummaryType.put(objType, new List<Rollup__mdt>());
+                }
+                rollupsBySummaryType.get(objType).add(rollup);
             }
-            rollupsBySummaryType.get(objType).add(rollup);
         }
         return rollupsBySummaryType;
     }
@@ -88,14 +91,17 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the Detail object and a list of
      * all rollups for each Detail object
      */
+    private static Map<Schema.SObjectType, List<Rollup__mdt>> rollupsByDetailType;
     public static Map<Schema.SObjectType, List<Rollup__mdt>> getRollupsByDetailType() {
-        Map<Schema.SObjectType, List<Rollup__mdt>> rollupsByDetailType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Detail_Object__r.QualifiedApiName).getSObjectType();
-            if (!rollupsByDetailType.containsKey(objType)) {
-                rollupsByDetailType.put(objType, new List<Rollup__mdt>());
+        if (rollupsByDetailType == null) {
+            rollupsByDetailType = new Map<Schema.SObjectType, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                Schema.SObjectType objType = UTIL_Describe.getObjectDescribe(rollup.Detail_Object__r.QualifiedApiName).getSObjectType();
+                if (!rollupsByDetailType.containsKey(objType)) {
+                    rollupsByDetailType.put(objType, new List<Rollup__mdt>());
+                }
+                rollupsByDetailType.get(objType).add(rollup);
             }
-            rollupsByDetailType.get(objType).add(rollup);
         }
         return rollupsByDetailType;
     }
@@ -104,13 +110,16 @@ public class CRLP_Rollup_SEL {
      * @description Return a map of Rollup Definitions with a key of the FilterGroup Id and a list of
      * all rollups for each FilterGroup
      */
+    private static Map<Id, List<Rollup__mdt>> rollupsByFilterGroup;
     public static Map<Id, List<Rollup__mdt>> getRollupsByFilterGroup() {
-        Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = new Map<Id, List<Rollup__mdt>>();
-        for (Rollup__mdt rollup : cachedRollups) {
-            if (!rollupsByFilterGroup.containsKey(rollup.Filter_Group__c)) {
-                rollupsByFilterGroup.put(rollup.Filter_Group__c, new List<Rollup__mdt>());
+        if (rollupsByFilterGroup == null) {
+            rollupsByFilterGroup = new Map<Id, List<Rollup__mdt>>();
+            for (Rollup__mdt rollup : cachedRollups) {
+                if (!rollupsByFilterGroup.containsKey(rollup.Filter_Group__c)) {
+                    rollupsByFilterGroup.put(rollup.Filter_Group__c, new List<Rollup__mdt>());
+                }
+                rollupsByFilterGroup.get(rollup.Filter_Group__c).add(rollup);
             }
-            rollupsByFilterGroup.get(rollup.Filter_Group__c).add(rollup);
         }
         return rollupsByFilterGroup;
     }
@@ -123,7 +132,7 @@ public class CRLP_Rollup_SEL {
      * @return List<DescribeFieldResult>
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
-        String objName = objType.getDescribe().getName();
+        String objName = UTIL_Describe.getObjectDescribe(objType).getName();
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
         Map<String, Schema.DescribeFieldResult> referencedFields = new Map<String, Schema.DescribeFieldResult>();
         for (Rollup__mdt rollup : cachedRollups) {
@@ -170,8 +179,7 @@ public class CRLP_Rollup_SEL {
     public static void validateReferencedFields(Map<String, Schema.DescribeFieldResult> referencedFields, String objName) {
         for (String fld : referencedFields.keySet()) {
             if (referencedFields.get(fld) == null) {
-                // TODO Should this just do an Assert(false) for unit testing or should this throw an exception/log an error?
-                system.assert(false, '>> Field ' + fld + ' not found in allFields collection for ' + objName);
+                throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + fld + ' not found in allFields collection for ' + objName);
             }
         }
     }
@@ -187,5 +195,93 @@ public class CRLP_Rollup_SEL {
             soql += dfr.getName() + ',';
         }
         return soql.removeEnd(',');
+    }
+
+    /** @description Static cache of filtered rollups by RollupType and Applied Filter */
+    private static Map<String, List<Rollup__mdt>> cachedRollupsByTypeAndFilter = new Map<String, List<Rollup__mdt>>();
+
+    /**
+     * @description Used to populate the cache with the saved value from the Batch stateful property.
+     * @param rollupType Enum of the job type (AccountHardCredit, ContactHardCredit, etc.)
+     * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
+     * @param rollups List of Rollup__mdt records to store
+     */
+    public static void stuffRollupsByTypeCache(CRLP_RollupProcessingOptions.RollupType rollupType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter, List<Rollup__mdt> rollups) {
+        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), rollups);
+    }
+
+    /**
+     * @description Return a list of Rollup__mdt records based on the Rollup Job Type (Account Hard Credit, etc.)
+     * and the Rollup Type Filter (if there is one defined). This is called by each of the Rollup Job Handler
+     * classes as well as the initial batch class.
+     * @param rollupType Enum of the job type (AccountHardCredit, ContactHardCredit, etc.)
+     * @param typeFilter Enum of the rollup filter to apply (All, DaysAgoOnly, NonDaysAgoOnly, etc.)
+     * @return List<Rollup__mdt>
+     */
+    public static List<Rollup__mdt> getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType rollupType,
+            CRLP_RollupProcessingOptions.RollupTypeFilter typeFilter) {
+
+        // If the list exists in the cache, just return it
+        if (cachedRollupsByTypeAndFilter != null && cachedRollupsByTypeAndFilter.containsKey(rollupType.name() + typeFilter.name())) {
+            return cachedRollupsByTypeAndFilter.get(rollupType.name() + typeFilter.name());
+        }
+
+        List<Rollup__mdt> filteredRollups = new List<Rollup__mdt>();
+
+        String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
+        String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
+        String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+
+        // Determine the correct base summary object based on the Rollup Type
+        SObjectType summaryObjectType;
+        if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            summaryObjectType = Account.SObjectType;
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            summaryObjectType = Contact.SObjectType;
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            summaryObjectType = General_Accounting_Unit__c.SObjectType;
+        }
+
+        // Retrieve all the Rollup Definitions for the summary object
+        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(summaryObjectType);
+        if (rlps != null) {
+            // Loop through each Rollup__mdt and determine whether the record should be included based on the
+            // Rollup Type Job AND the Type Filter if there is one.
+            for (Rollup__mdt r : rlps) {
+                Boolean includeRollupDefinition=false;
+                if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                        rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
+                            && r.Amount_Object__r.QualifiedApiName != pscObjectName);
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                    includeRollupDefinition = true;
+                }
+                if (includeRollupDefinition) {
+                    if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.NonDaysAgo &&
+                            r.Time_Bound_Operation_Type__c == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                        includeRollupDefinition = false;
+                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.DaysAgoOnly &&
+                            r.Time_Bound_Operation_Type__c != CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                        includeRollupDefinition = false;
+                    } else if (typeFilter == CRLP_RollupProcessingOptions.RollupTypeFilter.MembershipsOnly &&
+                            !r.Summary_Field__r.QualifiedApiName.containsIgnoreCase('Membership')) {
+                        includeRollupDefinition = false;
+                    }
+                }
+                if (includeRollupDefinition) {
+                    filteredRollups.add(r);
+                }
+            }
+        }
+
+        // Save the list in the cache
+        cachedRollupsByTypeAndFilter.put(rollupType.name() + typeFilter.name(), filteredRollups);
+        return filteredRollups;
     }
 }

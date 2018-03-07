@@ -40,9 +40,6 @@
 public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
         implements Database.Batchable<SObject>, Database.Stateful {
 
-    /** @description The last Parent Id processed by the batch job */
-    private Id lastParentIdProcessed;
-
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
@@ -72,32 +69,54 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             // Build a query string for the specified Summary object.
             SObjectType detailObjectType;
             String keyField;
+            // Not including OppPayment as the child object because including the sub-query in an LDV org
+            // may cause a cpu time out issue.
             List<SObjectType> childObjects = new List<SObjectType>();
             if (this.summaryObjectType == General_Accounting_Unit__c.SObjectType) {
                 detailObjectType = Allocation__c.SObjectType;
                 keyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
 
             } else if (this.summaryObjectType == Account.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
-                childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.AccountId.getName();
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
 
             } else if (this.summaryObjectType == Contact.SObjectType) {
                 detailObjectType = Opportunity.SObjectType;
-                childObjects.add(npe01__OppPayment__c.SObjectType);
                 keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            }
-            query = CRLP_Query_SEL.getDetailsQuery(detailObjectType, childObjects) + ' WHERE ';
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
 
+            }
+            query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, childObjects);
+
+            this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
+                    CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
+
+            List<String> whereClauses = new List<String>();
             // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
             if (detailObjectType == Opportunity.SObjectType) {
-                query += 'Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode';
+                whereClauses.add('Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName() + ' >= :maxRelatedOppsForNonLDVMode');
             }
+
+            // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
+            if (this.summaryObjectType == Contact.SObjectType) {
+                whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
+            }
+
             if (this.recordIds != null && this.recordIds.size() > 0) {
-                query += (query.endsWith(' WHERE ') ? '' : ' AND ') + keyField + ' IN :recordIds';
+                whereClauses.add(keyField + ' IN :recordIds');
             }
-            if (query.endsWith(' WHERE ')) {
-                query = query.removeEnd(' WHERE ');
+
+            // Identify a common filter that can be applied to the main query to reduce the number of records queried
+            String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, detailObjectType,
+                    this.statefulCacheOfRollupsToBeProcessed.get(this.summaryObjectType));
+            if (!String.isEmpty(addlFilter)) {
+                whereClauses.add(addlFilter);
+            }
+
+            if (!whereClauses.isEmpty()) {
+                query += ' WHERE ' + String.join(whereClauses, ' AND ');
             }
             query += ' ORDER BY ' + keyField + ', CreatedDate ASC';
 
@@ -130,59 +149,97 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
         this.batchIteration++;
-        Boolean isAllocationsRollup = (this.summaryObjectType == General_Accounting_Unit__c.SObjectType);
 
         try {
             // Build the processing options instance
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+            CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
+
+            Id lastParentIdProcessed = null; // reset the value
 
             Id firstParentId = (Id)detailRecords[0].get(options.parentKeyField);
             Id lastParentId = (Id)detailRecords[detailRecords.size()-1].get(options.parentKeyField);
 
-            // Get all parent records to be processed by this batch iteration, being sure to include the
-            // last parent id processed by the previous batch
+            // For the GAU object, strip out any detail records where the key field is NULL. This is better
+            // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
+            detailRecords = applyPostQueryLocatorFilters(detailRecords);
+
+            // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
+            // as the primary queryLocator).
+            Map<Id, List<npe01__OppPayment__c>> paymentsByOpp = new Map<Id, List<npe01__OppPayment__c>>();
+
+            // If the detail object is Opportunity AND there are payment rollups for the parent object
+            // these need to be queried outside of the main batch job query due to a current known issue with
+            // sub-queries on large objects.
+            if (!detailRecords.isEmpty() && options.detailObjType == Opportunity.SObjectType &&
+                    CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType)) {
+
+                // build a list of all the detail record Id's to use for retrieving the child payment records
+                // for each Opportunity (detail).
+                Set<Id> detailIds = new Map<Id,SObject>(detailRecords).keySet();
+
+                String paymentsQuery = CRLP_Query_SEL.buildObjectQueryForRollup(npe01__OppPayment__c.SObjectType) +
+                        ' WHERE npe01__Opportunity__c IN :detailIds ORDER BY npe01__Opportunity__c, CreatedDate ASC';
+
+                for (npe01__OppPayment__c pmt : database.query(paymentsQuery)) {
+                    if (!paymentsByOpp.containsKey(pmt.npe01__Opportunity__c)) {
+                        paymentsByOpp.put(pmt.npe01__Opportunity__c, new List<npe01__OppPayment__c>());
+                    }
+                    paymentsByOpp.get(pmt.npe01__Opportunity__c).add(pmt);
+                }
+            }
+
+            // Get all parent records to be processed by this batch iteration
             List<Id> parentIds = getUniqueParentIds(this.summaryObjectType, detailRecords, options.parentKeyField);
 
             // Get the Summary (target) records for the current set of Detail Records
-            String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
-            List<SObject> summaryRecords = database.query(soql);
+            String soql = CRLP_Query_SEL.buildObjectQueryForRollup(options.parentObjType) + ' WHERE Id IN :parentIds ORDER BY Id';
 
             // Resequence the Parent (Summary) records to be in the exact order of the detail records
             // using the defined parent Id
-            summaryRecords = resequenceSummaryRecords(parentIds, summaryRecords);
+            List<SObject> summaryRecords = queryAndSequenceSummaryRecords(parentIds, soql);
 
-            // For the GAU object, strip out any detail records where the key field is NULL. This is better
-            // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
-            List<SObject> updatedDetailRecords = new List<SObject>();
-            if (isAllocationsRollup) {
-                for (Integer n = 0, listSize = detailRecords.size(); n < listSize; n++) {
-                    Allocation__c alloc = (Allocation__c)detailRecords[n];
-                    if (alloc.Opportunity__c != null) {
-                        updatedDetailRecords.add(alloc);
-                    }
-                }
-            } else {
-                updatedDetailRecords = detailRecords;
-            }
+            // Pass only the specific stateful data for the parents that are actually referenced in the
+            // current data scope to the processing class to avoid taking up additional heap size with
+            // cloned data.
+            options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
+            options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
 
             // Call the method to do the actual rollups. This returns only records that require updating
-            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, updatedDetailRecords, options);
+            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
             // Save Rollups collection and the last parent record id processed in stateful vars
-            this.lastParentIdProcessed = options.lastParentIdProcessed;
-            this.statefulRollupsById.put(firstParentId, options.mapOfRollupsByParentId.get(firstParentId));
-            this.statefulRollupsById.put(lastParentId, options.mapOfRollupsByParentId.get(lastParentId));
-            this.statefulRollupsById.put(this.lastParentIdProcessed, options.mapOfRollupsByParentId.get(this.lastParentIdProcessed));
+            lastParentIdProcessed = options.getLastParentIdProcessed();
+            this.statefulRollupsById.put(firstParentId, options.getUpdatedMapOfRollupsByParentId().get(firstParentId));
+            this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
+            if (lastParentIdProcessed != null) {
+                this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
+                this.lastBatchIterationByParentId.put(lastParentIdProcessed, this.batchIteration);
+            }
+
+            // Track the last time a given ParentId was seen in a batch iteration. This is used to
+            // clean out the stateful collection after X number of batch iterations where the parent id
+            // is not seen.
+            this.lastBatchIterationByParentId.put(firstParentId, this.batchIteration);
+            this.lastBatchIterationByParentId.put(lastParentId, this.batchIteration);
 
             // Remember which batch iteration this parent was last NOT updated
             if (options.lastParentIdRemovedFromUpdatesList == true) {
-                this.parentIdsNotCommittedWithBatch.put(this.lastParentIdProcessed, this.batchIteration);
+                this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
+                this.lastBatchIterationByParentId.put(lastParentIdProcessed, this.batchIteration);
             }
 
             // Handle dml on the records to be updated
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
             if (updatedRecords != null) {
                 this.totalRecordsModified += updatedRecords.size();
+                this.totalCommits++;
+                // If the record was committed and the Id is in the parentIdsNotCommittedWithBatch collection
+                // that tracks the last batch iteration by Id, remove it from that collection now that it's committed.
+                for (SObject s : updatedRecords) {
+                    if (this.parentIdsNotCommittedWithBatch.containsKey(s.Id)) {
+                        this.parentIdsNotCommittedWithBatch.remove(s.Id);
+                    }
+                }
             }
 
         } catch (Exception ex) {
@@ -200,21 +257,29 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
     public void finish(Database.BatchableContext bc) {
 
         try {
+
             // Handle the final parent record in the LDV job
             if (this.parentIdsNotCommittedWithBatch != null && !this.parentIdsNotCommittedWithBatch.isEmpty()) {
                 // Build the processing options instance
-                CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+                CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
 
                 // Get the Summary (target) records for the final record to be processed
-                Set<Id> parentIds = this.parentIdsNotCommittedWithBatch.keySet();
-                String soql = CRLP_Query_SEL.getResultsQuery(options.parentObjType) + ' WHERE Id IN :parentIds';
+                List<Id> parentIds = new List<Id>(this.parentIdsNotCommittedWithBatch.keySet());
+                String soql = CRLP_Query_SEL.buildObjectQueryForRollup(options.parentObjType) + ' WHERE Id IN :parentIds';
                 List<SObject> parents = database.query(soql);
+
+                // Pass only the specific stateful data for the parents that are actually referenced in the
+                // current data scope to the processing class to avoid taking up additional heap size with
+                // cloned data.
+                options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
+                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
 
                 // Call the method to do the actual rollup on this last remaining record, which is basically
                 // just to return the updated record
                 List<SObject> updatedRecords = new List<SObject>();
                 for (SObject parent : parents) {
-                    SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(), options);
+                    SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(),
+                            new Map<Id, List<SObject>>(), options);
                     if (updatedRecord != null) {
                         updatedRecords.add(updatedRecord);
                     }
@@ -224,7 +289,9 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
                 if (!updatedRecords.isEmpty()) {
                     CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
                     this.totalRecordsModified += updatedRecords.size();
+                    this.totalCommits++;
                 }
+
             }
 
         } catch (Exception ex) {
@@ -232,5 +299,30 @@ public class CRLP_Rollup_LDV_BATCH extends CRLP_AbstractRollup_BATCH
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
         }
 
+    }
+
+    /**
+     * @description There are cases where the main queryLocator did not filter out certain records to avoid
+     * non-selectivity issues that would affect the query performance. In these cases, this method is hard-coded
+     * to strip out any detail records from the queried data that will not be rolled up. Initially this only applies
+     * to removing records with a null value in Opportunity__c from the Allocation__c object.
+     * @param scope List<SObject> from query locator
+     * @return updated List<SObject> with the same or less rows as 'scope'
+     */
+    private List<SObject> applyPostQueryLocatorFilters(List<SObject> scope) {
+        Boolean isAllocationsRollup = (this.summaryObjectType == General_Accounting_Unit__c.SObjectType);
+
+        List<SObject> updatedDetailRecords = new List<SObject>();
+        for (Integer n = 0, listSize = scope.size(); n < listSize; n++) {
+            if (isAllocationsRollup) {
+                Allocation__c alloc = (Allocation__c) scope[n];
+                if (alloc.Opportunity__c != null) {
+                    updatedDetailRecords.add(alloc);
+                }
+            } else {
+                updatedDetailRecords.add(scope[n]);
+            }
+        }
+        return updatedDetailRecords;
     }
 }

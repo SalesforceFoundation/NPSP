@@ -61,6 +61,9 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     /* @description The currency code of the target object if multi-currency is enabled. */
     protected String currCode;
 
+    /** @description The default filter to apply to Rollups type records for the processing */
+    protected CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
+
     /**
      * @description Collection of all Rollups for the current instance of the Rollup Handler (by Summary Object record)
      * This collection may be saved in a stateful var in the LDV Batch Job to support calling the Handler multiple
@@ -85,7 +88,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      * Logic is implemented by the class that extends this virtual class
      */
     public virtual void initRollup() { }
-    public virtual void processRollups(List<SObject> details) { }
+    public virtual void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) { }
 
     // ===================================================================================================
     // Class methods that are NOT overriden by classes that extend this class.
@@ -105,6 +108,10 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
             // clear all the rolled up values in the current instances of any CRLP_Rollup objects
             resetAllRollups();
         }
+    }
+
+    public void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        this.jobFilter = jobFilter;
     }
 
     /**
@@ -141,7 +148,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
         for (CRLP_Rollup rollup : this.rollups) {
             Map<String,Object> results = rollup.getFinalValues();
-            CRLP_Debug_UTIL.setCurrentRollupState(CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
+            CRLP_Debug_UTIL.setCurrentRollupState(this.objectId + ': ' + CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
                 //CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
                 this.record.put(fld, results.get(fld));
@@ -161,56 +168,6 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     }
 
     /**
-     * @description Filters the list of built CRLP_Rollup instances to either All, DateBased or NonDateBased
-     * to reduce the actual number of rollups being calculated at once.
-     * @param rollupProcessingMode All, DaysAgoOnly, NonDaysAgoOnly, MembershipsOnly, or NonMembershipsOnly enum
-     */
-    public void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode) {
-        if (rollupProcessingMode != CRLP_RollupProcessor_SVC.RollupsMode.All) {
-            List<CRLP_Rollup> filteredRollups = new List<CRLP_Rollup>();
-            for (CRLP_Rollup r : this.rollups) {
-                if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.DaysAgoOnly &&
-                        r.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
-                    filteredRollups.add(r);
-
-                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonDaysAgoOnly &&
-                        r.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
-                    filteredRollups.add(r);
-
-                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.MembershipsOnly) {
-                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
-                    for (Rollup__mdt rlp : r.rollupsMdt) {
-                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
-                        if (summaryField != null && summaryField.contains('Membership')) {
-                            rlps.add(rlp);
-                        }
-                    }
-                    if (!rlps.isEmpty()) {
-                        r.rollupsMdt = rlps;
-                        filteredRollups.add(r);
-                    }
-
-                } else if (rollupProcessingMode == CRLP_RollupProcessor_SVC.RollupsMode.NonMembershipsOnly) {
-                    List<Rollup__mdt> rlps = new List<Rollup__mdt>();
-                    for (Rollup__mdt rlp : r.rollupsMdt) {
-                        String summaryField = rlp.Summary_Field__r.QualifiedApiName;
-                        if (summaryField != null && !summaryField.contains('Membership')) {
-                            rlps.add(rlp);
-                        }
-                    }
-                    if (!rlps.isEmpty()) {
-                        r.rollupsMdt = rlps;
-                        filteredRollups.add(r);
-                    }
-
-                }
-            }
-            this.rollups = filteredRollups;
-        }
-        return;
-    }
-
-    /**
      * @description Either add the passed Rollup__mdt defintion to the collection of RLLP_Rollup or if it's in the
      * same 'group' as existing Rollups, just add the mdt to the collection of rollups rollupsMdt the RLLP_Rollup
      * @param Rollup__mdt
@@ -220,7 +177,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         Boolean addNewRollup = true;
         for (CRLP_Rollup rollup : this.rollups) {
             if (rollup.isRollupInSameGroup(rlp)) {
-                rollup.rollupsMdt.add(rlp);
+                rollup.rollupsMdt.add(new CRLP_Rollup.Rollupmdt(rlp));
                 addNewRollup = false;
                 break;
             }
