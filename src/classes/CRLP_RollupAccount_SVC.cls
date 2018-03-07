@@ -46,14 +46,9 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      * are handled by a different service class.
      */
     public override void initRollup() {
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(Account.SObjectType);
-        if (rlps != null) {
-            for (Rollup__mdt r : rlps) {
-                if ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                        && r.Amount_Object__r.QualifiedApiName != pscObjectName) {
-                    addRollupDefinition(r);
-                }
-            }
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, this.jobFilter)) {
+            addRollupDefinition(r);
         }
     }
 
@@ -65,16 +60,18 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Payments for each Opportunity. Split out into a Map by Detail (Opp) Id to
+     * support LDV orgs where querying the payments in an Opportunity sub-query might cause a CPU timeout
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the Opportunity (or Opp+Payment) to the Account object
 
-        List<Opportunity> opps = (List<Opportunity>) details;
-        for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
-            Opportunity opp = opps[n];
+        for (Integer n=0, listSize = details.size(); n<listSize; n++) {
+            Opportunity opp = (Opportunity)details[n];
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
@@ -88,14 +85,19 @@ public class CRLP_RollupAccount_SVC extends CRLP_VRollupHandler {
                 } else if (rollup.detailObject == pmtObjectName) {
                     // Process rollups from the Payment to the Account
 
-                    List<npe01__OppPayment__c> payments = opp.npe01__OppPayment__r;
-                    for (npe01__OppPayment__c pmt : payments) {
-                        if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
-                            CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
+                    if (childRecordsByDetailId.get(opp.Id) != null) {
+                        List<npe01__OppPayment__c> payments = childRecordsByDetailId.get(opp.Id);
+                        for (npe01__OppPayment__c pmt : payments) {
+                            if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, pmt }, filterGroupId)) {
+                                CRLP_Operation_SVC.doRollupOperation(rollup, opp, pmt);
+                            }
                         }
                     }
                 }
             }
+
+            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }
     }
 

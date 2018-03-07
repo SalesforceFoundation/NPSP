@@ -48,7 +48,7 @@
     <aura:handler name="change" value="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
                   action="{!c.changeSummaryFields}"/>
     <aura:handler name="change" value="{!v.activeRollup.Operation__c}" action="{!c.onChangeOperation}"/>
-    <aura:handler name="change" value="{!v.activeRollup.Yearly_Operation_Type__c}"
+    <aura:handler name="change" value="{!v.activeRollup.Time_Bound_Operation_Type__c}"
                   action="{!c.onChangeYearlyOperation}"/>
 
     <!--activeRollup:<br/>
@@ -64,7 +64,7 @@
     Summary Field API Name: {!v.cachedRollup.Summary_Field__r.QualifiedApiName}<br/>
 -->
     <!--yearly Op Label: {!v.selectedYearlyOperationLabel}<br/>
-    yearly Op : {!v.activeRollup.Yearly_Operation_Type__c}<br/>
+    yearly Op : {!v.activeRollup.Time_Bound_Operation_Type__c}<br/>
     Op Label: {!v.selectedOperationLabel}<br/>
     Op : {!v.activeRollup.Operation__c}-->
 
@@ -208,7 +208,7 @@
                                                     auraId="yearlyOperation"
                                                     fieldName="{!v.labels.yearlyOperationType}"
                                                     entityLabel="{!v.selectedYearlyOperationLabel}"
-                                                    apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                                    apiName="{!v.activeRollup.Time_Bound_Operation_Type__c}"
                                                     options="{!v.yearlyOperations}"
                                                     mediumDeviceSize="3"
                                                     selectLabel="{!v.labels.selectOne}"

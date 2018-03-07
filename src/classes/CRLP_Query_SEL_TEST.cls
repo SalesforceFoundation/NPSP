@@ -46,28 +46,28 @@ private class CRLP_Query_SEL_TEST {
 
         Test.startTest();
 
-        String soql = CRLP_Query_SEL.getResultsQuery(Opportunity.SObjectType);
+        String soql = CRLP_Query_SEL.buildObjectQueryForRollup(Opportunity.SObjectType);
         List<Opportunity> opps = database.query(soql);
         System.AssertEquals(0, opps.size(), 'There should be no results, but the query should work');
 
-        soql = CRLP_Query_SEL.getResultsQuery(Account.SObjectType);
+        soql = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
         List<Account> accts = database.query(soql);
         System.AssertEquals(0, accts.size(), 'There should be no results, but the query should work');
 
-        soql = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{
+        soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType, new List<SObjectType>{
                 npe01__OppPayment__c.SObjectType, Allocation__c.SObjectType, OpportunityContactRole.SObjectType});
         List<Opportunity> opps2 = database.query(soql);
         System.AssertEquals(0, opps2.size(), 'There should be no results, but the query should work');
 
-        soql = CRLP_Query_SEL.getDetailsQuery(Allocation__c.SObjectType, new List<SObjectType>());
+        soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Allocation__c.SObjectType, new List<SObjectType>());
         List<Allocation__c> allocs = database.query(soql);
         System.AssertEquals(0, allocs.size(), 'There should be no results, but the query should work');
 
-        soql = CRLP_Query_SEL.getDetailsQuery(OpportunityContactRole.SObjectType, new List<SObjectType>());
+        soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(OpportunityContactRole.SObjectType, new List<SObjectType>());
         List<OpportunityContactRole> ocrs = database.query(soql);
         System.AssertEquals(0, ocrs.size(), 'There should be no results, but the query should work');
 
-        soql = CRLP_Query_SEL.getDetailsQuery(Opportunity.SObjectType, new List<SObjectType>{
+        soql = CRLP_Query_SEL.buildDetailObjectQueryForRollup(Opportunity.SObjectType, new List<SObjectType>{
                 Partial_Soft_Credit__c.SObjectType});
         opps = database.query(soql);
         System.AssertEquals(0, ocrs.size(), 'There should be no results, but the query should work');

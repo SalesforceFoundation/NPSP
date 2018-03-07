@@ -46,6 +46,7 @@ public class UTIL_Describe {
     //maps to hold the describe info
     private static Map<String, Schema.SObjectType> gd;
     private static Map<String, Schema.DescribeSObjectResult> objectDescribes = new Map<String, Schema.DescribeSObjectResult>();
+    private static Map<Schema.SObjectType, Schema.DescribeSObjectResult> objectDescribesByType = new Map<Schema.SObjectType, Schema.DescribeSObjectResult>();
     private static Map<String, Map<String, Schema.SObjectField>> fieldTokens = new Map<String,Map<String, Schema.SObjectField>>();
     private static Map<String, Map<String, Schema.DescribeFieldResult>> fieldDescribes = new Map<String,Map<String, Schema.DescribeFieldResult>>();
 
@@ -54,13 +55,17 @@ public class UTIL_Describe {
     ********************************************/
     static void fillMapsForObject(string objectName) {
         // get the object map the first time
-        if (gd==null) gd = Schema.getGlobalDescribe();
+        if (gd == null) {
+            gd = Schema.getGlobalDescribe();
+        }
 
         // get the object description
         if (gd.containsKey(objectName)) {
-
-            if (!objectDescribes.containsKey(objectName))
-                objectDescribes.put(objectName, gd.get(objectName).getDescribe());
+            if (!objectDescribes.containsKey(objectName)) {
+                Schema.DescribeSObjectResult objDescribe = gd.get(objectName).getDescribe();
+                objectDescribes.put(objectName, objDescribe);
+                objectDescribesByType.put(objDescribe.getSObjectType(), objDescribe);
+            }
         } else {
             throw new SchemaDescribeException('Invalid object name \'' + objectName + '\'');
         }
@@ -149,6 +154,20 @@ public class UTIL_Describe {
             fillMapsForObject(objectName);
 
         return objectDescribes.get(objectName);
+    }
+
+    /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public static Schema.DescribeSObjectResult getObjectDescribe(SObjectType objType) {
+        // make sure we have this object's schema mapped
+        if (objectDescribesByType == null || !objectDescribesByType.containsKey(objType)) {
+            fillMapsForObject(objType.getDescribe().getName());
+        }
+
+        return objectDescribesByType.get(objType);
     }
 
     /*******************************************************************************************************

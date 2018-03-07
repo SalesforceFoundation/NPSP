@@ -50,18 +50,10 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      */
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
-        SObjectType targetObjType = this.objectId.getSobjectType();
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(targetObjType);
-        if (rlps != null) {
-            for (Rollup__mdt r : rlps) {
-                // Due to how PartialSoftCredit and Opportunity interact with Rollups, the Detail Object
-                // can still be set to Opportunity for some of the PartialSoftCredit rollups. As a result,
-                // the only reliable ObjectField to check against is AmountObject since that will always point
-                // to the PartialSoftCredit object for these types of rollups.
-                if (r.Amount_Object__r.QualifiedApiName == pscObjectName) {
-                    addRollupDefinition(r);
-                }
-            }
+        CRLP_RollupProcessingOptions.RollupType rollupType = (this.objectId.getSobjectType() == Account.SObjectType ?
+                CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit : CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
+            addRollupDefinition(r);
         }
     }
 
@@ -73,17 +65,19 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Ignored for Soft Credit rollups
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
         List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
-        for (Integer n=0, listSize=pscs.size(); n<listSize; n++) {
+        for (Integer n=0, listSize = pscs.size(); n<listSize; n++) {
             Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Does this row pass the evaluation?
@@ -92,6 +86,9 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
                 }
             }
+
+            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }
     }
 }
