@@ -118,6 +118,11 @@
         var changePercent = function(i) {
             var thisRowAmount = $('.amount'+i);
             var thisRowPercent = $('.percent'+i);
+            
+            //disabled inputs don't submit their value, so copy percent values to the hidden field so that they can be submitted.
+            var thisRowHiddenPercent = $('.hidden'+i);
+            thisRowHiddenPercent.val(thisRowPercent.val());
+
             if (isBlankOrEmpty(thisRowPercent)) {
                 thisRowAmount.val('');
             }
@@ -193,6 +198,10 @@
                                         <div class="slds-form-element__control slds-input-has-fixed-addon">
                                             <apex:inputField id="alloInputPercent" styleClass="slds-input slds-size_2-of-3 alloPercent percent{!cnt}" onkeyup="window.changePercent({!cnt})" value="{!Allo.Percent__c}"/>
                                             <span class="slds-form-element__addon">%</span>
+                                        </div>
+                                        <div>
+                                            <!-- disabled inputfields don't submit their value to the controller, so we have to copy the value to this hidden field for the case where the percent was set to null and an amount was added -->
+                                            <apex:inputField styleClass="slds-hide hidden{!cnt}" value="{!Allo.Percent__c}"/>
                                         </div>
                                     </div>
                                 </td>
