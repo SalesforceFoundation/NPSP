@@ -149,6 +149,7 @@
     </script>
     <apex:form id="theForm">
         <div class="slds-scope">
+            <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
                 parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
