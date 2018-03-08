@@ -40,7 +40,7 @@
                     //need to reset fields to populate the selected objects -- refactor to see if necessary
                     //fields can be lazy loaded if user is creating a new rollup
                     //setup is first called here instead of in change mode to ensure active rollup information is returned from the server
-                    if (cmp.get("v.mode") != 'create') {
+                    if (cmp.get("v.mode") !== 'create') {
                         this.onChangeYearlyOperationsOptions(cmp, false);
                         this.updateAllowedOperations(cmp);
                         this.onChangeOperation(cmp);
@@ -207,7 +207,7 @@
 
     onChangeDetailField: function(cmp, detailField, label){
         //enables save button if detailField is not null
-        if(detailField != ''){
+        if(detailField !== ''){
             cmp.set("v.isIncomplete", false);
         } else {
             cmp.set("v.isIncomplete", true);
@@ -221,7 +221,7 @@
         cmp.set("v.activeRollup.Filter_Group__r.MasterLabel", label);
     },
 
-    onChangeInteger: function (cmp, label) {
+    onChangeInteger: function (cmp) {
         //stores the selected years back integer value to be used when the page is in view mode
         var selectedInteger = cmp.get("v.activeRollup.Integer__c");
         var integerList = cmp.get("v.integerList");
@@ -258,11 +258,11 @@
 
         //disables save button if a detail field is required for a single result operation and detail field or operation isn't selected
         var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-        if(operation != ''){
+        if(operation !== ''){
             if(!renderMap["detailField"]){
                 //if detail field isn't required, save button enables
                 cmp.set("v.isIncomplete", false);
-            } else if(detailField != '' && detailField != null){
+            } else if(detailField !== '' && detailField !== null){
                 //if detail field is required, save button enables only if detail field is selected
                 cmp.set("v.isIncomplete", false);
             } else {
@@ -535,7 +535,6 @@
     },
 
     resetRollupTypes: function(cmp){
-        //
 
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         var labels = cmp.get("v.labels");
@@ -603,7 +602,7 @@
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
         var labels = cmp.get("v.labels");
-        var rollupType = new Object();
+        var rollupType = {};
 
         if (detailObject === 'Opportunity' && summaryObject === 'Account') {
             rollupType.name = 'Opportunity';
