@@ -3,7 +3,7 @@
         //filters row data based selected filter group
         var rollupList = cmp.get("v.rollupList");
         var filteredRollupList = rollupList.filter(function(rollup){
-                return rollup.filterGroupName === filterGroupLabel;
+            return rollup.filterGroupName === filterGroupLabel;
         });
 
         //todo: should summary obj be dynamic?
