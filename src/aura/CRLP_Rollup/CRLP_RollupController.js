@@ -100,7 +100,7 @@
             } else if(fieldName === 'yearlyOperation'){
                 helper.onChangeYearlyOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){
-                helper.onChangeInteger(cmp, label);
+                helper.onChangeInteger(cmp);
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
             }
