@@ -1600,6 +1600,9 @@
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
         <members>stgHelpCreateMissingPayments</members>
+        <members>stgHelpCustomizableRollupsEnable1</members>
+        <members>stgHelpCustomizableRollupsEnable2</members>
+        <members>stgHelpCustomizableRollupsEnable3</members>
         <members>stgHelpDefaultAllocationsEnabled</members>
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>

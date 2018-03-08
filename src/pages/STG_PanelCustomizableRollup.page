@@ -20,36 +20,25 @@
 
         <apex:actionPoller action="{!checkDeploymentStatus}"
                            enabled="{!isPolling}"
-                           reRender="status, deployStatusVar, pollingStatus"
+                           reRender="status, pollingStatus"
                            interval="5"
-                           onComplete="callSomeJSMethod" />
+                           status="deploymentStatus"/>
 
+<!--
         <apex:variable id="deployStatusVar" value="{!status}" var="deployStatus"/>
+-->
 
-        <apex:actionStatus id="deploymentStatus">
+        <apex:actionStatus id="deploymentStatus"
+                           onstart="document.getElementById('divLoading').style.display = 'block';"
+                           onstop="document.getElementById('divLoading').style.display = 'none';" />
+        <!--<apex:actionStatus id="deploymentStatus">
             <apex:facet name="start">
-                <apex:outputText value="POLLING"/>
+
             </apex:facet>
             <apex:facet name="complete">
-                <!--hide spinner display status; rerender the entire page-->
+                &lt;!&ndash;hide spinner display status; rerender the entire page&ndash;&gt;
             </apex:facet>
-        </apex:actionStatus>
-
-        <script>
-
-            function callSomeJSMethod() {
-                console.log('hit the JS');/*
-                if (deployStatus.contains('Succeeded') {
-                    console.log('Success!');
-                    // good
-
-                } else {
-                    // bad
-                    // display message
-                }*/
-            }
-
-        </script>
+        </apex:actionStatus>-->
 
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
             <apex:commandButton id="editOppRollups" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
@@ -69,7 +58,7 @@
         </div>
 
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-            <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+            <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status" styleClass="slds-button slds-button_small slds-button_brand" />
             <apex:commandButton id="cancelOppRollups" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
 
@@ -79,7 +68,7 @@
             <apex:commandButton id="enableCRLP" value="Enable Customizable Rollups" action="{!enableCRLP}" styleClass="slds-button slds-button&#45;&#45;small slds-button&#45;&#45;neutral" />
 -->
 
-            <apex:commandButton id="navigate" value="Go to Customizable Rollup Summaries Setup" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <apex:commandButton id="navigate" value="Go to Customizable Rollup Summaries Setup" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode}" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
 
     </apex:form>
