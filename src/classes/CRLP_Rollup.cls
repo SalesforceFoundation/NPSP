@@ -41,18 +41,19 @@ public class CRLP_Rollup {
 
     private static CRLP_FiscalYears fiscalYrs;
 
-    public List<Rollup__mdt> rollupsMdt;
+    public List<Rollupmdt> rollupsMdt;
     public String resultFieldName;
     public SoapType resultFieldType;
     public DisplayType resultFieldDisplaytype;
     public Boolean useFiscalYear;
     public String filterGroup;
+    public String summaryObject;
     public String detailObject;
     public String amountObject;
     public String dateObject;
     public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
-    public String yearlyOperation;
+    public String timeBoundOperation;
     public Integer daysBack;
 
     // Basic counter vars
@@ -78,42 +79,43 @@ public class CRLP_Rollup {
     public DateTime[] dateTimeValue;
 
     // Maps of rolled up stats by year; where the map key is the year (fiscal or calendar) from the specified date field
-    public Map<String, Double> sumByYear;
-    public Map<String, Double> minByYear;
-    public Map<String, Double> maxByYear;
+    public Map<String, Decimal> sumByYear;
+    public Map<String, Decimal> minByYear;
+    public Map<String, Decimal> maxByYear;
     public Map<String, Integer> countByYear;
 
     /** @description Constructor */
-    public CRLP_Rollup(Rollup__mdt rollupMdt) {
+    public CRLP_Rollup(Rollup__mdt rlp) {
         if (this.rollupsMdt == null) {
-            this.rollupsMdt = new List<Rollup__mdt>();
+            this.rollupsMdt = new List<Rollupmdt>();
 
             // Field and Object details
-            this.amountObject = rollupMdt.Amount_Object__r.QualifiedApiName;
-            this.dateObject = rollupMdt.Date_Object__r.QualifiedApiName;
-            this.detailObject = rollupMdt.Detail_Object__r.QualifiedApiName;
-            this.filterGroup = rollupMdt.Filter_Group__c;
-            if (rollupMdt.Detail_Field__c !=  null) {
-                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rollupMdt.Detail_Field__r.QualifiedApiName);
+            this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
+            this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
+            this.dateObject = rlp.Date_Object__r.QualifiedApiName;
+            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            this.filterGroup = rlp.Filter_Group__c;
+            if (rlp.Detail_Field__c !=  null) {
+                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rlp.Detail_Field__r.QualifiedApiName);
                 this.resultFieldType = resultField.getSoapType();
                 this.resultFieldDisplaytype = resultField.getType();
                 this.resultFieldName = resultField.getName();
             }
-            if (rollupMdt.Date_Field__c !=  null) {
-                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rollupMdt.Date_Field__r.QualifiedApiName);
+            if (rlp.Date_Field__c !=  null) {
+                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rlp.Date_Field__r.QualifiedApiName);
                 this.dateFieldType = dateField.getSoapType();
             }
             // Year and Date/Day related details
-            this.useFiscalYear = rollupMdt.Use_Fiscal_Year__c;
-            this.yearlyOperation = rollupMdt.Yearly_Operation_Type__c;
-            if (this.yearlyOperation == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()) {
-                this.daysBack = Integer.valueOf(rollupMdt.Integer__c);
+            this.useFiscalYear = rlp.Use_Fiscal_Year__c;
+            this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
+            if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
+                this.daysBack = Integer.valueOf(rlp.Integer__c);
             }
 
             // Clear all the counter values
             resetValues();
         }
-        this.rollupsMdt.add(rollupMdt);
+        this.rollupsMdt.add(new Rollupmdt(rlp));
     }
 
     /** @description Reset all counter vars to 0/null */
@@ -123,9 +125,9 @@ public class CRLP_Rollup {
         this.minDate = this.maxDate = null;
         this.minDateTime = this.maxDateTime = null;
 
-        this.minByYear = new Map<String, Double>();
-        this.maxByYear = new Map<String, Double>();
-        this.sumByYear = new Map<String, Double>();
+        this.minByYear = new Map<String, Decimal>();
+        this.maxByYear = new Map<String, Decimal>();
+        this.sumByYear = new Map<String, Decimal>();
         this.countByYear = new Map<String, Integer>();
 
         this.textValue = new List<String>{ null, null, null, null };
@@ -159,22 +161,53 @@ public class CRLP_Rollup {
             return true;
         }
 
-        // Due to the large variation of possible combinations, Rollups for DAYS_BACK YearlyOperation
+        // Due to the large variation of possible combinations, Rollups for DAYS_BACK TimeBoundOperation
         // types cannot be combined with other rollups of different types/days. Group these together
         // where the NumberOfDays is the same.
-        if (otherMdtRollup.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                && (this.yearlyOperation != CRLP_Operation.YearlyOperationType.DAYS_BACK.name()
-                    || this.daysBack != otherMdtRollup.Integer__c)) {
-            return false;
+
+        Boolean isSameRollupGroup = true;
+
+        // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
+        // consider them in the same group
+        String daysBackOperation = CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name();
+        if ((this.timeBoundOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
+                this.daysBack != otherMdtRollup.Integer__c)) ||
+                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.timeBoundOperation != daysBackOperation)
+                ) {
+            isSameRollupGroup = false;
         }
 
-        Rollup__mdt rollupItem = this.rollupsMdt[0];
+        // The Amount and Detail fields do not matter for Count operations, so remove them from the
+        // grouping matching logic if this Rollup is a Count OR there is only one MDT record in the
+        // instance and that one is a Count.
+        if (otherMdtRollup.Operation__c == CRLP_Operation.RollupType.COUNT.name()
+                || (this.rollupsMdt.size() == 1 && this.rollupsMdt[0].operation == CRLP_Operation.RollupType.COUNT.name())) {
+            matchingFields.remove('Amount_Field__c');
+            matchingFields.remove('Detail_Field__c');
+        }
+
+        Rollupmdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
-            if (rollupItem.get(fld) != otherMdtRollup.get(fld)) {
-                return false;
+            Object val;
+            if (fld == 'Filter_Group__c') {
+                val = this.filterGroup;
+            } else if (fld == 'Use_Fiscal_Year__c') {
+                val = this.useFiscalYear;
+            } else if (fld == 'Summary_Object__c') {
+                val = this.summaryObject;
+            } else if (fld == 'Detail_Field__c') {
+                val = rollupItem.detailField;
+            } else if (fld == 'Date_Field__c') {
+                val = rollupItem.dateField;
+            } else if (fld == 'Amount_Field__c') {
+                val = rollupItem.amountField;
+            }
+            if (val != otherMdtRollup.get(fld)) {
+                isSameRollupGroup = false;
+                break;
             }
         }
-        return true;
+        return isSameRollupGroup;
     }
 
     /**
@@ -190,11 +223,11 @@ public class CRLP_Rollup {
 
         // Get the rolled up value for each Rollup__mdt record
         for (Integer ns=0, listSize=rollupsMdt.size(); ns<listSize; ns++) {
-            Rollup__mdt r = this.rollupsMdt[ns];
-            Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+            Rollupmdt r = this.rollupsMdt[ns];
+            Schema.DescribeFieldResult targetField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.summaryObject, r.summaryField);
             Object val = determineRollupValue(r, targetField);
             if (val != null) {
-                rtnValues.put(r.Summary_Field__r.QualifiedApiName, val);
+                rtnValues.put(r.summaryField, val);
             }
         }
 
@@ -207,11 +240,11 @@ public class CRLP_Rollup {
      * @param targetField DescribeFieldResult for the target (Summary) field
      * @return Object with the return value to be stored in the target field
      */
-    private Object determineRollupValue(Rollup__mdt r, DescribeFieldResult targetField) {
+    private Object determineRollupValue(Rollupmdt r, DescribeFieldResult targetField) {
         SoapType fldType = targetField.getSoapType();
         Object resultValue;
 
-        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.Operation__c);
+        CRLP_Operation.RollupType operation = CRLP_Operation.getRollupTypeFromString(r.operation);
 
 //        CRLP_Debug_UTIL.setCurrentRollupState(' - determineRollupValue: ' + targetField.getName() +
 //                '/' + fldType + ' for ' + operation);
@@ -221,10 +254,10 @@ public class CRLP_Rollup {
         // in the later logic to determine the values to return for this rollup.
         // ================================================================
         Decimal sumForSpecifiedYear = 0, maxForSpecifiedYear = 0, minForSpecifiedYear = 0, countForSpecifiedYear = 0;
-        Boolean useYearsAgoValue = ( r.Yearly_Operation_Type__c == CRLP_Operation.YearlyOperationType.YEARS_AGO.name());
+        Boolean useYearsAgoValue = ( r.timeBoundOperationType == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name());
         if (useYearsAgoValue == true) {
             // Find the data for the specified number of years back.
-            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.Today()) : Date.Today().Year()) - r.Integer__c.intValue();
+            Integer getThisYear = (this.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - r.intValue;
             String yrString = getThisYear.format().replace(',','');
             // If the map of sums by year include the specified year, then get the Sum/Min/Max
             if (sumByYear.containsKey(yrString)) {
@@ -295,8 +328,8 @@ public class CRLP_Rollup {
         // ================================================================
         // Best Year or Best Year Total
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.BEST_YEAR || operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
-            Double maxVal = 0;
+        else if (operation == CRLP_Operation.RollupType.Best_Year || operation == CRLP_Operation.RollupType.Best_Year_Total) {
+            Decimal maxVal = 0;
             String bestYr = null;
             List<String> years = new List<String>( this.sumByYear.keySet() );
             years.sort();
@@ -306,7 +339,7 @@ public class CRLP_Rollup {
                     maxVal = this.sumByYear.get(yr);
                 }
             }
-            if (operation == CRLP_Operation.RollupType.BEST_YEAR_TOTAL) {
+            if (operation == CRLP_Operation.RollupType.Best_Year_Total) {
                 resultValue = maxVal;
             } else {
                 if (bestYr == null || fldType == SoapType.STRING) {
@@ -320,7 +353,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Years Donated (semi-colon separated list)
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.YEARS_DONATED) {
+        else if (operation == CRLP_Operation.RollupType.Years_Donated) {
             List<String> years = new List<String>( this.sumByYear.keySet() );
             years.sort();
             resultValue = (!years.isEmpty() ? String.join(years,';') : null);
@@ -329,7 +362,7 @@ public class CRLP_Rollup {
         // ================================================================
         // Current Streak (returns the number of years going back from this yer that a donation has been made)
         // ================================================================
-        else if (operation == CRLP_Operation.RollupType.CURRENT_STREAK) {
+        else if (operation == CRLP_Operation.RollupType.Donor_Streak) {
             List<String> yearlySorted = new List<String>(this.sumByYear.keySet());
             yearlySorted.sort();
             Integer streakLength = 0;
@@ -371,5 +404,37 @@ public class CRLP_Rollup {
 
 //        CRLP_Debug_UTIL.amendLastCurrentRollupState('==> ' + resultValue);
         return resultValue;
+    }
+
+    /**
+     * @description Wrapper class for the Rollup__mdt CMT records to use in the collection of MDT's within this
+     * outer class and for stateful storage. Uses significantly less heap size than storing a list of Rollup__mdt records.
+     */
+    public class Rollupmdt {
+        public String operation;
+        public String timeBoundOperationType;
+        public String summaryObject;
+        public String summaryField;
+        public String detailObject;
+        public String detailField;
+        public String amountObject;
+        public String amountField;
+        public String dateObject;
+        public String dateField;
+        public Integer intValue;
+
+        public Rollupmdt(Rollup__mdt rlp) {
+            this.operation = rlp.Operation__c;
+            this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
+            this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
+            this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
+            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            this.detailField = rlp.Detail_Field__r.QualifiedApiName;
+            this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
+            this.amountField = rlp.Amount_Field__r.QualifiedApiName;
+            this.dateObject = rlp.Date_Object__r.QualifiedApiName;
+            this.dateField = rlp.Date_Field__r.QualifiedApiName;
+            this.intValue = (rlp.Integer__c != null ? rlp.Integer__c.intValue() : null);
+        }
     }
 }

@@ -74,7 +74,6 @@ private class CRLP_RollupContact_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
-        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -87,17 +86,21 @@ private class CRLP_RollupContact_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Donations Last 2 Years', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Count Donations', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, null) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppsClosedLastNDays__c', CRLP_Operation.RollupType.COUNT, 'Amount',
-                        CRLP_Operation.YearlyOperationType.DAYS_BACK, 365) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -109,7 +112,7 @@ private class CRLP_RollupContact_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '') + ',' +
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, '') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -123,6 +126,11 @@ private class CRLP_RollupContact_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST, 'CloseDate') + ',' +
+
+                /* Using SingleResult operation to get the first gift date */
+                CMT_UnitTestData_TEST.createRollupRecord('First Gift Date', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.FIRST, 'CloseDate') + ',' +
 
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
@@ -167,7 +175,9 @@ private class CRLP_RollupContact_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
-                        Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Account_LDV_Batch_Size__c = 200,
+                        Rollups_Contact_LDV_Batch_Size__c = 200,
+                        Rollups_Soft_Credit_Batch_Size__c = 200,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
@@ -194,6 +204,18 @@ private class CRLP_RollupContact_TEST {
         c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
+
+        // Insert a single test Contact that will have no Opportunities, but should end up getting
+        // processed and this field cleared.
+        Contact c2 = UTIL_UnitTestData_TEST.getContact();
+        c2.npo02__NumberOfClosedOpps__c = 100;  // force to a value that should be cleared to 0 since there are no opps for it
+
+        Contact c3 = UTIL_UnitTestData_TEST.getContact();
+        c3.npo02__NumberOfClosedOpps__c = null; // force this to null and will verify that it remains as null at the end
+        insert new List<Contact>{ c2, c3 };
+
+        Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -242,6 +264,19 @@ private class CRLP_RollupContact_TEST {
                 Primary_Contact__c = conId,
                 RecordTypeId = rtId
         ));
+
+        // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
+        opps.add(new Opportunity (
+                Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
+                AccountId = orgAcct.Id,
+                Amount = 50000,
+                CloseDate = Date.Today().addDays(-30),
+                StageName = closedStage,
+                Primary_Contact__c = conId,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+
         insert opps;
 
         // Mark two payments as written off; though only one should be rolled up
@@ -264,8 +299,8 @@ private class CRLP_RollupContact_TEST {
 
         system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
                 'There should be 100 payment records on closed won opps');
-        system.assertEquals(cnt, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
-                'There should be 100 OCR records on closed won opps');
+        system.assertEquals(cnt+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
+                'There should be 101 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity
         if (tt == TestType.TestTrigger) {
@@ -281,12 +316,13 @@ private class CRLP_RollupContact_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals(maxAmt, c.npo02__LargestAmount__c);
+        System.assertEquals(closeDate, c.npo02__FirstCloseDate__c);
         System.assertEquals(lastCloseDate, c.npo02__LastCloseDate__c);
         System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
@@ -300,5 +336,21 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), c.Description.split(';').size(), 'The list of donated years should match');
+
+        // THe batch process will query all Contacts, but these 2 are special circumstances to validate
+        if (tt == TestType.TestBatch) {
+            // Contact2.npo02__NumberOfClosedOpps__c was set to 100, but has attached opps, so it should be reset to 0.
+            Id c2Id = c2.Id;
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+            c2 = database.query(conQuery);
+            System.assertEquals(0, c2.npo02__NumberOfClosedOpps__c);
+
+            // Contact3.npo02__NumberOfClosedOpps__c was set to null and has attached opps, so it remain as
+            // null (vs. being reset to 0).
+            Id c3Id = c3.Id;
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c3Id LIMIT 1';
+            c3 = database.query(conQuery);
+            System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
+        }
     }
 }

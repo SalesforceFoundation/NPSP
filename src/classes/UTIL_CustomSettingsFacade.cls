@@ -864,7 +864,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         // New default settings for the Customizable Rollups engine
         crs.Customizable_Rollups_Enabled__c = false;
         crs.Rollups_Limit_on_Attached_Opps_for_LDV__c = 500;
-        crs.Rollups_LDV_Batch_Size__c = 600;
+        crs.Rollups_Account_LDV_Batch_Size__c = 600;
+        crs.Rollups_Contact_LDV_Batch_Size__c = 600;
+        crs.Rollups_Soft_Credit_Batch_Size__c = 600;
         crs.Rollups_Account_Batch_Size__c = 200;
         crs.Rollups_Contact_Batch_Size__c = 200;
         crs.Rollups_Allocation_Batch_Size__c = 1000;
@@ -887,7 +889,9 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
         customizableRollupSettings.Rollups_Allocation_Batch_Size__c = mySettings.Rollups_Allocation_Batch_Size__c;
         customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c = mySettings.Rollups_Limit_on_Attached_Opps_for_LDV__c;
-        customizableRollupSettings.Rollups_LDV_Batch_Size__c  = mySettings.Rollups_LDV_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c  = mySettings.Rollups_Account_LDV_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c  = mySettings.Rollups_Contact_LDV_Batch_Size__c;
+        customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c  = mySettings.Rollups_Soft_Credit_Batch_Size__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 

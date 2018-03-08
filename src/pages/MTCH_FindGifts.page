@@ -47,7 +47,10 @@
                         </dt>
                         <dd>
                             <p class="slds-text-body_regular slds-truncate">
-                                <apex:outputField value="{!opp.Amount}"/>
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}">
+                                    <apex:param value="{!opp.Amount}"/>
+                                </apex:outputText>
                             </p>
                         </dd>
                     </dl>
@@ -77,7 +80,10 @@
                         </dt>
                         <dd>
                             <p class="slds-text-body_regular slds-truncate">
-                                <apex:outputField id="totalSelected" value="{!oppTotalSelected.Amount}"/>
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}" id="totalSelected">
+                                    <apex:param value="{!oppTotalSelected.Amount}"/>
+                                </apex:outputText>
                             </p>
                         </dd>
                     </dl>
@@ -91,7 +97,10 @@
                         </dt>
                         <dd>
                             <p class="slds-text-body_regular slds-truncate">
-                                <apex:outputField id="totalUn" value="{!oppTotalUnaccounted.Amount}"/>
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}" id="totalUn">
+                                    <apex:param value="{!oppTotalUnaccounted.Amount}"/>
+                                </apex:outputText>
                             </p>
                         </dd>
                     </dl>
@@ -135,7 +144,12 @@
                             <td><apex:outputLink value="/{!g.Id}">{!g.Name}</apex:outputLink></td>
                             <td><apex:outputField value="{!g.Account.Name}" /></td>
                             <td><apex:outputField value="{!g.Primary_Contact__c}" /></td>
-                            <td><apex:outputField value="{!g.Amount}" /></td>
+                            <td>
+                                <span class="slds-form-element__addon">{!currencySymbol}</span>
+                                <apex:outputText value="{0, number, ###,##0.00}">
+                                    <apex:param value="{!g.Amount}"/>
+                                </apex:outputText>
+                            </td>
                             <td><apex:outputField value="{!g.CloseDate}" /></td>
                         </tr>
                     </apex:repeat>

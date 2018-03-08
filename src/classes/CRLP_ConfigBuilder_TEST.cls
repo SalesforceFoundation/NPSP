@@ -96,7 +96,7 @@ private class CRLP_ConfigBuilder_TEST {
         CRLP_ConfigBuilder_SVC.clearQueue();
 
         // Construct our callback class
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId, null);
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack(jobId);
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();
