@@ -339,7 +339,7 @@
         //fires when yearly operations options is changed or when set up
         //the isOnChange value is a boolean to determine if this is fired during a change (true) or during setup (false)
         console.log("in helper changeYearlyOperationsOptions");
-        var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+        var operation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
             //disable fiscal year, disable integer, and reset values

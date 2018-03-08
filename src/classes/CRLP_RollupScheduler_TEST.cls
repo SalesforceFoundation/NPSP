@@ -50,7 +50,9 @@ private class CRLP_RollupScheduler_TEST {
                         Rollups_Account_Batch_Size__c = 100,
                         Rollups_Contact_Batch_Size__c = 100,
                         Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_LDV_Batch_Size__c = 1000
+                        Rollups_Account_LDV_Batch_Size__c = 1000,
+                        Rollups_Contact_LDV_Batch_Size__c = 1000,
+                        Rollups_Soft_Credit_Batch_Size__c = 1000
                 ));
 
         // Delete all currently scheduled jobs
@@ -102,7 +104,7 @@ private class CRLP_RollupScheduler_TEST {
                         Rollups_Account_Batch_Size__c = 100,
                         Rollups_Contact_Batch_Size__c = 100,
                         Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_LDV_Batch_Size__c = 1000
+                        Rollups_Account_LDV_Batch_Size__c = 1000
                 ));
 
         // Delete all currently scheduled jobs
@@ -117,7 +119,7 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(false, Account.SObjectType));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(Account.SObjectType));
         // StopTest to allow the job to execute
         Test.stopTest();
 
@@ -138,7 +140,7 @@ private class CRLP_RollupScheduler_TEST {
                         Rollups_Account_Batch_Size__c = 100,
                         Rollups_Contact_Batch_Size__c = 100,
                         Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_LDV_Batch_Size__c = 1000
+                        Rollups_Account_LDV_Batch_Size__c = 1000
                 ));
 
         // Delete all currently scheduled jobs

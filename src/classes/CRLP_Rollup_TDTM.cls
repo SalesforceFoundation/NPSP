@@ -32,10 +32,13 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Customizable Rollups for TDTM
+* @description Customizable Rollups for TDTM on the Opportunity and Payment objects only
 *
 */
 public class CRLP_Rollup_TDTM extends TDTM_Runnable {
+
+    /** @description Prevent additional Batch or Queueable jobs if there are already this many queued/executing */
+    private static final Integer MAX_ALLOWED_QUEUED_JOBS = 5;
 
     /**
      * @description Static collection of Account/Contact/Allocation Id's that have already been submitted
@@ -44,9 +47,8 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
     private static Set<Id> alreadyQueuedForRollupJob = new Set<Id>();
 
     /**
-     * @description Trigger Handler on Opportunity, Payment and Allocation to determine if rollups to the parent
+     * @description Trigger Handler on Opportunity and Payment to determine if rollups to the parent
      * Account, Contact and/or GeneralAccountingUnit objects is necessary.
-     * TODO Partial Soft Credits?
      * @param listNew the list of records from trigger new.
      * @param listOld the list of recods from trigger old.
      * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
@@ -157,28 +159,10 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             }
             opps = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds];
 
-        } else if (detailObjType == Allocation__c.SObjectType) {
-
-            // If the Allocation records were modified, get the parent GAU Id's to rollup
-            List<Id> gauIds = new List<Id>();
-            for (SObject s  : detailRecordsToRollup) {
-                Allocation__c alloc = (Allocation__c)s;
-                if (alloc.Opportunity__c != null && !alreadyQueuedForRollupJob.contains(alloc.Opportunity__c)) {
-                    gauIds.add(alloc.General_Accounting_Unit__c);
-                    alreadyQueuedForRollupJob.add(alloc.Opportunity__c);
-                }
-            }
-
-            // Don't submit the batch job when unit tests are running or if this is being called from
-            // a batch, queueable or future method
-            if (!Test.isRunningTest() && !gauIds.isEmpty() && !System.isBatch() && !System.isQueueable() && !System.isFuture()) {
-                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(gauIds), batchSize);
-            }
         }
 
         // If there are Opportunities, get the Account and/or Contact Ids to roll up to
-        if (detailObjType != Allocation__c.SObjectType) {
+        if (!opps.isEmpty()) {
             for (Opportunity opp : opps) {
                 if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
                     accountIds.add(opp.AccountId);
@@ -207,13 +191,23 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 // Queueable execution using chained queuable executions for each type of summary object
 
                 List<List<Id>> queueOfSummaryIds = new List<List<Id>>();
-                queueOfSummaryIds.add(accountIds);
-                queueOfSummaryIds.add(contactIds);
+                if (!accountIds.isEmpty()) {
+                    queueOfSummaryIds.add(accountIds);
+                }
+                if (!contactIds.isEmpty()) {
+                    queueOfSummaryIds.add(contactIds);
+                }
 
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up
                 // The queueable job will pop the list of Id's off the stack and process them in serial.
                 if (!queueOfSummaryIds.isEmpty() && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
-                    System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                    Integer numExecutingJobs = [SELECT count() FROM AsyncApexJob
+                        WHERE JobType='Queueable' AND (Status = 'Processing' OR Status = 'Preparing' OR Status = 'Holding' OR Status = 'Queued')];
+
+                    // Don't execute the batch if there are already 5 CRLP queueable jobs jobs executing
+                    if (numExecutingJobs < MAX_ALLOWED_QUEUED_JOBS) {
+                        System.enqueueJob(new CRLP_RollupQueueable(queueOfSummaryIds));
+                    }
                 }
             }
         }

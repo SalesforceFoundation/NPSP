@@ -46,10 +46,10 @@ public class CRLP_Rollup_SVC {
      * @description Interface class that the each of the 5 handler classes will implement
      */
     public interface IRollupHandler {
-        void processRollups(List<SObject> details);
+        void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId);
         void setRecordId(Id objectId);
         void setRollupsList(List<CRLP_Rollup> rollups);
-        void filterRollups(CRLP_RollupProcessor_SVC.RollupsMode rollupProcessingMode);
+        void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter);
         List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
     }
@@ -88,7 +88,7 @@ public class CRLP_Rollup_SVC {
             SObject emptyObject = UTIL_Describe.getPrototypeObject(objType.getDescribe().getName());
             for (CRLP_Rollup rollup : rollups) {
                 for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                    emptyObject.put(rollup.rollupsMdt[ns].Summary_Field__r.QualifiedApiName, null);
+                    emptyObject.put(rollup.rollupsMdt[ns].summaryField, null);
                 }
             }
             cachedEmptyObjects.put(objType, emptyObject);
@@ -113,8 +113,8 @@ public class CRLP_Rollup_SVC {
         Boolean hasValueChanged = false;
         for (CRLP_Rollup rollup : rollups) {
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
-                Rollup__mdt r = rollup.rollupsMdt[ns];
-                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.Summary_Object__r.QualifiedApiName, r.Summary_Field__r.QualifiedApiName);
+                CRLP_Rollup.Rollupmdt r = rollup.rollupsMdt[ns];
+                Schema.DescribeFieldResult summaryField = getSObjectFieldDescribe(r.summaryObject, r.summaryField);
                 SoapType summaryFieldType = summaryField.getSoapType();
                 Object origValue = originalObject.get(summaryField.getName());
                 Object newValue = updatedObject.get(summaryField.getName());
@@ -164,11 +164,11 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getBatchSize(SObjectType objType) {
-        if (objType == Account.SObjectType) {
+        if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType) {
+        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-        } else if (objType == Allocation__c.SObjectType) {
+        } else if (objType == Allocation__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
         }
         return 200;
@@ -180,10 +180,16 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getLDVBatchSize(SObjectType objType) {
-        if (objType == General_Accounting_Unit__c.SObjectType) {
+        if (objType == General_Accounting_Unit__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
             return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+        } else if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
+        } else if (objType == Partial_Soft_Credit__c.SObjectType && customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c != null) {
+            return customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
         } else {
-            return customizableRollupSettings.Rollups_LDV_Batch_Size__c.intValue();
+            return 500; // the above should all return a value, but this is the default
         }
     }
 

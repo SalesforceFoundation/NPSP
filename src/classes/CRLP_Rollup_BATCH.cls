@@ -37,12 +37,29 @@
 public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
         implements Database.Batchable<SObject>, Database.Stateful {
 
+    // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
+    // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
+    // are included in the queries/processing to ensure the values are reset accordingly. Now, the assumption here
+    // is that these 2 fields are inclusive of the types of values that might have been incremented at some point
+    // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
+    // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
+    // modified the filters to somehow change those meaning. This is a good 99.9% check though.
+    private List<String> fieldsToCheckForNonZero = new List<String>{
+            'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
+    };
+
     /*******************************************************************************************************
     * @description Constructs the class, sets the properties
     */
     public CRLP_Rollup_BATCH(SObjectType objType) {
         super(objType);
         this.isLdvBatchJob = false;
+    }
+
+    public CRLP_Rollup_BATCH(SObjectType objType, CRLP_RollupProcessingOptions.RollupTypeFilter jobTypeFilter) {
+        super(objType);
+        this.isLdvBatchJob = false;
+        this.jobFilter = jobTypeFilter;
     }
 
     /*******************************************************************************************************
@@ -66,8 +83,18 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                     UTIL_Namespace.StrAllNSPrefix('Number_of_Opportunities__c');
 
             // Build a query string of the target Summary object.
-            String query = CRLP_Query_SEL.getResultsQuery(this.summaryObjectType) +
-                    ' WHERE ' + fldRelatedOppsCnt + ' < :maxRelatedOppsForNonLDVMode';
+            String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
+
+            // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
+            if (this.summaryObjectType == Contact.SObjectType) {
+                for (String f : fieldsToCheckForNonZero) {
+                    if (!query.containsIgnoreCase(f)) {
+                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+                    }
+                }
+            }
+
+            query += ' WHERE ' + fldRelatedOppsCnt + ' < :maxRelatedOppsForNonLDVMode';
 
             // Add additional query filters as needed
             if (this.recordIds != null && this.recordIds.size() > 0) {
@@ -81,11 +108,19 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
                     ' OR npo02__NumberOfClosedOpps__c > 0 OR npo02__NumberOfMembershipOpps__c > 0)';
             }
 
+            // If there are no active rollups for the object type, then force the query to return zero records.
             if (CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType) == false) {
-                // If there are no active rollups for the object type, then force the query to return zero records.
                 // This is needed because can't return null as a valid iterator.
                 query += ' LIMIT 0';
             }
+
+            if (this.summaryObjectType == Account.SObjectType) {
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+            } else if (this.summaryObjectType == Contact.SObjectType) {
+                this.jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+            }
+            this.statefulCacheOfRollupsToBeProcessed.put(this.summaryObjectType,
+                    CRLP_Rollup_SEL.getRollupDefinitionsToUse(this.jobType, this.jobFilter));
 
             return Database.getQueryLocator(query);
 
@@ -107,20 +142,63 @@ public class CRLP_Rollup_BATCH extends CRLP_AbstractRollup_BATCH
 
         this.batchIteration++;
         try {
-            // Get the detail records for the current set of Summary Records
-            Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
-            List<SObject> detailsRecords = CRLP_RollupProcessor_SVC.getDetailRecordsFromParentRecords(summaryRecords, includeChildPayments);
 
-            // Build the processing options instance
-            CRLP_RollupProcessor_SVC.ProcessingOptions options = initOptionsInstance();
+            CRLP_RollupProcessingOptions.ProcessingOptions options = initOptionsInstance();
             options.detailObjType = Opportunity.SObjectType;
 
-// options.rollupTypesToProcess = CRLP_RollupProcessor_SVC.RollupsMode.DateBasedOnly;
+            // Get the detail records for the current set of Summary Records
+            Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(this.summaryObjectType);
+            List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-            // Call the method to do the actual rollups. This returns only records that require updating
-            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailsRecords, options);
+            // Strip out summary records where there are no detail records to process.
+            // This is not needed for Accounts because the main query on Account already includes this filter.
+            if (this.summaryObjectType == Contact.SObjectType) {
 
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                Set<Id> parentsWithDetails = new Set<Id>(); // which parent records have details
+
+                // The Contact object is always rolling up from Opportunities so no need to use the generic SObject
+                List<Opportunity> opps = (List<Opportunity>) detailRecords;
+                for (Integer n=0, listSize=opps.size(); n<listSize; n++) {
+                    parentsWithDetails.add(opps[n].Primary_Contact__c);
+                }
+
+                // These 2 fields have to be included in every query.
+                List<SObject> newSummaryRecords = new List<SObject>();
+                for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
+                    SObject parentRecord = summaryRecords[n];
+                    Boolean processParentRecord = parentsWithDetails.contains(parentRecord.Id);
+                    if (!processParentRecord) {
+                        // no details, but are the any of these key fields not zero/null?
+                        for (String f : fieldsToCheckForNonZero) {
+                            if (parentRecord.get(f) != null && (Double) parentRecord.get(f) > 0) {
+                                processParentRecord = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (processParentRecord) {
+                        newSummaryRecords.add(parentRecord);
+                    }
+                }
+                summaryRecords = newSummaryRecords;
+            }
+
+            // Are there any summary records left to process?
+            if (summaryRecords.size() > 0) {
+
+                Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+                if (includeChildPayments && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)) {
+                    paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+                }
+
+                // Call the method to do the actual rollups. This returns only records that require updating
+                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
+
+                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                this.totalRecordsModified += updatedRecords.size();
+                this.totalCommits++;
+            }
+
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());

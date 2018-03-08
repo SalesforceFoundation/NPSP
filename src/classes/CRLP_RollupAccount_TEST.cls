@@ -87,7 +87,7 @@ private class CRLP_RollupAccount_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations Last 2 Years', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
@@ -99,7 +99,7 @@ private class CRLP_RollupAccount_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.CURRENT_STREAK, '') + ',' +
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, '') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
@@ -152,7 +152,9 @@ private class CRLP_RollupAccount_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
-                        Rollups_LDV_Batch_Size__c = 200,
+                        Rollups_Account_LDV_Batch_Size__c = 200,
+                        Rollups_Contact_LDV_Batch_Size__c = 200,
+                        Rollups_Soft_Credit_Batch_Size__c = 200,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
@@ -265,7 +267,7 @@ private class CRLP_RollupAccount_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

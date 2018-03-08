@@ -91,7 +91,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Group.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;
@@ -106,7 +106,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }
@@ -165,7 +165,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;
@@ -184,7 +184,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }
@@ -199,7 +199,7 @@ public class CRLP_RollupCMT {
         public String filterGroupRecordName;
         public String description;
         public String operation;
-        public String yearlyOperationType;
+        public String timeBoundOperationType;
         public String summaryObject;
         public String summaryField;
         public String detailObject;
@@ -226,7 +226,7 @@ public class CRLP_RollupCMT {
             this.filterGroupRecordName = rlp.Filter_Group__r.DeveloperName;
             this.description = rlp.Description__c;
             this.operation = rlp.Operation__c;
-            this.yearlyOperationType = rlp.Yearly_Operation_Type__c;
+            this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
             this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
@@ -251,7 +251,7 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
 
-            // Setup custom metadata to be created or udpated in the subscriber org.
+            // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
             customMd.label = this.label;
@@ -263,7 +263,7 @@ public class CRLP_RollupCMT {
                     'Filter_Group__c' => filterGroupRecordName,
                     'Description__c' => this.description,
                     'Operation__c' => operation,
-                    'Yearly_Operation_Type__c' => yearlyOperationType,
+                    'Time_Bound_Operation_Type__c' => timeBoundOperationType,
                     'Integer__c' => intValue,
                     'Use_Fiscal_Year__c' => useFiscalYear,
                     'Active__c' => isActive,
@@ -285,7 +285,7 @@ public class CRLP_RollupCMT {
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
             }
-            md = CMT_MetadataAPI.addFieldsToMedataObject(customMd, fldValues);
+            md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
             return md;
         }
