@@ -1,12 +1,44 @@
+/*
+    Copyright (c) 2014, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
 /**
-* Created by randi.wilson on 12/20/17.
+* @author Salesforce.org
+* @date 2018
+* @group Settings
+* @group-content ../../ApexDocContent/Settings.htm
+* @description Controller extension for the Customizable Rollups settings panel.
 */
 
 public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
     /*******************************************************************************************************
-    * @description Action Method to save all settings changes in the Settings Service.
-    * @return void
+    * @description is the panel currently Polling for deployment results
     */
     public Boolean isPolling {
         get {
@@ -19,26 +51,69 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         set;
     }
 
-    public String status {public get; set;}
+    /*******************************************************************************************************
+    * @description is the org on the HH Account model
+    */
+    public Boolean isHHAccount {
+        get { return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR); }
+        set;
+    }
 
+    /*******************************************************************************************************
+    * @description is the running user an admin
+    */
+    public Boolean isAdmin {
+        get { return STG_SettingsManager_CTRL.runningUserIsAdmin(); }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description the jobId of the deployment
+    */
+    public String jobId {public get; set;}
+
+    /*******************************************************************************************************
+    * @description action method run on page load to check account model and admin status of running user
+    * and add pagemessages as needed
+    */
+    public void checkPermissions() {
+        // throw an error if the org isn't on HH account model
+        if (!isHHAccount) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgCRLPHouseholdAccountError));
+        }
+        // throw an error if the user isn't an admin
+        if (!isAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgCRLPNonAdminError));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
+    * and reschedule Scheduled Jobs
+    * @return void
+    */
     public virtual override PageReference saveSettings() {
+
+        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
         try {
+            isEditMode = false;
             if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
                 String oldStatus = STG_Panel.stgService.stgCRLP.CMT_API_Status__c;
-                system.debug(oldStatus);
-                // only start polling if the last deployment wasn't a success
+                // Only start polling if it's their first time or the last deployment wasn't a success
                 if(String.isEmpty(oldStatus) || !oldStatus.contains('Succeeded')) {
                     isPolling = true;
                 }
-                CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                // This method includes committing Customizable_Rollups_Enabled__c as true if the deployment succeeds
+                jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
             } else {
                 // The deployment method takes care of setting the Enabled flag to true if it succeeds.
                 // In here, we only set it to false.
                 stgService.saveAll();
             }
-            isEditMode = false;
+            UTIL_MasterSchedulableHelper.setScheduledJobs();
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
@@ -47,56 +122,37 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         return null;
     }
 
+    /*******************************************************************************************************
+    * @description Action Method to navigate to separate VF page that contains custom CMDT UI in Lightning Components
+    * @return void
+    */
     public PageReference navigate(){
-
         //TODO: check this will work with upcoming URL changes
         PageReference rollupGrid = new PageReference('/apex/CRLP_RollupSetup');
         rollupGrid.setRedirect(true);
         return rollupGrid;
     }
 
+    /*******************************************************************************************************
+    * @description Action Method used by Poller to check status of CMDT deployment
+    * @return void
+    */
     public PageReference checkDeploymentStatus() {
-        // would this be cached? might have to re-query differently
-        System.debug('+++++status: '+status);
         Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        status = crlpSettings.CMT_API_Status__c;
-        System.debug('+++++status: '+status);
-        if (!String.isEmpty(status)) {
-            System.debug('+++++Turning polling off');
+        String newStatus = crlpSettings.CMT_API_Status__c;
+        // Make sure we have a response and it's the new response.
+        if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
             isPolling = false;
-        }
-        if (status.contains('Succeeded')) {
-            PageReference pr = new PageReference('/apex/STG_SettingsManager');
-            pr.getParameters().put('panel','idPanelCustomizableRollup');
-            pr.setRedirect(true);
-            return pr;
+            // add bang to test fail condition.
+            if (newStatus.contains('Succeeded')) {
+                return null;
+            } else {
+                crlpSettings.Customizable_Rollups_Enabled__c = false;
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+                return null;
+            }
         } else {
-            crlpSettings.Customizable_Rollups_Enabled__c = false;
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, status));
             return null;
         }
-        return null;
     }
-
-    public PageReference refreshPage() {
-        PageReference pr = new PageReference('/apex/STG_SettingsManager');
-        pr.getParameters().put('panel','idPanelCustomizableRollup');
-        pr.setRedirect(true);
-        return pr;
-    }
-
-    //APEX:ACTIONPOLLER SAMPLE METHODS BELOW
-    //TODO: remove these
-
-    Integer count = 0;
-
-    public PageReference incrementCounter() {
-        count++;
-        return null;
-    }
-
-    public Integer getCount() {
-        return count;
-    }
-
 }

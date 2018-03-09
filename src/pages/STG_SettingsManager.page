@@ -44,6 +44,7 @@
         // but submitting the click on all li's does the trick!
         j$('div',cl).trigger('click');
         ShowPanel(idPanelCurrent);
+        reRenderTree({!stgService.stgCRLP.Customizable_Rollups_Enabled__c});
     });
 
     function ShowPanel(idPanel) {
@@ -80,6 +81,25 @@
         if (idPanelCurrent != '{!idPanelCurrent}')
             setPanelCurrent(idPanelCurrent);
     }
+
+    function reRenderTree(isCRLPEnabled) {
+        if(isCRLPEnabled === undefined) {
+            isCRLPEnabled = document.querySelector('[id$="cbxCRLPE"]').checked;
+        }
+        console.log('isCRLPEnabled: '+isCRLPEnabled);
+        if(isCRLPEnabled === true) {
+            node = document.getElementById('idPanelOppRollupNav');
+            if (node != null) node.style.display =  'none';
+            node = document.getElementById('idPanelUserRollupNav');
+            if (node != null) node.style.display =  'none';
+        } else {
+            node = document.getElementById('idPanelOppRollupNav');
+            if (node != null) node.style.display =  'block';
+            node = document.getElementById('idPanelUserRollupNav');
+            if (node != null) node.style.display =  'block';
+        }
+    }
+
 </script>
 <apex:form >
     <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >

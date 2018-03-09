@@ -107,7 +107,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
     * @description Returns whether the running user is a System Administrator.
     * @return void
     */
-    private boolean runningUserIsAdmin() {
+    public static boolean runningUserIsAdmin() {
         try {
             Profile currentUserProfile = [SELECT Id, PermissionsCustomizeApplication, PermissionsModifyAllData, 
                                           PermissionsAuthorApex FROM Profile WHERE Id = :UserInfo.getProfileId()];

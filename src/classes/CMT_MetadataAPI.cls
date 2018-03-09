@@ -158,7 +158,8 @@ public class CMT_MetadataAPI {
             Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.CMT_API_Status__c = JSON.serializePretty(statusMap).left(255);
             // THIS WILL NEED TO BE REFACTORED IF THIS CMT DEPLOYMENT CODE IS USED BY SOMETHING OTHER THAN ROLLUPS
-            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);if (!Test.isRunningTest()) {
+            crlpSettings.Customizable_Rollups_Enabled__c = (isSuccess || crlpSettings.Customizable_Rollups_Enabled__c == true);
+            if (!Test.isRunningTest()) {
                 upsert crlpSettings;
             }
         }

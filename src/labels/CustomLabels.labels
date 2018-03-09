@@ -4629,12 +4629,44 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Create</value>
     </labels>
     <labels>
+        <fullName>stgCRLPHouseholdAccountError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCRLPHouseholdAccountError</shortDescription>
+        <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCRLPNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Customizable Rollups.</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgDocumentation</shortDescription>
         <value>Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentInProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentTryAgain</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDeploymentTryAgain</shortDescription>
+        <value>You can try again immediately.</value>
     </labels>
     <labels>
         <fullName>stgDontAutoScheduleHelpText</fullName>
