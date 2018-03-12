@@ -131,7 +131,7 @@
         <members>CRLP_DefaultConfigBuilder_TEST</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
-        <members>CRLP_GAU_Batch</members>
+        <members>CRLP_GAU_BATCH</members>
         <members>CRLP_Operation</members>
         <members>CRLP_Operation_SVC</members>
         <members>CRLP_Operation_TEST</members>
