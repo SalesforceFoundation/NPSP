@@ -63,9 +63,10 @@
         } else {
             cmp.set("v.mode", "view");
             var cachedRollup = cmp.get("v.cachedRollup");
+            helper.fieldSetup(cmp);
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", helper.restructureResponse(cachedRollup.valueOf()));
-            //todo: need to add selected integer/operation/yearly op values here?
+            helper.fieldSetup(cmp);
         }
     },
 
@@ -79,7 +80,6 @@
         //fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
         var message = event.getParam("message");
         var channel = event.getParam("channel");
-        console.log("Message received!");
         if(channel === 'selectField'){
             var fieldName = message[0];
             var value = message[1];
@@ -96,7 +96,7 @@
             } else if (fieldName === 'filterGroup'){
                 helper.onChangeFilterGroup(cmp, label);
             } else if (fieldName ==='operation'){
-                helper.onChangeOperation(cmp, value, label);
+                helper.onChangeOperation(cmp, value);
             } else if(fieldName === 'yearlyOperation'){
                 helper.onChangeYearlyOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){

@@ -64,6 +64,7 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="c:CRLP_CancelEvent" action="{!c.handleCancelEvent}"/>
     <aura:handler event="c:CRLP_NavigateEvent" action="{!c.handleNavigateEvent}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
     <!-- markup -->
     <!--BEGIN BREADCRUMB-->

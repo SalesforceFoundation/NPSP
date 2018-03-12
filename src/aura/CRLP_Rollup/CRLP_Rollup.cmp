@@ -132,16 +132,6 @@
                     </lightning:layout>
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.renderMap.description}">
-                            <aura:if isTrue="{!and(equals(v.mode, 'create'), v.renderMap.rollupType)}">
-                                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                                    <lightning:input aura:id="nameInput"
-                                                     label="{!v.labels.name}"
-                                                     name="{!v.labels.name}"
-                                                     value="{!v.activeRollup.MasterLabel}"
-                                                     required="false"
-                                                     readonly="true"/>
-                                </lightning:layoutItem>
-                            </aura:if>
                             <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
                                 <lightning:textarea aura:id="descriptionInput"
                                                     label="{!v.labels.description}"

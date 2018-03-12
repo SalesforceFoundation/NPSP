@@ -387,7 +387,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'name' => Label.stgLabelName,
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
-                'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel().toLowerCase()}),
+                'noFields' => Label.stgLabelPaymentMapNoValidFields,
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),

@@ -149,6 +149,22 @@
         }
     },
 
+    /* @description: handles the ltng:message event
+    * currently listens for the rollup name change on the Rollup cmp since this doesn't bind correctly
+    */
+    handleMessage: function(cmp, event, helper){
+        var message = event.getParam("message");
+        var channel = event.getParam("channel");
+
+        if(channel === 'rollupNameChange'){
+            //message is the masterLabel
+            //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
+            var activeRecord = cmp.get("v.activeRecord");
+            activeRecord.MasterLabel = message;
+            cmp.set("v.activeRecord", activeRecord);
+        }
+    },
+
     handleNavigateEvent: function(cmp, event, helper){
         //handles the selection of a specific rollup from the filter group view and the return to filter group
         var id = event.getParam('id');
