@@ -37,7 +37,7 @@
 private class CRLP_RollupSoftCredit_TEST {
 
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestLDV
+        TestBatchContact, TestBatchAccount, testSkewBatchContact
     }
 
     /**
@@ -123,8 +123,14 @@ private class CRLP_RollupSoftCredit_TEST {
 
     }
 
-    static testMethod void test_Rollups_SoftCredits() {
-        testRollupsServices(TestType.TestLDV);
+    static testMethod void test_Rollups_Contact() {
+        testRollupsServices(TestType.testBatchContact);
+    }
+    static testMethod void test_Rollups_ContactSkew() {
+        testRollupsServices(TestType.testSkewBatchContact);
+    }
+    static testMethod void test_Rollups_Account() {
+        testRollupsServices(TestType.testBatchAccount);
     }
 
     /**
@@ -143,7 +149,7 @@ private class CRLP_RollupSoftCredit_TEST {
 
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
+                Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.testSkewBatchContact ? 50 : 200),
                 Rollups_Account_LDV_Batch_Size__c = 600,
                 Rollups_Contact_LDV_Batch_Size__c = 600,
                 Rollups_Soft_Credit_Batch_Size__c = 600,
@@ -256,7 +262,16 @@ private class CRLP_RollupSoftCredit_TEST {
                 'There should be 301 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
-        database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), 600);
+        if (tt == TestType.testSkewBatchContact) {
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{ c.Id, c2.Id, c3.Id, c4.Id }, null);
+        } else if (tt == TestType.TestBatchContact) {
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+        } else if (tt == TestType.TestBatchAccount) {
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+        }
         Test.stopTest();
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
@@ -286,15 +301,17 @@ private class CRLP_RollupSoftCredit_TEST {
         System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
         System.assertEquals(1, c.Number_of_Soft_Credits__c);
 
-        // Query the Household
-        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
-        Account a = database.query(acctQuery);
-
         // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-        System.assertEquals(cnt, a.npo02__NumberOfClosedOpps__c);
-        System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
-        System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
-        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+        if (tt == TestType.TestBatchAccount) {
+            // Query the Household
+            String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+            Account a = database.query(acctQuery);
+
+            System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
+            System.assertEquals(cnt, a.npo02__NumberOfClosedOpps__c);
+            System.assertEquals(firstCloseDate, a.npo02__FirstCloseDate__c);
+            System.assertEquals(baseAmt, a.npo02__LastOppAmount__c);
+            System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+        }
     }
 }

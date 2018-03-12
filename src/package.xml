@@ -112,7 +112,17 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
-        <members>CRLP_AbstractRollup_BATCH</members>
+        <members>CRLP_AccountSkew_BATCH</members>
+        <members>CRLP_AccountSkew_SoftCredit_BATCH</members>
+        <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_Account_BATCH</members>
+        <members>CRLP_ContactSkew_BATCH</members>
+        <members>CRLP_ContactSkew_SoftCredit_BATCH</members>
+        <members>CRLP_Contact_BATCH</members>
+        <members>CRLP_Contact_SoftCredit_BATCH</members>
+        <members>CRLP_Batch_Base</members>
+        <members>CRLP_Batch_Base_NonSkew</members>
+        <members>CRLP_Batch_Base_Skew</members>
         <members>CRLP_ConfigBuilder_SVC</members>
         <members>CRLP_ConfigBuilder_TEST</members>
         <members>CRLP_Debug_UTIL</members>
@@ -121,6 +131,7 @@
         <members>CRLP_DefaultConfigBuilder_TEST</members>
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
+        <members>CRLP_GAU_Batch</members>
         <members>CRLP_Operation</members>
         <members>CRLP_Operation_SVC</members>
         <members>CRLP_Operation_TEST</members>
@@ -131,6 +142,7 @@
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
+        <members>CRLP_RollupBatch_SVC</members>
         <members>CRLP_RollupCMT</members>
         <members>CRLP_RollupContact_SVC</members>
         <members>CRLP_RollupContact_TEST</members>
@@ -144,14 +156,12 @@
         <members>CRLP_RollupSoftCredit_SVC</members>
         <members>CRLP_RollupSoftCredit_TEST</members>
         <members>CRLP_RollupUI_SVC</members>
-        <members>CRLP_Rollup_BATCH</members>
-        <members>CRLP_Rollup_LDV_BATCH</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
         <members>CRLP_Rollup_SVC</members>
         <members>CRLP_Rollup_SVC_TEST</members>
-        <members>CRLP_Rollup_SoftCredit_LDV_BATCH</members>
         <members>CRLP_Rollup_TDTM</members>
+        <members>CRLP_SkewDispatcher_BATCH</members>
         <members>CRLP_VRollupHandler</members>
         <members>EP_EngagementPlanTaskValidation_TDTM</members>
         <members>EP_EngagementPlanTaskValidation_TEST</members>

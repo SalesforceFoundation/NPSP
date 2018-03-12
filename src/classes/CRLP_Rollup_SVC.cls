@@ -159,38 +159,39 @@ public class CRLP_Rollup_SVC {
     }
 
     /**
-     * @description Return the batch size to use for standard (non-LDV) batch roll-up operations
-     * @param objType SObjectType of the Summary object
+     * @description Return the batch size to use for the specified Rollup Job and Rollup Type
+     * @param jobType Job Type Enum
+     * @param jobMode Batch Job Mode Enum
      * @return Integer value
      */
-    public static Integer getBatchSize(SObjectType objType) {
-        if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-        } else if (objType == Allocation__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-        }
-        return 200;
-    }
+    public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        Integer batchSize;
+        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
 
-    /**
-     * @description Return the batch size to use for LDV batch roll-up operations
-     * @param objType SObjectType of the Summary object
-     * @return Integer value
-     */
-    public static Integer getLDVBatchSize(SObjectType objType) {
-        if (objType == General_Accounting_Unit__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
-        } else if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
-        } else if (objType == Partial_Soft_Credit__c.SObjectType && customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+            }
         } else {
-            return 500; // the above should all return a value, but this is the default
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+            }
         }
+        return (batchSize != null ? batchSize : 200);
     }
 
     /**
@@ -198,7 +199,7 @@ public class CRLP_Rollup_SVC {
      * have before it's considered an LDV data scenario.
      * @return Integer value
      */
-    public static Integer getMaxRelatedOppsForNonLDVMode() {
+    public static Integer getMaxRelatedOppsForNonSkewMode() {
         return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
     }
 

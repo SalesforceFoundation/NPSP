@@ -119,7 +119,8 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(Account.SObjectType));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
         // StopTest to allow the job to execute
         Test.stopTest();
 
@@ -130,7 +131,7 @@ private class CRLP_RollupScheduler_TEST {
     /**
      * @description Test scheduling a single LDV job
      */
-    static testMethod void test_Scheduled_CRLP_Rollup_LDV_Job() {
+    static testMethod void test_Scheduled_CRLP_Rollup_Skew_Job() {
 
         // Enable Customizable Rollups
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(
@@ -164,7 +165,8 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(true, Account.SObjectType));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
         // StopTest to allow the job to execute
         Test.stopTest();
 

@@ -185,7 +185,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 String objName = defaultScheduledJobs.get(jobName)[2];
                 SObjectType objType = UTIL_Describe.getSObjectType(objName);
                 Boolean isLDV = defaultScheduledJobs.get(jobName)[3] == 'True';
-                classInstance = new CRLP_RollupScheduler(isLDV, objType);
+//                classInstance = new CRLP_RollupScheduler(isLDV, objType);
             }
             System.schedule(jobName, cronExpression, classInstance);
         } catch (Exception ex) {

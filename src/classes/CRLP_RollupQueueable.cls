@@ -94,7 +94,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
-        options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonLDV;
+        options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
         options.parentObjType = objType;
         options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {

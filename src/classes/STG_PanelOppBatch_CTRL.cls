@@ -67,26 +67,27 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
         } else {
-            Integer batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(Account.SObjectType);
-            Integer batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(Contact.SObjectType);
+            Integer batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            Integer batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
 
-            Database.executeBatch(new CRLP_Rollup_BATCH(Account.SObjectType), batchSizeAcct);
-            Database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType), batchSizeCntct);
+//            Database.executeBatch(new CRLP_Rollup_BATCH(Account.SObjectType), batchSizeAcct);
+//            Database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType), batchSizeCntct);
             this.numJobSubmitted = 2;
 
-            Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+            Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+            // TODO -- FIX THIS QUERY
             Boolean hasLDVAccounts = [SELECT Count() FROM Account WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
 
             // If there is at least one LDV Account to roll up, execute this batch job
             if (hasLDVAccounts) {
-                batchSizeAcct = CRLP_Rollup_SVC.getLDVBatchSize(Account.SObjectType);
-                batchSizeCntct = CRLP_Rollup_SVC.getLDVBatchSize(Contact.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(Account.SObjectType), batchSizeAcct);
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(Contact.SObjectType), batchSizeCntct);
+                batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+                batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+//                Database.executeBatch(new CRLP_Batch_Base_Skew(Account.SObjectType), batchSizeAcct);
+//                Database.executeBatch(new CRLP_Batch_Base_Skew(Contact.SObjectType), batchSizeCntct);
                 this.numJobSubmitted += 2;
             }
 
-            Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
+//            Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
             this.numJobSubmitted++;
 
         }

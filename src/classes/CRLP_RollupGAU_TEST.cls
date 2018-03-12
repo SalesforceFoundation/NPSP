@@ -37,7 +37,7 @@
 private class CRLP_RollupGAU_TEST {
 
     private Enum TestType {
-        TestLDV
+        testSkewBatch
     }
 
     /**
@@ -103,8 +103,8 @@ private class CRLP_RollupGAU_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
-    static testMethod void test_Rollups_BatchLDV() {
-        testRollupsServices(TestType.TestLDV);
+    static testMethod void test_Rollups_SkewBatch() {
+        testRollupsServices(TestType.testSkewBatch);
     }
 
     /**
@@ -206,8 +206,8 @@ private class CRLP_RollupGAU_TEST {
         // Now test the rollups to the GAU from the Allocation using the LDV Batch Job
         // since this is the only rollup method that supports allocations
         Test.startTest();
-        Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-        database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ), batchSize);
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, null, null);
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups

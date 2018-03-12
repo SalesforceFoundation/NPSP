@@ -59,8 +59,6 @@ public class CRLP_Operation_SVC {
 
         String objName = UTIL_Describe.getObjectDescribe(detailSObject.getSObjectType()).getName();
 
-        CRLP_Debug_UTIL.setCurrentRollupState('doRollupOperation() for ' + oppSObject.Id + ' ' + objName, rollup);
-
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
 
         // Get the the first rollup in the list.
@@ -69,8 +67,6 @@ public class CRLP_Operation_SVC {
         // these values should be the same for every rollup definition in the CRLP_Rollup instance
         String dateField = firstRollup.dateField;
         String amtField = firstRollup.amountField;
-
-//        System.debug('>>>> doRollupOperation() for ' + oppSObject.Primary_Contact__c + ' ' + objName + ' / ' + firstRollup.Summary_Field__r.QualifiedApiName);
 
         Date dateValue;
         DateTime dateTimeValue;

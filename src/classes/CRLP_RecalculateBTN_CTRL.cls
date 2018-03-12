@@ -71,30 +71,43 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
 
         } else if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
 
-            // Determine if the LDV batch job is needed for the rollup instead of the quicker Queueable
-            // standard rollup logic.
-            Double numOpps = 0;
+            CRLP_RollupProcessingOptions.RollupType jobType;
+            CRLP_RollupProcessingOptions.BatchJobMode jobMode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
+
+            // Hard Credit Rollups for Account, Contact or GAU
             if (this.objType == Account.SObjectType) {
-                Account a = [SELECT Number_of_Opportunities__c FROM Account WHERE Id = :recordId LIMIT 1];
-                numOpps = a.Number_of_Opportunities__c;
+                jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
             } else if (this.objType == Contact.SObjectType) {
-                Contact c = [SELECT Account.Number_of_Opportunities__c FROM Contact WHERE Id = :recordId LIMIT 1];
-                numOpps = c.Account.Number_of_Opportunities__c;
+                jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
-                numOpps = 1000000;  // always want to run these in LDV mode
+                jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
+            }
+            if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
+                jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
             }
 
-            if (numOpps < CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode()) {
+            if (jobMode != CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             } else {
-                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(this.objType);
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ recordId }), batchSize);
+//                Database.executeBatch(new CRLP_Batch_Base_Skew(new List<Id>{ recordId }), batchSize);
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 
             // Execute Contact or Account Soft Credit roll-ups
-            if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
-                Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType);
-                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(new List<Id>{ recordId }), batchSize);
+            // TODO Add logic for soft credit rollups
+            jobType = null;
+            if (this.objType == Account.SObjectType) {
+                jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
+            } else if (this.objType == Contact.SObjectType) {
+                jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
+            }
+            if (jobType != null) {
+                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
+                    jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
+                }
+                if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
+                    CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
+                }
             }
 
         } else {

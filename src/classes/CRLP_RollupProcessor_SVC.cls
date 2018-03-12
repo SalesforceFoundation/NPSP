@@ -134,7 +134,7 @@ public class CRLP_RollupProcessor_SVC {
         // passed through multiple batch iterations. The 'final' record will be handled by the finish() method of
         // the LDV Batch job.
         options.lastParentIdRemovedFromUpdatesList = false;
-        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.lastParentIdProcessed != null &&
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && options.lastParentIdProcessed != null &&
                 recordsToUpdate.containsKey(options.lastParentIdProcessed)) {
             recordsToUpdate.remove(options.lastParentIdProcessed);
             options.lastParentIdRemovedFromUpdatesList = true;
@@ -150,20 +150,21 @@ public class CRLP_RollupProcessor_SVC {
      * @param detailObjType Detail Object Type
      * @return ApexClassType
      */
-    private static Type getHanderClassType(SObjectType summObjType, SObjectType detailObjType) {
+    private static Type getHanderClassType(CRLP_RollupProcessingOptions.ProcessingOptions options) {
         Type handlerClass;
-        if (detailObjType == Partial_Soft_Credit__c.SObjectType) {
+        if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             handlerClass = CRLP_RollupSoftCredit_SVC.class;
 
-        } else if (summObjType == Account.SObjectType) {
+        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             // Opportunity and Payment to Account
             handlerClass = CRLP_RollupAccount_SVC.class;
 
-        } else if (summObjType == Contact.SObjectType) {
+        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             // Opportunity and Payment  to Contact
             handlerClass = CRLP_RollupContact_SVC.class;
 
-        } else if (summObjType == General_Accounting_Unit__c.SObjectType) {
+        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             // Allocation to GeneralAccountingUnit
             handlerClass = CRLP_RollupGAU_SVC.class;
 
@@ -231,7 +232,8 @@ public class CRLP_RollupProcessor_SVC {
      * rollups summary both Account and Contact soft credits at the same time, it's necessary to use a map to separate the
      * instances by the Summary Object Type. It's still much faster than instantiating on every summary record.
      */
-    private static Map<SObjectType, CRLP_VRollupHandler> handlersMapByType = new Map<SObjectType, CRLP_VRollupHandler>();
+    private static Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler> handlersMapByType =
+            new Map<CRLP_RollupProcessingOptions.RollupType, CRLP_VRollupHandler>();
 
     /**
      * @description For a given Parent (Summary) record, and set of detail records, complete the rollup of the
@@ -249,15 +251,15 @@ public class CRLP_RollupProcessor_SVC {
         // has changed or not.
         Id parentId = parent.Id;
 
-        CRLP_VRollupHandler handler = handlersMapByType.get(parent.getSObjectType());
+        CRLP_VRollupHandler handler = handlersMapByType.get(options.rollupJobType);
         if (handler == null) {
-            Type handlerClassType = getHanderClassType(parent.getSObjectType(), options.detailObjType);
+            Type handlerClassType = getHanderClassType(options);
             CRLP_Debug_UTIL.setCurrentRollupState('Instantiate Handler Class: ' + handlerClassType.getName() + ' for ' + parentId);
             handler = (CRLP_VRollupHandler) handlerClassType.newInstance();
             if (UserInfo.isMultiCurrencyOrganization()) {
                 handler.setCurrencyCode((String)parent.get('CurrencyIsoCode'));
             }
-            handlersMapByType.put(parent.getSObjectType(), handler);
+            handlersMapByType.put(options.rollupJobType, handler);
         }
 
         // Set the Id of the summary object. This method will also reset and load the appropriate rollup mdt records
@@ -266,7 +268,7 @@ public class CRLP_RollupProcessor_SVC {
 
         // If the map of Rollups by Parent Id contains this parentId, use that List<CRLP_Rollup> rather than
         // create a new fresh list.
-        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV && options.getUpdatedMapOfRollupsByParentId() != null &&
+        if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode && options.getUpdatedMapOfRollupsByParentId() != null &&
                 options.getUpdatedMapOfRollupsByParentId().get(parentId) != null) {
             CRLP_Debug_UTIL.setCurrentRollupState('Set stateful rollups collection in Handler Class');
             handler.setRollupsList(options.getUpdatedMapOfRollupsByParentId().get(parentId));
@@ -281,7 +283,7 @@ public class CRLP_RollupProcessor_SVC {
             options.lastParentIdProcessed = parentId;
 
             // Save the rollup data from the Handler instance into the processing options instance
-            if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.LDV) {
+            if (options.mode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
                 options.mapOfRollupsByParentId.put(parentId, fullyCloneList(handler.getRollupsList()));
             }
         }

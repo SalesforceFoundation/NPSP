@@ -37,7 +37,7 @@
 private class CRLP_RollupAccount_TEST {
 
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, TestLDV
+        TestTrigger, TestQueueuable, TestBatch, testSkewBatch
     }
 
     /**
@@ -131,8 +131,8 @@ private class CRLP_RollupAccount_TEST {
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
-    static testMethod void test_Rollups_BatchLDV() {
-        testRollupsServices(TestType.TestLDV);
+    static testMethod void test_Rollups_SkewBatch() {
+        testRollupsServices(TestType.testSkewBatch);
     }
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
@@ -151,7 +151,7 @@ private class CRLP_RollupAccount_TEST {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
+                        Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.testSkewBatch ? 50 : 200),
                         Rollups_Account_LDV_Batch_Size__c = 200,
                         Rollups_Contact_LDV_Batch_Size__c = 200,
                         Rollups_Soft_Credit_Batch_Size__c = 200,
@@ -258,9 +258,11 @@ private class CRLP_RollupAccount_TEST {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch) {
-            database.executeBatch(new CRLP_Rollup_BATCH(new List<Id>{acctId}));
-        } else if (tt == TestType.TestLDV) {
-            database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{acctId}));
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+        } else if (tt == TestType.testSkewBatch) {
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, null, null);
         } else if (tt == TestType.TestQueueuable) {
             System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{acctId})));
         }

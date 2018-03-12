@@ -36,15 +36,22 @@
 */
 public class CRLP_RollupScheduler implements Schedulable {
 
-    private SObjectType rollupObjectType;
-    private Boolean isLDVRollup = false;
+    /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
+    private CRLP_RollupProcessingOptions.RollupType jobType;
 
-    /**
-     * @description Constructor
-     * @param objType SObjectType for the standard rollup
-     */
-    public CRLP_RollupScheduler(SObjectType objType) {
-        this.rollupObjectType = objType;
+    /** @description The batch job mode - Skew (LDV) or Non-Skew */
+    private CRLP_RollupProcessingOptions.BatchJobMode jobMode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
+
+    /** @description Rollup Schedule Options - TBD */
+    public Enum RollupSchedule {
+        Daily,
+        Weekly_Friday,
+        Weekly_Sunday,
+        Month_LastDay,
+        Month_FirstDay,
+        Year_LastDay,
+        Year_FirstDay,
+        Never
     }
 
     /**
@@ -52,9 +59,9 @@ public class CRLP_RollupScheduler implements Schedulable {
      * @param isLDV Boolean True to queue an LDV Batch Job versus the standard batch job.
      * @param objType SObjectType for the standard rollup
      */
-    public CRLP_RollupScheduler(Boolean isLDV, SObjectType objType) {
-        this.isLDVRollup = isLDV;
-        this.rollupObjectType = objType;
+    public CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        this.jobType = jobType;
+        this.jobMode = jobMode;
     }
 
     /**
@@ -63,34 +70,37 @@ public class CRLP_RollupScheduler implements Schedulable {
      * job if there is at least one Account record that meets the minimum number of attached opps criteria value.
      */
     public void execute(SchedulableContext context) {
+
+        Integer batchSize = CRLP_Rollup_SVC.getBatchSize(this.jobType, this.jobMode);
+
         if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             // if customizable rollups are not enabled, then do nothing. This is a failsafe in case the
             // customizable rollups engine is disabled after the new jobs have been scheduled.
 
-        } else if (!isLDVRollup) {
+        } else if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
             // Non-LDV Batch Rollup for the specified Summary SObject
-            Integer batchSize = CRLP_Rollup_SVC.getBatchSize(this.rollupObjectType);
-            Database.executeBatch(new CRLP_Rollup_BATCH(this.rollupObjectType), batchSize);
+//            Database.executeBatch(new CRLP_Rollup_BATCH(this.rollupObjectType), batchSize);
 
         } else {
             // LDV Batch Rollup for the specified Summary SObject
             Boolean hasLDVAccounts = true;
-            if (this.rollupObjectType == Account.SObjectType || this.rollupObjectType == Contact.SObjectType) {
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                 // For Account & Contact rollups, only execute the batch job if there is at least one Account
                 // record with the minimum number of attached Opportunities.
-                Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode();
+                Integer maxRelatedOppsForNonSkewMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
+                // TODO -- Fix this query
                 hasLDVAccounts = [SELECT Count() FROM Account
-                        WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode
+                        WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonSkewMode
                         LIMIT 1] > 0;
             }
 
-            Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(this.rollupObjectType);
-
             // If there is at least one LDV Account to roll up, execute this batch job
-            if (this.rollupObjectType == Partial_Soft_Credit__c.SObjectType) {
-                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), batchSize);
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+//                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), batchSize);
             } else if (hasLDVAccounts) {
-                Database.executeBatch(new CRLP_Rollup_LDV_BATCH(this.rollupObjectType), batchSize);
+//                Database.executeBatch(new CRLP_Batch_Base_Skew(this.rollupObjectType), batchSize);
             }
         }
     }
