@@ -38,7 +38,7 @@
                     //need to reset fields to populate the selected objects -- refactor to see if necessary
                     //fields can be lazy loaded if user is creating a new rollup
                     //setup is first called here instead of in change mode to ensure active rollup information is returned from the server
-                    if (cmp.get("v.mode") != 'create') {
+                    if (cmp.get("v.mode") !== 'create') {
                         this.fieldSetup(cmp);
                     } else {
                         //set active default as true
@@ -51,12 +51,13 @@
                         if(summaryObject != undefined){
                             this.onChangeSummaryObject(cmp, summaryObject, label);
                         }
+                        this.hideAllFields(cmp);
                     }
 
                     //update filter group list to contain none as a first option
                     //note: unshift can't be used here due to an issue with bound values
                     var filterGroups = cmp.get("v.filterGroups");
-                    var tempList = [{"name": '', "label": cmp.get("v.labels.na")}];
+                    var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
                     tempList = tempList.concat(filterGroups);
                     cmp.set("v.filterGroups", tempList);
 
@@ -199,6 +200,7 @@
         this.resetFields(cmp, summaryObject, 'summary');
         cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName", null);
         cmp.set("v.activeRollup.Summary_Object__r.Label", label);
+        cmp.set("v.activeRollup.Description__c", null);
         cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", null);
         cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
         cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
@@ -224,7 +226,6 @@
     * @label: filter group label
     */
     onChangeFilterGroup: function (cmp, label) {
-        //todo: not working yet
         cmp.set("v.activeRollup.Filter_Group__r.MasterLabel", label);
     },
 
@@ -261,6 +262,8 @@
         } else {
             renderMap["timeBoundOperation"] = false;
             cmp.set(("v.activeRollup.Yearly_Operation_Type__c"), 'All_Time');
+            var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.yearlyOperations"));
+            cmp.set("v.selectedYearlyOperationLabel", timeBoundLabel);
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
         }
@@ -307,7 +310,7 @@
                 renderMap["operation"] = false;
                 renderMap["filterGroup"] = false;
                 cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", '');
-                this.onChangeFilterGroup(cmp, '');
+                this.onChangeFilterGroup(cmp, cmp.get("v.labels.na"));
                 cmp.set("v.renderMap", renderMap);
                 cmp.set("v.activeRollup.Operation__c", '');
                 this.onChangeOperation(cmp, '');
@@ -346,14 +349,21 @@
     * @label: summary field label
     */
     onChangeSummaryField: function (cmp, label) {
-        //sets default rollup type for list of 1, sets concatenated rollup name
-        var renderMap = cmp.get("v.renderMap");
-        renderMap["rollupType"] = true;
-        renderMap["description"] = true;
-        cmp.set("v.renderMap", renderMap);
+        //toggle rendering for create flow
+        if(cmp.get("v.mode") === 'create'){
+            var renderMap = cmp.get("v.renderMap");
+            if(label !== ''){
+                renderMap["rollupType"] = true;
+                renderMap["description"] = true;
+            } else{
+                renderMap["rollupType"] = false;
+                renderMap["description"] = false;
+            }
+            cmp.set("v.renderMap", renderMap);
+        }
 
-        var rollupTypes = cmp.get("v.rollupTypes");
         //sets rollup type automatically if there is only 1
+        var rollupTypes = cmp.get("v.rollupTypes");
         if (rollupTypes.length === 1 && label !== '') {
             cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", rollupTypes[0].name);
             cmp.set("v.selectedRollupType", {label: rollupTypes[0].label, name: rollupTypes[0].name});
