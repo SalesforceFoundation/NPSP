@@ -4632,7 +4632,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>stgCRLPHouseholdAccountError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgCRLPHouseholdAccountError</shortDescription>
         <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
     </labels>
@@ -4640,7 +4640,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>stgCRLPNonAdminError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgCRLPNonAdminError</shortDescription>
         <value>Only System Administrators can enable or disable Customizable Rollups.</value>
     </labels>
@@ -4919,7 +4919,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <fullName>stgHelpCustomizableRollupsEnable1</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
             Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 82 out-of-box NPSP rollups, into Customizable Rollups.
@@ -4929,7 +4929,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <fullName>stgHelpCustomizableRollupsEnable2</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
             &lt;br/&gt;&lt;br/&gt;Enabling Customizable Rollups makes some changes to your org that are important to review and understand before turning this feature on. Here are the high level changes.
@@ -4947,7 +4947,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <fullName>stgHelpCustomizableRollupsEnable3</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
             When active, enables Customizable Rollup Summaries.

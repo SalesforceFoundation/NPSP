@@ -86,7 +86,6 @@
         if(isCRLPEnabled === undefined) {
             isCRLPEnabled = document.querySelector('[id$="cbxCRLPE"]').checked;
         }
-        console.log('isCRLPEnabled: '+isCRLPEnabled);
         if(isCRLPEnabled === true) {
             node = document.getElementById('idPanelOppRollupNav');
             if (node != null) node.style.display =  'none';

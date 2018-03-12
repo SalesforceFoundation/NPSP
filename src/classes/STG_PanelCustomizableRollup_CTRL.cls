@@ -48,7 +48,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 return isPolling;
             }
         }
-        set;
+        private set;
     }
 
     /*******************************************************************************************************
@@ -70,7 +70,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description the jobId of the deployment
     */
-    public String jobId {public get; set;}
+    public String jobId { get; private set; }
 
     /*******************************************************************************************************
     * @description action method run on page load to check account model and admin status of running user
