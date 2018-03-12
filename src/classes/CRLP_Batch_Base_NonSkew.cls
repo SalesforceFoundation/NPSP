@@ -43,9 +43,25 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     // when an Opportunity was inserted/updated, but maybe that Opportunity was deleted or the reference changed.
     // There may be some custom rollups that use other fields that this wouldn't know about, or the user may have
     // modified the filters to somehow change those meaning. This is a good 99.9% check though.
-    protected List<String> fieldsToCheckForNonZero = new List<String>{
-            'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
-    };
+    protected List<String> fieldsToCheckForNonZero {
+        get {
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                return new List<String>{
+                        'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
+                };
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                return new List<String>{
+                        SObjectType.Contact.fields.Number_of_Soft_Credits__c.getName()
+                };
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                return new List<String>{
+                        SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName()
+                };
+            }
+            return new List<String >();
+        } private set;
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all records that meet the "Non Skew" criteria
@@ -108,7 +124,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             query += ' LIMIT 0';
         }
 
-        system.debug(query);
+        UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
         return Database.getQueryLocator(query);
     }
 
@@ -182,7 +198,19 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             for (Integer n=0, listSize=summaryRecords.size(); n<listSize; n++) {
                 if (parentIdHasDetailRecords.contains(summaryRecords[n].Id)) {
                     newSummaryRecords.add(summaryRecords[n]);
+                } else if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
+                    // If the Account and Contact is the Summary record, and there are no detail records, but the object
+                    // has a value in any of these key rollup fields, then we need to include it so the values can be
+                    // updated (reset) as necessary
+                    for (String f : fieldsToCheckForNonZero) {
+                        Object val = summaryRecords[n].get(f);
+                        if (val != null && val != 0) {
+                            newSummaryRecords.add(summaryRecords[n]);
+                            break;
+                        }
+                    }
                 }
+
             }
             summaryRecords = newSummaryRecords;
             UTIL_Debug.debug(LoggingLevel.WARN, '>> summaryRecords Size =' + summaryRecords.size());

@@ -125,11 +125,10 @@ public abstract class CRLP_Batch_Base {
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
-//            options.parentKeyField = 'Contact';
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') + '.AccountId';
-//            options.parentKeyField = 'Contact.AccountId';
+            options.preventDupeOppsInRollup = true;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();

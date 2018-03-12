@@ -71,7 +71,6 @@ public class CRLP_Operation_SVC {
         Date dateValue;
         DateTime dateTimeValue;
         Decimal amountValue = null;
-        String resultFieldText;
 
         // Get the Date value from the appropriate object. There should always be a date!
         // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).

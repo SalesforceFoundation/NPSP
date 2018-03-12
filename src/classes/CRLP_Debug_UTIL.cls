@@ -18,7 +18,7 @@ public class CRLP_Debug_UTIL {
 
     public static void setCurrentRollupState(String state) {
         if (isEnabled) {
-            UTIL_Debug.debug('===== setCurrentRollupState(' + state + ')');
+            UTIL_Debug.debugWithInfo('===== setCurrentRollupState(' + state + ')\n');
             currentRollupState.add(state);
         }
     }
@@ -62,10 +62,6 @@ public class CRLP_Debug_UTIL {
                 '\n* timeBoundOperation=' + r.timeBoundOperation +
                 '\n* theCount=' + r.theCount +
                 '\n* theSum=' + r.theSum +
-                '\n* minvalue=' + r.minValue +
-                '\n* maxValue=' + r.maxValue +
-                '\n* minDate=' + r.minDate +
-                '\n* maxDate=' + r.maxDate +
                 '\n* minDateTime=' + r.minDateTime +
                 '\n* maxDateTime=' + r.maxDateTime +
                 '\n* minByYear=' + JSON.serialize(r.minByYear) +

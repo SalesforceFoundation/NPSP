@@ -67,14 +67,23 @@ public class CRLP_RollupBatch_SVC {
         // If the Summary Object is the Account, then filter on Accounts that have at least a single
         // Opportunity attached. This is helpful to reduce the overall query size.
         // To handle a scenario where an attached Oppportunity was deleted, but the record not recalculated
-        // also include any records where the TotalGifts or TotalMemberships fields are not zero
+        // also include any records where the TotalGifts or TotalMemberships fields are not zero.
+        // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
         if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             queryFilter = '(npo02__NumberOfClosedOpps__c' + operator + maxRelatedOppsForNonLDVMode + ' OR ' +
-                    'npo02__NumberOfMembershipOpps__c' + operator + maxRelatedOppsForNonLDVMode + ')';
+                    'npo02__NumberOfMembershipOpps__c' + operator + maxRelatedOppsForNonLDVMode;
+            if (operator.contains('<')) {
+                queryFilter += ' OR npo02__NumberOfClosedOpps__c = null OR npo02__NumberOfMembershipOpps__c = null';
+            }
+            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            queryFilter = UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c') + ' ' + operator + maxRelatedOppsForNonLDVMode;
+            queryFilter = '(' + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c') + ' ' + operator + maxRelatedOppsForNonLDVMode;
+            if (operator.contains('<')) {
+                queryFilter += ' OR Number_of_Soft_Credits__c = null';
+            }
+            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             // TODO -- How to get Accounts that require using this method for Soft Credits??

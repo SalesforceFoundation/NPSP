@@ -261,10 +261,10 @@ private class CRLP_RollupAccount_TEST {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         } else if (tt == TestType.testSkewBatch) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, null, null);
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{acctId}, null);
         } else if (tt == TestType.TestQueueuable) {
-            System.enqueueJob(new CRLP_RollupQueueable((new List<Id>{acctId})));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{acctId}));
         }
         Test.stopTest();
 

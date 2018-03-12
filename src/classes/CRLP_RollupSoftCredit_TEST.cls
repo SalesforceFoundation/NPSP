@@ -261,10 +261,12 @@ private class CRLP_RollupSoftCredit_TEST {
         system.assertEquals((cnt * 3)+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 301 OCR records on closed won opps');
 
+        List<Id> contactIds = new List<Id>{ c.Id, c2.Id, c3.Id, c4.Id };
+
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
         if (tt == TestType.testSkewBatchContact) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{ c.Id, c2.Id, c3.Id, c4.Id }, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, contactIds, null);
         } else if (tt == TestType.TestBatchContact) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
@@ -275,31 +277,33 @@ private class CRLP_RollupSoftCredit_TEST {
         Test.stopTest();
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
-        Id c2Id = c2.Id;
-        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
-        c2 = database.query(conQuery);
+        if (tt != TestType.TestBatchAccount) {
+            Id c2Id = c2.Id;
+            String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+            c2 = database.query(conQuery);
 
-        // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
-        System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
-        System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
-        System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
-        System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
-        System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
+            // Basic rollup asserts using existing NPSP rollup fields.
+            System.assertEquals(totalDonations, c2.npo02__Soft_Credit_Total__c);
+            System.assertEquals(cnt, c2.Number_of_Soft_Credits__c);
+            System.assertEquals(firstCloseDate, c2.First_Soft_Credit_Date__c);
+            System.assertEquals(largestGiftDate, c2.Largest_Soft_Credit_Date__c);
+            System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
+            System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
 
-        // Query the Primary Contact (should have NO Soft Credit)
-        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-        c = database.query(conQuery);
-        System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
-                'The Total Soft Credits for this contact should be null or zero');
+            // Query the Primary Contact (should have NO Soft Credit)
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+            c = database.query(conQuery);
+            System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
+                    'The Total Soft Credits for this contact should be null or zero');
 
-        // Query the Contact listed as the primary on an organizational opportunity. This contact
-        // has only this one soft credit attributed to them.
-        Id c4Id = c4.Id;
-        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
-        c = database.query(conQuery);
-        System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
-        System.assertEquals(1, c.Number_of_Soft_Credits__c);
+            // Query the Contact listed as the primary on an organizational opportunity. This contact
+            // has only this one soft credit attributed to them.
+            Id c4Id = c4.Id;
+            conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
+            c = database.query(conQuery);
+            System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
+            System.assertEquals(1, c.Number_of_Soft_Credits__c);
+        }
 
         // Basic rollup asserts using existing NPSP rollup fields.
         if (tt == TestType.TestBatchAccount) {
