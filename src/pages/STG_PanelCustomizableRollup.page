@@ -14,10 +14,12 @@
             </div>
             <c:UTIL_PageMessages allowClose="false" id="messages"/>
 
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small">
-                    <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
-                </p>
+            <div class="slds-card {!IF(isPolling,'','slds-hide')}">
+                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                    <p class="slds-text-body--small slds-m-top--x-small">
+                        <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
+                    </p>
+                </div>
             </div>
 
             <apex:actionPoller action="{!checkDeploymentStatus}"
