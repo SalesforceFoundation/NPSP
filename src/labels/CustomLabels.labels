@@ -2042,6 +2042,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Only one object lookup can be populated per Engagement Plan.</value>
     </labels>
     <labels>
+        <fullName>exceptionDeletePermission</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>exceptionDeletePermission</shortDescription>
+        <value>You do not have permissions to delete {0}.</value>
+    </labels>
+    <labels>
         <fullName>exceptionRequiredField</fullName>
         <categories>Error</categories>
         <language>en_US</language>
