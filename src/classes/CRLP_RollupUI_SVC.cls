@@ -399,6 +399,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
+                'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
+                'rdLabel' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
                 'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -418,6 +421,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 'view' => Label.stgLabelView,
                 'yearlyOperationType' => Schema.Rollup__mdt.Yearly_Operation_Type__c.getDescribe().getLabel()
             };
+
+        for (Integer i = 2; i < 21; i++) {
+            String key = 'picklistLabelYearsAgo' + i;
+            String value = String.format(Label.stgLabelYearPicklistYearsAgo, new List<String>{String.valueOf(i)});
+            labels.put(key, value);
+        }
 
         return labels;
     }

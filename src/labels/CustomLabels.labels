@@ -6469,6 +6469,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>View</value>
     </labels>
     <labels>
+        <fullName>stgLabelYearPicklistLastYear</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label for previous year</shortDescription>
+        <value>Last Year</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelYearPicklistThisYear</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label for current year</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelYearPicklistYearsAgo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Label for dynamic number of years ago</shortDescription>
+        <value>{0} Years Ago</value>
+    </labels>
+    <labels>
         <fullName>stgLinkDelete</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

@@ -112,7 +112,7 @@
     fieldSetup: function(cmp){
         this.resetAllFields(cmp);
         this.onChangeYearlyOperationsOptions(cmp, false);
-        this.onChangeInteger(cmp);
+        this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
         this.updateAllowedOperations(cmp);
         this.onChangeOperation(cmp, cmp.get("v.activeRollup.Operation__c"));
         this.resetRollupTypes(cmp);
@@ -190,7 +190,7 @@
         cmp.set("v.renderMap", renderMap);
     },
 
-    /* @description: resets the detail object, all picklist fields, and rollup types when summary object is changed
+    /* @description: resets the detail object, description, all picklist fields, and rollup types when summary object is changed
     * @summaryObject: summaryObject API name
     * @label: summaryObject API label
     */
@@ -229,17 +229,19 @@
         cmp.set("v.activeRollup.Filter_Group__r.MasterLabel", label);
     },
 
-    /* @description: stores the selected years back integer value to be used when the page is in view mode
-    * @label: integer label
+    /* @description: stores the selected years back integer value for years to be used when the page is in view mode
+    * @value: integer value
     */
-    onChangeInteger: function (cmp, label) {
-        console.log("in change integer function");
-        var selectedInteger = cmp.get("v.activeRollup.Integer__c");
-        var integerList = cmp.get("v.integerList");
-        if(label === undefined){
-            label = this.retrieveFieldLabel(selectedInteger, integerList);
+    onChangeInteger: function (cmp, value) {
+        var renderMap = cmp.get("v.renderMap");
+        if(renderMap["integerYears"]){
+            var integerList = cmp.get("v.integerList");
+            //need to convert value to an integer due to strict comparison in retrieveFieldLabel
+            var label = this.retrieveFieldLabel(parseInt(value), integerList);
+            cmp.set("v.selectedIntegerLabel", label);
+        } else {
+            cmp.set("v.selectedIntegerLabel", "");
         }
-        cmp.set("v.selectedIntegerLabel", label);
     },
 
     /* @description: conditionally renders the yearly operation, use fiscal year, amount, date and detail fields
@@ -293,32 +295,33 @@
 
     },
 
-    /* @description: renders filter group and operation
+    /* @description: renders filter group and operation, resets fields for the amount, detail and date fields based on the detail object
     * @detailObject: detail object API name stored as the name on the rollupType attribute
     * @rollupLabel: rollup type label
     */
     onChangeRollupType: function (cmp, detailObject, rollupLabel) {
         var renderMap = cmp.get("v.renderMap");
-        if (rollupLabel !== '') {
-            //resets fields for the amount, detail and date fields based on the detail object
-            renderMap["filterGroup"] = true;
-            renderMap["operation"] = true;
-            cmp.set("v.renderMap", renderMap);
-            this.filterDetailFieldsBySummaryField(cmp, detailObject);
-        } else {
-            if(cmp.get("v.mode") === "create"){
+        //during create, visibility of operation and filter group are toggled
+        if(cmp.get("v.mode") === "create"){
+            if (rollupLabel !== '') {
+                renderMap["filterGroup"] = true;
+                renderMap["operation"] = true;
+                cmp.set("v.renderMap", renderMap);
+                this.filterDetailFieldsBySummaryField(cmp, detailObject);
+            } else {
                 renderMap["operation"] = false;
                 renderMap["filterGroup"] = false;
-                cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", '');
-                this.onChangeFilterGroup(cmp, cmp.get("v.labels.na"));
-                cmp.set("v.renderMap", renderMap);
-                cmp.set("v.activeRollup.Operation__c", '');
-                this.onChangeOperation(cmp, '');
             }
+            //always reset operation and filter group when rollup is changed during create
+            cmp.set("v.renderMap", renderMap);
+            cmp.set("v.activeRollup.Operation__c", '');
+            this.onChangeOperation(cmp, '');
+            var na = cmp.get("v.labels.na");
+            cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", na);
+            this.onChangeFilterGroup(cmp, na);
         }
 
         //set detail object label explicitly since detail obj name is bound to rollup type field, but the label is not
-        //var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
         var detailObjects = cmp.get("v.detailObjects");
         var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
         cmp.set("v.activeRollup.Detail_Object__r.Label", detailLabel);
@@ -402,6 +405,7 @@
             if (isOnChange) {
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
                 cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+                this.onChangeInteger(cmp, 0);
             }
         } else if (operation === 'Years_Ago') {
             //enable fiscal year and integerYears
@@ -411,6 +415,7 @@
             //set a default integer of 0
             if (isOnChange) {
                 cmp.set("v.activeRollup.Integer__c", 0);
+                this.onChangeInteger(cmp, 0);
             }
         } else if (operation === 'Days_Back') {
             //disable fiscal year and enable integerDays
@@ -421,6 +426,7 @@
             if (isOnChange) {
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
                 cmp.set("v.activeRollup.Integer__c", 0);
+                this.onChangeInteger(cmp, 0);
             }
         } else {
             //default to not showing these fields and reset values
@@ -431,6 +437,7 @@
             if (isOnChange) {
                 cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
                 cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+                this.onChangeInteger(cmp, 0);
             }
         }
         //check to display or clear the dateField for Years_Ago or Days_Back
@@ -637,6 +644,11 @@
                 label: labels.allocationLabel + ' -> ' + labels.gauLabel
                 , summaryObject: 'General_Accounting_Unit__c', name: 'Allocation__c'
             });
+        } else if (summaryObject === 'npe03__Recurring_Donation__c') {
+            templateList.push({
+                label: labels.opportunityLabel + ' -> ' + labels.rdLabel
+                , summaryObject: 'npe03__Recurring_Donation__c', name: 'Opportunity'
+            });
         }
 
         cmp.set("v.rollupTypes", templateList);
@@ -723,6 +735,10 @@
             rollupType.name = 'Opportunity';
             rollupType.summaryObject = 'General_Accounting_Unit__c';
             rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
+        } else if (detailObject === 'Opportunity' && summaryObject === 'npe03__Recurring_Donation__c'){
+            rollupType.name = 'Opportunity';
+            rollupType.summaryObject = 'npe03__Recurring_Donation__c';
+            rollupType.label = labels.opportunityLabel + ' -> ' + labels.rdLabel;
         }
 
         cmp.set("v.selectedRollupType", rollupType);
@@ -731,13 +747,14 @@
     /* @description: creates the integer picklist for years, and is only called during setup
     */
     setIntegerYearList: function (cmp) {
-        //todo: add custom labels for years
         var integerList = [];
+        var labels = cmp.get("v.labels");
 
-        integerList.push({name: 0, label: 'This Year'});
-        integerList.push({name: 1, label: 'Last Year'});
+        integerList.push({name: 0, label: labels.picklistLabelThisYear});
+        integerList.push({name: 1, label: labels.picklistLabelLastYear});
         for (var i = 2; i < 21; i++) {
-            integerList.push({name: i, label: i + ' Years Ago'});
+            var yearsAgoKey = labels['picklistLabelYearsAgo' + i];
+            integerList.push({name: i, label: yearsAgoKey});
         }
 
         cmp.set("v.integerList", integerList);

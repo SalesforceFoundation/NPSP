@@ -35,7 +35,8 @@
                 //TODO: update here RD
                 var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
                     , {label: labels.contactLabel, name: 'Contact'}
-                    , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}];
+                    , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}
+                    , {label: labels.rdLabel, name: 'npe03__Recurring_Donation__c'}];
                 cmp.set("v.summaryObjects", summaryObjects);
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting

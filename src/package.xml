@@ -1793,6 +1793,9 @@
         <members>stgLabelUDRTargetFieldHelp</members>
         <members>stgLabelUDRTargetObject</members>
         <members>stgLabelView</members>
+        <members>stgLabelYearPicklistLastYear</members>
+        <members>stgLabelYearPicklistThisYear</members>
+        <members>stgLabelYearPicklistYearsAgo</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
