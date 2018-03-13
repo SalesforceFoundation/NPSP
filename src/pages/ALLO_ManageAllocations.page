@@ -163,7 +163,7 @@
                         <tr class="slds-text-heading_label">
                             <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                             <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
-                            <th scope="col" width="130px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                            <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
                             <th scope="col" width="200px"></th>
                         </tr>
                     </thead>
