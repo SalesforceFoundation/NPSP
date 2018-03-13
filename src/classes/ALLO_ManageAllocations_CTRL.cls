@@ -57,7 +57,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     private sObjectType sObjType;
     /** @description List of allocations to delete when the user clicks Save.*/
     public list<Allocation__c> listAlloForDelete = new list<Allocation__c>();
-
+    /** @description after successful save set to true to redirect page */
+    public Boolean redirect {get; set;}
     /** @description The id of the parent object; Opportunity, Campaign, or Recurring Donation.*/
     public id parentId {get;set;}
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
@@ -256,9 +257,16 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Removes a row from the page, and adds to the list for deletion once the user saves.*/
     public pageReference delRow() {
+        Boolean hasId = listAllo[rowNumber].id != null;
+
         //add to deletion list if the allocation has an id
-        if (listAllo[rowNumber].id!=null)
+        if (hasId) {
+            if (!isDeletable()) {
+                addDelExceptionMessage();
+                return null;
+            }
             listAlloForDelete.add(listAllo[rowNumber]);
+        }
         listAllo.remove(rowNumber);
 
         return null;
@@ -266,10 +274,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
     /** @description Saves changes and returns user to parent object detail page.*/
     public pageReference saveClose() {
-        pageReference source = new pageReference('/'+parentId);
-        source.setRedirect(true);
-        source.getParameters().put('t',''+(System.currentTimeMillis()));
-        
         list<Allocation__c> listAlloForInsert = new list<Allocation__c>();
         list<Allocation__c> listAlloForUpdate = new list<Allocation__c>();
 
@@ -287,7 +291,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
                 //allow user to delete all GAUs and save with one empty GAU
                 if (listAllo.size()==1 && listAllo[0].General_Accounting_Unit__c==null && listAllo[0].Amount__c==null && listAllo[0].Percent__c==null)
-                    return source;
+                    redirect = true;
             }
             if (!listAlloForUpdate.isEmpty()) {
                 TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.ALLOC, false);
@@ -298,13 +302,13 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 insert listAlloForInsert;
             }
             
-            return source;
+            redirect = true;
         } catch (Exception e) {
             Database.rollback(sp);
 
             ApexPages.addMessages(e);
-            return null;
         }
+        return null;
     }
 
     /** @description Discards all changes and returns user to parent object detail page.*/
@@ -321,6 +325,19 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     /** @description Returns the thousands separator character in use for the Users current Locale setting */
     public String getThousandsSeparator() {
         return (1000).format().subString(1,2);
+    }
+
+    private Boolean isDeletable() {
+        return UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Allocation__c')).isDeletable();
+    }
+
+    private void addDelExceptionMessage() {
+        ApexPages.addMessage(
+            new ApexPages.Message(
+                    ApexPages.Severity.WARNING,
+                    String.format(
+                        System.Label.exceptionDeletePermission,
+                        new String[]{UTIL_Describe.getObjectLabel(UTIL_Namespace.StrTokenNSPrefix('Allocation__c'))})));
     }
 
 }
