@@ -39,8 +39,8 @@
 * name updating.
 */
 public class ACCT_Accounts_TDTM extends TDTM_Runnable {
-        
-    
+
+
     /*******************************************************************************************************
     * @description Trigger Handler on Accounts that handles ensuring the correct system flags are set on
     * our special accounts (Household, One-to-One), and also detects changes on Household Account that requires
@@ -51,33 +51,56 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
     * @param objResult the describe for Accounts 
     * @return dmlWrapper.  always null.
     ********************************************************************************************************/
-    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
-        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-        
+    public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld,
+            TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        list<Account> listHHNew = new list<Account>();
+        list<Account> listHHOld = new list<Account>();
+
+        //set system Account fields
+        configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
+
+        // deal with any name changes for Household Accounts
+        if (listHHNew.size() > 0)
+            HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
+
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description The helper method for Trigger Handler. Set all the system Account fields
+    * @param listNew the list of Accounts from trigger new.
+    * @param listOld the list of Accounts from trigger old.
+    * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
+    * @param listHHNew the list
+    * @param listHHOld
+    * @return null
+    ********************************************************************************************************/
+    public void configAccountForContact(List<SObject> listNew, List<SObject> listOld,
+            TDTM_Runnable.Action triggerAction, list<Account> listHHNew, list<Account> listHHOld) {
+
         ID rtIdAccountHH;
         ID rtIdAccountOne2One;
-        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {        
+        if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
             rtIdAccountOne2One = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(false);
         }
-        list<Account> listHHNew = new list<Account>();
-        list<Account> listHHOld = new list<Account>();
-        
+
         integer i = 0;
         for (SObject so : listNew) {
             Account acc = (Account)so;
-            
+
             if (triggerAction == TDTM_Runnable.Action.BeforeInsert || triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
                 if (acc.RecordTypeId == rtIdAccountHH && acc.RecordTypeId != null) {
-                   if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
+                    if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
                         acc.npe01__SYSTEM_AccountType__c = CAO_Constants.HH_ACCOUNT_TYPE;
                         acc.Type = CAO_Constants.HH_TYPE;
-                        acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+                        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
                     }
                 } else if (acc.RecordTypeId == rtIdAccountOne2One && acc.RecordTypeId != null) {
-                   if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
+                    if (acc.npe01__SYSTEM_AccountType__c == null || acc.npe01__SYSTEMISINDIVIDUAL__c != true) {
                         acc.npe01__SYSTEM_AccountType__c = CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
-                        acc.npe01__SYSTEMISINDIVIDUAL__c = true; 
+                        acc.npe01__SYSTEMISINDIVIDUAL__c = true;
                     }
                 } else if (!(CAO_Constants.isBucketModel() && acc.Name == CAO_Constants.BUCKET_ACCOUNT_NAME)) {
                     if (triggerAction == TDTM_Runnable.Action.BeforeUpdate && acc.RecordTypeId != listOld[i].get('RecordTypeId')) {
@@ -86,20 +109,14 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
                     }
                 }
             }
-            
-            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
-               if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
-                   listHHNew.add(acc);
-                   listHHOld.add((Account)listOld[i]);
-               }
-            }
-        i++;
-        }
-        
-        // deal with any name changes for Household Accounts
-        if (listHHNew.size() > 0)
-            HH_HouseholdNaming.handleHHNameUpdates(listHHNew, listHHOld, triggerAction, objResult);
 
-        return null;
+            if (triggerAction == TDTM_Runnable.Action.BeforeUpdate || triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                if (acc.npe01__SYSTEM_AccountType__c == CAO_Constants.HH_ACCOUNT_TYPE) {
+                    listHHNew.add(acc);
+                    listHHOld.add((Account)listOld[i]);
+                }
+            }
+            i++;
+        }
     }
 }

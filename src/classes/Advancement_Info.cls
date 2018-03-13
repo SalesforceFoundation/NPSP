@@ -43,16 +43,21 @@ public with sharing class Advancement_Info {
     private static void setup() {
         //Check if Advancement is installed and enabled.
         try {
-            List<SObject> advSettings = Database.query('select Use_Advancement__c, API_NPSP_Class__c from Advancement_Setting__mdt');
-            useAdv = (Boolean)advSettings[0].get('Use_Advancement__c');
-            String apiNPSPClass = (String)advSettings[0].get('API_NPSP_Class__c');
+            //This function checks if the current user is licensed to Advancement
+            //If the Advancement is not installed, then it will throw TypeException: Package corresponding to namespace prefix not found
+            Boolean isUserLicensed = UserInfo.isCurrentUserLicensed('adv1');
+            if(isUserLicensed) {
+                List<SObject> advSettings = Database.query('select adv1__Use_Advancement__c, adv1__API_NPSP_Class__c from adv1__Advancement_Setting__mdt');
+                useAdv = (Boolean)advSettings[0].get('adv1__Use_Advancement__c');
+                String apiNPSPClass = (String)advSettings[0].get('adv1__API_NPSP_Class__c');
 
-            if(String.isNotBlank(apiNPSPClass)) {
-                Type classType = Type.forName(apiNPSPClass);
-                if (classType != null) {
-                    Object classInstance = classType.newInstance();
-                    if (classInstance instanceof Advancement_Adapter) {
-                        apiNPSP = (Advancement_Adapter) classInstance;
+                if(String.isNotBlank(apiNPSPClass)) {
+                    Type classType = Type.forName(apiNPSPClass);
+                    if (classType != null) {
+                        Object classInstance = classType.newInstance();
+                        if (classInstance instanceof Advancement_Adapter) {
+                            apiNPSP = (Advancement_Adapter) classInstance;
+                        }
                     }
                 }
             }
