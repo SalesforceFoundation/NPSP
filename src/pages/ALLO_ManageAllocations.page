@@ -149,11 +149,12 @@
     </script>
     <apex:form id="theForm">
         <div class="slds-scope">
+            <c:UTIL_NavigateBack recordId="{!parentId}" redirect="{!redirect}"/>
             <!-- PAGE HEADER -->
             <c:UTIL_PageHeader showBreadcrumb="true" parentEntityLabel="{!objectLabelPlural}"
-                parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}"
-                parentRecordAction="/{!parentId}" header="{!pageTitle}" icon="custom_120" iconCategory="standard"
-                cancelAction="{!cancel}" saveAction="{!saveClose}" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
+                parentAction="javascript:window.urlHome();" parentRecordName="{!objectName}" parentRecordAction="/{!parentId}"
+                header="{!pageTitle}" icon="custom_120" iconCategory="standard" cancelAction="{!cancel}"
+                saveAction="{!saveClose}" saveReRender="theForm" saveDisabled="{!OR(NOT(isSupportedObject),(opp!=null&&parentAmount==0))}"/>
             <c:UTIL_PageMessages />
             <div>
                 <apex:outputPanel id="theTable">
@@ -162,7 +163,7 @@
                         <tr class="slds-text-heading_label">
                             <th scope="col"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.General_Accounting_Unit__c.Label}</span></th>
                             <th scope="col" width="250px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Amount__c.Label}</span></th>
-                            <th scope="col" width="130px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
+                            <th scope="col" width="150px"><span class="slds-truncate">{!$ObjectType.Allocation__c.Fields.Percent__c.Label}</span></th>
                             <th scope="col" width="200px"></th>
                         </tr>
                     </thead>
@@ -197,7 +198,7 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theTable" immediate="true">
+                                    <apex:commandButton styleClass="slds-button slds-button_destructive" value="{!$Label.alloDeleteRow}" id="delRowBTN" title="{!$Label.alloDeleteRow}" action="{!delRow}" reRender="theForm" immediate="true">
                                         <span class="slds-form-element__label slds-assistive-text">Delete Row {!cnt}</span>
                                         <apex:param name="rowForDel" value="{!cnt}" assignTo="{!rowNumber}"/>
                                     </apex:commandButton>
