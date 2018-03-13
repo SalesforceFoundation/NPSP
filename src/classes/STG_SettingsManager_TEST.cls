@@ -161,6 +161,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertNotEquals(null, svc.stgRel);
         system.assertNotEquals(null, svc.stgAffl);
         system.assertNotEquals(null, svc.stgBDE);
+        system.assertNotEquals(null, svc.stgCRLP);
         system.assertNotEquals(null, svc.mapRDCustomField);
         system.assertNotEquals(null, svc.listRDCustomInstallment);
         system.assertNotEquals(null, svc.listRDCustomFieldMapping);
@@ -908,7 +909,46 @@ public with sharing class STG_SettingsManager_TEST {
         );        
         insert badobject;
     }
-    
+
+    /*********************************************************************************************************
+    * @description Tests the Customizable Rollups CRLP panel
+    * @return void
+    */
+    public static testMethod void testPanelCRLP() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelCRLP') return;
+
+        STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
+        System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
+        System.assertEquals(true, panel.isAdmin);
+        System.assertEquals(false, panel.isPolling);
+        System.assertEquals(false, ApexPages.hasMessages());
+        System.assert(panel.isHHAccount);
+        System.assert(panel.isAdmin);
+        panel.checkPermissions();
+        System.assertEquals(false, ApexPages.hasMessages());
+        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
+        panel.saveSettings();
+        System.assertEquals(true, panel.isPolling, 'Polling should be active.');
+        System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be enabled in STG_Panel.');
+        //fake the success result.
+        UTIL_CustomSettingsFacade.customizableRollupSettings.CMT_API_Status__c = '123 Succeeded';
+        PageReference deploymentPR = panel.checkDeploymentStatus();
+        System.assertEquals(null, deploymentPR, 'Returned PageReference should be null');
+        //fake the fail result.
+        UTIL_CustomSettingsFacade.customizableRollupSettings.CMT_API_Status__c = '123 Failed';
+        //set enabled=true to test the failure setting it false.
+        UTIL_CustomSettingsFacade.customizableRollupSettings.Customizable_Rollups_Enabled__c = true;
+        deploymentPR = panel.checkDeploymentStatus();
+        System.assertEquals(false, UTIL_CustomSettingsFacade.getcustomizableRollupSettings().Customizable_Rollups_Enabled__c, 'CRLPs should be disabled.');
+        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = false;
+        panel.saveSettings();
+        System.assertEquals(false, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be disabled in STG_Panel.');
+        PageReference navPR = panel.navigate();
+        System.debug(navPR);
+        System.assertNotEquals(null, navPR, 'Returned PageReference should not be null');
+
+    }
+
     /*********************************************************************************************************
     * @description Tests the Schedule panel
     * @return void

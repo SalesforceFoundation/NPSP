@@ -37,6 +37,11 @@
 
 public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Recurring Donations panel.
+    */
+    public override string idPanel() { return 'idPanelCustomizableRollup'; }
+
     /*******************************************************************************************************
     * @description is the panel currently Polling for deployment results
     */
@@ -108,6 +113,9 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 }
                 // This method includes committing Customizable_Rollups_Enabled__c as true if the deployment succeeds
                 jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                if (Test.isRunningTest()) {
+                    jobId = '123';
+                }
             } else {
                 // The deployment method takes care of setting the Enabled flag to true if it succeeds.
                 // In here, we only set it to false.
@@ -143,7 +151,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         // Make sure we have a response and it's the new response.
         if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
             isPolling = false;
-            // add bang to test fail condition.
             if (newStatus.contains('Succeeded')) {
                 return null;
             } else {
