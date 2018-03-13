@@ -1019,6 +1019,10 @@ public class RD_RecurringDonations {
                     r.addError(Label.RD_ErrorMoreClosedWonOpportunitiesThanInstallments);
                 }
 
+                if (numInstallments == closedOpptyCounter && paidAmount != r.npe03__Amount__c) {
+                    r.addError(Label.RD_ErrorNotEnoughClosedValueForFixedLength);
+                }
+
                 if (opptyCounter<=numInstallments) {
                     if (o.isWon != true) {
 

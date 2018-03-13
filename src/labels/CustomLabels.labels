@@ -777,9 +777,18 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <fullName>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</fullName>
         <categories>Recurring-Donations, Error</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>More ClosedWon donations than Installments</shortDescription>
         <value>There are more Closed Won Opportunities than the number of Installments defined.</value>
+    </labels>
+    RD_ErrorNotEnoughClosedValueForFixedLength
+    <labels>
+        <fullName>RD_ErrorNotEnoughClosedValueForFixedLength</fullName>
+        <categories>Recurring-Donations, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>The total Amount of all Closed Won Opps is not equal to the RD Amount.</shortDescription>
+        <value>The total Amount of all Closed Won Opportunities is not equal to the Recurring Donation Amount.</value>
     </labels>
     <labels>
         <fullName>REL_Create_New_Relationship</fullName>

@@ -860,6 +860,80 @@ public class RD_RecurringDonations_TEST {
         System.assert(ex.getMessage().contains(Label.RD_ErrorMoreClosedWonOpportunitiesThanInstallments),'Exception should be thrown.');
     }
 
+    /*********************************************************************************************************
+    @description
+        Test updating a Fixed-Length Recurring Donation with a number of installments equal to
+        its number of already-Closed Won Opportunities, but the Closed Won Opportunities' Amounts
+        don't add up to the Amount of the Fixed-Length RD.
+    verify:
+        - Recurring Donation update disallowed; error thrown to user.
+    **********************************************************************************************************/
+    static testMethod void updateFixedLengthRecurringDonationDecreaseWithMismatchedAmount() {
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+                new npe03__Recurring_Donations_Settings__c(
+                        // npe03__Opportunity_Forecast_Months__c = 12,
+                        npe03__Maximum_Donations__c = 50,
+                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                ));
+
+        String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        Account a = new Account();
+        a.Name = 'updateFixedLengthRecurringDonationDecreaseWithTooManyClosedOpps';
+        insert a;
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.AccountId = a.Id;
+        insert c;
+
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'updateFixedLengthRecurringDonationDecreaseWithTooManyClosedOpps';
+        r1.npe03__Installments__c = 4;
+        r1.npe03__Contact__c = c.Id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
+        r1.npe03__Date_Established__c = system.today().toStartOfMonth();
+        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationDivideValue;
+        r1.npe03__Open_Ended_Status__c = null;
+        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
+        insert r1;
+
+        List<Opportunity> originalOpps = [SELECT Id
+                , Name
+                , Amount
+                , AccountId
+                , CloseDate
+                , StageName
+        FROM Opportunity
+        WHERE npe03__Recurring_Donation__c = :r1.id];
+
+        assertNoErrors();
+
+        System.assertEquals(4, originalOpps.size(), 'Four opportunities should be created initially.');
+        for (Opportunity o : originalOpps) {
+            System.assertEquals(25, originalOpps[0].Amount, 'All originalOpps should be $25.');
+            System.assertEquals(system.label.npe03.RecurringDonationStageName, originalOpps[0].StageName, 'All originalOpps should be Open.');
+        }
+
+        Test.startTest();
+        //close the first 3 opportunities
+        originalOpps[0].StageName = closedStage;
+        originalOpps[1].StageName = closedStage;
+        originalOpps[2].StageName = closedStage;
+        update originalOpps;
+        //update the RD to be only 3 installments
+        Exception ex;
+        try {
+            r1.npe03__Installments__c = 3;
+            update r1;
+        } catch (Exception e) {
+            ex = e;
+        }
+        Test.stopTest();
+        System.assert(ex.getMessage().contains(Label.RD_ErrorNotEnoughClosedValueForFixedLength),'Exception should be thrown.');
+    }
+
     static testMethod void updateOpenEndedRecurringDonationMonthly(){
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
