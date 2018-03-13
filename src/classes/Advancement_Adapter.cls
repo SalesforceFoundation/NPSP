@@ -101,14 +101,14 @@ global virtual with sharing class Advancement_Adapter {
      *
      * @return null
      */
-    global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld,
-            TDTM_Runnable.Action triggerAction, List<Account> listHHNew, List<Account> listHHOld) {
+    global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld, String action) {
         if(!Advancement_Info.useAdv()) {
             throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
         }
 
-        ACCT_Accounts_TDTM accounsTDTM = new ACCT_Accounts_TDTM();
-        accounsTDTM.configAccountForContact(listNew, listOld, triggerAction, listHHNew, listHHOld);
+        TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
+        ACCT_Accounts_TDTM accountsTDTM = new ACCT_Accounts_TDTM();
+        accountsTDTM.configAccountForContact(listNew, listOld, triggerAction, new List<Account>(), new List<Account>());
     }
 
     /**
