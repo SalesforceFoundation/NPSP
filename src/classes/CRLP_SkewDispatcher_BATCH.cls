@@ -50,16 +50,25 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
 
     /**
      * @description Constructor
-     * @param objType Summary Object Type to run the rollups on
+     * @param jobType Enum for the type of job to execute.
      */
-    public CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+    public CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType jobType) {
         this.jobType = jobType;
-        this.jobFilter = jobFilter;
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(jobType);
     }
 
     /**
      * @description Constructor
+     * @param jobType Enum for the type of job to execute.
+     */
+    public CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        this(jobType);
+        this.jobFilter = jobFilter;
+    }
+
+    /**
+     * @description Constructor
+     * @param jobType Enum for the type of job to execute.
      * @param lastIdProcessed The last Id processed by the calling batch job. This job will query for Id > lastIdProcessed
      */
     public CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter, Id lastIdProcessed) {
@@ -124,17 +133,6 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
             Map<Id, SObject> summaryMap = new Map<Id, SObject>(summaryRecords);
             this.recordIds = new List<Id>(summaryMap.keySet());
             this.lastIdProcessed = this.recordIds[summaryRecords.size() - 1];
-
-            Error__c err = new Error__c(
-                    Context_Type__c = 'CRLP',
-                    Object_Type__c = bc.getJobId(),
-                    Full_Message__c =
-                            ' Last Id Processed:' + this.lastIdProcessed + '\n' +
-                                    ' Number of Ids:' + this.recordIds.size() + '\n' +
-                                    ' Record Id\'s List: ' + JSON.serializePretty(recordIds),
-                    Error_Type__c = 'CRLP_SkewDispatcher_BATCH'
-            );
-            insert err;
         }
 
     }

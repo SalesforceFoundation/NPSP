@@ -67,29 +67,34 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
         } else {
-            Integer batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-            Integer batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
 
-//            Database.executeBatch(new CRLP_Rollup_BATCH(Account.SObjectType), batchSizeAcct);
-//            Database.executeBatch(new CRLP_Rollup_BATCH(Contact.SObjectType), batchSizeCntct);
-            this.numJobSubmitted = 2;
+            // Customizable Rollup Jobs are more complicated. There are 4 base jobs, but there may be 4 more
+            // Skew jobs to execute if necessary.
+            List<CRLP_RollupProcessingOptions.RollupType> jobTypeList = new List<CRLP_RollupProcessingOptions.RollupType>{
+                    CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+            };
+            for (CRLP_RollupProcessingOptions.RollupType jobType : jobTypeList) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+                this.numJobSubmitted++;
 
-            Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
-            // TODO -- FIX THIS QUERY
-            Boolean hasLDVAccounts = [SELECT Count() FROM Account WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonLDVMode LIMIT 1] > 0;
+                // Determine if the SkewMode job is needed based on a simple count of the number of records
+                // that meet the skew mode criteria.
+                String objName = (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ? 'Account' : 'Contact');
 
-            // If there is at least one LDV Account to roll up, execute this batch job
-            if (hasLDVAccounts) {
-                batchSizeAcct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-                batchSizeCntct = CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-//                Database.executeBatch(new CRLP_Batch_Base_Skew(Account.SObjectType), batchSizeAcct);
-//                Database.executeBatch(new CRLP_Batch_Base_Skew(Contact.SObjectType), batchSizeCntct);
-                this.numJobSubmitted += 2;
+                String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
+                        CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
+                        ' LIMIT 1';
+
+                Boolean executeSkewMode = (database.countQuery(query) != 0);
+                if (executeSkewMode) {
+                    Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+                    this.numJobSubmitted++;
+                }
             }
-
-//            Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), CRLP_Rollup_SVC.getLDVBatchSize(Partial_Soft_Credit__c.SObjectType));
-            this.numJobSubmitted++;
-
         }
         return null;
     }

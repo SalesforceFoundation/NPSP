@@ -87,45 +87,51 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * @return database.Querylocator
     */
     public database.Querylocator getQuerylocator() {
-        initializeJobData();
+        try {
+            initializeJobData();
 
-        // Build a query string of the target Summary object.
-        String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
+            // Build a query string of the target Summary object.
+            String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
 
-        // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-        if (this.summaryObjectType == Contact.SObjectType) {
-            for (String f : fieldsToCheckForNonZero) {
-                if (!query.containsIgnoreCase(f)) {
-                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+            // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
+            if (this.summaryObjectType == Contact.SObjectType) {
+                for (String f : fieldsToCheckForNonZero) {
+                    if (!query.containsIgnoreCase(f)) {
+                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
+                    }
                 }
             }
-        }
 
-        List<String> whereClauses = new List<String>();
+            List<String> whereClauses = new List<String>();
 
-        // Add additional query filters as needed
-        if (this.recordIds != null && this.recordIds.size() > 0) {
-            whereClauses.add('Id IN :recordIds');
-        } else {
-            String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-            if (!String.isEmpty(skewClause)) {
-                whereClauses.add(skewClause);
+            // Add additional query filters as needed
+            if (this.recordIds != null && this.recordIds.size() > 0) {
+                whereClauses.add('Id IN :recordIds');
+            } else {
+                String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+                if (!String.isEmpty(skewClause)) {
+                    whereClauses.add(skewClause);
+                }
             }
-        }
-        // TODO DO we need to exclude Organization Donations??
+            // TODO DO we need to exclude Organization Donations??
 
-        if (!whereClauses.isEmpty()) {
-            query += ' WHERE ' + String.join(whereClauses, ' AND ');
-        }
+            if (!whereClauses.isEmpty()) {
+                query += ' WHERE ' + String.join(whereClauses, ' AND ');
+            }
 
-        // If there are no active rollups for the object type, then force the query to return zero records.
-        if (hasActiveRollupsForThisJob() == false) {
-            // This is needed because can't return null as a valid iterator.
-            query += ' LIMIT 0';
-        }
+            // If there are no active rollups for the object type, then force the query to return zero records.
+            if (hasActiveRollupsForThisJob() == false) {
+                // This is needed because can't return null as a valid iterator.
+                query += ' LIMIT 0';
+            }
 
-        UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
-        return Database.getQueryLocator(query);
+            UTIL_Debug.debug(LoggingLevel.WARN, '>> Batch Query =' + query);
+            return Database.getQueryLocator(query);
+
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
+            return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
+        }
     }
 
     /*******************************************************************************************************
@@ -226,7 +232,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 // Call the method to do the actual rollups. This returns only records that require updating
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
                 this.totalRecordsModified += updatedRecords.size();
                 this.totalCommits++;
             }
@@ -234,7 +240,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         } catch (Exception ex) {
             // TODO Not 100% sure we want to keep this, but for now it's needed to capture any unexpected errors in the processing logic
             ex.setMessage(ex.getMessage() + '\n\nRollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState());
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }
     }
 

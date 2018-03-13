@@ -89,25 +89,21 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             if (jobMode != CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
                 System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
             } else {
-//                Database.executeBatch(new CRLP_Batch_Base_Skew(new List<Id>{ recordId }), batchSize);
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 
             // Execute Contact or Account Soft Credit roll-ups
-            // TODO Add logic for soft credit rollups
             jobType = null;
             if (this.objType == Account.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
             } else if (this.objType == Contact.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
             }
-            if (jobType != null) {
+            if (jobType != null && CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
                 if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                     jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
                 }
-                if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
-                    CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
-                }
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 
         } else {

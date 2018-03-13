@@ -58,7 +58,7 @@ public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
         try {
             return getQuerylocator();
         } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
             return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
         }
     }

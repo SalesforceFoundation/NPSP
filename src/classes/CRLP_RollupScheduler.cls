@@ -32,15 +32,12 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Customizable Rollups Scheduler for all Batch Rollup Jobs
+* @description Customizable Rollups Scheduler Service for all Batch Rollup Jobs
 */
 public class CRLP_RollupScheduler implements Schedulable {
 
     /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
     private CRLP_RollupProcessingOptions.RollupType jobType;
-
-    /** @description The batch job mode - Skew (LDV) or Non-Skew */
-    private CRLP_RollupProcessingOptions.BatchJobMode jobMode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
 
     /** @description Rollup Schedule Options - TBD */
     public Enum RollupSchedule {
@@ -56,12 +53,10 @@ public class CRLP_RollupScheduler implements Schedulable {
 
     /**
      * @description Constructor
-     * @param isLDV Boolean True to queue an LDV Batch Job versus the standard batch job.
-     * @param objType SObjectType for the standard rollup
+     * @param jobType Enum for the type of job to execute.
      */
-    public CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+    public CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType jobType) {
         this.jobType = jobType;
-        this.jobMode = jobMode;
     }
 
     /**
@@ -71,36 +66,42 @@ public class CRLP_RollupScheduler implements Schedulable {
      */
     public void execute(SchedulableContext context) {
 
-        Integer batchSize = CRLP_Rollup_SVC.getBatchSize(this.jobType, this.jobMode);
-
         if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             // if customizable rollups are not enabled, then do nothing. This is a failsafe in case the
             // customizable rollups engine is disabled after the new jobs have been scheduled.
 
-        } else if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-            // Non-LDV Batch Rollup for the specified Summary SObject
-//            Database.executeBatch(new CRLP_Rollup_BATCH(this.rollupObjectType), batchSize);
-
         } else {
-            // LDV Batch Rollup for the specified Summary SObject
-            Boolean hasLDVAccounts = true;
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                // For Account & Contact rollups, only execute the batch job if there is at least one Account
-                // record with the minimum number of attached Opportunities.
-                Integer maxRelatedOppsForNonSkewMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
-                // TODO -- Fix this query
-                hasLDVAccounts = [SELECT Count() FROM Account
-                        WHERE Number_of_Opportunities__c >= :maxRelatedOppsForNonSkewMode
-                        LIMIT 1] > 0;
-            }
 
-            // If there is at least one LDV Account to roll up, execute this batch job
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-//                Database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), batchSize);
-            } else if (hasLDVAccounts) {
-//                Database.executeBatch(new CRLP_Batch_Base_Skew(this.rollupObjectType), batchSize);
+            Boolean executeSkewMode = (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU);
+
+            // Account and Contact Hard/Soft Credit Rollups will always execute the non-skew model batch job
+            // first, and then determine if the skew mode batch job is needed in addition.
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+
+                // Execute the main Non-Skew mode job
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+
+                try {
+                    // Determine if the SkewMode job is needed based on a simple count of the number of records
+                    // that meet the skew mode criteria.
+                    String objName = (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ? 'Account' : 'Contact');
+
+                    String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
+                            CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
+                            ' LIMIT 1';
+
+                    executeSkewMode = (database.countQuery(query) != 0);
+                } catch (Exception ex) {
+                    ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+                }
+            }
+            
+            if (executeSkewMode) {
+                Database.executeBatch(new CRLP_SkewDispatcher_BATCH(this.jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
             }
         }
     }

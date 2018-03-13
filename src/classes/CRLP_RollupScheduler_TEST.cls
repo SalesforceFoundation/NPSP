@@ -73,8 +73,6 @@ private class CRLP_RollupScheduler_TEST {
         }
         System.assertNotEquals(0, jobCount, 'There should be more than one default job for CRLP_RollupScheduler');
 
-/* TODO Fix This Test
-
         // Verify that the correct number of jobs has been scheduled
         List<AsyncApexJob> scheduledJobs = [SELECT Id, JobType, Status, ApexClass.Name FROM AsyncApexJob
                                 WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name = 'CRLP_RollupScheduler'];
@@ -91,7 +89,6 @@ private class CRLP_RollupScheduler_TEST {
         System.assertEquals(0, [SELECT count() FROM AsyncApexJob
             WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler' AND Status != 'Aborted'],
             'There should be zero jobs scheduled using the CRLP_RollupScheduler interface');
-*/
     }
 
     /**
@@ -122,8 +119,7 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit));
         // StopTest to allow the job to execute
         Test.stopTest();
 
@@ -168,8 +164,7 @@ private class CRLP_RollupScheduler_TEST {
 
         Test.startTest();
         // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit));
         // StopTest to allow the job to execute
         Test.stopTest();
 

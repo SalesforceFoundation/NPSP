@@ -55,12 +55,7 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
     }
 
     public database.Querylocator start(Database.BatchableContext bc) {
-        try {
-            return getQuerylocator();
-        } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
-            return Database.getQueryLocator([SELECT Id FROM Contact LIMIT 0]);
-        }
+        return getQuerylocator();
     }
 
     public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {

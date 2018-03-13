@@ -117,7 +117,6 @@ public class CRLP_RollupBatch_SVC {
             if (!String.isEmpty(filter)) {
                 soql += ' AND ' + filter;
             }
-            System.debug(soql);
             List<SObject> cntObj = database.query(soql);
             return cntObj.size() == 1;
         }

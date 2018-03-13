@@ -67,11 +67,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * a collection of jobsToAbort - a list of job names that if exist should be aborted.
     */
     @testVisible
-    public static Map<String, List<String>> defaultScheduledJobs {
+    public static Map<String, List<Object>> defaultScheduledJobs {
         get {
             if (defaultScheduledJobs == null) {
                 jobsToAbort.clear();
-                defaultScheduledJobs = new Map<String, List<String>>{
+                defaultScheduledJobs = new Map<String, List<Object>>{
                     'NPSP 00 - Error Processing'                => new List<String>{'0 0 * * * ?',  'ERR_AsyncErrors_SCHED'},
                     // Start the Recurring Donations job one hour before the Rollup jobs to avoid any conflict with
                     // the Opps that may be created/modified by the RD job.
@@ -86,12 +86,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // primary SObject to use when instantiating the scheduler
                     // The last parameter is set to True for LDV jobs (i.e, pass True to the CRLP_RollupScheduler() instance).
                     // Jobs are staggered by 10 minutes to hopefully improve performance when each of the jobs starts with a large query
-                    defaultScheduledJobs.put('NPSP 01 - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'False'});
-                    defaultScheduledJobs.put('NPSP 02 - Customizable Rollups - Contact Hard Credit', new List<String>{'0 10 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'False'});
-                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Hard Credit for Large Data Volumes', new List<String>{'0 20 23 ? * *', 'CRLP_RollupScheduler', 'Account', 'True'});
-                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Contact Hard Credit for Large Data Volumes', new List<String>{'0 30 23 ? * *', 'CRLP_RollupScheduler', 'Contact', 'True'});
-                    defaultScheduledJobs.put('NPSP 04 - Customizable Rollups - Soft Credits', new List<String>{'0 50 23 ? * *', 'CRLP_RollupScheduler', SObjectType.Partial_Soft_Credit__c.getName(), 'True'});
-                    defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Allocation Units', new List<String>{'0 0 23 ? * *', 'CRLP_RollupScheduler', SObjectType.General_Accounting_Unit__c.getName(), 'True'});
+                    defaultScheduledJobs.put('NPSP 01 - Customizable Rollups - Account Hard Credit', new List<Object>{'0 0 23 ? * *', 'CRLP_RollupScheduler', CRLP_RollupProcessingOptions.RollupType.AccountHardCredit});
+                    defaultScheduledJobs.put('NPSP 02 - Customizable Rollups - Contact Hard Credit', new List<Object>{'0 05 23 ? * *', 'CRLP_RollupScheduler', CRLP_RollupProcessingOptions.RollupType.ContactHardCredit});
+                    defaultScheduledJobs.put('NPSP 03 - Customizable Rollups - Account Soft Credits', new List<Object>{'0 10 23 ? * *', 'CRLP_RollupScheduler', CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit});
+                    defaultScheduledJobs.put('NPSP 04 - Customizable Rollups - Contact Soft Credits', new List<Object>{'0 15 23 ? * *', 'CRLP_RollupScheduler', CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit});
+                    defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<Object>{'0 20 23 ? * *', 'CRLP_RollupScheduler', CRLP_RollupProcessingOptions.RollupType.GAU});
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
                     jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
@@ -111,10 +110,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
                     jobsToAbort.add('NPSP 01 - Customizable Rollups - Account Hard Credit');
                     jobsToAbort.add('NPSP 02 - Customizable Rollups - Contact Hard Credit');
-                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account Hard Credit for Large Data Volumes');
-                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Contact Hard Credit for Large Data Volumes');
-                    jobsToAbort.add('NPSP 04 - Customizable Rollups - Soft Credits');
-                    jobsToAbort.add('NPSP 05 - Customizable Rollups - General Allocation Units');
+                    jobsToAbort.add('NPSP 03 - Customizable Rollups - Account Soft Credits');
+                    jobsToAbort.add('NPSP 04 - Customizable Rollups - Contact Soft Credits');
+                    jobsToAbort.add('NPSP 05 - Customizable Rollups - General Accounting Units');
                 }
             }
             return defaultScheduledJobs;
@@ -172,20 +170,18 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return void
     */
     private static void createJob(String jobName) {
-        String cronExpression = defaultScheduledJobs.get(jobName)[0];
-        String className = defaultScheduledJobs.get(jobName)[1];
+        String cronExpression = (String)defaultScheduledJobs.get(jobName)[0];
+        String className = (String)defaultScheduledJobs.get(jobName)[1];
 
         try {
             Schedulable classInstance;
             if (className != 'CRLP_RollupScheduler') {
                 classInstance = (Schedulable) Type.forName(className).newInstance();
             } else {
-                // The Customizable Rollups engine scheduler class needs to have parameters passed into the
-                // class instantiation. This is not possible using Type.forName().newInstance().
-                String objName = defaultScheduledJobs.get(jobName)[2];
-                SObjectType objType = UTIL_Describe.getSObjectType(objName);
-                Boolean isLDV = defaultScheduledJobs.get(jobName)[3] == 'True';
-//                classInstance = new CRLP_RollupScheduler(isLDV, objType);
+                // The Customizable Rollups engine scheduler class accepts a JobType Enum during instantiation
+                // This is not possible using Type.forName().newInstance().
+                CRLP_RollupProcessingOptions.RollupType jobType = (CRLP_RollupProcessingOptions.RollupType)defaultScheduledJobs.get(jobName)[2];
+                classInstance = new CRLP_RollupScheduler(jobType);
             }
             System.schedule(jobName, cronExpression, classInstance);
         } catch (Exception ex) {

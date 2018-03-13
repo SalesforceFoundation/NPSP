@@ -122,34 +122,46 @@ private class CRLP_RecalculateBTN_TEST {
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
         insert gau;
 
+        System.assertEquals(0, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
+                'Zero jobs should be currently scheduled');
+
         Test.startTest();
-/* TODO Fix This Test
+
+        Integer expectedJobCount = 0;
+
         CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
         System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+
         ctlr.buttonClick();
+
+        expectedJobCount++;
+        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType)) {
+            expectedJobCount++;
+        }
+        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
+                expectedJobCount + ' jobs should been queued');
 
         ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(a));
         System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
         ctlr.buttonClick();
 
-        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
-        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
-        ctlr.buttonClick();
-
-        Test.stopTest();
-
-        Integer expectedJobCount = 3;
-        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType)) {
-            expectedJobCount++;
-        }
+        expectedJobCount++;
         if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType)) {
             expectedJobCount++;
         }
+        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
+                expectedJobCount + ' jobs should been queued');
+
+        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
+        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+        ctlr.buttonClick();
+        expectedJobCount++;
 
         // validate that both the standard and the partial soft credit jobs were submitted
-        system.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob],
-                expectedJobCount + ' Queueable jobs should been executed');
-*/
+        System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
+                expectedJobCount + ' jobs should been queued');
+
+        Test.stopTest();
     }
 
 }

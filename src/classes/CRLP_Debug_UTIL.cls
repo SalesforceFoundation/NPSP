@@ -121,7 +121,7 @@ public class CRLP_Debug_UTIL {
                 }
             }
             if (records.size() > 0) {
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(records);
+                UTIL_DMLService.updateRecordBatchAndLogErrors(records, 'UTIL');
                 System.enqueueJob(new clearRollupFieldsASync(this.objType, records.size()));
             }
         }
