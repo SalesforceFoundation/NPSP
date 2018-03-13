@@ -39,6 +39,8 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
 
     private Id recordId;
     private SObjectType objType;
+
+    /** @description Used by the VF page for the button to render an apex pages message if there is one */
     public Boolean hasError { get; set; }
 
     /**
@@ -74,7 +76,9 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             CRLP_RollupProcessingOptions.RollupType jobType;
             CRLP_RollupProcessingOptions.BatchJobMode jobMode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
 
+            // ------------------------------------------------
             // Hard Credit Rollups for Account, Contact or GAU
+            // ------------------------------------------------
             if (this.objType == Account.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
             } else if (this.objType == Contact.SObjectType) {
@@ -82,6 +86,8 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
             }
+
+            // Is skew mode needed?
             if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                 jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
             }
@@ -92,7 +98,9 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 
-            // Execute Contact or Account Soft Credit roll-ups
+            // ------------------------------------------------
+            // Soft Credit Rollups for Contact or Account
+            // ------------------------------------------------
             jobType = null;
             if (this.objType == Account.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
@@ -100,9 +108,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
             }
             if (jobType != null && CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
-                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
+                // Is skew mode needed?
+//                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                     jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
-                }
+//                }
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 

@@ -38,6 +38,7 @@ public class CRLP_RollupBatch_SVC {
 
     /**
      * @description Returns the Summary ObjectType based on the specific JobType
+     * @param jobType Rollup Job Type Enum
      */
     public static SObjectType getSummaryObjectType(CRLP_RollupProcessingOptions.RollupType jobType) {
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
@@ -55,8 +56,8 @@ public class CRLP_RollupBatch_SVC {
     /**
      * @description Returns a portion of the WHERE clause to use to filter "Skew" or "NonSkew" mode records. This is
      * effectively the only place where the fields needed to make this determination are referenced.
-     * @param jobType
-     * @param jobMode
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Job Mode (Skew or NonSkew)
      * @return A portion of a WHERE clause without WHERE or AND
      */
     public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
@@ -102,8 +103,8 @@ public class CRLP_RollupBatch_SVC {
 
     /**
      * @description Determine if a given record Id needs to use the Skew rollup method.
-     * @param recordId
-     * @param jobType
+     * @param recordId The specific record Id to verify
+     * @param jobType Rollup Job Type Enum
      * @return True or False
      */
     public static Boolean doesRecordNeedSkewRollupMethod(Id recordId, CRLP_RollupProcessingOptions.RollupType jobType) {
@@ -123,6 +124,15 @@ public class CRLP_RollupBatch_SVC {
         return true;
     }
 
+    /**
+     * @description Centralized Rollup Batch Job execution based on the Job Type, Batch Job Mode, etc.
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Mode Enum (Skew or NonSkew)
+     * @param recordIds (Optional) List of Record Id's to be rolled up
+     * @param lastIdProcessed (Optional) If this is being called by the SkewDispatcher class, the last record id of
+     * the parent records is passed into the batch job to allow it to be passed back to the SkewDispatcher to
+     * support chunking by Id.
+     */
     public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType, 
             CRLP_RollupProcessingOptions.BatchJobMode jobMode, List<Id> recordIds, Id lastIdProcessed) {
 
@@ -148,6 +158,9 @@ public class CRLP_RollupBatch_SVC {
                 database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                // Technically this job is always processed in "skew" mode
+                database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
             }
         }
     }

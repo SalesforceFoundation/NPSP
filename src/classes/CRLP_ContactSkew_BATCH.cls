@@ -47,8 +47,9 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Contact Id's
-     * @param jobType Defines the type of rollup job
-     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
+     * @param recordIds Specific set of parent record id's to roll up to
+     * @param lastIdProcessedForChunking If this job is called by the SkewDispatcher, this contains the last Id queried
+     * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_ContactSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, lastIdProcessedForChunking);
