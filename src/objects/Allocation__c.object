@@ -122,9 +122,9 @@
         <externalId>false</externalId>
         <inlineHelpText>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</inlineHelpText>
         <label>Percent</label>
-        <precision>5</precision>
+        <precision>9</precision>
         <required>false</required>
-        <scale>2</scale>
+        <scale>6</scale>
         <trackTrending>false</trackTrending>
         <type>Percent</type>
     </fields>

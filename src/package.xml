@@ -1264,6 +1264,7 @@
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
+        <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
