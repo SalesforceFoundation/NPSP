@@ -279,6 +279,23 @@ public class CRLP_DefaultConfigBuilder_SVC {
         groupPledgedDonations.rules.add(ruleNotWon);
 
         // ==============================================================================================================
+        // Default "Donations: Close/Won Stage WITHOUT RT Exclusions" filter group -- Recurring Donations Rollups
+        // ==============================================================================================================
+        CRLP_RollupCMT.FilterGroup groupClosedWonDonationsNoRTExclusions = new CRLP_RollupCMT.FilterGroup(acctDonation+': Closed Won excluding RTs');
+        groupClosedWonDonationsNoRTExclusions.recordName = CRLP_DefaultConfigBuilder.FilterGroup_ClosedWonDonations_NoRTExclusions;
+        groupClosedWonDonationsNoRTExclusions.description = 'Closed/Won {0} Opportunities for Recurring Donations Rollups. ';
+
+        CRLP_RollupCMT.FilterRule ruleCloseWonStage4 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsNoRTExclusions.recordName, acctDonation+': Not Won Only');
+        ruleCloseWonStage4.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage4.recordName;
+        ruleCloseWonStage4.objectName = 'Opportunity';
+        ruleCloseWonStage4.fieldName = 'IsWon';
+        ruleCloseWonStage4.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage4.value = 'true';
+        groupClosedWonDonationsNoRTExclusions.rules.add(ruleCloseWonStage4);
+
+
+
+        // ==============================================================================================================
         // Create a list of the default Groups+Rules to use for deployment
         // ==============================================================================================================
 
