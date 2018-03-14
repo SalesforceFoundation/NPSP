@@ -229,7 +229,7 @@
                                                 auraId="yearlyOperation"
                                                 fieldLabel="{!v.labels.yearlyOperationType}"
                                                 entityLabel="{!v.selectedYearlyOperationLabel}"
-                                                apiName="{!v.activeRollup.Yearly_Operation_Type__c}"
+                                                apiName="{!v.activeRollup.Time_Bound_Operation_Type__c}"
                                                 options="{!v.yearlyOperations}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
