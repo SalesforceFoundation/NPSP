@@ -254,11 +254,36 @@ public class CRLP_DefaultConfigBuilder_SVC {
         }
 
         // ==============================================================================================================
+        // Default "Donations: Pledged Stage" filter group -- Recurring Donations Rollups
+        // ==============================================================================================================
+        CRLP_RollupCMT.FilterGroup groupPledgedDonations = new CRLP_RollupCMT.FilterGroup(acctDonation+': Pledged Only');
+        groupPledgedDonations.recordName = CRLP_DefaultConfigBuilder.FilterGroup_PledgedDonations;
+        groupPledgedDonations.description = 'Pledged {0} Opportunities for all Hard and Soft Credit Rollups.';
+
+        // isClosed == false && isWon == null
+        // constructed this way to exactly match the logic from RDs
+        CRLP_RollupCMT.FilterRule ruleOpenStage = new CRLP_RollupCMT.FilterRule(groupPledgedDonations.recordName, acctDonation+': Not Closed Only');
+        ruleOpenStage.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOpenStage.recordName;
+        ruleOpenStage.objectName = 'Opportunity';
+        ruleOpenStage.fieldName = 'isClosed';
+        ruleOpenStage.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleOpenStage.value = 'false';
+        groupPledgedDonations.rules.add(ruleOpenStage);
+
+        CRLP_RollupCMT.FilterRule ruleNotWon = new CRLP_RollupCMT.FilterRule(groupPledgedDonations.recordName, acctDonation+': Not Won Only');
+        ruleNotWon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleNotWon.recordName;
+        ruleNotWon.objectName = 'Opportunity';
+        ruleNotWon.fieldName = 'isWon';
+        ruleNotWon.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleNotWon.value = null;
+        groupPledgedDonations.rules.add(ruleNotWon);
+
+        // ==============================================================================================================
         // Create a list of the default Groups+Rules to use for deployment
         // ==============================================================================================================
 
         List<CRLP_RollupCMT.FilterGroup> groups = new List<CRLP_RollupCMT.FilterGroup>{
-                groupClosedWonDonations, groupMemberships, groupAllocations
+                groupClosedWonDonations, groupMemberships, groupAllocations, groupPledgedDonations
         };
         if (groupClosedWonDonationsContacts != null) {
             groups.add(groupClosedWonDonationsContacts);
