@@ -57,7 +57,7 @@ private class OPP_OpportunityContactRoles_TEST {
         if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
         
         Account acc = new Account(Name='test77');
-        acc.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.sobjectType, OPP_AutomatedSoftCreditsService.ACCOUNT_RECORD_TYPE_ORGANIZATION);
+        acc.npe01__SYSTEMIsIndividual__c = false;
         insert acc;
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -74,14 +74,14 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp1;
         
         //Make sure that we haven't created a contact role yet.
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         system.assertEquals(0, result.size());
         
         //Insert the contact role with a blank Role field.
         OpportunityContactRole cr = new OpportunityContactRole (OpportunityId = opp1.Id, ContactId = con.Id, IsPrimary = true);
         insert cr;
         
-        result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         system.assertEquals(con.Id, result[0].ContactId);
         //system.assertEquals(null, result[0].Role); there might be a default set
         
@@ -94,9 +94,9 @@ private class OPP_OpportunityContactRoles_TEST {
         );
         insert opp2;
 
-        result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp2.Id];
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         system.assertEquals(con.Id, result[0].ContactId);
-        if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.RecordTypeId)) {
+        if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.npe01__SYSTEMIsIndividual__c)) {
             System.assertEquals(softCreditRoleforTest, result[0].Role);
         } else {
            System.assertEquals(donorRoleforTest, result[0].Role);
@@ -116,7 +116,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Trigger_Handler__c triggerHandler = [select Active__c from Trigger_Handler__c where Class__c = 'OPP_OpportunityContactRoles_TDTM'];
+        Trigger_Handler__c triggerHandler = [SELECT Active__c FROM Trigger_Handler__c WHERE Class__c = 'OPP_OpportunityContactRoles_TDTM'];
         triggerHandler.Active__c = false;
         update triggerHandler;
         TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
@@ -130,11 +130,11 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert opp1;
         Test.stopTest();
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(0, result.size());
         
-        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
         //should have the contact's one to one account
         system.assertEquals(null, oppResult[0].AccountId);
     }
@@ -150,7 +150,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId, Account.RecordTypeId from Contact where Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -161,13 +161,13 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert opp1;
         Test.stopTest();
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
         system.assertEquals(donorRoleforTest, result[0].Role);
         system.assertEquals(true, result[0].isPrimary);
         
-       Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+       Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
        //should have the contact's one to one account
        system.assertEquals(createdContacts[0].AccountId, oppResult[0].AccountId);
     }
@@ -183,7 +183,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId, Account.Name from Contact where Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -195,13 +195,13 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp1;
         Test.stopTest();
 
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary,Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary,Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be one role
         system.assertEquals(1, result.size());
         system.assertEquals(donorRoleforTest, result[0].Role);
         system.assertEquals(true, result[0].isPrimary);
         
-       Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+       Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
        //should be null account
        system.assertEquals(null, oppResult[0].AccountId);
 
@@ -218,7 +218,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId from Contact where Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -229,7 +229,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert opp1;
         Test.stopTest();
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
         system.assertEquals(1, result.size());
         system.assertEquals(donorRoleforTest, result[0].Role);
@@ -248,7 +248,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [select AccountId, Account.Name from Contact where Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -260,13 +260,13 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp1;
         Test.stopTest();
 
-        OpportunityContactRole[] result = [select OpportunityId, ContactId, isPrimary,Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be one role
         system.assertEquals(1, result.size());
         system.assertEquals(donorRoleforTest, result[0].Role);
         system.assertEquals(true, result[0].isPrimary);
         
-        Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
         //should be null account
         system.assertEquals(null, oppResult[0].AccountId);
 
@@ -289,11 +289,11 @@ private class OPP_OpportunityContactRoles_TEST {
         try {
             insert opp1;            
             
-            OpportunityContactRole[] result = [select OpportunityId, ContactId, Role from OpportunityContactRole where OpportunityId = :opp1.Id];
+            OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
             //shouldn't be a contact role
             system.assertEquals(0, result.size());
             
-            Opportunity[] oppResult = [select AccountId from Opportunity where Id = :opp1.Id];
+            Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
             //shouldn't be an account
             system.assertEquals(null, oppResult[0].AccountId);
         } catch (exception e) {
@@ -493,7 +493,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact primaryCon = UTIL_UnitTestData_TEST.getContact();
         insert primaryCon;
 
-        list<Contact> queryCon = [select AccountId from Contact where Id = :primaryCon.id];
+        list<Contact> queryCon = [SELECT AccountId FROM Contact where Id = :primaryCon.id];
         Id hhAccountId = queryCon[0].AccountId;
 
         list<contact> householdMembers = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);

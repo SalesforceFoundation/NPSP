@@ -37,23 +37,14 @@
 
 public class OPP_AutomatedSoftCreditsService {
 
-	public static final String OPPORTUNITY_CONTACT_ROLE_ORGANIZATIONAL_DEFAULT = 'Soft Credit';
-	public static final String ACCOUNT_RECORD_TYPE_ORGANIZATION = 'Organization';
-
-
 	/*********************************************************************************************************
-    * @description Determines if the Account is an Organization based on its RecordType.
-    * @param oppAccountRecordTypeId The Record Type Id of the Opportunity's associated Account.
+    * @description Determines if the Account is an Organization based on its account classification, 
+    *				e.g., Individual.
+    * @param accountClassification The classification of an Opportunity's associated Account.
     * @return Boolean
     **********************************************************************************************************/
-    public static Boolean isOrganizationalAccount(Id oppAccountRecordTypeId) {
-		if (oppAccountRecordTypeId == null) {
-    		return false;
-    	}
-
-		return (ACCOUNT_RECORD_TYPE_ORGANIZATION.equalsIgnoreCase(UTIL_RecordTypes.getRecordTypeName(Account.sobjectType, oppAccountRecordTypeId))
-				&& !CAO_Constants.isOneToOne()
-				&& !CAO_Constants.isBucketModel());
+    public static Boolean isOrganizationalAccount(Boolean accountClassification) {
+		return (accountClassification == false);
     }
 
 

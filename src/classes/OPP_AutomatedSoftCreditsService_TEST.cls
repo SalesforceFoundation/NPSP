@@ -36,12 +36,12 @@
 */
 
 @isTest
-public with sharing class OPP_AutomatedSoftCreditsService_TEST {
+private class OPP_AutomatedSoftCreditsService_TEST {
 
 	/*********************************************************************************************************
     * @description If you only want to run a single test in this class, fill in its name here.
     * If you want to run all tests, then use '*'
-    */
+    **********************************************************************************************************/
     private static string strTestOnly = '*';
 
 
@@ -57,11 +57,11 @@ public with sharing class OPP_AutomatedSoftCreditsService_TEST {
         Boolean isOrganizationalAccount = false;
 
         Account acct = new Account(Name = 'Organization Account');
-        acct.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.sobjectType, OPP_AutomatedSoftCreditsService.ACCOUNT_RECORD_TYPE_ORGANIZATION);
+        acct.npe01__SYSTEMIsIndividual__c = false;
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.RecordTypeId);
+		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
         Test.stopTest();
 
         System.assertEquals(true, isOrganizationalAccount);
@@ -80,16 +80,15 @@ public with sharing class OPP_AutomatedSoftCreditsService_TEST {
         Boolean isOrganizationalAccount = false;
 
         Account acct = new Account(Name = 'Household Account');
-        acct.RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.sobjectType, CAO_Constants.HH_ACCOUNT_TYPE);
+        acct.npe01__SYSTEMIsIndividual__c = true;
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.RecordTypeId);
+		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
         Test.stopTest();
 
         System.assertEquals(false, isOrganizationalAccount);
     }
 
-    
-}
 
+}

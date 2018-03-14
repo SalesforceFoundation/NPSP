@@ -309,8 +309,8 @@ public class RD_RecurringDonations_TEST {
             WHERE Opportunity.npe03__Recurring_Donation__c = :r1.id
         ];
         system.assertEquals(2,installmentCRs.size());
-        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(accountId)) {
-            System.assertEquals(system.label.npe03.RecurringDonationContactRole,installmentCRs[0].Role);
+        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(c.Account.npe01__SYSTEMIsIndividual__c)) {
+            System.assertEquals(system.label.npe03.RecurringDonationContactRole, installmentCRs[0].Role);
         }
     }
 
