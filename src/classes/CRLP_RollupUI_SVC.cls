@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2017, Salesforce.org
+    Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
     Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
@@ -44,6 +44,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String active;
         @AuraEnabled public String activeIcon;
         @AuraEnabled public String creditType;
+        @AuraEnabled public String description;
         @AuraEnabled public String detailField;
         @AuraEnabled public String detailObject;
         @AuraEnabled public String filterGroupName;
@@ -62,6 +63,18 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
+        @AuraEnabled public Id id;
+    }
+
+    /*******************************************************************************************************
+    * @description a class to hold only the required information from the filter_rule__mdt records for the filter group detail.
+    */
+    public class FilterRulesTableItem{
+        @AuraEnabled public String objectLabel;
+        @AuraEnabled public String fieldLabel;
+        @AuraEnabled public String operator;
+        @AuraEnabled public String constant;
+        @AuraEnabled public Id id;
     }
 
     /*******************************************************************************************************
@@ -74,6 +87,16 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Map<String, String> operations;
         @AuraEnabled public Map<String, String> yearlyOperations;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the Filter Group and Filter Rules used on the page to minimize server trips.
+    * Filter rules need to be flattened for use within the lightning:datatable.
+    */
+    public class FilterGroupModel {
+        @AuraEnabled public Filter_Group__mdt filterGroup;
+        @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
 
     }
 
@@ -106,23 +129,31 @@ public with sharing class CRLP_RollupUI_SVC {
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
         List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
+        Map<CRLP_Operation.RollupType, String> operationTypes = CRLP_Operation.getRollupOperationTypes();
 
         for(Integer i=0; i<mdtList.size(); i++){
             RollupTableItem item = new RollupTableItem();
 
-            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Partial_Soft_Credit__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
                 item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'General_Accounting_Unit__c' && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Allocation__c') {
+            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')
+                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Allocation__c')) {
                 item.creditType = Label.CRLP_HardCredit;
             } else {
                 item.creditType = Label.CRLP_HardCredit;
@@ -131,6 +162,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
             item.rollupName = mdtList[i].MasterLabel;
             item.detailField = mdtList[i].Detail_Field__r.Label;
+            item.description = mdtList[i].Description__c;
             item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
             item.operation = mdtList[i].Operation__c.replace('_', ' ');
             if(mdtList[i].Active__c){
@@ -167,12 +199,71 @@ public with sharing class CRLP_RollupUI_SVC {
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
+            item.id = mdtList[i].Id;
 
             mdtTableList.add(item);
         }
 
         return mdtTableList;
 
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Filter Rule metadata to fetch all operation values.
+    * @return a map of picklist options api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getfilterRuleOperations() {
+
+        Map<String,String> filterRuleOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Filter_Rule__mdt.Operator__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            filterRuleOperations.put(f.getValue(), f.getLabel());
+        }
+        return filterRuleOperations;
+    }
+
+    /*******************************************************************************************************
+    * @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
+    * @return a FilterGroup__mdt record and related FilterRule__mdt records.
+    */
+
+    @AuraEnabled
+    public static FilterGroupModel getFilterGroupById(Id id) {
+
+        List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
+        Map<String,String> operators = getfilterRuleOperations();
+
+        Filter_Group__mdt filterGroup = [SELECT Id
+                , DeveloperName
+                , MasterLabel
+                , Description__c
+        FROM Filter_Group__mdt
+        WHERE Id = :id];
+
+        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Object__r.MasterLabel FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
+
+        for(Integer i=0; i<mdtList.size(); i++) {
+            FilterRulesTableItem item = new FilterRulesTableItem();
+
+            String c = mdtList[i].Constant__c;
+            item.constant = c.replace(';', '\n');
+            item.operator = operators.get(mdtList[i].Operator__c);
+            item.fieldLabel = mdtList[i].Field__r.MasterLabel;
+            item.objectLabel = mdtList[i].Object__r.MasterLabel;
+            item.id = mdtList[i].id;
+
+            mdtTableList.add(item);
+        }
+
+        FilterGroupModel model = new FilterGroupModel();
+
+        model.filterGroup = filterGroup;
+        model.filterRuleList = mdtTableList;
+
+        return model;
     }
 
 
@@ -218,36 +309,7 @@ public with sharing class CRLP_RollupUI_SVC {
     @AuraEnabled
     public static Rollup__mdt getRollupById(Id id) {
 
-        Rollup__mdt rollup = [SELECT Id
-                , DeveloperName
-                , MasterLabel
-                , Active__c
-                , Use_Fiscal_Year__c
-                , Time_Bound_Operation_Type__c
-                , Description__c
-                , Filter_Group__c
-                , Filter_Group__r.QualifiedApiName
-                , Filter_Group__r.MasterLabel
-                , Operation__c
-                , Integer__c
-                , Summary_Field__r.QualifiedApiName
-                , Summary_Field__r.Label
-                , Summary_Object__r.QualifiedApiName
-                , Summary_Object__r.Label
-                , Detail_Field__r.QualifiedApiName
-                , Detail_Field__r.Label
-                , Detail_Object__r.QualifiedApiName
-                , Detail_Object__r.Label
-                , Amount_Field__r.QualifiedApiName
-                , Amount_Field__r.Label
-                , Amount_Object__r.QualifiedApiName
-                , Amount_Object__r.Label
-                , Date_Field__r.QualifiedApiName
-                , Date_Field__r.Label
-                , Date_Object__r.QualifiedApiName
-                , Date_Object__r.Label
-        FROM Rollup__mdt
-        WHERE Id = :id];
+        Rollup__mdt rollup = CRLP_Rollup_SEL.getRollupsById(Id);
 
         return rollup;
     }
@@ -263,9 +325,10 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNametoFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String obj : objectNames){
-            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllLabeledFieldsWithType(obj);
+            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllWritableFieldsWithType(obj);
             objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
-            //TODO: filter out fields that can be rolled up before returning
+            //TODO: filter out fields that can't be rolled up before returning
+            //todo: will also need to append the field being used in the list
         }
 
         return objNametoFieldTypeMap;
@@ -285,6 +348,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'accountLabel' => Schema.SObjectType.Account.getLabel(),
                 'action' => Label.stgLabelActionColumn,
                 'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
+                'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
+                'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
                 'allocationLabel' => Schema.SObjectType.Allocation__c.getLabel(),
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
@@ -293,6 +358,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'checkboxTrue' => Label.stgCheckboxTrue,
                 'checkboxFalse' => Label.stgCheckboxFalse,
                 'clone' => Label.stgBtnClone,
+                'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
@@ -304,10 +370,13 @@ public with sharing class CRLP_RollupUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
+                'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
+                'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'gauLabel' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
@@ -318,21 +387,27 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel().toLowerCase()}),
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
+                'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
                 'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
+                'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
+                'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
-                'return' => Label.CRLP_Return,
+                'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
+                'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
                 'rollupLabelPlural' => Schema.SObjectType.Rollup__mdt.getLabelPlural(),
                 'rollupNew' => Label.CRLP_RollupNew,
+                'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
+                'selectAll' => Label.conMergeSelectAll,
                 'softCredit' => Label.CRLP_SoftCredit,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
