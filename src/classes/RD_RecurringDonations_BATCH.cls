@@ -100,7 +100,7 @@ Schedulable {
     public void execute(Database.BatchableContext bc, Sobject[] result) {
         RD_RecurringDonations_BATCH.isBatchButton = true;
         recCount += result.size();
-        failuresCount = RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
+        failuresCount += RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(result);
     }
 
     /*******************************************************************************************************
