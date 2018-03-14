@@ -11,7 +11,8 @@
                 var modelString = response.getReturnValue();
                 var model = JSON.parse(modelString);
 
-                cmp.set("v.labels", model.labels);
+                var labels = model.labels;
+                cmp.set("v.labels", labels);
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.cachedRollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
@@ -26,29 +27,36 @@
                 });
                 cmp.set("v.yearlyOperations", yOps);
 
-                var actions = [{label: model.labels.edit, name:'edit'}
-                    , {label: model.labels.clone, name:'clone'}
-                    , {label: model.labels.delete, name:'delete'}
+                var actions = [{label: labels.edit, name:'edit'}
+                    , {label: labels.clone, name:'clone'}
+                    , {label: labels.delete, name:'delete'}
                 ];
 
+                //TODO: update here RD
+                var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
+                    , {label: labels.contactLabel, name: 'Contact'}
+                    , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}
+                    , {label: labels.rdLabel, name: 'npe03__Recurring_Donation__c'}];
+                cmp.set("v.summaryObjects", summaryObjects);
+
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
-                var rollupColumns = [{label: model.labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
+                var rollupColumns = [{label: labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
                                 , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
-                            , {label: model.labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
-                            , {label: model.labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
-                            , {label: model.labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
-                            , {label: model.labels.operation, fieldName: 'operation', type: 'string', sortable: 'true', initialWidth: 130}
-                            , {label: model.labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
-                            , {label: model.labels.active, fieldName: 'active', type: 'string', sortable: 'true', initialWidth: 100
+                            , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
+                            , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
+                            , {label: labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
+                            , {label: labels.operation, fieldName: 'operation', type: 'string', sortable: 'true', initialWidth: 130}
+                            , {label: labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
+                            , {label: labels.active, fieldName: 'active', type: 'string', sortable: 'true', initialWidth: 100
                                 , cellAttributes: {iconName: {fieldName: 'activeIcon'}}}
                             , {type: 'action', typeAttributes: { rowActions: actions }}
                             ];
                 cmp.set("v.rollupColumns", rollupColumns);
 
-                var filterGroupColumns = [{label: model.labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
-                    , {label: model.labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
-                    , {label: model.labels.countOf+' '+model.labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true', initialWidth: 200}
-                    , {label: model.labels.countOf+' '+model.labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true', initialWidth: 200}
+                var filterGroupColumns = [{label: labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
+                    , {label: labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
+                    , {label: labels.countOf+ ' ' + labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true', initialWidth: 200}
+                    , {label: labels.countOf+ ' ' + labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true', initialWidth: 200}
                     , {type: 'action', typeAttributes: { rowActions: actions }}
                 ];
 
@@ -87,9 +95,16 @@
     },
 
     displayNewRollupForm: function (cmp, event, helper) {
-        //toggle grid and detail views, set detail mode to create
         //resets the active record to ensure there is no leftover data
+        //applies filtered summary object to the creation of a new rollup if applicable
         cmp.set("v.activeRecord", {});
+        cmp.set("v.activeRecord.MasterLabel", cmp.get("v.labels.rollupNew"));
+        var summaryFilterObject = cmp.find("selectSummaryObject").get("v.value");
+        if(summaryFilterObject !== 'All'){
+            cmp.set("v.activeRecord.Summary_Object__r.QualifiedApiName", summaryFilterObject);
+        }
+
+        //toggle grid and detail views, set detail mode to create
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isRollupDetail", true);
         cmp.set("v.detailMode", "create");
@@ -132,6 +147,22 @@
         else if (gridTarget === 'filterGroup' || breadcrumbName === labels.filterGroupLabelPlural) {
             helper.displayFilterGroupsGrid(cmp);
             cmp.set("v.width", 12);
+        }
+    },
+
+    /* @description: handles the ltng:message event
+    * currently listens for the rollup name change on the Rollup cmp since this doesn't bind correctly
+    */
+    handleMessage: function(cmp, event, helper){
+        var message = event.getParam("message");
+        var channel = event.getParam("channel");
+
+        if(channel === 'rollupNameChange'){
+            //message is the masterLabel
+            //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
+            var activeRecord = cmp.get("v.activeRecord");
+            activeRecord.MasterLabel = message;
+            cmp.set("v.activeRecord", activeRecord);
         }
     },
 

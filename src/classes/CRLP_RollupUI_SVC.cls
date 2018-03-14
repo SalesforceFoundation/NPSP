@@ -51,6 +51,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
         @AuraEnabled public String summaryObject;
+        @AuraEnabled public String summaryObjectApiName;
         @AuraEnabled public Id id;
 
     }
@@ -160,6 +161,7 @@ public with sharing class CRLP_RollupUI_SVC {
             }
             item.detailObject = mdtList[i].Detail_Object__r.Label;
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
+            item.summaryObjectApiName = mdtList[i].Summary_Object__r.QualifiedApiName;
             item.rollupName = mdtList[i].MasterLabel;
             item.detailField = mdtList[i].Detail_Field__r.Label;
             item.description = mdtList[i].Description__c;
@@ -362,6 +364,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
+                'createSummaryHelpText' => Label.CRLP_CreateRollupIntroHelpText,
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
@@ -384,7 +387,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'name' => Label.stgLabelName,
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
-                'noFields' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel().toLowerCase()}),
+                'noFields' => Label.stgLabelPaymentMapNoValidFields,
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
@@ -396,6 +399,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
+                'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
+                'rdLabel' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
                 'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -415,6 +421,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 'view' => Label.stgLabelView,
                 'yearlyOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
             };
+
+        for (Integer i = 2; i < 21; i++) {
+            String key = 'picklistLabelYearsAgo' + i;
+            String value = String.format(Label.stgLabelYearPicklistYearsAgo, new List<String>{String.valueOf(i)});
+            labels.put(key, value);
+        }
 
         return labels;
     }

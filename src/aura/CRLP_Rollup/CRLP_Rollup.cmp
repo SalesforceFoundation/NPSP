@@ -55,6 +55,7 @@
     <aura:attribute name="allowedOperations" type="List"
                     description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
     <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
+    <aura:attribute name="summaryObjects" type="List" description="List of summary objects" access="public"/>
     <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="List" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
@@ -67,7 +68,6 @@
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
     <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
     <aura:attribute name="detailFields" type="List" description="Dependent list of detail fields" access="private"/>
-    <aura:attribute name="summaryObjects" type="List" description="Dependent list of summary objects" access="private"/>
     <aura:attribute name="summaryFields" type="List" description="Dependent list of summary fields" access="private"/>
     <aura:attribute name="amountFields" type="List" description="Dependent list of amount fields" access="private"/>
     <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
@@ -91,7 +91,7 @@
                 <lightning:layoutItem size="12" largeDeviceSize="8">
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.mode == 'create'}">
-                            <h3 class="slds-text-heading_label slds-p-horizontal_large">To get started, select a summary object and summary field. This will be the field that receives the rollup information.</h3>
+                            <h3 class="slds-p-horizontal_large slds-text-heading_small">{!v.labels.createSummaryHelpText}</h3>
                         </aura:if>
 
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -132,19 +132,6 @@
                     </lightning:layout>
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.renderMap.description}">
-                            <aura:if isTrue="{!and(equals(v.mode, 'create'), v.renderMap.rollupType)}">
-                                <lightning:layoutItem padding="around-medium" mediumDeviceSize="6" size="12">
-                                    <lightning:input aura:id="nameInput"
-                                                     label="{!v.labels.name}"
-                                                     name="{!v.labels.name}"
-                                                     value="{!v.activeRollup.MasterLabel}"
-                                                     required="false"
-                                                     readonly="true"/>
-                                </lightning:layoutItem>
-                                <lightning:layoutItem size="12" mediumDeviceSize="6">
-                                    <h3 class="slds-text-heading_label slds-p-around_large">Information about the immutable name, rollup type and description goes here.</h3>
-                                </lightning:layoutItem>
-                            </aura:if>
                             <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
                                 <lightning:textarea aura:id="descriptionInput"
                                                     label="{!v.labels.description}"
@@ -300,7 +287,7 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+!v.activeRollup.Detail_Field__r.Label}"
+                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Detail_Field__r.Label}"
                                                 apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
@@ -323,11 +310,12 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+!v.activeRollup.Amount_Field__r.Label}"
+                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Amount_Field__r.Label}"
                                                 apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
                                                 options="{!v.amountFields}"
                                                 objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
                                                 mediumDeviceSize="3"
+                                                hasNullOption="false"
                             />
                         </aura:if>
                     </lightning:layout>
