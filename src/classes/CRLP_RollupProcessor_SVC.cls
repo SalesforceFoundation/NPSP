@@ -73,9 +73,6 @@ public class CRLP_RollupProcessor_SVC {
             mapOfDetailsByParentId.get(parentId).add(dtl);
         }
 
-        SObjectType detailObjectType = (detailRecords != null && !detailRecords.isEmpty() ? detailRecords[0].getSObjectType() : null);
-        Boolean isSoftCreditPreventDupeOppsMode = (options.preventDupeOppsInRollup && detailObjectType == Partial_Soft_Credit__c.SObjectType);
-
         // Loop through each of the detail records and call the appropriate handler processing method
         Map<Id, SObject> recordsToUpdate = new Map<Id, SObject>();
         Id previousParentIdProcessed = null;
@@ -86,20 +83,17 @@ public class CRLP_RollupProcessor_SVC {
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
             // collection is unique by Opportunity Id
-            if (isSoftCreditPreventDupeOppsMode == true) {
-                List<SObject> prunedOpps = new List<SObject>();
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                List<SObject> oppsToRollup = new List<SObject>();
                 for (Integer nd=0, listSizeDtl=detailsForParent.size(); nd<listSizeDtl; nd++) {
                     SObject dtl = detailsForParent[nd];
                     Id dtlId = (Id)dtl.get(Partial_Soft_Credit__c.Opportunity__c);
-                    if (!options.mapOfProcessedOppIdsByAcctId.containsKey(parentId)) {
-                        options.mapOfProcessedOppIdsByAcctId.put(parentId, new Set<Id>());
-                    }
-                    if (!options.mapOfProcessedOppIdsByAcctId.get(parentId).contains(dtlId)) {
-                        prunedOpps.add(dtl);
-                        options.mapOfProcessedOppIdsByAcctId.get(parentId).add(dtlId);
+                    if (!options.mapOfProcessedOppIdsByAcctId.containsKey(parentId) ||
+                            !options.mapOfProcessedOppIdsByAcctId.get(parentId).contains(dtlId)) {
+                        oppsToRollup.add(dtl);
                     }
                 }
-                detailsForParent = prunedOpps;
+                detailsForParent = oppsToRollup;
             }
 
             // Heap size is precious. There's no need to keep anything other than the first and last
@@ -278,6 +272,10 @@ public class CRLP_RollupProcessor_SVC {
         if (detailRecords != null && !detailRecords.isEmpty()) {
 
             handler.processRollups(detailRecords, childRecordsByDetailId);
+
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                options.mapOfProcessedOppIdsByAcctId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
+            }
 
             // only set the lastParentId when there are actually detail records
             options.lastParentIdProcessed = parentId;

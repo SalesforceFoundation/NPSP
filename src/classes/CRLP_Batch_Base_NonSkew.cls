@@ -75,7 +75,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Summary Object Id's
      * @param jobType Defines the type of rollup job
-     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
+     * @param recordIds Specific set of parent record id's to roll up to
      */
     public CRLP_Batch_Base_NonSkew(CRLP_RollupProcessingOptions.RollupType jobType, List<Id> recordIds) {
         super(jobType, recordIds);
@@ -136,7 +136,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     /*******************************************************************************************************
     * @description Handle each group of Summary records to roll-up.
-    * @param bc BatchableContext passed by the system call
     * @param scope List of Summary records
     */
     public void execute(List<SObject> summaryRecords) {
@@ -244,6 +243,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
+    /**
+     * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.
+     */
     private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;

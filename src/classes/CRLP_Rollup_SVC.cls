@@ -52,6 +52,7 @@ public class CRLP_Rollup_SVC {
         void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter);
         List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
+        Set<Id> getListOfOppIdsThatWereRolledUp();
     }
 
     /**
@@ -179,13 +180,15 @@ public class CRLP_Rollup_SVC {
                 batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
             }
         } else {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                 batchSize = customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
 
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                 batchSize = customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                 batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();

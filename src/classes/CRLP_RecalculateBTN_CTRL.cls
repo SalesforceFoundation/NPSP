@@ -109,9 +109,9 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             }
             if (jobType != null && CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
                 // Is skew mode needed?
-//                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
+                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                     jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
-//                }
+                }
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
             }
 

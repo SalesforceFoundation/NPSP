@@ -36,20 +36,20 @@
 */
 public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
-    /** @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
+    /**
+     * @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
      * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
      * the parent record multiple times, the code will keep uncommitted rollup data in the stateful var for up to
-     * this number of batch iterations. After that number, the record will be committed to the database. There
-     * are a couple of assumptions here: a) Salesforce will not likely put data so much out of sequence that there
-     * are more than 30 batches of data between two batches for the same parent id; b) 30 is an acceptable number
-     * for heap size.
+     * this number of batch iterations. After that number, the record will be committed to the database.
+     * Salesforce can easily put data significantly out of sequence -- hundreds or even thousands of batch iterations.
      */
-    private Integer MAX_BATCHES_TO_HOLD_BEFORE_COMMIT = 50;
+    private Integer MAX_BATCHES_TO_HOLD_BEFORE_COMMIT = 200;
 
     /** @description The last Id of a set of records passed to this method. Passed back to the SkewDispatcher batch job */
     private Id lastIdProcessedForChunking;
 
-    /** @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
+    /**
+     * @description Rather than commit the parent record every time the lastParentIdProcessed is changed,
      * which can cause a single parent to be committed multiple times, this is used to track which parent records
      * have not yet been committed. This is useful when Salesforce calls the execute() method with blocks of data
      * out of sequence.
@@ -127,6 +127,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
                 if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                     whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
+                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+//                    whereClauses.add('IsPrimary = false');
                 }
 
                 // Identify a common filter that can be applied to the main query to reduce the number of records queried
@@ -182,13 +185,13 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
             String parentObjectField, parentKeyField = options.parentKeyField;
 
-            // Soft Credit rollup function by first querying the OpportunityContactRole object and then
-            // creating virtual PartialSoftCredit__c records to use for the actual rollup logic. As a result,
-            // the parentKeyField used for this initial logic is different than the parentKeyField needed for
-            // the rollup logic.
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            // Soft Credit rollup functions by first querying the OpportunityContactRole object and then
+            // creating virtual Partial_Soft_Credit__c records to use for the actual rollup logic. As a result,
+            // the parentKeyField used for the initial logic to split out the OCR's is different than the
+            // parentKeyField needed for the rollup logic.
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 parentKeyField = 'ContactId';
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                 parentKeyField = 'Contact.AccountId';
             }
 
@@ -210,8 +213,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 lastParentId = (Id)dtlRecord.get(parentKeyField);
             }
 
-            // For the GAU object, strip out any detail records where the key field is NULL. This is better
-            // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
+            // If there is any post-query filtering that needs to be applied, do it here
             detailRecords = applyPostQueryLocatorFilters(detailRecords);
 
             // Map of Payment Child details by parent Opportunity (this job only handles Opportunity or Allocation
@@ -250,8 +252,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             List<SObject> summaryRecords = queryAndSequenceSummaryRecords(parentIds, soql);
 
             // Soft Credit rollups require changing the detail object type to PartialSoftCredit
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                 // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
                 // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
                 detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
@@ -261,7 +263,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // current data scope to the processing class to avoid taking up additional heap size with
             // cloned data.
             options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-            options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+            }
 
             // Call the method to do the actual rollups. This returns only records that require updating
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
@@ -272,6 +276,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
             if (lastParentIdProcessed != null) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
+                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    this.statefulMapOfOppIdsByAcct.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
+                }
             }
 
             // Remember which batch iteration this parent was last NOT updated
@@ -365,20 +372,21 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * @return updated List<SObject> with the same or less rows as 'scope'
      */
     private List<SObject> applyPostQueryLocatorFilters(List<SObject> scope) {
-        Boolean isAllocationsRollup = (this.summaryObjectType == General_Accounting_Unit__c.SObjectType);
 
-        List<SObject> updatedDetailRecords = new List<SObject>();
-        for (Integer n = 0, listSize = scope.size(); n < listSize; n++) {
-            if (isAllocationsRollup) {
+        if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+            // For the GAU object, strip out any detail records where the key field is NULL. This is better
+            // handled here in the Execute() method than in the query to ensure proper SOQL selectivity.
+            List<SObject> updatedDetailRecords = new List<SObject>();
+            for (Integer n = 0, listSize = scope.size(); n < listSize; n++) {
                 Allocation__c alloc = (Allocation__c) scope[n];
                 if (alloc.Opportunity__c != null) {
                     updatedDetailRecords.add(alloc);
                 }
-            } else {
-                updatedDetailRecords.add(scope[n]);
             }
+            return updatedDetailRecords;
+        } else {
+            return scope;
         }
-        return updatedDetailRecords;
     }
 
     /**
@@ -430,9 +438,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     }
 
     /**
-     * @description
-     *
-     * @return
+     * @description Instantiate the ProcessingOptions class for SkewMode batch operations.
      */
     private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
