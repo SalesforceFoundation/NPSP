@@ -125,6 +125,45 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
+     * @description Queries a single Rollup Definition based on the requested Id
+     * @return requested rollup__mdt
+     */
+    public static Rollup__mdt getRollupsById(Id id) {
+        Rollup__mdt rollup = [SELECT Id
+                , DeveloperName
+                , MasterLabel
+                , Active__c
+                , Use_Fiscal_Year__c
+                , Time_Bound_Operation_Type__c
+                , Description__c
+                , Filter_Group__c
+                , Filter_Group__r.QualifiedApiName
+                , Filter_Group__r.MasterLabel
+                , Operation__c
+                , Integer__c
+                , Summary_Field__r.QualifiedApiName
+                , Summary_Field__r.Label
+                , Summary_Object__r.QualifiedApiName
+                , Summary_Object__r.Label
+                , Detail_Field__r.QualifiedApiName
+                , Detail_Field__r.Label
+                , Detail_Object__r.QualifiedApiName
+                , Detail_Object__r.Label
+                , Amount_Field__r.QualifiedApiName
+                , Amount_Field__r.Label
+                , Amount_Object__r.QualifiedApiName
+                , Amount_Object__r.Label
+                , Date_Field__r.QualifiedApiName
+                , Date_Field__r.Label
+                , Date_Object__r.QualifiedApiName
+                , Date_Object__r.Label
+        FROM Rollup__mdt
+        WHERE Id = :id];
+
+        return rollup;
+    }
+
+    /**
      * @description Creates a list of all fields for a given object that are referenced in any way on an
      *  existing Rollup. This list can be used when building a query of the needed fields to retrieve
      *  for an object.

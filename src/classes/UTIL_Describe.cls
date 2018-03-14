@@ -210,30 +210,32 @@ public class UTIL_Describe {
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getAllLabeledFieldsWithType(String objectName) {
+    public static List<Map<String, String>> getAllWritableFieldsWithType(String objectName) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            Map<String, String> fieldObject = new Map<String, String>();
-            fieldObject.put('name', dfr.name);
-            fieldObject.put('label', dfr.label);
-            fieldObject.put('type', dfr.getType().Name());
+            if(dfr.isUpdateable()){
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', dfr.getType().Name());
 
-            fieldObjectList.add(fieldObject);
+                fieldObjectList.add(fieldObject);
+            }
         }
 
         return fieldObjectList;
     }
 
 
-/*******************************************************************************************************
-* @description Returns the Name field of any given object.
-* @param objectName the name of the object to look up
-* @return String the API name of the Name field
-*/
+    /*******************************************************************************************************
+    * @description Returns the Name field of any given object.
+    * @param objectName the name of the object to look up
+    * @return String the API name of the Name field
+    */
     public static String getNameField(String objectName) {
         String nameField = 'Name';
 
