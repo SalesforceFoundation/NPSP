@@ -50,6 +50,9 @@ private class HH_OppContactRoles_TEST {
         opportunityWithHousehold(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdBucket() {
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdBucket') return;
         opportunityWithHousehold(CAO_Constants.BUCKET_PROCESSOR);
     }
@@ -149,6 +152,9 @@ private class HH_OppContactRoles_TEST {
         opportunityWithHouseholdNoRoles(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     private static testMethod void opportunityWithHouseholdNoRolesBucket() {
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'opportunityWithHouseholdNoRolesBucket') return;
         opportunityWithHouseholdNoRoles(CAO_Constants.BUCKET_PROCESSOR);
     }

@@ -288,6 +288,8 @@ public with sharing class BDI_DryRun_TEST {
     *    Statuses updated appropriately
     **********************************************************************************************************/
     static testMethod void manyDIExistingHomeAddresses() {
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
 
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -336,7 +338,9 @@ public with sharing class BDI_DryRun_TEST {
     *    Statuses updated appropriately
     **********************************************************************************************************/
     static testMethod void manyDIUpdatedHomeAddresses() {
-
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+        
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));

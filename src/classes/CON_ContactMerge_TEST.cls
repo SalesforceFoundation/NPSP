@@ -638,10 +638,16 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2IndividualsOne2One(){
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsOne2One') return;
         merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2IndividualsHHAccount(){
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsHHAccount') return;
         merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
