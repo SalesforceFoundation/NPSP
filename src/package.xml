@@ -510,11 +510,12 @@
     <types>
         <members>CRLP_CancelEvent</members>
         <members>CRLP_CreateRollup</members>
-        <members>CRLP_ModeChanged</members>
+        <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
+        <members>CRLP_NavigateEvent</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -1067,11 +1068,14 @@
         <members>CONV_Triggers_Reenabled</members>
         <members>CONV_Warning</members>
         <members>CONV_What_This_Tool_Does</members>
+        <members>CRLP_AdvancedCustomizationHeader</members>
+        <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
         <members>CRLP_Return</members>
+        <members>CRLP_RollupsByFilterGroup</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
         <members>CRLP_RollupType</members>
@@ -1817,6 +1821,7 @@
         <members>stgNavRelationships</members>
         <members>stgNavRollupAlloBatch</members>
         <members>stgNavRollupBatch</members>
+        <members>stgNavRollups</members>
         <members>stgNavSchedule</members>
         <members>stgNavSystem</members>
         <members>stgNavTriggerConfig</members>
