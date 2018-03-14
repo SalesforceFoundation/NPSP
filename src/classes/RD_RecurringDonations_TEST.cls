@@ -595,7 +595,7 @@ public class RD_RecurringDonations_TEST {
 
         System.assertEquals(4, postUpdateOpps.size(),'Two new opportunities should have been created.');
 
-        for(Integer i; i<originalOpps.size(); i++) {
+        for(Integer i=0; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
         System.assertEquals(closedStage, postUpdateOpps[0].StageName, 'First Opp should still be Closed Won.');
@@ -676,7 +676,7 @@ public class RD_RecurringDonations_TEST {
         }
         System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
 
-        for(Integer i; i<originalOpps.size(); i++) {
+        for(Integer i=0; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
         System.assertEquals(50, postUpdateOpps[0].Amount, 'Opportunity 1 should be $50.');
@@ -771,7 +771,7 @@ public class RD_RecurringDonations_TEST {
 
         System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
 
-        for(Integer i; i<originalOpps.size(); i++) {
+        for(Integer i=0; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
         System.assertEquals(25, postUpdateOpps[0].Amount, 'Opportunity 1 should still be $25.');
@@ -994,7 +994,7 @@ public class RD_RecurringDonations_TEST {
 
         System.assertEquals(postUpdateOpps.size(), originalOpps.size(), 'No opportunities should have been deleted.');
 
-        for(Integer i; i<originalOpps.size(); i++) {
+        for(Integer i=0; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
 
