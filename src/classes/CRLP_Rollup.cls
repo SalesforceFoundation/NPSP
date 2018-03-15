@@ -167,12 +167,16 @@ public class CRLP_Rollup {
 
         Boolean isSameRollupGroup = true;
 
+        // Convert a null TimeBoundOperationType to AllTime to ease comparisons
+        String otherMdtTimeBoundOperationType = (otherMdtRollup.Time_Bound_Operation_Type__c != null ?
+                otherMdtRollup.Time_Bound_Operation_Type__c : CRLP_Operation.TimeBoundOperationType.All_Time.name());
+
         // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
         // consider them in the same group
         String daysBackOperation = CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name();
-        if ((this.timeBoundOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
+        if ((this.timeBoundOperation == daysBackOperation && (otherMdtTimeBoundOperationType != daysBackOperation ||
                 this.daysBack != otherMdtRollup.Integer__c)) ||
-                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.timeBoundOperation != daysBackOperation)
+                (otherMdtTimeBoundOperationType == daysBackOperation && this.timeBoundOperation != daysBackOperation)
                 ) {
             isSameRollupGroup = false;
         }
@@ -189,24 +193,32 @@ public class CRLP_Rollup {
         Rollupmdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
             Object val;
+            Object otherVal = otherMdtRollup.get(fld);
             if (fld == 'Filter_Group__c') {
                 val = this.filterGroup;
             } else if (fld == 'Use_Fiscal_Year__c') {
                 val = this.useFiscalYear;
-            } else if (fld == 'Summary_Object__c') {
-                val = this.summaryObject;
-            } else if (fld == 'Detail_Field__c') {
-                val = rollupItem.detailField;
-            } else if (fld == 'Date_Field__c') {
-                val = rollupItem.dateField;
-            } else if (fld == 'Amount_Field__c') {
-                val = rollupItem.amountField;
+            } else {
+                if (fld == 'Summary_Object__c') {
+                    val = this.summaryObject;
+                    otherVal = otherMdtRollup.Summary_Object__r.QualifiedApiName;
+                } else if (fld == 'Detail_Field__c') {
+                    val = rollupItem.detailField;
+                    otherVal = otherMdtRollup.Detail_Field__r.QualifiedApiName;
+                } else if (fld == 'Date_Field__c') {
+                    val = rollupItem.dateField;
+                    otherVal = otherMdtRollup.Date_Field__r.QualifiedApiName;
+                } else if (fld == 'Amount_Field__c') {
+                    val = rollupItem.amountField;
+                    otherVal = otherMdtRollup.Amount_Field__r.QualifiedApiName;
+                }
             }
-            if (val != otherMdtRollup.get(fld)) {
+            if (val != otherVal && otherVal != null) {
                 isSameRollupGroup = false;
                 break;
             }
         }
+
         return isSameRollupGroup;
     }
 
@@ -425,7 +437,8 @@ public class CRLP_Rollup {
 
         public Rollupmdt(Rollup__mdt rlp) {
             this.operation = rlp.Operation__c;
-            this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
+            this.timeBoundOperationType = (rlp.Time_Bound_Operation_Type__c != null ? rlp.Time_Bound_Operation_Type__c :
+                    CRLP_Operation.TimeBoundOperationType.All_Time.name());
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
             this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
