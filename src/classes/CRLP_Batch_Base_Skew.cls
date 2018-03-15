@@ -119,7 +119,21 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 if (this.recordIds != null && this.recordIds.size() > 0) {
                     whereClauses.add(keyField + ' IN :recordIds');
                 } else {
-                    String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+                    // When querying detail rows and trying to filer on a field in the parent, need to get the
+                    // relationship name to use for that parent query.
+                    String parentRelationshipPrefix = '';
+                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                        parentRelationshipPrefix = 'Account.';
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                        parentRelationshipPrefix = Opportunity.fields.Primary_Contact__c.getDescribe().getName().replace('__c', '__r') + '.';
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                        parentRelationshipPrefix = 'Contact.';
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                        parentRelationshipPrefix = 'Contact.Account.';
+                    }
+
+                    String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
+                            CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, parentRelationshipPrefix);
                     if (!String.isEmpty(skewClause)) {
                         whereClauses.add(skewClause);
                     }

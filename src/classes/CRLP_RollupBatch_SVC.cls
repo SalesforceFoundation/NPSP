@@ -64,8 +64,21 @@ public class CRLP_RollupBatch_SVC {
      * @return A portion of a WHERE clause without WHERE or AND; or an empty string
      */
     public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        return getSkewWhereClause(jobType, jobMode, '');
+    }
+
+    /**
+     * @description Returns a portion of the WHERE clause to use to filter "Skew" or "NonSkew" mode records. This is
+     * effectively the only place where the fields needed to make this determination are referenced.
+     * @param jobType Rollup Job Type Enum
+     * @param jobMode Batch Job Mode (Skew or NonSkew)
+     * @param parentRelationshipField If the query this where clause will be used on is the detail object, then need
+     * the parent relationship prefix to use with the conditions
+     * @return A portion of a WHERE clause without WHERE or AND; or an empty string
+     */
+    public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode,
+            String parentRelationshipField) {
         String queryFilter = '';
-        String operator = (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode ? ' >= ' : ' < ');
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
 
         // If the Summary Object is the Account, then filter on Accounts that have at least a single
@@ -75,28 +88,35 @@ public class CRLP_RollupBatch_SVC {
         // If the field is null, a query with "< #" will not work. "= null" must be explicitly included in the query.
         if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-            queryFilter = '(npo02__NumberOfClosedOpps__c' + operator + maxRelatedOppsForNonLDVMode + ' OR ' +
-                    'npo02__NumberOfMembershipOpps__c' + operator + maxRelatedOppsForNonLDVMode;
-            if (operator.contains('<')) {
-                queryFilter += ' OR npo02__NumberOfClosedOpps__c = null OR npo02__NumberOfMembershipOpps__c = null';
+
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c = null OR ' + parentRelationshipField +
+                    'npo02__NumberOfClosedOpps__c < ' + maxRelatedOppsForNonLDVMode + ') ' +
+                    'AND (' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c = null OR ' + parentRelationshipField +
+                    'npo02__NumberOfMembershipOpps__c < ' + maxRelatedOppsForNonLDVMode + ')';
+            } else {
+                queryFilter = '(' + parentRelationshipField + 'npo02__NumberOfClosedOpps__c >= ' + maxRelatedOppsForNonLDVMode +
+                        ' OR ' + parentRelationshipField + 'npo02__NumberOfMembershipOpps__c >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
-            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            queryFilter = '(' + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c') + ' ' + operator + maxRelatedOppsForNonLDVMode;
-            if (operator.contains('<')) {
-                queryFilter += ' OR Number_of_Soft_Credits__c = null';
+
+            String softCreditField = parentRelationshipField + UTIL_Namespace.StrAllNSPrefix('Number_of_Soft_Credits__c');
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+            } else {
+                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
-            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             // TODO -- How to get Accounts that require using this method for Soft Credits??
             // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
-            queryFilter = '(npo02__NumberOfClosedOpps__c' + operator + maxRelatedOppsForNonLDVMode;
-            if (operator.contains('<')) {
-                queryFilter += ' OR npo02__NumberOfClosedOpps__c = null';
+            String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + softCreditField + ' = null OR ' + softCreditField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+            } else {
+                queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
-            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             // no extra filter on this type since we're always processing all GAU's using the skew method

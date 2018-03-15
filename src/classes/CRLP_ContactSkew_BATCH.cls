@@ -43,7 +43,7 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      */
     public void execute(SchedulableContext context) {
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
     }
 
     /*******************************************************************************************************

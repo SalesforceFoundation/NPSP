@@ -114,6 +114,17 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 if (!String.isEmpty(skewClause)) {
                     whereClauses.add(skewClause);
                 }
+
+                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                    whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
+                    /*} else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                        String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+                        whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                        whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                        whereClauses.add('Id IN (SELECT Contact.AccountId FROM OpportunityContactRole ALLROWS)');*/
+                }
             }
             // TODO DO we need to exclude Organization Donations??
 
