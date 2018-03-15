@@ -33,6 +33,7 @@
                          , items: objList.list
                };
                itemList.push(obj);
+
            }
         });
 
