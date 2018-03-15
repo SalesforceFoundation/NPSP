@@ -295,7 +295,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         Map<String,String> yearlyOperations = new Map<String,String>();
 
-        Schema.DescribeFieldResult field = Rollup__mdt.Yearly_Operation_Type__c.getDescribe();
+        Schema.DescribeFieldResult field = Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe();
 
         for (Schema.PicklistEntry f : field.getPicklistValues()) {
             yearlyOperations.put(f.getValue(), f.getLabel());
@@ -419,7 +419,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
-                'yearlyOperationType' => Schema.Rollup__mdt.Yearly_Operation_Type__c.getDescribe().getLabel()
+                'yearlyOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
             };
 
         for (Integer i = 2; i < 21; i++) {

@@ -46,11 +46,11 @@ private class CMT_MetadataAPI_TEST {
                         'Field__c' => SObjectType.OpportunityContactRole.Fields.Role.getName()
                 });
 
-        CMT_MetadataAPI.commitPendingOperations(UserInfo.getUserId());
+        CMT_MetadataAPI.deployMetadata(UserInfo.getUserId(), CMT_MetadataAPI.cmtUpsertQueue);
         CMT_MetadataAPI.deleteCustomMetadataTypeRecord(CRLP_RollupCMT.MetadataObject.Filter_Group, 'SomeName');
 
         // Construct our callback class
-        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test', null);
+        CMT_MetadataAPI.MetadataCallBack callback = new CMT_MetadataAPI.MetadataCallBack('Test');
 
         // Construct a dummy Context
         TestingDeployCallbackContext context = new TestingDeployCallbackContext();

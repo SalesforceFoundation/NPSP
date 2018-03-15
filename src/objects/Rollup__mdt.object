@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>NPSP Customizable Rollup definitions</description>
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>true</defaultValue>
@@ -27,8 +28,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Amount Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups</relationshipLabel>
-        <relationshipName>Rollups</relationshipName>
+        <relationshipLabel>RollupAmount</relationshipLabel>
+        <relationshipName>RollupAmount</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -52,8 +53,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Date Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups1</relationshipLabel>
-        <relationshipName>Rollups1</relationshipName>
+        <relationshipLabel>RollupsDate</relationshipLabel>
+        <relationshipName>RollupsDate</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -74,8 +75,8 @@
         <label>Detail Field</label>
         <metadataRelationshipControllingField>Rollup__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups1</relationshipLabel>
-        <relationshipName>Rollups1</relationshipName>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
+        <relationshipName>RollupsDetail</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -86,8 +87,8 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Detail Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups3</relationshipLabel>
-        <relationshipName>Rollups3</relationshipName>
+        <relationshipLabel>RollupsDetail</relationshipLabel>
+        <relationshipName>RollupsDetail</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -192,8 +193,8 @@
         <label>Summary Field</label>
         <metadataRelationshipControllingField>Rollup__mdt.Summary_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
-        <relationshipLabel>Rollups2</relationshipLabel>
-        <relationshipName>Rollups2</relationshipName>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
+        <relationshipName>RollupsSummary</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
@@ -204,23 +205,14 @@
         <fieldManageability>DeveloperControlled</fieldManageability>
         <label>Summary Object</label>
         <referenceTo>EntityDefinition</referenceTo>
-        <relationshipLabel>Rollups4</relationshipLabel>
-        <relationshipName>Rollups4</relationshipName>
+        <relationshipLabel>RollupsSummary</relationshipLabel>
+        <relationshipName>RollupsSummary</relationshipName>
         <required>false</required>
         <type>MetadataRelationship</type>
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Use_Fiscal_Year__c</fullName>
-        <defaultValue>false</defaultValue>
-        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
-        <externalId>false</externalId>
-        <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Use Fiscal Year</label>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Yearly_Operation_Type__c</fullName>
+        <fullName>Time_Bound_Operation_Type__c</fullName>
         <description>Related to the Integer__c field. The value in that field represents the number of Years to sum or the number of days back to sum amounts for.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
@@ -249,7 +241,16 @@
             </valueSetDefinition>
         </valueSet>
     </fields>
+    <fields>
+        <fullName>Use_Fiscal_Year__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>Checkbox to indicate that Fiscal Year is to be used instead of Calendar year</description>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>Use Fiscal Year</label>
+        <type>Checkbox</type>
+    </fields>
     <label>Rollup</label>
     <pluralLabel>Rollups</pluralLabel>
-    <visibility>Protected</visibility>
+    <visibility>Public</visibility>
 </CustomObject>
