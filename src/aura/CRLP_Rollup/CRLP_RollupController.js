@@ -1,4 +1,6 @@
 ({
+    /* @description: fired on each init of rollup
+    */
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
          /* queries active rollup ID to populate the full active rollup detail
@@ -46,14 +48,19 @@
         helper.setObjectAndFieldDependencies(cmp);
     },
 
+    /* @description: fires when mode is changed
+    */
     onChangeMode: function (cmp, event, helper) {
         helper.changeMode(cmp);
     },
 
+    /* @description: fires when cancel button is clicked
+    * options for cancel: return to rollup summaries or return to view
+    * if mode is clone or create and ID is null the user returns to the grid
+    * else resets mode to view to become display-only and resets rollup values
+    */
     onCancel: function(cmp, event, helper) {
-        //options for cancel: return to rollup summaries or return to view
-        //first checks to see if mode is clone and bubbles up an Id of 0 to parent to trigger handleRollupSelect
-        //else resets mode to view to become display-only and resets rollup values
+        //todo: should we make this more sensitive to a clone from edit mode
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
             //set off cancel event for container
             var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
@@ -65,21 +72,24 @@
             var cachedRollup = cmp.get("v.cachedRollup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", helper.restructureResponse(cachedRollup.valueOf()));
-            //todo: need to add selected integer/operation/yearly op values here?
+            //reset all field visibility and values
+            helper.fieldSetup(cmp);
         }
     },
 
+    /* @description: fires when save button is clicked
+    */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
         helper.saveRollup(cmp, activeRollup);
     },
 
+    /* @description: listens for a message from the select field cmp to trigger a change in the rollup information
+    * fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
+    */
     onSelectValueChange: function(cmp, event, helper){
-        //listens for a message from the select field cmp to trigger a change in the rollup information
-        //fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
         var message = event.getParam("message");
         var channel = event.getParam("channel");
-        console.log("Message received!");
         if(channel === 'selectField'){
             var fieldName = message[0];
             var value = message[1];
@@ -96,11 +106,11 @@
             } else if (fieldName === 'filterGroup'){
                 helper.onChangeFilterGroup(cmp, label);
             } else if (fieldName ==='operation'){
-                helper.onChangeOperation(cmp, value, label);
+                helper.onChangeOperation(cmp, value);
             } else if(fieldName === 'yearlyOperation'){
                 helper.onChangeYearlyOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){
-                helper.onChangeInteger(cmp);
+                helper.onChangeInteger(cmp, value);
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
             }

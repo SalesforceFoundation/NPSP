@@ -1071,6 +1071,18 @@
         <members>CRLP_AdvancedCustomizationHeader</members>
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
+        <members>CRLP_CreateRollupSummaryObjectHelpText</members>
+        <members>CRLP_CreateRollupSummaryFieldHelpText</members>
+        <members>CRLP_CreateRollupDescriptionHelpText</members>
+        <members>CRLP_CreateRollupIntroHelpText</members>
+        <members>CRLP_CreateRollupNameHelpText</members>
+        <members>CRLP_CreateRollupTypeHelpText</members>
+        <members>CRLP_CreateRollupFilterGroupHelpText</members>
+        <members>CRLP_CreateRollupOperationHelpText</members>
+        <members>CRLP_CreateRollupFiscalYearHelpText</members>
+        <members>CRLP_CreateRollupTimeBoundOperationHelpText</members>
+        <members>CRLP_CreateRollupYearsAgoHelpText</members>
+        <members>CRLP_CreateRollupDaysBackHelpText</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
@@ -1787,6 +1799,9 @@
         <members>stgLabelUDRTargetFieldHelp</members>
         <members>stgLabelUDRTargetObject</members>
         <members>stgLabelView</members>
+        <members>stgLabelYearPicklistLastYear</members>
+        <members>stgLabelYearPicklistThisYear</members>
+        <members>stgLabelYearPicklistYearsAgo</members>
         <members>stgLinkDelete</members>
         <members>stgNPSPGuideImportData</members>
         <members>stgNPSPSettings</members>
