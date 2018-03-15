@@ -322,18 +322,20 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static Map<String,List<Map<String,String>>> getFieldsByDataType(List<String> objectNames) {
+    public static Map<String,List<Map<String,String>>> getFieldsByDataType(List<String> targetObjectNames, List<String> detailObjectNames) {
 
-        Map<String,List<Map<String,String>>> objNametoFieldTypeMap = new Map<String,List<Map<String,String>>>();
+        Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
-        for(String obj : objectNames){
-            List<Map<String, String>> fieldNameToFieldTypeObj = UTIL_Describe.getAllWritableFieldsWithType(obj);
-            objNametoFieldTypeMap.put(obj,fieldNameToFieldTypeObj);
-            //TODO: filter out fields that can't be rolled up before returning
-            //todo: will also need to append the field being used in the list
+        for(String detailObj : detailObjectNames){
+            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(detailObj);
+            objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+        }
+        for(String targetObj : targetObjectNames){
+            List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj);
+            objNameToFieldTypeMap.put(targetObj, summaryNameToFieldTypeObj);
         }
 
-        return objNametoFieldTypeMap;
+        return objNameToFieldTypeMap;
     }
 
 
@@ -429,6 +431,36 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return labels;
+    }
+
+    /*******************************************************************************************************
+    * @description Finds writable, custom target fields of specific types to provide field lists for Rollup definitions.
+    * @param objectName the name of the object to look up
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    public static List<Map<String, String>> getTargetFieldsWithType(String objectName) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            //valid types are taken from the DisplayType Enum
+            String type = dfr.getType().Name();
+            Set<String> validTypeSet = new Set<String>{'DATE', 'DATETIME', 'DOUBLE', 'ID', 'MULTIPICKLIST', 'PICKLIST', 'STRING', 'TEXTAREA'};
+            Boolean isValidType = validTypeSet.contains(type);
+
+            if(dfr.isUpdateable() && dfr.isCustom() && !dfr.name.contains('SYSTEM') && isValidType){
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', type);
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
     }
 
 }

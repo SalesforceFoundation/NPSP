@@ -13,23 +13,23 @@
                 , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
                 , {label: labels.allocationLabel, name: 'Allocation__c'}];
             var summaryObjects = cmp.get("v.summaryObjects");
-            var availableObjects = detailObjects.concat(summaryObjects);
-
             cmp.set("v.detailObjects", detailObjects);
 
             //put only the object names into a list
-            var objectList = availableObjects.map(function (obj, index, array) {
-                return obj.name;
+            var summaryNames = summaryObjects.map(function (summaryObj, index, array) {
+                return summaryObj.name;
+            });
+            var detailNames = detailObjects.map(function (detailObj, index, array) {
+                return detailObj.name;
             });
 
             var action = cmp.get("c.getFieldsByDataType");
-            action.setParams({objectNames: objectList});
+            action.setParams({targetObjectNames: summaryNames, detailObjectNames: detailNames});
 
             action.setCallback(this, function (response) {
                 var state = response.getState();
                 console.log('STATE' + state);
                 if (state === "SUCCESS") {
-                    console.log('RESPONSE: ' + response.getReturnValue());
                     var data = response.getReturnValue();
                     cmp.set("v.objectDetails", data);
                     this.setIntegerYearList(cmp);
