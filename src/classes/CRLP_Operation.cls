@@ -40,47 +40,48 @@ public class CRLP_Operation {
      * @description Enum of valid Rollup Operation Types supported by the Customizable Rollups Engine
      */
     public enum RollupType {
-        COUNT,
-        SUM,
-        AVERAGE,
-        LARGEST,
-        SMALLEST,
-        FIRST,
-        LAST,
-        YEARS_DONATED,
-        CURRENT_STREAK,
-        BEST_YEAR,
-        BEST_YEAR_TOTAL
+        Count,
+        Sum,
+        Average,
+        Largest,
+        Smallest,
+        First,
+        Last,
+        Years_Donated,
+        Donor_Streak,
+        Best_Year,
+        Best_Year_Total
     }
 
     /**
      * @description Enum of valid Yearly Operation Types supported by the Customizable Rollups Engine
      */
-    public enum YearlyOperationType {
-        ALL_TIME,
-        YEARS_AGO,
-        DAYS_BACK
+    public enum TimeBoundOperationType {
+        All_Time,
+        Years_Ago,
+        Days_Back
     }
 
     /**
-     * @description Converts the enum strings into friendly strings for the pick-lists. The Enum value
+     * @description Converts the enum strings into picklist api names to match the picklist field. The Enum value
      * and the String label should exactly match the picklist values in the Rollup__mdt.Operation__c field
      */
     public static Map<CRLP_Operation.RollupType, String> getRollupOperationTypes() {
         return new Map<CRLP_Operation.RollupType, String>{
-                CRLP_Operation.RollupType.COUNT => 'Count',
-                CRLP_Operation.RollupType.SUM => 'Sum',
-                CRLP_Operation.RollupType.AVERAGE => 'Average',
-                CRLP_Operation.RollupType.LARGEST => 'Largest',
-                CRLP_Operation.RollupType.SMALLEST => 'Smallest',
-                CRLP_Operation.RollupType.FIRST => 'First',
-                CRLP_Operation.RollupType.LAST => 'Last',
-                CRLP_Operation.RollupType.YEARS_DONATED => 'Years Donated',
-                CRLP_Operation.RollupType.CURRENT_STREAK => 'Current Streak',
-                CRLP_Operation.RollupType.BEST_YEAR => 'Best Year',
-                CRLP_Operation.RollupType.BEST_YEAR_TOTAL => 'Best Year Total'
+                CRLP_Operation.RollupType.Count => 'Count',
+                CRLP_Operation.RollupType.Sum => 'Sum',
+                CRLP_Operation.RollupType.Average => 'Average',
+                CRLP_Operation.RollupType.Largest => 'Largest',
+                CRLP_Operation.RollupType.Smallest => 'Smallest',
+                CRLP_Operation.RollupType.First => 'First',
+                CRLP_Operation.RollupType.Last => 'Last',
+                CRLP_Operation.RollupType.Years_Donated => 'Years_Donated',
+                CRLP_Operation.RollupType.Donor_Streak => 'Donor_Streak',
+                CRLP_Operation.RollupType.Best_Year => 'Best_Year',
+                CRLP_Operation.RollupType.Best_Year_Total => 'Best_Year_Total'
         };
     }
+
     /** @description Inverse of the getRollupOperationTypes map to use for quick lookups */
     private static Map<String, CRLP_Operation.RollupType> rollupOperationTypesByName;
 
@@ -91,6 +92,7 @@ public class CRLP_Operation {
      * @return Integer value of 0 to 3.
      */
     public static Integer operationTypeToArrayPosition(CRLP_Operation.RollupType rlpType) {
+
         return (rlpType == RollupType.FIRST ? 0 :
                 rlpType == RollupType.LAST ? 1 :
                 rlpType == RollupType.LARGEST ? 2 :
@@ -103,16 +105,16 @@ public class CRLP_Operation {
      * @param CRLP_Operation.RollupType
      * @return List of valid SelectOptions to display
      */
-    public static List<SelectOption> getAvailableYearlyOperationTypes(String rollupOperation) {
+    public static List<SelectOption> getAvailableTimeBoundOperationTypes(String rollupOperation) {
         List<SelectOption> options = new List<SelectOption>{
-                new SelectOption(YearlyOperationType.ALL_TIME.name(), 'All Time')
+                new SelectOption(TimeBoundOperationType.ALL_TIME.name(), 'All Time')
         };
         if (rollupOperation == CRLP_Operation.RollupType.SUM.name() ||
                 rollupOperation == CRLP_Operation.RollupType.COUNT.name() ||
                 rollupOperation == CRLP_Operation.RollupType.LARGEST.name() ||
                 rollupOperation == CRLP_Operation.RollupType.SMALLEST.name()) {
-            options.add(new SelectOption(YearlyOperationType.YEARS_AGO.name(), 'Years Ago'));
-            options.add(new SelectOption(YearlyOperationType.DAYS_BACK.name(), 'Days Back'));
+            options.add(new SelectOption(TimeBoundOperationType.YEARS_AGO.name(), 'Years Ago'));
+            options.add(new SelectOption(TimeBoundOperationType.DAYS_BACK.name(), 'Days Back'));
         }
         return options;
     }

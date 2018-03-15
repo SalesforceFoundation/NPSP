@@ -53,6 +53,14 @@ public class CMT_FilterRuleEvaluation_SVC {
     private static Map<String, Boolean> cachedFilterEvalResults = new Map<String, Boolean>();
 
     /**
+     * @description Allow the cache of filter group eval results to be cleared externally, such as when the
+     * detail record changes.
+     */
+    public static void clearEvaluationCache() {
+        cachedFilterEvalResults.clear();
+    }
+
+    /**
      * @description For a given SObject detail record and possibly a related related record, evaluate the
      * record(s) against the FilterRules in the specified FilterGroupId.
      * @param detailRows A collection of SObject records to be processed.
@@ -89,7 +97,6 @@ public class CMT_FilterRuleEvaluation_SVC {
                 if (objType == rule.getObjectType()) {
                     if (!rule.isIncluded(record)) {
                         // No reason to continue if any one rule for any one record fails the evaluation
-                        cachedFilterEvalResults.put(cacheKey, false);
                         return false;
                     }
                 }

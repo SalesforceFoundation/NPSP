@@ -136,6 +136,7 @@
         <members>CRLP_RollupContact_TEST</members>
         <members>CRLP_RollupGAU_SVC</members>
         <members>CRLP_RollupGAU_TEST</members>
+        <members>CRLP_RollupProcessingOptions</members>
         <members>CRLP_RollupProcessor_SVC</members>
         <members>CRLP_RollupQueueable</members>
         <members>CRLP_RollupScheduler</members>
@@ -672,10 +673,12 @@
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_LDV_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Allocation_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_LDV_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Contact_LDV_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Soft_Credit_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
@@ -949,7 +952,7 @@
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
         <members>Rollup__mdt.Use_Fiscal_Year__c</members>
-        <members>Rollup__mdt.Yearly_Operation_Type__c</members>
+        <members>Rollup__mdt.Time_Bound_Operation_Type__c</members>
         <members>Schedulable__c.Active__c</members>
         <members>Schedulable__c.Class_Name__c</members>
         <members>Schedulable__c.Frequency__c</members>
@@ -1113,6 +1116,8 @@
         <members>PageMessagesError</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesWarning</members>
+        <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>
+        <members>RD_ErrorNotEnoughClosedValueForFixedLength</members>
         <members>REL_Create_New_Relationship</members>
         <members>REL_Former</members>
         <members>REL_No_Relationships</members>
@@ -1273,6 +1278,7 @@
         <members>engagementPlanCantEdit</members>
         <members>engagementPlanNoLookups</members>
         <members>engagementPlanTwoLookups</members>
+        <members>exceptionDeletePermission</members>
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>

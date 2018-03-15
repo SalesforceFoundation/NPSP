@@ -44,7 +44,7 @@ public class CRLP_ConfigBuilder_SVC {
 
     /** @description Metadata queued up for deployment */
     @TestVisible
-    private static List<List<Metadata.CustomMetadata>> queuedNestedMetadata = new List<List<Metadata.CustomMetadata>>();
+    private static List<Metadata.CustomMetadata> queuedMetadataTypes = new List<Metadata.CustomMetadata>();
 
     /**
      * @description Queue a list of CRLP_RollupCMT.Filter Groups instances and optionally a list of Filter Rules
@@ -62,8 +62,8 @@ public class CRLP_ConfigBuilder_SVC {
             }
         }
 
-        queuedNestedMetadata.add(groups);
-        queuedNestedMetadata.add(rules);
+        queuedMetadataTypes.addAll(groups);
+        queuedMetadataTypes.addAll(rules);
     }
 
     /**
@@ -75,7 +75,7 @@ public class CRLP_ConfigBuilder_SVC {
         for (CRLP_RollupCMT.FilterRule fr : rules) {
             rollupMD.add(fr.getMetadataRecord());
         }
-        queuedNestedMetadata.add(rollupMD);
+        queuedMetadataTypes.addAll(rollupMD);
     }
 
     /**
@@ -87,26 +87,25 @@ public class CRLP_ConfigBuilder_SVC {
         for (CRLP_RollupCMT.Rollup rlp : rollups) {
             rollupMD.add(rlp.getMetadataRecord());
         }
-        queuedNestedMetadata.add(rollupMD);
+        queuedMetadataTypes.addAll(rollupMD);
     }
 
     /**
-     * @description Clear the queuedNestedMetadata static var contents
+     * @description Clear the queuedMetadata static var contents
      */
     public static void clearQueue() {
-        queuedNestedMetadata.clear();
+        queuedMetadataTypes.clear();
     }
 
     /**
-     * @description Pass the List<List<CustomMetadata>> to the CMT_MetadataAPI for deployment using a chaining process
-     * to support inserting/updating one set of CMT records before another set can be updated/inserted.
+     * @description Pass the List<CustomMetadata>> to the CMT_MetadataAPI for deployment
      * @return A unique jobId. This value is used when writing the final status to the Customizable_Rollup_Settings__c
      * object and is needed to ensure that the status retrieved from that custom settings object is for this
      * particular deployment and not a previous one.
      */
     public static String deployedQueuedMetadataTypes() {
         String jobId = getUniqueJobId();
-        CMT_MetadataAPI.deployMetadata(jobId, queuedNestedMetadata.clone());
+        CMT_MetadataAPI.deployMetadata(jobId, queuedMetadataTypes.clone());
         return jobId;
     }
 

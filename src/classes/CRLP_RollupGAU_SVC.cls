@@ -43,11 +43,9 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
      */
     public override void initRollup() {
-        List<Rollup__mdt> rlps = CRLP_Rollup_SEL.getRollupsBySummaryType().get(General_Accounting_Unit__c.SObjectType);
-        if (rlps != null) {
-            for (Rollup__mdt r : rlps) {
-                addRollupDefinition(r);
-            }
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
+                CRLP_RollupProcessingOptions.RollupType.GAU, this.jobFilter)) {
+            addRollupDefinition(r);
         }
     }
 
@@ -59,17 +57,19 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
+     * @param childRecordsByDetailId Ignored for GAU rollups
      * @return none
      */
-    public override void processRollups(List<SObject> details) {
+    public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the Allocation to the GAU object
 
         List<Allocation__c> allocs = (List<Allocation__c>)details;
-        for (Integer n=0, listSize=allocs.size(); n<listSize; n++) {
+        for (Integer n=0, listSize = allocs.size(); n<listSize; n++) {
             Allocation__c alloc = allocs[n];
             Opportunity opp = alloc.Opportunity__r;
 
-            for (CRLP_Rollup rollup : this.rollups) {
+            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
+                CRLP_Rollup rollup = this.rollups[nsr];
                 Id filterGroupId = rollup.filterGroup;
 
                 // Process rollups that are coming from the Opportunity only (not from Payment)
@@ -81,6 +81,9 @@ public class CRLP_RollupGAU_SVC extends CRLP_VRollupHandler {
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, alloc);
                 }
             }
+
+            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }
     }
 

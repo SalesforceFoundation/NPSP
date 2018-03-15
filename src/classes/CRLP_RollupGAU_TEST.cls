@@ -71,31 +71,31 @@ private class CRLP_RollupGAU_TEST {
                 CMT_UnitTestData_TEST.createRollupRecord('Household Total Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Total_Allocations__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Average Allocations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Average_Allocation__c', CRLP_Operation.RollupType.AVERAGE, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Allocations 2 Years Ago', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Total_Allocations_Two_Years_Ago__c', CRLP_Operation.RollupType.SUM, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.YEARS_AGO, 2) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Max Allocation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Largest_Allocation__c', CRLP_Operation.RollupType.LARGEST, 'Amount__c',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
                         'Description__c', CRLP_Operation.RollupType.YEARS_DONATED, '',
-                        CRLP_Operation.YearlyOperationType.ALL_TIME, 0) + ',' +
+                        CRLP_Operation.TimeBoundOperationType.ALL_TIME, 0) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.GAU,
-                        'Total_Allocations_Last_N_Days__c', CRLP_Operation.RollupType.CURRENT_STREAK, '',
+                        'Total_Allocations_Last_N_Days__c', CRLP_Operation.RollupType.Donor_Streak, '',
                         null, 0) +
                 ']';
 
@@ -132,7 +132,9 @@ private class CRLP_RollupGAU_TEST {
                         Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Allocation_Batch_Size__c = 400,
-                        Rollups_LDV_Batch_Size__c = 100
+                        Rollups_Account_LDV_Batch_Size__c = 100,
+                        Rollups_Contact_LDV_Batch_Size__c = 100,
+                        Rollups_Soft_Credit_Batch_Size__c = 100
                 )
         );
 
@@ -209,7 +211,7 @@ private class CRLP_RollupGAU_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String gauQuery = CRLP_Query_SEL.getResultsQuery(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';
+        String gauQuery = CRLP_Query_SEL.buildObjectQueryForRollup(General_Accounting_Unit__c.SObjectType) + ' WHERE Id = :gauId LIMIT 1';
         General_Accounting_Unit__c gau = database.query(gauQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
