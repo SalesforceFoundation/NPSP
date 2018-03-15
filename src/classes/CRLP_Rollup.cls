@@ -169,8 +169,10 @@ public class CRLP_Rollup {
     /**
      * @description Determine if the passed Rollup__mdt record has the identical key properties to this
      * Rollup instance: FilterGroup, Summary Object, Detail Field, Amount Field, Date Field, and UseFiscalYear.
+     * Grouping of Rollup__mdt records in instances of CRLP_Rollup significantly improves the overall rollup performance
+     * because it reduced the number of for-loop iterations for each detail record being rolled up.
      * @param Rollup__mdt
-     * @return True or False
+     * @return True (group the Mdt record into this CRLP_Rollup instance) or False (create a new CRLP_Rollup instance for this record)
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
