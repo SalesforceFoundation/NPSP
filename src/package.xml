@@ -151,7 +151,6 @@
         <members>CRLP_RollupProcessingOptions</members>
         <members>CRLP_RollupProcessor_SVC</members>
         <members>CRLP_RollupQueueable</members>
-        <members>CRLP_RollupScheduler</members>
         <members>CRLP_RollupScheduler_TEST</members>
         <members>CRLP_RollupSoftCredit_SVC</members>
         <members>CRLP_RollupSoftCredit_TEST</members>

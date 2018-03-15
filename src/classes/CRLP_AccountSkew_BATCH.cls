@@ -34,7 +34,9 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Account Hard Credit Rollup Batch Job using the "Skew" rollup method
 */
-public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+
+    public CRLP_AccountSkew_BATCH() {}
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Skew" criteria
@@ -43,6 +45,13 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      */
     public CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
     }
 
     /*******************************************************************************************************

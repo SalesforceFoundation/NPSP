@@ -67,7 +67,7 @@ private class CRLP_RollupScheduler_TEST {
         // Count the number of jobs using the CRLP_RollupScheduler class
         Integer jobCount = 0;
         for (String jobName : UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet()) {
-            if (UTIL_MasterSchedulableHelper.defaultScheduledJobs.get(jobName)[1] == 'CRLP_RollupScheduler') {
+            if (UTIL_MasterSchedulableHelper.defaultScheduledJobs.get(jobName)[1].startsWith('CRLP_')) {
                 jobCount++;
             }
         }
@@ -75,7 +75,7 @@ private class CRLP_RollupScheduler_TEST {
 
         // Verify that the correct number of jobs has been scheduled
         List<AsyncApexJob> scheduledJobs = [SELECT Id, JobType, Status, ApexClass.Name FROM AsyncApexJob
-                                WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name = 'CRLP_RollupScheduler'];
+                                WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name LIKE 'CRLP_%'];
         System.assertEquals(jobCount, scheduledJobs.size(),
             'There should be ' + jobCount + ' jobs scheduled using the CRLP_RollupScheduler interface');
 
@@ -87,88 +87,7 @@ private class CRLP_RollupScheduler_TEST {
         UTIL_MasterSchedulableHelper.setScheduledJobs();
 
         System.assertEquals(0, [SELECT count() FROM AsyncApexJob
-            WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler' AND Status != 'Aborted'],
+            WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
             'There should be zero jobs scheduled using the CRLP_RollupScheduler interface');
-    }
-
-    /**
-     * @description Test scheduling a single non-LDV job
-     */
-    static testMethod void test_Scheduled_CRLP_Rollup_Job() {
-
-        // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
-                        Rollups_Account_Batch_Size__c = 100,
-                        Rollups_Contact_Batch_Size__c = 100,
-                        Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_Account_LDV_Batch_Size__c = 1000
-                ));
-
-        // Delete all currently scheduled jobs
-        List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
-        for (CronTrigger eachJob : jobs) {
-            System.abortJob(eachJob.Id);
-        }
-
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
-        insert c;
-
-        Test.startTest();
-        // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit));
-        // StopTest to allow the job to execute
-        Test.stopTest();
-
-        // It's not possible to verify that the scheduled job actually ran unfortunately other than to see if
-        // the rollup job actually rolled anything up, but there are no rollups in this particular test.
-    }
-
-    /**
-     * @description Test scheduling a single LDV job
-     */
-    static testMethod void test_Scheduled_CRLP_Rollup_Skew_Job() {
-
-        // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 1,
-                        Rollups_Account_Batch_Size__c = 100,
-                        Rollups_Contact_Batch_Size__c = 100,
-                        Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_Account_LDV_Batch_Size__c = 1000
-                ));
-
-        // Delete all currently scheduled jobs
-        List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
-        for (CronTrigger eachJob : jobs) {
-            System.abortJob(eachJob.Id);
-        }
-
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
-        insert c;
-
-        Opportunity opp =new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
-                Amount = 500,
-                CloseDate = Date.Today().addDays(1),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Primary_Contact__c = c.Id
-        );
-        insert opp;
-
-        Test.startTest();
-        // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit));
-        // StopTest to allow the job to execute
-        Test.stopTest();
-
-        // It's not possible to verify that the scheduled job actually ran unfortunately other than to see if
-        // the rollup job actually rolled anything up, but there are no rollups in this particular test.
     }
 }

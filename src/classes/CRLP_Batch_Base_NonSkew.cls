@@ -36,6 +36,8 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
+    protected CRLP_Batch_Base_NonSkew() { }
+
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
     // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
     // are included in the queries/processing to ensure the values are reset accordingly. Now, the assumption here

@@ -34,7 +34,17 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Contact Hard Credit Rollup Batch Job using the "Skew" rollup method
 */
-public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful,Schedulable {
+
+    public CRLP_ContactSkew_BATCH() { }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Skew" criteria

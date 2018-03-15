@@ -42,6 +42,9 @@ public class CRLP_Rollup_SVC {
 
     private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
 
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
     /**
      * @description Interface class that the each of the 5 handler classes will implement
      */
@@ -147,9 +150,6 @@ public class CRLP_Rollup_SVC {
         return hasValueChanged;
     }
 
-    /** @description Custom Settings record that defines specific Customizable Rollups settings */
-    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
     /**
     * @description Returns true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
     */
@@ -157,44 +157,6 @@ public class CRLP_Rollup_SVC {
         get {
             return (customizableRollupSettings.Customizable_Rollups_Enabled__c == true);
         } private set;
-    }
-
-    /**
-     * @description Return the batch size to use for the specified Rollup Job and Rollup Type
-     * @param jobType Job Type Enum
-     * @param jobMode Batch Job Mode Enum
-     * @return Integer value
-     */
-    public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
-        Integer batchSize;
-        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-            }
-        } else {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                batchSize = customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                batchSize = customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                batchSize = customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
-
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-            }
-        }
-        return (batchSize != null ? batchSize : 200);
     }
 
     /**

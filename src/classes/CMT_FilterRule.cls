@@ -152,13 +152,14 @@ public class CMT_FilterRule {
      */
     public Boolean isIncluded(SObject record) {
         Boolean included = compare.isIncluded(record, this);
-        if (!included) {
-            // TODO Remove the debug statements once all testing is finalized
-//            System.Debug(LoggingLevel.Error, '>>> THIS FAILED <<<');
-//            System.Debug(LoggingLevel.Error, '>>> ' + this.objectType.getDescribe().getName() + '.' + this.field.getDescribe().getName());
-//            System.Debug(LoggingLevel.Error, '>>> ' + this.operation);
-//            System.Debug(LoggingLevel.Error, '>>> ' + this.constant);
-        }
+        // TODO Remove the debug statements once all testing is finalized
+        /*if (!included) {
+            System.debug(LoggingLevel.Error, '>>> THIS FAILED  - ' + this.objectType.getDescribe().getName() + '.' +
+                    this.field.getDescribe().getName() + ' ' + this.operation + ' ' + this.constant);
+        } else {
+            System.debug(LoggingLevel.Error, '>>> THIS PASSED - ' + this.objectType.getDescribe().getName() + '.' +
+                    this.field.getDescribe().getName() + ' ' + this.operation + ' ' + this.constant);
+        }*/
         return included;
     }
 

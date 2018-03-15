@@ -34,7 +34,17 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Account Soft Credit Rollup Batch Job for the "Skew" rollup method
 */
-public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+
+    public CRLP_AccountSkew_SoftCredit_BATCH() { }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria

@@ -33,7 +33,7 @@
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Rollup Operation Services Classes
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_Rollup_SVC_TEST {
 
     /**
@@ -52,11 +52,12 @@ private class CRLP_Rollup_SVC_TEST {
                         Rollups_Contact_Batch_Size__c = 20
                 ));
 
-        system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
-        system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
-        system.assertEquals(200, CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
-        system.assertEquals(200, CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
-        system.assertEquals(400, CRLP_Rollup_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.GAU, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+        system.assertEquals(20, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        system.assertEquals(20, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        system.assertEquals(200, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+        system.assertEquals(200, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+        system.assertEquals(400, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.GAU, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+
         system.assertEquals(200, CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode());
         system.assertEquals(true, CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled);
         system.assertNotEquals(null, CRLP_Rollup_SVC.getSObjectFieldDescribe('Account', 'Name'));

@@ -34,7 +34,17 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description GeneralAccountingUnit Rollup Batch Job for the "Skew" rollup method
 */
-public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful {
+public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+
+    public CRLP_GAU_BATCH() {}
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
@@ -63,9 +73,6 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
         execute(summaryRecords);
     }
 
-    /**
-     * @description nothing to do here for this type of batch job
-     */
     public void finish(Database.BatchableContext bc) {
         finish();
     }

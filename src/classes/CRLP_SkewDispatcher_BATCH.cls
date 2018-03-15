@@ -80,12 +80,16 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
      * @description Query records to be rolled up using Skew Mode
      */
     public database.Querylocator start(Database.BatchableContext bc) {
+        String query;
         try {
             Boolean hasActiveRollups = false;
 
             // Build a query string of the target Summary object.
-            String query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
-            query += ' WHERE ' + CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            query = 'SELECT Id FROM ' + this.summaryObjectType.getDescribe().getName();
+            String skewFilter = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!String.isEmpty(skewFilter)) {
+                query += ' WHERE ' + skewFilter;
+            }
 
             // If the Summary Object is the Account, then filter on Accounts that have at least a single
             // Opportunity attached. This is helpful to reduce the overall query size.
@@ -105,7 +109,7 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
             if (hasActiveRollups == true) {
                 // Chunking logic: Filter for Id greater than the last Id processed, sort by Id, and limit the number of records
                 if (this.lastIdProcessed != null) {
-                    query += ' AND Id > \'' + this.lastIdProcessed + '\'';
+                    query += (query.contains(' WHERE ') ? ' AND' : ' WHERE') + ' Id > \'' + this.lastIdProcessed + '\'';
                 }
                 query += ' ORDER BY Id ASC';
 
@@ -119,7 +123,8 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
             return Database.getQueryLocator(query);
 
         } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            ex.setMessage(ex.getMessage() + '\n' + query);
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP.name() + '.' + this.jobType);
         }
 
         return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]); // return a generic empty data set rather than null
@@ -134,7 +139,6 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
             this.recordIds = new List<Id>(summaryMap.keySet());
             this.lastIdProcessed = this.recordIds[summaryRecords.size() - 1];
         }
-
     }
 
     /**

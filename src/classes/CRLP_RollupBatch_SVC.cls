@@ -36,6 +36,9 @@
 */
 public class CRLP_RollupBatch_SVC {
 
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
     /**
      * @description Returns the Summary ObjectType based on the specific JobType
      * @param jobType Rollup Job Type Enum
@@ -58,10 +61,10 @@ public class CRLP_RollupBatch_SVC {
      * effectively the only place where the fields needed to make this determination are referenced.
      * @param jobType Rollup Job Type Enum
      * @param jobMode Batch Job Mode (Skew or NonSkew)
-     * @return A portion of a WHERE clause without WHERE or AND
+     * @return A portion of a WHERE clause without WHERE or AND; or an empty string
      */
     public static String getSkewWhereClause(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
-        String queryFilter = null;
+        String queryFilter = '';
         String operator = (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode ? ' >= ' : ' < ');
         Integer maxRelatedOppsForNonLDVMode = CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode();
 
@@ -88,13 +91,15 @@ public class CRLP_RollupBatch_SVC {
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             // TODO -- How to get Accounts that require using this method for Soft Credits??
-            // For Now, we'll force all Account Soft Credits to use the NonSkew method
-            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
-                queryFilter = 'CreatedDate = 1970-01-15T00:23:15Z';
+            // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
+            queryFilter = '(npo02__NumberOfClosedOpps__c' + operator + maxRelatedOppsForNonLDVMode;
+            if (operator.contains('<')) {
+                queryFilter += ' OR npo02__NumberOfClosedOpps__c = null';
             }
+            queryFilter += ')';
 
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-            // no extra filter on this type.
+            // no extra filter on this type since we're always processing all GAU's using the skew method
 
         }
 
@@ -124,6 +129,11 @@ public class CRLP_RollupBatch_SVC {
         return true;
     }
 
+    public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType,
+            CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        executeBatchRollupJob(jobType, jobMode, null, null);
+    }
+
     /**
      * @description Centralized Rollup Batch Job execution based on the Job Type, Batch Job Mode, etc.
      * @param jobType Rollup Job Type Enum
@@ -136,7 +146,7 @@ public class CRLP_RollupBatch_SVC {
     public static void executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType jobType, 
             CRLP_RollupProcessingOptions.BatchJobMode jobMode, List<Id> recordIds, Id lastIdProcessed) {
 
-        Integer batchSize = CRLP_Rollup_SVC.getBatchSize(jobType, jobMode);
+        Integer batchSize = getBatchSize(jobType, jobMode);
         if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
@@ -163,5 +173,51 @@ public class CRLP_RollupBatch_SVC {
                 database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
             }
         }
+    }
+
+    /**
+     * @description Return the batch size to use for the specified Rollup Job and Rollup Type
+     * @param jobType Job Type Enum
+     * @param jobMode Batch Job Mode Enum
+     * @return Integer value
+     */
+    // TODO - Refactor Batch Size Fields Into:
+    // Account_BatchSize_NonSkew (hard and soft credit)
+    // Account_BatchSize_Skew
+    // Contact_BatchSize_NonSkew
+    // Contact_BatchSize_Skew
+    // GAU_BatchSize_Skew
+    // RD_BatchSize_Skew (or use field added recently)
+    // SkewDispatcher_BatchSize
+    public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
+        Integer batchSize;
+        if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+            }
+        } else {
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+            }
+        }
+        return (batchSize != null ? batchSize : 200);
     }
 }

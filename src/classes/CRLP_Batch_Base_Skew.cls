@@ -36,6 +36,8 @@
 */
 public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
 
+    protected CRLP_Batch_Base_Skew() { }
+
     /**
      * @description Because Salesforce may call the execute method with sorted blocks of data out of sequence
      * it's necessary to store the working rollup data in a stateful map. Rather than write the current state to
@@ -118,18 +120,19 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     whereClauses.add(keyField + ' IN :recordIds');
                 } else {
                     String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-                    if (skewClause != null) {
+                    if (!String.isEmpty(skewClause)) {
                         whereClauses.add(skewClause);
                     }
                 }
 
-                // TODO POSSIBLY REFACTOR THIS FOR HARD/SOFT CREDITS BASED ON NEW ORG ROLLUP LOGIC
                 // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
                 if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                     whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
+
                 } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                         this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-//                    whereClauses.add('IsPrimary = false');
+                    whereClauses.add('(IsPrimary = False' +
+                            ' OR (IsPrimary = True AND Opportunity.Account.npe01__SYSTEMIsIndividual__c = False))');
                 }
 
                 // Identify a common filter that can be applied to the main query to reduce the number of records queried
