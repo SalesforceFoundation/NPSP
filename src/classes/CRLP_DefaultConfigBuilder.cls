@@ -80,7 +80,7 @@ public class CRLP_DefaultConfigBuilder {
     public static final String FilterGroup_PledgedDonations = RecordNamePrefix + 'Pledged_Donations';
 
     /** @description The RecordName for the default filter group of Closed Won Donations without RT Exclusions(Unique to Recurring Donations Rollups) */
-    public static final String FilterGroup_ClosedWonDonations_NoRTExclusions = RecordNamePrefix + 'ClosedWon_Donations_No_RT_Exclusions';
+    public static final String FilterGroup_ClosedWonOpps_NoRTExclusions = RecordNamePrefix + 'ClosedWon_Opps_No_RT_Exclusions';
 
 
     // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
@@ -474,13 +474,13 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Opportunity to Recurring Donation ======== */
             'npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c' =>
-                    new List<String>{ 'Recurring Donation: Next Payment Date', 'Date of the next Opportunity set to close' },
+                    new List<String>{ 'RD: Next Payment Date', 'Date of the next Opportunity set to close' },
             'npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c' =>
-                    new List<String>{ 'Recurring Donation: Last Payment Date', 'Date of the last Closed Won Opportunity' },
+                    new List<String>{ 'RD: Last Payment Date', 'Date of the last Closed Won Opportunity' },
             'npe03__Recurring_Donation__c.npe03__Paid_Amount__c' =>
-                    new List<String>{ 'Recurring Donation: Paid Amount', 'Sum of Opportunity Amounts of all Closed Won Opportunities' },
+                    new List<String>{ 'RD: Paid Amount', 'Sum of Opportunity Amounts of all Closed Won Opportunities' },
             'npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c' =>
-                    new List<String>{ 'Recurring Donation: Total Paid Installments', 'Count of all Closed Won Opportunities' }
+                    new List<String>{ 'RD: Total Paid Installments', 'Count of all Closed Won Opportunities' }
 
     };
 

@@ -275,17 +275,17 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleNotWon.objectName = 'Opportunity';
         ruleNotWon.fieldName = 'isWon';
         ruleNotWon.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
-        ruleNotWon.value = null;
+        ruleNotWon.value = 'false';
         groupPledgedDonations.rules.add(ruleNotWon);
-
+    
         // ==============================================================================================================
         // Default "Donations: Close/Won Stage WITHOUT RT Exclusions" filter group -- Recurring Donations Rollups
         // ==============================================================================================================
-        CRLP_RollupCMT.FilterGroup groupClosedWonDonationsNoRTExclusions = new CRLP_RollupCMT.FilterGroup(acctDonation+': Closed Won excluding RTs');
-        groupClosedWonDonationsNoRTExclusions.recordName = CRLP_DefaultConfigBuilder.FilterGroup_ClosedWonDonations_NoRTExclusions;
+        CRLP_RollupCMT.FilterGroup groupClosedWonDonationsNoRTExclusions = new CRLP_RollupCMT.FilterGroup(acctDonation+': Closed Won not excluding RTs');
+        groupClosedWonDonationsNoRTExclusions.recordName = CRLP_DefaultConfigBuilder.FilterGroup_ClosedWonOpps_NoRTExclusions;
         groupClosedWonDonationsNoRTExclusions.description = 'Closed/Won {0} Opportunities for Recurring Donations Rollups. ';
 
-        CRLP_RollupCMT.FilterRule ruleCloseWonStage4 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsNoRTExclusions.recordName, acctDonation+': Not Won Only');
+        CRLP_RollupCMT.FilterRule ruleCloseWonStage4 = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsNoRTExclusions.recordName, acctDonation+': Won Only');
         ruleCloseWonStage4.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage4.recordName;
         ruleCloseWonStage4.objectName = 'Opportunity';
         ruleCloseWonStage4.fieldName = 'IsWon';
@@ -293,14 +293,12 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage4.value = 'true';
         groupClosedWonDonationsNoRTExclusions.rules.add(ruleCloseWonStage4);
 
-
-
         // ==============================================================================================================
         // Create a list of the default Groups+Rules to use for deployment
         // ==============================================================================================================
 
         List<CRLP_RollupCMT.FilterGroup> groups = new List<CRLP_RollupCMT.FilterGroup>{
-                groupClosedWonDonations, groupMemberships, groupAllocations, groupPledgedDonations
+                groupClosedWonDonations, groupMemberships, groupAllocations, groupPledgedDonations, groupClosedWonDonationsNoRTExclusions
         };
         if (groupClosedWonDonationsContacts != null) {
             groups.add(groupClosedWonDonationsContacts);
