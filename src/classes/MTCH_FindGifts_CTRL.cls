@@ -59,7 +59,11 @@ public with sharing class MTCH_FindGifts_CTRL {
 
     /* @description a set of closed won Opp stages */
     private Set<String> closedWonStages;
-    
+
+    /** @description The currency symbol or ISO code of the related record or org default */
+    @TestVisible
+    private String currencySymbol;
+
     /*******************************************************************************************************
     * @description constructor for the page
     * @param controller the StandardController for the page
@@ -172,7 +176,23 @@ public with sharing class MTCH_FindGifts_CTRL {
         }
         return totalSelected;
     }
-    
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(opp.Id);
+        }
+        return currencySymbol;
+    }
+
     /*******************************************************************************************************
     * @description Saves changes made in the page by creating OCR's and Partial Soft Credits.
     * @return True if success, false if failure

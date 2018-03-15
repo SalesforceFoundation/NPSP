@@ -143,7 +143,7 @@
     </fields>
     <fields>
         <label><!-- Yearly Operation Type --></label>
-        <name>Yearly_Operation_Type__c</name>
+        <name>Time_Bound_Operation_Type__c</name>
         <picklistValues>
             <masterLabel>All Time</masterLabel>
             <translation><!-- All Time --></translation>

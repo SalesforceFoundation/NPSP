@@ -111,8 +111,7 @@ public without sharing class CMT_FilterRule_SEL {
      * @return List<DescribeFieldResult>
      */
     public static List<Schema.DescribeFieldResult> getReferencedFieldsByObject(SObjectType objType) {
-        String objName = objType.getDescribe().getName();
-        String ocrObjectName = OpportunityContactRole.SObjectType.getDescribe().getName();
+        String objName = UTIL_Describe.getObjectDescribe(objType).getName();
 
         // Get all field describes from the cache
         Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(objName);
@@ -127,8 +126,7 @@ public without sharing class CMT_FilterRule_SEL {
                 if (allFields.containsKey(fldName)) {
                     referencedFields.put(fr.Field__c, allFields.get(fldName));
                 } else {
-                    // TODO Handle fields not found
-                    system.assert(false, '>> Field ' + fldName + ' not found in allFields collection for ' + objName);
+                    throw new CRLP_Rollup_SVC.CRLP_Exception('Field ' + fldName + ' not found in allFields collection for ' + objName);
                 }
             }
         }

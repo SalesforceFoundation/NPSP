@@ -3,7 +3,7 @@
         //filters row data based selected filter group
         var rollupList = cmp.get("v.rollupList");
         var filteredRollupList = rollupList.filter(function(rollup){
-                return rollup.filterGroupName === filterGroupLabel;
+            return rollup.filterGroupName === filterGroupLabel;
         });
 
         //todo: should summary obj be dynamic?
@@ -27,12 +27,13 @@
         //only add object to list if there are rollups with matching summary objects
         rollupsBySummaryObj.forEach(function(objList){
            if(objList.list.length > 1){
-               var objList = {label: objList.label
+               var obj = {label: objList.label
                          , name: "title"
                          , expanded: false
                          , items: objList.list
                };
-               itemList.push(objList);
+               itemList.push(obj);
+
            }
         });
 

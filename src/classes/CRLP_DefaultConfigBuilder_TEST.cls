@@ -48,7 +48,9 @@ private class CRLP_DefaultConfigBuilder_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = false,
                 Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
-                Rollups_LDV_Batch_Size__c = 200,
+                Rollups_Account_LDV_Batch_Size__c = 200,
+                Rollups_Contact_LDV_Batch_Size__c = 200,
+                Rollups_Soft_Credit_Batch_Size__c = 200,
                 Rollups_Account_Batch_Size__c = 20,
                 Rollups_Contact_Batch_Size__c = 20
         ));
@@ -84,18 +86,13 @@ private class CRLP_DefaultConfigBuilder_TEST {
         CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
         test.stopTest();
 
-        // The queued list should contain 3 nested lists: Filter Groups, Filter Rules, and Rollups
-        System.assertEquals(3, CRLP_ConfigBuilder_SVC.queuedNestedMetadata.size(), 'There should be 3 blocks of Metadata pending deployment');
-
         Integer fgCount = 0;
         Integer rlpCount = 0;
-        for (List<Metadata.CustomMetadata> mdList : CRLP_ConfigBuilder_SVC.queuedNestedMetadata) {
-            for (Metadata.CustomMetadata md : mdList) {
-                if (md.fullName.startsWith('Filter_Group__mdt')) {
-                    fgCount++;
-                } else if (md.fullName.startsWith('Rollup__mdt')) {
-                    rlpCount++;
-                }
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.startsWith('Filter_Group__mdt')) {
+                fgCount++;
+            } else if (md.fullName.startsWith('Rollup__mdt')) {
+                rlpCount++;
             }
         }
 
@@ -119,20 +116,16 @@ private class CRLP_DefaultConfigBuilder_TEST {
         CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
         test.stopTest();
 
-        // The queued list should contain 3 nested lists: Filter Groups, Filter Rules, and Rollups
-        System.assertEquals(3, CRLP_ConfigBuilder_SVC.queuedNestedMetadata.size(), 'There should be 3 blocks of Metadata pending deployment');
-
         Integer fgCount = 0;
         Integer rlpCount = 0;
-        for (List<Metadata.CustomMetadata> mdList : CRLP_ConfigBuilder_SVC.queuedNestedMetadata) {
-            for (Metadata.CustomMetadata md : mdList) {
-                if (md.fullName.startsWith('Filter_Group__mdt')) {
-                    fgCount++;
-                } else if (md.fullName.startsWith('Rollup__mdt')) {
-                    rlpCount++;
-                }
+        for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
+            if (md.fullName.startsWith('Filter_Group__mdt')) {
+                fgCount++;
+            } else if (md.fullName.startsWith('Rollup__mdt')) {
+                rlpCount++;
             }
         }
+
 
         System.assertEquals(4, fgCount, 'There should be 3 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 83 rollups');

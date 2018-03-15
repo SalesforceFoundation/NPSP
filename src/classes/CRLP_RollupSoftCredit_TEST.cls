@@ -69,7 +69,6 @@ private class CRLP_RollupSoftCredit_TEST {
         CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
 
         // Create a single Rollup that uses the above Filter Group
-        // TODO Add many more rollup variations to this
         String rollupsJSON = '[' +
                 /* CONTACT SOFT-CREDIT ROLL-UPS */
                 CMT_UnitTestData_TEST.createRollupRecord('Contact: Soft Credits - Total', filterGroupId1,
@@ -145,7 +144,9 @@ private class CRLP_RollupSoftCredit_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 Rollups_Limit_on_Attached_Opps_for_LDV__c = (tt == TestType.TestLDV ? 50 : 200),
-                Rollups_LDV_Batch_Size__c = 600,
+                Rollups_Account_LDV_Batch_Size__c = 600,
+                Rollups_Contact_LDV_Batch_Size__c = 600,
+                Rollups_Soft_Credit_Batch_Size__c = 600,
                 Rollups_Account_Batch_Size__c = 20,
                 Rollups_Contact_Batch_Size__c = 20
         ));
@@ -162,6 +163,9 @@ private class CRLP_RollupSoftCredit_TEST {
         // Disable all rollup triggers to avoid governer or unit test limit issues
         UTIL_UnitTestData_TEST.disableRollupTriggers();
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
+
+        Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
 
         // Insert a dummy Contact and 100 Opportunity records
         Contact c = UTIL_UnitTestData_TEST.getContact();
@@ -225,14 +229,31 @@ private class CRLP_RollupSoftCredit_TEST {
                 Primary_Contact__c = conId,
                 RecordTypeId = rtId
         ));
+
+        // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
+        opps.add(new Opportunity (
+                Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
+                AccountId = orgAcct.Id,
+                Amount = 50000,
+                CloseDate = Date.Today().addDays(-30),
+                StageName = closedStage,
+                Primary_Contact__c = c4.Id,
+                RecordTypeId = rtId,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+
         insert opps;
 
-        system.assertEquals(opps.size(), [SELECT Count() FROM Opportunity WHERE Account.npe01__SYSTEMIsIndividual__c = TRUE]);
+        // Change the OCR Role on the org donation so that it will roll up as a soft credit.
+        OpportunityContactRole orgOCR = [SELECT Id, Role FROM OpportunityContactRole
+                    WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
+        orgOCR.Role = 'Soft Credit';
+        update orgOCR;
 
         Test.startTest();
 
-        system.assertEquals(cnt * 3, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
-                'There should be 300 OCR records on closed won opps');
+        system.assertEquals((cnt * 3)+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
+                'There should be 301 OCR records on closed won opps');
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
         database.executeBatch(new CRLP_Rollup_SoftCredit_LDV_BATCH(), 600);
@@ -240,7 +261,7 @@ private class CRLP_RollupSoftCredit_TEST {
 
         // Query the Contact with Soft Credits with all the target fields specified in the rollups
         Id c2Id = c2.Id;
-        String conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
+        String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c2Id LIMIT 1';
         c2 = database.query(conQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
@@ -251,21 +272,22 @@ private class CRLP_RollupSoftCredit_TEST {
         System.assertEquals(baseAmt, c2.Last_Soft_Credit_Amount__c);
         System.assertEquals(maxAmt, c2.Largest_Soft_Credit_Amount__c);
 
-        // Query the Primary Contact (NO Soft Credit)
-        conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
+        // Query the Primary Contact (should have NO Soft Credit)
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
         System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
                 'The Total Soft Credits for this contact should be null or zero');
 
-        // Query the Household Account and validate the soft-credit values
+        // Query the Contact listed as the primary on an organizational opportunity. This contact
+        // has only this one soft credit attributed to them.
         Id c4Id = c4.Id;
-        conQuery = CRLP_Query_SEL.getResultsQuery(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
         c = database.query(conQuery);
-        System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
-                'The Total Soft Credits for this contact should be null or zero');
+        System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
+        System.assertEquals(1, c.Number_of_Soft_Credits__c);
 
-        // Query the Contact with Soft Credits with all the target fields specified in the rollups
-        String acctQuery = CRLP_Query_SEL.getResultsQuery(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+        // Query the Household
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

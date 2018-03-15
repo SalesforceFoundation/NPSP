@@ -395,7 +395,7 @@
     */
     onChangeYearlyOperationsOptions: function (cmp, isOnChange, label) {
         console.log("in helper changeYearlyOperationsOptions");
-        var operation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+        var operation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
             //disable fiscal year, disable integer, and reset values
