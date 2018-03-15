@@ -92,7 +92,6 @@ public class CRLP_RollupProcessingOptions {
         public SObjectType parentObjType;   // Summary object (Account, Contact, GAU)
         public SObjectType detailObjType;   // Used when working with Soft Credits to have a way to know what the detail object is
         public String parentKeyField;       // Used to know how to get the Id of the Parent record from the supplied detail record
-        public Boolean preventDupeOppsInRollup = false; // Used with Account Soft Credit rollups
 
         /**
          * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
@@ -113,7 +112,7 @@ public class CRLP_RollupProcessingOptions {
         public Map<Id, List<CRLP_Rollup>> mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
 
         /**
-         * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
+         * @description When working with Account Soft Credit Rollups, this var is used to hold a list
          * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
          * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
          */
