@@ -260,10 +260,10 @@
         //TIME BOUND OPERATION RENDERING
         if (operation !== '' && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
             renderMap["timeBoundOperation"] = true;
-            var timeOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+            var timeOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
         } else {
             renderMap["timeBoundOperation"] = false;
-            cmp.set(("v.activeRollup.Yearly_Operation_Type__c"), 'All_Time');
+            cmp.set(("v.activeRollup.Time_Bound_Operation_Type__c"), 'All_Time');
             var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.yearlyOperations"));
             cmp.set("v.selectedYearlyOperationLabel", timeBoundLabel);
             renderMap["integerDays"] = false;
@@ -543,7 +543,7 @@
     */
     renderFiscalYear: function (cmp, renderMap) {
         var operation = cmp.get("v.activeRollup.Operation__c");
-        var yearlyOperation = cmp.get("v.activeRollup.Yearly_Operation_Type__c");
+        var yearlyOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
 
         if ((operation === 'Donor_Streak'
             || operation === 'Years_Donated'

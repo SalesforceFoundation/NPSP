@@ -215,7 +215,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @return a map of picklist options api values to labels
     */
     @AuraEnabled
-    public static Map<String,String> getfilterRuleOperations() {
+    public static Map<String,String> getFilterRuleOperations() {
 
         Map<String,String> filterRuleOperations = new Map<String,String>();
 
