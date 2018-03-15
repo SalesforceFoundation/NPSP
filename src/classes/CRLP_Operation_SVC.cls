@@ -61,12 +61,9 @@ public class CRLP_Operation_SVC {
 
         CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(rollup.useFiscalYear);
 
-        // Get the the first rollup in the list.
-        CRLP_Rollup.Rollupmdt firstRollup = rollup.rollupsMdt[0];
-
         // these values should be the same for every rollup definition in the CRLP_Rollup instance
-        String dateField = firstRollup.dateField;
-        String amtField = firstRollup.amountField;
+        String dateField = rollup.dateFieldName; // firstRollup.dateField;
+        String amtField = rollup.amountFieldName; // firstRollup.amountField;
 
         Date dateValue;
         DateTime dateTimeValue;
@@ -99,17 +96,13 @@ public class CRLP_Operation_SVC {
         }
 
         // Skip updating the SumByYear, MinByYear, MaxByYear rollup vars if they're not needed for the current Rollup
-        Boolean updateByYearVars = true;
         if (rollup.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
-            updateByYearVars = false;
         } else if (rollup.timeBoundOperation != CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name()) {
-            updateByYearVars = false;
             for (Integer ns=0, listSize=rollup.rollupsMdt.size(); ns<listSize; ns++) {
                 if (rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Best_Year.name() ||
                         rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Best_Year_Total.name() ||
                         rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Years_Donated.name() ||
                         rollup.rollupsMdt[ns].operation == CRLP_Operation.RollupType.Donor_Streak.name())  {
-                    updateByYearVars = true;
                     break;
                 }
             }
@@ -243,7 +236,7 @@ public class CRLP_Operation_SVC {
                 }
             }
         }
-        if (updateByYearVars == true && dateValue != null && amountValue != null) {
+        if (dateValue != null && amountValue != null) {
             if (rollup.sumByYear.containsKey(theYear)) {
                 rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);

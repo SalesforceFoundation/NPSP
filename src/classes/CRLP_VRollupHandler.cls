@@ -187,7 +187,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         Boolean addNewRollup = true;
         for (CRLP_Rollup rollup : this.rollups) {
             if (rollup.isRollupInSameGroup(rlp)) {
-                rollup.rollupsMdt.add(new CRLP_Rollup.Rollupmdt(rlp));
+                rollup.addNewMDTRecord(rlp);
                 addNewRollup = false;
                 break;
             }

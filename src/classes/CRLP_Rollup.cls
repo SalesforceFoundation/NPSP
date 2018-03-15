@@ -50,7 +50,9 @@ public class CRLP_Rollup {
     public String summaryObject;
     public String detailObject;
     public String amountObject;
+    public String amountFieldName;
     public String dateObject;
+    public String dateFieldName;
     public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
     public String timeBoundOperation;
@@ -95,16 +97,7 @@ public class CRLP_Rollup {
             this.dateObject = rlp.Date_Object__r.QualifiedApiName;
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
             this.filterGroup = rlp.Filter_Group__c;
-            if (rlp.Detail_Field__c !=  null) {
-                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rlp.Detail_Field__r.QualifiedApiName);
-                this.resultFieldType = resultField.getSoapType();
-                this.resultFieldDisplaytype = resultField.getType();
-                this.resultFieldName = resultField.getName();
-            }
-            if (rlp.Date_Field__c !=  null) {
-                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rlp.Date_Field__r.QualifiedApiName);
-                this.dateFieldType = dateField.getSoapType();
-            }
+
             // Year and Date/Day related details
             this.useFiscalYear = rlp.Use_Fiscal_Year__c;
             this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
@@ -114,6 +107,33 @@ public class CRLP_Rollup {
 
             // Clear all the counter values
             resetValues();
+        }
+        addNewMDTRecord(rlp);
+    }
+
+    /**
+     * @description Add a Rollup__mdt metadata type record to the collection of rollupmetadata type instances updating
+     * instance vars as needed to ensure proper grouping.
+     * @param rlp Rollup__mdt record
+     */
+    public void addNewMDTRecord(Rollup__mdt rlp) {
+        // If the first MDT added to this instance had a null DetailField, but a later one had a defined DetailField
+        // use that info to allow grouping of similar rollup types. A null value means it's ignored anyway.
+        if (this.resultFieldName == null && rlp.Detail_Field__c != null) {
+            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.detailObject, rlp.Detail_Field__r.QualifiedApiName);
+            this.resultFieldType = resultField.getSoapType();
+            this.resultFieldDisplaytype = resultField.getType();
+            this.resultFieldName = rlp.Detail_Field__r.QualifiedApiName;
+        }
+        if (this.dateFieldType == null && rlp.Date_Field__c != null) {
+            DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rlp.Date_Field__r.QualifiedApiName);
+            this.dateFieldType = dateField.getSoapType();
+            this.dateFieldName = rlp.Date_Field__r.QualifiedApiName;
+        }
+        if (this.amountFieldName == null && rlp.Amount_Field__c != null) {
+            DescribeFieldResult amtField = CRLP_Rollup_SVC.getSObjectFieldDescribe(amountObject, rlp.Amount_Field__r.QualifiedApiName);
+            this.amountFieldName = rlp.Amount_Field__r.QualifiedApiName;
         }
         this.rollupsMdt.add(new Rollupmdt(rlp));
     }
@@ -154,7 +174,7 @@ public class CRLP_Rollup {
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
-                'Filter_Group__c','Summary_Object__c','Detail_Field__c',
+                'Filter_Group__c','Summary_Object__c','Detail_Field__c', 'Detail_Object__c',
                 'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
         };
         if (this.rollupsMdt == null) {
@@ -190,7 +210,6 @@ public class CRLP_Rollup {
             matchingFields.remove('Detail_Field__c');
         }
 
-        Rollupmdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
             Object val;
             Object otherVal = otherMdtRollup.get(fld);
@@ -202,18 +221,21 @@ public class CRLP_Rollup {
                 if (fld == 'Summary_Object__c') {
                     val = this.summaryObject;
                     otherVal = otherMdtRollup.Summary_Object__r.QualifiedApiName;
+                } else if (fld == 'Detail_Object__c') {
+                    val = this.detailObject;
+                    otherVal = otherMdtRollup.Detail_Object__r.QualifiedApiName;
                 } else if (fld == 'Detail_Field__c') {
-                    val = rollupItem.detailField;
+                    val = this.resultFieldName;
                     otherVal = otherMdtRollup.Detail_Field__r.QualifiedApiName;
                 } else if (fld == 'Date_Field__c') {
-                    val = rollupItem.dateField;
+                    val = this.dateFieldName;
                     otherVal = otherMdtRollup.Date_Field__r.QualifiedApiName;
                 } else if (fld == 'Amount_Field__c') {
-                    val = rollupItem.amountField;
+                    val = this.amountFieldName;
                     otherVal = otherMdtRollup.Amount_Field__r.QualifiedApiName;
                 }
             }
-            if (val != otherVal && otherVal != null) {
+            if (val != otherVal && otherVal != null && val != null) {
                 isSameRollupGroup = false;
                 break;
             }
