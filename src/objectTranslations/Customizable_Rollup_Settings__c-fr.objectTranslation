@@ -25,9 +25,14 @@
         <name>Rollups_Account_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Allocation object --></help>
-        <label><!-- Rollups: Allocation Batch Size --></label>
-        <name>Rollups_Allocation_Batch_Size__c</name>
+        <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Account object using Skew Mode --></help>
+        <label><!-- Rollups: Account Skew Mode Batch Size --></label>
+        <name>Rollups_Account_SkewMode_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of records per batch to process when recalculating soft credit donor roll-ups to the Account object --></help>
+        <label><!-- Rollups: Account Soft Credit Batch Size --></label>
+        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
     </fields>
     <fields>
         <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Contact object --></help>
@@ -35,9 +40,29 @@
         <name>Rollups_Contact_Batch_Size__c</name>
     </fields>
     <fields>
-        <help><!-- The maximum number of attached Opportunities on an Account allowed in the non-LDV Roll-up Recalculation Batch Jobs. An account with more than this number of attached Opportunities will always be rolled up using the LDV Roll-Up Engine. --></help>
-        <label><!-- Rollups: Limit on Attached Opps for LDV --></label>
-        <name>Rollups_Limit_on_Attached_Opps_for_LDV__c</name>
+        <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Contact object using Skew Mode --></help>
+        <label><!-- Rollups: Contact Skew Mode Batch Size --></label>
+        <name>Rollups_Contact_SkewMode_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of records per batch to process when recalculating soft credit donor roll-ups to the Contact object --></help>
+        <label><!-- Rollups: Contact Soft Credit Batch Size --></label>
+        <name>Rollups_Contact_Soft_Credit_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of records per batch to process when recalculating donor roll-ups to the General Accounting Unit object --></help>
+        <label><!-- Rollups: GAU Batch Size --></label>
+        <name>Rollups_GAU_Batch_Size__c</name>
+    </fields>
+    <fields>
+        <help><!-- TThe maximum number of related Opportunities on an Account or Contact allowed in the non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode. --></help>
+        <label><!-- Rollups: Max Related Record in Skew Mode --></label>
+        <name>Rollups_Limit_on_Attached_Opps_for_Skew__c</name>
+    </fields>
+    <fields>
+        <help><!-- Number of records per batch to selecting Account, Contact or GAU records for Skew Mode processing. --></help>
+        <label><!-- Rollups: Skew Mode Dispatcher Batch Size --></label>
+        <name>Rollups_Skew_Dispatcher_Batch_Size__c</name>
     </fields>
     <gender><!-- Masculine --></gender>
     <startsWith><!-- Consonant --></startsWith>

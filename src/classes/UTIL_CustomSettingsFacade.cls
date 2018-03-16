@@ -863,13 +863,15 @@ public without sharing class UTIL_CustomSettingsFacade {
     private static void configRollupSettings(Customizable_Rollup_Settings__c crs) {
         // New default settings for the Customizable Rollups engine
         crs.Customizable_Rollups_Enabled__c = false;
-        crs.Rollups_Limit_on_Attached_Opps_for_LDV__c = 500;
-        crs.Rollups_Account_LDV_Batch_Size__c = 600;
-        crs.Rollups_Contact_LDV_Batch_Size__c = 600;
-        crs.Rollups_Soft_Credit_Batch_Size__c = 600;
+        crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
         crs.Rollups_Account_Batch_Size__c = 200;
         crs.Rollups_Contact_Batch_Size__c = 200;
-        crs.Rollups_Allocation_Batch_Size__c = 1000;
+        crs.Rollups_Account_SkewMode_Batch_Size__c = 1000;
+        crs.Rollups_Contact_SkewMode_Batch_Size__c = 1000;
+        crs.Rollups_Account_Soft_Credit_Batch_Size__c = 200;
+        crs.Rollups_Contact_Soft_Credit_Batch_Size__c = 200;
+        crs.Rollups_GAU_Batch_Size__c = 1000;
+        crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
     }
 
     /*******************************************************************************************************
@@ -887,11 +889,13 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
         customizableRollupSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
         customizableRollupSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
-        customizableRollupSettings.Rollups_Allocation_Batch_Size__c = mySettings.Rollups_Allocation_Batch_Size__c;
-        customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c = mySettings.Rollups_Limit_on_Attached_Opps_for_LDV__c;
-        customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c  = mySettings.Rollups_Account_LDV_Batch_Size__c;
-        customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c  = mySettings.Rollups_Contact_LDV_Batch_Size__c;
-        customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c  = mySettings.Rollups_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c = mySettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c = mySettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c  = mySettings.Rollups_Account_SkewMode_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c  = mySettings.Rollups_Contact_SkewMode_Batch_Size__c;
+        customizableRollupSettings.Rollups_GAU_Batch_Size__c = mySettings.Rollups_GAU_Batch_Size__c;
+        customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = mySettings.Rollups_Limit_on_Attached_Opps_for_Skew__c;
+        customizableRollupSettings.Rollups_Skew_Dispatcher_Batch_Size__c = mySettings.Rollups_Skew_Dispatcher_Batch_Size__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 

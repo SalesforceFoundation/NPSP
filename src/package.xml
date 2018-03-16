@@ -682,12 +682,14 @@
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Account_LDV_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Allocation_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Contact_LDV_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_LDV__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Soft_Credit_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_GAU_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Limit_on_Attached_Opps_for_Skew__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Skew_Dispatcher_Batch_Size__c</members>
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>

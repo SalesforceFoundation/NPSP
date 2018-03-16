@@ -201,41 +201,42 @@ public class CRLP_RollupBatch_SVC {
      * @param jobMode Batch Job Mode Enum
      * @return Integer value
      */
-    // TODO - Refactor Batch Size Fields Into:
-    // Account_BatchSize_NonSkew (hard and soft credit)
-    // Account_BatchSize_Skew
-    // Contact_BatchSize_NonSkew
-    // Contact_BatchSize_Skew
-    // GAU_BatchSize_Skew
-    // RD_BatchSize_Skew (or use field added recently)
-    // SkewDispatcher_BatchSize
     public static Integer getBatchSize(CRLP_RollupProcessingOptions.RollupType jobType, CRLP_RollupProcessingOptions.BatchJobMode jobMode) {
         Integer batchSize;
+
         if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
-            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                 batchSize = customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
 
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                 batchSize = customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
 
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c.intValue();
+
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+                batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
             }
+
         } else {
+
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                batchSize = customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
+                batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                batchSize = customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
+                batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
 
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                batchSize = customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c.intValue();
+
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                batchSize = customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c.intValue();
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
-                batchSize = customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
+                batchSize = customizableRollupSettings.Rollups_GAU_Batch_Size__c.intValue();
             }
         }
         return (batchSize != null ? batchSize : 200);

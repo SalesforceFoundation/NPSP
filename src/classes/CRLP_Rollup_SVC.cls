@@ -165,7 +165,7 @@ public class CRLP_Rollup_SVC {
      * @return Integer value
      */
     public static Integer getMaxRelatedOppsForNonSkewMode() {
-        return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
+        return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c.intValue();
     }
 
     /**
