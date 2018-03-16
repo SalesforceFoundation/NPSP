@@ -82,12 +82,22 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
-    public class RollupModel {
+    public class RollupGridModel {
         @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
-        @AuraEnabled public Map<String, String> operations;
-        @AuraEnabled public Map<String, String> yearlyOperations;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
+    * Retrieving labels in Apex instead of lightning components avoids namespace complications.
+    */
+    public class RollupDetailModel {
+        @AuraEnabled public Rollup__mdt rollup;
+        @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, String> timeBoundOperations;
+        @AuraEnabled public Map<String, String> operations;
 
     }
 
@@ -103,17 +113,38 @@ public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model.
-    * @return
+    * @return rollup grid model
     */
     @AuraEnabled
-    public static String setupRollups() {
-        RollupModel model = new RollupModel();
+    public static String setupRollupGrid() {
+        RollupGridModel model = new RollupGridModel();
 
         model.items = getRollupDefinitions();
         model.labels = getRollupLabels();
-        model.operations = getRollupOperations();
-        model.yearlyOperations = getYearlyOperations();
         model.filterGroups = getFilterGroupDefinitions();
+
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves rollup definitions and creates the rollup model.
+    * @return model with optional rollup and fields with data types
+    */
+    @AuraEnabled
+    public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
+        RollupDetailModel model = new RollupDetailModel();
+        String summaryField = '';
+
+        if(rollupId != ''){
+            Id id = Id.valueOf(rollupId);
+            model.rollup = getRollupById(id);
+            summaryField = model.rollup.Summary_Field__r.QualifiedApiName;
+        }
+        model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
+        model.timeBoundOperations = getTimeBoundOperations();
+        model.operations = getRollupOperations();
 
         //serialize to avoid passing inner classes, which is technically unsupported
         String modelString = JSON.serialize(model);
@@ -291,16 +322,16 @@ public with sharing class CRLP_RollupUI_SVC {
     * @return a map of picklist yearly operations api values to labels
     */
     @AuraEnabled
-    public static Map<String,String> getYearlyOperations() {
+    public static Map<String,String> getTimeBoundOperations() {
 
-        Map<String,String> yearlyOperations = new Map<String,String>();
+        Map<String,String> timeBoundOperations = new Map<String,String>();
 
         Schema.DescribeFieldResult field = Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe();
 
         for (Schema.PicklistEntry f : field.getPicklistValues()) {
-            yearlyOperations.put(f.getValue(), f.getLabel());
+            timeBoundOperations.put(f.getValue(), f.getLabel());
         }
-        return yearlyOperations;
+        return timeBoundOperations;
     }
 
     /*******************************************************************************************************
@@ -322,7 +353,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static Map<String,List<Map<String,String>>> getFieldsByDataType(List<String> targetObjectNames, List<String> detailObjectNames) {
+    public static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String> targetObjectNames, List<String> detailObjectNames) {
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
@@ -331,7 +362,7 @@ public with sharing class CRLP_RollupUI_SVC {
             objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
         }
         for(String targetObj : targetObjectNames){
-            List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj);
+            List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj, summaryField);
             objNameToFieldTypeMap.put(targetObj, summaryNameToFieldTypeObj);
         }
 
@@ -421,7 +452,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
-                'yearlyOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
+                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
             };
 
         for (Integer i = 2; i < 21; i++) {
@@ -434,23 +465,31 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Finds writable, custom target fields of specific types to provide field lists for Rollup definitions.
+    * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
+    *              Includes an exception for a set summary field on the rollup detail.
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getTargetFieldsWithType(String objectName) {
+    public static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+        Schema.SObjectType sobjType = UTIL_Describe.getSObjectType(objectName);
+        List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(sobjType);
+        Set<Schema.DescribeFieldResult> referencedFieldSet = new Set<Schema.DescribeFieldResult>(referencedFields);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            //valid types are taken from the DisplayType Enum
+            //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
             String type = dfr.getType().Name();
             Set<String> validTypeSet = new Set<String>{'DATE', 'DATETIME', 'DOUBLE', 'ID', 'MULTIPICKLIST', 'PICKLIST', 'STRING', 'TEXTAREA'};
             Boolean isValidType = validTypeSet.contains(type);
 
-            if(dfr.isUpdateable() && dfr.isCustom() && !dfr.name.contains('SYSTEM') && isValidType){
+            //check that summary field isn't being used on another rollup
+            Boolean isRolledUp = referencedFieldSet.contains(dfr);
+
+            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.label.contains('_SYSTEM') && isValidType && !isRolledUp)
+                    || selectedField.equals(dfr.name)){
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);

@@ -1,9 +1,9 @@
 ({
     doInit: function (cmp, event, helper) {
-        var action = cmp.get("c.setupRollups");
+        var action = cmp.get("c.setupRollupGrid");
         console.log("in the init function");
 
-        //setup rollup records, filter group records, and operations
+        //setup rollup records, filter group records, and labels
         //also sets the rollups grid to display on page load
         action.setCallback(this, function(response) {
             var state = response.getState();
@@ -16,23 +16,12 @@
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.cachedRollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
-                cmp.set("v.operations", model.operations);
-
-                var yOps = [];
-                for(var j in model.yearlyOperations){
-                    yOps.push({name: j, label: model.yearlyOperations[j]});
-                }
-                yOps.sort(function(a,b){
-                    return a.name > b.name;
-                });
-                cmp.set("v.yearlyOperations", yOps);
 
                 var actions = [{label: labels.edit, name:'edit'}
                     , {label: labels.clone, name:'clone'}
                     , {label: labels.delete, name:'delete'}
                 ];
 
-                //TODO: update here RD
                 var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
                     , {label: labels.contactLabel, name: 'Contact'}
                     , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}

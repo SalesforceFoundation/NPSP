@@ -1,90 +1,47 @@
 ({
+    /* @description: resets values and visibility for objects based on the object details
+    * this is run when the page is first loaded or when a cancel event resets the page
+    */
     setObjectAndFieldDependencies: function (cmp) {
         console.log("In setObjectAndFieldDependencies");
 
-        //set list of objects and get data type for all
-        //todo: is this check still necessary?
-        if ($A.util.isEmpty(cmp.get("v.objectDetails"))) {
-
-            console.log("In the helper function");
-            var labels = cmp.get("v.labels");
-            var detailObjects = [{label: labels.opportunityLabel, name: 'Opportunity'}
-                , {label: labels.partialSoftCreditLabel, name: 'Partial_Soft_Credit__c'}
-                , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
-                , {label: labels.allocationLabel, name: 'Allocation__c'}];
+        //need to reset fields to populate the selected objects -- refactor to see if necessary
+        //fields can be lazy loaded if user is creating a new rollup
+        if (cmp.get("v.mode") !== 'create') {
+            this.fieldSetup(cmp);
+        } else {
+            //set active default as true
+            cmp.set("v.activeRollup.Active__c", true);
+            // check for a summary object filter to see if summary fields need to be set
+            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
             var summaryObjects = cmp.get("v.summaryObjects");
-            cmp.set("v.detailObjects", detailObjects);
+            var label = this.retrieveFieldLabel(summaryObject, summaryObjects);
 
-            //put only the object names into a list
-            var summaryNames = summaryObjects.map(function (summaryObj, index, array) {
-                return summaryObj.name;
-            });
-            var detailNames = detailObjects.map(function (detailObj, index, array) {
-                return detailObj.name;
-            });
-
-            var action = cmp.get("c.getFieldsByDataType");
-            action.setParams({targetObjectNames: summaryNames, detailObjectNames: detailNames});
-
-            action.setCallback(this, function (response) {
-                var state = response.getState();
-                console.log('STATE' + state);
-                if (state === "SUCCESS") {
-                    var data = response.getReturnValue();
-                    cmp.set("v.objectDetails", data);
-                    this.setIntegerYearList(cmp);
-
-                    console.log('Before calling reset details');
-                    //need to reset fields to populate the selected objects -- refactor to see if necessary
-                    //fields can be lazy loaded if user is creating a new rollup
-                    //setup is first called here instead of in change mode to ensure active rollup information is returned from the server
-                    if (cmp.get("v.mode") !== 'create') {
-                        this.fieldSetup(cmp);
-                    } else {
-                        //set active default as true
-                        cmp.set("v.activeRollup.Active__c", true);
-                        // check for a summary object filter to see if summary fields need to be set
-                        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-                        var summaryObjects = cmp.get("v.summaryObjects");
-                        var label = this.retrieveFieldLabel(summaryObject, summaryObjects);
-
-                        if(summaryObject != undefined){
-                            this.onChangeSummaryObject(cmp, summaryObject, label);
-                        }
-                        this.hideAllFields(cmp);
-                    }
-
-                    //update filter group list to contain none as a first option
-                    //note: unshift can't be used here due to an issue with bound values
-                    var filterGroups = cmp.get("v.filterGroups");
-                    var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
-                    tempList = tempList.concat(filterGroups);
-                    cmp.set("v.filterGroups", tempList);
-
-                    console.log('Called reset details');
-                }
-                else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-
-                }
-            });
-            console.log('about to make the callback');
-            $A.enqueueAction(action);
+            //sets summary object if it's being passed from the container
+            if (summaryObject != undefined) {
+                this.onChangeSummaryObject(cmp, summaryObject, label);
+            }
+            this.hideAllFields(cmp);
         }
+
+        //update filter group list to contain none as a first option
+        //note: unshift can't be used here due to an issue with bound values
+        var filterGroups = cmp.get("v.filterGroups");
+        var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
+        tempList = tempList.concat(filterGroups);
+        cmp.set("v.filterGroups", tempList);
+        this.setIntegerYearList(cmp);
+
+
+        console.log('Called reset details');
     },
 
+    /* @description: changes field visibility and save button access based on the mode
+    * this is bound to a change handler to the mode attribute
+    */
     changeMode: function (cmp) {
-        //we check to see if mode is null since the change handler is called when mode is cleared in the container
         var mode = cmp.get("v.mode");
-        console.log(mode);
+        //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode !== null) {
             console.log("Mode is " + mode);
             console.log("In changeMode");
@@ -96,6 +53,8 @@
             } else if (mode === "clone") {
                 cmp.set("v.activeRollupId", null);
                 cmp.set("v.isReadOnly", false);
+                var newSummary = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
+                cmp.set("v.summaryFields", newSummary);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "create") {
@@ -111,7 +70,7 @@
     */
     fieldSetup: function(cmp){
         this.resetAllFields(cmp);
-        this.onChangeYearlyOperationsOptions(cmp, false);
+        this.onChangeTimeBoundOperationsOptions(cmp, false);
         this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
         this.updateAllowedOperations(cmp);
         this.onChangeOperation(cmp, cmp.get("v.activeRollup.Operation__c"));
@@ -155,13 +114,8 @@
 
         //loop over all summary fields to get the type of selected field
         var summaryFields = cmp.get("v.summaryFields");
-        var type;
-        for (var i = 0; i < summaryFields.length; i++) {
-            if (summaryFields[i].name === summaryField) {
-                type = summaryFields[i].type;
-                break;
-            }
-        }
+        var type = this.getFieldType(cmp, summaryField, summaryFields);
+
         //TODO: maybe check if type is the same to see if need to filter?
         //if type is undefined, return all fields
         if (type === undefined || allFields === undefined) {
@@ -178,6 +132,20 @@
         }
         //reset detail field to null to prompt user selection
         cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+    },
+
+    /* @description: gets the type of a field
+    * @field: name of the field
+    * @fieldList: list of fields with name, type and label keys
+    * @return: the type of the field
+    */
+    getFieldType: function(cmp, field, fieldList){
+        for (var i = 0; i < fieldList.length; i++) {
+            if (fieldList[i].name === field) {
+                type = fieldList[i].type;
+                return type;
+            }
+        }
     },
 
     /* @description: hides all fields but the summary view with the renderMap var to walk user through a create rollup flow
@@ -244,7 +212,7 @@
         }
     },
 
-    /* @description: conditionally renders the yearly operation, use fiscal year, amount, date and detail fields
+    /* @description: conditionally renders the time bound operation, use fiscal year, amount, date and detail fields
     * @operation: operation API name
     */
     onChangeOperation: function (cmp, operation) {
@@ -264,8 +232,8 @@
         } else {
             renderMap["timeBoundOperation"] = false;
             cmp.set(("v.activeRollup.Time_Bound_Operation_Type__c"), 'All_Time');
-            var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.yearlyOperations"));
-            cmp.set("v.selectedYearlyOperationLabel", timeBoundLabel);
+            var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
+            cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
         }
@@ -389,12 +357,12 @@
         cmp.set("v.activeRollup.Summary_Field__r.Label", label);
     },
 
-    /* @description: fires when yearly operations options is changed or when set up
+    /* @description: fires when time bound operations options is changed or when set up
     * @isOnChange: determines if this is fired during a change (true) or during setup (false)
-    * @label: yearly operations label
+    * @label: time bound operations label
     */
-    onChangeYearlyOperationsOptions: function (cmp, isOnChange, label) {
-        console.log("in helper changeYearlyOperationsOptions");
+    onChangeTimeBoundOperationsOptions: function (cmp, isOnChange, label) {
+        console.log("in helper changeTimeBoundOperationsOptions");
         var operation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
@@ -446,11 +414,11 @@
         cmp.set("v.renderMap", renderMap);
 
         //set selected operation to be available in view mode
-        var yearlyOperations = cmp.get("v.yearlyOperations");
+        var timeBoundOperations = cmp.get("v.timeBoundOperations");
         if(label === undefined){
-            var label = this.retrieveFieldLabel(operation, yearlyOperations);
+            var label = this.retrieveFieldLabel(operation, timeBoundOperations);
         }
-        cmp.set("v.selectedYearlyOperationLabel", label);
+        cmp.set("v.selectedTimeBoundOperationLabel", label);
     },
 
     /* @description: conditionally render amount field based on the selected operation
@@ -484,7 +452,7 @@
         return renderMap;
     },
 
-    /* @description: conditionally render date field based on the selected operation and yearly operations
+    /* @description: conditionally render date field based on the selected operation and time bound operations
     * @operation: operation API name
     * @renderMap: current map of fields to render
     * @return: updated render map
@@ -536,14 +504,14 @@
 
     },
 
-    /* @description: conditionally render fiscal year checkbox based on the selected operation and yearly operation
+    /* @description: conditionally render fiscal year checkbox based on the selected operation and time bound operation
     * note that both operations are retrieved instead of passed since only 1 would be available
     * @renderMap: current map of fields to render
     * @return: updated render map
     */
     renderFiscalYear: function (cmp, renderMap) {
         var operation = cmp.get("v.activeRollup.Operation__c");
-        var yearlyOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
+        var timeBoundOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
 
         if ((operation === 'Donor_Streak'
             || operation === 'Years_Donated'
@@ -579,6 +547,8 @@
         if (context === 'detail') {
             cmp.set("v.detailFields", newFields);
         } else if (context === 'summary') {
+            //check if record's summary field needs to be added
+            newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
         } else if (context === 'date') {
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
@@ -758,6 +728,25 @@
         }
 
         cmp.set("v.integerList", integerList);
+    },
+
+    /* @description: checks the mode to see if record's summary field needs to be added to or removed from summary field list
+    *  @newFields: list of all fields in name and label key value pairs
+    *  @return: updated list of newFields
+    */
+    uniqueSummaryFieldCheck: function (cmp, newFields){
+        var mode = cmp.get("v.mode");
+        var summaryField = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        if(mode === 'clone'){
+            //remove if it's in the list
+            for (var i = 0; i < newFields.length; i++) {
+                if (newFields[i].name === summaryField) {
+                    newFields.splice(i, 1);
+                }
+            }
+        }
+
+        return newFields
     },
 
     /* @description: resets allowed operations based on the summary field type

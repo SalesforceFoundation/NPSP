@@ -54,12 +54,12 @@
     <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="allowedOperations" type="List"
                     description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
-    <aura:attribute name="yearlyOperations" type="List" description="List of yearly operation types" access="public"/>
+    <aura:attribute name="timeBoundOperations" type="List" description="List of time bound operation types" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="List of summary objects" access="public"/>
     <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="List" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
-    <aura:attribute name="selectedYearlyOperationLabel" type="String"/>
+    <aura:attribute name="selectedTimeBoundOperationLabel" type="String"/>
     <aura:attribute name="selectedIntegerLabel" type="String"/>
     <aura:attribute name="rollupTypes" type="List"/>
     <aura:attribute name="selectedRollupType" type="Object" default="{label: '', name: ''}"/>
@@ -226,11 +226,11 @@
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.timeBoundOperation}">
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                                auraId="yearlyOperation"
-                                                fieldLabel="{!v.labels.yearlyOperationType}"
-                                                entityLabel="{!v.selectedYearlyOperationLabel}"
+                                                auraId="timeBoundOperation"
+                                                fieldLabel="{!v.labels.timeBoundOperationType}"
+                                                entityLabel="{!v.selectedTimeBoundOperationLabel}"
                                                 apiName="{!v.activeRollup.Time_Bound_Operation_Type__c}"
-                                                options="{!v.yearlyOperations}"
+                                                options="{!v.timeBoundOperations}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                             />
@@ -241,7 +241,7 @@
                                 <lightning:input aura:id="integerInput"
                                                  type="{!v.isReadOnly ? 'text' : 'number'}"
                                                  class="integerInputField"
-                                                 label="{!v.selectedYearlyOperationLabel}"
+                                                 label="{!v.selectedTimeBoundOperationLabel}"
                                                  value="{!v.activeRollup.Integer__c}"
                                                  readonly="{!v.isReadOnly}"
                                                  min="0"
@@ -253,7 +253,7 @@
                         <aura:if isTrue="{!v.renderMap.integerYears}">
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="integer"
-                                                fieldLabel="{!v.selectedYearlyOperationLabel}"
+                                                fieldLabel="{!v.selectedTimeBoundOperationLabel}"
                                                 entityLabel="{!v.selectedIntegerLabel}"
                                                 apiName="{!v.activeRollup.Integer__c}"
                                                 options="{!v.integerList}"
