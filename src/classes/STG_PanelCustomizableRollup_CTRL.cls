@@ -70,7 +70,9 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @description is the running user an admin
     */
     public Boolean isAdmin {
-        get { return STG_SettingsManager_CTRL.runningUserIsAdmin(); }
+        get {
+            return STG_Panel.runningUserIsAdmin();
+        }
         set;
     }
 

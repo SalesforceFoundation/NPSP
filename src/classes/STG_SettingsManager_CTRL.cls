@@ -76,7 +76,7 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
 
         UTIL_MasterSchedulableHelper.abortOldScheduledJobs();
 
-        if (runningUserIsAdmin()) {
+       if (STG_Panel.runningUserIsAdmin()) {
             cleanupRecordTypeSettings();
 
             UTIL_MasterSchedulableHelper.setScheduledJobs();
@@ -102,20 +102,5 @@ public with sharing class STG_SettingsManager_CTRL extends STG_Panel {
             UTIL_CustomSettingsFacade.reloadCustomSettingsOnRecordTypeCleanup();
         }
     }
-    
-    /*******************************************************************************************************
-    * @description Returns whether the running user is a System Administrator.
-    * @return void
-    */
-    public static boolean runningUserIsAdmin() {
-        try {
-            Profile currentUserProfile = [SELECT Id, PermissionsCustomizeApplication, PermissionsModifyAllData, 
-                                          PermissionsAuthorApex FROM Profile WHERE Id = :UserInfo.getProfileId()];
-            return currentUserProfile.PermissionsCustomizeApplication &&
-                   currentUserProfile.PermissionsModifyAllData && 
-                   currentUserProfile.PermissionsAuthorApex;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+
 }
