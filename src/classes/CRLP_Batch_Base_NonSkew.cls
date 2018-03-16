@@ -116,15 +116,22 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     whereClauses.add(skewClause);
                 }
 
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
-                    /*} else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+                if (!Test.isRunningTest() || customizableRollupSettings.Disable_Related_Records_Filter__c == true) {
+                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                        whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                         String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                        whereClauses.add('Id IN (SELECT Contact.AccountId FROM OpportunityContactRole ALLROWS)');*/
+                        // It's not possible to do an inner query on this due to the following Salesforce error:
+                        // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+                        whereClauses.add('Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)');
+                    }
                 }
             }
 

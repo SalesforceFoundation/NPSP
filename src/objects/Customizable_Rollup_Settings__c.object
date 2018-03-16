@@ -23,6 +23,15 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Disable_Related_Records_Filter__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <inlineHelpText>Check this box to prevent Hard and Soft Credit rollups on the Account and Contact from only processing Account and Contact records that have an existing related Opportunity or OpportunityContactRole record.</inlineHelpText>
+        <label>Disable Related Records Filter</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Rollups_Account_Batch_Size__c</fullName>
         <defaultValue>200</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
