@@ -161,96 +161,106 @@ public class RD_RecurringDonations {
     * @param dmlWrapper Object to hold the rd's to be updated
     * @return void
     */ 
-    public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){   
-        //set of RDs to be updated
-        map<id, npe03__Recurring_Donation__c> updateMap = new map<id, npe03__Recurring_Donation__c>();
-        
-        //Get the closed label for opps
-        string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
-        
-        //before we query for any RD's, we must make sure that all previous changes to them have been committed!
-        if (dmlWrapper != null)
-            TDTM_TriggerHandler.processDML(dmlWrapper);
-        
-        String rdQuery = strQueryRDNoWhere();
-        rdQuery += ' where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids';
+    public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper){
 
-        //get all possible rd records that may need updating, exclude ones that are closed.  
-        map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>();
-        for (sObject rd : database.query(rdQuery)) {
-            rdMap.put((id) rd.get('id'), (npe03__Recurring_Donation__c) rd);
-        }
+        Boolean CRLPEnabled = UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
 
-        //get the cumulative values to update the recurring donations
-        //update the rc next payment date 
-        //and the paid amounts and paid installments
-        for (sobject obj : [select count(id) oppcount, MIN(CloseDate) MinDate, MAX(CloseDate) MaxDate, SUM(Amount) Total,
-                                  isClosed, npe03__Recurring_Donation__c rdid, isWon
-                                  from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel 
-                                  and npe03__Recurring_Donation__c IN :rdMap.keySet()
-                                  group by rollup(npe03__Recurring_Donation__c, isClosed, isWon)]) {
+        // only use this hard-coded RD rollup code if Customizable Rollups aren't enabled
+        if (!CRLPEnabled) {
 
-            id rdid = (id)obj.get('rdid');
-            
-            boolean isClosed = (boolean)obj.get('isClosed');
-            boolean isWon = (boolean)obj.get('isWon');            
-            
-            if (rdid != null) {
-                npe03__Recurring_Donation__c rd;        
-                //if we already have values for this RD, get it from our rdid map, otherwise just grab
-                //the one we're already working on 
-                if (!updateMap.containsKey(rdid)) {
-                    rd = rdMap.get(rdid);
+            //set of RDs to be updated
+            map<id, npe03__Recurring_Donation__c> updateMap = new map<id, npe03__Recurring_Donation__c>();
 
-                    //initialize fields to null that might not get set
-                    rd.npe03__Next_Payment_Date__c = null;
-                    rd.npe03__Last_Payment_Date__c = null;
-                    rd.npe03__Paid_Amount__c = null;     
-                    rd.npe03__Total_Paid_Installments__c = null;
-                    updateMap.put(rdid, rd);                        
-                } else {
-                    rd = updateMap.get(rdid);
-                }
-                
-                //if this is the summary row for this rd only update installments for open ended opportunities
-                if (isClosed == null && isWon == null && rd.npe03__open_ended_status__c == system.label.npe03.RecurringDonationOpenStatus) {
-                    rd.npe03__Installments__c = (integer)obj.get('oppcount'); 
-                    updateMap.put(rdid, rd);                                       
-                }
-                //if this is the open set of opps
-                else if (isClosed == false && isWon == null) {
-                    rd.npe03__Next_Payment_Date__c = (date)obj.get('MinDate');
-                    updateMap.put(rdid, rd);
-                }
-                //if this is the closed set of opps    
-                else if (isClosed == true && isWon == true) {
-                    rd.npe03__Last_Payment_Date__c = (date) obj.get('MaxDate');
+            //Get the closed label for opps
+            string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
 
-                    //convert rollup total to RD's currency
-                    if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                        rd.npe03__Paid_Amount__c = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((String) rd.get(RDCurrencyField), (Decimal) obj.get('Total'));
+            //before we query for any RD's, we must make sure that all previous changes to them have been committed!
+            if (dmlWrapper != null)
+                TDTM_TriggerHandler.processDML(dmlWrapper);
+
+            String rdQuery = strQueryRDNoWhere();
+            rdQuery += ' where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids';
+
+            //get all possible rd records that may need updating, exclude ones that are closed.
+            map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>();
+            for (sObject rd : database.query(rdQuery)) {
+                rdMap.put((id) rd.get('id'), (npe03__Recurring_Donation__c) rd);
+            }
+
+            //get the cumulative values to update the recurring donations
+            //update the rc next payment date
+            //and the paid amounts and paid installments
+            for (sobject obj : [
+                    select count(id) oppcount, MIN(CloseDate) MinDate, MAX(CloseDate) MaxDate, SUM(Amount) Total,
+                            isClosed, npe03__Recurring_Donation__c rdid, isWon
+                    from Opportunity
+                    where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel
+                    and npe03__Recurring_Donation__c IN :rdMap.keySet()
+                    group by rollup(npe03__Recurring_Donation__c, isClosed, isWon)
+            ]) {
+
+                id rdid = (id) obj.get('rdid');
+
+                boolean isClosed = (boolean) obj.get('isClosed');
+                boolean isWon = (boolean) obj.get('isWon');
+
+                if (rdid != null) {
+                    npe03__Recurring_Donation__c rd;
+                    //if we already have values for this RD, get it from our rdid map, otherwise just grab
+                    //the one we're already working on
+                    if (!updateMap.containsKey(rdid)) {
+                        rd = rdMap.get(rdid);
+
+                        //initialize fields to null that might not get set
+                        rd.npe03__Next_Payment_Date__c = null;
+                        rd.npe03__Last_Payment_Date__c = null;
+                        rd.npe03__Paid_Amount__c = null;
+                        rd.npe03__Total_Paid_Installments__c = null;
+                        updateMap.put(rdid, rd);
                     } else {
-                        rd.npe03__Paid_Amount__c = (Decimal) obj.get('Total');
+                        rd = updateMap.get(rdid);
                     }
-                    rd.npe03__Total_Paid_Installments__c = (integer)obj.get('oppcount');
-                    updateMap.put(rdid, rd);
-                }
 
-                // if no open opportunities remain because forecast months is too short,
-                // use last payment date to project next payment date
-                if(rd.npe03__Last_Payment_Date__c != null) {
-                    Date nextPaymentDate = getNextDate(rd.npe03__Last_Payment_Date__c, rd);
-                    rd.npe03__Next_Payment_Date__c = nextPaymentDate;
-                    updateMap.put(rdid, rd);
+                    //if this is the summary row for this rd only update installments for open ended opportunities
+                    if (isClosed == null && isWon == null && rd.npe03__open_ended_status__c == system.label.npe03.RecurringDonationOpenStatus) {
+                        rd.npe03__Installments__c = (integer) obj.get('oppcount');
+                        updateMap.put(rdid, rd);
+                    }
+                    //if this is the open set of opps
+                    else if (isClosed == false && isWon == null) {
+                        rd.npe03__Next_Payment_Date__c = (date) obj.get('MinDate');
+                        updateMap.put(rdid, rd);
+                    }
+                    //if this is the closed set of opps
+                    else if (isClosed == true && isWon == true) {
+                        rd.npe03__Last_Payment_Date__c = (date) obj.get('MaxDate');
+
+                        //convert rollup total to RD's currency
+                        if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                            rd.npe03__Paid_Amount__c = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((String) rd.get(RDCurrencyField), (Decimal) obj.get('Total'));
+                        } else {
+                            rd.npe03__Paid_Amount__c = (Decimal) obj.get('Total');
+                        }
+                        rd.npe03__Total_Paid_Installments__c = (integer) obj.get('oppcount');
+                        updateMap.put(rdid, rd);
+                    }
+
+                    // if no open opportunities remain because forecast months is too short,
+                    // use last payment date to project next payment date
+                    if (rd.npe03__Last_Payment_Date__c != null) {
+                        Date nextPaymentDate = getNextDate(rd.npe03__Last_Payment_Date__c, rd);
+                        rd.npe03__Next_Payment_Date__c = nextPaymentDate;
+                        updateMap.put(rdid, rd);
+                    }
                 }
             }
-        }
 
-        if (!updateMap.isEmpty()) {
-            if (dmlWrapper != null) {
-                dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateMap.values());
-            } else {
-                update updateMap.values();
+            if (!updateMap.isEmpty()) {
+                if (dmlWrapper != null) {
+                    dmlWrapper.objectsToUpdate.addAll((list<SObject>) updateMap.values());
+                } else {
+                    update updateMap.values();
+                }
             }
         }
     } 
