@@ -139,7 +139,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @return void
     */
     public PageReference navigate(){
-        //TODO: check this will work with upcoming URL changes
         PageReference rollupGrid = new PageReference('/apex/CRLP_RollupSetup');
         rollupGrid.setRedirect(true);
         return rollupGrid;
