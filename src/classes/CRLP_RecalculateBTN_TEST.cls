@@ -37,13 +37,26 @@
 private class CRLP_RecalculateBTN_TEST {
 
     /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
+        insert gau;
+    }
+
+    /**
      * @description Validate that a User with no update permissions to the Contact object gets a pageMessage
      * error when the recalculate controller constructor is executed.
      */
     static testMethod void test_nopermissions() {
-        // Insert a dummy Contact
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
+        // Retrieve the dummy Contact
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
 
         // Find the ReadOnly profile (a Salesforce standard profile) and create a dummy User with that Profile
         Id roProfileId = [SELECT Id FROM Profile WHERE Name = 'Read Only' LIMIT 1].Id;
@@ -75,12 +88,9 @@ private class CRLP_RecalculateBTN_TEST {
                         Customizable_Rollups_Enabled__c = false
                 ));
 
-        // Insert a dummy Contact
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
-        insert c;
-
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
-        insert gau;
+        // Retrieve the dummy Contact
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
         Test.startTest();
 
@@ -115,13 +125,10 @@ private class CRLP_RecalculateBTN_TEST {
                         Rollups_GAU_Batch_Size__c = 400
                 ));
 
-        // Insert a dummy Contact
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
-        insert c;
-        Account a = [SELECT Id FROM Account LIMIT 1];
-
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
-        insert gau;
+        // Retrieve the dummy Contact
+        Contact c = [SELECT Id, FirstName, LastName, AccountId, Account.Id FROM Contact LIMIT 1];
+        Account a = c.Account;
+        General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
         System.assertEquals(0, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
                 'Zero jobs should be currently scheduled');

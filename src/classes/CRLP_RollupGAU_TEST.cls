@@ -36,6 +36,30 @@
 @isTest
 private class CRLP_RollupGAU_TEST {
 
+    /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        // create two GAU's
+        General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='CRLP-GAU-TEST #1');
+        General_Accounting_Unit__c defaultGau2 = new General_Accounting_Unit__c(Name='CRLP-GAU-TEST #2');
+        insert new List<General_Accounting_Unit__c>{defaultGau1, defaultGau2};
+
+        // Create a Campaign and assign the two GAU's as Allocations each at 50%.
+        Campaign cam = new Campaign(Name='CRLP-CAMPAIGN-TEST', IsActive=true);
+        insert cam;
+
+        List<Allocation__c> allocs = new List<Allocation__c>();
+        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau1.id));
+        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
+        insert allocs;
+    }
+
     private Enum TestType {
         testSkewBatch
     }
@@ -112,19 +136,11 @@ private class CRLP_RollupGAU_TEST {
      */
     private static void testRollupsServices(TestType tt) {
 
-        // create two GAU's
-        General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='GAU #1');
-        General_Accounting_Unit__c defaultGau2 = new General_Accounting_Unit__c(Name='GAU #2');
-        insert new List<General_Accounting_Unit__c>{defaultGau1, defaultGau2};
+        // Query one GAU created earlier to use for testing
+        General_Accounting_Unit__c defaultGau1 = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
-        // Create a Campaign and assign the two GAU's as Allocations each at 50%.
-        Campaign cam = new Campaign(Name='Foo', IsActive=true);
-        insert cam;
-
-        List<Allocation__c> allocs = new List<Allocation__c>();
-        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau1.id));
-        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
-        insert allocs;
+        // Query the campaign
+        Campaign cam = [SELECT Id FROM Campaign LIMIT 1];
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
@@ -146,10 +162,8 @@ private class CRLP_RollupGAU_TEST {
         // Disable all customizable rollup triggers
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();

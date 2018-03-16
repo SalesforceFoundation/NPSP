@@ -41,6 +41,35 @@ private class CRLP_RollupSoftCredit_TEST {
     }
 
     /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+
+        Account orgAcct = new Account(Name = 'CRLP-ORG-TEST', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.FirstName = 'TEST-1';
+        insert c;
+
+        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        Id acctId = c.AccountId;
+        Id conId = c.Id;
+
+        // Create two additional family members
+        Contact c2 = new Contact(LastName = 'CRLP-UNITTEST-PSC', FirstName = 'TEST-2', AccountId = c.AccountId);
+        Contact c3 = new Contact(LastName = 'CRLP-UNITTEST-PSC', FirstName = 'TEST-3', AccountId = c.AccountId);
+
+        // Create one more Contact that is used to test filters
+        Contact c4 = new Contact(LastName = 'CRLP-UNITTEST-PSC', FirstName = 'TEST-4');
+
+        insert new List<Contact>{ c2, c3, c4 };
+
+    }
+
+    /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
     private static void mockRollupCMTValues() {
@@ -171,24 +200,25 @@ private class CRLP_RollupSoftCredit_TEST {
         UTIL_UnitTestData_TEST.disableRollupTriggers();
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
-        Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
-        insert orgAcct;
+        Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false LIMIT 1];
 
         // Insert a dummy Contact and 100 Opportunity records
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
-        Id acctId = c.AccountId;
-        Id conId = c.Id;
-
-        // Create two additional family members
-        Contact c2 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-1', AccountId = c.AccountId);
-        Contact c3 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-2', AccountId = c.AccountId);
-
-        // Create one more Contact that is used to test filters
-        Contact c4 = new Contact(LastName = 'UNITTEST-PSC', FirstName = 'TEST-3');
-
-        insert new List<Contact>{ c2, c3, c4 };
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c1, c2, c3, c4;
+        Id acctId, conId;
+        for (Contact cx : [SELECT Id, FirstName, LastName, AccountId FROM Contact WHERE AccountId != :orgAcct.Id]) {
+            if (cx.FirstName == 'TEST-1') {
+                acctId = cx.AccountId;
+                conId = cx.Id;
+                c1 = cx;
+            } else if (cx.FirstName == 'TEST-2') {
+                c2 = cx;
+            } else if (cx.FirstName == 'TEST-3') {
+                c3 = cx;
+            } else if (cx.FirstName == 'TEST-4') {
+                c4 = cx;
+            }
+        }
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -206,7 +236,7 @@ private class CRLP_RollupSoftCredit_TEST {
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
-                    Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                    Name = 'Test Opp ' + c1.FirstName + ' ' + c1.LastName,
                     Amount = amt,
                     CloseDate = closeDate.addMonths(n),
                     StageName = closedStage,
@@ -229,7 +259,7 @@ private class CRLP_RollupSoftCredit_TEST {
 
         // create one closed opportunity to ensure it's not included in our rollups
         opps.add(new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
+                Name = 'Test Opp ' + c1.FirstName + ' ' + c1.LastName,
                 Amount = 500,
                 CloseDate = Date.Today().addDays(1),
                 StageName = UTIL_UnitTestData_TEST.getClosedLostStage(),
@@ -239,7 +269,7 @@ private class CRLP_RollupSoftCredit_TEST {
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
         opps.add(new Opportunity (
-                Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
+                Name = 'Test Org Opp ' + c1.FirstName + ' ' + c1.LastName,
                 AccountId = orgAcct.Id,
                 Amount = 50000,
                 CloseDate = Date.Today().addDays(-30),
@@ -262,7 +292,7 @@ private class CRLP_RollupSoftCredit_TEST {
         system.assertEquals((cnt * 3)+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 301 OCR records on closed won opps');
 
-        List<Id> contactIds = new List<Id>{ c.Id, c2.Id, c3.Id, c4.Id };
+        List<Id> contactIds = new List<Id>{ c1.Id, c2.Id, c3.Id, c4.Id };
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
         if (tt == TestType.testSkewBatchContact) {
@@ -293,17 +323,17 @@ private class CRLP_RollupSoftCredit_TEST {
 
             // Query the Primary Contact (should have NO Soft Credit)
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
-            c = database.query(conQuery);
-            System.assert(c.npo02__Soft_Credit_Total__c == null || c.npo02__Soft_Credit_Total__c == 0,
+            c1 = database.query(conQuery);
+            System.assert(c1.npo02__Soft_Credit_Total__c == null || c1.npo02__Soft_Credit_Total__c == 0,
                     'The Total Soft Credits for this contact should be null or zero');
 
             // Query the Contact listed as the primary on an organizational opportunity. This contact
             // has only this one soft credit attributed to them.
             Id c4Id = c4.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
-            c = database.query(conQuery);
-            System.assertEquals(50000, c.npo02__Soft_Credit_Total__c);
-            System.assertEquals(1, c.Number_of_Soft_Credits__c);
+            c4 = database.query(conQuery);
+            System.assertEquals(50000, c4.npo02__Soft_Credit_Total__c);
+            System.assertEquals(1, c4.Number_of_Soft_Credits__c);
         }
 
         // Basic rollup asserts using existing NPSP rollup fields.

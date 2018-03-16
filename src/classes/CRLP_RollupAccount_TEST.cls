@@ -41,6 +41,16 @@ private class CRLP_RollupAccount_TEST {
     }
 
     /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+    }
+
+    /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
     private static void mockRollupCMTValues() {
@@ -89,9 +99,13 @@ private class CRLP_RollupAccount_TEST {
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Max Donation All Time', filterGroupId1,
+                CMT_UnitTestData_TEST.createRollupRecord('Largest Donation All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__LargestAmount__c', CRLP_Operation.RollupType.LARGEST, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Smallest Donation All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__SmallestAmount__c', CRLP_Operation.RollupType.Smallest, 'Amount') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
@@ -105,10 +119,13 @@ private class CRLP_RollupAccount_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '') + ',' +
 
-                /* Using SingleResult operation to get the last gift date */
                 CMT_UnitTestData_TEST.createRollupRecord('Last Gift Date', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
                         'npo02__LastCloseDate__c', CRLP_Operation.RollupType.LAST, 'CloseDate') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('First Gift Date', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.First, 'CloseDate') + ',' +
 
                 /* Payment Rollups for Total Paid and Total Written Off - using a field that can hold the value */
                 CMT_UnitTestData_TEST.createRollupRecord('Total Payments', filterGroupId1,
@@ -176,10 +193,8 @@ private class CRLP_RollupAccount_TEST {
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
 
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
@@ -254,6 +269,21 @@ private class CRLP_RollupAccount_TEST {
                                 WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
                 'There should be 1 written off payment record on a closed won opp');
 
+        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
+        Account a = database.query(acctQuery);
+
+        // Make sure everything is null first!
+        if (tt != TestType.TestTrigger) {
+            System.assertEquals(0, a.npo02__TotalOppAmount__c);
+            System.assertEquals(0, a.npo02__AverageAmount__c);
+            System.assertEquals(0, a.npo02__OppAmount2YearsAgo__c);
+            System.assertEquals(0, a.npo02__LargestAmount__c);
+            System.assertEquals(0, a.npo02__SmallestAmount__c);
+            System.assertEquals(null, a.npo02__LastCloseDate__c);
+            System.assertEquals(null, a.npo02__FirstCloseDate__c);
+            System.assertEquals(null, a.npo02__Best_Gift_Year__c);
+        }
+
         // Now test the rollups to the Account from the Opportunity
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
@@ -270,15 +300,16 @@ private class CRLP_RollupAccount_TEST {
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
-        Account a = database.query(acctQuery);
+        a = database.query(acctQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
         System.assertEquals((totalDonations / cnt), a.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, a.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
+        System.assertEquals(closeDate, a.npo02__FirstCloseDate__c);
         System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
+        System.assertEquals(baseAmt, a.npo02__SmallestAmount__c);
         System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);
 
         // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in

@@ -41,6 +41,16 @@ private class CRLP_RollupContact_TEST {
     }
 
     /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+    }
+
+    /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
      */
     private static void mockRollupCMTValues() {
@@ -198,10 +208,8 @@ private class CRLP_RollupContact_TEST {
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
 
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
 
