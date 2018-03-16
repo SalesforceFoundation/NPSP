@@ -90,4 +90,67 @@ private class CRLP_RollupScheduler_TEST {
             WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
             'There should be zero jobs scheduled using the CRLP_RollupScheduler interface');
     }
+
+    /**
+     * @description It's not actually possible to test whether a job was executed or not, but we need to ensure
+     * code coverage on each of these Batch Classes. The actual rollup logic in the batch classes is covered
+     * by each of the individual tests for the related rollup. Plus, because tests are limited to a single batch
+     * iteration, the only way this method can schedule and execute multiple batches is if there is no data to
+     * query/process.
+     */
+    static testMethod void test_scheduled_jobs() {
+
+        Test.startTest();
+
+        System.schedule('UNITTEST-GAU', '0 0 23 ? * *', new CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT', '0 0 23 ? * *', new CRLP_Contact_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-CONTACT', '0 0 23 ? * *', new CRLP_Contact_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+
+        System.assertEquals(9, [SELECT count() FROM AsyncApexJob
+        WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
+                'There should be nine jobs scheduled using the CRLP_RollupScheduler interface');
+
+        Test.stopTest();
+    }
+
+    /**
+     * @description Simple test to ensure that the SkewDispatcher batch job executes. Due to Test limitations
+     * with the number of batch iterations, it's not possible to have this job execute and then call another
+     * batch job to execute that will actually roll up data.
+     */
+    static testMethod void test_skewdispatcher_job() {
+
+        // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = 0,
+                Rollups_Skew_Dispatcher_Batch_Size__c = 200
+        ));
+
+        // Create a single rollup definition
+        String rollupsJSON = '[' +
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', '',
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') +
+                ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        Test.startTest();
+
+        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+        CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+
+        Test.stopTest();
+    }
 }
