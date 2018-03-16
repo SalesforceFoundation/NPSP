@@ -38,6 +38,11 @@
 */
 public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, Database.Stateful {
 
+    /** @description Batch size for Apex Job. Uses default of 300 if Custom Setting is null. */
+    public static Integer BATCH_SIZE = (UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Rollups_Skew_Dispatcher_Batch_Size__c != null) ?
+            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Rollups_Skew_Dispatcher_Batch_Size__c.intValue() : 300;
+
+    /** @description Default job filter (not yet implemented */
     private CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter = CRLP_RollupProcessingOptions.RollupTypeFilter.All;
 
     /** @description The job type for this batch job -- AccountHardCredit, AccountSoftCredit, etc. */
@@ -46,7 +51,6 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
     private SObjectType summaryObjectType;
     private Id lastIdProcessed;
     private List<Id> recordIds;
-    public static final Integer BATCH_SIZE = 400;
 
     /**
      * @description Constructor

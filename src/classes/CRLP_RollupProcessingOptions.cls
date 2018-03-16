@@ -46,7 +46,8 @@ public class CRLP_RollupProcessingOptions {
         ContactHardCredit,
         AccountSoftCredit,
         ContactSoftCredit,
-        GAU
+        GAU,
+        RecurringDonations
     }
 
     /**
