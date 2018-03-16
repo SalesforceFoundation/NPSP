@@ -110,6 +110,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (this.recordIds != null && this.recordIds.size() > 0) {
                 whereClauses.add('Id IN :recordIds');
             } else {
+                // Exclude Accounts or Contacts that will be rolled up in the SkewMode batch job
                 String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
                 if (!String.isEmpty(skewClause)) {
                     whereClauses.add(skewClause);
@@ -126,6 +127,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         whereClauses.add('Id IN (SELECT Contact.AccountId FROM OpportunityContactRole ALLROWS)');*/
                 }
             }
+
             // TODO DO we need to exclude Organization Donations??
 
             if (!whereClauses.isEmpty()) {

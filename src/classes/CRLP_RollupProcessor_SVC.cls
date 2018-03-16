@@ -83,7 +83,7 @@ public class CRLP_RollupProcessor_SVC {
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
             // collection is unique by Opportunity Id
-            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (detailsForParent != null && options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                 List<SObject> oppsToRollup = new List<SObject>();
                 for (Integer nd=0, listSizeDtl=detailsForParent.size(); nd<listSizeDtl; nd++) {
                     SObject dtl = detailsForParent[nd];
