@@ -60,7 +60,9 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @description is the org on the HH Account model
     */
     public Boolean isHHAccount {
-        get { return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR); }
+        get {
+            return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        }
         set;
     }
 

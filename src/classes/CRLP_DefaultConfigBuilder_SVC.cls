@@ -44,16 +44,6 @@ public class CRLP_DefaultConfigBuilder_SVC {
             FROM RecordType
             WHERE SobjectType = 'Opportunity' AND IsActive = True]);
 
-
-    /*************************************************************************************************************
-     * @description Call each of the methods in this class to build the default Filter Groups and each of the four
-     * Rollup Types (Account Hard Credit/Membership, Contact Hard Credit/Membership, Contact Soft Credit, and GAU)
-     */
-    @future
-    public static void convertLegacyRollupsIntoCustomizableRollupsFuture() {
-        String jobId = convertLegacyRollupsIntoCustomizableRollups();
-    }
-
     /*************************************************************************************************************
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
      * Rollup Types (Account Hard Credit/Membership, Contact Hard Credit/Membership, Contact Soft Credit, and GAU)
