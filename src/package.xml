@@ -169,6 +169,8 @@
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
         <members>OPP_CascadeDeleteLookups_TEST</members>
+        <members>OPP_DuplicateContactRoles_QUEUE</members>
+        <members>OPP_DuplicateContactRoles_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
