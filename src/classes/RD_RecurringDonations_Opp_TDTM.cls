@@ -90,20 +90,9 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
             }
         }
 
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete) {
-            for (SObject sobj : oldlist) {
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            for (SObject sobj : (triggerAction == TDTM_Runnable.Action.AfterDelete ? oldlist : newlist)) {
                 Opportunity o = (Opportunity)sobj;
-                //does it have a recurring donation reference?
-                if (o.npe03__Recurring_Donation__c != null) {
-                    rdIds.add(o.npe03__Recurring_Donation__c);
-                }
-            }
-        }
-
-        if (triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            for (SObject sobj : newlist) {
-                Opportunity o = (Opportunity)sobj;
-                //does it have a recurring donation reference?
                 if (o.npe03__Recurring_Donation__c != null) {
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
