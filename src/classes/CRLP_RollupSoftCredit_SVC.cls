@@ -71,10 +71,18 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
     public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
         // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
+        SObjectType summaryObjectType = this.objectId.getSobjectType();
+
         List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
         for (Integer n=0, listSize = pscs.size(); n<listSize; n++) {
             Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
+
+            // Account Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
+            // the same parent Account more than one time.
+            if (summaryObjectType == Account.SObjectType && this.processedOppIds.contains(opp.Id)) {
+                continue;
+            }
 
             for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
                 CRLP_Rollup rollup = this.rollups[nsr];
@@ -84,6 +92,7 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
                 if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, psc }, filterGroupId)) {
                     // YES -- now need to do the actual rollup!
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
+                    this.processedOppIds.add(opp.Id);
                 }
             }
 

@@ -50,7 +50,9 @@ public class CRLP_Rollup {
     public String summaryObject;
     public String detailObject;
     public String amountObject;
+    public String amountFieldName;
     public String dateObject;
+    public String dateFieldName;
     public SoapType dateFieldType;
     public String currCode;     // The currency code of the target (summary) object
     public String timeBoundOperation;
@@ -95,16 +97,7 @@ public class CRLP_Rollup {
             this.dateObject = rlp.Date_Object__r.QualifiedApiName;
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
             this.filterGroup = rlp.Filter_Group__c;
-            if (rlp.Detail_Field__c !=  null) {
-                DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(detailObject, rlp.Detail_Field__r.QualifiedApiName);
-                this.resultFieldType = resultField.getSoapType();
-                this.resultFieldDisplaytype = resultField.getType();
-                this.resultFieldName = resultField.getName();
-            }
-            if (rlp.Date_Field__c !=  null) {
-                DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rlp.Date_Field__r.QualifiedApiName);
-                this.dateFieldType = dateField.getSoapType();
-            }
+
             // Year and Date/Day related details
             this.useFiscalYear = rlp.Use_Fiscal_Year__c;
             this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
@@ -114,6 +107,33 @@ public class CRLP_Rollup {
 
             // Clear all the counter values
             resetValues();
+        }
+        addNewMDTRecord(rlp);
+    }
+
+    /**
+     * @description Add a Rollup__mdt metadata type record to the collection of rollupmetadata type instances updating
+     * instance vars as needed to ensure proper grouping.
+     * @param rlp Rollup__mdt record
+     */
+    public void addNewMDTRecord(Rollup__mdt rlp) {
+        // If the first MDT added to this instance had a null DetailField, but a later one had a defined DetailField
+        // use that info to allow grouping of similar rollup types. A null value means it's ignored anyway.
+        if (this.resultFieldName == null && rlp.Detail_Field__c != null) {
+            this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
+            DescribeFieldResult resultField = CRLP_Rollup_SVC.getSObjectFieldDescribe(this.detailObject, rlp.Detail_Field__r.QualifiedApiName);
+            this.resultFieldType = resultField.getSoapType();
+            this.resultFieldDisplaytype = resultField.getType();
+            this.resultFieldName = rlp.Detail_Field__r.QualifiedApiName;
+        }
+        if (this.dateFieldType == null && rlp.Date_Field__c != null) {
+            DescribeFieldResult dateField = CRLP_Rollup_SVC.getSObjectFieldDescribe(dateObject, rlp.Date_Field__r.QualifiedApiName);
+            this.dateFieldType = dateField.getSoapType();
+            this.dateFieldName = rlp.Date_Field__r.QualifiedApiName;
+        }
+        if (this.amountFieldName == null && rlp.Amount_Field__c != null) {
+            DescribeFieldResult amtField = CRLP_Rollup_SVC.getSObjectFieldDescribe(amountObject, rlp.Amount_Field__r.QualifiedApiName);
+            this.amountFieldName = rlp.Amount_Field__r.QualifiedApiName;
         }
         this.rollupsMdt.add(new Rollupmdt(rlp));
     }
@@ -149,12 +169,14 @@ public class CRLP_Rollup {
     /**
      * @description Determine if the passed Rollup__mdt record has the identical key properties to this
      * Rollup instance: FilterGroup, Summary Object, Detail Field, Amount Field, Date Field, and UseFiscalYear.
+     * Grouping of Rollup__mdt records in instances of CRLP_Rollup significantly improves the overall rollup performance
+     * because it reduced the number of for-loop iterations for each detail record being rolled up.
      * @param Rollup__mdt
-     * @return True or False
+     * @return True (group the Mdt record into this CRLP_Rollup instance) or False (create a new CRLP_Rollup instance for this record)
      */
     public Boolean isRollupInSameGroup(Rollup__mdt otherMdtRollup) {
         Set<String> matchingFields = new Set<String>{
-                'Filter_Group__c','Summary_Object__c','Detail_Field__c',
+                'Filter_Group__c','Summary_Object__c','Detail_Field__c', 'Detail_Object__c',
                 'Date_Field__c', 'Amount_Field__c', 'Use_Fiscal_Year__c'
         };
         if (this.rollupsMdt == null) {
@@ -167,12 +189,16 @@ public class CRLP_Rollup {
 
         Boolean isSameRollupGroup = true;
 
+        // Convert a null TimeBoundOperationType to AllTime to ease comparisons
+        String otherMdtTimeBoundOperationType = (otherMdtRollup.Time_Bound_Operation_Type__c != null ?
+                otherMdtRollup.Time_Bound_Operation_Type__c : CRLP_Operation.TimeBoundOperationType.All_Time.name());
+
         // DaysBack operations have to be grouped together, so if the value doesn't match exactly don't
         // consider them in the same group
         String daysBackOperation = CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name();
-        if ((this.timeBoundOperation == daysBackOperation && (otherMdtRollup.Time_Bound_Operation_Type__c != daysBackOperation ||
+        if ((this.timeBoundOperation == daysBackOperation && (otherMdtTimeBoundOperationType != daysBackOperation ||
                 this.daysBack != otherMdtRollup.Integer__c)) ||
-                (otherMdtRollup.Time_Bound_Operation_Type__c == daysBackOperation && this.timeBoundOperation != daysBackOperation)
+                (otherMdtTimeBoundOperationType == daysBackOperation && this.timeBoundOperation != daysBackOperation)
                 ) {
             isSameRollupGroup = false;
         }
@@ -186,27 +212,37 @@ public class CRLP_Rollup {
             matchingFields.remove('Detail_Field__c');
         }
 
-        Rollupmdt rollupItem = this.rollupsMdt[0];
         for (String fld : matchingFields) {
             Object val;
+            Object otherVal = otherMdtRollup.get(fld);
             if (fld == 'Filter_Group__c') {
                 val = this.filterGroup;
             } else if (fld == 'Use_Fiscal_Year__c') {
                 val = this.useFiscalYear;
-            } else if (fld == 'Summary_Object__c') {
-                val = this.summaryObject;
-            } else if (fld == 'Detail_Field__c') {
-                val = rollupItem.detailField;
-            } else if (fld == 'Date_Field__c') {
-                val = rollupItem.dateField;
-            } else if (fld == 'Amount_Field__c') {
-                val = rollupItem.amountField;
+            } else {
+                if (fld == 'Summary_Object__c') {
+                    val = this.summaryObject;
+                    otherVal = otherMdtRollup.Summary_Object__r.QualifiedApiName;
+                } else if (fld == 'Detail_Object__c') {
+                    val = this.detailObject;
+                    otherVal = otherMdtRollup.Detail_Object__r.QualifiedApiName;
+                } else if (fld == 'Detail_Field__c') {
+                    val = this.resultFieldName;
+                    otherVal = otherMdtRollup.Detail_Field__r.QualifiedApiName;
+                } else if (fld == 'Date_Field__c') {
+                    val = this.dateFieldName;
+                    otherVal = otherMdtRollup.Date_Field__r.QualifiedApiName;
+                } else if (fld == 'Amount_Field__c') {
+                    val = this.amountFieldName;
+                    otherVal = otherMdtRollup.Amount_Field__r.QualifiedApiName;
+                }
             }
-            if (val != otherMdtRollup.get(fld)) {
+            if (val != otherVal && otherVal != null && val != null) {
                 isSameRollupGroup = false;
                 break;
             }
         }
+
         return isSameRollupGroup;
     }
 
@@ -425,7 +461,8 @@ public class CRLP_Rollup {
 
         public Rollupmdt(Rollup__mdt rlp) {
             this.operation = rlp.Operation__c;
-            this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
+            this.timeBoundOperationType = (rlp.Time_Bound_Operation_Type__c != null ? rlp.Time_Bound_Operation_Type__c :
+                    CRLP_Operation.TimeBoundOperationType.All_Time.name());
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
             this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;

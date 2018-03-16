@@ -36,8 +36,32 @@
 @isTest
 private class CRLP_RollupGAU_TEST {
 
+    /**
+     * @description Test Setup: Insert a dummy contact and let it create an Account. The Opportunity data has to
+     * be created in the actual unit test to allow for the trigger test to run
+     */
+    @TestSetup
+    private static void setupBaseTestData() {
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        insert c;
+
+        // create two GAU's
+        General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='CRLP-GAU-TEST #1');
+        General_Accounting_Unit__c defaultGau2 = new General_Accounting_Unit__c(Name='CRLP-GAU-TEST #2');
+        insert new List<General_Accounting_Unit__c>{defaultGau1, defaultGau2};
+
+        // Create a Campaign and assign the two GAU's as Allocations each at 50%.
+        Campaign cam = new Campaign(Name='CRLP-CAMPAIGN-TEST', IsActive=true);
+        insert cam;
+
+        List<Allocation__c> allocs = new List<Allocation__c>();
+        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau1.id));
+        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
+        insert allocs;
+    }
+
     private Enum TestType {
-        TestLDV
+        testSkewBatch
     }
 
     /**
@@ -103,8 +127,8 @@ private class CRLP_RollupGAU_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
-    static testMethod void test_Rollups_BatchLDV() {
-        testRollupsServices(TestType.TestLDV);
+    static testMethod void test_Rollups_SkewBatch() {
+        testRollupsServices(TestType.testSkewBatch);
     }
 
     /**
@@ -112,29 +136,21 @@ private class CRLP_RollupGAU_TEST {
      */
     private static void testRollupsServices(TestType tt) {
 
-        // create two GAU's
-        General_Accounting_Unit__c defaultGau1 = new General_Accounting_Unit__c(Name='GAU #1');
-        General_Accounting_Unit__c defaultGau2 = new General_Accounting_Unit__c(Name='GAU #2');
-        insert new List<General_Accounting_Unit__c>{defaultGau1, defaultGau2};
+        // Query one GAU created earlier to use for testing
+        General_Accounting_Unit__c defaultGau1 = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
-        // Create a Campaign and assign the two GAU's as Allocations each at 50%.
-        Campaign cam = new Campaign(Name='Foo', IsActive=true);
-        insert cam;
-
-        List<Allocation__c> allocs = new List<Allocation__c>();
-        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau1.id));
-        allocs.add(new Allocation__c(Campaign__c=cam.id, Percent__c = 50, General_Accounting_Unit__c = defaultGau2.id));
-        insert allocs;
+        // Query the campaign
+        Campaign cam = [SELECT Id FROM Campaign LIMIT 1];
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 150,
                         Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Allocation_Batch_Size__c = 400,
-                        Rollups_Account_LDV_Batch_Size__c = 100,
-                        Rollups_Contact_LDV_Batch_Size__c = 100,
-                        Rollups_Soft_Credit_Batch_Size__c = 100
+                        Rollups_GAU_Batch_Size__c = 400,
+                        Rollups_Account_SkewMode_Batch_Size__c = 100,
+                        Rollups_Contact_SkewMode_Batch_Size__c = 100,
+                        Rollups_Contact_Soft_Credit_Batch_Size__c = 100
                 )
         );
 
@@ -146,10 +162,8 @@ private class CRLP_RollupGAU_TEST {
         // Disable all customizable rollup triggers
         UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
 
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
-        c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Retrieve the dummy Contact and then insert 100 Opportunity records
+        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
         Id acctId = c.AccountId;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
@@ -206,8 +220,8 @@ private class CRLP_RollupGAU_TEST {
         // Now test the rollups to the GAU from the Allocation using the LDV Batch Job
         // since this is the only rollup method that supports allocations
         Test.startTest();
-        Integer batchSize = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-        database.executeBatch(new CRLP_Rollup_LDV_BATCH(new List<Id>{ defaultGau1.Id, defaultGau2.Id } ), batchSize);
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, null, null);
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups

@@ -33,7 +33,7 @@
 * @group Custom Metadata Types
 * @description Tests for CMT Filter Rule related actions
 */
-@isTest
+@isTest(IsParallel=true)
 private class CMT_FilterRuleEvaluation_TEST {
 
     private static Id filterGroupId1, filterGroupId2, filterGroupId3;

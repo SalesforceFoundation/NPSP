@@ -42,6 +42,9 @@ public class CRLP_Rollup_SVC {
 
     private static final Boolean DO_NOT_UPDATE_NULL_TO_ZERO = false;
 
+    /** @description Custom Settings record that defines specific Customizable Rollups settings */
+    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
     /**
      * @description Interface class that the each of the 5 handler classes will implement
      */
@@ -52,6 +55,7 @@ public class CRLP_Rollup_SVC {
         void setRollupTypeFilter(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter);
         List<CRLP_Rollup> getRollupsList();
         SObject getPopulatedSObject();
+        Set<Id> getListOfOppIdsThatWereRolledUp();
     }
 
     /**
@@ -146,9 +150,6 @@ public class CRLP_Rollup_SVC {
         return hasValueChanged;
     }
 
-    /** @description Custom Settings record that defines specific Customizable Rollups settings */
-    private static final Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
     /**
     * @description Returns true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
     */
@@ -159,47 +160,12 @@ public class CRLP_Rollup_SVC {
     }
 
     /**
-     * @description Return the batch size to use for standard (non-LDV) batch roll-up operations
-     * @param objType SObjectType of the Summary object
-     * @return Integer value
-     */
-    public static Integer getBatchSize(SObjectType objType) {
-        if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Account_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Contact_Batch_Size__c.intValue();
-        } else if (objType == Allocation__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-        }
-        return 200;
-    }
-
-    /**
-     * @description Return the batch size to use for LDV batch roll-up operations
-     * @param objType SObjectType of the Summary object
-     * @return Integer value
-     */
-    public static Integer getLDVBatchSize(SObjectType objType) {
-        if (objType == General_Accounting_Unit__c.SObjectType && customizableRollupSettings.Rollups_Allocation_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Allocation_Batch_Size__c.intValue();
-        } else if (objType == Contact.SObjectType && customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Contact_LDV_Batch_Size__c.intValue();
-        } else if (objType == Account.SObjectType && customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Account_LDV_Batch_Size__c.intValue();
-        } else if (objType == Partial_Soft_Credit__c.SObjectType && customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c != null) {
-            return customizableRollupSettings.Rollups_Soft_Credit_Batch_Size__c.intValue();
-        } else {
-            return 500; // the above should all return a value, but this is the default
-        }
-    }
-
-    /**
      * @description Get the setting that defines the max number of attached Opportunities an Account can
      * have before it's considered an LDV data scenario.
      * @return Integer value
      */
-    public static Integer getMaxRelatedOppsForNonLDVMode() {
-        return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_LDV__c.intValue();
+    public static Integer getMaxRelatedOppsForNonSkewMode() {
+        return customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c.intValue();
     }
 
     /**

@@ -54,8 +54,6 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static set<string> softCreditRoles = new set<string>();
     /** @description Household Custom Settings. */
     public static npo02__Households_Settings__c hh_settings;
-    /** @description Batch size defaults to 200 if not set in Settings. */
-    public static integer BATCH_SIZE = 200;
     /** @description Set to true if record types are enabled for opportunities. */
     private static boolean recordTypesOnOpps;
     /** @description Set to true if soft credits are used. */
@@ -238,10 +236,6 @@ public without sharing class RLLP_OppRollup_UTIL {
             } else {
                 useFiscalYear = true;
             }
-        }
-
-        if (household_settings.npo02__Batch_Size__c != null) {
-            BATCH_SIZE = household_settings.npo02__Batch_Size__c.intValue();
         }
 
         // If the new Customizable Rollup Engine is enabled, then all of the legacy NPSP

@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Customizable Rollups Scheduler class
+* @description Unit Test for the Customizable Rollups Batch Schedules
 */
 @isTest
 private class CRLP_RollupScheduler_TEST {
@@ -46,13 +46,13 @@ private class CRLP_RollupScheduler_TEST {
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(
                 new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
+                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 150,
                         Rollups_Account_Batch_Size__c = 100,
                         Rollups_Contact_Batch_Size__c = 100,
-                        Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_Account_LDV_Batch_Size__c = 1000,
-                        Rollups_Contact_LDV_Batch_Size__c = 1000,
-                        Rollups_Soft_Credit_Batch_Size__c = 1000
+                        Rollups_GAU_Batch_Size__c = 100,
+                        Rollups_Account_SkewMode_Batch_Size__c = 1000,
+                        Rollups_Contact_SkewMode_Batch_Size__c = 1000,
+                        Rollups_Contact_Soft_Credit_Batch_Size__c = 1000
                 ));
 
         // Delete all currently scheduled jobs
@@ -67,7 +67,7 @@ private class CRLP_RollupScheduler_TEST {
         // Count the number of jobs using the CRLP_RollupScheduler class
         Integer jobCount = 0;
         for (String jobName : UTIL_MasterSchedulableHelper.defaultScheduledJobs.keySet()) {
-            if (UTIL_MasterSchedulableHelper.defaultScheduledJobs.get(jobName)[1] == 'CRLP_RollupScheduler') {
+            if (UTIL_MasterSchedulableHelper.defaultScheduledJobs.get(jobName)[1].startsWith('CRLP_')) {
                 jobCount++;
             }
         }
@@ -75,7 +75,7 @@ private class CRLP_RollupScheduler_TEST {
 
         // Verify that the correct number of jobs has been scheduled
         List<AsyncApexJob> scheduledJobs = [SELECT Id, JobType, Status, ApexClass.Name FROM AsyncApexJob
-                                WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name = 'CRLP_RollupScheduler'];
+                                WHERE JobType = 'ScheduledApex' AND Status != 'Aborted' AND ApexClass.Name LIKE 'CRLP_%'];
         System.assertEquals(jobCount, scheduledJobs.size(),
             'There should be ' + jobCount + ' jobs scheduled using the CRLP_RollupScheduler interface');
 
@@ -87,88 +87,70 @@ private class CRLP_RollupScheduler_TEST {
         UTIL_MasterSchedulableHelper.setScheduledJobs();
 
         System.assertEquals(0, [SELECT count() FROM AsyncApexJob
-            WHERE JobType = 'ScheduledApex' AND ApexClass.Name = 'CRLP_RollupScheduler' AND Status != 'Aborted'],
+            WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
             'There should be zero jobs scheduled using the CRLP_RollupScheduler interface');
     }
 
     /**
-     * @description Test scheduling a single non-LDV job
+     * @description It's not actually possible to test whether a job was executed or not, but we need to ensure
+     * code coverage on each of these Batch Classes. The actual rollup logic in the batch classes is covered
+     * by each of the individual tests for the related rollup. Plus, because tests are limited to a single batch
+     * iteration, the only way this method can schedule and execute multiple batches is if there is no data to
+     * query/process.
      */
-    static testMethod void test_Scheduled_CRLP_Rollup_Job() {
-
-        // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 150,
-                        Rollups_Account_Batch_Size__c = 100,
-                        Rollups_Contact_Batch_Size__c = 100,
-                        Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_Account_LDV_Batch_Size__c = 1000
-                ));
-
-        // Delete all currently scheduled jobs
-        List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
-        for (CronTrigger eachJob : jobs) {
-            System.abortJob(eachJob.Id);
-        }
-
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
-        insert c;
+    static testMethod void test_scheduled_jobs() {
 
         Test.startTest();
-        // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(Account.SObjectType));
-        // StopTest to allow the job to execute
-        Test.stopTest();
 
-        // It's not possible to verify that the scheduled job actually ran unfortunately other than to see if
-        // the rollup job actually rolled anything up, but there are no rollups in this particular test.
+        System.schedule('UNITTEST-GAU', '0 0 23 ? * *', new CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT', '0 0 23 ? * *', new CRLP_Contact_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-CONTACT', '0 0 23 ? * *', new CRLP_Contact_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+
+        System.assertEquals(9, [SELECT count() FROM AsyncApexJob
+        WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
+                'There should be nine jobs scheduled using the CRLP_RollupScheduler interface');
+
+        Test.stopTest();
     }
 
     /**
-     * @description Test scheduling a single LDV job
+     * @description Simple test to ensure that the SkewDispatcher batch job executes. Due to Test limitations
+     * with the number of batch iterations, it's not possible to have this job execute and then call another
+     * batch job to execute that will actually roll up data.
      */
-    static testMethod void test_Scheduled_CRLP_Rollup_LDV_Job() {
+    static testMethod void test_skewdispatcher_job() {
 
-        // Enable Customizable Rollups
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-                new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 1,
-                        Rollups_Account_Batch_Size__c = 100,
-                        Rollups_Contact_Batch_Size__c = 100,
-                        Rollups_Allocation_Batch_Size__c = 100,
-                        Rollups_Account_LDV_Batch_Size__c = 1000
-                ));
+        // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = 0,
+                Rollups_Skew_Dispatcher_Batch_Size__c = 200
+        ));
 
-        // Delete all currently scheduled jobs
-        List<CronTrigger> jobs = [SELECT Id FROM CronTrigger];
-        for (CronTrigger eachJob : jobs) {
-            System.abortJob(eachJob.Id);
-        }
+        // Create a single rollup definition
+        String rollupsJSON = '[' +
+                CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', '',
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') +
+                ']';
 
-        // Insert a dummy Contact and 100 Opportunity records
-        Contact c = new Contact(LastName = 'UNITTEST', FirstName = 'TEST');
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
 
-        Opportunity opp =new Opportunity (
-                Name = 'Test Opp ' + c.FirstName + ' ' + c.LastName,
-                Amount = 500,
-                CloseDate = Date.Today().addDays(1),
-                StageName = UTIL_UnitTestData_TEST.getClosedWonStage(),
-                Primary_Contact__c = c.Id
-        );
-        insert opp;
-
         Test.startTest();
-        // Schedule an instance of the job. Actual schedule doesn't really matter here.
-        System.schedule('TESTING', '0 0 23 ? * *', new CRLP_RollupScheduler(true, Account.SObjectType));
-        // StopTest to allow the job to execute
-        Test.stopTest();
 
-        // It's not possible to verify that the scheduled job actually ran unfortunately other than to see if
-        // the rollup job actually rolled anything up, but there are no rollups in this particular test.
+        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+        CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+
+        Test.stopTest();
     }
 }
