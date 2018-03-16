@@ -63,6 +63,7 @@
         } else if (resultObject == Opportunity.SObjectType) {
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
         } else  if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
         }

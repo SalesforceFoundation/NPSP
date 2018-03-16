@@ -162,6 +162,10 @@ public class CRLP_RollupProcessor_SVC {
             // Allocation to GeneralAccountingUnit
             handlerClass = CRLP_RollupGAU_SVC.class;
 
+        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            // Opportunity to RecurringDonation
+            // handlerClass = CRLP_RollupRD_SVC.class;
+
         }
         return handlerClass;
     }

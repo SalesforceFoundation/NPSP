@@ -133,6 +133,9 @@ public abstract class CRLP_Batch_Base {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
             options.detailObjType = Allocation__c.SObjectType;
 
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+
         }
 
         // Retrieve and store the cached list of Rollup__mdt records into the Rollups Processor

@@ -282,6 +282,8 @@ public class CRLP_Rollup_SEL {
             summaryObjectType = Contact.SObjectType;
         } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             summaryObjectType = General_Accounting_Unit__c.SObjectType;
+        } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            summaryObjectType = npe03__Recurring_Donation__c.SObjectType;
         }
 
         // Retrieve all the Rollup Definitions for the summary object
@@ -299,6 +301,8 @@ public class CRLP_Rollup_SEL {
                         rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                     includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
+                    includeRollupDefinition = true;
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
                     includeRollupDefinition = true;
                 }
                 if (includeRollupDefinition) {
