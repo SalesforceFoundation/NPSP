@@ -7,7 +7,6 @@
 public class CRLP_Debug_UTIL {
 
     private static final Boolean isEnabled = false;
-
     private static List<String> currentRollupState = new List<String>();
 
     public static void clearCurrentRollupState() {
@@ -18,7 +17,7 @@ public class CRLP_Debug_UTIL {
 
     public static void setCurrentRollupState(String state) {
         if (isEnabled) {
-            UTIL_Debug.debugWithInfo('===== setCurrentRollupState(' + state + ')\n');
+            UTIL_Debug.debug('===== setCurrentRollupState(' + state + ')\n');
             currentRollupState.add(state);
         }
     }

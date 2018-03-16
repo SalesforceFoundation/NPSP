@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Customizable Rollups Scheduler class
+* @description Unit Test for the Customizable Rollups Batch Schedules
 */
 @isTest
 private class CRLP_RollupScheduler_TEST {

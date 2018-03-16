@@ -257,6 +257,11 @@ public class CRLP_RollupBatch_SVC {
         } catch (Exception ex) {
             // ignore null pointer exception errors because a default will be returned
         }
+
+        // Legacy Batch Job Sizes are limited to 200 (this is hardcoded in UTIL_AbstractRollup_BATCH)
+        if (customizableRollupSettings.Customizable_Rollups_Enabled__c != true && batchSize > 200) {
+            batchSize = 200;
+        }
         return (batchSize != null ? batchSize : 200);
     }
 }
