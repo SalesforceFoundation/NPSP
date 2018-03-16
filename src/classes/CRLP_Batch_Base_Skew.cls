@@ -289,9 +289,13 @@ System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
 
             // Save Rollups collection and the last parent record id processed in stateful vars
             lastParentIdProcessed = options.getLastParentIdProcessed();
-            this.statefulRollupsById.put(firstParentId, options.getUpdatedMapOfRollupsByParentId().get(firstParentId));
-            this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
-            if (lastParentIdProcessed != null) {
+            if (options.getUpdatedMapOfRollupsByParentId().containsKey(firstParentId)) {
+                this.statefulRollupsById.put(firstParentId, options.getUpdatedMapOfRollupsByParentId().get(firstParentId));
+            }
+            if (options.getUpdatedMapOfRollupsByParentId().containsKey(lastParentId)) {
+                this.statefulRollupsById.put(lastParentId, options.getUpdatedMapOfRollupsByParentId().get(lastParentId));
+            }
+            if (lastParentIdProcessed != null && options.getUpdatedMapOfRollupsByParentId().containsKey(lastParentIdProcessed)) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
                 if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                     this.statefulMapOfOppIdsByAcct.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
