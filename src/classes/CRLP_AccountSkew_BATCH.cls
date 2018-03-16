@@ -63,21 +63,4 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
     public CRLP_AccountSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, lastIdProcessedForChunking);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        return getQuerylocator();
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    /**
-     * @description call the parent finish() method to handle any final database commits and possibly returning
-     * to the SkewDispatcher batch
-     */
-    public void finish(Database.BatchableContext bc) {
-        finish();
-    }
-
 }

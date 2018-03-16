@@ -64,25 +64,4 @@ public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
     public CRLP_AccountSkew_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, recordIds, lastIdProcessedForChunking);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        try {
-            return getQuerylocator();
-        } catch (Exception ex) {
-            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
-            return Database.getQueryLocator([SELECT Id FROM Account LIMIT 0]);
-        }
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    /**
-     * @description nothing to do here for this type of batch job
-     */
-    public void finish(Database.BatchableContext bc) {
-        finish();
-    }
-
 }

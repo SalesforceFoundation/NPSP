@@ -88,7 +88,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public database.Querylocator getQuerylocator() {
+    public database.Querylocator start(Database.BatchableContext bc) {
         try {
             initializeJobData();
 
@@ -149,9 +149,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
     /*******************************************************************************************************
     * @description Handle each group of Summary records to roll-up.
-    * @param scope List of Summary records
+    * @param summaryRecords List of Summary records
     */
-    public void execute(List<SObject> summaryRecords) {
+    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
 
         this.batchIteration++;
         try {
@@ -231,7 +231,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             }
             summaryRecords = newSummaryRecords;
-            UTIL_Debug.debug(LoggingLevel.WARN, '>> summaryRecords Size =' + summaryRecords.size());
 
             // Are there any summary records left to process?
             if (summaryRecords.size() > 0) {
@@ -245,6 +244,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
+
                 this.totalRecordsModified += updatedRecords.size();
                 this.totalCommits++;
             }
@@ -255,6 +255,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP + '.' + this.jobType.name());
         }
     }
+
+    public void finish(Database.BatchableContext bc) { }
 
     /**
      * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.

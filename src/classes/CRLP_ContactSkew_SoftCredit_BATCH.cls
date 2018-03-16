@@ -64,20 +64,4 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
     public CRLP_ContactSkew_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, recordIds, lastIdProcessedForChunking);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        return getQuerylocator();
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    /**
-     * @description nothing to do here for this type of batch job
-     */
-    public void finish(Database.BatchableContext bc) {
-        finish();
-    }
-
 }

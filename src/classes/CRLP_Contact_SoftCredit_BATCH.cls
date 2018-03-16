@@ -63,19 +63,4 @@ public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
     public CRLP_Contact_SoftCredit_BATCH(List<Id> recordIds) {
         super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, recordIds);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        return getQuerylocator();
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    /**
-     * @description nothing to do here for this type of batch job
-     */
-    public void finish(Database.BatchableContext bc) {
-    }
-
 }

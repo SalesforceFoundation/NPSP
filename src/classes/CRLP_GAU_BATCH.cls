@@ -64,16 +64,4 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
     public CRLP_GAU_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.GAU, recordIds, lastIdProcessedForChunking);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        return getQuerylocator();
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    public void finish(Database.BatchableContext bc) {
-        finish();
-    }
 }

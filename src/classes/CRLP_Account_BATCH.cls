@@ -63,19 +63,4 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
     public CRLP_Account_BATCH(List<Id> recordIds) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
     }
-
-    public database.Querylocator start(Database.BatchableContext bc) {
-        return getQuerylocator();
-    }
-
-    public void execute(Database.BatchableContext bc, List<SObject> summaryRecords) {
-        execute(summaryRecords);
-    }
-
-    /**
-     * @description nothing to do here for this type of batch job
-     */
-    public void finish(Database.BatchableContext bc) {
-    }
-
 }

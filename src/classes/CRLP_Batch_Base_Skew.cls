@@ -102,7 +102,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * the start() method of the individual batch jobs that extend this class.
     * @return database.Querylocator
     */
-    public database.Querylocator getQuerylocator() {
+    public database.Querylocator start(Database.BatchableContext bc) {
         try {
             initializeJobData();
 
@@ -187,12 +187,12 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     * @description Handle each group of Detail records to roll-up (i.e., LDV mode). A Stateful collection of
     * CRLP_Rollup instances is used to accumulate the rolled up values by Parent Id across multiple calls to this
     * exection() method with more and more detailsRecords for the same parent.
-    * @param scope List of Detail (Allocation, Opportunity, or OpportunityContactRole) records
+    * @param detailRecords List of Detail (Allocation, Opportunity, or OpportunityContactRole) records
     */
-    public void execute(List<SObject> detailRecords) {
+    public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
         this.batchIteration++;
-        System.debug('#### EXECUTE ####');
+System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
 
         try {
             // Build the processing options instance
@@ -327,7 +327,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * Detail object, there will be one parent record to finish the update for.
      * Log any captured DML errors.
      */
-    public void finish() {
+    public void finish(Database.BatchableContext bc) {
 
         System.debug('#### FINISH ####');
         try {
