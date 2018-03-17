@@ -42,7 +42,8 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     public void execute(SchedulableContext context) {
         try {
             if (customizableRollupEngineEnabled == false) {
-                ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
+                ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.GAU, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
                 rollup.runRollups();
             }
         } catch(Exception e) {
