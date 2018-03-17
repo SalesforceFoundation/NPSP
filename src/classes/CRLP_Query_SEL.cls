@@ -63,6 +63,7 @@
         } else if (resultObject == Opportunity.SObjectType) {
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
         } else  if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
         }
@@ -346,6 +347,7 @@
                 String whereClause = fieldName;
                 // If the field is RecordTypeId, switch it to RecordType.DeveloperName to match the
                 // constant values used which are DeveloperName values.
+                // TODO Refactor this to do comparisons by RecordTypeId rather than DeveloperName
                 if (fieldName == 'RecordTypeId') {
                     whereClause = 'RecordType.DeveloperName';
                 }

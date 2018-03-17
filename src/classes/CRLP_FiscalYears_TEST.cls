@@ -33,7 +33,7 @@
 * @group Selectors
 * @description Unit Test for the Fiscal Years class
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_FiscalYears_TEST {
 
     /*********************************************************************************************************

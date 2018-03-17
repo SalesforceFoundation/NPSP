@@ -38,13 +38,26 @@
 public class CRLP_RollupProcessingOptions {
 
     /**
-     * @description The processing mode for the calling batch operation - normal or LDV mode. In LDV mode,
+     * @description Defines the type of rollups being executed by the specific batch job. This is used with the
+     * RollupFilterSetting enum to select the correct Rollup__mdt records to use for the entire rollup operation.
+     */
+    public Enum RollupType {
+        AccountHardCredit,
+        ContactHardCredit,
+        AccountSoftCredit,
+        ContactSoftCredit,
+        GAU,
+        RecurringDonations
+    }
+
+    /**
+     * @description The processing mode for the calling batch operation - normal or Skew mode. In Skew mode,
      * the List<CRLP_Rollup> collection is saved back into the ProcessingOptions class so that it can be
      * kept in a stateful var in the calling batch job; allowing rollups for a single parent record to extend
      * beyond a single batch iteration
      */
     public Enum BatchJobMode {
-        NonLDV, LDV
+        NonSkewMode, SkewMode
     }
 
     /**
@@ -61,43 +74,6 @@ public class CRLP_RollupProcessingOptions {
         MembershipsOnly // Only rolups with "Membership" in the Summary Field Name
     }
 
-    public Enum RollupSchedule {
-        Daily,
-        Weekly_Friday,
-        Weekly_Sunday,
-        Month_LastDay,
-        Month_FirstDay,
-        Year_LastDay,
-        Year_FirstDay,
-        Never
-    }
-
-    public static RollupSchedule getRollupScheduleFromString(String schedText) {
-        Map<String,RollupSchedule> scheduleMap = new Map<String, RollupSchedule>{
-                'Daily' => RollupSchedule.Daily,
-                'Weekly on Friday' => RollupSchedule.Weekly_Friday,
-                'Weekly on Sunday' => RollupSchedule.Weekly_Sunday,
-                'First Day of Month' => RollupSchedule.Month_FirstDay,
-                'Last Day of Month' => RollupSchedule.Month_LastDay,
-                'First Day of Year' => RollupSchedule.Year_FirstDay,
-                'Last Day of Year' => RollupSchedule.Year_LastDay,
-                'Never' => RollupSchedule.Never
-        };
-        return scheduleMap.get(schedText);
-    }
-
-    /**
-     * @description Defines the type of rollups being executed by the specific batch job. This is used with the
-     * RollupFilterSetting enum to select the correct Rollup__mdt records to use for the entire rollup operation.
-     */
-    public Enum RollupType {
-        AccountHardCredit,
-        ContactHardCredit,
-        AccountSoftCredit,
-        ContactSoftCredit,
-        GAU
-    }
-
     /**
      * @description Processing Options to use for the startRollupsProcess
      * These are set by the calling Batch or Queueable job to define how the rollups will be processed by the
@@ -106,7 +82,7 @@ public class CRLP_RollupProcessingOptions {
     public class ProcessingOptions {
 
         /** @description Define the type of batch job mode - LDV or NonLDV mode */
-        public BatchJobMode mode = BatchJobMode.NonLDV;
+        public BatchJobMode mode = BatchJobMode.NonSkewMode;
 
         /** @description Type of rollup being performed */
         public RollupType rollupJobType;
@@ -117,7 +93,6 @@ public class CRLP_RollupProcessingOptions {
         public SObjectType parentObjType;   // Summary object (Account, Contact, GAU)
         public SObjectType detailObjType;   // Used when working with Soft Credits to have a way to know what the detail object is
         public String parentKeyField;       // Used to know how to get the Id of the Parent record from the supplied detail record
-        public Boolean preventDupeOppsInRollup = false; // Used with Account Soft Credit rollups
 
         /**
          * @description used to recieve and return the last Parent record id processed by startRollupsForLDV().
@@ -138,7 +113,7 @@ public class CRLP_RollupProcessingOptions {
         public Map<Id, List<CRLP_Rollup>> mapOfRollupsByParentId = new Map<Id, List<CRLP_Rollup>>();
 
         /**
-         * @description When ProcessingOptions.preventDupeOppsInRollup is set to true, this var is used to hold a list
+         * @description When working with Account Soft Credit Rollups, this var is used to hold a list
          * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
          * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
          */

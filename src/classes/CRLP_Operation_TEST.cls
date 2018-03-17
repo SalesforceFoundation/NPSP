@@ -33,7 +33,7 @@
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Rollup Operation Services Classes
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_Operation_TEST {
 
     /**
