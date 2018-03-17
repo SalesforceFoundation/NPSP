@@ -50,7 +50,8 @@ public abstract class CRLP_Batch_Base {
      * the rest of the batch processing logic. This data is passed in the
      * ProcessingOptions collection to the processor. It's also used to pre-generate the SOQL used to retrieve
      * summary or detail records rather than build that in every single batch iteration. Basically this collection
-     * is injected into the CRLP_Rollup_SEL cache to significantly simplify and narrow the pr
+     * is injected into the CRLP_Rollup_SEL cache to significantly simplify and narrow the number of records
+     * retrieved and cached throughout the job.
      */
     protected List<Rollup__mdt> statefulCacheOfRollupsToBeProcessed = new List<Rollup__mdt>();
 
@@ -62,7 +63,11 @@ public abstract class CRLP_Batch_Base {
 
     /** @description Simple counters used to track state */
     protected Integer batchIteration = 0;
+
+    /** @description Simple counters used to track state */
     protected Integer totalRecordsModified = 0;
+
+    /** @description Simple counters used to track state */
     protected Integer totalCommits=0;
 
     /** @description Specified list of Summary (Account, Contact or GAU) Id's to roll up */
@@ -126,7 +131,7 @@ public abstract class CRLP_Batch_Base {
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
 
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') + '.AccountId';
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
@@ -207,14 +212,14 @@ public abstract class CRLP_Batch_Base {
             this.detailObjectType = OpportunityContactRole.SObjectType;
             this.keyField = SObjectType.OpportunityContactRole.fields.ContactId.getName();
 
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             this.detailObjectType = OpportunityContactRole.SObjectType;
             this.keyField = 'Contact.AccountId';
         }
     }
 
     /**
-     * @description Are active Rollup__mdt records for the job type?
+     * @description Are there active Rollup__mdt records for the job type?
      * @return True if there are active Rollup__mdt records for the current job type
      */
     protected Boolean hasActiveRollupsForThisJob() {
@@ -231,7 +236,7 @@ public abstract class CRLP_Batch_Base {
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType);
 
-        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType);
         }
         return hasActiveRollups;

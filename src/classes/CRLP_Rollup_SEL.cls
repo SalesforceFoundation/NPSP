@@ -275,7 +275,7 @@ public class CRLP_Rollup_SEL {
         // Determine the correct base summary object based on the Rollup Type
         SObjectType summaryObjectType;
         if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             summaryObjectType = Account.SObjectType;
         } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -298,7 +298,7 @@ public class CRLP_Rollup_SEL {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
                             && r.Amount_Object__r.QualifiedApiName != pscObjectName);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                        rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                     includeRollupDefinition = true;

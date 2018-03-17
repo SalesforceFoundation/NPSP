@@ -47,13 +47,6 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
     }
 
-    /**
-     * @description Scheduler execute method to support scheduling this job directly from the UI
-     */
-    public void execute(SchedulableContext context) {
-        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
-    }
-
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
      * @param recordIds Specific set of parent record id's to roll up to
@@ -62,5 +55,12 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      */
     public CRLP_AccountSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, lastIdProcessedForChunking);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
     }
 }
