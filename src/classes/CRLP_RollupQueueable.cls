@@ -94,7 +94,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
-        options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonLDV;
+        options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
         options.parentObjType = objType;
         options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {
@@ -145,7 +145,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
             List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
             // DML and capture any returned DML errors into a Map by Summary Record Id
-            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords);
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);
         }
     }
 }

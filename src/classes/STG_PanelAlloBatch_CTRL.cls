@@ -51,8 +51,8 @@ public with sharing class STG_PanelAlloBatch_CTRL extends STG_Panel {
             ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED();
             rollup.runRollups();
         } else {
-            Integer batchSizeLDV = CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType);
-            Database.executeBatch(new CRLP_Rollup_LDV_BATCH(General_Accounting_Unit__c.SObjectType), batchSizeLDV);
+            Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.GAU),
+                    CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
         }
         return null;
     }

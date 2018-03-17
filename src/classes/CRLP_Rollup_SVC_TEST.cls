@@ -33,7 +33,7 @@
 * @group Customizable Rollups Operations Services
 * @description Unit Test for the Rollup Operation Services Classes
 */
-@isTest
+@isTest(IsParallel=true)
 private class CRLP_Rollup_SVC_TEST {
 
     /**
@@ -43,20 +43,22 @@ private class CRLP_Rollup_SVC_TEST {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                         Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_LDV__c = 200,
-                        Rollups_Account_LDV_Batch_Size__c = 200,
-                        Rollups_Contact_LDV_Batch_Size__c = 200,
-                        Rollups_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_Allocation_Batch_Size__c = 400,
+                        Rollups_Limit_on_Attached_Opps_for_Skew__c = 200,
+                        Rollups_Account_SkewMode_Batch_Size__c = 200,
+                        Rollups_Contact_SkewMode_Batch_Size__c = 200,
+                        Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+                        Rollups_GAU_Batch_Size__c = 400,
                         Rollups_Account_Batch_Size__c = 20,
                         Rollups_Contact_Batch_Size__c = 20
                 ));
 
-        system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(Account.SObjectType));
-        system.assertEquals(20, CRLP_Rollup_SVC.getBatchSize(Contact.SObjectType));
-        system.assertEquals(200, CRLP_Rollup_SVC.getLDVBatchSize(Account.SObjectType));
-        system.assertEquals(400, CRLP_Rollup_SVC.getLDVBatchSize(General_Accounting_Unit__c.SObjectType));
-        system.assertEquals(200, CRLP_Rollup_SVC.getMaxRelatedOppsForNonLDVMode());
+        system.assertEquals(20, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        system.assertEquals(20, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+        system.assertEquals(200, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+        system.assertEquals(200, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+        system.assertEquals(400, CRLP_RollupBatch_SVC.getBatchSize(CRLP_RollupProcessingOptions.RollupType.GAU, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode));
+
+        system.assertEquals(200, CRLP_Rollup_SVC.getMaxRelatedOppsForNonSkewMode());
         system.assertEquals(true, CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled);
         system.assertNotEquals(null, CRLP_Rollup_SVC.getSObjectFieldDescribe('Account', 'Name'));
     }

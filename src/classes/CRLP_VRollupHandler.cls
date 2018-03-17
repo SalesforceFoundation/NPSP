@@ -101,6 +101,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public void setRecordId(Id objectId) {
         this.objectId = objectId;
+        this.processedOppIds.clear();
         if (this.rollups.size() == 0) {
             // This will call the method in the class that extends this class, not the empty virtual method above.
             initRollup();
@@ -158,6 +159,15 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     }
 
     /**
+     * @description Returns a list of OpportunityId's that were "processed" by a rollup, meaning that the filter
+     * evaluation succeeded.
+     */
+    protected Set<Id> processedOppIds = new Set<Id>();
+    public Set<Id> getListOfOppIdsThatWereRolledUp() {
+        return processedOppIds;
+    }
+
+    /**
      * @description Reset all counter vars for each instance of the rollups when the SummaryObject.Id
      * changes. This eliminates the need to reinstantiate RLLP_Rollup each time
      */
@@ -177,7 +187,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
         Boolean addNewRollup = true;
         for (CRLP_Rollup rollup : this.rollups) {
             if (rollup.isRollupInSameGroup(rlp)) {
-                rollup.rollupsMdt.add(new CRLP_Rollup.Rollupmdt(rlp));
+                rollup.addNewMDTRecord(rlp);
                 addNewRollup = false;
                 break;
             }

@@ -771,7 +771,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllAccounts() {
         RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity rollups for all contacts.
@@ -779,7 +780,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllContacts() { 
         RLLP_OppContactRollup_BATCH batch = new RLLP_OppContactRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity rollups for all households.
@@ -787,7 +789,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllHouseholds(){
         RLLP_OppHouseholdRollup_BATCH batch = new RLLP_OppHouseholdRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity soft credit rollups for all contacts.
@@ -795,7 +798,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllSoftCredits(){
         RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     
     /*******************************************************************************************************
