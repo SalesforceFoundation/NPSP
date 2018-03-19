@@ -45,9 +45,11 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Role values to use in settings.
     */    
-    private static string donorRoleforTest = 'Donor';
-    private static string HonoreeRoleforTest = 'Honoree';
-    private static string NotificationRecipientRoleforTest = 'Notification Recipient';
+    private static String donorRoleforTest = 'Donor';
+    private static String HonoreeRoleforTest = 'Honoree';
+    private static String NotificationRecipientRoleforTest = 'Notification Recipient';
+    private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
+
 
     /*******************************************************************************************************
     * @description Test creation or upate of contact role.
@@ -529,4 +531,65 @@ private class OPP_OpportunityContactRoles_TEST {
         system.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
         system.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
     }
+
+
+    /*********************************************************************************************************
+    * @description Tests updating the Opportunity's Primary Contact to Contact that has an associated
+    *               Opportunity Contact Role.
+    * verify:
+    *   The updated Opportunity Contact Role has the IsPrimary flag selected.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testUpdatingPrimaryContact() {
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        insert testContacts;
+
+        Opportunity oppty = new Opportunity(
+            Name = 'Update Primary Contact Test Oppty',
+            AccountId = testContacts[0].AccountId,
+            Primary_Contact__c = testContacts[0].Id,
+            Amount = 100,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+
+        Test.startTest();
+        insert oppty;
+
+        List<OpportunityContactRole> ocrs = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(1, ocrs.size());
+        System.assertEquals(donorRoleforTest, ocrs[0].Role);
+        System.assertEquals(true, ocrs[0].IsPrimary);
+
+        OpportunityContactRole ocr = new OpportunityContactRole();
+        ocr.OpportunityId = oppty.id;
+        ocr.ContactId =  testContacts[1].Id;
+        ocr.Role = OPPORTUNITY_CONTACT_ROLE_INFLUENCER;
+        insert ocr;
+
+        ocrs = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(2, ocrs.size());
+
+        for (OpportunityContactRole eachOCR : ocrs) {
+            if (eachOCR.IsPrimary) {
+                System.assertEquals(testContacts[0].Id, eachOCR.ContactId);
+                System.assertEquals(donorRoleforTest, eachOCR.Role);
+            } else {
+                System.assertEquals(testContacts[1].Id, eachOCR.ContactId);
+                System.assertEquals(OPPORTUNITY_CONTACT_ROLE_INFLUENCER, eachOCR.Role);
+            }
+        }
+
+        oppty.Primary_Contact__c = testContacts[1].Id;
+        update oppty;
+        Test.stopTest();
+
+        List<OpportunityContactRole> ocrsUpdated = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(1, ocrsUpdated.size());
+
+        System.assertEquals(true, ocrsUpdated[0].IsPrimary);
+        System.assertEquals(donorRoleforTest, ocrsUpdated[0].Role);
+        System.assertEquals(oppty.Primary_Contact__c, testContacts[1].Id);
+        System.assertEquals(oppty.Primary_Contact__c, ocrsUpdated[0].ContactId);
+    }
+
 }
