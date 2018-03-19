@@ -64,8 +64,13 @@
             allFieldsToQuery.add(SObjectType.Opportunity.fields.Amount.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.CloseDate.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
-        } else  if (resultObject == npe01__OppPayment__c.SObjectType) {
+        } else if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
+        } else if (resultObject == npe03__Recurring_Donation__c) {
+            allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Next_Payment_Date__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Last_Payment_Date__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Total_Paid_Installments__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Paid_Amount__c.getSobjectField().getDescribe());
         }
 
         // Loop through the FieldDescribeResults list and add each field that is accessible to the current user

@@ -279,11 +279,11 @@ public class CRLP_DefaultConfigBuilder {
             'npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c' =>
                     new List<String>{ oppCloseDateFld, FilterGroup_PledgedDonations, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'npe03__Recurring_Donation__c.npe03__Paid_Amount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
             'npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Donations_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' }
+                    new List<String>{ oppAmountFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' }
 
     };
 
