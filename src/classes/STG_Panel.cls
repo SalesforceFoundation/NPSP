@@ -394,4 +394,16 @@ public with sharing virtual class STG_Panel {
     public static String getRecordTypeNamesFromPicklistString(Schema.sObjectType objectType, String idValues) {
         return getRecordTypeNamesFromPicklistString(objectType, idValues, Label.stgLabelNone);
     }
+
+    /*******************************************************************************************************
+    * @description Returns whether the running user is a System Administrator.
+    * @return boolean
+    */
+    public static Boolean runningUserIsAdmin() {
+
+        Id runningUserId = UserInfo.getUserId();
+        Id runningUserProfileId = UserInfo.getProfileId();
+        return USER_UserService.isSysAdmin(new List<User>{(new User(Id = runningUserId, ProfileId = runningUserProfileId))}).get(runningUserId);
+
+    }
 }

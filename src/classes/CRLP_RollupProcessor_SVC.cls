@@ -83,7 +83,7 @@ public class CRLP_RollupProcessor_SVC {
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
             // collection is unique by Opportunity Id
-            if (detailsForParent != null && options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (detailsForParent != null && options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 List<SObject> oppsToRollup = new List<SObject>();
                 for (Integer nd=0, listSizeDtl=detailsForParent.size(); nd<listSizeDtl; nd++) {
                     SObject dtl = detailsForParent[nd];
@@ -147,7 +147,7 @@ public class CRLP_RollupProcessor_SVC {
     private static Type getHanderClassType(CRLP_RollupProcessingOptions.ProcessingOptions options) {
         Type handlerClass;
         if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
-                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             handlerClass = CRLP_RollupSoftCredit_SVC.class;
 
         } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
@@ -277,7 +277,7 @@ public class CRLP_RollupProcessor_SVC {
 
             handler.processRollups(detailRecords, childRecordsByDetailId);
 
-            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 options.mapOfProcessedOppIdsByAcctId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
             }
 

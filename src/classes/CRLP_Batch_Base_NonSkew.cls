@@ -126,7 +126,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                         // It's not possible to do an inner query on this due to the following Salesforce error:
                         // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
@@ -176,7 +176,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, hasActivePaymentRollupsForThisJob(), options);
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
 
                 String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(this.detailObjectType, new List<SObjectType>()) +
                     + ' WHERE ' + this.keyField + ' IN : summaryRecords';

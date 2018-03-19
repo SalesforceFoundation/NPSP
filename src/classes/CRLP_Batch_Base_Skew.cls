@@ -128,7 +128,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         parentRelationshipPrefix = Opportunity.fields.Primary_Contact__c.getDescribe().getName().replace('__c', '__r') + '.';
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         parentRelationshipPrefix = 'Contact.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                         parentRelationshipPrefix = 'Contact.Account.';
                     }
 
@@ -144,7 +144,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
 
                 } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     whereClauses.add('(IsPrimary = False' +
                             ' OR (IsPrimary = True AND Opportunity.Account.npe01__SYSTEMIsIndividual__c = False))');
                 }
@@ -156,7 +156,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                             this.statefulCacheOfRollupsToBeProcessed);
                 } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
                 }
                 if (!String.isEmpty(addlFilter)) {
@@ -192,7 +192,6 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
         this.batchIteration++;
-System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
 
         try {
             // Build the processing options instance
@@ -208,7 +207,7 @@ System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
             // parentKeyField needed for the rollup logic.
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 parentKeyField = 'ContactId';
-            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 parentKeyField = 'Contact.AccountId';
             }
 
@@ -270,7 +269,7 @@ System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
 
             // Soft Credit rollups require changing the detail object type to PartialSoftCredit
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
                 // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
                 detailRecords = buildPartialSoftCreditRecordsFromOCRs(detailRecords);
@@ -280,7 +279,7 @@ System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
             // current data scope to the processing class to avoid taking up additional heap size with
             // cloned data.
             options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
             }
 
@@ -297,7 +296,7 @@ System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
             }
             if (lastParentIdProcessed != null && options.getUpdatedMapOfRollupsByParentId().containsKey(lastParentIdProcessed)) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     this.statefulMapOfOppIdsByAcct.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
                 }
             }

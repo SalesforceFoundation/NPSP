@@ -302,7 +302,7 @@ private class CRLP_RollupSoftCredit_TEST {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         } else if (tt == TestType.TestBatchAccount) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         }
         Test.stopTest();
