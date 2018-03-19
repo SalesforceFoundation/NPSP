@@ -1,52 +1,61 @@
-<!--
-    Copyright (c) 2018, Salesforce.org
-    All rights reserved.
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" action="{!checkPermissions}"  >
 
-    Redistribution and use in source and binary forms, with or without
-    modification, are permitted provided that the following conditions are met:
-
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of Salesforce.org nor the names of
-      its contributors may be used to endorse or promote products derived
-      from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
-    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
-    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
-    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
-    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-    POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-  @author Salesforce.org
-  @date 2018
-  @group Rollups
-  @group-content ../../ApexDocContent/Rollups2.htm
-  @description Activation page included in NPSP Settings for the Rollups UI page.
--->
-
-<apex:page controller="STG_PanelCustomizableRollup_CTRL" >
-    <apex:form id="form" styleClass="slds-m-around--x-large">
-        <c:STG_PageHeader sectionLabel="CRLP Section Enable" pageLabel="CRLP Page Enable" />
-        <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small">This page controls the enablement of CRLP. Needs a label.</p>
+    <apex:slds/>
+    <div class="slds-scope">
+        <apex:form id="form" styleClass="slds-m-around--x-large">
+            <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
+            <div class="slds-grid">
+                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                    <p class="slds-text-body--small slds-m-top--x-small">
+                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
+                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
+                    </p>
+                </div>
             </div>
-        </div>
-        <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="enableCRLP" value="Enable Customizable Rollups" action="{!enableCRLP}" styleClass="slds-button slds-button--small slds-button--neutral" />
-            <apex:commandButton id="navigate" value="Navigate to Rollup Grid" action="{!navigate}" styleClass="slds-button slds-button--small slds-button--neutral" />
-        </div>
-    </apex:form>
+            <c:UTIL_PageMessages allowClose="false" id="messages"/>
+
+            <div class="slds-card {!IF(isPolling,'','slds-hide')}">
+                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                    <p class="slds-text-body--small slds-m-top--x-small">
+                        <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
+                    </p>
+                </div>
+            </div>
+
+            <apex:actionPoller action="{!checkDeploymentStatus}"
+                               enabled="{!isPolling}"
+                               reRender="form, fullTree"
+                               interval="5"
+                               status="deploymentStatus"
+                               onComplete="reRenderTree({!stgService.stgCRLP.Customizable_Rollups_Enabled__c})"/>
+
+            <div class="{!IF(isHHAccount, '', 'slds-hide')}">
+
+                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large {!IF(isAdmin, '', 'slds-hide')}">
+                    <apex:commandButton id="editOppRollups" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode && !isPolling}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                </div>
+
+                <div class="slds-form--horizontal slds-m-around--large">
+                    <div class="slds-form-element">
+                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Customizable_Rollups_Enabled__c.Label}" for="cbxCRLPE" styleClass="slds-form-element__label" rendered="{! !isPolling }"/>
+                        <div class="slds-form-element__control">
+                            <apex:inputCheckbox value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" rendered="{!isEditMode}" id="cbxCRLPE" html-aria-describedby="{!$Component.cbxCRLPEHelp}" styleClass="slds-checkbox" />
+                            <apex:inputCheckbox value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" rendered="{!isReadOnlyMode && !isPolling}" disabled="true" id="cbxCRLPEO" html-aria-describedby="{!$Component.cbxCRLPEHelp}" styleClass="slds-checkbox" />
+                            <apex:outputPanel id="cbxCRLPEHelp" layout="block">
+                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpCustomizableRollupsEnable3}" rendered="{! !isPolling }" />
+                            </apex:outputPanel>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
+                    <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status" styleClass="slds-button slds-button_small slds-button_brand" onClick="reRenderTree()"/>
+                    <apex:commandButton id="cancelOppRollups" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                    <apex:commandButton id="navigate" value="Go to Customizable Rollup Summaries Setup" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
+                </div>
+
+            </div>
+
+        </apex:form>
+    </div>
 </apex:page>

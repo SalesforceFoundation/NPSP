@@ -38,21 +38,13 @@ public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
 
     public CRLP_AccountSkew_SoftCredit_BATCH() { }
 
-    /**
-     * @description Scheduler execute method to support scheduling this job directly from the UI
-     */
-    public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-    }
-
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_AccountSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, jobFilter);
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -62,6 +54,14 @@ public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
      * by the SkewDispatcher Id chunking logic.
      */
     public CRLP_AccountSkew_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, recordIds, lastIdProcessedForChunking);
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds, lastIdProcessedForChunking);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
     }
 }

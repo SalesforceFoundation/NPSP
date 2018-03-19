@@ -1602,10 +1602,14 @@
         <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
+        <members>stgCRLPHouseholdAccountError</members>
+        <members>stgCRLPNonAdminError</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
         <members>stgCreate</members>
+        <members>stgDeploymentInProgress</members>
+        <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
         <members>stgDontAutoScheduleHelpText</members>
         <members>stgErrorINaming</members>
@@ -1631,6 +1635,9 @@
         <members>stgHelpCiceroAddrVerification</members>
         <members>stgHelpContactRTExcluded</members>
         <members>stgHelpCreateMissingPayments</members>
+        <members>stgHelpCustomizableRollupsEnable1</members>
+        <members>stgHelpCustomizableRollupsEnable2</members>
+        <members>stgHelpCustomizableRollupsEnable3</members>
         <members>stgHelpDefaultAllocationsEnabled</members>
         <members>stgHelpDefaultGAU</members>
         <members>stgHelpDisableHHAccountAddr</members>

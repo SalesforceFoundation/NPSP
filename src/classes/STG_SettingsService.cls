@@ -149,6 +149,17 @@ public with sharing class STG_SettingsService {
     }
 
     /*********************************************************************************************************
+    * @description The Customizable Rollups Settings object
+    */
+    public Customizable_Rollup_Settings__c stgCRLP {
+        get {
+            if (stgCRLP == null) stgCRLP = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+            return stgCRLP;
+        }
+        private set;
+    }
+
+    /*********************************************************************************************************
     * @description The RD Custom Field Mapping settings object
     */
     public map<string, npe03__Custom_Field_Mapping__c> mapRDCustomField {
@@ -202,8 +213,8 @@ public with sharing class STG_SettingsService {
             return listPMTFieldMapping;           
         }
         public set;    	
-    } 
-    
+    }
+
     /*********************************************************************************************************
     * @description Saves all settings objects to the database
     * @return void
@@ -219,6 +230,7 @@ public with sharing class STG_SettingsService {
 	        upsert stgBDE;
 	        upsert stgErr;
 	        upsert stgAllo;
+            upsert stgCRLP;
         }
     }
 }
