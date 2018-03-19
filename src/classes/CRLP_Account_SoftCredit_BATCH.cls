@@ -38,21 +38,13 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
 
     public CRLP_Account_SoftCredit_BATCH() {}
 
-    /**
-     * @description Scheduler execute method to support scheduling this job directly from the UI
-     */
-    public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-    }
-
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_Account_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, jobFilter);
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -61,6 +53,14 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
     public CRLP_Account_SoftCredit_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, recordIds);
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 }

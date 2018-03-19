@@ -38,14 +38,6 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Account_BATCH() { }
 
-    /**
-     * @description Scheduler execute method to support scheduling this job directly from the UI
-     */
-    public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
-    }
-
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
@@ -62,5 +54,13 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      */
     public CRLP_Account_BATCH(List<Id> recordIds) {
         super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 }

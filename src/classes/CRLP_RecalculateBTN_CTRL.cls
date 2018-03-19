@@ -103,7 +103,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             // ------------------------------------------------
             jobType = null;
             if (this.objType == Account.SObjectType) {
-                jobType = CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit;
+                jobType = CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit;
             } else if (this.objType == Contact.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
             }

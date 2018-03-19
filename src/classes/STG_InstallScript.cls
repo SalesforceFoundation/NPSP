@@ -214,7 +214,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
-    * upgradade. Public just for testing purposes (it should otherwise be private).
+    * upgrade. Public just for testing purposes (it should otherwise be private).
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {

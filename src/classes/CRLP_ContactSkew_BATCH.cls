@@ -38,14 +38,6 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
 
     public CRLP_ContactSkew_BATCH() { }
 
-    /**
-     * @description Scheduler execute method to support scheduling this job directly from the UI
-     */
-    public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
-    }
-
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Skew" criteria
      * @param jobType Defines the type of rollup job
@@ -63,5 +55,13 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      */
     public CRLP_ContactSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
         super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, lastIdProcessedForChunking);
+    }
+
+    /**
+     * @description Scheduler execute method to support scheduling this job directly from the UI
+     */
+    public void execute(SchedulableContext context) {
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
     }
 }
