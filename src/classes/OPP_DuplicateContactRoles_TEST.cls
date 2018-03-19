@@ -38,8 +38,8 @@
 private class OPP_DuplicateContactRoles_TEST {
 
     /*********************************************************************************************************
-    * @description 
-    * Verifies results. 
+    * @description Given Opportunity with multiple primary OCRs Opportunity has OCRs with Role != NPSP Settings Role 
+    * when the batch runs, then an error log created, containing a link to the Opportunity.
     */
     @isTest static void test_LogErrorIfNoOCRsRoleDefinedInNPSPSettings() {
         String nonNPSPRole = 'NON_NPSP_ROLE';
@@ -105,12 +105,14 @@ private class OPP_DuplicateContactRoles_TEST {
         ];
         // An Error Log should be created.
         System.assertEquals(1, errors.size());
-        System.assertEquals(String.format(OPP_DuplicateContactRoles_QUEUE.ERROR_MESSAGE, new List<String>{opportunity.Id}), errors[0].Full_Message__c);
+        System.assertEquals(String.format(OPP_DuplicateContactRoles.ERROR_MESSAGE, new List<String>{opportunity.Id}), errors[0].Full_Message__c);
     }
 
     /*********************************************************************************************************
-    * @description 
-    * Verifies results. 
+    * @description Given Opportunity with multiple primary OCRs and many OCRs with Role equals to 
+    * (NPSP Settings Role, blank, NOT “NPSP Settings Role”) the Queueable runs, then the Opportunity primary OCRs
+    * with blank role AND role not defined in NPSP Settings, are deleted. Opportunity should have only 1 primary OCR
+    * and that role should be the NPSP Settings Role. The Opportunity Primary Contact should be equals to Primary OCR Contact
     */
     @isTest static void test_SingleContact_DeleteBlankAndNonNPSPRole() {
         String npspRole = 'DONOR';
@@ -145,7 +147,25 @@ private class OPP_DuplicateContactRoles_TEST {
                 OpportunityId = opportunity.Id,
                 ContactId = contact.Id,
                 IsPrimary = true,
+                Role = npspRole
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
                 Role = nonNPSPRole
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = nonNPSPRole
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = ''
             ),
             new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
@@ -167,7 +187,7 @@ private class OPP_DuplicateContactRoles_TEST {
         ];
         
         System.assertEquals(1, expectedOpportunities.size());
-        System.assertEquals(3, expectedOpportunities[0].OpportunityContactRoles.size());
+        System.assertEquals(6, expectedOpportunities[0].OpportunityContactRoles.size());
         for (OpportunityContactRole expectedOCR : expectedOpportunities[0].OpportunityContactRoles) {
             System.assertEquals(contact.Id, expectedOCR.ContactId);
             System.assertEquals(true, expectedOCR.IsPrimary);
