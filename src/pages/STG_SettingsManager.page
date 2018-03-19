@@ -39,11 +39,12 @@
 
     // page init function
     j$(function () {
-        ShowPanel(idPanelCurrent);
         var cl = j$('#mynavbar').collapsibleList('.slds-tree__branch', {search: false, animate: false});
         // start with slds-tree-container all collapsed.  couldn't figure out how to call collapseAllHeaders(),
         // but submitting the click on all li's does the trick!
         j$('div',cl).trigger('click');
+        ShowPanel(idPanelCurrent);
+        reRenderTree({!stgService.stgCRLP.Customizable_Rollups_Enabled__c});
     });
 
     function ShowPanel(idPanel) {
@@ -59,6 +60,15 @@
         node = document.getElementById(idPanelCurrent + 'Nav');
         if (node != null) node.classList.add('slds-is-selected');
 
+        var headerNode = node.parentElement.previousElementSibling;
+        headerNode.classList.remove('collapsed');
+        siblings = node.parentNode.childNodes;
+        for (var i = 0, ii = siblings.length; i < ii; i++) {
+            if(siblings[i].nodeName !== '#text') {
+                siblings[i].style.display = 'block';
+            }
+        }
+
         // scroll the panel into view
         j$('body').scrollTop(0);
 
@@ -71,6 +81,24 @@
         if (idPanelCurrent != '{!idPanelCurrent}')
             setPanelCurrent(idPanelCurrent);
     }
+
+    function reRenderTree(isCRLPEnabled) {
+        if(isCRLPEnabled === undefined) {
+            isCRLPEnabled = document.querySelector('[id$="cbxCRLPE"]').checked;
+        }
+        if(isCRLPEnabled === true) {
+            node = document.getElementById('idPanelOppRollupNav');
+            if (node != null) node.style.display =  'none';
+            node = document.getElementById('idPanelUserRollupNav');
+            if (node != null) node.style.display =  'none';
+        } else {
+            node = document.getElementById('idPanelOppRollupNav');
+            if (node != null) node.style.display =  'block';
+            node = document.getElementById('idPanelUserRollupNav');
+            if (node != null) node.style.display =  'block';
+        }
+    }
+
 </script>
 <apex:form >
     <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
@@ -142,7 +170,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppCampMembers}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBDE}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavUserDefinedRollups}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollups}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.CRLP_RollupSummary}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
