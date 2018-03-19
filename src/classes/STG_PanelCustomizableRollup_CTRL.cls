@@ -30,23 +30,139 @@
 /**
 * @author Salesforce.org
 * @date 2018
-* @group Rollups
-* @group-content ../../ApexDocContent/Rollups2.htm
-* @description Controller for the settings page that allows the user to enable customizable rollups and then navigate to
-* the rollups UI once the metadata is deployed.
+* @group Settings
+* @group-content ../../ApexDocContent/Settings.htm
+* @description Controller extension for the Customizable Rollups settings panel.
 */
 
-public with sharing class STG_PanelCustomizableRollup_CTRL {
+public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
-    public static void enableCRLP(){
-        //method to enable CRLP
+    /*********************************************************************************************************
+    * @description Returns the string Id of the Recurring Donations panel.
+    */
+    public override string idPanel() { return 'idPanelCustomizableRollup'; }
+
+    /*******************************************************************************************************
+    * @description is the panel currently Polling for deployment results
+    */
+    public Boolean isPolling {
+        get {
+            if (isPolling == null) {
+                return false;
+            } else {
+                return isPolling;
+            }
+        }
+        private set;
     }
 
-    public PageReference navigate(){
+    /*******************************************************************************************************
+    * @description is the org on the HH Account model
+    */
+    public Boolean isHHAccount {
+        get {
+            return (STG_Panel.stgService.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
+        }
+        set;
+    }
 
+    /*******************************************************************************************************
+    * @description is the running user an admin
+    */
+    public Boolean isAdmin {
+        get {
+            return STG_Panel.runningUserIsAdmin();
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description the jobId of the deployment
+    */
+    public String jobId { get; private set; }
+
+    /*******************************************************************************************************
+    * @description action method run on page load to check account model and admin status of running user
+    * and add pagemessages as needed
+    */
+    public void checkPermissions() {
+        // throw an error if the org isn't on HH account model
+        if (!isHHAccount) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgCRLPHouseholdAccountError));
+        }
+        // throw an error if the user isn't an admin
+        if (!isAdmin) {
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgCRLPNonAdminError));
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
+    * and reschedule Scheduled Jobs
+    * @return void
+    */
+    public virtual override PageReference saveSettings() {
+
+        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        try {
+            isEditMode = false;
+            if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
+                String oldStatus = STG_Panel.stgService.stgCRLP.CMT_API_Status__c;
+                // Only start polling if it's their first time or the last deployment wasn't a success
+                if(String.isEmpty(oldStatus) || !oldStatus.contains('Succeeded')) {
+                    isPolling = true;
+                }
+                // This method includes committing Customizable_Rollups_Enabled__c as true if the deployment succeeds
+                jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                if (Test.isRunningTest()) {
+                    jobId = '123';
+                }
+            } else {
+                // The deployment method takes care of setting the Enabled flag to true if it succeeds.
+                // In here, we only set it to false.
+                stgService.saveAll();
+            }
+            UTIL_MasterSchedulableHelper.setScheduledJobs();
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Action Method to navigate to separate VF page that contains custom CMDT UI in Lightning Components
+    * @return void
+    */
+    public PageReference navigate(){
         PageReference rollupGrid = new PageReference('/apex/CRLP_RollupSetup');
         rollupGrid.setRedirect(true);
         return rollupGrid;
     }
 
+    /*******************************************************************************************************
+    * @description Action Method used by Poller to check status of CMDT deployment
+    * @return void
+    */
+    public PageReference checkDeploymentStatus() {
+        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        String newStatus = crlpSettings.CMT_API_Status__c;
+        // Make sure we have a response and it's the new response.
+        if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
+            isPolling = false;
+            if (newStatus.contains('Succeeded')) {
+                return null;
+            } else {
+                crlpSettings.Customizable_Rollups_Enabled__c = false;
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, newStatus +' '+ Label.stgDeploymentTryAgain));
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
 }
