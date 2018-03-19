@@ -32,30 +32,29 @@
 * @date 2018
 * @group Opportunity Contact Role
 * @group-content ../../ApexDocContent/Rollups.htm
-* @description Queueable Class for removing duplicate primary OCRs. 
+* @description Queueable Class for the deletion of the duplicate primary OCRs. 
 */
 public class OPP_DuplicateContactRoles_QUEUE  implements Queueable {
-    @TestVisible private static final String ERROR_MESSAGE = '/{0}';
     private static final Integer LOAD_SIZE = 100;
 
-    private DuplicatePrimaryOCRs duplicatePrimaryOCRs;
+    private OPP_DuplicateContactRoles.DuplicatePrimaryOCRs duplicatePrimaryOCRs;
 
     /*******************************************************************************************************
     * @description Queueable execute method. It instanciates the DuplicatePrimaryOCRs and runs the logic that
-    * manages the Primary OCRs duplicate.
-    * @return void
+    * manages the Primary OCR duplicates.
+    * @return void.
     ********************************************************************************************************/
     public void execute(QueueableContext context) {
-        duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(LOAD_SIZE);
+        duplicatePrimaryOCRs = new OPP_DuplicateContactRoles.DuplicatePrimaryOCRs(LOAD_SIZE);
         if (duplicatePrimaryOCRs.isEmpty()) {
             return;
         }
 
         String settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
-        Errors errors = logInvalidOCRsRoleErrors(duplicatePrimaryOCRs, settingsRole);
+        OPP_DuplicateContactRoles.Errors errors = validateOpportunityOCRs(duplicatePrimaryOCRs, settingsRole);
         mergeDuplicatePrimaryOCRs(duplicatePrimaryOCRs, settingsRole);
 
-        duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(LOAD_SIZE);
+        duplicatePrimaryOCRs = new OPP_DuplicateContactRoles.DuplicatePrimaryOCRs(LOAD_SIZE);
         if (duplicatePrimaryOCRs.isEmpty() || errors.containsAll(duplicatePrimaryOCRs.getOpportunities())) {
             return;
         }
@@ -64,16 +63,16 @@ public class OPP_DuplicateContactRoles_QUEUE  implements Queueable {
     }
 
     /*******************************************************************************************************
-    * @description Validates if the Opportunity duplicate primary OCRs contains at least the Role defined
-    * in the NPSP Settings. If there is no NPSP Settings Role, then log an error.
+    * @description Validates if the Opportunity primary OCRs contains at least the Role defined
+    * in the NPSP Settings. If there is no OCR with NPSP Settings Role, then log an error.
     * @param DuplicatePrimaryOCRs The Duplicate Primary OCRs object.
-    * @param String The Role defined in NPSP Settings
+    * @param String The Role defined in NPSP Settings.
     * @return Errors The errors object.
     ********************************************************************************************************/
-    private Errors logInvalidOCRsRoleErrors(DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
-        Errors errors = new Errors();
+    private OPP_DuplicateContactRoles.Errors validateOpportunityOCRs(OPP_DuplicateContactRoles.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
+        OPP_DuplicateContactRoles.Errors errors = new OPP_DuplicateContactRoles.Errors();
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
+            OPP_DuplicateContactRoles.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_DuplicateContactRoles.OpportunityPrimaryOCRs(opportunityRecord);
 
             if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
                 errors.add(opportunityRecord);
@@ -84,254 +83,24 @@ public class OPP_DuplicateContactRoles_QUEUE  implements Queueable {
     }
 
     /*******************************************************************************************************
-    * @description Merges the Opportunity duplicate primary OCRs. 
+    * @description Merges the Opportunity primary OCRs, by deleting the OCRs with Blank roles and
+    * roles different than the one defined in the NPSP Settings. 
     * @param DuplicatePrimaryOCRs The Duplicate Primary OCRs object.
-    * @param String The Role defined in NPSP Settings
-    * @return void
+    * @param String The Role defined in NPSP Settings.
+    * @return void.
     ********************************************************************************************************/
-    private void mergeDuplicatePrimaryOCRs(DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
+    private void mergeDuplicatePrimaryOCRs(OPP_DuplicateContactRoles.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
+            OPP_DuplicateContactRoles.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_DuplicateContactRoles.OpportunityPrimaryOCRs(opportunityRecord);
             if (opportunityPrimaryOCRs.containsRole(settingsRole)) {
                 duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getBlankRole());
                 duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getRoleNotEquals(settingsRole));
-                OpportunityContactRole primaryOCR = opportunityPrimaryOCRs.getRoleEquals(settingsRole)[0];
-                duplicatePrimaryOCRs.makePrimary(primaryOCR);
+                List<OpportunityContactRole> settingsRoleOCRs = opportunityPrimaryOCRs.getRoleEquals(settingsRole);
+                duplicatePrimaryOCRs.makePrimary(settingsRoleOCRs[0]);
+                settingsRoleOCRs.remove(0);
+                duplicatePrimaryOCRs.deleteRecords(settingsRoleOCRs);
             }
         }
         duplicatePrimaryOCRs.processDML();
-    }
-
-    /*******************************************************************************************************
-    * @description Duplicate Primary Opportunity Contact Roles Wrapper. It contains the logic that loads and 
-    * manages the duplicate Primary OCRs and the related Opportunities.
-    ********************************************************************************************************/
-    class DuplicatePrimaryOCRs {
-        private Map<Id, Opportunity> opportunityRecords;
-        private Map<Id, OpportunityContactRole> opportunityContactRoles;
-
-        private Map<Id, Opportunity> opportunityRecordsToUpdate;
-        private Map<Id, OpportunityContactRole> opportunityContactRolesToUpdate;
-        private Map<Id, OpportunityContactRole> opportunityContactRolesToDelete;
-
-        /*********************************************************************************************************
-        * @description The Constructor of DuplicatePrimaryOCRs.
-        * @param Integer The max number of records to load.
-        */
-        public DuplicatePrimaryOCRs(Integer ocrsLoadSize) {
-            opportunityRecords = new Map<Id, Opportunity>(loadOpportunities(ocrsLoadSize));
-            opportunityContactRoles = new Map<Id, OpportunityContactRole>(loadOpportunityContactRoles(opportunityRecords.values()));
-            opportunityRecordsToUpdate = new Map<Id, Opportunity>();
-            opportunityContactRolesToUpdate = new Map<Id, OpportunityContactRole>();
-            opportunityContactRolesToDelete = new Map<Id, OpportunityContactRole>();
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the duplicate primary OCRs Opportunities. 
-        * @return List<Opportunity> The duplicate primary OCRs Opportunities.
-        ********************************************************************************************************/
-        public List<Opportunity> getOpportunities() {
-            return opportunityRecords.values();
-        }
-
-        /*******************************************************************************************************
-        * @description Checks if this Object contains Opportunities and OCRs.
-        * @return Boolean.
-        ********************************************************************************************************/
-        public Boolean isEmpty() {
-            return opportunityRecords.isEmpty() || opportunityContactRoles.isEmpty();
-        }
-
-        /*******************************************************************************************************
-        * @description Sets the OCR in paramater as a Primary OCR.
-        * @return void.
-        ********************************************************************************************************/
-        public void makePrimary(OpportunityContactRole primaryOCR) {
-            OpportunityContactRole ocrToUpdate = opportunityContactRoles.get(primaryOCR.Id);
-            ocrToUpdate.IsPrimary = true;
-            opportunityContactRolesToUpdate.put(ocrToUpdate.Id, ocrToUpdate);
-
-            Opportunity opportunityToUpdate = opportunityRecords.get(primaryOCR.OpportunityId);
-            opportunityToUpdate.Primary_Contact__c = primaryOCR.ContactId;
-            opportunityRecordsToUpdate.put(opportunityToUpdate.Id, opportunityToUpdate);
-        }
-
-        /*******************************************************************************************************
-        * @description Deletes the OCRs in paramater.
-        * @return void.
-        ********************************************************************************************************/
-        public void deleteRecords(List<OpportunityContactRole> ocrsToDelete) {
-            opportunityContactRolesToDelete.putAll(ocrsToDelete);
-        }
-
-        /*******************************************************************************************************
-        * @description Commits the DMLs (delete/Update OCRs, update Opportunities)
-        * @return void.
-        ********************************************************************************************************/
-        public void processDML() {
-            delete opportunityContactRolesToDelete.values();
-            update opportunityContactRolesToUpdate.values();
-            update opportunityRecordsToUpdate.values();
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the duplicate primary OCRs Opportunity Ids. 
-        * @param Integer The max number of records to load.
-        * @return List<Opportunity> 
-        ********************************************************************************************************/
-        private List<Opportunity> loadOpportunities(Integer ocrsLoadSize) {
-            Set<Id> opportunityIds = new Set<Id>();
-            for (AggregateResult aggregateResult : [
-                    SELECT OpportunityId 
-                    FROM OpportunityContactRole 
-                    WHERE IsPrimary = true 
-                    GROUP BY OpportunityId 
-                    HAVING COUNT(Id) > 1 
-                    LIMIT :ocrsLoadSize
-            ]) {
-                opportunityIds.add((Id) aggregateResult.get('OpportunityId'));
-            }
-            return [
-                SELECT Primary_Contact__c, (
-                    SELECT OpportunityId, ContactId, Role, IsPrimary
-                    FROM OpportunityContactRoles
-                    WHERE IsPrimary = true
-                )
-                FROM Opportunity
-                WHERE Id IN :opportunityIds
-            ];
-        }
-
-        /*******************************************************************************************************
-        * @description Gets all the duplicate primary OCRs. 
-        * @param List<Opportunity> The Opportunities with the related Primary OCRs.
-        * @return List<OpportunityContactRole>
-        ********************************************************************************************************/
-        private List<OpportunityContactRole> loadOpportunityContactRoles(List<Opportunity> opportunityRecords) {
-            List<OpportunityContactRole> result = new List<OpportunityContactRole>();
-            for (Opportunity currentOpportunity : opportunityRecords) {
-                result.addAll(currentOpportunity.OpportunityContactRoles);
-            }
-            return result;
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Duplicate Primary OCRs Opportunity Wrapper. It encapsulates an Opportunity and its related
-    * duplicate Primary OCRs.
-    ********************************************************************************************************/
-    class OpportunityPrimaryOCRs {
-        private Opportunity record;
-
-        /*********************************************************************************************************
-        * @description The Constructor of OpportunityPrimaryOCRs.
-        * @param Opportunity Opportunity with the related primary OCRs.
-        */
-        public OpportunityPrimaryOCRs(Opportunity currentOpportunity) {
-            record = currentOpportunity;
-        }
-
-        /*******************************************************************************************************
-        * @description Checks if the Opportunity has an OCR Role equals to the Role in the parameter.
-        * @param String OCR Role.
-        * @return Boolean.
-        ********************************************************************************************************/
-        public Boolean containsRole(String ocrRole) {
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.Role == ocrRole) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the OCRs with blank role.
-        * @return List<OpportunityContactRole> The OCRs with blank role.
-        ********************************************************************************************************/
-        public List<OpportunityContactRole> getBlankRole() {
-            List<OpportunityContactRole> result = new List<OpportunityContactRole>();
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (String.isBlank(ocr.Role)) {
-                    result.add(ocr);
-                }
-            }
-            return result;
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the OCRs with Role equals to the Role in the parameter.
-        * @return List<OpportunityContactRole> The OCRs with Role equals to the Role in the parameter.
-        ********************************************************************************************************/
-        public List<OpportunityContactRole> getRoleEquals(String ocrRole) {
-            List<OpportunityContactRole> result = new List<OpportunityContactRole>();
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.Role == ocrRole) {
-                    result.add(ocr);
-                }
-            }
-            return result;
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the OCRs with Role not equals to the Role in the parameter.
-        * @return List<OpportunityContactRole> The OCRs with Role not equals to the Role in the parameter.
-        ********************************************************************************************************/
-        public List<OpportunityContactRole> getRoleNotEquals(String ocrRole) {
-            List<OpportunityContactRole> result = new List<OpportunityContactRole>();
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.Role != ocrRole) {
-                    result.add(ocr);
-                }
-            }
-            return result;
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Error Log. This class contains the logic that creates the error logs.
-    ********************************************************************************************************/
-    class Errors {
-        private List<Error__c> errors;
-        private Set<Id> errorOpportunityRecords;
-
-        /*********************************************************************************************************
-        * @description The Constructor of Errors
-        */
-        public Errors() {
-            errors = new List<Error__c>();
-            errorOpportunityRecords = new Set<Id>();
-        }
-
-        /*******************************************************************************************************
-        * @description Adds an error log for the Opportunity in the parameter.
-        * @param Opportunity.
-        * @return void.
-        ********************************************************************************************************/
-        public void add(Opportunity opportunityRecord) {
-            errors.add(ERR_Handler.createJobError(
-                String.format(ERROR_MESSAGE, new List<String>{opportunityRecord.Id}), 
-                'DuplicateContactRoles',
-                'Opportunity'
-            ));
-            errorOpportunityRecords.add(opportunityRecord.Id);
-        }
-
-        /*******************************************************************************************************
-        * @description Checks if all the Opportunities in the parameter have error logs.
-        * @param List<Opportunity>.
-        * @return Boolean.
-        ********************************************************************************************************/
-        public Boolean containsAll(List<Opportunity> opportunityRecords) {
-            return errorOpportunityRecords.containsAll((new Map<Id,Opportunity>(opportunityRecords)).keySet());
-        }
-
-        /*******************************************************************************************************
-        * @description Commits the DMLs (delete/Update OCRs, update Opportunities)
-        * @return void.
-        ********************************************************************************************************/
-        public void processDML() {
-            insert errors;
-        }
     }
 }
