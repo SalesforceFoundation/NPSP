@@ -110,12 +110,14 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // may cause a cpu time out issue.
             String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(detailObjectType, new List<SObjectType>());
 
+            npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
             // If there active rollups for this job type
             if (hasActiveRollupsForThisJob()) {
 
                 List<String> whereClauses = new List<String>();
-                // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
 
+                // Add necessary filters to limit the LDV batch job to only the records that should be processed as LDV
                 if (this.recordIds != null && this.recordIds.size() > 0) {
                     whereClauses.add(keyField + ' IN :recordIds');
                 } else {
@@ -139,14 +141,21 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     }
                 }
 
-                // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                    whereClauses.add('Account.npe01__SYSTEMIsIndividual__c != false');
+                // Exclude Organization Donations (where Opp.Account.SYSTEM_IsIndividual=false) from Contact Hard Credit rollups
+                // Depending on the npo02__Always_Rollup_to_Primary_Contact__c custom setting
+                if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                    whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
 
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    whereClauses.add('(IsPrimary = False' +
-                            ' OR (IsPrimary = True AND Opportunity.Account.npe01__SYSTEMIsIndividual__c = False))');
+                } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false &&
+                        (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+                    whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+
+                } else if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == True &&
+                        (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit)) {
+                    whereClauses.add('IsPrimary = False');
                 }
 
                 // Identify a common filter that can be applied to the main query to reduce the number of records queried
@@ -192,6 +201,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
     public void execute(Database.BatchableContext bc, List<SObject> detailRecords) {
 
         this.batchIteration++;
+        System.debug('#### EXECUTE (' + this.batchIteration + ') ####');
 
         try {
             // Build the processing options instance
@@ -306,6 +316,13 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 this.parentIdsNotCommittedWithBatch.put(lastParentIdProcessed, this.batchIteration);
             }
 
+            try {
+                System.debug(LoggingLevel.Error, '### DetailRecordsSize=' + detailRecords.size());
+                System.debug(LoggingLevel.Error, '>>> \n' + CRLP_Debug_UTIL.getRollupState(this.statefulRollupsById.get(lastParentIdProcessed)));
+            } catch (Exception ex) {
+                System.debug(LoggingLevel.Error, '### this.statefulRollupsById.get(' + lastParentIdProcessed + ') IS NULL');
+            }
+
             // Handle dml on the records to be updated
             if (updatedRecords != null) {
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
@@ -355,6 +372,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 // just to return the updated record
                 List<SObject> updatedRecords = new List<SObject>();
                 for (SObject parent : parents) {
+
+System.debug(LoggingLevel.Error, '>>> \n' + CRLP_Debug_UTIL.getRollupState(this.statefulRollupsById.get(parent.Id)));
+
                     SObject updatedRecord = CRLP_RollupProcessor_SVC.completeRollupForParent(parent, new List<SObject>(),
                             new Map<Id, List<SObject>>(), options);
                     if (updatedRecord != null) {
