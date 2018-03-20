@@ -72,9 +72,9 @@ public class ACCT_Accounts_TDTM extends TDTM_Runnable {
     * @param listNew the list of Accounts from trigger new.
     * @param listOld the list of Accounts from trigger old.
     * @param triggerAction which trigger event (BeforeInsert, AfterInsert, etc.).
-    * @param listHHNew the list
-    * @param listHHOld
-    * @return null
+    * @param listHHNew the list of HH Accounts from trigger new.
+    * @param listHHOld the list of HH Accounts from trigger old.
+    * @return void
     ********************************************************************************************************/
     public void configAccountForContact(List<SObject> listNew, List<SObject> listOld,
             TDTM_Runnable.Action triggerAction, list<Account> listHHNew, list<Account> listHHOld) {

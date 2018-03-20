@@ -30,64 +30,67 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group
-* @group-content
+* @group TDTM
+* @group-content ../../ApexDocContent/TDTM.htm
 * @description Provides an adapter for Advancement package to be able to inject customizations into NPSP and provide API to inject to other project.
 **/
 
 global virtual with sharing class Advancement_Adapter {
 
-    /**
-     * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger handlers records (since they conflict with HEDA version)
-     * and return the rest
-     *
-     * @return List<Trigger_Handler__c> The TDTM configuration.
-     */
+    /*******************************************************************************************************
+    * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger
+    * handlers records (since they conflict with HEDA version) and return the rest.
+    * @param listTH The list of Trigger handler record for further processing.
+    * @return List<Trigger_Handler__c> The list of Trigger Handler record for TDTM to use.
+    ********************************************************************************************************/
     global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
         if(!Advancement_Info.useAdv()) {
-            throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
+            throw new AdapterException(Label.adapterException);
         }
 
         return TDTM_Config_API.getDefaultRecords();
     }
 
-    /**
-     * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
-     * Expose this API for Advancement to inject the rollup functionality into HEDA code base
-     *
-     * @return null
-     */
+    /*******************************************************************************************************
+    * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap
+    * in HEDA. Expose this API for Advancement to inject the rollup functionality into HEDA code base
+    * @param listAccountId The list of Account (Id's) that need updating.
+    * @return void
+    ********************************************************************************************************/
     global void rollupAccounts(List<Id> listAccountId) {
         if(!Advancement_Info.useAdv()) {
-            throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
+            throw new AdapterException(Label.adapterException);
         }
 
         ACCT_IndividualAccounts_TDTM.rollupAccounts(listAccountId);
     }
 
-    /**
-     * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
-     * Expose this API for Advancement to inject the moving opportunity functionality into HEDA code base
-     *
-     * @return null
-     */
+    /*******************************************************************************************************
+    * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap
+    * in HEDA. Expose this API for Advancement to inject the moving opportunity functionality into HEDA
+    * code base.
+    * @param mapContactIdAccountIdNew A map of Contact Id to Account Id, for the Accounts to move opps to.
+    * @param mapContactIdAccountIdOld A map of Contact Id to Account Id, for the Accounts to move opps from.
+    * @return void
+    ********************************************************************************************************/
     global void moveOppsToContactAccount(Map<Id,Id> mapContactIdAccountIdNew, Map<Id,Id> mapContactIdAccountIdOld) {
         if(!Advancement_Info.useAdv()) {
-            throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
+            throw new AdapterException(Label.adapterException);
         }
 
         ACCT_IndividualAccounts_TDTM.moveOppsToContactAccount(mapContactIdAccountIdNew, mapContactIdAccountIdOld, null);
     }
 
-    /**
-     * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
-     * Expose this API for Advancement to inject the setting NPSP's system Account fields functionality into HEDA code base
-     *
-     * @return null
-     */
+    /*******************************************************************************************************
+    * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap
+    * in HEDA. Expose this API for Advancement to inject the setting NPSP's system Account fields functionality
+    * into HEDA code base.
+    * @param a The Account that need updating.
+    * @return void
+    ********************************************************************************************************/
     global void configAccountForContact(Account a) {
         if(!Advancement_Info.useAdv()) {
-            throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
+            throw new AdapterException(Label.adapterException);
         }
 
         a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
@@ -95,15 +98,17 @@ global virtual with sharing class Advancement_Adapter {
         a.npe01__SYSTEMISINDIVIDUAL__c = true;
     }
 
-    /**
-     * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
-     * Expose this API for Advancement to inject the setting NPSP's system Account fields functionality into HEDA code base
-     *
-     * @return null
-     */
+    /*******************************************************************************************************
+    * @description Since Advancement will disable some NPSP trigger handler class, we need to fill in gap in HEDA.
+    * Expose this API for Advancement to inject the setting NPSP's system Account fields functionality into HEDA code base
+    * @param listNew The list of Account from trigger new.
+    * @param listOld The list of Account from trigger old.
+    * @param action The trigger event (BeforeInsert, AfterInsert, etc.).
+    * @return void
+    ********************************************************************************************************/
     global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld, String action) {
         if(!Advancement_Info.useAdv()) {
-            throw new AdapterException('Invalid call. This function is reserved for Salesforce use.');
+            throw new AdapterException(Label.adapterException);
         }
 
         TDTM_Runnable.Action triggerAction = TDTM_TriggerActionHelper.getTriggerActionFromName(action);
@@ -111,8 +116,8 @@ global virtual with sharing class Advancement_Adapter {
         accountsTDTM.configAccountForContact(listNew, listOld, triggerAction, new List<Account>(), new List<Account>());
     }
 
-    /**
-     * @description This is the expection class for Advancement Adapter class
-     */
+    /*******************************************************************************************************
+    * @description This is the expection class for Advancement Adapter class
+    ********************************************************************************************************/
     global class AdapterException extends Exception{}
 }

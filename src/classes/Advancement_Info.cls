@@ -30,16 +30,30 @@
 /**
 * @author Salesforce.org
 * @date 2017
-* @group
-* @group-content
+* @group TDTM
+* @group-content ../../ApexDocContent/TDTM.htm
 * @description Provides the Advancement Information to NPSP class.
 **/
 public with sharing class Advancement_Info {
-
+    /*******************************************************************************************************
+    * @description  The boolean value to determine if Adv project is installed.
+    *******************************************************************************************************/
     private static Boolean useAdv = false;
+
+    /*******************************************************************************************************
+    * @description  The adapter class from Adv to override the default behavior of Advancement_Adapter.
+    *******************************************************************************************************/
     private static Advancement_Adapter apiNPSP = null;
+
+    /*******************************************************************************************************
+    * @description  The boolean value to determine if the setup is called before.
+    *******************************************************************************************************/
     private static Boolean setupCalled = false;
 
+    /*******************************************************************************************************
+    * @description Setup the attributes of the class.
+    * @return void
+    *******************************************************************************************************/
     private static void setup() {
         //Check if Advancement is installed and enabled.
         try {
@@ -68,6 +82,10 @@ public with sharing class Advancement_Info {
         setupCalled = true;
     }
 
+    /*******************************************************************************************************
+    * @description The method for other class to determine if Adv is installed or not.
+    * @return useAdv The boolean value to determine if Adv project is installed.
+    *******************************************************************************************************/
     public static Boolean useAdv() {
         if(!setupCalled) {
             setup();
@@ -75,6 +93,11 @@ public with sharing class Advancement_Info {
         return useAdv;
     }
 
+    /*******************************************************************************************************
+    * @description The method for other class to get the API_NPSP class instance
+    * @return Advancement_Adapter The adapter class from Adv to override the default behavior of
+    * Advancement_Adapter.
+    *******************************************************************************************************/
     public static Advancement_Adapter getApiNPSP() {
         if(!setupCalled) {
             setup();
