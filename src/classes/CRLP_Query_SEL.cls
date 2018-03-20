@@ -147,7 +147,6 @@
             }
 
             // always include these two extra fields for Opportunity queries
-            mainSoql += ', Account.' + SObjectType.Account.fields.Number_of_Opportunities__c.getName();
             mainSoql += ', Account.npe01__SYSTEMIsIndividual__c';
 
         }
