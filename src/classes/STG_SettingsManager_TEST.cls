@@ -931,13 +931,13 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(true, panel.isPolling, 'Polling should be active.');
         System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be enabled in STG_Panel.');
         //fake the success result.
-        UTIL_CustomSettingsFacade.customizableRollupSettings.CMT_API_Status__c = '123 Succeeded';
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Succeeded';
         PageReference deploymentPR = panel.checkDeploymentStatus();
         System.assertEquals(null, deploymentPR, 'Returned PageReference should be null');
         //fake the fail result.
-        UTIL_CustomSettingsFacade.customizableRollupSettings.CMT_API_Status__c = '123 Failed';
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Failed';
         //set enabled=true to test the failure setting it false.
-        UTIL_CustomSettingsFacade.customizableRollupSettings.Customizable_Rollups_Enabled__c = true;
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = true;
         deploymentPR = panel.checkDeploymentStatus();
         System.assertEquals(false, UTIL_CustomSettingsFacade.getcustomizableRollupSettings().Customizable_Rollups_Enabled__c, 'CRLPs should be disabled.');
         STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = false;

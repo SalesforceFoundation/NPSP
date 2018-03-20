@@ -305,6 +305,14 @@ public class CRLP_DefaultConfigBuilder_SVC {
             if (!String.isEmpty(rollupDetails[6])) {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
+
+            // If the legacy 'Enable Soft Credit Rollups' field is false, set all the soft credit rollup
+            // definitions to inactive.
+            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Enable_Soft_Credit_Rollups__c == false &&
+                    rollupDetails[2] == CRLP_DefaultConfigBuilder.pscAmountFld) {
+                rollup.isActive = false;
+            }
+
             rollups.add(rollup);
         }
 
