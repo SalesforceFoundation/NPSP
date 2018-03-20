@@ -48,11 +48,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     /** @description  Retrieve and cache the household settings the first time this class is loaded only */
     public static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
-    /** @description Set this to true only if ACM is enabled, in use, and there is a defined field to store the value in */
-    public static final Boolean storeDatedConversionRate = UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled()
-            && householdSettings.Use_Dated_Conversion_Rates__c == true
-            && householdSettings.Custom_Exchange_Rate_Field__c != null;
-
     /** @description The id of the default General Accounting Unit if default allocations are enabled */
     public static id idDefaultGAU = settings.Default__c;
 
@@ -749,22 +744,6 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         );
         if (UserInfo.isMultiCurrencyOrganization()) {
             defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
-        }
-
-        // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate
-        // on the Allocation object, get the effective exchange rate to convert to the corporate currency
-        // and store in a customer defined field on the Allocation record
-        if (storeDatedConversionRate && defaultAllo.Opportunity__c != null) {
-            Date oppCloseDate = opp.CloseDate;
-            // To allow for testing, if the org isn't a true multi-currency org use the (mocked) corp currency code
-            String oppCurrCode = (UserInfo.isMultiCurrencyOrganization() ? (String)opp.get('CurrencyIsoCode') : ALLO_Multicurrency_TDTM.currCorporate);
-            Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,
-                    oppCurrCode, ALLO_Multicurrency_TDTM.currCorporate);
-            try {
-                defaultAllo.put(householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
-            } catch (Exception ex) {
-                // ignore the error if this field doesn't actually exist
-            }
         }
 
         return defaultAllo;
