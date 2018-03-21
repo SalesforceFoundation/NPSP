@@ -142,7 +142,7 @@
     getFieldType: function(cmp, field, fieldList){
         for (var i = 0; i < fieldList.length; i++) {
             if (fieldList[i].name === field) {
-                type = fieldList[i].type;
+                var type = fieldList[i].type;
                 return type;
             }
         }
@@ -219,18 +219,14 @@
         console.log("in helper onChangeOperation");
         var renderMap = cmp.get("v.renderMap");
 
-        //AMOUNT, DATE & DETAIL FIELD RENDERING
-        renderMap = this.renderAmountField(cmp, operation, renderMap);
-        renderMap = this.renderDateField(cmp, operation, renderMap);
-        renderMap = this.renderDetailField(cmp, operation, renderMap);
-        renderMap = this.renderFiscalYear(cmp, renderMap);
-
         //TIME BOUND OPERATION RENDERING
         if (operation !== '' && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
             renderMap["timeBoundOperation"] = true;
             var timeOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
+            renderMap["rollupType"] = true;
         } else {
             renderMap["timeBoundOperation"] = false;
+            renderMap["rollupType"] = false;
             cmp.set(("v.activeRollup.Time_Bound_Operation_Type__c"), 'All_Time');
             var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
             cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
@@ -273,17 +269,20 @@
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel !== '') {
                 renderMap["filterGroup"] = true;
-                renderMap["operation"] = true;
                 cmp.set("v.renderMap", renderMap);
                 this.filterDetailFieldsBySummaryField(cmp, detailObject);
             } else {
-                renderMap["operation"] = false;
                 renderMap["filterGroup"] = false;
             }
+            //AMOUNT, DATE & DETAIL FIELD RENDERING
+            var operation = cmp.get("v.activeRollup.Operation__c");
+            renderMap = this.renderAmountField(cmp, operation, renderMap);
+            renderMap = this.renderDateField(cmp, operation, renderMap);
+            renderMap = this.renderDetailField(cmp, operation, renderMap);
+            renderMap = this.renderFiscalYear(cmp, renderMap);
+
             //always reset operation and filter group when rollup is changed during create
             cmp.set("v.renderMap", renderMap);
-            cmp.set("v.activeRollup.Operation__c", '');
-            this.onChangeOperation(cmp, '');
             var na = cmp.get("v.labels.na");
             cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", na);
             this.onChangeFilterGroup(cmp, na);
@@ -324,13 +323,15 @@
         if(cmp.get("v.mode") === 'create'){
             var renderMap = cmp.get("v.renderMap");
             if(label !== ''){
-                renderMap["rollupType"] = true;
                 renderMap["description"] = true;
+                renderMap["operation"] = true;
             } else{
-                renderMap["rollupType"] = false;
                 renderMap["description"] = false;
+                renderMap["operation"] = false;
             }
             cmp.set("v.renderMap", renderMap);
+            cmp.set("v.activeRollup.Operation__c", '');
+            this.onChangeOperation(cmp, '');
         }
 
         //sets rollup type automatically if there is only 1
@@ -517,7 +518,7 @@
             || operation === 'Years_Donated'
             || operation === 'Best_Year'
             || operation === 'Best_Year_Total'
-            || yearlyOperation === 'Years_Ago')
+            || timeBoundOperation === 'Years_Ago')
             && operation != '') {
             //enable fiscal year
             renderMap["fiscalYear"] = true;

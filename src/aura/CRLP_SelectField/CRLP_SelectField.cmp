@@ -39,15 +39,21 @@
 
     <!-- private attributes -->
     <aura:attribute name="isReadOnly" type="Boolean"/>
-    <aura:attribute name="auraId" type="String" description="Id label to be used for aura:id for view and select. Also identifies the type of field."/>
-    <aura:attribute name="fieldLabel" type="String" description="Label for the rollup__mdt field" />
-    <aura:attribute name="entityLabel" type="String" description="Label of the selected entity" />
+    <aura:attribute name="auraId" type="String"
+                    description="Id label to be used for aura:id for view and select. Also identifies the type of field."/>
+    <aura:attribute name="fieldLabel" type="String" description="Label for the rollup__mdt field"/>
+    <aura:attribute name="entityLabel" type="String" description="Label of the selected entity"/>
     <aura:attribute name="apiName" type="String" description="API name of the selected entity"/>
     <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
-    <aura:attribute name="mediumDeviceSize" type="Integer" default="6" description="Controls the number of items per row on a medium device"/>
-    <aura:attribute name="objectLabel" type="String" default="" description="Optional parameter to concatenate the object label with the field labels"/>
+    <aura:attribute name="mediumDeviceSize" type="Integer" default="6"
+                    description="Controls the number of items per row on a medium device"/>
+    <aura:attribute name="objectLabel" type="String" default=""
+                    description="Optional parameter to concatenate the object label with the field labels"/>
     <aura:attribute name="isRequired" type="Boolean" default="" description="Sets the required flag on the field"/>
-    <aura:attribute name="hasNullOption" type="Boolean" default="true" description="Optional parameter to include the first null option in a list"/>
+    <aura:attribute name="hasNullOption" type="Boolean" default="true"
+                    description="Optional parameter to include the first null option in a list"/>
+    <aura:attribute name="helpText" type="String" default="Example text"
+                    description="Help text to describe the field and its requirements"/>
 
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
         <!--Field Label: {!v.fieldLabel}<br/>
@@ -59,21 +65,26 @@
                              value="{!v.entityLabel}"
                              readonly="true"/>
             <aura:set attribute="else">
-                <lightning:select aura:id="{!v.auraId + 'Select'}"
-                                  label="{!v.fieldLabel}"
-                                  name="{!v.fieldLabel}"
-                                  value="{!v.apiName}"
-                                  required="{!v.isRequired}"
-                                  onchange="{!c.changeField}">
+                <div class="slds-form-element">
+                    <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}"/>
+                    <lightning:select aura:id="{!v.auraId + 'Select'}"
+                                      label="{!v.fieldLabel}"
+                                      name="{!v.fieldLabel}"
+                                      value="{!v.apiName}"
+                                      required="{!v.isRequired}"
+                                      onchange="{!c.changeField}"
+                                      variant="label-hidden">
 
-                    <aura:if isTrue="{!v.hasNullOption}">
-                        <option value="" text=""/>
-                    </aura:if>
+                        <aura:if isTrue="{!v.hasNullOption}">
+                            <option value="" text=""/>
+                        </aura:if>
 
-                    <aura:iteration items="{!v.options}" var="option">
-                        <option value="{!option.name}" text="{!v.objectLabel+option.label}" selected="{!option.name == v.apiName}"/>
-                    </aura:iteration>
-                </lightning:select>
+                        <aura:iteration items="{!v.options}" var="option">
+                            <option value="{!option.name}" text="{!v.objectLabel+option.label}"
+                                    selected="{!option.name == v.apiName}"/>
+                        </aura:iteration>
+                    </lightning:select>
+                </div>
             </aura:set>
         </aura:if>
     </lightning:layoutItem>

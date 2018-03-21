@@ -645,20 +645,28 @@
         </value>
     </labels>
     <labels>
-        <fullName>CRLP_CreateRollupSummaryObjectHelpText</fullName>
+        <fullName>CRLP_CreateRollupTargetObjectHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Tooltip help text for summary object.</shortDescription>
-        <value>The object determines which Summary Fields are available for you to roll up data to.</value>
+        <shortDescription>Tooltip help text for target object.</shortDescription>
+        <value>The object determines which Target Fields are available for you to roll up donation data to. The available Target Objects are Account, Contact, General Accounting Unit, and Recurring Donation.</value>
     </labels>
     <labels>
-        <fullName>CRLP_CreateRollupSummaryFieldHelpText</fullName>
+        <fullName>CRLP_CreateRollupTargetFieldHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Tooltip help text for summary field.</shortDescription>
-        <value>TBD</value>
+        <shortDescription>Tooltip help text for target field.</shortDescription>
+        <value>Custom field on the selected Target Object that you are rolling up donation data to. Fields must be of the following types: Date, Datetime, Double, ID, MultiPicklist, Picklist, String, TextArea. Note that a Target Field can only be associated with one rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupActiveHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for the active flag.</shortDescription>
+        <value>Indicates that the rollup is active. Inactive rollups won't be calculated along with active rollups.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDescriptionHelpText</fullName>
@@ -666,7 +674,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for description.</shortDescription>
-        <value>TBD</value>
+        <value>It's important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupNameHelpText</fullName>
@@ -674,7 +682,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for name.</shortDescription>
-        <value>TBD</value>
+        <value>TODO: REMOVE ME</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupTypeHelpText</fullName>
@@ -682,7 +690,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for rollup type.</shortDescription>
-        <value>TBD</value>
+        <value>The combination of which object you're rolling up and the attribution</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
@@ -690,7 +698,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>TBD</value>
+        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine what records don't get rolled up.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupOperationHelpText</fullName>
@@ -698,7 +706,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for operation.</shortDescription>
-        <value>TBD</value>
+        <value>Determines how the donation data will roll up. Is it a sum, an average, or a best year total (to name just a few)? Available values are determined by the type of the Target Field.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupFiscalYearHelpText</fullName>
@@ -706,7 +714,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for fiscal year.</shortDescription>
-        <value>TBD</value>
+        <value>Calculates rollups based on fiscal year settings (instead of calendar year).</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupTimeBoundOperationHelpText</fullName>
@@ -714,7 +722,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for time bound operation.</shortDescription>
-        <value>TBD</value>
+        <value>The time period for this rollup. You can roll up data for all time, a certain number of days, or a specific year.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupYearsAgoHelpText</fullName>
@@ -722,7 +730,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for years ago picklist.</shortDescription>
-        <value>TBD</value>
+        <value>Choose the number of years ago that you want to roll up data for. Keep in mind that only the data for that calendar (or fiscal) year will roll up. So, if the current year is 2018 and you choose 2 years ago, the roll up will include data for 2016.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDaysBackHelpText</fullName>
@@ -730,7 +738,31 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for days back integer.</shortDescription>
-        <value>TBD</value>
+        <value>Choose the number of days back (from today) that you want to roll up data for.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDetailFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation Type is  a single result operation (First, Last, Largest, or Smallest).</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for date field picklist.</shortDescription>
+        <value>The date field to use when calculating the rollup. The Time Bound Operation depends on this field.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for amount field picklist.</shortDescription>
+        <value>The amount field to use when calculating the rollup.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreditType</fullName>

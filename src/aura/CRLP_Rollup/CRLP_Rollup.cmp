@@ -86,12 +86,12 @@
 
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
-        <form class="slds-form_stacked">
+        <form>
             <lightning:layout>
                 <lightning:layoutItem size="12" largeDeviceSize="8">
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <aura:if isTrue="{!v.mode == 'create'}">
-                            <h3 class="slds-p-horizontal_large slds-text-heading_small">{!v.labels.createSummaryHelpText}</h3>
+                        <aura:if isTrue="{!and(v.mode == 'create', not(v.renderMap.description))}">
+                            <h3 class="slds-p-horizontal_large slds-text-heading_small">{!v.labels.createIntroHelp}</h3>
                         </aura:if>
 
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -102,6 +102,7 @@
                                             options="{!v.summaryObjects}"
                                             isRequired="true"
                                             mediumDeviceSize="4"
+                                            helpText="{!v.labels.createTargetObjectHelp}"
                         />
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="summaryField"
@@ -111,6 +112,7 @@
                                             options="{!v.summaryFields}"
                                             isRequired="true"
                                             mediumDeviceSize="4"
+                                            helpText="{!v.labels.createTargetFieldHelp}"
                         />
                         <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                               size="12">
@@ -121,11 +123,14 @@
                                                    altUnchecked="{!v.labels.active + ' ' + v.labels.checkboxFalse}"
                                 />
                                 <span class="slds-form-element__label rollupCheckbox">{!v.labels.active}</span>
+                                />
                                 <aura:set attribute="else">
+                                    <c:CRLP_Tooltip helpText="{!v.labels.createActiveHelp}" fieldLabel="{!v.labels.active}"/>
                                     <lightning:input aura:id="activeCheckbox"
                                                      type="checkbox"
                                                      label="{!v.labels.active}"
-                                                     checked="{!v.activeRollup.Active__c}"/>
+                                                     checked="{!v.activeRollup.Active__c}"
+                                                     variant="label-hidden"/>
                                 </aura:set>
                             </aura:if>
                         </lightning:layoutItem>
@@ -133,62 +138,20 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.renderMap.description}">
                             <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
+                                <c:CRLP_Tooltip helpText="{!v.labels.createDescriptionHelp}" fieldLabel="{!v.labels.description}"/>
                                 <lightning:textarea aura:id="descriptionInput"
                                                     label="{!v.labels.description}"
                                                     name="{!v.labels.description}"
                                                     value="{!v.activeRollup.Description__c}"
                                                     readonly="{!v.isReadOnly}"
-                                                    required="{!v.isReadOnly ? 'false' : 'true'}"/>
+                                                    required="{!v.isReadOnly ? 'false' : 'true'}"
+                                                    variant="label-hidden"
+                                                    />
                             </lightning:layoutItem>
-                        </aura:if>
-                    </lightning:layout>
-                    <lightning:layout multipleRows="true" verticalAlign="start">
-                        <aura:if isTrue="{!v.renderMap.filterGroup}">
-                            <aura:if isTrue="{!v.mode == 'create'}">
-                                <lightning:layoutItem size="12" mediumDeviceSize="6">
-                                </lightning:layoutItem>
-                                <lightning:layoutItem size="12" mediumDeviceSize="6">
-                                    <h3 class="slds-text-heading_label slds-p-horizontal_large">Information about what a filter group is would go here.</h3>
-                                </lightning:layoutItem>
-                            </aura:if>
-                        </aura:if>
-                    </lightning:layout>
-                    <lightning:layout multipleRows="true" verticalAlign="start">
-                        <aura:if isTrue="{!v.renderMap.rollupType}">
-                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                                auraId="rollupType"
-                                                fieldLabel="{!v.labels.rollupType}"
-                                                entityLabel="{!v.selectedRollupType.label}"
-                                                apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
-                                                options="{!v.rollupTypes}"
-                                                isRequired="true"
-                                                mediumDeviceSize="6"
-
-                            />
-                        </aura:if>
-                        <aura:if isTrue="{!v.renderMap.filterGroup}">
-                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                                auraId="filterGroup"
-                                                fieldLabel="{!v.labels.filterGroupLabel}"
-                                                entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
-                                                apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
-                                                options="{!v.filterGroups}"
-                                                isRequired="false"
-                                                hasNullOption="false"
-                            />
                         </aura:if>
                     </lightning:layout>
 
                     <!--START OPERATION FIELDS-->
-                    <lightning:layout multipleRows="true" verticalAlign="start">
-                        <aura:if isTrue="{!v.renderMap.operation}">
-                            <aura:if isTrue="{!v.mode == 'create'}">
-                                <lightning:layoutItem size="12" mediumDeviceSize="6">
-                                    <h3 class="slds-text-heading_label slds-p-horizontal_large">Information about operation should go here.</h3>
-                                </lightning:layoutItem>
-                            </aura:if>
-                        </aura:if>
-                    </lightning:layout>
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.renderMap.operation}">
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
@@ -199,6 +162,7 @@
                                                 options="{!v.allowedOperations}"
                                                 mediumDeviceSize="3"
                                                 isRequired="true"
+                                                helpText="{!v.labels.createOperationHelp}"
                             />
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.fiscalYear}">
@@ -215,11 +179,13 @@
                                     <span role="checkbox" aria-checked="{!v.activeRollup.Use_Fiscal_Year__c}"
                                           class="slds-form-element__label rollupCheckbox">{!v.labels.useFiscalYear}</span>
                                     <aura:set attribute="else">
+                                        <c:CRLP_Tooltip helpText="{!v.labels.createFiscalYearHelp}" fieldLabel="{!v.labels.useFiscalYear}"/>
                                         <lightning:input aura:id="fiscalYearCheckbox"
                                                          type="checkbox"
                                                          label="{!v.labels.useFiscalYear}"
                                                          checked="{!v.activeRollup.Use_Fiscal_Year__c}"
-                                                         readonly="{!v.isReadOnly}"/>
+                                                         readonly="{!v.isReadOnly}"
+                                                         variant="label-hidden"/>
                                     </aura:set>
                                 </aura:if>
                             </lightning:layoutItem>
@@ -233,11 +199,15 @@
                                                 options="{!v.timeBoundOperations}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
+                                                helpText="{!v.labels.createTimeBoundHelp}"
                             />
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.integerDays}">
                             <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                                   size="12">
+                                <aura:if isTrue="{!not(v.isReadOnly)}">
+                                    <c:CRLP_Tooltip helpText="{!v.labels.createTimeBoundHelp}" fieldLabel="{!v.selectedTimeBoundOperationLabel}"/>
+                                </aura:if>
                                 <lightning:input aura:id="integerInput"
                                                  type="{!v.isReadOnly ? 'text' : 'number'}"
                                                  class="integerInputField"
@@ -247,7 +217,8 @@
                                                  min="0"
                                                  step="1"
                                                  messageWhenRangeUnderflow="{!v.labels.integerError}"
-                                                 messageWhenStepMismatch="{!v.labels.integerError}"/>
+                                                 messageWhenStepMismatch="{!v.labels.integerError}"
+                                                 variant="{!v.isReadOnly ? '' : 'label-hidden'}"/>
                             </lightning:layoutItem>
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.integerYears}">
@@ -259,10 +230,41 @@
                                                 options="{!v.integerList}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
+                                                helpText="{!v.labels.createYearsHelp}"
                             />
                         </aura:if>
                     </lightning:layout>
                     <!--END OPERATION FIELDS-->
+
+                    <!--Rollup type + filter group -->
+                    <lightning:layout multipleRows="true" verticalAlign="start">
+                        <aura:if isTrue="{!v.renderMap.rollupType}">
+                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                auraId="rollupType"
+                                                fieldLabel="{!v.labels.rollupType}"
+                                                entityLabel="{!v.selectedRollupType.label}"
+                                                apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                                                options="{!v.rollupTypes}"
+                                                isRequired="true"
+                                                mediumDeviceSize="6"
+                                                helpText="{!v.labels.createRollupTypeHelp}"
+
+                            />
+                        </aura:if>
+                        <aura:if isTrue="{!v.renderMap.filterGroup}">
+                            <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
+                                                auraId="filterGroup"
+                                                fieldLabel="{!v.labels.filterGroupLabel}"
+                                                entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
+                                                apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
+                                                options="{!v.filterGroups}"
+                                                isRequired="false"
+                                                hasNullOption="false"
+                                                helpText="{!v.labels.createFilterGroupHelp}"
+                            />
+                        </aura:if>
+                    </lightning:layout>
+                    <!--Rollup type + filter group -->
 
                     <!--START ADVANCED CUSTOMIZATION-->
                     <lightning:layout multipleRows="true" verticalAlign="start">
@@ -293,6 +295,7 @@
                                                 mediumDeviceSize="3"
                                                 objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
                                                 isRequired="true"
+                                                helpText="{!v.labels.createDetailFieldHelp}"
                             />
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.dateField}">
@@ -304,6 +307,7 @@
                                                 options="{!v.dateFields}"
                                                 objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
                                                 mediumDeviceSize="3"
+                                                helpText="{!v.labels.createDateFieldHelp}"
                             />
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.amountField}">
@@ -316,6 +320,7 @@
                                                 objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
+                                                helpText="{!v.labels.createAmountFieldHelp}"
                             />
                         </aura:if>
                     </lightning:layout>

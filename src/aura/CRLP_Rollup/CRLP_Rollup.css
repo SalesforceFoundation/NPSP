@@ -5,6 +5,9 @@
     margin-left: .5rem;
     font-size: 13px;
 }
+.THIS .slds-form-element__icon{
+    margin-left: .2rem;
+}
 .THIS .slds-input[readonly]{
     padding-left: .5rem;
 }

@@ -1095,6 +1095,9 @@
         <members>CRLP_CreateRollupTimeBoundOperationHelpText</members>
         <members>CRLP_CreateRollupYearsAgoHelpText</members>
         <members>CRLP_CreateRollupDaysBackHelpText</members>
+        <members>CRLP_CreateRollupDetailFieldHelpText</members>
+        <members>CRLP_CreateRollupDateFieldHelpText</members>
+        <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>

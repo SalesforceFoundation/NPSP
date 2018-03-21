@@ -181,14 +181,8 @@ public with sharing class CRLP_RollupUI_SVC {
             } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
                     && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Allocation__c')) {
-                item.creditType = Label.CRLP_HardCredit;
             } else {
-                item.creditType = Label.CRLP_HardCredit;
+                item.creditType = Label.stgNotApplicable;
             }
             item.detailObject = mdtList[i].Detail_Object__r.Label;
             item.summaryObject = mdtList[i].Summary_Object__r.Label;
@@ -397,7 +391,21 @@ public with sharing class CRLP_RollupUI_SVC {
                 'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
-                'createSummaryHelpText' => Label.CRLP_CreateRollupIntroHelpText,
+                'createIntroHelp' => Label.CRLP_CreateRollupIntroHelpText,
+                'createTargetObjectHelp' => Label.CRLP_CreateRollupTargetObjectHelpText,
+                'createTargetFieldHelp' => Label.CRLP_CreateRollupTargetFieldHelpText,
+                'createActiveHelp' => Label.CRLP_CreateRollupActiveHelpText,
+                'createDescriptionHelp' => Label.CRLP_CreateRollupDescriptionHelpText,
+                'createRollupTypeHelp' => Label.CRLP_CreateRollupTypeHelpText,
+                'createFilterGroupHelp' => Label.CRLP_CreateRollupFilterGroupHelpText,
+                'createOperationHelp' => Label.CRLP_CreateRollupOperationHelpText,
+                'createFiscalYearHelp' => Label.CRLP_CreateRollupFiscalYearHelpText,
+                'createTimeBoundHelp' => Label.CRLP_CreateRollupTimeBoundOperationHelpText,
+                'createYearsHelp' => Label.CRLP_CreateRollupYearsAgoHelpText,
+                'createDaysHelp' => Label.CRLP_CreateRollupDaysBackHelpText,
+                'createDetailFieldHelp' => Label.CRLP_CreateRollupDetailFieldHelpText,
+                'createDateFieldHelp' => Label.CRLP_CreateRollupDateFieldHelpText,
+                'createAmountFieldHelp' => Label.CRLP_CreateRollupAmountFieldHelpText,
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
