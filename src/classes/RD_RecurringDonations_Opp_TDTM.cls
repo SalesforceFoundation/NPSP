@@ -46,7 +46,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public override DmlWrapper run(List<SObject> newlist, List<SObject> oldlist, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
-
+            
         TDTM_ProcessControl.setRecursionFlag(TDTM_ProcessControl.flag.RD, true);
         DmlWrapper dmlWrapper = new DmlWrapper();
         
@@ -87,18 +87,9 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;
-            }
-        }
-
-        if (triggerAction == TDTM_Runnable.Action.AfterDelete || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
-            for (SObject sobj : (triggerAction == TDTM_Runnable.Action.AfterDelete ? oldlist : newlist)) {
-                Opportunity o = (Opportunity)sobj;
-                if (o.npe03__Recurring_Donation__c != null) {
-                    rdIds.add(o.npe03__Recurring_Donation__c);
-                }
-            }
-        }
-
+            }                  
+        }           
+        
         //Get the open label for opps
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         Integer rdcount = 0;
@@ -106,7 +97,7 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
             rdcount = [select count() from npe03__Recurring_Donation__c where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids];
         }
                                                                                           
-        //recurring donations that need to be updated
+        //recurring donations that need to be updated      
         if (rdcount > 0) {
             if (rdcount == 1 || system.isBatch() || system.isFuture() || RD_RecurringDonations_BATCH.isBatchButton) {
                 RD_RecurringDonations.updateRecurringDonationOnOppChange(rdIds, dmlWrapper); 
