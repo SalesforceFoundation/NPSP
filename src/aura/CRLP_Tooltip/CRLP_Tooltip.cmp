@@ -38,10 +38,14 @@
 <aura:component description="CRLP_Tooltip">
     <aura:attribute name="helpText" type="String" description="Help text to appear in the tooltip"/>
     <aura:attribute name="fieldLabel" type="String" description="Label for the field"/>
+    <aura:attribute name="isRequired" type="Boolean" description="If item is required or not"/>
 
     <!-- custom help text component -->
     <label class="slds-form-element__label">
-        {!v.fieldLabel}
+        <aura:if isTrue="{!v.isRequired}">
+            <abbr class="slds-required">*</abbr>
+        </aura:if>
+        <span>{!v.fieldLabel}</span>
         <div class="slds-form-element__icon">
             <a href="javascript:void(0);" class="slds-form-element__icon slds-align-middle"
                onclick="{!c.handleOnClick}"
@@ -49,7 +53,7 @@
                onmouseover="{!c.handleMouseEnter}"
                tabindex="-1">
                 <lightning:icon class="slds-icon-text-default ms-help-icon" size="xx-small"
-                                iconName="utility:info" alternativeText="Help" title="Help"/>
+                                iconName="utility:info" alternativeText="Help"/>
             </a>
             <div aura:id="divSelectHelp" class="slds-popover slds-popover_tooltip slds-nubbin_left-top ms-help-popup-in-header slds-fall-into-ground" role="tooltip" aria-live="polite">
                 <div class="slds-popover__body ms-help-popup-body">

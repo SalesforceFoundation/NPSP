@@ -18,10 +18,11 @@
             var label = this.retrieveFieldLabel(summaryObject, summaryObjects);
 
             //sets summary object if it's being passed from the container
-            if (summaryObject != undefined) {
+            if (summaryObject !== undefined) {
                 this.onChangeSummaryObject(cmp, summaryObject, label);
             }
             this.hideAllFields(cmp);
+            this.setIntegerYearList(cmp);
         }
 
         //update filter group list to contain none as a first option
@@ -30,7 +31,6 @@
         var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
-        this.setIntegerYearList(cmp);
 
 
         console.log('Called reset details');
@@ -70,10 +70,11 @@
     */
     fieldSetup: function(cmp){
         this.resetAllFields(cmp);
-        this.onChangeTimeBoundOperationsOptions(cmp, false);
-        this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
         this.updateAllowedOperations(cmp);
         this.onChangeOperation(cmp, cmp.get("v.activeRollup.Operation__c"));
+        this.setIntegerYearList(cmp);
+        this.onChangeTimeBoundOperationsOptions(cmp, false);
+        this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
         this.resetRollupTypes(cmp);
         this.setRollupType(cmp);
     },
@@ -241,22 +242,6 @@
         var label = operations[operation];
         cmp.set("v.selectedOperationLabel", label);
 
-        //disables save button if a detail field is required for a single result operation and detail field or operation isn't selected
-        var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
-        if (operation !== '') {
-            if (!renderMap["detailField"]) {
-                //if detail field isn't required, save button enables
-                cmp.set("v.isIncomplete", false);
-            } else if (detailField !== '' && detailField !== null) {
-                //if detail field is required, save button enables only if detail field is selected
-                cmp.set("v.isIncomplete", false);
-            } else {
-                cmp.set("v.isIncomplete", true);
-            }
-        } else {
-            cmp.set("v.isIncomplete", true);
-        }
-
     },
 
     /* @description: renders filter group and operation, resets fields for the amount, detail and date fields based on the detail object
@@ -311,6 +296,22 @@
             cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
             this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
             cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "CloseDate");
+        }
+
+        //disables save button if a detail field is required for a single result operation and detail field or operation isn't selected
+        var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+        if (rollupLabel !== '') {
+            if (!renderMap["detailField"]) {
+                //if detail field isn't required, save button enables
+                cmp.set("v.isIncomplete", false);
+            } else if (detailField !== '' && detailField !== null) {
+                //if detail field is required, save button enables only if detail field is selected
+                cmp.set("v.isIncomplete", false);
+            } else {
+                cmp.set("v.isIncomplete", true);
+            }
+        } else {
+            cmp.set("v.isIncomplete", true);
         }
 
     },
@@ -399,8 +400,6 @@
             }
         } else {
             //default to not showing these fields and reset values
-            //took this out because some operations (not time bound operations) require fiscal year checkbox
-            //renderMap["fiscalYear"] = false;
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
             if (isOnChange) {
@@ -417,7 +416,7 @@
         //set selected operation to be available in view mode
         var timeBoundOperations = cmp.get("v.timeBoundOperations");
         if(label === undefined){
-            var label = this.retrieveFieldLabel(operation, timeBoundOperations);
+            label = this.retrieveFieldLabel(operation, timeBoundOperations);
         }
         cmp.set("v.selectedTimeBoundOperationLabel", label);
     },
@@ -519,7 +518,7 @@
             || operation === 'Best_Year'
             || operation === 'Best_Year_Total'
             || timeBoundOperation === 'Years_Ago')
-            && operation != '') {
+            && operation !== '') {
             //enable fiscal year
             renderMap["fiscalYear"] = true;
         } else {
@@ -818,7 +817,7 @@
         } else if (mode === 'create') {
             masterLabel = cmp.get("v.labels.rollupNew") + ' - ' + label;
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
-        } else if (summaryObjectName != undefined && summaryFieldName != undefined ) {
+        } else if (summaryObjectName !== undefined && summaryFieldName !== undefined ) {
             //only reset the name once summary object and field are selected for edit and clone modes
             masterLabel = label;
             cmp.set("v.activeRollup.MasterLabel", masterLabel);

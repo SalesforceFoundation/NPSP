@@ -1,0 +1,4 @@
+/*removes the extra required asterisk for tooltip workaround*/
+.THIS .slds-form-element__label > [title='required'] {
+    display: none; visibility: hidden;
+}

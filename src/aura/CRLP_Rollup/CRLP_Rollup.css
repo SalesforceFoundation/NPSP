@@ -1,6 +1,7 @@
-.THIS .slds-checkbox, .THIS .rollupCheckbox{
+.THIS .slds-checkbox, .THIS .rollupOutputCheckbox{
     padding-top: 2em;
 }
+/*margin is for view mode indentation*/
 .THIS .slds-form-element__label{
     margin-left: .5rem;
     font-size: 13px;
@@ -10,4 +11,16 @@
 }
 .THIS .slds-input[readonly]{
     padding-left: .5rem;
+}
+/*formatting for edit mode checkboxes*/
+.THIS .rollupInputCheckbox{
+    display: inline-flex;
+}
+/*lightning input checkbox reset margin from checkbox*/
+.THIS .rollupInputCheckbox + .slds-form-element__label{
+    margin-left: 0rem;
+}
+/*removes the extra required asterisk for tooltip workaround*/
+.THIS .slds-form-element__label > [title='required'] {
+    display: none; visibility: hidden;
 }

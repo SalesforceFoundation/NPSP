@@ -65,26 +65,25 @@
                              value="{!v.entityLabel}"
                              readonly="true"/>
             <aura:set attribute="else">
-                <div class="slds-form-element">
-                    <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}"/>
-                    <lightning:select aura:id="{!v.auraId + 'Select'}"
-                                      label="{!v.fieldLabel}"
-                                      name="{!v.fieldLabel}"
-                                      value="{!v.apiName}"
-                                      required="{!v.isRequired}"
-                                      onchange="{!c.changeField}"
-                                      variant="label-hidden">
 
-                        <aura:if isTrue="{!v.hasNullOption}">
-                            <option value="" text=""/>
-                        </aura:if>
+                <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}" isRequired="{!v.isRequired}"/>
+                <lightning:select aura:id="{!v.auraId + 'Select'}"
+                                  name="{!v.fieldLabel}"
+                                  label="{!v.fieldLabel}"
+                                  value="{!v.apiName}"
+                                  required="{!v.isRequired}"
+                                  onchange="{!c.changeField}"
+                                  variant="label-hidden">
 
-                        <aura:iteration items="{!v.options}" var="option">
-                            <option value="{!option.name}" text="{!v.objectLabel+option.label}"
-                                    selected="{!option.name == v.apiName}"/>
-                        </aura:iteration>
-                    </lightning:select>
-                </div>
+                    <aura:if isTrue="{!v.hasNullOption}">
+                        <option value="" text=""/>
+                    </aura:if>
+
+                    <aura:iteration items="{!v.options}" var="option">
+                        <option value="{!option.name}" text="{!v.objectLabel+option.label}"
+                                selected="{!option.name == v.apiName}"/>
+                    </aura:iteration>
+                </lightning:select>
             </aura:set>
         </aura:if>
     </lightning:layoutItem>

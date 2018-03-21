@@ -118,19 +118,20 @@
                                               size="12">
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <!--todo: how can this be screen-readable?-->
-                                <ui:outputCheckbox value="{!v.activeRollup.Active__c}" class="rollupCheckbox"
-                                                   altChecked="{!v.labels.active + ' ' + v.labels.checkboxTrue}"
-                                                   altUnchecked="{!v.labels.active + ' ' + v.labels.checkboxFalse}"
-                                />
-                                <span class="slds-form-element__label rollupCheckbox">{!v.labels.active}</span>
-                                />
+                                <div class="slds-form-element rollupOutputCheckbox">
+                                    <ui:outputCheckbox value="{!v.activeRollup.Active__c}" class="rollupCheckbox slds-form-element__control"
+                                                       altChecked="{!v.labels.active + ' ' + v.labels.checkboxTrue}"
+                                                       altUnchecked="{!v.labels.active + ' ' + v.labels.checkboxFalse}"
+                                    />
+                                    <span class="slds-form-element__label">{!v.labels.active}</span>
+                                </div>
                                 <aura:set attribute="else">
-                                    <c:CRLP_Tooltip helpText="{!v.labels.createActiveHelp}" fieldLabel="{!v.labels.active}"/>
-                                    <lightning:input aura:id="activeCheckbox"
+                                    <lightning:input aura:id="activeCheckbox" class="rollupInputCheckbox"
                                                      type="checkbox"
                                                      label="{!v.labels.active}"
                                                      checked="{!v.activeRollup.Active__c}"
                                                      variant="label-hidden"/>
+                                    <c:CRLP_Tooltip helpText="{!v.labels.createActiveHelp}" fieldLabel="{!v.labels.active}"/>
                                 </aura:set>
                             </aura:if>
                         </lightning:layoutItem>
@@ -138,14 +139,16 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <aura:if isTrue="{!v.renderMap.description}">
                             <lightning:layoutItem padding="around-medium" mediumDeviceSize="12" size="12">
-                                <c:CRLP_Tooltip helpText="{!v.labels.createDescriptionHelp}" fieldLabel="{!v.labels.description}"/>
+                                <aura:if isTrue="{!not(v.isReadOnly)}">
+                                    <c:CRLP_Tooltip helpText="{!v.labels.createDescriptionHelp}" fieldLabel="{!v.labels.description}" isRequired="true"/>
+                                </aura:if>
                                 <lightning:textarea aura:id="descriptionInput"
                                                     label="{!v.labels.description}"
                                                     name="{!v.labels.description}"
                                                     value="{!v.activeRollup.Description__c}"
                                                     readonly="{!v.isReadOnly}"
                                                     required="{!v.isReadOnly ? 'false' : 'true'}"
-                                                    variant="label-hidden"
+                                                    variant="{!v.isReadOnly ? '' : 'label-hidden'}"
                                                     />
                             </lightning:layoutItem>
                         </aura:if>
@@ -170,22 +173,23 @@
                                                   size="12">
                                 <aura:if isTrue="{!v.isReadOnly}">
                                     <!--todo: how can this be screen-readable-->
-                                    <ui:outputCheckbox aura:id="fiscalYearCheckboxOutput"
-                                                       value="{!v.activeRollup.Use_Fiscal_Year__c}"
-                                                       class="rollupCheckbox"
-                                                       altChecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxTrue}"
-                                                       altUnchecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxFalse}"
-                                    />
-                                    <span role="checkbox" aria-checked="{!v.activeRollup.Use_Fiscal_Year__c}"
-                                          class="slds-form-element__label rollupCheckbox">{!v.labels.useFiscalYear}</span>
+                                    <div class="slds-form-element rollupOutputCheckbox">
+                                        <ui:outputCheckbox aura:id="fiscalYearCheckboxOutput" class="rollupCheckbox slds-form-element__control"
+                                                           value="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                                           altChecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxTrue}"
+                                                           altUnchecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxFalse}"
+                                        />
+                                        <span role="checkbox" aria-checked="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                              class="slds-form-element__label">{!v.labels.useFiscalYear}</span>
+                                    </div>
                                     <aura:set attribute="else">
-                                        <c:CRLP_Tooltip helpText="{!v.labels.createFiscalYearHelp}" fieldLabel="{!v.labels.useFiscalYear}"/>
-                                        <lightning:input aura:id="fiscalYearCheckbox"
+                                        <lightning:input aura:id="fiscalYearCheckbox" class="rollupInputCheckbox"
                                                          type="checkbox"
                                                          label="{!v.labels.useFiscalYear}"
                                                          checked="{!v.activeRollup.Use_Fiscal_Year__c}"
                                                          readonly="{!v.isReadOnly}"
                                                          variant="label-hidden"/>
+                                        <c:CRLP_Tooltip helpText="{!v.labels.createFiscalYearHelp}" fieldLabel="{!v.labels.useFiscalYear}"/>
                                     </aura:set>
                                 </aura:if>
                             </lightning:layoutItem>
@@ -271,17 +275,8 @@
                         <aura:if isTrue="{!or(v.renderMap.detailField, or(v.renderMap.dateField, v.renderMap.amountField))}">
                             <lightning:layoutItem size="12" mediumDeviceSize="12"
                                                   class="slds-p-horizontal_large slds-p-top_large">
-                                <div class="slds-media">
-                                    <div class="slds-media__figure">
-                                        <!--todo: add alt text-->
-                                        <lightning:icon iconName="utility:info" size="x-small"
-                                                        alternativeText="Info Icon"/>
-                                    </div>
-                                    <div class="slds-media__body">
-                                        <h3 class="slds-text-heading_label">{!v.labels.advancedCustomizationHeader}</h3>
-                                        <p class="slds-text-body_small">{!v.labels.advancedCustomizationText}</p>
-                                    </div>
-                                </div>
+                                <h3 class="slds-text-heading_label">{!v.labels.advancedCustomizationHeader}</h3>
+                                <p class="slds-text-body_small">{!v.labels.advancedCustomizationText}</p>
                             </lightning:layoutItem>
                         </aura:if>
 
