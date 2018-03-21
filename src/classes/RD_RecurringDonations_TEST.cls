@@ -512,7 +512,7 @@ public class RD_RecurringDonations_TEST {
 
         System.assertEquals(4, postUpdateOpps.size(),'Two new opportunities should have been created.');
 
-        for(Integer i=0; i<originalOpps.size(); i++) {
+        for(Integer i; i<originalOpps.size(); i++) {
             System.assertEquals(originalOpps[i].Id, postUpdateOpps[i].Id, 'The original opportunity records should persist.');
         }
 
