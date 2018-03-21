@@ -65,14 +65,14 @@ private with sharing class RD_RecurringDonations_TEST2 {
 
         npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
         r1.Name = 'test';
+        r1.npe03__Installments__c = 2;
         r1.npe03__Organization__c = a.id;
         r1.npe03__Amount__c = 100;
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
         r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
         r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
         r1.npe03__Open_Ended_Status__c = system.label.npe03.RecurringDonationOpenStatus;
-        //r1.npe03__Next_Payment_Date__c = system.today();
-        r1.npe03__Next_Payment_Date__c = Date.newInstance(2018,3,2);
+        r1.npe03__Next_Payment_Date__c = system.today();
         r1.OwnerId = system.Userinfo.getUserId();
         insert r1;
         
@@ -86,31 +86,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Test.startTest();
         //update opp
         update o;
-        //re-query the RD for changes after the oppty is updated
-        r1 = [SELECT Id
-                , Name
-                , npe03__Installments__c
-                , npe03__Contact__c
-                , npe03__Amount__c
-                , npe03__Installment_Period__c
-                , npe03__Date_Established__c
-                , npe03__Schedule_Type__c
-                , npe03__Open_Ended_Status__c
-                , npe03__Next_Payment_Date__c
-                , npe03__Last_Payment_Date__c
-                , Always_Use_Last_Day_Of_Month__c
-                , npe03__Total_Paid_Installments__c
-                , npe03__Recurring_Donation_Campaign__c
-                , npe03__Organization__c
-                , npe03__Donor_Name__c
-                , OwnerId
-        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
         //call the update method
         RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{r1});
         Test.stopTest();
         
         
-        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];
+        npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
+        
         system.assertEquals(0, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
@@ -198,34 +180,18 @@ private with sharing class RD_RecurringDonations_TEST2 {
         o.StageName = closedstage;
         o.CloseDate = system.today();
         update o;
-
-        //re-query the RD for changes after the oppty is updated
-        r1 = [SELECT Id
-                , Name
-                , npe03__Installments__c
-                , npe03__Contact__c
-                , npe03__Amount__c
-                , npe03__Installment_Period__c
-                , npe03__Date_Established__c
-                , npe03__Schedule_Type__c
-                , npe03__Open_Ended_Status__c
-                , npe03__Next_Payment_Date__c
-                , Always_Use_Last_Day_Of_Month__c
-                , npe03__Total_Paid_Installments__c
-                , npe03__Recurring_Donation_Campaign__c
-                , npe03__Organization__c
-                , npe03__Donor_Name__c
-                , OwnerId
-        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
+        
+        //fake the last payment date close operation
+        r1.npe03__Last_Payment_Date__c = system.today();
+        update r1;
         Test.startTest();
         r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
         update r1;
         Test.stopTest();        
         
         npe03__Recurring_Donation__c rd = [select npe03__Last_Payment_Date__c from npe03__Recurring_Donation__c where id = :r1.id];     
-
-        List<Opportunity> openOppsAfterUpdate = [SELECT Id, CloseDate, StageName FROM Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false];
-        System.assertEquals(1, openOppsAfterUpdate.size());
+        
+        system.assertEquals(1, [select count() from Opportunity where npe03__Recurring_Donation__c = :r1.id and isClosed = false]);
         system.assertEquals(system.today(), rd.npe03__Last_Payment_Date__c);
     }
 
@@ -436,22 +402,17 @@ private with sharing class RD_RecurringDonations_TEST2 {
                                         
         Test.startTest();
         insert rdlist;
-        Test.stopTest();
-        list<Opportunity> originalOpps = [select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id];
-        for (Opportunity o : originalOpps) {
-            System.assertEquals(100, o.Amount, 'Amount should be $100.');
-            system.assertNotEquals(null, o.Description, 'Description should be populated.');
-        }
         rdlist[0].npe03__Amount__c = 50;
         rdlist[1].npe03__Amount__c = 50;
         rdlist[1].npe03__Next_Payment_Date__c = system.today().toStartOfMonth().addDays(5);
         update rdlist;
+        Test.stopTest();
 
-        list<Opportunity> updatedOpps = [select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id];
-        system.assertEquals(7, updatedOpps.size());
-        for (Opportunity o : updatedOpps) {
-            System.assertEquals(50, o.Amount, 'Amount should be $50.');
-        }
+        list<Opportunity> originalOpps = new list<Opportunity>([select id, Name,amount,accountid,CloseDate,Description from Opportunity where npe03__Recurring_Donation__r.id = :r1.id or npe03__Recurring_Donation__c = :r2.id]);
+        system.assertEquals(7, originalOpps.size());
+        system.assertEquals(50, originalOpps[0].Amount);
+        system.assertNotEquals(null, originalOpps[0].Description);
+        system.assertNotEquals(null, originalOpps[1].Description);
     }
     static testMethod void tooManyInstallments(){
         if (strTestOnly != '*' && strTestOnly != 'tooManyInstallments') return;
