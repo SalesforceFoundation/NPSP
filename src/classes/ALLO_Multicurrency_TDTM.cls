@@ -133,20 +133,6 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
             // Update allocation ISO code to match parent
             String parentCurrCode = (String)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CurrencyIsoCode');
             allo.put('CurrencyIsoCode', parentCurrCode);
-
-            // If ACM is enabled in the Org and the custom settings is enabled to store the dated exchange rate
-            // on the Allocation object, get the effective exchange rate to convert to the corporate currency
-            // and store in a customer defined field on the Allocation record
-            if (ALLO_Allocations_TDTM.storeDatedConversionRate && allo.Opportunity__c != null) {
-                Date oppCloseDate = (Date)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CloseDate');
-                Decimal exchangeRate = UTIL_CurrencyConversion.getExchangeRate(oppCloseDate,
-                        parentCurrCode, currCorporate);
-                try {
-                    allo.put(ALLO_Allocations_TDTM.householdSettings.Custom_Exchange_Rate_Field__c, exchangeRate);
-                } catch (Exception ex) {
-                    // ignore the error if this field doesn't actually exist
-                }
-            }
         }
     }
 
