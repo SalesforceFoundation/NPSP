@@ -37,6 +37,8 @@
 
 public with sharing class CRLP_RollupUI_SVC {
 
+    private static final String SUCCESS_RESPONSE = 'SUCCESS';
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
@@ -200,7 +202,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.name = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
-            item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
+            item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
             item.id = mdtList[i].Id;
 
             mdtTableList.add(item);
@@ -411,6 +413,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
+                'savingMessage' => 'Saving',
+                'saveSuccess' => 'Successfully Saved',
+                'saveFail' => 'Error Saving Record',
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
@@ -429,6 +434,27 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return labels;
+    }
+
+    /**
+     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @return 'Success-########' (where ####### is the job id to look for) or an error message
+     */
+    @auraEnabled
+    public static String saveRollup(String rollupCMT) {
+        try {
+            CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
+            if (rollupCMTObj.recordName == null) {
+                rollupCMTObj.recordName = CRLP_RollupCMT.generateRecordName(rollupCMTObj.label);
+            }
+
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+            return SUCCESS_RESPONSE + '-' + jobId;
+        } catch (Exception ex) {
+            return ex.getMessage() + '\n' + ex.getStackTraceString();
+        }
     }
 
 }

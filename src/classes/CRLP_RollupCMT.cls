@@ -297,7 +297,7 @@ public class CRLP_RollupCMT {
      * @param label String
      * @return DeveloperName format string
      */
-    private static String generateRecordName(String label) {
+    public static String generateRecordName(String label) {
 
         if (useRandomGeneratedDeveloperName == false) {
             // replace all special characters and double underscores

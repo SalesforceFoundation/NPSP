@@ -679,12 +679,58 @@
         return label;
     },
 
-    /* @description: saves the active rollup and sets the mode to view
-    * @activeRollup:
+    /*
+    * @description: saves the active rollup and sets the mode to view
+    * @param: activeRollup
     */
     saveRollup: function (cmp, activeRollup) {
+        // Set the mode to view while the save is running
         cmp.set("v.mode", 'view');
+
+        // todo - Spinner?
+
         //save record here
+
+        var rollupCMT = {};
+        rollupCMT.recordName = cmp.get("v.activeRollup.DeveloperName");
+        rollupCMT.label = cmp.get("v.activeRollup.MasterLabel");
+        rollupCMT.summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        rollupCMT.summaryField = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        rollupCMT.detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        rollupCMT.detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+        rollupCMT.dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+        rollupCMT.dateField = cmp.get("v.activeRollup.Date_Field__r.QualifiedApiName");
+        rollupCMT.amountObject = cmp.get("v.activeRollup.Amount_Object__r.QualifiedApiName");
+        rollupCMT.amountField = cmp.get("v.activeRollup.Amount_Field__r.QualifiedApiName");
+        rollupCMT.filterGroupRecordName = cmp.get("v.activeRollup.Filter_Group__r.QualifiedApiName");
+        rollupCMT.description = cmp.get("v.activeRollup.Description__c");
+        rollupCMT.operation = cmp.get("v.activeRollup.Operation__c");
+        rollupCMT.timeBoundOperationType = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
+        rollupCMT.intValue = cmp.get("v.activeRollup.Integer__c");
+        rollupCMT.useFiscalYear = cmp.get("v.activeRollup.Use_Fiscal_Year__c");
+        rollupCMT.isActive = cmp.get("v.activeRollup.Active__c");
+
+        var action = cmp.get("c.saveRollup");
+        action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            console.log('STATE' + state);
+            if (state === "SUCCESS") {
+                console.log('RESPONSE: ' + response.getReturnValue());
+                var data = response.getReturnValue();
+                this.showToast('success', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.saveSuccess"));
+
+            } else if (state === "ERROR") {
+                var errors = response.getError();
+                var msg = "Unknown error";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
+                }
+                this.showToast('error', cmp.get("v.labels.saveFail"), msg);
+            }
+        });
+        this.showToast('info', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.savingMessage"));
+        $A.enqueueAction(action);
     },
 
     /* @description: sets the selected rollup type based on detail and summary objects when a record is loaded
@@ -843,5 +889,22 @@
             });
             sendMessage.fire();
         }
+    },
+
+    /**
+     * @description Show a message on the screen
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast : function(type, title, message) {
+        console.log(message);
+        /*var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "type":type,
+            "title": title,
+            "message": message
+        });
+        toastEvent.fire();*/
     }
 })
