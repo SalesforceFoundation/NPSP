@@ -456,7 +456,7 @@ public class RD_RecurringDonations_TEST {
 
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
                 new npe03__Recurring_Donations_Settings__c(
-                        // npe03__Opportunity_Forecast_Months__c = 12,
+                        npe03__Opportunity_Forecast_Months__c = 12,
                         npe03__Maximum_Donations__c = 50,
                         npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
                 ));
@@ -519,6 +519,110 @@ public class RD_RecurringDonations_TEST {
         for(Integer i=0; i<postUpdateOpps.size(); i++) {
             System.assertEquals(system.label.npe03.RecurringDonationStageName,postUpdateOpps[i].StageName, 'All opportunities should still be open.');
         }
+
+    }
+
+    /*********************************************************************************************************
+    @description
+        Test deleting and undeleting a ClosedWon Oppty from  a Fixed-Length Recurring Donation
+    verify:
+        - Rollups are updated on both delete and undelete
+        - npe03__Last_Payment_Date__c
+        - npe03__Next_Payment_Date__c
+        - npe03__Paid_Amount__c
+        - npe03__Total_Paid_Installments__c
+    **********************************************************************************************************/
+    static testMethod void updateFixedLengthRecurringDonationDeleteUndeleteClosedOpps() {
+
+        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
+                new npe03__Recurring_Donations_Settings__c(
+                        npe03__Opportunity_Forecast_Months__c = 12,
+                        npe03__Maximum_Donations__c = 50,
+                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                ));
+
+        String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        Account a = new Account();
+        a.Name = 'updateFixedLengthRecurringDonationDeleteUndeleteClosedOpps';
+        insert a;
+
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.AccountId = a.Id;
+        insert c;
+
+        npe03__Recurring_Donation__c r1 = new npe03__Recurring_Donation__c();
+        r1.Name = 'updateFixedLengthRecurringDonationDeleteUndeleteClosedOpps';
+        r1.npe03__Installments__c = 2;
+        r1.npe03__Contact__c = c.Id;
+        r1.npe03__Amount__c = 100;
+        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodMonthly;
+        r1.npe03__Date_Established__c = system.today().toStartOfMonth();
+        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        r1.npe03__Open_Ended_Status__c = null;
+        r1.npe03__Next_Payment_Date__c = system.today().toStartOfMonth();
+        insert r1;
+
+        List<Opportunity> originalOpps = [SELECT Id
+                , Name
+                , Amount
+                , AccountId
+                , CloseDate
+                , StageName
+        FROM Opportunity
+        WHERE npe03__Recurring_Donation__c = :r1.id];
+
+        assertNoErrors();
+
+        System.assertEquals(2, originalOpps.size(), 'Two opportunities should be created initially.');
+        System.assertEquals(100, originalOpps[0].Amount);
+
+        Test.startTest();
+        originalOpps[0].CloseDate = System.today().toStartOfMonth();
+        originalOpps[0].StageName = closedStage;
+        originalOpps[1].StageName = closedStage;
+        update originalOpps;
+
+        //re-query the RD for changes after the oppties are updated
+        r1 = [SELECT Id
+                , npe03__Last_Payment_Date__c
+                , npe03__Total_Paid_Installments__c
+                , npe03__Paid_Amount__c
+        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
+
+        System.assertEquals(System.today(), r1.npe03__Last_Payment_Date__c);
+        System.assertEquals(2,r1.npe03__Total_Paid_Installments__c);
+        System.assertEquals(200,r1.npe03__Paid_Amount__c);
+
+        delete originalOpps[1];
+
+        //re-query the RD for changes after the oppty is deleted
+        r1 = [SELECT Id
+                , npe03__Last_Payment_Date__c
+                , npe03__Total_Paid_Installments__c
+                , npe03__Paid_Amount__c
+        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
+
+        System.assertEquals(system.today().toStartOfMonth(), r1.npe03__Last_Payment_Date__c);
+        System.assertEquals(1,r1.npe03__Total_Paid_Installments__c);
+        System.assertEquals(100,r1.npe03__Paid_Amount__c);
+
+        undelete originalOpps[1];
+
+        //re-query the RD for changes after the oppty is deleted
+        r1 = [SELECT Id
+                , npe03__Last_Payment_Date__c
+                , npe03__Total_Paid_Installments__c
+                , npe03__Paid_Amount__c
+        FROM npe03__Recurring_Donation__c WHERE Id = :r1.Id];
+
+        System.assertEquals(system.today(), r1.npe03__Last_Payment_Date__c);
+        System.assertEquals(2,r1.npe03__Total_Paid_Installments__c);
+        System.assertEquals(200,r1.npe03__Paid_Amount__c);
+
+        Test.stopTest();
+
+        assertNoErrors();
 
     }
 

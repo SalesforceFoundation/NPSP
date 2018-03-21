@@ -87,9 +87,18 @@ public class RD_RecurringDonations_Opp_TDTM extends TDTM_Runnable {
                     rdIds.add(o.npe03__Recurring_Donation__c);
                 }
                 i++;
-            }                  
-        }           
-        
+            }
+        }
+
+        if (triggerAction == TDTM_Runnable.Action.AfterDelete || triggerAction == TDTM_Runnable.Action.AfterUndelete) {
+            for (SObject sobj : (triggerAction == TDTM_Runnable.Action.AfterDelete ? oldlist : newlist)) {
+                Opportunity o = (Opportunity)sobj;
+                if (o.npe03__Recurring_Donation__c != null) {
+                    rdIds.add(o.npe03__Recurring_Donation__c);
+                }
+            }
+        }
+
         //Get the open label for opps
         string closedLabel = system.label.npe03.RecurringDonationClosedStatus;
         Integer rdcount = 0;
