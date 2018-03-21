@@ -37,14 +37,14 @@
 
 public class OPP_AutomatedSoftCreditsService {
 
-	/*********************************************************************************************************
+    /*********************************************************************************************************
     * @description Determines if the Account is an Organization based on its account classification, 
-    *				e.g., Individual.
+    *               e.g., Individual.
     * @param accountClassification The classification of an Opportunity's associated Account.
     * @return Boolean
     **********************************************************************************************************/
     public static Boolean isOrganizationalAccount(Boolean accountClassification) {
-		return (accountClassification == false);
+        return (accountClassification == false);
     }
 
 

@@ -283,7 +283,7 @@ public class RD_RecurringDonations_TEST {
             npe01__Opportunity_Contact_Role_Default_role__c = system.label.npe03.RecurringDonationContactRole
         ));
             
-        Id accountId = CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
         
         Contact c = new Contact();
         c.FirstName = 'test';
@@ -297,9 +297,9 @@ public class RD_RecurringDonations_TEST {
         r1.npe03__Contact__c = c.Id;
         r1.npe03__Open_Ended_Status__c = 'None'; 
         r1.npe03__Amount__c = 100;
-        r1.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodWeekly;
-        r1.npe03__Date_Established__c = date.newinstance(1970,6,12);
-        r1.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        r1.npe03__Installment_Period__c = System.label.npe03.RecurringDonationInstallmentPeriodWeekly;
+        r1.npe03__Date_Established__c = Date.newinstance(1970,6,12);
+        r1.npe03__Schedule_Type__c = System.label.npe03.RecurringDonationMultiplyValue;
         insert r1;
         Test.stopTest();
 
@@ -308,10 +308,8 @@ public class RD_RecurringDonations_TEST {
             FROM OpportunityContactRole 
             WHERE Opportunity.npe03__Recurring_Donation__c = :r1.id
         ];
-        system.assertEquals(2,installmentCRs.size());
-        if (!OPP_AutomatedSoftCreditsService.isOrganizationalAccount(c.Account.npe01__SYSTEMIsIndividual__c)) {
-            System.assertEquals(system.label.npe03.RecurringDonationContactRole, installmentCRs[0].Role);
-        }
+        System.assertEquals(2,installmentCRs.size());
+        System.assertEquals(system.label.npe03.RecurringDonationContactRole, installmentCRs[0].Role);
     }
 
     /*********************************************************************************************************

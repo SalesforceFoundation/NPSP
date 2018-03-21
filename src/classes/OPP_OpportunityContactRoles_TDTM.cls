@@ -38,7 +38,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
     private static final String FIELD_NAME_PRIMARY_CONTACT = 'Primary_Contact__c';
     private static final String FIELD_NAME_HONOREE_CONTACT = 'Honoree_Contact__c';
-    private static final String FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT = 'Notification_Recipient_Contact__c';
+    private static final String FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT = 'Notification_Recipient_Contact__c';
 
 
     /** @description DmlWrapper holds dml transactions for processing classes. */
@@ -163,7 +163,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     ********************************************************************************************************/
     private static void updateHonoreeNotificationFields(list<Opportunity> listOpps, list<Opportunity> listOldOpps) {
         map<id,Contact> mapConIdContact = new map<id,Contact>();
-        list<String> listFields = new list<string>{FIELD_NAME_HONOREE_CONTACT, FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT};
+        list<String> listFields = new list<string>{FIELD_NAME_HONOREE_CONTACT, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT};
 
         for (integer i=0; i<listOpps.size(); i++) {
             Opportunity newOpp = listOpps[i];
@@ -231,7 +231,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //cloned opportunity is necessary in order to modify the Primary Contact lookup and update the record in the trigger set
             Opportunity clonedOpp = opp.clone(true,true,false,true);
 
-            Boolean isIndividualAccount = (oppAccountDetails != null && oppAccountDetails.containsKey(opp.AccountId)) ? oppAccountDetails.get(opp.AccountId).npe01__SYSTEMIsIndividual__c : null;
+            Boolean isIndividualAccount = (oppAccountDetails.containsKey(opp.AccountId))
+                                            ? oppAccountDetails.get(opp.AccountId).npe01__SYSTEMIsIndividual__c
+                                            : null;
 
             //process opportunities that already have a primary OCR
             if (mapOppIdPrimaryOCR.containsKey(opp.id)) {
@@ -271,8 +273,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 dmlWrapper.objectsToInsert.add(getOCR(clonedOpp, FIELD_NAME_HONOREE_CONTACT));
             }
 
-            if (needsManageOCR(clonedOpp, new Opportunity(), FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT)) {
-                dmlWrapper.objectsToInsert.add(getOCR(clonedOpp, FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT));
+            if (needsManageOCR(clonedOpp, new Opportunity(), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+                dmlWrapper.objectsToInsert.add(getOCR(clonedOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT));
             }
         }
 
@@ -322,7 +324,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (integer i=0; i<listOpps.size(); i++) {
             if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
                 needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_HONOREE_CONTACT) ||
-                needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT)) {
+                needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
 
                 mapOppIdMapConIdOCR.put(listOpps[i].id, new map<id,OpportunityContactRole>());
             }
@@ -350,8 +352,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_HONOREE_CONTACT);
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
-                if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT)) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT);
+                if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT);
                 }
             }
         }
@@ -446,7 +448,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //contact lookup changed from one contact to another
             if (idOldCon != null) {
                 //an OCR for the old contact exists, and has the role for this field
-                if (ocrOldCon != null && ocrOldCon.Role == getRole(fieldName, opp.Account.npe01__SYSTEMIsIndividual__c)) {
+                if (ocrOldCon != null && ocrOldCon.Role == getRole(fieldName, null)) {
                     //our new contact doesn't yet have an OCR, so update the old one to the new contact
                     if (ocrNewCon == null) {
                         ocrOldCon.ContactId = idNewCon;
@@ -481,7 +483,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
         } else if (fieldName.equals(FIELD_NAME_HONOREE_CONTACT)) {
             result = UTIL_CustomSettingsFacade.getContactsSettings().Honoree_Opportunity_Contact_Role__c;
-        } else if (fieldName.equals(FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT)) {
+        } else if (fieldName.equals(FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
             result = UTIL_CustomSettingsFacade.getContactsSettings().Notification_Recipient_Opp_Contact_Role__c;
         }
 
@@ -496,14 +498,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @return OpportunityContactRole The newly created OCR.
     ********************************************************************************************************/
     private OpportunityContactRole getOCR(Opportunity opp, String fieldName) {
-        OpportunityContactRole ocr = new OpportunityContactRole();
-        ocr.OpportunityId = opp.Id;
-        ocr.ContactId = (Id)opp.get(fieldname);
-        ocr.Role = getRole(fieldName, null);
-        if (fieldName.equals(FIELD_NAME_PRIMARY_CONTACT)) {
-            ocr.isPrimary = true;
-        }
-        return ocr;
+        return getOCR(opp, fieldName, null);
     }
 
     /*******************************************************************************************************
@@ -546,10 +541,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (fieldName == FIELD_NAME_HONOREE_CONTACT && opp.Honoree_Contact__c == opp.Primary_Contact__c)
             return false;
         //the notification recipient contact is the same as the primary contact, thus the OCR is already managed
-        if (fieldName == FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Primary_Contact__c)
+        if (fieldName == FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Primary_Contact__c)
             return false;
         //the notification recipient contact is the same as the honoree contact, thus the OCR is already managed
-        if (fieldName == FIELD_NAME_NOTIFICATION_RECIPENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Honoree_Contact__c)
+        if (fieldName == FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Honoree_Contact__c)
             return false;
 
         return true;

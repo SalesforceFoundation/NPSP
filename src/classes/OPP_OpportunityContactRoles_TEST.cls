@@ -51,9 +51,9 @@ private class OPP_OpportunityContactRoles_TEST {
     private static string NotificationRecipientRoleforTest = 'Notification Recipient';
 
     /*******************************************************************************************************
-    * @description Test creation or upate of contact role.
+    * @description Test creation or upate of contact role for Organizational Account.
     */
-    static testMethod void createOrUpdateCR() {
+    static testMethod void testCreateUpdateCRForOrganizationalAccount() {
         if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
         
         Account acc = new Account(Name='test77');
@@ -75,15 +75,14 @@ private class OPP_OpportunityContactRoles_TEST {
         
         //Make sure that we haven't created a contact role yet.
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
-        system.assertEquals(0, result.size());
+        System.assertEquals(0, result.size());
         
         //Insert the contact role with a blank Role field.
         OpportunityContactRole cr = new OpportunityContactRole (OpportunityId = opp1.Id, ContactId = con.Id, IsPrimary = true);
         insert cr;
         
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
-        system.assertEquals(con.Id, result[0].ContactId);
-        //system.assertEquals(null, result[0].Role); there might be a default set
+        System.assertEquals(con.Id, result[0].ContactId);
         
         //Now simulate import of an opp record with a contact ID.
         Opportunity opp2 = new Opportunity(
@@ -95,14 +94,58 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp2;
 
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
-        system.assertEquals(con.Id, result[0].ContactId);
-        if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acc.npe01__SYSTEMIsIndividual__c)) {
-            System.assertEquals(softCreditRoleforTest, result[0].Role);
-        } else {
-           System.assertEquals(donorRoleforTest, result[0].Role);
-        }
+        System.assertEquals(con.Id, result[0].ContactId);
+        System.assertEquals(softCreditRoleforTest, result[0].Role);
     }
-    
+
+    /*******************************************************************************************************
+    * @description Test creation or upate of contact role for Individual Accounts.
+    */
+    static testMethod void createOrUpdateCRForIndividualAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
+
+        Account acc = new Account(Name='test77');
+        acc.npe01__SYSTEMIsIndividual__c = true;
+        insert acc;
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.AccountId = acc.id;
+        insert con;
+
+        //Simulate user interface creation of opp from button on contact screen, 
+        //i.e. Role field is blank in the new contact role.
+        Opportunity opp1 = new Opportunity(
+            Name = 'Apex Test Opp1',
+            AccountId = acc.Id,
+            CloseDate = date.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp1;
+
+        //Make sure that we haven't created a contact role yet.
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        System.assertEquals(0, result.size());
+
+        //Insert the contact role with a blank Role field.
+        OpportunityContactRole cr = new OpportunityContactRole (OpportunityId = opp1.Id, ContactId = con.Id, IsPrimary = true);
+        insert cr;
+
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        System.assertEquals(con.Id, result[0].ContactId);
+
+        //Now simulate import of an opp record with a contact ID.
+        Opportunity opp2 = new Opportunity(
+            Name = 'Apex Test Opp2',
+            AccountId = acc.Id,
+            Primary_Contact__c = con.Id,
+            CloseDate = date.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp2;
+
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
+        System.assertEquals(con.Id, result[0].ContactId);
+        System.assertEquals(donorRoleforTest, result[0].Role);
+    }
+
     /*******************************************************************************************************
     * @description Disables OCR and verifies contact role isn't created.
     */
@@ -150,7 +193,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -183,7 +226,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -197,9 +240,9 @@ private class OPP_OpportunityContactRoles_TEST {
 
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary,Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be one role
-        system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
-        system.assertEquals(true, result[0].isPrimary);
+        System.assertEquals(1, result.size());
+        System.assertEquals(donorRoleforTest, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
         
        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
        //should be null account

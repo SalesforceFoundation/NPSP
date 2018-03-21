@@ -38,22 +38,13 @@
 @isTest
 private class OPP_AutomatedSoftCreditsService_TEST {
 
-	/*********************************************************************************************************
-    * @description If you only want to run a single test in this class, fill in its name here.
-    * If you want to run all tests, then use '*'
-    **********************************************************************************************************/
-    private static string strTestOnly = '*';
-
-
     /*********************************************************************************************************
-    * @description Tests the Opportunity's Account has an Organization record type.
+    * @description Tests the Opportunity's Account classification is set to Organization.
     * verify:
-    *   Account's RecordType is Organization.
+    *   Account's classification is not set to Individual.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testOpportunityAccountRecordTypeIsOrganization() {
-        if (strTestOnly != '*' && strTestOnly != 'testOpportunityAccountRecordTypeIsOrganization') return;
-        
+    private static testMethod void testOpportunityAccountClassificationIsOrganization() {
         Boolean isOrganizationalAccount = false;
 
         Account acct = new Account(Name = 'Organization Account');
@@ -61,7 +52,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
+        isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
         Test.stopTest();
 
         System.assertEquals(true, isOrganizationalAccount);
@@ -69,14 +60,12 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
 
     /*********************************************************************************************************
-    * @description Tests the Opportunity's Account does not have an Organization record type.
+    * @description Tests the Opportunity's Account classification is set to Individual.
     * verify:
-    *   Account's RecordType is not Organization.
+    *   Account's classification is set to Individual.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testOpportunityAccountRecordTypeNotOrganization() {
-        if (strTestOnly != '*' && strTestOnly != 'testOpportunityAccountRecordTypeNotOrganization') return;
-        
+    private static testMethod void testOpportunityAccountClassificationIsIndividual() {
         Boolean isOrganizationalAccount = false;
 
         Account acct = new Account(Name = 'Household Account');
@@ -84,7 +73,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         insert acct;
 
         Test.startTest();
-		isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
+        isOrganizationalAccount = OPP_AutomatedSoftCreditsService.isOrganizationalAccount(acct.npe01__SYSTEMIsIndividual__c);
         Test.stopTest();
 
         System.assertEquals(false, isOrganizationalAccount);
