@@ -1,0 +1,32 @@
+<aura:component >
+
+    <aura:registerEvent name="ShowModal" type="c:BGE_BatchMenuShowModalEvent" />
+
+    <lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center slds-m-top_medium">
+
+        <lightning:button class="button-style slds-p-around_medium slds-button_icon-large" onclick="{!c.createBatch}">
+            <lightning:icon iconName="action:edit" size="large" alternativeText="Creates a new row"/>
+            <label class="slds-text-heading_large"> Create Batch </label>
+        </lightning:button>
+
+    </lightning:layoutItem>
+
+    <lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center">
+
+            <lightning:button class="button-style first-button slds-p-around_medium slds-button_icon-large" onclick="{!c.resumeBatch}">
+                <lightning:icon iconName="action:lead_convert" size="large" alternativeText="Creates a new row"/>
+                <label class="slds-text-heading_large"> Continue a Batch </label>
+            </lightning:button>
+
+    </lightning:layoutItem>
+
+    <lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center">
+
+            <lightning:button class="button-style slds-p-around_medium slds-button_icon-large" onclick="{!c.createTemplate}">
+                <lightning:icon iconName="action:new_task" size="large" alternativeText="Creates a new row"/>
+                <label class="slds-text-heading_large"> Create Template </label>
+            </lightning:button>
+
+    </lightning:layoutItem>
+
+</aura:component>

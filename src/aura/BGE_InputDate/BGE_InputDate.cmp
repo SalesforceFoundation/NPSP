@@ -1,0 +1,11 @@
+<aura:component >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="today" type="Date" default=""/>
+     
+        <ui:inputDate aura:id="expdate" label="" class="field" value="{!v.today}" displayDatePicker="true" />      
+        <ui:button class="btn" label="Submit" press="{!c.setOutput}"/> 
+
+    <div aura:id="msg" class="hide">
+        <ui:outputDate aura:id="oDate" value="" />
+    </div>
+</aura:component>

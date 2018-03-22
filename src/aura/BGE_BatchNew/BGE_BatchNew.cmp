@@ -1,0 +1,53 @@
+<aura:component >
+
+    <aura:attribute name="newBatch" type="Object"/>
+    <aura:attribute name="sampleBatch" type="Object"/>
+    <aura:attribute name="batchError" type="String"/>
+    <aura:attribute name="nextButtonEnabled" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <aura:registerEvent name="DismissBatchModal" type="c:BGE_BatchMenuDismissModalEvent"/>
+
+    <force:recordData aura:id="batchRecordCreator"
+                      layoutType="FULL"
+                      targetRecord="{!v.newBatch}"
+                      targetFields="{!v.sampleBatch}"
+                      targetError="{!v.batchError}" />
+
+    <div class="modal-background">
+
+        <div class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+
+            <div class="slds-modal__container">
+
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium slds-hyphenate">New Batch</h2>
+                </div>
+
+                <div class="slds-modal__content slds-p-around--medium">
+
+                    <lightning:input aura:id="batchName" label="Batch Name"
+                                    value="{!v.sampleBatch.Name}" required="true" onchange="{!c.lightningInputOnChange}"/>
+
+                    <br/>
+
+                    <lightning:textarea label="Description" value="{!v.sampleBatch.Description__c}"/>
+
+                </div> <!-- /slds-modal__content -->
+
+                <div class="slds-modal__footer">
+
+                    <lightning:button label="Cancel" onclick="{!c.closeModal}"
+                            variant="destructive" class="slds-m-top--medium" />
+
+                    <lightning:button label="Next" onclick="{!c.handleSaveContact}"
+                            variant="brand" class="slds-m-top--medium" disabled="{!!v.nextButtonEnabled}"/>
+
+                </div>
+            </div> <!-- /slds-modal__container -->
+        </div> <!-- /slds-modal -->
+
+    </div>
+
+</aura:component>

@@ -1,0 +1,48 @@
+<aura:component controller="BGE_AuraController">
+
+    <aura:attribute name="batches" type="Batch__c[]"/>
+    <aura:attribute name="batchId" type="Id"/>
+
+    <aura:attribute name="hasBatches" type="Boolean" default="false"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <aura:handler event="c:BGE_BatchListTableRowSelectEvent" action="{!c.setSelectedBatch}"/>
+
+    <aura:registerEvent name="DismissBatchModal" type="c:BGE_BatchMenuDismissModalEvent"/>
+    <aura:registerEvent name="ShowGrid" type="c:BGE_BatchMenuShowGridEvent"/>
+
+    <div class="modal-background">
+
+        <div class="slds-modal slds-fade-in-open" aria-hidden="false" role="dialog">
+
+            <div class="slds-modal__container">
+
+                <div class="slds-modal__header">
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Select Batch</h2>
+                </div>
+
+                <div class="slds-modal__content slds-p-around--medium">
+
+                    <lightning:input aura:id="searchInput" label="Search" onchange="{!c.lightningInputOnChange}"/>
+
+                    <aura:if isTrue="{!v.hasBatches}">
+                        <c:BGE_BatchListTable records="{!v.batches}" />
+                    </aura:if>
+
+                </div>
+
+                <div class="slds-modal__footer">
+
+                    <lightning:button label="Cancel" onclick="{!c.closeModal}"
+                            variant="destructive" class="slds-m-top--medium" />
+
+                    <lightning:button label="Next" onclick="{!c.resumeBatch}" disabled="{!v.batchId == NULL}"
+                            variant="brand" class="slds-m-top--medium"/>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</aura:component>

@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event to remove Row" >
+    <aura:attribute name="indexVar" type="Integer" description="Use For Delete Row" />
+    <aura:attribute name="templateFieldToDelete" type="Batch_Template_Field__c" description="Use For Delete Template Field from the org" />
+</aura:event>

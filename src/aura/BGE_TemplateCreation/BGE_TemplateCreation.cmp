@@ -1,0 +1,63 @@
+<aura:component controller="BGE_AuraController" Implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,force:lightningQuickAction" access="global">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="template" type="Batch_Template__c" access="global" default="{sobjectType : 'Batch_Template__c'}" />
+    <aura:attribute name="fields" type="Batch_Template_Field__c[]" access="global" default="{sobjectType : 'Batch_Template_Field__c[]'}" />
+    <aura:attribute name="selectedTemplateFields" type="Batch_Template_Field__c[]" default="{sobjectType : 'Batch_Template_Field__c[]'}" />
+
+    <aura:attribute name="errorInLastRow" type="Boolean" access="global" default="false" />
+
+    <aura:attribute name="toCreate" type="Boolean" access="global" default="true" />
+    <aura:attribute name="toClone" type="Boolean" access="global" default="false" />
+    <aura:attribute name="toEdit" type="Boolean" access="global" default="false" />
+    
+
+
+    <aura:attribute name="listOptions" type="Batch_Template_Field__c[]" default="[]"/>
+    <aura:attribute name="defaultOptions" type="Batch_Template_Field__c[]" default="[]"/>
+    <aura:attribute name="requiredOptions" type="List" default="[]"/>
+
+
+ <!--Aura Attribute for store Contact Object List as Array-->    
+    <aura:attribute name="templateFields" type="Batch_Template_Field__c[]" />
+    <aura:attribute name="templateFieldsToDelete" type="Batch_Template_Field__c[]" />
+
+    <div aura:id="body">
+
+        <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
+
+        <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
+
+            <h2 class="slds-text-heading_medium slds-m-bottom_x-large">New Template</h2>
+
+            <div class="slds-form-element">
+                <lightning:input type="text" name="template name" label="Template Name" value="{!v.template.Name}"/>
+            </div>
+
+            <div class="slds-form-element">
+                <lightning:textarea name="description" label="Descripcion" maxlength="300" value="{!v.template.Description__c}"/>
+            </div>
+
+            <lightning:dualListbox class="slds-m-horizontal_medium" aura:id="selectOptions" name="Select Options" label="Select Options" 
+                           sourceLabel="Available Template Fields" 
+                           selectedLabel="Active Template Fields" 
+                           options="{! v.listOptions }"
+                           value="{! v.defaultOptions }"
+                           requiredOptions="{! v.requiredOptions }"
+                           onchange="{! c.handleChange }"/>
+
+            <div class="slds-grid slds-wrap slds-m-top_medium">
+                <div class="slds-size_1-of-2 slds-grid slds-wrap">
+                    <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
+                    <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
+                </div>
+
+                <div class="slds-size_1-of-2 slds-clearfix">
+                    <div class="slds-float_right">
+                        <lightning:button class="button-style button-size" label="Save Template" onclick="{! c.save }" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</aura:component>

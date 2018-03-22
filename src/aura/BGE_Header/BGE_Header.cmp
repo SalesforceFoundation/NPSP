@@ -1,0 +1,13 @@
+<aura:component >
+
+    <div class="slds-grid slds-wrap slds-m-bottom_medium border-style" style="background-color: #f7f9fb;">
+		
+		<div class="slds-size_1-of-12">
+			<lightning:icon class="slds-m-left_x-large slds-m-vertical_medium" iconName="standard:flow" size="large" alternativeText="Creates a new row"/>
+		</div>
+		<div class="slds-size_11-of-12 slds-m-top_medium">
+			<h2 class="slds-text-heading_small"> SETTINGS </h2>
+			<h1 class="slds-text-heading_medium"> Gift Entry </h1>
+		</div>
+	</div>
+</aura:component>

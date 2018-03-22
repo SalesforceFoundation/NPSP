@@ -1,0 +1,9 @@
+<aura:component >
+    
+    <aura:attribute name="batchId" type="Id"/>
+    <aura:attribute name="showBatchCreation" type="Boolean" default="false"/>
+    <aura:attribute name="showBatchSelection" type="Boolean" default="false"/>
+    <aura:attribute name="showTemplateCreation" type="Boolean" default="false"/>
+    <aura:attribute name="showProgressBar" type="Boolean" default="false"/>
+	
+</aura:component>

@@ -1,0 +1,23 @@
+<aura:component >
+
+    <aura:attribute name="currentTemplate" type="Batch_Template__c" />
+    <aura:attribute name="idx" type="Integer" />
+
+    <div aura:id="body">
+       <div class="slds-box slds-grid slds-wrap slds-theme_shade slds-clearfix" data-record="{!idx}" aura:id="template-value" onclick="{!c.goToStoreDetail}">
+            <div class="slds-truncate slds-size_2-of-8"><a href="javascript:void(0);">{!currentTemplate.Name}</a></div>
+
+            <div class="slds-truncate slds-size_3-of-8">{!currentTemplate.Description__c}</div>
+
+            <lightning:button class="slds-size_2-of-8 button-style button-small-size" label="Select" onclick="{! c.nextToEnterData }" />
+
+            <lightning:select class="slds-size_1-of-8 slds-float_right slds-m-left_x-large" aura:id="{!template-options}" name="selectItem" variant="label-hidden" onchange="{!c.selectTemplate}">
+                <option value=""></option>
+                <option value="1">Edit</option>
+                <option value="2">Clone</option>
+                <option value="3">Delete</option>
+            </lightning:select>
+
+        </div>
+    </div>
+</aura:component>

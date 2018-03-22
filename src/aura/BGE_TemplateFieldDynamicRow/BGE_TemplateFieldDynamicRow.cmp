@@ -1,0 +1,56 @@
+<!-- Child Lightning Component for Create New Row Instance-->
+<aura:component >    
+    <!-- Aura Attribute for store single Contact[standard Object] Instance
+         And Store Index of Particular Instance --> 
+    <aura:attribute name="TemplateFieldInstance" type="Batch_Template_Field__c"/>
+    <aura:attribute name="rowIndex" type="String"/>
+    
+    <!-- Register 2 Lightning Event for handle add or Delete rows on Parent Component  --> 
+    <aura:registerEvent name="DeleteRowEvent" type="c:BGE_RemoveTemplateFieldRowEvent"/> 
+    <aura:registerEvent name="AddRowEvent" type="c:BGE_AddTemplateFieldRowEvent"/> 
+    
+    <!-- Table Row -->   
+    <tr aura:id="body" class="slds-grid slds-wrap">
+        <!-- <td class="slds-size_1-of-2">
+            {!v.rowIndex + 1}
+        </td> -->
+        <td class="slds-size_3-of-12">
+            <ui:inputText aura:id="templateFieldName" required="true" value="{!v.TemplateFieldInstance.Name}"/>
+        </td>
+        <td class="slds-size_1-of-12">
+            <lightning:input type="checkbox" name="readyOnly" label="Read Only" variant="label-hidden" checked="{!v.TemplateFieldInstance.Read_Only__c}"/>
+        </td>
+        <td class="slds-size_1-of-12">
+            <lightning:input type="checkbox" name="required" label="Required" variant="label-hidden" checked="{!v.TemplateFieldInstance.Required__c}"/>
+        </td>
+        <td class="slds-size_1-of-12">
+            <lightning:input type="checkbox" name="stickyField" label="Sticky" variant="label-hidden" checked="{!v.TemplateFieldInstance.Sticky_Field__c}"/>
+        </td>
+        <td class="slds-size_3-of-12">
+            <lightning:input name="stickyFieldValue" label="Value" variant="label-hidden" value="{!v.TemplateFieldInstance.Sticky_Field_Value__c}"/>
+        </td>
+        <td class="slds-size_1-of-12">
+            <lightning:input name="stickyFieldVisibility" label="Test Boolean" type="checkbox" variant="label-hidden" checked="{!v.TemplateFieldInstance.Sticky_Field_Visibility__c}" />
+        </td>
+        <td class="slds-size_1-of-12">
+            <lightning:input type="number" name="order" label="Order" variant="label-hidden" value="{!v.TemplateFieldInstance.Order__c}"/>
+        </td>
+        <td class="slds-size_1-of-12">
+            <!-- conditionally Display Add or Delete Icons
+                 if rowIndex is 0 then show Add New Row Icon else show delete Icon
+             --> 
+            <aura:if isTrue="{!v.rowIndex == 0}">
+                <a onclick="{!c.addNewRow}">
+                  <lightning:icon iconName="utility:add" class="slds-icon slds-icon_small" size="small" alternativeText="add"/>
+                  <span class="slds-assistive-text">Add Icon</span>
+                </a>    
+              <aura:set attribute="else">
+                  <a onclick="{!c.removeRow}">
+                   <lightning:icon variant="error" iconName="utility:delete" class="slds-icon slds-icon_small" size="small" alternativeText="icon"/>
+                   <span class="slds-assistive-text">Delete Icon</span>
+                  </a>
+              </aura:set> 
+            </aura:if>
+        </td> 
+    </tr>
+</aura:component>

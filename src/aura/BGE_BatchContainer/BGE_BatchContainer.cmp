@@ -1,0 +1,49 @@
+<aura:component >
+
+        <aura:attribute name="showNewBatchModal" type="Boolean" default="false"/>
+        <aura:attribute name="showNewTemplateModal" type="Boolean" default="false"/>
+        <aura:attribute name="showListBatchModal" type="Boolean" default="false"/>
+        <aura:attribute name="showBatchGrid" type="Boolean" default="false"/>
+        
+        <aura:attribute name="showBatchCreation" type="Boolean" default="false"/>
+        <aura:attribute name="showBatchSelection" type="Boolean" default="false"/>
+        <aura:attribute name="showTemplateCreation" type="Boolean" default="false"/>
+        <aura:attribute name="showTemplateSelection" type="Boolean" default="false"/>
+        <aura:attribute name="showProgressBar" type="Boolean" default="false"/>
+        <aura:attribute name="processStage" type="String"/>
+        <aura:attribute name="fromCreation" type="Boolean" access="global" default="false" />
+
+        <aura:attribute name="associatedBatch" type="DataImportBatch__c" access="global" default="{sobjectType : 'DataImportBatch__c'}" />
+
+        <aura:attribute name="batchId" type="Id" />
+
+        <lightning:layout horizontalAlign="center" multipleRows="true">
+
+            <aura:if isTrue="{!v.showListBatchModal}">
+                <c:BGE_BatchList />
+            </aura:if>
+
+        </lightning:layout>
+
+        <!-- NEW BGE FLOW -->
+
+        <div aura:id="body">
+
+            <aura:if isTrue="{!v.showBatchCreation}">
+                <c:BGE_BatchCreation />
+            </aura:if>
+
+            <aura:if isTrue="{!v.showBatchSelection}">
+                <c:BGE_BatchSelection />
+            </aura:if>
+
+            <aura:if isTrue="{!v.showTemplateCreation}">
+                <c:BGE_TemplateCreation />
+            </aura:if>
+
+            <aura:if isTrue="{!v.showTemplateSelection}">
+                <c:BGE_TemplateSelection associatedBatch="{!v.associatedBatch}" />
+            </aura:if>
+
+        </div>
+</aura:component>

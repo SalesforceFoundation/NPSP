@@ -1,0 +1,75 @@
+<!--<aura:component controller="BGE_BatchController" implements="forceCommunity:availableForAllPageTypes" access="global">-->
+
+<aura:component controller="BGE_AuraController"  implements="forceCommunity:availableForAllPageTypes" access="global">
+    <aura:attribute name="batches" access="public" type="DataImportBatch__c[]"/>
+    <aura:attribute name="hasBatches" access="public" type="Boolean"/>
+    <aura:attribute name="hasBatchSelected" access="public" type="Boolean"/>
+    <aura:attribute name="hasTemplateSelected" access="public" type="Boolean"/>
+    <aura:attribute name="page" access="public" type="Integer"/>
+    <aura:attribute name="pages" access="public" type="Integer"/>
+    <aura:attribute name="total" access="public" type="Integer"/>
+    <aura:attribute name="batchId" access="public" type="Id"/>
+    <aura:attribute name="selectedBatch" type="DataImportBatch__c" access="global" default="{sobjectType : 'DataImportBatch__c'}" />
+
+    <aura:attribute name="batchName" access="public" type="String"/>
+
+    <aura:attribute name="warnings" type="String[]" description="Warnings for input text"/>
+
+    <aura:handler event="c:SearchKeyChange" action="{!c.searchKeyChange}"/>
+    <aura:handler event="c:BGE_PageChange" action="{!c.pageChange}"/>
+    <aura:handler event="c:BGE_GiftSelectionChange" action="{!c.batchSelectionChange}"/>
+    <aura:handler event="c:BGE_BatchListTableRowSelectEvent" action="{!c.setSelectedBatch}"/>
+
+    <div aura:id="body" >
+
+        <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToInitial}" label="Back"/>
+        <c:BGE_ProgressIndicator processStage="selectBatchStage" />
+
+        <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
+
+            <h2 class="slds-text-heading_medium">Select Batch</h2>
+            <div class="slds-form-element">
+                <div class="slds-clearfix">
+                    <div class="slds-m-bottom_medium slds-float_right">
+                        <label class="slds-checkbox_toggle slds-grid">
+                            <span class="slds-form-element__label slds-m-bottom_none"><b>More Recent Batches</b></span>
+                            <input type="checkbox" name="checkbox" aria-describedby="toggle-desc" value="on" />
+                            <span id="toggle-desc" class="slds-checkbox_faux_container" aria-live="assertive">
+                                <span class="slds-checkbox_faux"></span>
+                                <span class="slds-checkbox_on"></span>
+                                <span class="slds-checkbox_off"></span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slds-form-element">
+                <!-- <ui:inputDefaultError aura:id="number" value="{!v.warnings}" /> -->
+                <ui:inputDefaultError aura:id="number" value="{!v.warnings}" />
+
+                <c:BGE_SearchBar />
+            </div>
+
+            <div class="slds-form-element">
+
+                <div class="slds-form-element__control">
+
+                    <aura:if isTrue="{!v.hasBatches}">
+                        <c:BGE_BatchListTable records="{!v.batches}" />
+                    </aura:if>
+
+                </div>
+            </div>
+
+            <div class="slds-clearfix">
+                <div class="slds-m-top_medium slds-float_right">
+                    <lightning:button class="button-style button-size" label="Next" onclick="{!c.nextToEnterData}" />
+                </div>
+            </div>
+
+         </div>
+
+    </div>
+
+</aura:component>

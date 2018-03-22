@@ -1,0 +1,13 @@
+.THIS {
+
+    min-width: 100%;
+    
+
+}
+
+.THIS .button-size {
+    
+    min-width: 15em;
+    max-width: 15em;
+    height: 4em;
+}

@@ -1,0 +1,49 @@
+<aura:component >
+
+<aura:attribute name="processStage" access="public" type="String"/>
+
+<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+<div class="slds-grid slds-m-bottom_xx-large margin-progress-indicator" style="margin-left: 12%; margin-right: 12%;">
+  <div class="slds-tabs--path" role="application">
+    <ul class="slds-tabs--path__nav" role="tablist">
+      <li aura:id="createBatchStage" class="slds-tabs--path__item slds-is-incomplete" role="presentation">
+        <a class="slds-tabs--path__link" id="tabs-path-429" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+            <!-- <span class="slds-assistive-text">Stage Complete</span> -->
+          </span>
+          <span class="slds-tabs--path__title">Create Batch</span>
+        </a>
+      </li>
+
+      <li aura:id="selectTemplateStage" class="slds-tabs--path__item slds-is-incomplete" role="presentation">
+        <a class="slds-tabs--path__link" id="tabs-path-430" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+
+          </span>
+          <span class="slds-tabs--path__title">Select Template</span>
+        </a>
+      </li>
+
+      <li aura:id="dataBatchStage" class="slds-tabs--path__item slds-is-incomplete" role="presentation">
+        <a class="slds-tabs--path__link" id="tabs-path-430" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+
+          </span>
+          <span class="slds-tabs--path__title">Enter Data</span>
+        </a>
+      </li>
+
+      <li aura:id="commitBatchStage" class="slds-tabs--path__item slds-is-incomplete" role="presentation">
+        <a class="slds-tabs--path__link" id="tabs-path-430" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+          <span class="slds-tabs--path__stage">
+
+          </span>
+          <span class="slds-tabs--path__title">Validate + Commit</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</div>
+</aura:component>

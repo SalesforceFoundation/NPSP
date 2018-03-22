@@ -1,0 +1,11 @@
+.THIS .button-size {
+    
+    min-width: 15em;
+    max-width: 15em;
+    height: 4em;
+}
+
+.THIS h2 {
+
+    font-weight: 400;
+}

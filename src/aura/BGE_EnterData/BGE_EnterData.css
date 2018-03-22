@@ -1,0 +1,22 @@
+.THIS .drag-drop-section {
+    background: white;
+    border-style: dashed;
+    border-radius: 5px;
+    border-color: #a7b6c6;
+    
+} 
+.THIS .data-entry-section {
+    min-height: 200px;
+}
+
+.THIS .data-entry-adapt-margin {
+
+    margin-left: 12%;
+    margin-right: 12%;
+    font-weight: 400;
+}
+
+.THIS .title-style #input-1-form-label{
+
+    font-size: 1.2em;
+}

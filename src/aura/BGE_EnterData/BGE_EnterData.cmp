@@ -1,0 +1,76 @@
+<aura:component >
+
+    <aura:attribute name="batchId" type="Id" description="Record to which the files should be attached" />
+    <aura:attribute name="batch" type="DataImportBatch__c" access="global" default="{sobjectType : 'DataImportBatch__c'}" />
+    <aura:attribute name="templateName" type="String" access="global" />
+
+    <div aura:id="body" >
+
+        <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToTemplateSelection}" label="Back"/>
+        <c:BGE_ProgressIndicator processStage="dataBatchStage" />
+
+        <div class="slds-form slds-form_stacked slds-m-around_medium data-entry-adapt-margin">
+
+            <h2 class="slds-text-heading_medium">Enter Data</h2>
+
+            <div class="slds-form-element">
+
+                <p class="slds-m-top_medium slds-m-bottom_x-large">Your batch has been created and you've given it a template. Time to get those gifts in! You can upload a CSV file if you have one available, or proceed to manual entry.</p>
+
+                <div class="slds-grid slds-wrap slds-m-top_medium">
+                    <div class="slds-size_1-of-2 slds-grid slds-wrap">
+                        <label class="slds-size_1-of-1"> Batch Name: <b>{!v.batch.Name}</b></label>
+                        <label class="slds-size_1-of-1"> Template: <b>{!v.templateName}</b></label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="slds-m-top_medium">
+
+                <div class="slds-grid slds-wrap slds-theme_shade slds-box">
+
+                    <div class="slds-size_1-of-2 slds-m-top_large slds-m-bottom_large drag-drop-section data-entry-section">
+
+                        <div class="slds-form-element">
+
+                            <div class="slds-form-element__control title-style">
+                                <lightning:icon class="slds-m-vertical_medium slds-align_absolute-center" iconName="doctype:csv" size="large"/>
+                                <lightning:fileUpload class="slds-align_absolute-center"
+                                    label="Drag and Drop Here to Upload CSV or" 
+                                    multiple="false" 
+                                    accept=".csv"
+                                    recordId="{!v.batchId}"
+                                    onuploadfinished="{!c.handleUploadFinished}" />
+                                <!-- <div class="slds-file-selector slds-file-selector_files file-selector-style">
+                                    <div class="slds-file-selector__dropzone">
+                                        <lightning:icon class="slds-m-vertical_medium slds-align_absolute-center" iconName="doctype:csv" size="medium"/>
+                                        <p class="slds-text-heading_medium slds-align_absolute-center">Drag and Drop Here to Upload CSV</p>
+                                        <p class="slds-text-heading_medium slds-align_absolute-center">or</p>
+                                        <input type="file" class="slds-file-selector__input slds-assistive-text" accept="image/png" id="file-upload-input-01" aria-labelledby="file-selector-primary-label file-selector-secondary-label" />
+                                        <label class="slds-file-selector__body" for="file-upload-input-01" id="file-selector-secondary-label">
+                                            <span class="slds-file-selector__button slds-button slds-button_neutral">
+                                                <lightning:icon class="slds-m-vertical_medium" iconName="standard:flow" />
+                                                Upload Files
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+
+                     <div class="slds-size_1-of-2 slds-m-top_large slds-m-bottom_large entry-data-section">
+                        <p class="slds-text-heading_medium slds-align_absolute-center">No CSV? Simply enter your data manually.</p>
+                        <lightning:button class="slds-align_absolute-center button-style button-small-size" label="Manual Entry" onclick="{! c.nextToEnterData }" />
+                    </div>
+                </div>
+
+            </div>
+
+            
+
+         </div>
+
+    </div>
+</aura:component>

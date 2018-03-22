@@ -1,0 +1,51 @@
+<aura:component >
+
+    <aura:attribute name="newDataImport" type="Object"/>
+    <aura:attribute name="sampleDataImport" type="Object"/>
+    <aura:attribute name="dataImportError" type="String"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}"/>
+
+    <force:recordData aura:id="dataImportRecordCreator"
+                      layoutType="FULL"
+                      targetRecord="{!v.newDataImport}"
+                      targetFields="{!v.sampleDataImport}"
+                      targetError="{!v.dataImportError}" />
+
+    <tr class="slds-hint-parent">
+        <td role="gridcell" tabindex="0" class="slds-text-align_right" style="width: 3.75rem;">
+            <div class="slds-checkbox_add-button">
+                <input type="checkbox" class="slds-assistive-text" id="add-checkbox-34" tabindex="-1" value="on" />
+                <label for="add-checkbox-34" class="slds-checkbox_faux">
+                    <span class="slds-assistive-text">Select item 1</span>
+                </label>
+            </div>
+        </td>
+        <th scope="row">
+            <div class="slds-truncate" title="DONOR">
+                <ui:inputCurrency label="Amount" class="field" value="{!v.sampleDataImport.Account1Imported__c}"/>
+            </div>
+        </th>
+        <td role="gridcell">
+            <div class="slds-truncate" title="CONTACT">
+                <ui:inputCurrency label="Amount" class="field" value="{!v.sampleDataImport.Contact1Imported__c}"/>
+            </div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="CLOSE DATE">
+                <ui:inputDate label="Date" displayDatePicker="true" class="field" value="{!v.sampleDataImport.Donation_Date__c}"/>
+            </div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="STAGE">
+                <ui:inputCurrency label="Amount" class="field" value="{!v.sampleDataImport.Donation_Stage__c}"/>
+            </div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="AMOUNT">
+                <ui:inputCurrency label="Amount" class="field" value="{!v.sampleDataImport.Donation_Amount__c}"/>
+            </div>
+        </td>
+    </tr>
+
+</aura:component>

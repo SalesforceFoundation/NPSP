@@ -1,0 +1,28 @@
+<aura:component controller="BGE_AuraController">
+
+    <aura:attribute name="record" type="DataImport__c" />
+
+    <tr class="slds-hint-parent">
+        <td role="gridcell" tabindex="0" class="slds-text-align_right" style="width: 3.75rem;">
+            <div class="slds-checkbox_add-button">
+                <input type="checkbox" class="slds-assistive-text" id="add-checkbox-34" tabindex="-1" value="on" />
+                <label for="add-checkbox-34" class="slds-checkbox_faux">
+                    <span class="slds-assistive-text">Select item 1</span>
+                </label>
+            </div>
+        </td>
+        <th scope="row">
+            <div class="slds-truncate" title="Analytics">Donor</div>
+        </th>
+        <td role="gridcell">
+            <div class="slds-truncate" title="ANTLY">Contact</div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="5000.00">5000.00</div>
+        </td>
+        <td role="gridcell">
+            <div class="slds-truncate" title="Analytics Product">Analytics Product</div>
+        </td>
+    </tr>
+
+</aura:component>

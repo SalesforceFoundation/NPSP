@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<AuraDefinitionBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>37.0</apiVersion>
+    <description>Nima to create a POC in Lightning for Batch Data Import
+
+1. Grid like data entry.
+2. Define columns with some intelligence.
+3. Give the option to select existing Accounts and Contacts or create new ones.
+4. Upload data and process as batch.</description>
+</AuraDefinitionBundle>

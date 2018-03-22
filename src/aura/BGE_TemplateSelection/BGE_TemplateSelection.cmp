@@ -1,0 +1,71 @@
+<!-- <aura:component controller="BGE_TemplateController"> -->
+<aura:component controller="BGE_AuraController">
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="existingTemplates" type="Batch_Template__c[]" access="global" />
+    <aura:attribute name="associatedBatch" type="DataImportBatch__c" access="global" default="{sobjectType : 'DataImportBatch__c'}" />
+    <aura:attribute name="hasBatch" type="Boolean" access="global" default="false" />
+    <aura:attribute name="fromCreation" type="Boolean" access="global" default="false" />
+
+    <!-- Attribute to work on second iteration so it doesnt loose template data selected -->
+    <aura:attribute name="currentTemplate" type="Batch_Template__c" />
+
+    <div aura:id="body">
+
+        <aura:if isTrue="{!!v.hasBatch}">
+            <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToInitial}" label="Back"/>
+        </aura:if>
+
+        <aura:if isTrue="{!v.hasBatch}">
+            <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToPrevious}" label="Back"/>
+        </aura:if>
+
+        <c:BGE_ProgressIndicator processStage="selectTemplateStage" />
+
+        <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
+            <h2 class="slds-text-heading_medium">Select Template</h2>
+            <p class="slds-m-top_medium slds-m-bottom_x-large"> Batch templates determine what fields should be shown during the data entry process, as well as how to  rempa fields from imported files that don't match the field names your organization uses.</p>
+
+            <aura:if isTrue="{!v.hasBatch}">
+
+                <div class="slds-form-element">
+                    <label>Batch Name: <b>{!v.associatedBatch.Name}</b> </label>
+                </div>
+            </aura:if>
+
+             <div class="slds-clearfix">
+                <div class="slds-float_right">
+                    <lightning:button label="New Template" onclick="{! c.nextToTemplateCreation }" />
+                </div>
+            </div>
+
+            <div class="slds-m-top_medium">
+
+                <aura:iteration items="{!v.existingTemplates}" var="item" indexVar="idx">
+
+                    <div class="slds-box slds-grid slds-wrap slds-theme_shade slds-clearfix" data-record="{!idx}" aura:id="template-value" onclick="{!c.goToStoreDetail}">
+                        <div class="slds-truncate slds-size_2-of-8"><a href="javascript:void(0);">{!item.Name}</a></div>
+
+                        <div class="slds-truncate slds-size_3-of-8">{!item.Description__c}</div>
+
+                        <aura:if isTrue="{!v.hasBatch}">
+                            <!-- Will use a div instead a button because is necessary use data-record to store the item selected in the iteration -->
+                            <div class="slds-size_2-of-8 slds-button button-style button-small-size" data-record="{!idx}" onclick="{! c.nextToEnterData }"> <p class="slds-align_absolute-center">Select</p> </div>
+                        </aura:if>
+
+                        <lightning:select class="slds-size_1-of-8 slds-float_right slds-m-left_x-large" label="" aura:id="{!template-options}" name="selectItem" variant="label-hidden" onchange="{!c.selectTemplate}">
+                            <option value=""></option>
+                            <option value="1">Edit</option>
+                            <option value="2">Clone</option>
+                            <option value="3">Delete</option>
+                        </lightning:select>
+
+                    </div>
+                </aura:iteration>
+
+            </div>
+        </div>
+
+    </div>
+
+</aura:component>

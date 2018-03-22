@@ -1,0 +1,41 @@
+<aura:component >
+
+	<div aura:id="body">
+		<div  class="slds-m-vertical_xx-large" style="margin-left: 10%; margin-right: 10%">
+
+			<p >With the NPSP Gift Entry tool, you can create batches of gift data to make easier to enter, correct, and review your gifts before commiting them to Salesforce.</p>
+			<p class="slds-m-top_medium">Start by creating a new batch; then, choose a template to determine which fields to display; third, enter your gift data or import it from an existing file; and finally, review the data for accuracy and suspected duplicate records before commiting the batch to Salesforce</p>
+		</div>
+		
+		<div>
+
+			<lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center slds-m-top_medium">
+
+				<lightning:button class="button-style slds-p-around_medium slds-button_icon-large" onclick="{!c.nextToCreateBatch}">
+					<label class="slds-text-heading_small"> CREATE BATCH </label>
+				</lightning:button>
+
+			</lightning:layoutItem>
+
+			<label class="slds-align_absolute-center"> Create a new gift data batch by importing a CSV, or enter your gifts manually.</label>
+			
+			<lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center slds-m-top_medium">
+
+				<lightning:button class="button-style first-button slds-p-around_medium slds-button_icon-large" onclick="{!c.nextToContinueBatch}">
+					<label class="slds-text-heading_small"> CONTINUE BATCH </label>
+				</lightning:button>
+
+			</lightning:layoutItem>
+
+			<label class="slds-align_absolute-center"> Continue processing a batch you started earlier, or review batches than haven't been commited to Salesforce.</label>
+
+			<lightning:layoutItem size="12" padding="around-medium" class="slds-align_absolute-center slds-m-top_medium">
+
+				<lightning:button class="button-style slds-p-around_medium slds-button_icon-large" onclick="{!c.nextToSelectTemplate}">
+					<label class="slds-text-heading_small"> TEMPLATES </label>
+				</lightning:button>
+			</lightning:layoutItem>
+			<label class="slds-align_absolute-center">Create or edit batch templates to streamline your gift entry workflow.</label>
+		</div>
+	</div>
+</aura:component>

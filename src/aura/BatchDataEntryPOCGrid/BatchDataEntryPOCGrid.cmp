@@ -1,0 +1,40 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global" controller="BGE_HandsOnGridController">
+
+    <aura:attribute name="batchId" type="Id"/>
+    <aura:attribute name="batchName" type="String"/>
+    <aura:attribute name="processStage" type="String"/>
+
+    <div aura:id="body">
+        <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToBatchSelection}" label="Back"/>
+
+        <c:BGE_ProgressIndicator processStage="dataBatchStage" />
+
+        <div class="slds-form slds-form_stacked" style="padding-right:12%;padding-left:12%;">
+
+            <div class="slds-text-heading_medium slds-text-align_left">Data Entry</div>
+            <div class="slds-text-heading_small slds-text-align_left"><b>Batch Name:</b> {!v.batchName}</div>
+
+            <div class="slds-form-element">
+                <div class="slds-clearfix">
+                    <div class="slds-m-top_medium slds-float_right">
+                        <lightning:button class="button-style button-size" label="Continue to Commit" onclick="{!c.nextToCommit}" />
+                    </div>
+                </div>
+            </div>
+
+            <div >
+                <iframe scrolling="yes" frameBorder="0" width="100%" height="500px" src="{!'/apex/BGE_HandsOnGrid?batchId=' + v.batchId}" />
+            </div>
+
+            <div class="slds-form-element">
+                <div class="slds-clearfix">
+                    <div class="slds-m-top_medium slds-float_right">
+                        <lightning:button class="button-style button-size" label="Continue to Commit" onclick="{!c.nextToCommit}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</aura:component>

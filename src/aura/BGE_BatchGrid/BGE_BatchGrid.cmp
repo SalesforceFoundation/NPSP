@@ -1,0 +1,80 @@
+<aura:component controller="BGE_AuraController">
+
+    <aura:attribute name="batchId" type="Id"/>
+    <aura:attribute name="records" type="DataImport__c[]" />
+    <aura:attribute name="newRecord" type="DataImport__c[]" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+    <div class="slds-scrollable slds-grow">
+        <table role="grid" class="slds-table slds-table_fixed-layout slds-table_bordered slds-table_resizable-cols slds-no-row-hover slds-scrollable_none">
+
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th scope="col" style="width: 3.75rem;"></th>
+                    <th aria-label="Name" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                            <span class="slds-assistive-text">Sort by: </span>
+                            <span class="slds-truncate" title="Name">Donor</span>
+                        </a>
+                        <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted none</span>
+                        <div class="slds-resizable">
+                            <input type="range" min="20" max="1000" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-21" tabindex="-1" />
+                            <span class="slds-resizable__handle">
+                                <span class="slds-resizable__divider"></span>
+                            </span>
+                        </div>
+                    </th>
+                    <th aria-label="Product Code" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                            <span class="slds-assistive-text">Sort by: </span>
+                            <span class="slds-truncate" title="Product Code">Contact</span>
+                        </a>
+                        <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted none</span>
+                        <div class="slds-resizable">
+                            <input type="range" min="20" max="1000" aria-label="Product Code column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-22" tabindex="-1" />
+                            <span class="slds-resizable__handle">
+                                <span class="slds-resizable__divider"></span>
+                            </span>
+                        </div>
+                    </th>
+                    <th aria-label="List Price" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                            <span class="slds-assistive-text">Sort by: </span>
+                            <span class="slds-truncate" title="List Price">Date</span>
+                        </a>
+                        <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted none</span>
+                        <div class="slds-resizable">
+                            <input type="range" min="20" max="1000" aria-label="List Price column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-23" tabindex="-1" />
+                            <span class="slds-resizable__handle">
+                                <span class="slds-resizable__divider"></span>
+                            </span>
+                        </div>
+                    </th>
+                    <th aria-label="Product Family" aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" scope="col">
+                        <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                            <span class="slds-assistive-text">Sort by: </span>
+                            <span class="slds-truncate" title="Product Family">Amount</span>
+                        </a>
+                        <span class="slds-assistive-text" aria-live="assertive" aria-atomic="true">Sorted none</span>
+                        <div class="slds-resizable">
+                            <input type="range" min="20" max="1000" aria-label="Product Family column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-24" tabindex="-1" />
+                            <span class="slds-resizable__handle">
+                                <span class="slds-resizable__divider"></span>
+                            </span>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <aura:iteration items="{!v.records}" var="record" >
+                    <c:BGE_BatchDataImport record="{!record}" />
+                </aura:iteration>
+            </tbody>
+
+            <!-- <c:BGE_BatchDataImportNew record="{!record}" /> -->
+
+        </table>
+    </div>
+
+</aura:component>

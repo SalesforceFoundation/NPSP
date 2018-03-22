@@ -1,0 +1,34 @@
+.THIS .button-style {
+    
+    min-width: 25em;
+    max-width: 25em;
+    height: 5em;
+    color: white;
+    background: #a8b7c7;
+}
+    
+.THIS .button-style:hover{
+    background: rgb(164, 171, 172);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+}
+
+.THIS .adapt-margin  {
+    
+    margin-left: 18%;
+    margin-right: 18%;
+    font-weight: 400;
+}
+
+.THIS .button-size {
+    
+    min-width: 15em;
+    max-width: 15em;
+    height: 4em;
+}
+
+.THIS h2 {
+
+    font-weight: 400;
+}

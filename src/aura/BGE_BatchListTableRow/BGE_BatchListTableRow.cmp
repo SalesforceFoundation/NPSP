@@ -1,0 +1,30 @@
+<aura:component >
+
+    <aura:attribute name="item" type="Batch__c" />
+
+    <aura:registerEvent name="SelectBatchRow" type="c:BGE_BatchListTableRowSelectEvent" />
+
+    <tr class="slds-hint-parent">
+        <th scope="row" tabindex="0">
+            <div class="slds-truncate" title="{!v.item.Name}">
+                <ui:inputRadio aura:id="checkbox" name="group" change="{!c.onCheck}"/>
+            </div>
+        </th>
+        <th scope="row">
+            <div class="slds-truncate" title="{!v.item.Name}">
+                <ui:outputText value="{!v.item.Name}" />
+            </div>
+        </th>
+        <td role="gridcell" class="">
+            <div class="slds-truncate" title="4/10/15">
+                <ui:outputDate value="{!v.item.CreatedDate}" format="MM/dd/yyyy"/>
+            </div>
+        </td>
+        <td role="gridcell" class="">
+            <div class="slds-truncate" title="{!v.item.Description__c}">
+                <ui:outputText value="{!v.item.Description__c}" />
+            </div>
+        </td>
+    </tr>
+
+</aura:component>

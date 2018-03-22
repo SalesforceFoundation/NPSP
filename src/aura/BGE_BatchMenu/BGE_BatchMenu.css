@@ -1,0 +1,13 @@
+.THIS .button-style {
+
+    min-width: 30em;
+    max-width: 30em;
+}
+
+.THIS .button-style:hover{
+    background: rgb(9, 80, 142);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 15px 20px rgba(0, 0, 0, 0.3);
+
+}

@@ -1,0 +1,109 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+	<aura:attribute name="giftsList" type="Opportunity[]" />
+    <aura:attribute name="paginationList" type="Opportunity[]"/>
+    <aura:attribute name="pageSize" type="Integer" default="5"/>
+    <aura:attribute name="totalSize" type="Integer"/>
+    <aura:attribute name="start" type="Integer" />
+    <aura:attribute name="end" type="Integer"/>
+
+	<div class="slds-box">
+        <div class="container">
+        	<aura:iteration items="{!v.paginationList}" var="item">
+        	<div class="slds-grid slds-wrap slds-grid_pull-padded" style="margin-top: -1em !important">
+            	<div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-6 slds-large-size_4-of-12">
+	            	<lightning:input name="myInput" label="Name" required="true"/>
+	            </div>
+    	        <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-6 slds-large-size_3-of-12">
+        	        <div class="slds-form-element">
+	  					<label class="slds-form-element__label" for="combobox-unique-id">
+                	        <abbr class="slds-required" title="required">*</abbr>Donor
+                    	</label>
+
+	  					<div class="slds-form-element__control">
+    						<div class="slds-combobox_container slds-has-inline-listbox slds-has-input-focus">
+      							<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open" aria-expanded="true" aria-haspopup="listbox" role="combobox">
+        							<div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right">
+							            <input type="text" required="true" class="slds-input slds-combobox__input" id="combobox-unique-id" aria-autocomplete="list" aria-controls="listbox-unique-id" autocomplete="off" role="textbox" placeholder="Search Salesforce" />
+								        <span class="slds-icon_container slds-icon-utility-search slds-input__icon slds-input__icon_right" title="Description of icon when needed">
+              								<lightning:icon iconName="utility:search" size="small" alternativeText="search for a Donor"/>
+								            <span class="slds-assistive-text">Description of icon</span>
+						 	    	    </span>
+							        </div>
+						       </div>
+						    </div>
+					   </div>
+					</div>
+		        </div>
+    	        <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-6 slds-large-size_2-of-12">
+    		        <label class="slds-form-element__label" for="combobox-unique-id">
+            	    	Date
+                	</label>
+	                <input type="date" id="text-input-id-1" class="slds-input" placeholder="Placeholder Text" />
+    	    	</div>
+    		    <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-6 slds-large-size_2-of-12">
+        		    <div class="slds-combobox_container slds-size_small">
+                	    <label class="slds-form-element__label" for="combobox-unique-id">Stage</label>
+      						<div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-combobox-picklist" aria-expanded="false" aria-haspopup="listbox" role="combobox">
+					    	    <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right">
+    					    	    <input type="text" class="slds-input slds-combobox__input" id="combobox-unique-id" aria-controls="listbox-unique-id" autocomplete="off" role="textbox" placeholder="Select an Option" readonly="" />
+							        <span class="slds-icon_container slds-icon-utility-down slds-input__icon slds-input__icon_right" title="Description of icon when needed">
+							            <lightning:icon iconName="utility:down" size="small" alternativeText=""/>
+						            </span>
+						        </div>
+        						<div id="listbox-unique-id" role="listbox">
+          							<ul class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid" role="presentation">
+							            <li role="presentation" class="slds-listbox__item">
+              								<span id="listbox-option-unique-id-01" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center" role="option">
+							    	            <span class="slds-media__figure">
+                  									<lightning:icon iconName="utility:check" size="small" alternativeText=""/>
+    							        	    </span>
+							                	<span class="slds-media__body">
+								                  <span class="slds-truncate" title="Option A"> Option A</span>
+								                </span>
+								            </span>
+							            </li>
+            							<li role="presentation" class="slds-listbox__item">
+							              <span id="listbox-option-unique-id-02" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center" role="option">
+                							<span class="slds-media__figure">
+						    	              <lightning:icon iconName="utility:check" size="small" alternativeText=""/>
+						        	        </span>
+						            	    <lightning:icon iconName="utility:check" size="small" alternativeText=""/>
+						                	<span class="slds-media__body">
+							                  <span class="slds-truncate" title="Option B"> Option B</span>
+							                </span>
+							              </span>
+							            </li>
+							            <li role="presentation" class="slds-listbox__item">
+							              <span id="listbox-option-unique-id-03" class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small slds-media_center" role="option">
+                							<span class="slds-media__figure">
+						                  		<span class="slds-media__figure">
+							                  		<lightning:icon iconName="utility:check" size="small" alternativeText=""/>
+	   							                </span>
+							                </span>
+						                   <lightning:icon iconName="utility:check" size="small" alternativeText=""/>
+        	        						<span class="slds-media__body">
+							                  <span class="slds-truncate" title="Option ABCDEFGHIJKLMNOPQRSTUVWXYZ"> Option ABCDEFGHIJKLMNOPQRSTUVWXYZ</span>
+							                </span>
+							              </span>
+							            </li>
+						    	      </ul>
+						        	</div>
+							      </div>
+							    </div>
+				</div>
+            	<div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_1-of-6 slds-large-size_1-of-12">
+                	<span class="slds-media__figure">
+         				<lightning:icon iconName="action:new" size="small" alternativeText="Creates a new row"/>
+	                </span>
+            	</div>
+	        </div>
+	        <lightning:button label="Previous" disabled="{!v.start == 0}"  onclick="{!c.previous}" />
+      		<lightning:button label="Next" disabled="{!v.end >= v.totalSize}" onclick="{!c.next}" />
+        	</aura:iteration>
+        	<lightning:button label="Previous" disabled="{!v.start == 0}"  onclick="{!c.previous}" />
+	      <lightning:button label="Next" disabled="{!v.end >= v.totalSize}" onclick="{!c.next}" />
+		</div>
+    </div>
+
+</aura:component>
