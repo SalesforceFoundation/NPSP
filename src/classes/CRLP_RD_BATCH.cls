@@ -39,7 +39,7 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
     public CRLP_RD_BATCH() { }
 
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
+     * @description Constructs the class - Rollup all Recurring Donations that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
@@ -48,7 +48,7 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
     }
 
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup is for a specific set of Account Id's
+     * @description Constructs the class - Rollup is for a specific set of RD Id's
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */

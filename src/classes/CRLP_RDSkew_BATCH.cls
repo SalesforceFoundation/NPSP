@@ -32,7 +32,7 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Account Hard Credit Rollup Batch Job using the "Skew" rollup method
+* @description Recurring Donation Rollup Batch Job using the "Skew" rollup method
 */
     public class CRLP_RDSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 

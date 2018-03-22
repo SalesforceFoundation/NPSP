@@ -33,7 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Opportunity/Payment to Recurring Donation Rollups
+* @description Unit Test for the Opportunity to Recurring Donation Rollups
 */
 @isTest
 private class CRLP_RollupRecurringDonation_TEST {

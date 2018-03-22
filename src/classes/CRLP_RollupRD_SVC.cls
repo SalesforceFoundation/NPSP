@@ -32,7 +32,7 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Account roll-ups from Opportunity and Payment objects
+* @description Rollup Services unique to the Recurring Donation roll-ups from Opportunity object
 */
 public class CRLP_RollupRD_SVC extends CRLP_VRollupHandler {
 
@@ -40,12 +40,12 @@ public class CRLP_RollupRD_SVC extends CRLP_VRollupHandler {
 
     /**
      * @description Called by the setRecordId() method in the parent (super) class, this configures the
-     * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account record.
+     * CRLP_Rollup object instances that are used to do the actual rollup work for the target RD record.
      * For the given summary object, pre-populates the rollupResults map by rollupId,
-     * filtering the rollups to those from the Opportunity and/or OppPayment objects. Partial Soft Credits
-     * are handled by a different service class.
+     * filtering the rollups to those from the Opportunity object.
      */
     public override void initRollup() {
+
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(
                 CRLP_RollupProcessingOptions.RollupType.RecurringDonations, this.jobFilter)) {
             addRollupDefinition(r);
@@ -79,7 +79,6 @@ public class CRLP_RollupRD_SVC extends CRLP_VRollupHandler {
                     // YES -- now need to do the actual rollup!
                     CRLP_Operation_SVC.doRollupOperation(rollup, opp, opp);
                 }
-
 
             }
 
