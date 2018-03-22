@@ -164,7 +164,7 @@ public class CRLP_RollupProcessor_SVC {
 
         } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
             // Opportunity to RecurringDonation
-            // handlerClass = CRLP_RollupRD_SVC.class;
+            handlerClass = CRLP_RollupRD_SVC.class;
 
         }
         return handlerClass;

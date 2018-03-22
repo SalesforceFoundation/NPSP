@@ -53,7 +53,7 @@ private class CRLP_RollupRecurringDonation_TEST {
     }
 
     /**
-     * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
+     * @description Create Rollup__mdt records to test rolling up from the Opp object to Recurring Donations
      */
     private static void mockRollupCMTValues() {
 
@@ -107,20 +107,24 @@ private class CRLP_RollupRecurringDonation_TEST {
     }
 
     static testMethod void test_Rollups_Queueable() {
+        System.debug('+++++calling testRollupsServices with TestType.TestQueueable');
         testRollupsServices(TestType.TestQueueuable);
     }
     static testMethod void test_Rollups_Batch() {
+        System.debug('+++++calling testRollupsServices with TestType.TestBatch');
         testRollupsServices(TestType.TestBatch);
     }
     static testMethod void test_Rollups_SkewBatch() {
+        System.debug('+++++calling testRollupsServices with TestType.TestSkewBatch');
         testRollupsServices(TestType.testSkewBatch);
     }
     static testMethod void test_Rollups_Trigger() {
+        System.debug('+++++calling testRollupsServices with TestType.TestTrigger');
         testRollupsServices(TestType.TestTrigger);
     }
 
     /**
-     * @description Test some simple rollups from the Opportunity/Payment object to the Account using
+     * @description Test some simple rollups from the Opportunity object to Recurring Donations using
      * four different methods:
      * 1. Trigger based rollup
      * 2. Call a Queueuable method directly (simulates clicking a button to recalculate)
@@ -168,14 +172,13 @@ private class CRLP_RollupRecurringDonation_TEST {
         Id acctId = con.AccountId;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
-        Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
 
         Integer numOpps = 2;
         Integer numClosedOpps = 1;
         Decimal instAmt = 100;
         Date startDate = Date.newInstance(2000,1,1);
         // these two dates only work based on a monthly installment period
-        Date lastPaymentDate = startDate.addMonths(numClosedOpps);
+        Date lastPaymentDate = startDate.addMonths(numClosedOpps-1);
         Date nextPaymentDate = lastPaymentDate.addMonths(1);
 
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
@@ -221,28 +224,28 @@ private class CRLP_RollupRecurringDonation_TEST {
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger) {
-            System.assertEquals(0, rd.npe03__Paid_Amount__c);
-            System.assertEquals(0, rd.npe03__Total_Paid_Installments__c);
+            System.assertEquals(null, rd.npe03__Paid_Amount__c);
+            System.assertEquals(null, rd.npe03__Total_Paid_Installments__c);
             System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
             System.assertEquals(null, rd.npe03__Next_Payment_Date__c);
         }
 
-        // Now test the rollups to the Account from the Opportunity
+        // Now test the rollups to the Recurring Donation from the Opportunity
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         } else if (tt == TestType.testSkewBatch) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{acctId}, null);
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{rdId}, null);
         } else if (tt == TestType.TestQueueuable) {
-            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{acctId}));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{rdId}));
         }
         Test.stopTest();
 
-        // Query the Account with all the target fields specified in the rollups
+        // Query the RD with all the target fields specified in the rollups
         rd = database.query(rdQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.

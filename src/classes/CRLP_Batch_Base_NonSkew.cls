@@ -172,7 +172,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             // This could be Opportunity or OCR records
             List<SObject> detailRecords;
             if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
                 detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, hasActivePaymentRollupsForThisJob(), options);
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||

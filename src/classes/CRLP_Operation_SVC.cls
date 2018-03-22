@@ -135,8 +135,8 @@ public class CRLP_Operation_SVC {
         // Increment the overall counter
         rollup.theCount++;
 
-        // If there is a result field retrieve it's value and convert as required
-        // There is only one Rollup__mdt record when a Result Object/Field is involved.
+        // If there is a Detail field retrieve its value and convert as required
+        // There is only one Rollup__mdt record when a Detail Object/Field is involved.
         // Single Results of this nature are limited to an Operation type of First, Last, Largest or Smallest only
         if (rollup.resultFieldType != null && (rollup.detailObject == objName || rollup.detailObject == oppObjectName)) {
 

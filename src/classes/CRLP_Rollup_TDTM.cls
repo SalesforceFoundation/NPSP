@@ -128,10 +128,14 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
      * @param detailRecordsToRollup
      */
     private static void executeRollupsForSpecifiedRecords(List<SObject> detailRecordsToRollup) {
+
+        System.debug('+++++hitting executeRollups in RollupTDTM');
+
         SObjectType detailObjType = detailRecordsToRollup[0].getSObjectType();
 
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
+        List<Id> rdIds = new List<Id>();
 
         // Unit Tests cannot chain queuable rollups, so all rollups are done real-time. As such,
         // don't use this static set to prevent rollups from running multiple times on the same
@@ -161,7 +165,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
         }
 
-        // If there are Opportunities, get the Account and/or Contact Ids to roll up to
+        // If there are Opportunities, get the Account and/or Contact or RD Ids to roll up to
         if (!opps.isEmpty()) {
             for (Opportunity opp : opps) {
                 if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
@@ -171,6 +175,10 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 if (opp.Primary_Contact__c != null && !alreadyQueuedForRollupJob.contains(opp.Primary_Contact__c)) {
                     contactIds.add(opp.Primary_Contact__c);
                     alreadyQueuedForRollupJob.add(opp.Primary_Contact__c);
+                }
+                if (opp.npe03__Recurring_Donation__c != null && !alreadyQueuedForRollupJob.contains(opp.npe03__Recurring_Donation__c)) {
+                    rdIds.add(opp.npe03__Recurring_Donation__c);
+                    alreadyQueuedForRollupJob.add(opp.npe03__Recurring_Donation__c);
                 }
             }
 
@@ -186,6 +194,9 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 if (!contactIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(contactIds);
                 }
+                if (!rdIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(rdIds);
+                }
 
             } else  {
                 // Queueable execution using chained queuable executions for each type of summary object
@@ -196,6 +207,9 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
                 if (!contactIds.isEmpty()) {
                     queueOfSummaryIds.add(contactIds);
+                }
+                if (!rdIds.isEmpty()) {
+                    queueOfSummaryIds.add(rdIds);
                 }
 
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up

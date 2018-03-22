@@ -66,7 +66,7 @@
             allFieldsToQuery.add(SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getSobjectField().getDescribe());
         } else if (resultObject == npe01__OppPayment__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe01__OppPayment__c.fields.npe01__Opportunity__c.getSobjectField().getDescribe());
-        } else if (resultObject == npe03__Recurring_Donation__c) {
+        } else if (resultObject == npe03__Recurring_Donation__c.SObjectType) {
             allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Next_Payment_Date__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Last_Payment_Date__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.npe03__Recurring_Donation__c.fields.npe03__Total_Paid_Installments__c.getSobjectField().getDescribe());
@@ -192,6 +192,9 @@
                 childObjects.add(npe01__OppPayment__c.SObjectType);
             }
             detailKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+        } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
+            mainObject = Opportunity.SObjectType;
+            detailKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
         }
 
         // Get the base query
