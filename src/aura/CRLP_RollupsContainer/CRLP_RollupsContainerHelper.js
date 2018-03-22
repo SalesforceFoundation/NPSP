@@ -1,6 +1,7 @@
 ({
+    /* @description: resets the view assignments, clears detail information, and displays rollup grid
+    */
     displayRollupsGrid: function(cmp){
-        //resets the view assignments and clears detail information
         cmp.set("v.isRollupsGrid", true);
         cmp.set("v.isFilterGroupsGrid", false);
         cmp.set("v.isRollupDetail", false);
@@ -12,8 +13,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
+    /* @description: resets the view assignments, clears detail information, and displays filter group grid
+    */
     displayFilterGroupsGrid: function(cmp){
-        //resets the view assignments and clears detail information
         cmp.set("v.isFilterGroupsGrid",true);
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isFilterGroupDetail", false);
@@ -24,8 +26,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
+    /* @description: filters row data based on user's selection of summary object
+    */
     filterData: function(cmp, object){
-        //filters row data based on user's selection of summary object
         var cachedRollupList = cmp.get("v.cachedRollupList");
         if(object === 'All'){
             cmp.set("v.rollupList", cachedRollupList);
@@ -37,29 +40,17 @@
         }
     },
 
+    /* @description: sorts data by user's selected field and field direction
+    */
     sortData: function(cmp, fieldName, sortDirection, data){
-        //sorts data by user's selected field and field direction
         var reverse = sortDirection !== 'asc';
         data.sort(this.sortBy(fieldName, reverse));
         return data;
     },
 
-    sortFilterGroupGrid: function(cmp, fieldName, sortDirection){
-        //saves sorted filter group grid data
-        var data = cmp.get("v.filterGroupList");
-        var sortedData = this.sortData(cmp, fieldName, sortDirection, data);
-        cmp.set("v.filterGroupList", data);
-    },
-
-    sortRollupGrid: function(cmp, fieldName, sortDirection){
-        //saves sorted rollup grid data
-        var data = cmp.get("v.rollupList");
-        var sortedData = this.sortData(cmp, fieldName, sortDirection, data);
-        cmp.set("v.rollupList", data);
-    },
-
+    /* @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
+    */
     sortBy: function (field, reverse, primer) {
-        //provided by Salesforce lightning:datatable documentation
         var key = primer ?
             function(x) {return primer(x[field])} :
             function(x) {return x[field]};

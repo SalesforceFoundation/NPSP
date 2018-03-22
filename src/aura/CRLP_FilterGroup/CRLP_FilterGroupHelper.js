@@ -1,4 +1,8 @@
 ({
+    /* @description: filters the full rollup data to find which rollups use a particular filter group
+    * @param filterGroupLabel: label of the selected filter group
+    * @param labels: labels for the rollups UI
+    */
     filterRollupList: function(cmp, filterGroupLabel, labels){
         //filters row data based selected filter group
         var rollupList = cmp.get("v.rollupList");

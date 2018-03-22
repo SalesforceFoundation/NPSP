@@ -1,4 +1,6 @@
 ({
+    /* @description: setup for rollup app including cached rollups, filter groups, and labels for the app
+    */
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.setupRollupGrid");
         console.log("in the init function");
@@ -70,22 +72,18 @@
         $A.enqueueAction(action);
     },
 
-    activeChange: function(cmp){
-        var activeRecord = cmp.get("v.activeRecord");
-        console.log("Active record changed in Parent");
-        console.log(JSON.stringify(activeRecord));
-    },
-
+    /* @description: calls the helper function to display the filter group grid and resets shared sorting information
+    */
     displayFilterGroupsGrid: function(cmp, event, helper){
-        //sets the filter group grid to be displayed
         helper.displayFilterGroupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "");
     },
 
+    /* @description: resets the active record to ensure there is no leftover data and applies filtered summary object to the creation of a new rollup if applicable
+    */
+
     displayNewRollupForm: function (cmp, event, helper) {
-        //resets the active record to ensure there is no leftover data
-        //applies filtered summary object to the creation of a new rollup if applicable
         cmp.set("v.activeRecord", {});
         cmp.set("v.activeRecord.MasterLabel", cmp.get("v.labels.rollupNew"));
         var summaryFilterObject = cmp.find("selectSummaryObject").get("v.value");
@@ -99,36 +97,39 @@
         cmp.set("v.detailMode", "create");
     },
 
+    /* @description: resets the active record and toggles the grid and detail views
+    */
     displayNewFilterGroupForm: function (cmp, event, helper) {
-        //toggle grid and detail views, set detail mode to create
-        //resets the active record to ensure there is no leftover data
         cmp.set("v.activeRecord", {});
         cmp.set("v.isFilterGroupsGrid", false);
         cmp.set("v.isFilterGroupDetail", true);
         cmp.set("v.detailMode", "create");
     },
 
+    /* @description: calls the helper function to display the rollups grid and resets shared sorting information
+    */
     displayRollupsGrid: function(cmp, event, helper){
-        //sets the rollups grid to be displayed
         helper.displayRollupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "");
     },
 
+    /* @description: filters visible rollups by the summary object picklist
+    */
     filterBySummaryObject: function(cmp, event, helper){
-        //filters visible rollups by the summary object picklist
         var object = cmp.find("selectSummaryObject").get("v.value");
         helper.filterData(cmp, object);
     },
 
+    /* @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
+    */
     handleCancelEvent: function(cmp, event, helper){
-        //switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
-        //if cancel comes from the breadcrumbs in parent, check for name to toggle grid selection
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
         var gridTarget = event.getParam('grid');
         cmp.set("v.lastActiveRecordId", null);
 
+        //if cancel comes from the breadcrumbs in parent, check for name to toggle grid selection
         if(gridTarget === 'rollup' || breadcrumbName === labels.rollupSummaryTitle){
             helper.displayRollupsGrid(cmp);
             cmp.set("v.width", 12);
@@ -155,8 +156,9 @@
         }
     },
 
+    /* @description: handles the selection of a specific rollup from the filter group view and the return to filter group
+    */
     handleNavigateEvent: function(cmp, event, helper){
-        //handles the selection of a specific rollup from the filter group view and the return to filter group
         var id = event.getParam('id');
         var lastId = event.getParam('lastId');
         var target = event.getParam('target');
@@ -177,8 +179,9 @@
 
     },
 
+    /* @description: handles the selected action in the either grid
+    */
     handleRowAction: function(cmp, event, helper){
-        //handles the selected action in the rollups grid
         var action = event.getParam('action');
         var row = event.getParam('row');
 
@@ -203,6 +206,8 @@
         }
     },
 
+    /* @description: used in the breadcrumb to return to the filter group grid from the filter group detail view
+    */
     returnToFilterGroup: function(cmp, event, helper){
         cmp.set("v.activeRecordId", cmp.get("v.lastActiveRecordId"));
         cmp.set("v.lastActiveRecordId", null);
@@ -210,14 +215,16 @@
         cmp.set("v.isFilterGroupDetail", true);
     },
 
+    /* @description: changes the mode from the edit or clone buttons
+    */
     setMode: function(cmp, event, helper) {
-        //changes the mode from the edit or clone buttons
         var name = event.getSource().get("v.name");
         cmp.set("v.detailMode", name);
     },
 
+    /* @description: sorts the data in either grid by the field name and current direction
+    */
     sortByColumns: function(cmp, event, helper){
-        //sorts the data grid by the field name and current direction
         var col = event.getParam();
         var fieldName = event.getParam('fieldName');
         var sortDirection = event.getParam('sortDirection');
@@ -225,9 +232,13 @@
         cmp.set("v.sortedBy", fieldName);
         cmp.set("v.sortedDirection", sortDirection);
         if(cmp.get("v.isRollupsGrid")){
-            helper.sortRollupGrid(cmp, fieldName, sortDirection);
+            var data = cmp.get("v.rollupList");
+            var sortedData = helper.sortData(cmp, fieldName, sortDirection, data);
+            cmp.set("v.rollupList", data);
         } else if (cmp.get("v.isFilterGroupsGrid")){
-            helper.sortFilterGroupGrid(cmp, fieldName, sortDirection);
+            var data = cmp.get("v.filterGroupList");
+            var sortedData = helper.sortData(cmp, fieldName, sortDirection, data);
+            cmp.set("v.filterGroupList", data);
         }
 
     },

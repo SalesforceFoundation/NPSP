@@ -6599,7 +6599,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <fullName>stgLabelYearPicklistLastYear</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Label for previous year</shortDescription>
         <value>Last Year</value>
     </labels>
@@ -6607,7 +6607,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <fullName>stgLabelYearPicklistThisYear</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Label for current year</shortDescription>
         <value>This Year</value>
     </labels>
@@ -6615,7 +6615,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <fullName>stgLabelYearPicklistYearsAgo</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>Label for dynamic number of years ago</shortDescription>
         <value>{0} Years Ago</value>
     </labels>

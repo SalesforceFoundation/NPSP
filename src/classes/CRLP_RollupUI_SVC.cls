@@ -439,6 +439,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
                 'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
+                'partialSoftCreditName' => Schema.SObjectType.Partial_Soft_Credit__c.getName(),
                 'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
                 'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
                 'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,

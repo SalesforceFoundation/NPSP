@@ -9,7 +9,7 @@
          * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
         var detailObjects = [{label: labels.opportunityLabel, name: 'Opportunity'}
-            , {label: labels.partialSoftCreditLabel, name: 'Partial_Soft_Credit__c'}
+            , {label: labels.partialSoftCreditLabel, name: labels.partialSoftCreditName}
             , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
             , {label: labels.allocationLabel, name: 'Allocation__c'}];
         var summaryObjects = cmp.get("v.summaryObjects");
@@ -39,7 +39,7 @@
                 console.log(model.rollup);
                 console.log(model.fieldsByDataType);
                 //note: the duplicate parsing is important to avoid a shared reference
-                if(activeRollupId !== ''){
+                if(activeRollupId){
                     console.log('before set active rollups')
                     cmp.set("v.activeRollup", helper.restructureResponse(model.rollup));
                     cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
@@ -112,7 +112,10 @@
     */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
-        helper.saveRollup(cmp, activeRollup);
+        var canSave = helper.validateFields(cmp);
+        if(canSave){
+            helper.saveRollup(cmp, activeRollup);
+        }
     },
 
     /* @description: listens for a message from the select field cmp to trigger a change in the rollup information
@@ -132,16 +135,16 @@
                 helper.onChangeSummaryObject(cmp, value, label);
             } else if (fieldName === 'summaryField'){
                 helper.onChangeSummaryField(cmp, label);
-            } else if (fieldName === 'rollupType'){
-                helper.onChangeRollupType(cmp, value, label);
-            } else if (fieldName === 'filterGroup'){
-                helper.onChangeFilterGroup(cmp, label);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp, value);
             } else if(fieldName === 'timeBoundOperation'){
                 helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){
                 helper.onChangeInteger(cmp, value);
+            } else if (fieldName === 'rollupType'){
+                helper.onChangeRollupType(cmp, value, label);
+            } else if (fieldName === 'filterGroup'){
+                helper.onChangeFilterGroup(cmp, label);
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
             }

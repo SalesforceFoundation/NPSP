@@ -1,10 +1,10 @@
 ({
-    handleMouseEnter: function(cmp, event){
+    handleMouseOver: function(cmp, event){
         $A.util.removeClass(cmp.find("divSelectHelp"), 'slds-fall-into-ground');
         $A.util.addClass(cmp.find("divSelectHelp"), 'slds-rise-from-ground');
     },
 
-    handleMouseLeave: function(cmp, event){
+    handleMouseOut: function(cmp, event){
         $A.util.addClass(cmp.find("divSelectHelp"), 'slds-fall-into-ground');
         $A.util.removeClass(cmp.find("divSelectHelp"), 'slds-rise-from-ground');
     },
