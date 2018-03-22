@@ -163,6 +163,32 @@
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
             cmp.set("v.activeRecord", activeRecord);
+
+        } else if (channel === 'rollupRecordChange') {
+            // message will inserted or updated the Rollup__mdt record
+            var
+            var rollupsList = cmp.get("v.rollupList")
+            rollupsList.forEach(function(row) {
+                if (row.id === message.id) {
+                    // if the Id matches, update that record
+
+                    row.active = message.Active__c;
+                    if (message.Active__c === true) {
+                        row.activeIcon = 'utility:check';
+                    } else {
+                        row.activeIcon = 'utility:close';
+                    }
+                    // value.creditType = TBD
+                    row.description = message.Description__c;
+                    row.detailObject = message.Detail_Object__r.Label;
+                    row.detailField = message.Detail_Field__r.Label;
+                    row.filterGroupName = message.Filter_Group__r.MasterLabel;
+                    row.operation = message.Operation__c;
+                    row.rollupName = message.MasterLabel;
+                    row.summaryObject = message.Summary_Object__r.Label;
+                    row.summaryObjectApiName = message.Summary_Object__r.QualifiedApiName;
+                }
+            });
         }
     },
 

@@ -413,9 +413,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
-                'savingMessage' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
-                'saveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
-                'saveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                /* TODO Refactor this to use custom labels when have all save logic in place */
+                'rollupSaveProgress' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveTimeout' => String.format('Saving the {0} has timed out. Please see the Customizable Rollups documentation for more information.',
+                        new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
@@ -450,6 +453,17 @@ public with sharing class CRLP_RollupUI_SVC {
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
 
+            // TODO Remove this code after the UI properly sets the fields. For need it to test inserting new rollups
+            if (rollupCMTObj.amountObject == null) {
+                rollupCMTObj.amountObject = 'Opportunity';
+            }
+            if (rollupCMTObj.dateObject == null) {
+                rollupCMTObj.dateObject = 'Opportunity';
+            }
+            if (rollupCMTObj.detailObject == null) {
+                rollupCMTObj.detailObject = 'Opportunity';
+            }
+
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
 
@@ -459,7 +473,8 @@ public with sharing class CRLP_RollupUI_SVC {
             // Return the unique record DeveloperName value
             return jobId + '-' + rollupCMTObj.recordName;
         } catch (Exception ex) {
-            return 'ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString();
+            throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
+
         }
     }
 
@@ -474,7 +489,6 @@ public with sharing class CRLP_RollupUI_SVC {
     @auraEnabled
     public static Id getDeploymentStatus(String jobId, String recordName) {
         Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
-        system.debug('>> Querying deployment status for ' + jobId + '=' + crs.CMT_API_Status__c);
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
@@ -482,10 +496,11 @@ public with sharing class CRLP_RollupUI_SVC {
                 if (result == 'Succeeded') {
                     try {
                         Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
-                        system.debug('>> rollupId=' + rollupId);
                         return rollupId;
                     } catch (Exception ex) {}
                 } else {
+
+                    // If there is an error, parse the message to remove the metadata recordname leaving just the error message itself
                     List<String> errors = result.split('\n');
                     String errMsg = '';
                     for (String er : errors) {
@@ -496,8 +511,6 @@ public with sharing class CRLP_RollupUI_SVC {
                     }
                     throw new AuraHandledException(!String.isEmpty(errMsg) ? errMsg : result);
                 }
-            } else {
-                System.debug(jobId + ' not found in Map');
             }
         }
         return null;

@@ -715,36 +715,37 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             console.log('STATE=' + state);
+
             if (state === "SUCCESS") {
+                // Response value will be in the format of "JobId-RecordDeveloperName"
                 var responseText = response.getReturnValue();
-                // Response value will be one of the following
-                // - JobId-RecordDeveloperName
-                // - ERROR: Error Message
-                if (responseText.startsWith("ERROR")) {
-                    this.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), responseText);
-                    this.toggleSpinner(cmp, false);
-                } else {
-                    var jobId = responseText.split("-")[0];
-                    var recordName = responseText.split("-")[1];
+                var jobId = responseText.split("-")[0];
+                var recordName = responseText.split("-")[1];
 
-                    console.log('Response = ' + response.getReturnValue());
-                    console.log('Returned jobId = ' + jobId);
-                    console.log('Returned DeveloperName = ' + recordName);
+                console.log('Response = ' + response.getReturnValue());
+                console.log('Returned jobId = ' + jobId);
+                console.log('Returned DeveloperName = ' + recordName);
 
-                    console.log('Calling pollForDeploymentStatus');
-                    this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+                cmp.set("v.activeRollup.DeveloperName", recordName);
+                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.DeveloperName")) {
+                    cmp.set("v.cachedRollup.DeveloperName", recordName);
                 }
+
+                console.log('Calling pollForDeploymentStatus');
+                this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+
             } else if (state === "ERROR") {
+
                 var errors = response.getError();
                 var msg = "Unknown error";
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                this.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), msg);
+                this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
                 this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.savingMessage"));
+        this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
         $A.enqueueAction(action);
     },
 
@@ -909,35 +910,18 @@
     },
 
     /**
-     * @description Show a message on the screen
-     * @param cmp Relevant Component
-     * @param type - error, success, info
-     * @param title - message title
-     * @param message - message to display
-     */
-    showToast : function(cmp, type, title, message) {
-        console.log(message);
-        cmp.set("v.notificationClasses", "notification-" + type);
-        cmp.set("v.notificationMessage", message);
-        // TODO Get Toasts to work or replace with something better
-        /*var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-            "type":type,
-            "title": title,
-            "message": message
-        });
-        toastEvent.fire();*/
-    },
-
-    /**
-     * @description
+     * @description Inserting or updating a CMT record is an asynchronous deployment process. This method uses the
+     * unique jobId and the Rollup__mdt.DeveloperName value to recursively call an apex controller method to determine
+     * when the deployment has completed (by looking in a custom settings object). If it completes, the final recordId
+     * is returned. Otherwise an error message to render is returned. If the return is null, then it calls this method
+     * again to wait another second an try again.
      * @param cmp Relevant Component
      * @param jobId The returns CMT deployment job id to query status for
      * @param recordName Uniqude record name value (that was just inserted/updated) to query for.
      */
     pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
         var helper=this;
-        var maxPollingCount = 15;
+        var maxPollingRetryCount = 30;
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
@@ -952,33 +936,58 @@
                         console.log('recordId=' + recordId);
                         // if there is a record id response
                         if (recordId !== undefined && recordId !== null) {
-                            cmp.set("v.activeRollupId", recordId);
-                            helper.getRollupRecord(cmp, recordId);
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            this.showToast(cmp, 'success', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.saveSuccess"));
+                            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
+
+                            // Save the inserted/updated record id
+                            cmp.set("v.activeRollupId", recordId);
+                            cmp.set("v.activeRollup.id", recordId);
+
+                            // for a new record, copy the activeRollup map to the cachedRollup map
+                            if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.DeveloperName")) {
+                                var activeRollup = cmp.get("v.activeRollup");
+                                var cachedRollup = cmp.get("v.cachedRollup");
+                                for (var key in activeRollup) {
+                                    if (activeRollup.hasOwnProperty(key)) {
+                                        cachedRollup[key] = activeRollup[key];
+                                    }
+                                }
+                                cmp.set("v.cachedRollup", cachedRollup);
+                            }
+
+                            // Send a message with the changed or new Rollup to the RollupContainer Component
+                            var sendMessage = $A.get('e.ltng:sendMessage');
+                            sendMessage.setParams({
+                                'message': cmp.get("v.activeRollup"),
+                                'channel': 'rollupRecordChange'
+                            });
+                            sendMessage.fire();
+
                         } else {
-                            // No record id, so run this again
-                            if (counter < maxPollingCount) {
-                                console.log('Calling pollForDeploymentStatus again');
+                            // No record id, so run call this method again to check in another 1 second
+                            if (counter < maxPollingRetryCount) {
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
-                                console.log('Stop Polling Action');
+                                // When the counter hits the max, need to give the tell the user what happened
+                                this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveTimeout"));
+                                helper.toggleSpinner(cmp, false);
                             }
                         }
                     } else {
+                        // If an error is returned, parse the message, display and remove the spinner
                         var errors = response.getError();
                         var msg = "Unknown error";
                         if (errors && errors[0] && errors[0].message) {
                             msg = errors[0].message;
                         }
-                        helper.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), msg);
+                        helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
                         window.clearTimeout(poller);
                         helper.toggleSpinner(cmp, false);
                     }
                 });
                 $A.enqueueAction(action);
-            }), (1000 + (maxPollingCount*10)) /* query every 1 second with a small multiplier */
+            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
         );
     },
 
@@ -992,7 +1001,7 @@
     getRollupRecord : function(cmp, helper, recordId) {
         //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
         if (recordId !== null) {
-            this.toggleSpinner(cmp, true);
+            helper.toggleSpinner(cmp, true);
             var action = cmp.get("c.getRollupById");
             action.setParams({id: recordId});
             action.setCallback(this, function (response) {
@@ -1030,6 +1039,27 @@
     },
 
     /**
+     * @description Show a message on the screen
+     * @param cmp Relevant Component
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast : function(cmp, type, title, message) {
+        console.log(message);
+        cmp.set("v.notificationClasses", "notification-" + type);
+        cmp.set("v.notificationMessage", message);
+        // TODO Get Toasts to work or replace with something better
+        /*var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "type":type,
+            "title": title,
+            "message": message
+        });
+        toastEvent.fire();*/
+    },
+
+    /**
      * @description Show or Hide the page spinner
      * @param cmp
      * @param showSpinner - true to show; false to hide
@@ -1042,5 +1072,4 @@
             $A.util.addClass(spinner, "slds-hide");
         }
     }
-
 })
