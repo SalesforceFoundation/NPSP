@@ -130,6 +130,8 @@ public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model.
+    * @param targetObjectNames list of target objects used in rollups
+    * @param detailObjectNames list of detail objects used in rollups
     * @return model with optional rollup and fields with data types
     */
     @AuraEnabled
@@ -254,6 +256,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
     * @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
+    * @param id the filter group ID
     * @return a FilterGroup__mdt record and related FilterRule__mdt records.
     */
 
@@ -343,6 +346,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
     /*******************************************************************************************************
     @description Fetches all field labels, mapped to their data types, for a list of objects.
+    * @param summaryField a summary field already being used to include in the type list
+    * @param targetObjectNames list of target or summary objects to query
+    * @param detailObjectNames list of detail or objects to rollup to query
     * @return a map of strings to string-string maps. Map<String,Map<String,String>>
     */
 
@@ -422,6 +428,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'gauLabel' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
+                'gauName' => Schema.SObjectType.General_Accounting_Unit__c.getName(),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
@@ -477,6 +484,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
     *              Includes an exception for a set summary field on the rollup detail.
     * @param objectName the name of the object to look up
+    * @param selectedField the name of a summary field already in use
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
     public static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {

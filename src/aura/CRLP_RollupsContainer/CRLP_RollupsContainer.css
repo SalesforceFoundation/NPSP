@@ -2,6 +2,7 @@
     /**may want to use tokens instead?**/
     background-color: white;
 }
+/*changes lightningtable buttons into links*/
 .THIS .lightningTable :not(lightning-button-menu) > button{
     /*not() selector avoids editing action button*/
     border: none;
@@ -11,6 +12,7 @@
     font-size: 13px;
     background-color: transparent;
 }
+/*lightning table links hover*/
 .THIS .lightningTable button:hover{
     text-decoration: underline;
     background-color: transparent;

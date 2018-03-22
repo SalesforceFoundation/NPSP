@@ -67,7 +67,7 @@
             <aura:set attribute="else">
 
                 <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}" isRequired="{!v.isRequired}"/>
-                <lightning:select aura:id="{!v.auraId + 'Select'}"
+                <lightning:select aura:id="{!v.auraId + 'Select'}" class="rollupField"
                                   name="{!v.fieldLabel}"
                                   label="{!v.fieldLabel}"
                                   value="{!v.apiName}"

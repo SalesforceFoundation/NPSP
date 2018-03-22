@@ -1,9 +1,0 @@
-/*removes the extra required asterisk for tooltip workaround*/
-.THIS .slds-form-element__label > [title='required'] {
-    display: none;
-    visibility: hidden;
-}
-/*elongates input fields*/
-.THIS .slds-scope .slds-form--inline .slds-form-element__control{
-    display: inline;
-}

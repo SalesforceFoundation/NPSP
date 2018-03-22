@@ -142,7 +142,7 @@
                                 <aura:if isTrue="{!not(v.isReadOnly)}">
                                     <c:CRLP_Tooltip helpText="{!v.labels.createDescriptionHelp}" fieldLabel="{!v.labels.description}" isRequired="true"/>
                                 </aura:if>
-                                <lightning:textarea aura:id="descriptionInput"
+                                <lightning:textarea aura:id="descriptionInput" class="rollupField"
                                                     label="{!v.labels.description}"
                                                     name="{!v.labels.description}"
                                                     value="{!v.activeRollup.Description__c}"
@@ -214,7 +214,6 @@
                                 </aura:if>
                                 <lightning:input aura:id="integerInput"
                                                  type="{!v.isReadOnly ? 'text' : 'number'}"
-                                                 class="integerInputField"
                                                  label="{!v.selectedTimeBoundOperationLabel}"
                                                  value="{!v.activeRollup.Integer__c}"
                                                  readonly="{!v.isReadOnly}"

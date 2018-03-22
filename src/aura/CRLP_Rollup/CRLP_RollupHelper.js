@@ -77,8 +77,6 @@
         this.setIntegerYearList(cmp);
         this.onChangeTimeBoundOperationsOptions(cmp, false);
         this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
-        this.resetRollupTypes(cmp);
-        this.setRollupType(cmp);
     },
 
     /* @description: filters a picklist of fields by their type
@@ -130,7 +128,7 @@
         if (newFields.length > 0) {
             cmp.set("v.detailFields", newFields);
         } else {
-            newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
+            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
             cmp.set("v.detailFields", newFields);
         }
         //reset detail field to null to prompt user selection
@@ -576,6 +574,9 @@
 
         var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
         this.resetFields(cmp, dateObject, 'date');
+
+        this.resetRollupTypes(cmp);
+        this.setRollupType(cmp);
     },
 
     /* @description: resets the list of rollup types based on the selected summary object
@@ -610,10 +611,10 @@
                     label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
                     , summaryObject: 'Contact', name: 'npe01__OppPayment__c'
                 });
-        } else if (summaryObject === 'General_Accounting_Unit__c') {
+        } else if (summaryObject === labels.gauName) {
             templateList.push({
                 label: labels.allocationLabel + ' -> ' + labels.gauLabel
-                , summaryObject: 'General_Accounting_Unit__c', name: 'Allocation__c'
+                , summaryObject: labels.gauName, name: 'Allocation__c'
             });
         } else if (summaryObject === 'npe03__Recurring_Donation__c') {
             templateList.push({
@@ -697,14 +698,14 @@
             rollupType.summaryObject = 'Contact';
             rollupType.label = labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit;
 
-        } else if (detailObject === 'Allocation__c' && summaryObject === 'General_Accounting_Unit__c') {
+        } else if (detailObject === 'Allocation__c' && summaryObject === labels.gauName) {
             rollupType.name = 'Allocation__c';
-            rollupType.summaryObject = 'General_Accounting_Unit__c';
+            rollupType.summaryObject = labels.gauName;
             rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
 
-        } else if (detailObject === 'Opportunity' && summaryObject === 'General_Accounting_Unit__c') {
+        } else if (detailObject === 'Opportunity' && summaryObject === labels.gauName) {
             rollupType.name = 'Opportunity';
-            rollupType.summaryObject = 'General_Accounting_Unit__c';
+            rollupType.summaryObject = labels.gauName;
             rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
         } else if (detailObject === 'Opportunity' && summaryObject === 'npe03__Recurring_Donation__c'){
             rollupType.name = 'Opportunity';
@@ -812,7 +813,7 @@
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
-        if(mode === 'create' && (summaryObjectName === undefined || summaryFieldName === undefined )){
+        if(mode === 'create' && (!summaryObjectName || !summaryFieldName)){
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
         } else if (mode === 'create') {
@@ -852,7 +853,7 @@
     },
 
     /* @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't selected
-    * @param detailField: selected detail field
+    * @param detailField: selected detail field API name
     */
     verifyRollupSaveActive: function(cmp, detailField){
         console.log('in on change save active');

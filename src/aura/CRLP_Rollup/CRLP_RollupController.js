@@ -115,6 +115,8 @@
         var canSave = helper.validateFields(cmp);
         if(canSave){
             helper.saveRollup(cmp, activeRollup);
+            cmp.set("v.mode", 'view');
+            helper.updateRollupName(cmp);
         }
     },
 

@@ -26,7 +26,7 @@
 
                 var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
                     , {label: labels.contactLabel, name: 'Contact'}
-                    , {label: labels.gauLabel, name: 'General_Accounting_Unit__c'}
+                    , {label: labels.gauLabel, name: labels.gauName}
                     , {label: labels.rdLabel, name: 'npe03__Recurring_Donation__c'}];
                 cmp.set("v.summaryObjects", summaryObjects);
 
@@ -94,6 +94,7 @@
         //toggle grid and detail views, set detail mode to create
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isRollupDetail", true);
+        cmp.set("v.width", 8);
         cmp.set("v.detailMode", "create");
     },
 
@@ -103,6 +104,7 @@
         cmp.set("v.activeRecord", {});
         cmp.set("v.isFilterGroupsGrid", false);
         cmp.set("v.isFilterGroupDetail", true);
+        cmp.set("v.width", 8);
         cmp.set("v.detailMode", "create");
     },
 

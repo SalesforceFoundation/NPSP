@@ -24,7 +24,7 @@
 .THIS .slds-form-element__label > [title='required'] {
     display: none; visibility: hidden;
 }
-/*elongates input fields*/
-.THIS .slds-form-element__control{
+/*elongates rollup fields*/
+.THIS .rollupField > .slds-form-element__control{
     display: inline;
 }
