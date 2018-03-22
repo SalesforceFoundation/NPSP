@@ -524,6 +524,7 @@
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_NavigateEvent</members>
+        <members>CRLP_Tooltip</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -1081,8 +1082,9 @@
         <members>CRLP_AdvancedCustomizationHeader</members>
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
-        <members>CRLP_CreateRollupSummaryObjectHelpText</members>
-        <members>CRLP_CreateRollupSummaryFieldHelpText</members>
+        <members>CRLP_CreateRollupTargetObjectHelpText</members>
+        <members>CRLP_CreateRollupTargetFieldHelpText</members>
+        <members>CRLP_CreateRollupActiveHelpText</members>
         <members>CRLP_CreateRollupDescriptionHelpText</members>
         <members>CRLP_CreateRollupIntroHelpText</members>
         <members>CRLP_CreateRollupNameHelpText</members>
