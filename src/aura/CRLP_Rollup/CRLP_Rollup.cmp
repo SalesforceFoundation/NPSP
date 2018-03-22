@@ -74,6 +74,11 @@
     <aura:attribute name="isIncomplete" type="Boolean" description="Controls whether Save button is disabled"
                     access="private" default="false"/>
 
+    <!-- TODO Refactor the notifications dialog with something better at some point -->
+    <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
+                    access="private" default="slds-hide"/>
+    <aura:attribute name="notificationMessage" type="String" description="Message to display" access="private"/>
+
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
@@ -86,6 +91,28 @@
 
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
+
+        <div class="spinnerDiv">
+            <!--Hide the spinner by default-->
+            <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
+        </div>
+
+        <div class="slds-container_center" style="text-align: center;">
+            <section id="notificationWindow" class="{! 'slds-popover slds-popover_large slds-nubbin_bottom ' + v.notificationClasses}" role="dialog"
+                     aria-label="Dialog Title" aria-describedby="dialog-body-id-2">
+                <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" title="Close dialog"
+                    onclick="{!c.closeNotificationWindow}">X
+                    <!--<svg class="slds-button__icon" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#close" />
+                    </svg>-->
+                    <span class="slds-assistive-text">Close dialog</span>
+                </button>
+                <div class="slds-popover__body" id="dialog-body-id-2">
+                    <p>{!v.notificationMessage}</p>
+                </div>
+            </section>
+        </div>
+
         <form class="slds-form_stacked">
             <lightning:layout>
                 <lightning:layoutItem size="12" largeDeviceSize="8">
@@ -334,7 +361,6 @@
                 <aura:if isTrue="{!v.mode!='view'}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
-                            <!--TODO: this button needs an onclick function to save stuff-->
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
                             <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"
                                               disabled="{!v.isIncomplete}"/>

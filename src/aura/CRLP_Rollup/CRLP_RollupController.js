@@ -6,46 +6,7 @@
          /* queries active rollup ID to populate the full active rollup detail
          * switches the display to the detail view and sets the width for the buttons**/
         var activeRollupId = cmp.get("v.activeRollupId");
-
-        //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
-        if (activeRollupId !== null) {
-            var action = cmp.get("c.getRollupById");
-            action.setParams({id: activeRollupId});
-
-            action.setCallback(this, function (response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    //note: the duplicate parsing is important to avoid a shared reference
-                    cmp.set("v.activeRollup", helper.restructureResponse(response.getReturnValue()));
-                    cmp.set("v.cachedRollup", helper.restructureResponse(response.getReturnValue()));
-
-                    //change mode needs to be fired here because the sibling change of mode isn't being registered
-                    //TODO: review this since sibling isn't being used now
-                    helper.changeMode(cmp);
-
-                }
-                else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-                }
-            });
-
-            $A.enqueueAction(action);
-
-        } else {
-
-            // creating a new Rollup
-
-        }
-
-        helper.setObjectAndFieldDependencies(cmp);
+        helper.getRollupRecord(cmp, helper, activeRollupId);
     },
 
     /* @description: fires when mode is changed
@@ -115,6 +76,11 @@
                 helper.onChangeDetailField(cmp, value, label);
             }
         }
+    },
+
+    closeNotificationWindow : function(cmp, event, helper) {
+        console.log('Close Window');
+        cmp.set("v.notificationClasses", "slds-hide");
     }
 
 })

@@ -413,9 +413,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
-                'savingMessage' => 'Saving',
-                'saveSuccess' => 'Successfully Saved',
-                'saveFail' => 'Error Saving Record',
+                'savingMessage' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'saveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'saveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
@@ -439,22 +439,67 @@ public with sharing class CRLP_RollupUI_SVC {
     /**
      * @description Handle the save (insert/update) of a Rollup__mdt record
      * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
-     * @return 'Success-########' (where ####### is the job id to look for) or an error message
+     * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
+     * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
+     * the insert (deployment) completes.
      */
     @auraEnabled
     public static String saveRollup(String rollupCMT) {
         try {
+            // For new records, the RecordName property will be null by default. The process of deploying the
+            // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
-            if (rollupCMTObj.recordName == null) {
-                rollupCMTObj.recordName = CRLP_RollupCMT.generateRecordName(rollupCMTObj.label);
-            }
 
+            // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+
+            // Trigger the asynchronous deployment process
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-            return SUCCESS_RESPONSE + '-' + jobId;
+
+            // Return the unique record DeveloperName value
+            return jobId + '-' + rollupCMTObj.recordName;
         } catch (Exception ex) {
-            return ex.getMessage() + '\n' + ex.getStackTraceString();
+            return 'ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString();
         }
     }
 
+    /**
+     * @description When a new Rollup record is inserted, the page will only have a unique DeveloperName value to match
+     * the record. However, to re-load the record and allow for editing we need to have the actual record Id.
+     * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
+     * @param jobId CMT Deployment Job Id to check the status for
+     * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
+     * @return Id or null
+     */
+    @auraEnabled
+    public static Id getDeploymentStatus(String jobId, String recordName) {
+        Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
+        system.debug('>> Querying deployment status for ' + jobId + '=' + crs.CMT_API_Status__c);
+        if (crs.CMT_API_Status__c != null) {
+            Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
+            if (deploymentStatus.containsKey(jobId)) {
+                String result = deploymentStatus.get(jobId);
+                if (result == 'Succeeded') {
+                    try {
+                        Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
+                        system.debug('>> rollupId=' + rollupId);
+                        return rollupId;
+                    } catch (Exception ex) {}
+                } else {
+                    List<String> errors = result.split('\n');
+                    String errMsg = '';
+                    for (String er : errors) {
+                        if (er.contains('>')) {
+                            er = er.split('>')[1];
+                            errMsg += er + '\n';
+                        }
+                    }
+                    throw new AuraHandledException(!String.isEmpty(errMsg) ? errMsg : result);
+                }
+            } else {
+                System.debug(jobId + ' not found in Map');
+            }
+        }
+        return null;
+    }
 }

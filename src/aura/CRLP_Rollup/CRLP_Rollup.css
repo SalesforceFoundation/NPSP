@@ -8,3 +8,12 @@
 .THIS .slds-input[readonly]{
     padding-left: .5rem;
 }
+.THIS .notification-info {
+    background-color: lightgrey;
+}
+.THIS .notification-success {
+    background-color: lightgreen;
+}
+.THIS .notification-error {
+    background-color: lightcoral;
+}

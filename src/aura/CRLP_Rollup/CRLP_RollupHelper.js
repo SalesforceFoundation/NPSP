@@ -687,7 +687,7 @@
         // Set the mode to view while the save is running
         cmp.set("v.mode", 'view');
 
-        // todo - Spinner?
+        this.toggleSpinner(cmp, true);
 
         //save record here
 
@@ -714,22 +714,37 @@
         action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('STATE' + state);
+            console.log('STATE=' + state);
             if (state === "SUCCESS") {
-                console.log('RESPONSE: ' + response.getReturnValue());
-                var data = response.getReturnValue();
-                this.showToast('success', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.saveSuccess"));
+                var responseText = response.getReturnValue();
+                // Response value will be one of the following
+                // - JobId-RecordDeveloperName
+                // - ERROR: Error Message
+                if (responseText.startsWith("ERROR")) {
+                    this.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), responseText);
+                    this.toggleSpinner(cmp, false);
+                } else {
+                    var jobId = responseText.split("-")[0];
+                    var recordName = responseText.split("-")[1];
 
+                    console.log('Response = ' + response.getReturnValue());
+                    console.log('Returned jobId = ' + jobId);
+                    console.log('Returned DeveloperName = ' + recordName);
+
+                    console.log('Calling pollForDeploymentStatus');
+                    this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+                }
             } else if (state === "ERROR") {
                 var errors = response.getError();
                 var msg = "Unknown error";
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                this.showToast('error', cmp.get("v.labels.saveFail"), msg);
+                this.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), msg);
+                this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast('info', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.savingMessage"));
+        this.showToast(cmp, 'info', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.savingMessage"));
         $A.enqueueAction(action);
     },
 
@@ -872,11 +887,13 @@
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
         } else if (mode === 'create') {
-            masterLabel = cmp.get("v.labels.rollupNew") + ' - ' + label;
+            // masterLabel = cmp.get("v.labels.rollupNew") + ' - ' + label;
+            masterLabel = "UDR: " + label;
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
-        } else if (summaryObjectName != undefined && summaryFieldName != undefined ) {
+        } else if (summaryObjectName !== undefined && summaryFieldName !== undefined ) {
             //only reset the name once summary object and field are selected for edit and clone modes
-            masterLabel = label;
+            // masterLabel = label;
+            masterLabel = "UDR: " + label;
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
         }
 
@@ -893,12 +910,16 @@
 
     /**
      * @description Show a message on the screen
+     * @param cmp Relevant Component
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
      */
-    showToast : function(type, title, message) {
+    showToast : function(cmp, type, title, message) {
         console.log(message);
+        cmp.set("v.notificationClasses", "notification-" + type);
+        cmp.set("v.notificationMessage", message);
+        // TODO Get Toasts to work or replace with something better
         /*var toastEvent = $A.get("e.force:showToast");
         toastEvent.setParams({
             "type":type,
@@ -906,5 +927,120 @@
             "message": message
         });
         toastEvent.fire();*/
+    },
+
+    /**
+     * @description
+     * @param cmp Relevant Component
+     * @param jobId The returns CMT deployment job id to query status for
+     * @param recordName Uniqude record name value (that was just inserted/updated) to query for.
+     */
+    pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
+        var helper=this;
+        var maxPollingCount = 15;
+        var poller = window.setTimeout(
+            $A.getCallback(function() {
+                counter++;
+                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
+                var action = cmp.get("c.getDeploymentStatus");
+                action.setParams({jobId: jobId, recordName: recordName});
+                action.setCallback(this, function (response) {
+                    console.log('getDeploymentStatus.callback');
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        var recordId = response.getReturnValue();
+                        console.log('recordId=' + recordId);
+                        // if there is a record id response
+                        if (recordId !== undefined && recordId !== null) {
+                            cmp.set("v.activeRollupId", recordId);
+                            helper.getRollupRecord(cmp, recordId);
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            this.showToast(cmp, 'success', cmp.get("v.labels.savingMessage"), cmp.get("v.labels.saveSuccess"));
+                        } else {
+                            // No record id, so run this again
+                            if (counter < maxPollingCount) {
+                                console.log('Calling pollForDeploymentStatus again');
+                                helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
+                            } else {
+                                console.log('Stop Polling Action');
+                            }
+                        }
+                    } else {
+                        var errors = response.getError();
+                        var msg = "Unknown error";
+                        if (errors && errors[0] && errors[0].message) {
+                            msg = errors[0].message;
+                        }
+                        helper.showToast(cmp, 'error', cmp.get("v.labels.saveFail"), msg);
+                        window.clearTimeout(poller);
+                        helper.toggleSpinner(cmp, false);
+                    }
+                });
+                $A.enqueueAction(action);
+            }), (1000 + (maxPollingCount*10)) /* query every 1 second with a small multiplier */
+        );
+    },
+
+    /**
+     * @description Retrieve the specified Rollup__mdt record using the record Id and initialize the page components
+     * with the data
+     * @param cmp Component
+     * @param helper This helper controller
+     * @param recordId Rollup__mdt.Id
+     */
+    getRollupRecord : function(cmp, helper, recordId) {
+        //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
+        if (recordId !== null) {
+            this.toggleSpinner(cmp, true);
+            var action = cmp.get("c.getRollupById");
+            action.setParams({id: recordId});
+            action.setCallback(this, function (response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    //note: the duplicate parsing is important to avoid a shared reference
+                    cmp.set("v.activeRollup", this.restructureResponse(response.getReturnValue()));
+                    cmp.set("v.cachedRollup", this.restructureResponse(response.getReturnValue()));
+
+                    //change mode needs to be fired here because the sibling change of mode isn't being registered
+                    //TODO: review this since sibling isn't being used now
+                    helper.changeMode(cmp);
+
+                } else if (state === "ERROR") {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            console.log("Error message: " +
+                                errors[0].message);
+                        }
+                    } else {
+                        console.log("Unknown error");
+                    }
+                }
+                helper.toggleSpinner(cmp, false);
+            });
+
+            $A.enqueueAction(action);
+
+        } else {
+            // creating a new Rollup
+        }
+
+        this.setObjectAndFieldDependencies(cmp);
+    },
+
+    /**
+     * @description Show or Hide the page spinner
+     * @param cmp
+     * @param showSpinner - true to show; false to hide
+     */
+    toggleSpinner : function(cmp, showSpinner) {
+        var spinner = cmp.find("waitingSpinner");
+        if (showSpinner === true) {
+            $A.util.removeClass(spinner, "slds-hide");
+        } else {
+            $A.util.addClass(spinner, "slds-hide");
+        }
     }
+
 })

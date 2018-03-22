@@ -50,9 +50,6 @@ public class CRLP_DefaultConfigBuilder_SVC {
      */
     public static String convertLegacyRollupsIntoCustomizableRollups() {
 
-        // Set this to false so that all the RecordName values are generated with a friendly (and reproducible) value.
-        CRLP_RollupCMT.useRandomGeneratedDeveloperName = false;
-
         List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
