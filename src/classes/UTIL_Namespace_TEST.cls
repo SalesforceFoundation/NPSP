@@ -171,5 +171,7 @@ public with sharing class UTIL_Namespace_TEST {
         str = Label.healthSolutionInvalidScheduledJob;
         str = Label.healthDetailsScheduleJobs;
         str = Label.healthSolutionScheduleJobs;
+        str = Label.RD_ErrorMoreClosedWonOpportunitiesThanInstallments;
+        str = Label.RD_ErrorNotEnoughClosedValueForFixedLength;
     }
 }
