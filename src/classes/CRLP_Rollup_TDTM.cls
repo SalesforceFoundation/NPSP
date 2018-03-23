@@ -161,7 +161,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                     oppIds.add(pmt.npe01__Opportunity__c);
                 }
             }
-            opps = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds];
+            opps = [SELECT Id, AccountId, Primary_Contact__c, npe03__Recurring_Donation__c FROM Opportunity WHERE Id IN :oppIds];
 
         }
 
