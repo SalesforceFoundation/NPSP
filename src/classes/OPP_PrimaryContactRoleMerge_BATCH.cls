@@ -37,7 +37,7 @@
 public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sObject> {
 
     /******************************************************************************************************
-    * @description Batch start method. Run through all the Opportunities in the org.
+    * @description Batch start method. Runs through all the Opportunities in the org.
     */
     public Database.QueryLocator start(Database.batchableContext info) {
         return Database.getQueryLocator('SELECT Id FROM Opportunity');
@@ -45,7 +45,7 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
 
     /*******************************************************************************************************
     * @description Batch execute method. It gets the Opportunities with duplicate primary OCRs and runs 
-    * the logic that remove the Primary OCR duplicates.
+    * the logic that removes the Primary OCR duplicates.
     * @return void.
     ********************************************************************************************************/
     public void execute(Database.BatchableContext BC, List<Opportunity> scope) {
@@ -56,7 +56,7 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
 
         OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs  = new OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
         String settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
-        OPP_PrimaryContactRoleMerge.Errors errors = validateOpportunityOCRs(duplicatePrimaryOCRs, settingsRole);
+        validateOpportunityOCRs(duplicatePrimaryOCRs, settingsRole);
         mergeDuplicatePrimaryOCRs(duplicatePrimaryOCRs, settingsRole);
     }
 
@@ -85,12 +85,12 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
 
     /*******************************************************************************************************
     * @description Validates if the Opportunity primary OCRs contains at least the Role defined
-    * in the NPSP Settings. If there is no OCR with NPSP Settings Role, then log an error.
+    * in the NPSP Settings. If there is no OCR with NPSP Settings Role, then logs an error.
     * @param DuplicatePrimaryOCRs The Duplicate Primary OCRs object.
     * @param String The Role defined in NPSP Settings.
-    * @return Errors The errors object.
+    * @return void.
     ********************************************************************************************************/
-    private OPP_PrimaryContactRoleMerge.Errors validateOpportunityOCRs(OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
+    private void validateOpportunityOCRs(OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
         OPP_PrimaryContactRoleMerge.Errors errors = new OPP_PrimaryContactRoleMerge.Errors();
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
             OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs(opportunityRecord);
@@ -100,7 +100,6 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
             }
         }
         errors.processDML();
-        return errors;
     }
 
     /*******************************************************************************************************
@@ -113,6 +112,7 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     private void mergeDuplicatePrimaryOCRs(OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
             OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs(opportunityRecord);
+
             if (opportunityPrimaryOCRs.containsRole(settingsRole)) {
                 duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getBlankRole());
                 duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getRoleNotEquals(settingsRole));

@@ -31,12 +31,12 @@
 * @author Salesforce.org
 * @date 2018
 * @group Settings
-* @description Controller that runs the Batch Class that deletes the duplicate primary OCRs.
+* @description Controller that runs the Batch Class that removes the duplicate primary OCRs.
 */
 public with sharing class STG_PanelPrimaryContactRoleMerge_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
-    * @description The panel's constructor .
+    * @description The panel's constructor.
     */
     public STG_PanelPrimaryContactRoleMerge_CTRL() {
         isRunningBatch = false;
@@ -48,12 +48,12 @@ public with sharing class STG_PanelPrimaryContactRoleMerge_CTRL extends STG_Pane
     public override string idPanel() { return 'idPanelPrimaryContactRoleMergeBatch'; }
 
     /*********************************************************************************************************
-    * @description Whether we are running the Duplicate Primary OCRs Batch process.
+    * @description Whether we are running the Remove Duplicate Primary OCRs Batch process.
     */
     public boolean isRunningBatch { get; set; }
 
     /*********************************************************************************************************
-    * @description Action Method to run the Duplicate Primary OCRs Batch.
+    * @description Action Method to run the Remove Duplicate Primary OCRs Batch.
     * @return null 
     */
     public PageReference runBatch() {

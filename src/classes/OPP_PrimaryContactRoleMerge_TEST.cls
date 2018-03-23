@@ -221,8 +221,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             SELECT Object_Type__c, Full_Message__c 
             FROM Error__c
         ];
-        // No Error Log should be created.
-        System.assertEquals(0, errors.size());
+
+        System.assertEquals(0, errors.size(), 'No Error Log should be created.');
     }
     
     /*******************************************************************************************************

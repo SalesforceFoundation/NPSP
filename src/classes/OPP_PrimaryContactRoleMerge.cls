@@ -37,7 +37,7 @@
 
 public with sharing class OPP_PrimaryContactRoleMerge {
 
-    @TestVisible private static final String ERROR_MESSAGE = 'Unable to remove the duplicate primary OCRs from the Opportunity {0}. Review the Contact Roles on the Opportunity record, choose which is the correct one, and delete the others.';
+    @TestVisible private static final String ERROR_MESSAGE = Label.OCRRemovePrimaryDuplicateBatchErrorText;
     @TestVisible private static final String ERROR_CONTEXT = 'Remove Duplicate Primary OCRs';
     @TestVisible private static final String ERROR_SOBJECT = 'Opportunity';
     /*******************************************************************************************************
@@ -73,7 +73,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         }
 
         /*******************************************************************************************************
-        * @description Set the OCR in paramater as Primary OCR.
+        * @description Sets the OCR in paramater as Primary OCR.
         * @param OpportunityContactRole the OCR to set as primary.
         * @return void.
         ********************************************************************************************************/

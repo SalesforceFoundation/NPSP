@@ -989,6 +989,7 @@
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
+        <members>OCRRemovePrimaryDuplicateBatchErrorText</members>
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>

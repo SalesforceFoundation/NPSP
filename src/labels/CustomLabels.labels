@@ -734,6 +734,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Subject is a required field.</value>
     </labels>
     <labels>
+        <fullName>OCRRemovePrimaryDuplicateBatchErrorText</fullName>
+        <categories>Opportunity</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OCR Remove Primary Duplicate Batch Error Text</shortDescription>
+        <value>Unable to remove the duplicate primary OCRs from the Opportunity {0}. Review the Contact Roles on the Opportunity record, choose which is the correct one, and delete the others.</value>
+    </labels>
+    <labels>
         <fullName>OrganizationalOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>
