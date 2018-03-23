@@ -68,7 +68,7 @@
                     </div>
                     <div class="slds-media__body slds-size--10-of-12 slds-size_10-of-12">
                         <div class="slds-tile__title slds-grid">
-                            <p class="slds-truncate slds-col slds-small-size--2-of-3 slds-medium-size--1-of-2 slds-small-size_2-of-3 slds-medium-size_1-of-2"></p>
+                            <p class="slds-truncate slds-col slds-small-size--2-of-3 slds-medium-size--1-of-2 slds-small-size_2-of-3 slds-medium-size_1-of-2"><span class="slds-truncate className"></span></p>
                             <div class="slds-col slds-small-size--1-of-3 slds-medium-size--1-of-2 slds-small-size_1-of-3 slds-medium-size_1-of-2 slds-small-show">
                                 <span class="slds-badge completionBadge"><span class="status"></span></span>
                             </div>
@@ -167,6 +167,11 @@
                     if (!this.extendedStatus || this.extendedStatus === '') {
                         params.element.remove();
                     }
+                }
+            },
+            "className": {
+                "text": function() {
+                    return '' + this.className;
                 }
             }
         };
