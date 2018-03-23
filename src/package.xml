@@ -178,6 +178,9 @@
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_TEST</members>
+        <members>OPP_PrimaryContactRoleMerge</members>
+        <members>OPP_PrimaryContactRoleMerge_BATCH</members>
+        <members>OPP_PrimaryContactRoleMerge_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
