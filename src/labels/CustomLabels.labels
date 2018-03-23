@@ -3038,7 +3038,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionOCRDupPrimary</shortDescription>
-        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles.</value>
+        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles. To easily remove the duplicate Primary Opportunity Contact Roles (OCRs) in your org, go to &lt;strong&gt;NPSP Settings | Bulk Data Processes | Remove Duplicate Primary OCRs&lt;/strong&gt; and click &lt;strong&gt;Run Batch&lt;/strong&gt;.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRException</fullName>
@@ -5221,6 +5221,14 @@ This change updates Opportunity records. Before starting this process, we recomm
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
+        <fullName>stgHelpPrimaryContactRoleMergeBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text displayed on the Duplicate Primary OCRs Batch page</shortDescription>
+        <value>This utility removes any duplicate Primary Opportunity Contact Roles that exist in your org. This process may take some time, but you can safely close this page and the process will continue in the background.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6091,6 +6099,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelPaymentSettings</shortDescription>
         <value>Payment Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelPrimaryContactRoleMergeBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu title for the Duplicate Primary OCRs in NPSP Settings</shortDescription>
+        <value>Remove Duplicate Primary OCRs</value>
     </labels>
     <labels>
         <fullName>stgLabelRDFieldMap</fullName>
