@@ -45,10 +45,11 @@ private class OPP_OpportunityContactRoles_TEST {
     /*******************************************************************************************************
     * @description Role values to use in settings.
     */    
-    private static string donorRoleforTest = 'Donor';
-    private static string softCreditRoleforTest = 'Soft Credit';
-    private static string HonoreeRoleforTest = 'Honoree';
-    private static string NotificationRecipientRoleforTest = 'Notification Recipient';
+    private static final String OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
+    private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
+    private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
+    private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
+
 
     /*******************************************************************************************************
     * @description Test creation or upate of contact role for Organizational Account.
@@ -95,7 +96,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         System.assertEquals(con.Id, result[0].ContactId);
-        System.assertEquals(softCreditRoleforTest, result[0].Role);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
     }
 
     /*******************************************************************************************************
@@ -154,7 +155,7 @@ private class OPP_OpportunityContactRoles_TEST {
         
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR, 
-                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -175,11 +176,11 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
-        system.assertEquals(0, result.size());
+        System.assertEquals(0, result.size());
         
         Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
         //should have the contact's one to one account
-        system.assertEquals(null, oppResult[0].AccountId);
+        System.assertEquals(null, oppResult[0].AccountId);
     }
 
     /*******************************************************************************************************
@@ -188,7 +189,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void oppRolesForOneToOneContact() {
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneContact') return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -206,13 +207,13 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
-        system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
-        system.assertEquals(true, result[0].isPrimary);
+        System.assertEquals(1, result.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
         
        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
        //should have the contact's one to one account
-       system.assertEquals(createdContacts[0].AccountId, oppResult[0].AccountId);
+       System.assertEquals(createdContacts[0].AccountId, oppResult[0].AccountId);
     }
     
     /*******************************************************************************************************
@@ -221,7 +222,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void oppRolesForIndividualContact() {
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualContact') return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
               
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -238,16 +239,15 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp1;
         Test.stopTest();
 
-        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary,Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be one role
         System.assertEquals(1, result.size());
-        System.assertEquals(donorRoleforTest, result[0].Role);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
         System.assertEquals(true, result[0].isPrimary);
         
        Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
        //should be null account
-       system.assertEquals(null, oppResult[0].AccountId);
-
+       System.assertEquals(null, oppResult[0].AccountId);
     }
     
     /*******************************************************************************************************
@@ -256,7 +256,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void oppRolesForOneToOneAccount() {
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneAccount') return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
                 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -274,10 +274,9 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be a contact role
-        system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
-        system.assertEquals(true, result[0].isPrimary);
-        
+        System.assertEquals(1, result.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
     }
     
     /*******************************************************************************************************
@@ -286,7 +285,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void oppRolesForIndividualAccount() {
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualAccount') return;
 
-        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest));
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
               
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
@@ -305,14 +304,13 @@ private class OPP_OpportunityContactRoles_TEST {
 
         OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
         //should be one role
-        system.assertEquals(1, result.size());
-        system.assertEquals(donorRoleforTest, result[0].Role);
-        system.assertEquals(true, result[0].isPrimary);
+        System.assertEquals(1, result.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
         
         Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
         //should be null account
-        system.assertEquals(null, oppResult[0].AccountId);
-
+        System.assertEquals(null, oppResult[0].AccountId);
     }
     
     /*******************************************************************************************************
@@ -334,13 +332,13 @@ private class OPP_OpportunityContactRoles_TEST {
             
             OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
             //shouldn't be a contact role
-            system.assertEquals(0, result.size());
+            System.assertEquals(0, result.size());
             
             Opportunity[] oppResult = [SELECT AccountId FROM Opportunity WHERE Id = :opp1.Id];
             //shouldn't be an account
-            system.assertEquals(null, oppResult[0].AccountId);
+            System.assertEquals(null, oppResult[0].AccountId);
         } catch (exception e) {
-            system.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
+            System.assert(e.getMessage().contains(Label.npe01.Opportunity_Contact_Role_Error_Bad_Contact_Id));
         }
         Test.stopTest();
     }
@@ -353,7 +351,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void honoreeNotificationBlankSettings(){
         if (strTestOnly != '*' && strTestOnly != 'honoreeNotificationBlankSettings') return;
         
-        list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        List<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
         Opportunity opp = new Opportunity(
@@ -370,15 +368,15 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp;
         Test.stopTest();
 
-        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
-        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
-        system.assertEquals('do not overwrite me', queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should not be overwritten.');
+        List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        List<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        System.assertEquals('do not overwrite me', queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should not be overwritten.');
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id];
-        system.assertEquals(1,queryOCR.size(), 'Only one Opportunity Contact Role should be created.');
-        system.assertEquals(testCons[0].id, queryOCR[0].ContactId, 'Contact role should be for contact designated as primary.');
-        system.assertEquals(true, queryOCR[0].isPrimary, 'Contact role marked primary.');
+        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id];
+        System.assertEquals(1,queryOCR.size(), 'Only one Opportunity Contact Role should be created.');
+        System.assertEquals(testCons[0].id, queryOCR[0].ContactId, 'Contact role should be for contact designated as primary.');
+        System.assertEquals(true, queryOCR[0].isPrimary, 'Contact role marked primary.');
     }
 
     /*******************************************************************************************************
@@ -391,13 +389,13 @@ private class OPP_OpportunityContactRoles_TEST {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c(
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest,
-                Honoree_Opportunity_Contact_Role__c = HonoreeRoleforTest, 
-                Notification_Recipient_Opp_Contact_Role__c = NotificationRecipientRoleforTest
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
             )
         );
 
-        list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        List<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
         Opportunity opp = new Opportunity(
@@ -413,25 +411,25 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp;
         Test.stopTest();
 
-        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
-        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
-        system.assertEquals(queryCon[2].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
+        List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        List<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        System.assertEquals(queryCon[2].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        system.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
+        System.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
-        system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
-        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
-        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.');
+        System.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
+        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.');
 
-        system.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
-        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
-        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+        System.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        system.assertEquals(testCons[2].id,queryOCR[2].ContactId, 'Third OCR is for notification recipient contact.');
-        system.assertEquals(false,queryOCR[2].isPrimary, 'Notification recipient OCR is not marked primary.');
-        system.assertEquals(NotificationRecipientRoleforTest,queryOCR[2].Role, 'Notification recipient OCR has the correct role.');
+        System.assertEquals(testCons[2].id,queryOCR[2].ContactId, 'Third OCR is for notification recipient contact.');
+        System.assertEquals(false,queryOCR[2].isPrimary, 'Notification recipient OCR is not marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT, queryOCR[2].Role, 'Notification recipient OCR has the correct role.');
     }
 
     /*******************************************************************************************************
@@ -446,13 +444,13 @@ private class OPP_OpportunityContactRoles_TEST {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c(
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest,
-                Honoree_Opportunity_Contact_Role__c = HonoreeRoleforTest, 
-                Notification_Recipient_Opp_Contact_Role__c = NotificationRecipientRoleforTest
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
             )
         );
 
-        list<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        List<contact> testCons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
         insert testCons;
 
         Opportunity opp = new Opportunity(
@@ -464,20 +462,20 @@ private class OPP_OpportunityContactRoles_TEST {
         );
         insert opp;
 
-        list<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
-        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(queryCon[2].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        List<Contact> queryCon = [SELECT Id, Name FROM Contact WHERE Id IN :testCons];
+        List<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        System.assertEquals(queryCon[2].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
+        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
+        System.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
 
-        system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
-        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
-        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.');
+        System.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
+        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.');
 
-        system.assertEquals(testCons[2].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
-        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
-        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+        System.assertEquals(testCons[2].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
         opp.Honoree_Contact__c = testCons[1].id;
         opp.Notification_Recipient_Contact__c = testCons[0].id;
@@ -487,26 +485,25 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
 
         queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
-        system.assertEquals(queryCon[0].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
+        System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        System.assertEquals(queryCon[0].Name, queryOpp[0].Notification_Recipient_Name__c, 'Notifcation Recipient Name should be populated.');
 
         queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        system.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
+        System.assertEquals(2,queryOCR.size(), 'Two Opportunity Contact Roles should be created.');
         
-        system.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
-        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
-        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.');
+        System.assertEquals(testCons[0].id,queryOCR[0].ContactId, 'First OCR is for primary contact.');
+        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.');
 
-        system.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
-        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
-        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+        System.assertEquals(testCons[1].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
         opp.Honoree_Contact__c = null;
         update opp;
 
         queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assert(String.isBlank(queryOpp[0].Honoree_Name__c), 'Honoree Name should be deleted.');
-
+        System.assert(String.isBlank(queryOpp[0].Honoree_Name__c), 'Honoree Name should be deleted.');
     }
 
     /*******************************************************************************************************
@@ -519,9 +516,9 @@ private class OPP_OpportunityContactRoles_TEST {
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c(
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
-                npe01__Opportunity_Contact_Role_Default_role__c = donorRoleforTest,
-                Honoree_Opportunity_Contact_Role__c = HonoreeRoleforTest, 
-                Notification_Recipient_Opp_Contact_Role__c = NotificationRecipientRoleforTest
+                npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
             )
         );
 
@@ -536,17 +533,18 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact primaryCon = UTIL_UnitTestData_TEST.getContact();
         insert primaryCon;
 
-        list<Contact> queryCon = [SELECT AccountId FROM Contact where Id = :primaryCon.id];
+        List<Contact> queryCon = [SELECT AccountId FROM Contact WHERE Id = :primaryCon.id];
         Id hhAccountId = queryCon[0].AccountId;
 
-        list<contact> householdMembers = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        List<contact> householdMembers = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         householdMembers[0].AccountId = hhAccountId;
         householdMembers[1].AccountId = hhAccountId;
         insert householdMembers;
 
         queryCon = [SELECT Id, AccountId, Name FROM Contact WHERE Id IN :householdMembers OR Id = :primaryCon.id];
-        for (integer i=0; i<queryCon.size(); i++)
-            system.assertEquals(hhAccountId, queryCon[i].AccountId, 'Contacts should be in the same household.');
+        for (integer i=0; i<queryCon.size(); i++) {
+            System.assertEquals(hhAccountId, queryCon[i].AccountId, 'Contacts should be in the same household.');
+        }
 
         Opportunity opp = new Opportunity(
             Name = 'Test',
@@ -560,22 +558,83 @@ private class OPP_OpportunityContactRoles_TEST {
         insert opp;
         Test.stopTest();
 
-        list<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
-        system.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
+        List<Opportunity> queryOpp = [SELECT Id, Notification_Recipient_Name__c, Honoree_Name__c FROM Opportunity WHERE Id = :opp.id];
+        System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
-        list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        system.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
+        System.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
-        system.assertEquals(primaryCon.id,queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
-        system.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
-        system.assertEquals(donorRoleforTest,queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
+        System.assertEquals(primaryCon.id,queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
+        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
 
-        system.assertEquals(householdMembers[0].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
-        system.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
-        system.assertEquals(HonoreeRoleforTest,queryOCR[1].Role, 'Honoree OCR has the correct role.');
+        System.assertEquals(householdMembers[0].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        system.assertEquals(householdMembers[1].id,queryOCR[2].ContactId, 'Third OCR is for household member contact.');
-        system.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
-        system.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
+        System.assertEquals(householdMembers[1].id,queryOCR[2].ContactId, 'Third OCR is for household member contact.');
+        System.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
+        System.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
     }
+
+
+    /*********************************************************************************************************
+    * @description Tests updating the Opportunity's Primary Contact to Contact that has an associated
+    *               Opportunity Contact Role.
+    * verify:
+    *   The updated Opportunity Contact Role has the IsPrimary flag selected.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testUpdatingPrimaryContact() {
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
+        insert testContacts;
+
+        Opportunity oppty = new Opportunity(
+            Name = 'Update Primary Contact Test Oppty',
+            AccountId = testContacts[0].AccountId,
+            Primary_Contact__c = testContacts[0].Id,
+            Amount = 100,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+
+        Test.startTest();
+        insert oppty;
+
+        List<OpportunityContactRole> ocrs = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(1, ocrs.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, ocrs[0].Role);
+        System.assertEquals(true, ocrs[0].IsPrimary);
+
+        OpportunityContactRole ocr = new OpportunityContactRole();
+        ocr.OpportunityId = oppty.id;
+        ocr.ContactId =  testContacts[1].Id;
+        ocr.Role = OPPORTUNITY_CONTACT_ROLE_INFLUENCER;
+        insert ocr;
+
+        ocrs = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(2, ocrs.size());
+
+        for (OpportunityContactRole eachOCR : ocrs) {
+            if (eachOCR.IsPrimary) {
+                System.assertEquals(testContacts[0].Id, eachOCR.ContactId);
+                System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, eachOCR.Role);
+            } else {
+                System.assertEquals(testContacts[1].Id, eachOCR.ContactId);
+                System.assertEquals(OPPORTUNITY_CONTACT_ROLE_INFLUENCER, eachOCR.Role);
+            }
+        }
+
+        oppty.Primary_Contact__c = testContacts[1].Id;
+        update oppty;
+        Test.stopTest();
+
+        List<OpportunityContactRole> ocrsUpdated = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
+        System.assertEquals(1, ocrsUpdated.size());
+
+        System.assertEquals(true, ocrsUpdated[0].IsPrimary);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, ocrsUpdated[0].Role);
+        System.assertEquals(oppty.Primary_Contact__c, testContacts[1].Id);
+        System.assertEquals(oppty.Primary_Contact__c, ocrsUpdated[0].ContactId);
+    }
+
 }

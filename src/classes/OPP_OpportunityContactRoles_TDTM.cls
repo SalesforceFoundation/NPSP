@@ -413,7 +413,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     dmlWrapper.objectsToUpdate.add((SObject)newConOCR);
                 //no old contact to switch with, just delete the new contact's old OCR
                 } else {
-                    dmlWrapper.objectsToDelete.add((SObject)newConOCR);
+                    // To ensure newly created OCRs have the correct values set e.g., IsPrimary selected
+                    // for all Contacts, the old OCR needs to be deleted immediately.
+                    delete newConOCR;
                 }
             }
         }
