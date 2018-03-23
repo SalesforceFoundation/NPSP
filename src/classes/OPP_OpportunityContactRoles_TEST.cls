@@ -261,7 +261,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',
@@ -291,7 +291,7 @@ private class OPP_OpportunityContactRoles_TEST {
         Contact con = UTIL_UnitTestData_TEST.getContact();
         insert con;
         
-        Contact[] createdContacts = [SELECT AccountId, Account.npe01__SYSTEMIsIndividual__c FROM Contact WHERE Id = :con.id];
+        Contact[] createdContacts = [SELECT AccountId FROM Contact WHERE Id = :con.id];
 
         Opportunity opp1 = new Opportunity(
             Name = 'Apex Test Opp1',

@@ -341,7 +341,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 Opportunity newOpp = listOpps[i];
                 Opportunity oldOpp = listOldOpps[i];
 
-                Boolean isIndividualAccount = (oppAccountDetails != null  && oppAccountDetails.containsKey(newOpp.AccountId)) ? oppAccountDetails.get(newOpp.AccountId).npe01__SYSTEMIsIndividual__c : null;
+                Boolean isIndividualAccount = (oppAccountDetails.containsKey(newOpp.AccountId))
+                                            ? oppAccountDetails.get(newOpp.AccountId).npe01__SYSTEMIsIndividual__c
+                                            : null;
 
                 //first, manage primary contact role if the primary contact has changed
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_PRIMARY_CONTACT)) {
