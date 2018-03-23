@@ -165,6 +165,10 @@
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupRecordChange') {
+
+            // TODO Move logic out of the apex controller to populate CreditTpe and activeIcon values
+            // Call a helper method in this Component to do that work after retrieving the collections
+
             // message will inserted or updated the Rollup__mdt record
             var rollupsList = cmp.get("v.rollupList")
             rollupsList.forEach(function(row) {

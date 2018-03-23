@@ -992,53 +992,6 @@
     },
 
     /**
-     * @description Retrieve the specified Rollup__mdt record using the record Id and initialize the page components
-     * with the data
-     * @param cmp Component
-     * @param helper This helper controller
-     * @param recordId Rollup__mdt.Id
-     */
-    getRollupRecord : function(cmp, helper, recordId) {
-        //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
-        if (recordId !== null) {
-            helper.toggleSpinner(cmp, true);
-            var action = cmp.get("c.getRollupById");
-            action.setParams({id: recordId});
-            action.setCallback(this, function (response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    //note: the duplicate parsing is important to avoid a shared reference
-                    cmp.set("v.activeRollup", this.restructureResponse(response.getReturnValue()));
-                    cmp.set("v.cachedRollup", this.restructureResponse(response.getReturnValue()));
-
-                    //change mode needs to be fired here because the sibling change of mode isn't being registered
-                    //TODO: review this since sibling isn't being used now
-                    helper.changeMode(cmp);
-
-                } else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-                }
-                helper.toggleSpinner(cmp, false);
-            });
-
-            $A.enqueueAction(action);
-
-        } else {
-            // creating a new Rollup
-        }
-
-        this.setObjectAndFieldDependencies(cmp);
-    },
-
-    /**
      * @description Show a message on the screen
      * @param cmp Relevant Component
      * @param type - error, success, info

@@ -8,6 +8,8 @@
 .THIS .slds-input[readonly]{
     padding-left: .5rem;
 }
+
+/* popover box background colors by status */
 .THIS .notification-info {
     background-color: lightgrey;
 }
