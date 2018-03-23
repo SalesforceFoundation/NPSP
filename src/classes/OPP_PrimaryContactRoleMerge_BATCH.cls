@@ -50,8 +50,11 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     ********************************************************************************************************/
     public void execute(Database.BatchableContext BC, List<Opportunity> scope) {
         List<AggregateResult> primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(scope);
-        OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs  = new OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
+        if (primaryOCRsAggregateResult.isEmpty()) {
+            return;
+        }
 
+        OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs  = new OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
         String settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
         OPP_PrimaryContactRoleMerge.Errors errors = validateOpportunityOCRs(duplicatePrimaryOCRs, settingsRole);
         mergeDuplicatePrimaryOCRs(duplicatePrimaryOCRs, settingsRole);

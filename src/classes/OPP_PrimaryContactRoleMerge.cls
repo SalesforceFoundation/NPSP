@@ -72,14 +72,6 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         }
 
         /*******************************************************************************************************
-        * @description Checks if this Object contains Opportunities and OCRs.
-        * @return Boolean.
-        ********************************************************************************************************/
-        public Boolean isEmpty() {
-            return opportunityRecords.isEmpty() || ocrRecords.isEmpty();
-        }
-
-        /*******************************************************************************************************
         * @description Set the OCR in paramater as Primary OCR.
         * @param OpportunityContactRole the OCR to set as primary.
         * @return void.
