@@ -37,7 +37,7 @@
 private class CRLP_RollupContact_TEST {
 
     private Enum TestType {
-        TestTrigger, TestQueueuable, TestBatch, testSkewBatch
+        TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary
     }
 
     /**
@@ -170,6 +170,9 @@ private class CRLP_RollupContact_TEST {
     static testMethod void test_Rollups_Trigger() {
         testRollupsServices(TestType.TestTrigger);
     }
+    static testMethod void test_Rollups_AlwaysRollupToPrimaryEnabled() {
+        testRollupsServices(TestType.TestWithAlwaysRollupToPrimary);
+    }
 
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Contact using
@@ -183,19 +186,26 @@ private class CRLP_RollupContact_TEST {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
-                        Rollups_Account_SkewMode_Batch_Size__c = 200,
-                        Rollups_Contact_SkewMode_Batch_Size__c = 200,
-                        Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Contact_Batch_Size__c = 20
-                ));
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
+                Rollups_Account_SkewMode_Batch_Size__c = 200,
+                Rollups_Contact_SkewMode_Batch_Size__c = 200,
+                Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+                Rollups_Account_Batch_Size__c = 20,
+                Rollups_Contact_Batch_Size__c = 20
+            ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = true
-        ));
+            ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Always_Rollup_to_Primary_Contact__c = (tt == TestType.TestWithAlwaysRollupToPrimary)
+            ));
 
         // Create the test data
         mockRollupCMTValues();
@@ -274,11 +284,13 @@ private class CRLP_RollupContact_TEST {
         ));
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
+        Decimal orgDonationAmt = 50000;
+        Date orgDonationDate = Date.Today().addDays(-30);
         opps.add(new Opportunity (
                 Name = 'Test Org Opp ' + c.FirstName + ' ' + c.LastName,
                 AccountId = orgAcct.Id,
-                Amount = 50000,
-                CloseDate = Date.Today().addDays(-30),
+                Amount = orgDonationAmt,
+                CloseDate = orgDonationDate,
                 StageName = closedStage,
                 Primary_Contact__c = conId,
                 RecordTypeId = rtId,
@@ -297,6 +309,8 @@ private class CRLP_RollupContact_TEST {
         WHERE npe01__Opportunity__r.IsWon = true AND npe01__Written_Off__c = false AND Id != :pmt1.Id LIMIT 1];
         pmt2.npe01__Written_Off__c = true;
         pmt2.npe01__Paid__c = false;
+
+        Decimal totalPayments = totalDonations - baseAmt;
 
         Test.startTest();
 
@@ -320,7 +334,7 @@ private class CRLP_RollupContact_TEST {
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{conId}, null);
-        } else if (tt == TestType.TestQueueuable) {
+        } else if (tt == TestType.TestQueueuable || tt == TestType.TestWithAlwaysRollupToPrimary) {
             System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{conId}));
         }
         Test.stopTest();
@@ -329,19 +343,31 @@ private class CRLP_RollupContact_TEST {
         String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
 
+        // If the AlwaysRollupToPrimaryContact field is checked, the totals will include the org donation
+        if (tt == TestType.TestWithAlwaysRollupToPrimary) {
+            totalDonations += orgDonationAmt;
+            last365Days += orgDonationAmt;
+            maxAmt = orgDonationAmt;
+            cnt++;
+            bestGiftYear = orgDonationDate.year().format().replace(',', '');
+            if (orgDonationDate > lastCloseDate) {
+                lastCloseDate = orgDonationDate;
+            }
+        }
+
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals(maxAmt, c.npo02__LargestAmount__c);
         System.assertEquals(closeDate, c.npo02__FirstCloseDate__c);
         System.assertEquals(lastCloseDate, c.npo02__LastCloseDate__c);
-        System.assertEquals((totalDonations / cnt), c.npo02__AverageAmount__c);
+        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), c.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, c.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(bestGiftYear, c.npo02__Best_Gift_Year__c);
         System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
         System.assertEquals('New', c.Department);
 
         // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in
-        System.assertEquals(totalDonations - baseAmt, c.First_Soft_Credit_Amount__c,
+        System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
