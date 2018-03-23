@@ -69,6 +69,11 @@ public class CMT_FilterRuleEvaluation_SVC {
      */
     public static Boolean evaluateFilterGroup(List<SObject> detailRows, Id filterGroupId) {
 
+        // If there is no filter group to evaluate against, return true to support an 'all rows' type scenario
+        if (filterGroupId == null) {
+            return true;
+        }
+
         // Build a unique key of a concatenation of the Id's of all the detail rows.
         String cacheKey = filterGroupId + '.';
         for (SObject record : detailRows) {
