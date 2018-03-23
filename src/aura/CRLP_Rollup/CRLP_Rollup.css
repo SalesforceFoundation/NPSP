@@ -1,14 +1,17 @@
-.THIS .slds-checkbox, .THIS .rollupCheckbox{
+.THIS .slds-checkbox, .THIS .rollupOutputCheckbox{
     padding-top: 2em;
 }
+/*margin is for view mode indentation*/
 .THIS .slds-form-element__label{
     margin-left: .5rem;
     font-size: 13px;
 }
+.THIS .slds-form-element__icon{
+    margin-left: .2rem;
+}
 .THIS .slds-input[readonly]{
     padding-left: .5rem;
 }
-
 /* popover box background colors by status */
 .THIS .notification-info {
     background-color: lightgrey;
@@ -18,4 +21,20 @@
 }
 .THIS .notification-error {
     background-color: lightcoral;
+}
+/*formatting for edit mode checkboxes*/
+.THIS .rollupInputCheckbox{
+    display: inline-flex;
+}
+/*lightning input checkbox reset margin from checkbox*/
+.THIS .rollupInputCheckbox + .slds-form-element__label{
+    margin-left: 0rem;
+}
+/*removes the extra required asterisk for tooltip workaround*/
+.THIS .slds-form-element__label > [title='required'] {
+    display: none; visibility: hidden;
+}
+/*elongates rollup fields*/
+.THIS .rollupField > .slds-form-element__control{
+    display: inline;
 }

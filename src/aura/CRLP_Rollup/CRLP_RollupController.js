@@ -1,51 +1,84 @@
 ({
     /* @description: fired on each init of rollup
+    *   queries active rollup ID to populate the full active rollup detail
+    *   sets operations and object details
     */
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
-         /* queries active rollup ID to populate the full active rollup detail
+         /*
          * switches the display to the detail view and sets the width for the buttons**/
+        var labels = cmp.get("v.labels");
+        var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+            , {label: labels.labelPartialSoftCredit, name: labels.objectPartialSoftCredit}
+            , {label: labels.labelPayment, name: labels.objectPayment}
+            , {label: labels.labelAllocation, name: labels.objectAllocation}];
+        var summaryObjects = cmp.get("v.summaryObjects");
+        cmp.set("v.detailObjects", detailObjects);
+
+        //put only the object names into a list
+        var summaryNames = summaryObjects.map(function (summaryObj, index, array) {
+            return summaryObj.name;
+        });
+        var detailNames = detailObjects.map(function (detailObj, index, array) {
+            return detailObj.name;
+        });
+
         var activeRollupId = cmp.get("v.activeRollupId");
-
-        //retrieve full active rollup information only if ID is passed to the component in view, edit or clone mode
-        if (activeRollupId !== null) {
-            helper.toggleSpinner(cmp, true);
-            var action = cmp.get("c.getRollupById");
-            action.setParams({id: activeRollupId});
-            action.setCallback(this, function (response) {
-                var state = response.getState();
-                if (state === "SUCCESS") {
-                    //note: the duplicate parsing is important to avoid a shared reference
-                    cmp.set("v.activeRollup", helper.restructureResponse(response.getReturnValue()));
-                    cmp.set("v.cachedRollup", helper.restructureResponse(response.getReturnValue()));
-
-                    //change mode needs to be fired here because the sibling change of mode isn't being registered
-                    //TODO: review this since sibling isn't being used now
-                    helper.changeMode(cmp);
-
-                } else if (state === "ERROR") {
-                    var errors = response.getError();
-                    if (errors) {
-                        if (errors[0] && errors[0].message) {
-                            console.log("Error message: " +
-                                errors[0].message);
-                        }
-                    } else {
-                        console.log("Unknown error");
-                    }
-                }
-                helper.toggleSpinner(cmp, false);
-            });
-
-            $A.enqueueAction(action);
-
-        } else {
-
-            // creating a new Rollup
-
+        if(activeRollupId === null){
+            activeRollupId = '';
         }
+        var action = cmp.get("c.setupRollupDetail");
 
-        helper.setObjectAndFieldDependencies(cmp);
+        action.setParams({rollupId: activeRollupId, targetObjectNames: summaryNames, detailObjectNames: detailNames});
+
+        helper.toggleSpinner(cmp, true);
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var data = response.getReturnValue();
+                var model = JSON.parse(data);
+                console.log(model.rollup);
+                console.log(model.fieldsByDataType);
+                //note: the duplicate parsing is important to avoid a shared reference
+                if(activeRollupId){
+                    console.log('before set active rollups')
+                    cmp.set("v.activeRollup", helper.restructureResponse(model.rollup));
+                    cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
+                }
+
+                var tOps = [];
+                for(var j in model.timeBoundOperations){
+                    tOps.push({name: j, label: model.timeBoundOperations[j]});
+                }
+                tOps.sort(function(a,b){
+                    return a.name > b.name;
+                });
+                cmp.set("v.timeBoundOperations", tOps);
+
+                cmp.set("v.operations", model.operations);
+                cmp.set("v.objectDetails", model.fieldsByDataType);
+                console.log('before change mode');
+                //change mode needs to be fired here because the sibling change of mode isn't being registered
+                // todo: check if this is necessary
+                helper.changeMode(cmp);
+                helper.setObjectAndFieldDependencies(cmp);
+
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+            helper.toggleSpinner(cmp, false);
+        });
+
+        $A.enqueueAction(action);
     },
 
     /* @description: fires when mode is changed
@@ -60,7 +93,7 @@
     * else resets mode to view to become display-only and resets rollup values
     */
     onCancel: function(cmp, event, helper) {
-        //todo: should we make this more sensitive to a clone from edit mode
+        //todo: should we make this more sensitive to a clone from edit mode: will need to also factor in uniqueSummaryFieldCheck type check
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
             //set off cancel event for container
             var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
@@ -81,7 +114,12 @@
     */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
-        helper.saveRollup(cmp, activeRollup);
+        var canSave = helper.validateFields(cmp);
+        if(canSave){
+            helper.saveRollup(cmp, activeRollup);
+            cmp.set("v.mode", 'view');
+            helper.updateRollupName(cmp);
+        }
     },
 
     /* @description: listens for a message from the select field cmp to trigger a change in the rollup information
@@ -101,18 +139,22 @@
                 helper.onChangeSummaryObject(cmp, value, label);
             } else if (fieldName === 'summaryField'){
                 helper.onChangeSummaryField(cmp, label);
+            } else if (fieldName ==='operation'){
+                helper.onChangeOperation(cmp, value);
+            } else if(fieldName === 'timeBoundOperation'){
+                helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
+            } else if(fieldName === 'integer'){
+                helper.onChangeInteger(cmp, value);
             } else if (fieldName === 'rollupType'){
                 helper.onChangeRollupType(cmp, value, label);
             } else if (fieldName === 'filterGroup'){
                 helper.onChangeFilterGroup(cmp, label);
-            } else if (fieldName ==='operation'){
-                helper.onChangeOperation(cmp, value);
-            } else if(fieldName === 'yearlyOperation'){
-                helper.onChangeYearlyOperationsOptions(cmp, true, label);
-            } else if(fieldName === 'integer'){
-                helper.onChangeInteger(cmp, value);
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
+            } else if(fieldName === 'amountField'){
+                cmp.set("v.activeRollup.Amount_Field__r.Label", label);
+            } else if(fieldName === 'dateField'){
+                cmp.set("v.activeRollup.Date_Field__r.Label", label);
             }
         }
     },
