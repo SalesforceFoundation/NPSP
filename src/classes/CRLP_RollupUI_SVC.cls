@@ -505,7 +505,7 @@ public with sharing class CRLP_RollupUI_SVC {
             //check that summary field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.contains('system') && isValidType && !isRolledUp)
+            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('system') && isValidType && !isRolledUp)
                     || selectedField.equals(dfr.name)){
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);

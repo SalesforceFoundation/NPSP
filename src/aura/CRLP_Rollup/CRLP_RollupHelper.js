@@ -636,7 +636,7 @@
     /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
     * @param apiName: the name of the field. ex: 'General_Account_Unit__c'
     * @param entityList: list of fields to search
-    * @param label: field label that matches the apiName
+    * @return label: field label that matches the apiName
     */
     retrieveFieldLabel: function (apiName, entityList) {
         var label;

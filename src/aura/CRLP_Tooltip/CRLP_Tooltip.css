@@ -1,35 +1,6 @@
-.THIS .slds-icon{
-    width: 1.1rem !important;
-}
-
-.THIS .ms-help-popup-in-header {
+.THIS #divHelp {
     display: inline-block;
-    position: absolute !important;
-    top: -10px !important;
-    left: 55px !important;
-    margin-left: -1rem !important;
-    max-width: 20rem !important;
-    overflow: visible !important;
-    text-transform: none !important;
-}
-
-.THIS .ms-help-popup-in-header:before, .THIS .ms-help-popup-in-header:after {
-    width: 0.8rem !important;
-    height: 0.8rem !important;
     position: absolute;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    content: '';
-    background-color: inherit;
-    top: 50%;
-    left: -0.4rem !important;
-    margin-top: -.8rem !important;
-}
-
-.THIS .ms-help-popup-body {
-    white-space: unset !important;
-    word-break: keep-all;
-    overflow-wrap: break-word;
-    width: 200px;
+    top: -10px;
+    left: -15px;
 }

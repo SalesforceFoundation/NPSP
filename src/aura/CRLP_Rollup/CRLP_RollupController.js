@@ -149,6 +149,10 @@
                 helper.onChangeFilterGroup(cmp, label);
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
+            } else if(fieldName === 'amountField'){
+                cmp.set("v.activeRollup.Amount_Field__r.Label", label);
+            } else if(fieldName === 'dateField'){
+                cmp.set("v.activeRollup.Date_Field__r.Label", label);
             }
         }
     }
