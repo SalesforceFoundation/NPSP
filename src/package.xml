@@ -518,13 +518,13 @@
     </types>
     <types>
         <members>CRLP_CancelEvent</members>
-        <members>CRLP_CreateRollup</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
         <members>CRLP_NavigateEvent</members>
+        <members>CRLP_Tooltip</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -1081,8 +1081,9 @@
         <members>CRLP_AdvancedCustomizationHeader</members>
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
-        <members>CRLP_CreateRollupSummaryObjectHelpText</members>
-        <members>CRLP_CreateRollupSummaryFieldHelpText</members>
+        <members>CRLP_CreateRollupTargetObjectHelpText</members>
+        <members>CRLP_CreateRollupTargetFieldHelpText</members>
+        <members>CRLP_CreateRollupActiveHelpText</members>
         <members>CRLP_CreateRollupDescriptionHelpText</members>
         <members>CRLP_CreateRollupIntroHelpText</members>
         <members>CRLP_CreateRollupNameHelpText</members>
@@ -1093,6 +1094,9 @@
         <members>CRLP_CreateRollupTimeBoundOperationHelpText</members>
         <members>CRLP_CreateRollupYearsAgoHelpText</members>
         <members>CRLP_CreateRollupDaysBackHelpText</members>
+        <members>CRLP_CreateRollupDetailFieldHelpText</members>
+        <members>CRLP_CreateRollupDateFieldHelpText</members>
+        <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
