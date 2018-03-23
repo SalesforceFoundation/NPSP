@@ -585,7 +585,6 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
-        <members>Account.Number_of_Opportunities__c</members>
         <members>Activity.Engagement_Plan_Task__c</members>
         <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>

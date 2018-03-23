@@ -37,7 +37,7 @@
 private class CRLP_RollupSoftCredit_TEST {
 
     private Enum TestType {
-        TestBatchContact, TestBatchAccount, testSkewBatchContact
+        TestBatchContact, TestBatchAccount, testSkewBatchContact, TestWithAlwaysRollupToPrimary
     }
 
     /**
@@ -161,6 +161,9 @@ private class CRLP_RollupSoftCredit_TEST {
     static testMethod void test_Rollups_Account() {
         testRollupsServices(TestType.testBatchAccount);
     }
+    static testMethod void test_Rollups_AlwaysRollupToPrimaryEnabled() {
+        testRollupsServices(TestType.TestWithAlwaysRollupToPrimary);
+    }
 
     /**
      * @description Test some simple rollups from the Opportunity/Payment object to the Contact using
@@ -169,13 +172,6 @@ private class CRLP_RollupSoftCredit_TEST {
     private static void testRollupsServices(TestType tt) {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
-        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
-                new npo02__Households_Settings__c (
-                        npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-                        npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-                        npo02__Household_Contact_Roles_On__c = true
-                ));
-
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatchContact ? 50 : 200),
@@ -185,13 +181,21 @@ private class CRLP_RollupSoftCredit_TEST {
                 Rollups_Account_Soft_Credit_Batch_Size__c = 600,
                 Rollups_Account_Batch_Size__c = 20,
                 Rollups_Contact_Batch_Size__c = 20
-        ));
+            ));
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = false
-        ));
+            ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Always_Rollup_to_Primary_Contact__c = (tt == TestType.TestWithAlwaysRollupToPrimary)
+            ));
+
 
         // Create the test data
         mockRollupCMTValues();
@@ -268,11 +272,13 @@ private class CRLP_RollupSoftCredit_TEST {
         ));
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
+        Decimal orgDonationAmt = 50000;
+        Date orgDonationDate = Date.Today().addDays(-30);
         opps.add(new Opportunity (
                 Name = 'Test Org Opp ' + c1.FirstName + ' ' + c1.LastName,
                 AccountId = orgAcct.Id,
-                Amount = 50000,
-                CloseDate = Date.Today().addDays(-30),
+                Amount = orgDonationAmt,
+                CloseDate = orgDonationDate,
                 StageName = closedStage,
                 Primary_Contact__c = c4.Id,
                 RecordTypeId = rtId,
@@ -284,7 +290,7 @@ private class CRLP_RollupSoftCredit_TEST {
         // Change the OCR Role on the org donation so that it will roll up as a soft credit.
         OpportunityContactRole orgOCR = [SELECT Id, Role FROM OpportunityContactRole
                     WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
-        orgOCR.Role = 'Soft Credit';
+        orgOCR.Role = label.npo02.Household_Member_Contact_Role;
         update orgOCR;
 
         Test.startTest();
@@ -295,7 +301,7 @@ private class CRLP_RollupSoftCredit_TEST {
         List<Id> contactIds = new List<Id>{ c1.Id, c2.Id, c3.Id, c4.Id };
 
         // Now test the rollups to the Account from the Opportunity - use large batch size to get all OCR's at once
-        if (tt == TestType.testSkewBatchContact) {
+        if (tt == TestType.testSkewBatchContact || tt == TestType.TestWithAlwaysRollupToPrimary) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, contactIds, null);
         } else if (tt == TestType.TestBatchContact) {
@@ -332,8 +338,13 @@ private class CRLP_RollupSoftCredit_TEST {
             Id c4Id = c4.Id;
             conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :c4Id LIMIT 1';
             c4 = database.query(conQuery);
-            System.assertEquals(50000, c4.npo02__Soft_Credit_Total__c);
-            System.assertEquals(1, c4.Number_of_Soft_Credits__c);
+            if (tt != TestType.TestWithAlwaysRollupToPrimary) {
+                System.assertEquals(orgDonationAmt, c4.npo02__Soft_Credit_Total__c);
+                System.assertEquals(1, c4.Number_of_Soft_Credits__c);
+            } else {
+                System.assertEquals(null, c4.npo02__Soft_Credit_Total__c);
+                System.assertEquals(null, c4.Number_of_Soft_Credits__c);
+            }
         }
 
         // Basic rollup asserts using existing NPSP rollup fields.
