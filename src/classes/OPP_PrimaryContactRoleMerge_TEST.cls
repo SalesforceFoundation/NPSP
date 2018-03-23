@@ -105,7 +105,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         ];
         // An Error Log should be created.
         System.assertEquals(1, errors.size());
-        System.assertEquals(String.format(OPP_DuplicateContactRoles.ERROR_MESSAGE, new List<String>{opportunity.Id}), errors[0].Full_Message__c);
+        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Id}), errors[0].Full_Message__c);
     }
 
     /*********************************************************************************************************
