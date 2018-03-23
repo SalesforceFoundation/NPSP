@@ -45,8 +45,6 @@
     <aura:attribute name="activeRecordId" type="Id" description="ID of the selected record to display in detail view. Set to null once detail is hidden."/>
     <aura:attribute name="activeRecord" type="Map" description="Active item to display in detail view. Set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
-    <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label."/>
-    <aura:attribute name="yearlyOperations" type="List" description="Map of yearly operations, api name to label."/>
     <aura:attribute name="summaryObjects" type="List" description="List summary objects as maps with name and label keys."/>
 
     <!-- private attributes -->
@@ -227,8 +225,7 @@
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" operations="{#v.operations}" yearlyOperations="{#v.yearlyOperations}"
-                           filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}"/>
+                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

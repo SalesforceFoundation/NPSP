@@ -206,18 +206,18 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
-    * @description Returns a map of field names to data types
+    * @description Returns a map of field names to data types, excluding system fields
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getAllWritableFieldsWithType(String objectName) {
+    public static List<Map<String, String>> getAllFieldsWithType(String objectName) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if(dfr.isUpdateable()){
+            if(!dfr.name.toLowerCase().contains('__system')) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);

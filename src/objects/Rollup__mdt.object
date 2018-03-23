@@ -216,7 +216,7 @@
         <description>Related to the Integer__c field. The value in that field represents the number of Years to sum or the number of days back to sum amounts for.</description>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Time Bound Operation Type</label>
+        <label>Time Frame</label>
         <required>false</required>
         <type>Picklist</type>
         <valueSet>
