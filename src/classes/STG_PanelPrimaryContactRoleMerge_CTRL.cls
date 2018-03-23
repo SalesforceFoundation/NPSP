@@ -58,7 +58,7 @@ public with sharing class STG_PanelPrimaryContactRoleMerge_CTRL extends STG_Pane
     */
     public PageReference runBatch() {
         isRunningBatch = true;
-        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH(), 2000);
         return null;
     }
 }
