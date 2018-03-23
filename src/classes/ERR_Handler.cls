@@ -370,7 +370,7 @@ public class ERR_Handler {
     * @param objectType The type of all records in the job, only to be passed in if they all match.
     * @return The error record.
     */
-    public static Error__c createJobError(String message, String context, String objectType) {
+    private static Error__c createJobError(String message, String context, String objectType) {
         Error__c error = new Error__c();
         error.Datetime__c = System.now();
         error.Full_Message__c = message;

@@ -100,12 +100,15 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         System.assertEquals(nonNPSPRole, expectedOpportunities[0].OpportunityContactRoles[1].Role);
 
         List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c 
+            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
             FROM Error__c
         ];
-        // An Error Log should be created.
-        System.assertEquals(1, errors.size());
-        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Id}), errors[0].Full_Message__c);
+
+        System.assertEquals(1, errors.size(), 'An Error Log should be created');
+        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
+        System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunities[0].Id, errors[0].Record_URL__c);
     }
 
     /*********************************************************************************************************

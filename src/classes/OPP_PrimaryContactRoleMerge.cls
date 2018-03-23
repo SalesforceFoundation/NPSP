@@ -37,8 +37,9 @@
 
 public with sharing class OPP_PrimaryContactRoleMerge {
 
-    @TestVisible private static final String ERROR_MESSAGE = '/{0}';
-
+    @TestVisible private static final String ERROR_MESSAGE = 'Unable to remove the duplicate primary OCRs from the Opportunity {0}. Review the Contact Roles on the Opportunity record, choose which is the correct one, and delete the others.';
+    @TestVisible private static final String ERROR_CONTEXT = 'Remove Duplicate Primary OCRs';
+    @TestVisible private static final String ERROR_SOBJECT = 'Opportunity';
     /*******************************************************************************************************
     * @description The Duplicate Primary Opportunity Contact Roles Wrapper. It contains the logic that loads  
     * and manages the duplicate Primary OCRs and the related Opportunities.
@@ -116,7 +117,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 opportunityIds.add((Id) aggregateResult.get('OpportunityId'));
             }
             return [
-                SELECT Primary_Contact__c, (
+                SELECT Name, Primary_Contact__c, (
                     SELECT OpportunityId, ContactId, Role, IsPrimary
                     FROM OpportunityContactRoles
                     WHERE IsPrimary = true
@@ -236,10 +237,12 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         * @return void.
         ********************************************************************************************************/
         public void add(Opportunity opportunityRecord) {
-            errors.add(ERR_Handler.createJobError(
-                String.format(ERROR_MESSAGE, new List<String>{opportunityRecord.Id}), 
-                'DuplicateContactRoles',
-                'Opportunity'
+            errors.add(new Error__c(
+                Datetime__c = System.now(),
+                Full_Message__c = String.format(ERROR_MESSAGE, new List<String>{opportunityRecord.Name}),
+                Record_URL__c = URL.getSalesforceBaseUrl().toExternalForm() + '/' + opportunityRecord.Id,
+                Context_Type__c = ERROR_CONTEXT,
+                Object_Type__c = ERROR_SOBJECT
             ));
             errorOpportunityRecords.add(opportunityRecord.Id);
         }
