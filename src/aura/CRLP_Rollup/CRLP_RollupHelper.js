@@ -260,6 +260,7 @@
     onChangeRollupType: function (cmp, detailObject, rollupLabel) {
         console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
+        var labels = cmp.get("v.labels");
         //during create, visibility of operation and filter group are toggled
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel) {
@@ -269,8 +270,7 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            var na = cmp.get("v.labels.na");
-            cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", na);
+            cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", labels.na);
             this.onChangeFilterGroup(cmp, na);
         }
 
@@ -294,14 +294,14 @@
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
         //defaults field to Payment on the payment object, and CloseDate for everything else
-        if (detailObject === 'npe01__OppPayment__c') {
-            cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.paymentLabel"));
-            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "npe01__OppPayment__c");
+        if (detailObject === labels.objectPayment) {
+            cmp.set("v.activeRollup.Date_Object__r.Label", labels.labelPayment);
+            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", labels.objectPayment);
             this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
             cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "npe01__Payment_Date__c");
         } else {
-            cmp.set("v.activeRollup.Date_Object__r.Label", cmp.get("v.labels.opportunityLabel"));
-            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", "Opportunity");
+            cmp.set("v.activeRollup.Date_Object__r.Label", labels.labelOpportunity);
+            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", labels.objectOpportunity);
             this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
             cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "CloseDate");
         }
@@ -585,41 +585,41 @@
         var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
         var labels = cmp.get("v.labels");
         var templateList = [];
-        if (summaryObject === 'Account') {
+        if (summaryObject === labels.objectAccount) {
             templateList.push({
-                    label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit,
-                    summaryObject: 'Account', name: 'Opportunity'
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit,
+                    summaryObject: labels.objectAccount, name: labels.objectOpportunity
                 }
                 , {
-                    label: labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Account', name: 'npe01__OppPayment__c'
+                    label: labels.labelPayment + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit
+                    , summaryObject: labels.objectAccount, name: labels.objectPayment
                 }
                 , {
-                    label: labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit
-                    , summaryObject: 'Account', name: 'Partial_Soft_Credit__c'
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit
+                    , summaryObject: labels.objectAccount, name: labels.objectPartialSoftCredit
                 });
-        } else if (summaryObject === 'Contact') {
+        } else if (summaryObject === labels.objectContact) {
             templateList.push({
-                    label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Contact', name: 'Opportunity'
+                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit
+                    , summaryObject: labels.objectContact, name: labels.objectOpportunity
                 }
                 , {
-                    label: labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit
-                    , summaryObject: 'Contact', name: 'Partial_Soft_Credit__c'
+                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit
+                    , summaryObject: labels.objectContact, name: labels.objectPartialSoftCredit
                 }
                 , {
-                    label: labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit
-                    , summaryObject: 'Contact', name: 'npe01__OppPayment__c'
+                    label: labels.labelPayment + ' -> ' + labels.labelContact + ' ' + labels.hardCredit
+                    , summaryObject: labels.objectContact, name: labels.objectPayment
                 });
-        } else if (summaryObject === labels.gauName) {
+        } else if (summaryObject === labels.objectGAU) {
             templateList.push({
-                label: labels.allocationLabel + ' -> ' + labels.gauLabel
-                , summaryObject: labels.gauName, name: 'Allocation__c'
+                label: labels.labelAllocation + ' -> ' + labels.labelGAU
+                , summaryObject: labels.objectGAU, name: labels.objectAllocation
             });
-        } else if (summaryObject === 'npe03__Recurring_Donation__c') {
+        } else if (summaryObject === labels.objectRD) {
             templateList.push({
-                label: labels.opportunityLabel + ' -> ' + labels.rdLabel
-                , summaryObject: 'npe03__Recurring_Donation__c', name: 'Opportunity'
+                label: labels.labelOpportunity + ' -> ' + labels.labelRD
+                , summaryObject: labels.objectRD, name: labels.objectOpportunity
             });
         }
 
@@ -668,49 +668,50 @@
         var labels = cmp.get("v.labels");
         var rollupType = {};
 
-        if (detailObject === 'Opportunity' && summaryObject === 'Account') {
-            rollupType.name = 'Opportunity';
-            rollupType.summaryObject = 'Account';
-            rollupType.label = labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit;
+        if (detailObject === labels.objectOpportunity && summaryObject === labels.objectAccount) {
+            rollupType.name = labels.objectOpportunity;
+            rollupType.summaryObject = labels.objectAccount;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
 
-        } else if (detailObject === 'npe01__OppPayment__c' && summaryObject === 'Account') {
-            rollupType.name = 'npe01__OppPayment__c';
-            rollupType.summaryObject = 'Account';
-            rollupType.label = labels.paymentLabel + ' -> ' + labels.accountLabel + ' ' + labels.hardCredit;
+        } else if (detailObject === labels.objectPayment && summaryObject === labels.objectAccount) {
+            rollupType.name = labels.objectPayment;
+            rollupType.summaryObject = labels.objectAccount;
+            rollupType.label = labels.labelPayment + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
 
-        } else if (detailObject === 'Partial_Soft_Credit__c' && summaryObject === 'Account') {
-            rollupType.name = 'Partial_Soft_Credit__c';
-            rollupType.summaryObject = 'Account';
-            rollupType.label = labels.opportunityLabel + ' -> ' + labels.accountLabel + ' ' + labels.softCredit;
+        } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectAccount) {
+            rollupType.name = labels.objectPartialSoftCredit;
+            rollupType.summaryObject = labels.objectAccount;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
 
-        } else if (detailObject === 'Opportunity' && summaryObject === 'Contact') {
-            rollupType.name = 'Opportunity';
-            rollupType.summaryObject = 'Contact';
-            rollupType.label = labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit;
+        } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
+            rollupType.name = labels.objectOpportunity;
+            rollupType.summaryObject = labels.objectContact;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
 
-        } else if (detailObject === 'Partial_Soft_Credit__c' && summaryObject === 'Contact') {
-            rollupType.name = 'Partial_Soft_Credit__c';
-            rollupType.summaryObject = 'Contact';
-            rollupType.label = labels.opportunityLabel + ' -> ' + labels.contactLabel + ' ' + labels.softCredit;
+        } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectContact) {
+            rollupType.name = labels.objectPartialSoftCredit;
+            rollupType.summaryObject = labels.objectContact;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit;
 
-        } else if (detailObject === 'npe01__OppPayment__c' && summaryObject === 'Contact') {
-            rollupType.name = 'npe01__OppPayment__c';
-            rollupType.summaryObject = 'Contact';
-            rollupType.label = labels.paymentLabel + ' -> ' + labels.contactLabel + ' ' + labels.hardCredit;
+        } else if (detailObject === labels.objectPayment && summaryObject === labels.objectContact) {
+            rollupType.name = labels.objectPayment;
+            rollupType.summaryObject = labels.objectContact;
+            rollupType.label = labels.labelPayment + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
 
-        } else if (detailObject === 'Allocation__c' && summaryObject === labels.gauName) {
-            rollupType.name = 'Allocation__c';
-            rollupType.summaryObject = labels.gauName;
-            rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
+        } else if (detailObject === labels.objectAllocation && summaryObject === labels.objectGAU) {
+            rollupType.name = labels.objectAllocation;
+            rollupType.summaryObject = labels.objectGAU;
+            rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
 
-        } else if (detailObject === 'Opportunity' && summaryObject === labels.gauName) {
-            rollupType.name = 'Opportunity';
-            rollupType.summaryObject = labels.gauName;
-            rollupType.label = labels.allocationLabel + ' -> ' + labels.gauLabel;
-        } else if (detailObject === 'Opportunity' && summaryObject === 'npe03__Recurring_Donation__c'){
-            rollupType.name = 'Opportunity';
-            rollupType.summaryObject = 'npe03__Recurring_Donation__c';
-            rollupType.label = labels.opportunityLabel + ' -> ' + labels.rdLabel;
+        } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectGAU) {
+            rollupType.name = labels.objectOpportunity;
+            rollupType.summaryObject = labels.labelGAU;
+            rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
+
+        } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectRD){
+            rollupType.name = labels.objectOpportunity;
+            rollupType.summaryObject = labels.objectRD;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelRD;
         }
 
         cmp.set("v.selectedRollupType", rollupType);

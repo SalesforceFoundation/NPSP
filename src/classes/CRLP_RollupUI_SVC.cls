@@ -380,12 +380,10 @@ public with sharing class CRLP_RollupUI_SVC {
 
             Map<String, String> labels = new Map<String,String>
             {
-                'accountLabel' => Schema.SObjectType.Account.getLabel(),
                 'action' => Label.stgLabelActionColumn,
                 'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
                 'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
                 'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
-                'allocationLabel' => Schema.SObjectType.Allocation__c.getLabel(),
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
                 'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
                 'availableRollupTypes' => Label.CRLP_AvailableRollupType,
@@ -394,7 +392,6 @@ public with sharing class CRLP_RollupUI_SVC {
                 'checkboxFalse' => Label.stgCheckboxFalse,
                 'clone' => Label.stgBtnClone,
                 'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
-                'contactLabel' => Schema.SObjectType.Contact.getLabel(),
                 'countOf' => Label.stgCountOf,
                 'create' => Label.stgCreate,
                 'createIntroHelp' => Label.CRLP_CreateRollupIntroHelpText,
@@ -427,11 +424,17 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupNew' => Label.CMT_FilterNew,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
-                'gauLabel' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
-                'gauName' => Schema.SObjectType.General_Accounting_Unit__c.getName(),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
+                'labelAccount' => Schema.SObjectType.Account.getLabel(),
+                'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
+                'labelContact' => Schema.SObjectType.Contact.getLabel(),
+                'labelGAU' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
+                'labelPayment' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'labelOpportunity' => Schema.SObjectType.Opportunity.getLabel(),
+                'labelPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
+                'labelRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'name' => Label.stgLabelName,
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
@@ -442,15 +445,18 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
+                'objectAccount' => Schema.SObjectType.Account.getName(),
+                'objectAllocation' => Schema.SObjectType.Allocation__c.getName(),
+                'objectContact' => Schema.SObjectType.Contact.getName(),
+                'objectGAU' => Schema.SObjectType.General_Accounting_Unit__c.getName(),
+                'objectPayment' => Schema.SObjectType.npe01__OppPayment__c.getName(),
+                'objectOpportunity' => Schema.SObjectType.Opportunity.getName(),
+                'objectPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getName(),
+                'objectRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getName(),
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
                 'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
-                'opportunityLabel' => Schema.SObjectType.Opportunity.getLabel(),
-                'partialSoftCreditLabel' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
-                'partialSoftCreditName' => Schema.SObjectType.Partial_Soft_Credit__c.getName(),
-                'paymentLabel' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
                 'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
                 'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
-                'rdLabel' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
                 'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -499,13 +505,13 @@ public with sharing class CRLP_RollupUI_SVC {
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
             String type = dfr.getType().Name();
-            Set<String> validTypeSet = new Set<String>{'DATE', 'DATETIME', 'DOUBLE', 'ID', 'MULTIPICKLIST', 'PICKLIST', 'STRING', 'TEXTAREA'};
+            Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
             Boolean isValidType = validTypeSet.contains(type);
 
             //check that summary field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('system') && isValidType && !isRolledUp)
+            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
                     || selectedField.equals(dfr.name)){
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);

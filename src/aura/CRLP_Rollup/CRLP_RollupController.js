@@ -8,10 +8,10 @@
          /*
          * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
-        var detailObjects = [{label: labels.opportunityLabel, name: 'Opportunity'}
-            , {label: labels.partialSoftCreditLabel, name: labels.partialSoftCreditName}
-            , {label: labels.paymentLabel, name: 'npe01__OppPayment__c'}
-            , {label: labels.allocationLabel, name: 'Allocation__c'}];
+        var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+            , {label: labels.labelPartialSoftCredit, name: labels.objectPartialSoftCredit}
+            , {label: labels.labelPayment, name: labels.objectPayment}
+            , {label: labels.labelAllocation, name: labels.objectAllocation}];
         var summaryObjects = cmp.get("v.summaryObjects");
         cmp.set("v.detailObjects", detailObjects);
 

@@ -217,7 +217,7 @@ public class UTIL_Describe {
         Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            if(!dfr.name.contains('SYSTEM')) {
+            if(!dfr.name.toLowerCase().contains('__system')) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);

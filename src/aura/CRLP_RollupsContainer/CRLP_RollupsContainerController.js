@@ -24,10 +24,10 @@
                     , {label: labels.delete, name:'delete'}
                 ];
 
-                var summaryObjects = [{label: labels.accountLabel, name: 'Account'}
-                    , {label: labels.contactLabel, name: 'Contact'}
-                    , {label: labels.gauLabel, name: labels.gauName}
-                    , {label: labels.rdLabel, name: 'npe03__Recurring_Donation__c'}];
+                var summaryObjects = [{label: labels.labelAccount, name: labels.objectAccount}
+                    , {label: labels.labelContact, name: labels.objectContact}
+                    , {label: labels.labelGAU, name: labels.objectGAU}
+                    , {label: labels.labelRD, name: labels.objectRD}];
                 cmp.set("v.summaryObjects", summaryObjects);
 
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
