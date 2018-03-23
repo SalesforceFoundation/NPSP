@@ -1544,6 +1544,7 @@
         <members>stgHelpPaymentsEnabled</members>
         <members>stgHelpPowerOfUsHub</members>
         <members>stgHelpPrimaryContactBatch</members>
+        <members>stgHelpPrimaryContactRoleMergeBatch</members>
         <members>stgHelpRDAddCampaign</members>
         <members>stgHelpRDBatch</members>
         <members>stgHelpRDBatchSize</members>
@@ -1652,6 +1653,7 @@
         <members>stgLabelOtherOpportunigyNamingFormat</members>
         <members>stgLabelPaymentMapNoValidFields</members>
         <members>stgLabelPaymentSettings</members>
+        <members>stgLabelPrimaryContactRoleMergeBatch</members>
         <members>stgLabelRDFieldMap</members>
         <members>stgLabelRDNewPeriod</members>
         <members>stgLabelRDPeriod</members>
