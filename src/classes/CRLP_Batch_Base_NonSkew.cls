@@ -179,16 +179,27 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                     jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
 
-                String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(this.detailObjectType, new List<SObjectType>()) +
-                    + ' WHERE ' + this.keyField + ' IN : summaryRecords';
+                npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
+
+                String query = CRLP_Query_SEL.buildDetailObjectQueryForRollup(this.detailObjectType, new List<SObjectType>());
+
+                List<String> whereClauses = new List<String>();
+                whereClauses.add(this.keyField + ' IN : summaryRecords');
 
                 String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
                 if (!String.isEmpty(addlFilter)) {
-                    query += ' AND ' + addlFilter;
+                    whereClauses.add(addlFilter);
                 }
 
-                query += ' AND (IsPrimary = False ' +
-                        ' OR (IsPrimary = True AND Opportunity.Account.npe01__SYSTEMIsIndividual__c = False))';
+                if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
+                    whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+                } else {
+                    whereClauses.add('IsPrimary = False');
+                }
+
+                if (!whereClauses.isEmpty()) {
+                    query += ' WHERE ' + String.join(whereClauses, ' AND ');
+                }
 
                 // Note that the ORDER BY here doesn't gaurantee that the records will actually be in this order
                 query += ' ORDER BY ' + this.keyField + ', Opportunity.CreatedDate ASC ';

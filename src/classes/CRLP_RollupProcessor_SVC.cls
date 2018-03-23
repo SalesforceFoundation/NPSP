@@ -189,24 +189,37 @@ public class CRLP_RollupProcessor_SVC {
             }
         }
 
+        npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
         String detailsQuery = CRLP_Query_SEL.buildFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
 
         String orderBy;
+        List<String> whereClauses = new List<String>();
+
         if (detailsQuery.containsIgnoreCase('ORDER BY ')) {
-            detailsQuery = detailsQuery.split('ORDER BY')[0];
             orderBy = detailsQuery.split('ORDER BY')[1];
+            detailsQuery = detailsQuery.split('ORDER BY')[0];
+        }
+
+        if (detailsQuery.containsIgnoreCase(' WHERE ')) {
+            whereClauses.add(detailsQuery.split(' WHERE ')[1]);
+            detailsQuery = detailsQuery.split(' WHERE ')[0];
         }
 
         // Identify a common filter that can be applied to the main query to reduce the number of records queried
         String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryRecords[0].getSObjectType(),
                 Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(options.rollupJobType, options.rollupTypesToProcess));
         if (!String.isEmpty(addlFilter)) {
-            detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + addlFilter;
+            whereClauses.add(addlFilter);
         }
 
         // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)
-        if (objType == Contact.SObjectType) {
-            detailsQuery += (detailsQuery.endsWith(' WHERE ') ? '' : ' AND ') + ' Account.npe01__SYSTEMIsIndividual__c != false';
+        // When the npo02__Always_Rollup_to_Primary_Contact__c is field is unchecked.
+        if (objType == Contact.SObjectType && householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
+            whereClauses.add('Account.npe01__SYSTEMIsIndividual__c = True');
+        }
+
+        if (!whereClauses.isEmpty()) {
+            detailsQuery += ' WHERE ' + String.join(whereClauses, ' AND ');
         }
 
         // Sort the records by the parent key field

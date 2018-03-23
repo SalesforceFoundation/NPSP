@@ -80,6 +80,10 @@ private class CRLP_DefaultConfigBuilder_TEST {
         ));
     }
 
+    /**
+     * @description Test creating the default rollup configuration where there the legacy rollup settings are the same
+     * for the Account and Contact rollups
+     */
     static testMethod void test_createDefaults_simple() {
         setupLegacySettings();
         test.startTest();
@@ -100,6 +104,10 @@ private class CRLP_DefaultConfigBuilder_TEST {
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 
+    /**
+     * @description Test creating the default rollup configuration where there the legacy rollup settings are different
+     * for the Account and Contact rollups; and the 'Enable Soft Credit Rollups' field is unchecked.
+     */
     static testMethod void test_createDefaults_diffContact() {
         setupLegacySettings();
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
@@ -110,7 +118,8 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 npo02__Excluded_Account_Opp_Types__c = 'Nothing',
                 npo02__Excluded_Contact_Opp_Rectypes__c = membershipRecordTypeIdForTests,
                 npo02__Excluded_Contact_Opp_Types__c = 'Whatever',
-                npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests
+                npo02__Membership_Record_Types__c = membershipRecordTypeIdForTests,
+                npo02__Enable_Soft_Credit_Rollups__c = false
         ));
         test.startTest();
         CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
@@ -123,6 +132,16 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 fgCount++;
             } else if (md.fullName.startsWith('Rollup__mdt')) {
                 rlpCount++;
+                String lbl = md.label;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Active__c') {
+                        if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
+                            System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
+                        } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
+                            System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                        }
+                    }
+                }
             }
         }
 

@@ -85,10 +85,10 @@ public class CRLP_DefaultConfigBuilder {
 
     // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
     private static final String allocAmountFld = 'Allocation__c.Amount__c';
-    private static final String pscAmountFld = 'Partial_Soft_Credit__c.Amount__c';
     private static final String oppAmountFld = 'Opportunity.Amount';
     private static final String oppCloseDateFld = 'Opportunity.CloseDate';
     private static final String opportunityObject = 'Opportunity';
+    public static final String pscAmountFld = 'Partial_Soft_Credit__c.Amount__c';
 
     /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
      * following set of rollup properties

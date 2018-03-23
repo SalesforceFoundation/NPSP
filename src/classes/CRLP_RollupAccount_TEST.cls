@@ -167,19 +167,25 @@ private class CRLP_RollupAccount_TEST {
 
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                        Customizable_Rollups_Enabled__c = true,
-                        Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
-                        Rollups_Account_SkewMode_Batch_Size__c = 200,
-                        Rollups_Contact_SkewMode_Batch_Size__c = 200,
-                        Rollups_Account_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
-                        Rollups_Account_Batch_Size__c = 20,
-                        Rollups_Contact_Batch_Size__c = 20
-                ));
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Limit_on_Attached_Opps_for_Skew__c = (tt == TestType.testSkewBatch ? 50 : 200),
+                Rollups_Account_SkewMode_Batch_Size__c = 200,
+                Rollups_Contact_SkewMode_Batch_Size__c = 200,
+                Rollups_Contact_Soft_Credit_Batch_Size__c = 200,
+                Rollups_Account_Batch_Size__c = 20,
+                Rollups_Contact_Batch_Size__c = 20
+        ));
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_And_Orgs_Settings__c(
                 npe01__Opportunity_Contact_Role_Default_role__c = 'Donor',
                 npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
                 npe01__Payments_Enabled__c = true
+        ));
+
+        UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
+                npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
+                npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
+                npo02__Household_Contact_Roles_On__c = true,
+                npo02__Always_Rollup_to_Primary_Contact__c = false
         ));
 
         // Create the test data
@@ -304,7 +310,7 @@ private class CRLP_RollupAccount_TEST {
 
         // Basic rollup asserts using existing NPSP rollup fields.
         System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-        System.assertEquals((totalDonations / cnt), a.npo02__AverageAmount__c);
+        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), a.npo02__AverageAmount__c);
         System.assertEquals(total2YearsAgo, a.npo02__OppAmount2YearsAgo__c);
         System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
         System.assertEquals(closeDate, a.npo02__FirstCloseDate__c);
