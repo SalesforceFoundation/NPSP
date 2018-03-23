@@ -141,9 +141,8 @@ public with sharing class CRLP_RollupUI_SVC {
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
 
-        if(rollupId != ''){
-            Id id = Id.valueOf(rollupId);
-            model.rollup = getRollupById(id);
+        if(!String.isEmpty(rollupId)){
+            model.rollup = getRollupById(Id.valueOf(rollupId));
             summaryField = model.rollup.Summary_Field__r.QualifiedApiName;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
