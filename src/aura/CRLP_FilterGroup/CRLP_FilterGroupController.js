@@ -61,6 +61,7 @@
     */
     createFilterRule: function(cmp, event, helper){
         //placeholder for creating a new filter rule
+        helper.openFilterRuleModal(cmp);
     },
 
     /* @description: handles individual row events for the filter rule table
@@ -72,15 +73,62 @@
     /* @description: handles the cancel action during the edit of a filter group
     */
     onCancel: function(cmp, event, helper){
-        //placeholder for on cancel function in !view mode
+        if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeFilterGroupId") === null){
+            //set off cancel event for container
+            var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+            cancelEvent.setParams({grid: 'filterGroup'});
+            cancelEvent.fire();
+        } else {
+            cmp.set("v.mode", "view");
+            var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
+            //json shenanigans to avoid shared reference
+            cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup.valueOf()));
+        }
 
+    },
+
+    /* @description: fires when mode is changed and handles the readonly
+    */
+    onChangeMode: function(cmp){
+        var mode = cmp.get("v.mode");
+        //we check to see if mode is null since the change handler is called when mode is cleared in the container
+        if (mode) {
+            console.log("Mode is " + mode);
+            console.log("In changeMode");
+
+            //View is the only readOnly mode. Clone removes the activeRollupId for save.
+            //Create hides all fields
+            if (mode === "view") {
+                cmp.set("v.isReadOnly", true);
+            } else if (mode === "clone") {
+                cmp.set("v.activeFilterGroupId", null);
+                cmp.set("v.isReadOnly", false);
+            } else if (mode === "edit") {
+                cmp.set("v.isReadOnly", false);
+            } else if (mode === "create") {
+                cmp.set("v.isReadOnly", false);
+            }
+        }
     },
 
     /* @description: saves a new filter group and associated filter rules
     */
     onSave: function(cmp, event, helper){
         //placeholder for on cancel function in !view mode
+        //add check for description, name and a filter rule
+        var activeFilterGroup = cmp.get("v.activeFilterGroup");
+        var canSave = helper.validateFields(cmp, activeFilterGroup);
+        if(canSave){
+            cmp.set("v.mode", 'view');
 
+            //sends the message to the parent cmp RollupsContainer
+            var sendMessage = $A.get('e.ltng:sendMessage');
+            sendMessage.setParams({
+                'message': activeFilterGroup.MasterLabel,
+                'channel': 'nameChange'
+            });
+            sendMessage.fire();
+        }
     },
 
     /* @description: navigates the user to the selected rollup from the filter group detail page

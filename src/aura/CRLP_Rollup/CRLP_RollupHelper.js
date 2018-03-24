@@ -831,7 +831,7 @@
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
                 'message': masterLabel,
-                'channel': 'rollupNameChange'
+                'channel': 'nameChange'
             });
             sendMessage.fire();
         }

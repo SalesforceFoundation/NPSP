@@ -54,6 +54,7 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
     <!-- events we fire -->
     <aura:registerEvent name="NavigateEvent" type="c:CRLP_NavigateEvent"/>
@@ -96,15 +97,13 @@
                                                      hideCheckboxColumn="true"
                                                      />
                                 <aura:set attribute="else">
-                                    <aura:if isTrue="{!and(v.mode != 'view', !empty(v.filterRuleColumns))}">
-                                        <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
-                                        <aura:set attribute="else">
                                             <ui:message severity="info" closable="false">
                                                 {!v.labels.noFilterRules}
                                             </ui:message>
-                                        </aura:set>
-                                    </aura:if>
                                 </aura:set>
+                            </aura:if>
+                            <aura:if isTrue="{!v.mode != 'view'}">
+                                <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
                             </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>

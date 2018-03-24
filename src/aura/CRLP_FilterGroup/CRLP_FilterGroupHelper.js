@@ -43,4 +43,33 @@
 
         cmp.set("v.rollupItems", itemList);
     },
+
+    /* @description: opens a modal popup so user can add or edit a filter rule
+     */
+    openFilterRuleModal: function(cmp){
+
+    },
+
+    /* @description: verifies all required fields have been populated before saving the filter group
+     */
+    validateFields: function(cmp){
+        var canSave = true;
+        var name = cmp.get("v.activeFilterGroup.MasterLabel");
+        var description = cmp.get("v.activeFilterGroup.Description__c");
+        var filterRuleList = cmp.get("v.filterRuleList");
+
+        cmp.find("nameInput").showHelpMessageIfInvalid();
+        cmp.find("descriptionInput").showHelpMessageIfInvalid();
+        //todo: where to put error message for filter rules? or can a filter group be saved w/o filter rules?
+
+        if(!description){
+            canSave = false;
+        } else if(!name){
+            canSave = false;
+        } else if(filterRuleList.length() === 0){
+            canSave = false;
+        }
+
+        return canSave;
+    }
 })

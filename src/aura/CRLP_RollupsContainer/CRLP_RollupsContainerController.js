@@ -149,7 +149,7 @@
         var message = event.getParam("message");
         var channel = event.getParam("channel");
 
-        if(channel === 'rollupNameChange'){
+        if(channel === 'nameChange'){
             //message is the masterLabel
             //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
             var activeRecord = cmp.get("v.activeRecord");
