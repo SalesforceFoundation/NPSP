@@ -144,7 +144,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         System.assertEquals(con.Id, result[0].ContactId);
-        System.assertEquals(donorRoleforTest, result[0].Role);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
     }
 
     /*******************************************************************************************************
