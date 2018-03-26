@@ -1,4 +1,29 @@
 ({
+    /* @description: changes field visibility and save button access based on the mode
+    * this is bound to a change handler to the mode attribute
+    */
+    changeMode: function(cmp){
+        var mode = cmp.get("v.mode");
+        //we check to see if mode is null since the change handler is called when mode is cleared in the container
+        if (mode) {
+            console.log("Mode is " + mode);
+            console.log("In changeMode");
+
+            //View is the only readOnly mode. Clone removes the activeRollupId for save.
+            //Create hides all fields
+            if (mode === "view") {
+                cmp.set("v.isReadOnly", true);
+            } else if (mode === "clone") {
+                cmp.set("v.activeFilterGroupId", null);
+                cmp.set("v.isReadOnly", false);
+            } else if (mode === "edit") {
+                cmp.set("v.isReadOnly", false);
+            } else if (mode === "create") {
+                cmp.set("v.isReadOnly", false);
+            }
+        }
+    },
+
     /* @description: filters the full rollup data to find which rollups use a particular filter group
     * @param filterGroupLabel: label of the selected filter group
     * @param labels: labels for the rollups UI
@@ -44,10 +69,55 @@
         cmp.set("v.rollupItems", itemList);
     },
 
+    /* @description: opens a modal popup to warn user about
+     */
+    openFilterRuleDeleteModal: function(cmp, row){
+        if(row){
+            //editing rule
+
+        } else {
+            //adding new rule
+
+        }
+    },
+
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
-    openFilterRuleModal: function(cmp){
+    openFilterRuleModal: function(cmp, row){
+        var modalBody;
+        var filterRuleHeader;
+        var labels = cmp.get("v.labels");
+        if(row){
+            //editing rule
+            filterRuleHeader = labels.edit + labels.filterRuleLabel;
 
+        } else {
+            //adding new rule
+            filterRuleHeader = labels.create + labels.filterRuleLabel;
+
+        }
+        /*$A.createComponent("c:CRLP_FilterRuleModal", {},
+            function(content, status) {
+                if (status === "SUCCESS") {
+                    modalBody = content;
+                    component.find('filterRuleModal').showCustomModal({
+                        header: filterRuleHeader,
+                        body: modalBody,
+                        showCloseButton: true,
+                        closeCallback: function () {
+                            //update the row if save, do nothing if not
+                            //cmp.set("v.filterRuleList", rows);
+                        }
+                    });
+                }
+        });*/
+    },
+
+    /* @description: restructures returned Apex response to preserve separate variables
+    * @return: the parsed and stringified JSON
+    */
+    restructureResponse: function (resp) {
+        return JSON.parse(JSON.stringify(resp));
     },
 
     /* @description: verifies all required fields have been populated before saving the filter group
@@ -66,7 +136,7 @@
             canSave = false;
         } else if(!name){
             canSave = false;
-        } else if(filterRuleList.length() === 0){
+        } else if(filterRuleList.length === 0){
             canSave = false;
         }
 

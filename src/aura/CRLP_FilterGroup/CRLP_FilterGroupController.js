@@ -12,11 +12,9 @@
                 var state = response.getState();
                 if (state === "SUCCESS") {
                     //note: the parsing is important to avoid a shared reference
-                    //todo: try to stringify on server side; only parse on client
-                    //review: https://stackoverflow.com/questions/6605640/javascript-by-reference-vs-by-value
                     var data = JSON.parse(JSON.stringify(response.getReturnValue()));
-                    cmp.set("v.activeFilterGroup", data.filterGroup);
-                    cmp.set("v.cachedFilterGroupRollup", JSON.parse(JSON.stringify(response.getReturnValue())));
+                    cmp.set("v.activeFilterGroup", helper.restructureResponse(data.filterGroup));
+                    cmp.set("v.cachedFilterGroup", helper.restructureResponse(data.filterGroup));
 
                     var labels = cmp.get("v.labels");
 
@@ -29,12 +27,14 @@
                         , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                         , {label: labels.operator, fieldName: 'operator', type: 'string'}
                         , {label: labels.constant, fieldName: 'constant', type: 'string'}
+                        , {type: 'action', typeAttributes: { rowActions: actions }}
                     ];
                     //todo: add actions back
 
                     cmp.set("v.filterRuleList", data.filterRuleList);
                     cmp.set("v.filterRuleColumns", filterRuleColumns);
                     helper.filterRollupList(cmp, data.filterGroup.MasterLabel, labels);
+                    helper.changeMode(cmp);
 
                 }
                 else if (state === "ERROR") {
@@ -67,7 +67,19 @@
     /* @description: handles individual row events for the filter rule table
     */
     handleRowAction: function(cmp, event, helper){
-        //placeholder for filter rule actions
+        var action = event.getParam('action');
+        var row = event.getParam('row');
+
+        if(action.name !== 'delete'){
+            //handle modal popup
+            helper.openFilterRuleModal(cmp, row);
+        } else {
+            //caution user about deleting the filter rule?
+            helper.openFilterRuleDeleteModal(cmp);
+            var rowIndex = rows.indexOf(row);
+            rows.splice(rowIndex, 1);
+            cmp.set("v.filterRuleList", rows);
+        }
     },
 
     /* @description: handles the cancel action during the edit of a filter group
@@ -89,26 +101,8 @@
 
     /* @description: fires when mode is changed and handles the readonly
     */
-    onChangeMode: function(cmp){
-        var mode = cmp.get("v.mode");
-        //we check to see if mode is null since the change handler is called when mode is cleared in the container
-        if (mode) {
-            console.log("Mode is " + mode);
-            console.log("In changeMode");
-
-            //View is the only readOnly mode. Clone removes the activeRollupId for save.
-            //Create hides all fields
-            if (mode === "view") {
-                cmp.set("v.isReadOnly", true);
-            } else if (mode === "clone") {
-                cmp.set("v.activeFilterGroupId", null);
-                cmp.set("v.isReadOnly", false);
-            } else if (mode === "edit") {
-                cmp.set("v.isReadOnly", false);
-            } else if (mode === "create") {
-                cmp.set("v.isReadOnly", false);
-            }
-        }
+    onChangeMode: function(cmp, event, helper){
+        helper.changeMode(cmp);
     },
 
     /* @description: saves a new filter group and associated filter rules

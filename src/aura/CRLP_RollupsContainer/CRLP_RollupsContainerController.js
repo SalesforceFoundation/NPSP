@@ -186,12 +186,13 @@
     handleRowAction: function(cmp, event, helper){
         var action = event.getParam('action');
         var row = event.getParam('row');
+        var isRollupsGrid = cmp.get("v.isRollupsGrid");
 
         if(action.name !== 'delete'){
             cmp.set("v.detailMode", action.name);
             cmp.set("v.activeRecordId", row.id);
             //check which grid is displayed
-            if(cmp.get("v.isRollupsGrid")){
+            if(isRollupsGrid){
                 cmp.set("v.isRollupsGrid", false);
                 cmp.set("v.isRollupDetail", true);
                 cmp.set("v.width", 8);
@@ -201,10 +202,23 @@
                 cmp.set("v.width", 8);
             }
         } else {
-            var rows = cmp.get("v.rollupList");
-            var rowIndex = rows.indexOf(row);
-            rows.splice(rowIndex, 1);
-            cmp.set("v.rollupList", rows);
+            if(isRollupsGrid){
+                var rows = cmp.get("v.rollupList");
+                var rowIndex = rows.indexOf(row);
+                rows.splice(rowIndex, 1);
+                cmp.set("v.rollupList", rows);
+            }
+            else{
+                //verify no rollups use the filter group before deleting
+                if(row.countRollups){
+                    var rows = cmp.get("v.filterGroupList");
+                    var rowIndex = rows.indexOf(row);
+                    rows.splice(rowIndex, 1);
+                    cmp.set("v.filterGroupList", rows);
+                } else {
+                    //error or modal to alert user that filter group can't be deleted
+                }
+            }
         }
     },
 

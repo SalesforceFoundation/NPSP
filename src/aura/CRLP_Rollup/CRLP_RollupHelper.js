@@ -271,7 +271,7 @@
                 renderMap["filterGroup"] = false;
             }
             cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", labels.na);
-            this.onChangeFilterGroup(cmp, na);
+            this.onChangeFilterGroup(cmp, labels.na);
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING

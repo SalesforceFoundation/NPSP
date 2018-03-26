@@ -58,6 +58,7 @@
 
     <!-- events we fire -->
     <aura:registerEvent name="NavigateEvent" type="c:CRLP_NavigateEvent"/>
+    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
 
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
@@ -95,6 +96,7 @@
                                                      columns="{!v.filterRuleColumns}"
                                                      keyField="id"
                                                      hideCheckboxColumn="true"
+                                                     onrowaction="{!c.handleRowAction}"
                                                      />
                                 <aura:set attribute="else">
                                             <ui:message severity="info" closable="false">
@@ -103,6 +105,7 @@
                                 </aura:set>
                             </aura:if>
                             <aura:if isTrue="{!v.mode != 'view'}">
+                                <lightning:overlayLibrary aura:id="filterRuleModal"/>
                                 <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
                             </aura:if>
                         </lightning:layoutItem>
@@ -110,12 +113,14 @@
                     <!--END FILTER GROUP DATATABLE-->
 
                     <!--START ROLLUP LIST-->
-                    <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
-                            <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
-                            <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
-                        </lightning:layoutItem>
-                    </lightning:layout>
+                    <aura:if isTrue="{!v.mode=='view'}">
+                        <lightning:layout multipleRows="true" verticalAlign="start">
+                            <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
+                                <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
+                                <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
                     <!--END ROLLUP LIST-->
 
                 </lightning:layoutItem>
