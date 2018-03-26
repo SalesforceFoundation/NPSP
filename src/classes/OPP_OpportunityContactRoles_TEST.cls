@@ -49,6 +49,7 @@ private class OPP_OpportunityContactRoles_TEST {
     private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
     private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
     private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
+    private static final String OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
 
     /*******************************************************************************************************
@@ -96,7 +97,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         System.assertEquals(con.Id, result[0].ContactId);
-        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT, result[0].Role);
     }
 
     /*******************************************************************************************************
