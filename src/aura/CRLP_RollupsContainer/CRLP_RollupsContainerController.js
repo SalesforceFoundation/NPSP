@@ -149,41 +149,32 @@
         var message = event.getParam("message");
         var channel = event.getParam("channel");
 
+        console.log("handleMessage: " + channel);
+
+        //message is the masterLabel
         if(channel === 'rollupNameChange'){
-            //message is the masterLabel
             //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
+
             cmp.set("v.activeRecord", activeRecord);
-
         } else if (channel === 'rollupRecordChange') {
-
-            // TODO Move logic out of the apex controller to populate CreditTpe and activeIcon values
-            // Call a helper method in this Component to do that work after retrieving the collections
-
+console.log("Message: " + message);
             // message will inserted or updated the Rollup__mdt record
-            var rollupsList = cmp.get("v.rollupList")
-            rollupsList.forEach(function(row) {
-                if (row.id === message.id) {
+            var rollupsList = cmp.get("v.rollupList");
+            var newItem = true;
+            for (var i = 0; i < rollupsList.length; i++) {
+                if (rollupsList[i].id === message.id) {
                     // if the Id matches, update that record
-
-                    row.active = message.Active__c;
-                    if (message.Active__c === true) {
-                        row.activeIcon = 'utility:check';
-                    } else {
-                        row.activeIcon = 'utility:close';
-                    }
-                    // value.creditType = TBD
-                    row.description = message.Description__c;
-                    row.detailObject = message.Detail_Object__r.Label;
-                    row.detailField = message.Detail_Field__r.Label;
-                    row.filterGroupName = message.Filter_Group__r.MasterLabel;
-                    row.operation = message.Operation__c;
-                    row.rollupName = message.MasterLabel;
-                    row.summaryObject = message.Summary_Object__r.Label;
-                    row.summaryObjectApiName = message.Summary_Object__r.QualifiedApiName;
+                    console.log("Replace Row for " + message.id);
+                    rollupsList[i] = message;
+                    newItem = false;
                 }
-            });
+            }
+            if (newItem === true) {
+                rollupsList.push(message);
+            }
+            cmp.set("v.rollupList", rollupsList);
         }
     },
 

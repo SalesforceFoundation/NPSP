@@ -52,6 +52,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String filterGroupName;
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
+        @AuraEnabled public String recordName;
         @AuraEnabled public String summaryObject;
         @AuraEnabled public String summaryObjectApiName;
         @AuraEnabled public Id id;
@@ -114,6 +115,15 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Response model returned by the getDeploymentResult() method
+    */
+    public class DeploymentResult {
+        @AuraEnabled public Boolean completed = false;
+        @AuraEnabled public RollupTableItem rollupItem;
+        @AuraEnabled public FilterGroupModel filterGroupItem;
+    }
+
+    /*******************************************************************************************************
     * @description Retrieves rollup definitions and creates the rollup model.
     * @return rollup grid model
     */
@@ -163,50 +173,56 @@ public with sharing class CRLP_RollupUI_SVC {
     public static List<RollupTableItem> getRollupDefinitions() {
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
-        List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
-        Map<CRLP_Operation.RollupType, String> operationTypes = CRLP_Operation.getRollupOperationTypes();
-
-        for(Integer i=0; i<mdtList.size(); i++){
-            RollupTableItem item = new RollupTableItem();
-
-            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                item.creditType = Label.CRLP_SoftCredit;
-            } else {
-                item.creditType = Label.stgNotApplicable;
-            }
-            item.detailObject = mdtList[i].Detail_Object__r.Label;
-            item.summaryObject = mdtList[i].Summary_Object__r.Label;
-            item.summaryObjectApiName = mdtList[i].Summary_Object__r.QualifiedApiName;
-            item.rollupName = mdtList[i].MasterLabel;
-            item.detailField = mdtList[i].Detail_Field__r.Label;
-            item.description = mdtList[i].Description__c;
-            item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
-            item.operation = mdtList[i].Operation__c.replace('_', ' ');
-            if(mdtList[i].Active__c){
-                item.activeIcon = 'utility:check';
-            } else {
-                item.activeIcon = 'utility:close';
-            }
-            item.id = mdtList[i].Id;
-
-            mdtTableList.add(item);
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
+        for(Rollup__mdt rlp : rollups){
+            mdtTableList.add(createRollupItem(rlp));
         }
 
         return mdtTableList;
+    }
 
+    /**
+     * @description Build a RollupTableItem wrapper for a given Rollup__mdt record
+     * @param rlpm Rollup__mdt
+     * @return RollupTableItem
+     */
+    private static RollupTableItem createRollupItem(Rollup__mdt rlp) {
+        RollupTableItem item = new RollupTableItem();
+
+        if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else {
+            item.creditType = Label.stgNotApplicable;
+        }
+        item.detailObject = rlp.Detail_Object__r.Label;
+        item.summaryObject = rlp.Summary_Object__r.Label;
+        item.summaryObjectApiName = rlp.Summary_Object__r.QualifiedApiName;
+        item.recordName = rlp.DeveloperName;
+        item.rollupName = rlp.MasterLabel;
+        item.detailField = rlp.Detail_Field__r.Label;
+        item.description = rlp.Description__c;
+        item.filterGroupName = rlp.Filter_Group__r.MasterLabel;
+        item.operation = rlp.Operation__c.replace('_', ' ');
+        if(rlp.Active__c){
+            item.activeIcon = 'utility:check';
+        } else {
+            item.activeIcon = 'utility:close';
+        }
+        item.id = rlp.Id;
+        return item;
     }
 
     /*******************************************************************************************************
@@ -538,10 +554,10 @@ public with sharing class CRLP_RollupUI_SVC {
      * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
      * @param jobId CMT Deployment Job Id to check the status for
      * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
-     * @return Id or null
+     * @return DeploymentResult
      */
     @auraEnabled
-    public static Id getDeploymentStatus(String jobId, String recordName) {
+    public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
         Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
@@ -549,8 +565,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 String result = deploymentStatus.get(jobId);
                 if (result == 'Succeeded') {
                     try {
+                        // TODO Get this down to a single query
                         Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
-                        return rollupId;
+                        DeploymentResult response = new DeploymentResult();
+                        response.completed = true;
+                        response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupsById(rollupId));
+                        return response;
                     } catch (Exception ex) {}
                 } else {
 

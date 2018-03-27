@@ -873,6 +873,7 @@
         var summaryFieldName = this.retrieveFieldLabel(summaryFieldAPI, summaryFields);
 
         var label = summaryObjectName + ': ' + summaryFieldName;
+        var recordName = cmp.get("v.activeRollup.DeveloperName");
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
@@ -880,14 +881,23 @@
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
         } else if (mode === 'create') {
-            // masterLabel = cmp.get("v.labels.rollupNew") + ' - ' + label;
             masterLabel = "UDR: " + label;
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
         } else if (summaryObjectName && summaryFieldName) {
-            //only reset the name once summary object and field are selected for edit and clone modes
-            // masterLabel = label;
-            masterLabel = "UDR: " + label;
+            // Only reset the name once summary object and field are selected for edit and clone modes
+            // Don't add the UDR prefix if modifying a packaged rollup definition
+            if (!recordName.startsWith('NPSP')) {
+                masterLabel = "UDR: " + label;
+            } else {
+                masterLabel = label;
+            }
             cmp.set("v.activeRollup.MasterLabel", masterLabel);
+        }
+        if (masterLabel.length > 40) {
+            masterLabel = masterLabel.substring(0,39);
+            if (masterLabel.endsWith('_')) {
+                masterLabel = masterLabel.substring(0,38);
+            }
         }
 
         //sends the message to the parent cmp RollupsContainer
@@ -924,17 +934,19 @@
                     console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     if (state === "SUCCESS") {
-                        var recordId = response.getReturnValue();
-                        console.log('recordId=' + recordId);
+                        // Response will be a deployResult wrapper class
+                        var deployResult = response.getReturnValue();
+                        deployResult = helper.restructureResponse(deployResult);
+                        console.log('deployResult=' + deployResult);
                         // if there is a record id response
-                        if (recordId !== undefined && recordId !== null) {
+                        if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
                             helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
                             // Save the inserted/updated record id
-                            cmp.set("v.activeRollupId", recordId);
-                            cmp.set("v.activeRollup.id", recordId);
+                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
+                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
 
                             // for a new record, copy the activeRollup map to the cachedRollup map
                             if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.DeveloperName")) {
@@ -951,7 +963,7 @@
                             // Send a message with the changed or new Rollup to the RollupContainer Component
                             var sendMessage = $A.get('e.ltng:sendMessage');
                             sendMessage.setParams({
-                                'message': cmp.get("v.activeRollup"),
+                                'message': deployResult.rollupItem,
                                 'channel': 'rollupRecordChange'
                             });
                             sendMessage.fire();
