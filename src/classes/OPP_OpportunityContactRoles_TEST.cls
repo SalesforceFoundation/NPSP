@@ -49,15 +49,17 @@ private class OPP_OpportunityContactRoles_TEST {
     private static final String OPPORTUNITY_CONTACT_ROLE_HONOREE = 'Honoree';
     private static final String OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT = 'Notification Recipient';
     private static final String OPPORTUNITY_CONTACT_ROLE_INFLUENCER = 'Influencer';
+    private static final String OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
 
     /*******************************************************************************************************
-    * @description Test creation or upate of contact role.
+    * @description Test creation or upate of contact role for Organizational Account.
     */
-    static testMethod void createOrUpdateCR() {
+    static testMethod void testCreateUpdateCRForOrganizationalAccount() {
         if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
         
         Account acc = new Account(Name='test77');
+        acc.npe01__SYSTEMIsIndividual__c = false;
         insert acc;
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
@@ -95,9 +97,57 @@ private class OPP_OpportunityContactRoles_TEST {
 
         result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
         System.assertEquals(con.Id, result[0].ContactId);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT, result[0].Role);
+    }
+
+    /*******************************************************************************************************
+    * @description Test creation or upate of contact role for Individual Accounts.
+    */
+    static testMethod void createOrUpdateCRForIndividualAccount() {
+        if (strTestOnly != '*' && strTestOnly != 'createOrUpdateCR') return;
+
+        Account acc = new Account(Name='test77');
+        acc.npe01__SYSTEMIsIndividual__c = true;
+        insert acc;
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        con.AccountId = acc.id;
+        insert con;
+
+        //Simulate user interface creation of opp from button on contact screen, 
+        //i.e. Role field is blank in the new contact role.
+        Opportunity opp1 = new Opportunity(
+            Name = 'Apex Test Opp1',
+            AccountId = acc.Id,
+            CloseDate = date.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp1;
+
+        //Make sure that we haven't created a contact role yet.
+        OpportunityContactRole[] result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        System.assertEquals(0, result.size());
+
+        //Insert the contact role with a blank Role field.
+        OpportunityContactRole cr = new OpportunityContactRole (OpportunityId = opp1.Id, ContactId = con.Id, IsPrimary = true);
+        insert cr;
+
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        System.assertEquals(con.Id, result[0].ContactId);
+
+        //Now simulate import of an opp record with a contact ID.
+        Opportunity opp2 = new Opportunity(
+            Name = 'Apex Test Opp2',
+            AccountId = acc.Id,
+            Primary_Contact__c = con.Id,
+            CloseDate = date.today(), StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp2;
+
+        result = [SELECT OpportunityId, ContactId, Role FROM OpportunityContactRole WHERE OpportunityId = :opp2.Id];
+        System.assertEquals(con.Id, result[0].ContactId);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
     }
-    
+
     /*******************************************************************************************************
     * @description Disables OCR and verifies contact role isn't created.
     */
