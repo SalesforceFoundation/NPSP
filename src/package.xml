@@ -165,6 +165,8 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>OPP_AutomatedSoftCreditsService</members>
+        <members>OPP_AutomatedSoftCreditsService_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
@@ -868,6 +870,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Default_Organizational_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
@@ -1531,6 +1534,7 @@
         <members>stgHelpOppRecTypesNoPayments</members>
         <members>stgHelpOppTypesNoPayments</members>
         <members>stgHelpOrgAccountAddressMgmt</members>
+        <members>stgHelpOrgOCRDefaultRole</members>
         <members>stgHelpOverrunCount</members>
         <members>stgHelpPaymentMapOppField</members>
         <members>stgHelpPaymentMapPaymentField</members>
