@@ -35,6 +35,18 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Default_Organizational_Contact_Role__c</fullName>
+        <description>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is an Organization Account.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is an Organization Account.</inlineHelpText>
+        <label>Default Organizational Contact Role</label>
+        <length>255</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Honoree_Opportunity_Contact_Role__c</fullName>
         <description>Populating this setting will automatically create a Contact Role for Opportunities with an honoree Contact. Leaving this field blank will disable automatic Contact Role creation for the honoree.</description>
         <externalId>false</externalId>
