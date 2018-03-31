@@ -199,8 +199,8 @@
 
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
-        <div class="slds-p-horizontal_large slds-p-bottom_large">
-            <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
+        <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
+            <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container" style="height: 300px;">
                 <lightning:datatable data="{!v.filterGroupList}"
                                      columns="{!v.filterGroupColumns}"
                                      class="lightningTable"
@@ -210,14 +210,15 @@
                                      onrowaction="{!c.handleRowAction}"
                                      sortedBy="{!v.sortedBy}"
                                      sortedDirection="{!v.sortedDirection}"
-                                     defaultSortDirection="asc"/>
+                                     defaultSortDirection="asc"
+                                     style="height:300px;"/>
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
                         {!v.labels.noFilterGroups}
                     </ui:message>
                 </aura:set>
-            </aura:if>
-        </div>
+            </div>
+        </aura:if>
     </aura:if>
     <!--END FILTER GROUPS GRID-->
 

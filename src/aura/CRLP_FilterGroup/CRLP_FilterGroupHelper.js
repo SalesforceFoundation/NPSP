@@ -83,34 +83,11 @@
 
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
-    openFilterRuleModal: function(cmp, row){
-        var modalBody;
-        var filterRuleHeader;
-        var labels = cmp.get("v.labels");
-        if(row){
-            //editing rule
-            filterRuleHeader = labels.edit + labels.filterRuleLabel;
-
-        } else {
-            //adding new rule
-            filterRuleHeader = labels.create + labels.filterRuleLabel;
-
-        }
-        /*$A.createComponent("c:CRLP_FilterRuleModal", {},
-            function(content, status) {
-                if (status === "SUCCESS") {
-                    modalBody = content;
-                    component.find('filterRuleModal').showCustomModal({
-                        header: filterRuleHeader,
-                        body: modalBody,
-                        showCloseButton: true,
-                        closeCallback: function () {
-                            //update the row if save, do nothing if not
-                            //cmp.set("v.filterRuleList", rows);
-                        }
-                    });
-                }
-        });*/
+    openFilterRuleModal: function(cmp){
+        var backdrop = cmp.find('backdrop');
+        $A.util.addClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.addClass(modal, 'slds-fade-in-open');
     },
 
     /* @description: restructures returned Apex response to preserve separate variables

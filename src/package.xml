@@ -1578,6 +1578,7 @@
         <members>statusInProgress</members>
         <members>statusNotStarted</members>
         <members>stgActive</members>
+        <members>stgAdd</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
         <members>stgBtnCancel</members>
@@ -1609,7 +1610,6 @@
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
-        <members>stgCreate</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>

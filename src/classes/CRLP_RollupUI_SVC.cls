@@ -382,6 +382,7 @@ public with sharing class CRLP_RollupUI_SVC {
             {
                 'action' => Label.stgLabelActionColumn,
                 'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
+                'add' => Label.stgAdd,
                 'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
                 'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
@@ -393,7 +394,6 @@ public with sharing class CRLP_RollupUI_SVC {
                 'clone' => Label.stgBtnClone,
                 'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
                 'countOf' => Label.stgCountOf,
-                'create' => Label.stgCreate,
                 'createIntroHelp' => Label.CRLP_CreateRollupIntroHelpText,
                 'createTargetObjectHelp' => Label.CRLP_CreateRollupTargetObjectHelpText,
                 'createTargetFieldHelp' => Label.CRLP_CreateRollupTargetFieldHelpText,

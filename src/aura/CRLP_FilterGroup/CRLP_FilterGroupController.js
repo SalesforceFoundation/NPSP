@@ -29,7 +29,6 @@
                         , {label: labels.constant, fieldName: 'constant', type: 'string'}
                         , {type: 'action', typeAttributes: { rowActions: actions }}
                     ];
-                    //todo: add actions back
 
                     cmp.set("v.filterRuleList", data.filterRuleList);
                     cmp.set("v.filterRuleColumns", filterRuleColumns);
@@ -59,27 +58,36 @@
 
     /* @description: creates a new filter rule
     */
-    createFilterRule: function(cmp, event, helper){
-        //placeholder for creating a new filter rule
+    addFilterRule: function(cmp, event, helper){
         helper.openFilterRuleModal(cmp);
+    },
+
+    /* @description: cancels the pop up for filter rule
+    */
+    cancelFilterRule: function(cmp, event, helper){
+        var backdrop = cmp.find('backdrop');
+        $A.util.removeClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.removeClass(modal, 'slds-fade-in-open');
     },
 
     /* @description: handles individual row events for the filter rule table
     */
     handleRowAction: function(cmp, event, helper){
+        /*
         var action = event.getParam('action');
         var row = event.getParam('row');
 
         if(action.name !== 'delete'){
             //handle modal popup
-            helper.openFilterRuleModal(cmp, row);
+            helper.openFilterRuleModal(cmp);
         } else {
             //caution user about deleting the filter rule?
             helper.openFilterRuleDeleteModal(cmp);
             var rowIndex = rows.indexOf(row);
             rows.splice(rowIndex, 1);
             cmp.set("v.filterRuleList", rows);
-        }
+        }*/
     },
 
     /* @description: handles the cancel action during the edit of a filter group
@@ -123,6 +131,12 @@
             });
             sendMessage.fire();
         }
+    },
+
+    /* @description: saves filter rule into the list of filter rules on the filter group
+    */
+    saveFilterRule: function(cmp, event, helper){
+
     },
 
     /* @description: navigates the user to the selected rollup from the filter group detail page

@@ -4567,6 +4567,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Active</value>
     </labels>
     <labels>
+        <fullName>stgAdd</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To add to a list</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -4797,14 +4805,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgCountOf</shortDescription>
         <value>Count of</value>
-    </labels>
-    <labels>
-        <fullName>stgCreate</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCreate</shortDescription>
-        <value>Create</value>
     </labels>
     <labels>
         <fullName>stgCRLPHouseholdAccountError</fullName>

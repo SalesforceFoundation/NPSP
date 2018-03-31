@@ -88,26 +88,44 @@
                     </lightning:layout>
 
                     <!--START FILTER GROUP DATATABLE-->
+
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
-                            <h3 class="slds-text-heading_label slds-p-bottom_small">{!v.labels.filterRuleLabelPlural}</h3>
-                            <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                <lightning:datatable data="{!v.filterRuleList}"
-                                                     columns="{!v.filterRuleColumns}"
-                                                     keyField="id"
-                                                     hideCheckboxColumn="true"
-                                                     onrowaction="{!c.handleRowAction}"
-                                                     />
-                                <aura:set attribute="else">
+                            <article class="slds-card">
+                                <div class="slds-card__header slds-grid">
+                                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                                        <div class="slds-media__figure">
+                                            <lightning:icon iconName="utility:rules" variant="inverse" alternativeText="Rules" title="Rules"/>
+                                        </div>
+                                        <div class="slds-media__body">
+                                            <h3 class="slds-text-heading_label slds-p-bottom_small">{!v.labels.filterRuleLabelPlural}</h3>
+                                        </div>
+                                    </header>
+                                    <aura:if isTrue="{!v.mode != 'view'}">
+                                        <div class="slds-no-flex">
+                                            <lightning:button variant="brand" label="{!v.labels.add}"
+                                                              onclick="{!c.addFilterRule}" class="slds-p-around_medium"/>
+                                        </div>
+                                    </aura:if>
+                                </div>
+                                <div class="slds-card__body">
+                                    <aura:if isTrue="{! !empty(v.filterRuleList)}">
+                                        <lightning:datatable data="{!v.filterRuleList}"
+                                                             columns="{!v.filterRuleColumns}"
+                                                             keyField="id"
+                                                             hideCheckboxColumn="true"
+                                                             onrowaction="{!c.handleRowAction}"
+                                        />
+                                        <aura:set attribute="else">
                                             <ui:message severity="info" closable="false">
                                                 {!v.labels.noFilterRules}
                                             </ui:message>
-                                </aura:set>
-                            </aura:if>
-                            <aura:if isTrue="{!v.mode != 'view'}">
-                                <lightning:overlayLibrary aura:id="filterRuleModal"/>
-                                <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
-                            </aura:if>
+                                        </aura:set>
+                                    </aura:if>
+                                </div>
+                            </article>
+
+
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END FILTER GROUP DATATABLE-->
@@ -145,5 +163,56 @@
         </lightning:layout>
     </div>
     <!--END BUTTONS-->
+
+    <!--START MODAL-->
+    <div>
+        <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
+                 aria-describedby="modal-content-id-1" class="slds-modal">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning:buttonIcon alternativeText="{!v.labels.cancel}" iconName="utility:close"
+                                          onclick="{!c.cancelFilterRule}" variant="bare-inverse" size="small"/>
+                    <h2 id="modal-heading-01"
+                        class="slds-text-heading_medium slds-hyphenate">{!v.labels.filterRuleLabel + ' ' +  v.labels.edit}</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <lightning:layout>
+                        <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.object}">
+                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
+                                    <option value="{!option.name}" text="{!option.label}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.field}">
+                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
+                                    <option value="{!option.name}" text="{!option.label}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.operator}">
+                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
+                                    <option value="{!option.name}" text="{!option.label}"/>
+                                </aura:iteration>
+                            </lightning:select>
+                        </lightning:layoutItem>
+                        <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                            <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text"/>
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                            onclick="{!c.cancelFilterRule}">{!v.labels.cancel}</button>
+                    <button class="slds-button slds-button_brand"
+                            onclick="{!c.saveFilterRule}">{!v.labels.save}</button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+    </div>
+    <!--END MODAL-->
 
 </aura:component>
