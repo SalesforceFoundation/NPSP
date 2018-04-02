@@ -30,6 +30,12 @@
                     , {label: labels.labelRD, name: labels.objectRD}];
                 cmp.set("v.summaryObjects", summaryObjects);
 
+                var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+                    , {label: labels.labelPartialSoftCredit, name: labels.objectPartialSoftCredit}
+                    , {label: labels.labelPayment, name: labels.objectPayment}
+                    , {label: labels.labelAllocation, name: labels.objectAllocation}];
+                cmp.set("v.detailObjects", detailObjects);
+
                 //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
                 var rollupColumns = [{label: labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
                                 , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
@@ -77,7 +83,7 @@
     displayFilterGroupsGrid: function(cmp, event, helper){
         helper.displayFilterGroupsGrid(cmp);
         cmp.set("v.sortedBy", "");
-        cmp.set("v.sortedDirection", "");
+        cmp.set("v.sortedDirection", "asc");
     },
 
     /* @description: resets the active record to ensure there is no leftover data and applies filtered summary object to the creation of a new rollup if applicable
@@ -113,7 +119,7 @@
     displayRollupsGrid: function(cmp, event, helper){
         helper.displayRollupsGrid(cmp);
         cmp.set("v.sortedBy", "");
-        cmp.set("v.sortedDirection", "");
+        cmp.set("v.sortedDirection", "asc");
     },
 
     /* @description: filters visible rollups by the summary object picklist
@@ -244,6 +250,10 @@
         var col = event.getParam();
         var fieldName = event.getParam('fieldName');
         var sortDirection = event.getParam('sortDirection');
+
+        if(!sortDirection){
+            sortDirection = 'asc';
+        }
 
         cmp.set("v.sortedBy", fieldName);
         cmp.set("v.sortedDirection", sortDirection);

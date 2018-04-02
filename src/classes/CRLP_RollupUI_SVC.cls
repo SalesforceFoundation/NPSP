@@ -108,6 +108,8 @@ public with sharing class CRLP_RollupUI_SVC {
     public class FilterGroupModel {
         @AuraEnabled public Filter_Group__mdt filterGroup;
         @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
+        @AuraEnabled public Map<String,String> operators;
+        @AuraEnabled public Map<String,List<Map<String,String>>> filterFieldsByDataType;
 
     }
 
@@ -261,7 +263,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static FilterGroupModel getFilterGroupById(Id id) {
+    public static FilterGroupModel setupFilterGroupDetail(Id id, List<String> objectNames) {
 
         List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
         Map<String,String> operators = getfilterRuleOperations();
@@ -288,10 +290,19 @@ public with sharing class CRLP_RollupUI_SVC {
             mdtTableList.add(item);
         }
 
+        Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
+
+        for(String obj : objectNames){
+            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
+            objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+        }
+
         FilterGroupModel model = new FilterGroupModel();
 
         model.filterGroup = filterGroup;
         model.filterRuleList = mdtTableList;
+        model.operators = operators;
+        model.filterFieldsByDataType = objNameToFieldTypeMap;
 
         return model;
     }

@@ -37,7 +37,7 @@
 
 <aura:component description="CRLP_FilterGroup" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
-    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="labels" type="Map" description="All available labels for the app." access="public"/>
     <aura:attribute name="activeFilterGroupId" type="Id"/>
     <aura:attribute name="activeFilterGroup" type="Map"
                     description="The active filter group displayed. Only populated from Clone, View and Edit."/>
@@ -51,6 +51,12 @@
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
     <aura:attribute name="rollupItems" type="Object"/>
+    <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule." access="public"/>
+    <!-- private attributes -->
+    <aura:attribute name="operators" type="List" description="List of filter group operators" access="private"/>
+    <aura:attribute name="objectDetails" type="Map" description="Mapped objects to all related fields." access="private"/>
+    <aura:attribute name="filteredFields" type="List" description="List of mapped filter fields for the selected object" access="private"/>
+    <aura:attribute name="activeFilterRule" type="Map" description="Selected values for actively edited filter rule." access="private"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -62,7 +68,7 @@
 
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
-        <form class="slds-form_stacked">
+        <div class="slds-form_stacked">
             <lightning:layout>
                 <lightning:layoutItem size="12">
 
@@ -91,46 +97,31 @@
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
-                            <article class="slds-card">
-                                <div class="slds-card__header slds-grid">
-                                    <header class="slds-media slds-media_center slds-has-flexi-truncate">
-                                        <div class="slds-media__figure">
-                                            <lightning:icon iconName="utility:rules" variant="inverse" alternativeText="Rules" title="Rules"/>
-                                        </div>
-                                        <div class="slds-media__body">
-                                            <h3 class="slds-text-heading_label slds-p-bottom_small">{!v.labels.filterRuleLabelPlural}</h3>
-                                        </div>
-                                    </header>
+                            <lightning:card iconName="utility:rules" title="{!v.labels.filterRuleLabelPlural}">
+                                <aura:set attribute="actions">
                                     <aura:if isTrue="{!v.mode != 'view'}">
-                                        <div class="slds-no-flex">
-                                            <lightning:button variant="brand" label="{!v.labels.add}"
-                                                              onclick="{!c.addFilterRule}" class="slds-p-around_medium"/>
-                                        </div>
+                                        <lightning:button label="{!v.labels.add}" onclick="{!c.addFilterRule}" variant="brand"/>
                                     </aura:if>
-                                </div>
-                                <div class="slds-card__body">
-                                    <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                        <lightning:datatable data="{!v.filterRuleList}"
-                                                             columns="{!v.filterRuleColumns}"
-                                                             keyField="id"
-                                                             hideCheckboxColumn="true"
-                                                             onrowaction="{!c.handleRowAction}"
-                                        />
-                                        <aura:set attribute="else">
-                                            <ui:message severity="info" closable="false">
-                                                {!v.labels.noFilterRules}
-                                            </ui:message>
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </article>
-
-
+                                </aura:set>
+                                <aura:if isTrue="{! !empty(v.filterRuleList)}">
+                                    <lightning:datatable data="{!v.filterRuleList}"
+                                                         columns="{!v.filterRuleColumns}"
+                                                         keyField="id"
+                                                         hideCheckboxColumn="true"
+                                                         onrowaction="{!c.handleRowAction}"
+                                    />
+                                    <aura:set attribute="else">
+                                        <ui:message severity="info" closable="false">
+                                            {!v.labels.noFilterRules}
+                                        </ui:message>
+                                    </aura:set>
+                                </aura:if>
+                            </lightning:card>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END FILTER GROUP DATATABLE-->
 
-                    <!--START ROLLUP LIST-->
+                    <!--START RELATED ROLLUP LIST-->
                     <aura:if isTrue="{!v.mode=='view'}">
                         <lightning:layout multipleRows="true" verticalAlign="start">
                             <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
@@ -139,11 +130,11 @@
                             </lightning:layoutItem>
                         </lightning:layout>
                     </aura:if>
-                    <!--END ROLLUP LIST-->
+                    <!--END RELATED ROLLUP LIST-->
 
                 </lightning:layoutItem>
             </lightning:layout>
-        </form>
+        </div>
     </div>
     <!--END FORM-->
 
@@ -169,37 +160,37 @@
         <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true"
                  aria-describedby="modal-content-id-1" class="slds-modal">
             <div class="slds-modal__container">
+                <lightning:buttonIcon alternativeText="{!v.labels.cancel}" iconName="utility:close" class="slds-float_right"
+                                      onclick="{!c.cancelFilterRule}" size="large" variant="bare-inverse"/>
                 <header class="slds-modal__header">
-                    <lightning:buttonIcon alternativeText="{!v.labels.cancel}" iconName="utility:close"
-                                          onclick="{!c.cancelFilterRule}" variant="bare-inverse" size="small"/>
                     <h2 id="modal-heading-01"
-                        class="slds-text-heading_medium slds-hyphenate">{!v.labels.filterRuleLabel + ' ' +  v.labels.edit}</h2>
+                        class="slds-text-heading_medium slds-hyphenate">{!v.labels.add + ' ' + v.labels.filterRuleLabel}</h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
                     <lightning:layout>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                            <lightning:select class="slds-p-around_small" label="{!v.labels.object}">
-                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
-                                    <option value="{!option.name}" text="{!option.label}"/>
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.object}" value="{!v.activeFilterRule.object}" onchange="{!c.onChangeFilterRuleObject}">
+                                <aura:iteration items="{!v.detailObjects}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.object}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                            <lightning:select class="slds-p-around_small" label="{!v.labels.field}">
-                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
-                                    <option value="{!option.name}" text="{!option.label}"/>
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.field}" value="{!v.activeFilterRule.field}">
+                                <aura:iteration items="{!v.filteredFields}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.field}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                            <lightning:select class="slds-p-around_small" label="{!v.labels.operator}">
-                                <aura:iteration items="[{name: 'name1', label: 'label1'}, {name: 'name2', label: 'label2'}]" var="option">
-                                    <option value="{!option.name}" text="{!option.label}"/>
+                            <lightning:select class="slds-p-around_small" label="{!v.labels.operator}" value="{!v.activeFilterRule.operator}">
+                                <aura:iteration items="{!v.operators}" var="option">
+                                    <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.operator}"/>
                                 </aura:iteration>
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                            <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text"/>
+                            <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text" value="{!v.activeFilterRule.constant}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
                 </div>

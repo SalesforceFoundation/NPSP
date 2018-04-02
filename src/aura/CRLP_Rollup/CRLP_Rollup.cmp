@@ -56,6 +56,7 @@
                     description="Map of the allowed rollup operations, api name to label, based on the selected Summary Field data type"/>
     <aura:attribute name="timeBoundOperations" type="List" description="List of time bound operation types" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="List of summary objects" access="public"/>
+    <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="public"/>
     <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="List" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
@@ -66,7 +67,6 @@
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
-    <aura:attribute name="detailObjects" type="List" description="List of detail objects" access="private"/>
     <aura:attribute name="detailFields" type="List" description="Dependent list of detail fields" access="private"/>
     <aura:attribute name="summaryFields" type="List" description="Dependent list of summary fields" access="private"/>
     <aura:attribute name="amountFields" type="List" description="Dependent list of amount fields" access="private"/>
