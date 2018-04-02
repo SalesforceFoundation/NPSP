@@ -638,4 +638,75 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(oppty.Primary_Contact__c, ocrsUpdated[0].ContactId);
     }
 
+
+    /*********************************************************************************************************
+    * @description Tests retrieving the Opportunity's associated Account's details.
+    * verify:
+    *   The Opportunity's Account details are retrieved.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulateAccountDetails() {
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+
+        Account acct = new Account(Name = 'PopulateAccountDetails');
+        acct.npe01__SYSTEMIsIndividual__c = false;
+        insert acct;
+
+        Opportunity oppty = new Opportunity(
+            Name = 'Update Primary Contact Test Oppty',
+            AccountId = acct.Id,
+            Amount = 100,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+
+        Test.startTest();
+        insert oppty;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(new List<Opportunity>{oppty});
+        Test.stopTest();
+
+        System.assertEquals(1, accountDetails.size());
+        System.assertEquals(acct.Id, accountDetails.get(acct.Id).Id);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests retrieving the Opportunity's associated Primary Contact's details.
+    * verify:
+    *   The updated Opportunity's Primary Contact details are retrieved.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulatePrimaryContactToOpportunity() {
+        Map<Id, Id> primaryContactToOpportunity = new Map<Id, Id>();
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+
+        Account acct = new Account(Name = 'PopulateAccountDetails');
+        acct.npe01__SYSTEMIsIndividual__c = true;
+        insert acct;
+
+        Contact con = new Contact(FirstName = 'Primary', LastName = 'Contact', AccountId = acct.Id);
+        insert con;
+
+        Opportunity oppty = new Opportunity(
+            Name = 'Update Primary Contact Test Oppty',
+            AccountId = con.AccountId,
+            Primary_Contact__c = con.Id,
+            Amount = 100,
+            CloseDate = System.today(),
+            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+
+        Test.startTest();
+        insert oppty;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(new List<Opportunity>{oppty});
+
+        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(new List<Opportunity>{oppty}, accountDetails);
+        Test.stopTest();
+
+        System.assertEquals(1, primaryContactToOpportunity.size());
+        System.assertEquals(con.Id, new List<Id>(primaryContactToOpportunity.keySet())[0]);
+        System.assertEquals(oppty.Id, primaryContactToOpportunity.get(con.Id));
+    }
+
+
 }
