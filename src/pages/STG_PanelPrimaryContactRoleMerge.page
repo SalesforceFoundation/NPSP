@@ -13,7 +13,9 @@
                 strBatchComponentLabel="{!$Label.stgLabelPrimaryContactRoleMergeBatch}"
                 startPolling="True"
                 stopPollingOnComplete="True"
-                pollingDelay="1000"/>
+                pollingDelay="1000"
+                cNumberOfJobs="1"
+            />
         </apex:outputPanel>
     </apex:form>
 </apex:page>
