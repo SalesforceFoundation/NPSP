@@ -31,7 +31,6 @@
 * @author Salesforce.org
 * @date 2018
 * @group Opportunity Contact Role
-* @group-content ../../ApexDocContent/Rollups.htm
 * @description Batch Class for the deletion of the duplicate primary OCRs.
 */
 public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sObject> {
@@ -39,7 +38,7 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     /******************************************************************************************************
     * @description Batch start method. Runs through all the Opportunities in the org.
     */
-    public Database.QueryLocator start(Database.batchableContext info) {
+    public Database.QueryLocator start(Database.BatchableContext info) {
         return Database.getQueryLocator('SELECT Id FROM Opportunity');
     }
 
@@ -63,14 +62,14 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     /******************************************************************************************************
     * @description Batch finish method.
     */
-    public void finish(Database.batchableContext info) {
+    public void finish(Database.BatchableContext info) {
         
     }
 
     /*******************************************************************************************************
     * @description Gets the Opportunities with duplicate primary OCRs.
     * @param List<Opportunity> The List of the Opportunities.
-    * @return List<AggregateResult> The Aggegate Result that contains the List of the duplicate primary OCRs.
+    * @return List<AggregateResult> The Aggregate Result that contains the List of the duplicate primary OCRs.
     ********************************************************************************************************/
     private List<AggregateResult> getPrimaryOCRsAggregateResult(List<Opportunity> opportunities) {
         return [
