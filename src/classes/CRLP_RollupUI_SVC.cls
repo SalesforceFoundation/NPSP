@@ -72,8 +72,11 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class FilterRulesTableItem{
         @AuraEnabled public String objectLabel;
+        @AuraEnabled public String objectName;
         @AuraEnabled public String fieldLabel;
-        @AuraEnabled public String operator;
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public String operatorName;
+        @AuraEnabled public String operatorLabel;
         @AuraEnabled public String constant;
         @AuraEnabled public Id id;
     }
@@ -275,16 +278,19 @@ public with sharing class CRLP_RollupUI_SVC {
         FROM Filter_Group__mdt
         WHERE Id = :id];
 
-        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Object__r.MasterLabel FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
+        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Field__r.QualifiedApiName, Object__r.MasterLabel, Object__r.QualifiedApiName FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
 
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterRulesTableItem item = new FilterRulesTableItem();
 
             String c = mdtList[i].Constant__c;
             item.constant = c.replace(';', '\n');
-            item.operator = operators.get(mdtList[i].Operator__c);
+            item.operatorName = mdtList[i].Operator__c;
+            item.operatorLabel = operators.get(mdtList[i].Operator__c);
             item.fieldLabel = mdtList[i].Field__r.MasterLabel;
+            item.fieldName = mdtList[i].Field__r.QualifiedApiName;
             item.objectLabel = mdtList[i].Object__r.MasterLabel;
+            item.objectName = mdtList[i].Object__r.QualifiedApiName;
             item.id = mdtList[i].id;
 
             mdtTableList.add(item);

@@ -41,7 +41,7 @@
 
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
-                    , {label: labels.operator, fieldName: 'operator', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
                     , {label: labels.constant, fieldName: 'constant', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
@@ -77,13 +77,11 @@
         helper.openFilterRuleModal(cmp);
     },
 
-    /* @description: cancels the pop up for filter rule
+    /* @description: cancels the pop up for filter rule and clears the active filter rule
     */
     cancelFilterRule: function(cmp, event, helper){
-        var backdrop = cmp.find('backdrop');
-        $A.util.removeClass(backdrop, 'slds-backdrop_open');
-        var modal = cmp.find('modaldialog');
-        $A.util.removeClass(modal, 'slds-fade-in-open');
+        helper.closeFilterRuleModal(cmp);
+        helper.resetActiveFilterRule(cmp);
     },
 
     /* @description: handles individual row events for the filter rule table
@@ -130,13 +128,30 @@
     /* @description: filters the filter fields when filter rule objects is changed
     */
     onChangeFilterRuleObject: function(cmp, event, helper){
-        console.log('on change filter rule');
         var object = event.getSource().get("v.value");
         var objectDetails = cmp.get("v.objectDetails");
-        console.log(object);
-        console.log(objectDetails);
-        console.log(objectDetails[object]);
         cmp.set("v.filteredFields", objectDetails[object]);
+    },
+
+    /* @description: checks for type on filter rule field to update eligible values
+    */
+    onChangeFilterRuleField: function(cmp, event, helper){
+        var field = event.getSource().get("v.value");
+        var filteredFields = cmp.get("v.filteredFields");
+        var type;
+
+        for (var i = 0; i < filteredFields.length; i++) {
+            if (filteredFields[i].name === field) {
+                type = filteredFields[i].type;
+                break;
+            }
+        }
+
+        if(type.toLowerCase() === 'picklist'){
+            //todo: add picklist changes
+        } else if (type.toLowerCase() === 'multipicklist'){
+            //todo: add multipicklist changes
+        }
     },
 
     /* @description: saves a new filter group and associated filter rules
@@ -145,7 +160,7 @@
         //placeholder for on cancel function in !view mode
         //add check for description, name and a filter rule
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
-        var canSave = helper.validateFields(cmp, activeFilterGroup);
+        var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
         if(canSave){
             cmp.set("v.mode", 'view');
 
@@ -164,11 +179,19 @@
     saveFilterRule: function(cmp, event, helper){
         //todo: add exception handling
         //todo: save to DB first
+        //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
-        console.log(filterRule);
+        filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
+        filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
+        filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.operators"));
+
         var filterRuleList = cmp.get("v.filterRuleList");
         filterRuleList.push(filterRule);
         cmp.set("v.filterRuleList", filterRuleList);
+
+        helper.closeFilterRuleModal(cmp);
+        helper.resetActiveFilterRule(cmp);
+
     },
 
     /* @description: navigates the user to the selected rollup from the filter group detail page

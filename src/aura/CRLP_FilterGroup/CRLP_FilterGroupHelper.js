@@ -24,6 +24,15 @@
         }
     },
 
+    /* @description: closes modal popup
+     */
+    closeFilterRuleModal: function(cmp){
+        var backdrop = cmp.find('backdrop');
+        $A.util.removeClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.removeClass(modal, 'slds-fade-in-open');
+    },
+
     /* @description: filters the full rollup data to find which rollups use a particular filter group
     * @param filterGroupLabel: label of the selected filter group
     * @param labels: labels for the rollups UI
@@ -90,6 +99,13 @@
         $A.util.addClass(modal, 'slds-fade-in-open');
     },
 
+    /* @description: opens a modal popup so user can add or edit a filter rule
+     */
+    resetActiveFilterRule: function(cmp){
+        cmp.set("v.activeFilterRule", "{objectName: '', fieldName: '', operatorName: '', constant: ''}");
+        cmp.set("v.filteredFields", "");
+    },
+
     /* @description: restructures returned Apex response to preserve separate variables
     * @return: the parsed and stringified JSON
     */
@@ -97,9 +113,27 @@
         return JSON.parse(JSON.stringify(resp));
     },
 
+    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+    * @param apiName: the name of the field
+    * @param entityList: list of fields to search
+    * @return label: field label that matches the apiName
+    */
+    retrieveFieldLabel: function (apiName, entityList) {
+        var label;
+        if (entityList) {
+            for (var i = 0; i < entityList.length; i++) {
+                if (entityList[i].name === apiName) {
+                    label = entityList[i].label;
+                    break;
+                }
+            }
+        }
+        return label;
+    },
+
     /* @description: verifies all required fields have been populated before saving the filter group
      */
-    validateFields: function(cmp){
+    validateFilterGroupFields: function(cmp){
         var canSave = true;
         var name = cmp.get("v.activeFilterGroup.MasterLabel");
         var description = cmp.get("v.activeFilterGroup.Description__c");
