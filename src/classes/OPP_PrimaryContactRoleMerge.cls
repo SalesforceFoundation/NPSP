@@ -31,7 +31,6 @@
 * @author Salesforce.org
 * @date 2018
 * @group Opportunity Contact Role
-* @group-content ../../ApexDocContent/Rollups.htm
 * @description Domain Classes for the deletion of duplicate primary OCRs. 
 */
 
@@ -83,8 +82,10 @@ public with sharing class OPP_PrimaryContactRoleMerge {
             ocrRecordsToUpdate.put(ocrToUpdate.Id, ocrToUpdate);
 
             Opportunity opportunityToUpdate = opportunityRecords.get(inputOCR.OpportunityId);
-            opportunityToUpdate.Primary_Contact__c = inputOCR.ContactId;
-            opportunityRecordsToUpdate.put(opportunityToUpdate.Id, opportunityToUpdate);
+            if (opportunityToUpdate.Primary_Contact__c != inputOCR.ContactId) {
+                opportunityToUpdate.Primary_Contact__c = inputOCR.ContactId;
+                opportunityRecordsToUpdate.put(opportunityToUpdate.Id, opportunityToUpdate);
+            } 
         }
 
         /*******************************************************************************************************
@@ -221,14 +222,12 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     ********************************************************************************************************/
     public class Errors {
         private List<Error__c> errors;
-        private Set<Id> errorOpportunityRecords;
 
         /*********************************************************************************************************
         * @description The Constructor of Errors
         */
         public Errors() {
             errors = new List<Error__c>();
-            errorOpportunityRecords = new Set<Id>();
         }
 
         /*******************************************************************************************************
@@ -244,11 +243,10 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 Context_Type__c = ERROR_CONTEXT,
                 Object_Type__c = ERROR_SOBJECT
             ));
-            errorOpportunityRecords.add(opportunityRecord.Id);
         }
 
         /*******************************************************************************************************
-        * @description Commits the DMLs (delete/Update OCRs, update Opportunities)
+        * @description Commits the DMLs (insert Error__c records)
         * @return void.
         ********************************************************************************************************/
         public void processDML() {
