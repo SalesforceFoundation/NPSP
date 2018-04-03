@@ -789,7 +789,6 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <shortDescription>More ClosedWon donations than Installments</shortDescription>
         <value>There are more Closed Won Opportunities associated with this Recurring Donation than the number of Installments defined.</value>
     </labels>
-    RD_ErrorNotEnoughClosedValueForFixedLength
     <labels>
         <fullName>RD_ErrorNotEnoughClosedValueForFixedLength</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -5233,8 +5232,19 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <categories>NPSP Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text displayed on the Duplicate Primary OCRs Batch page</shortDescription>
-        <value>This utility removes any duplicate Primary Opportunity Contact Roles that exist in your org. This process may take some time, but you can safely close this page and the process will continue in the background.</value>
+        <shortDescription>Content of the &quot;Bulk Data Processes - Remove Duplicate Primary OCRs&quot; page</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch that permanently removes any duplicate Primary Opportunity Contact Roles that exist in your org. These records won&apos;t be recoverable in the recycle bin, so be careful to review expected changes in advance.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+This change updates Opportunity and Opportunity Contact Role records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDAddCampaign</fullName>
