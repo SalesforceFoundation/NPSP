@@ -554,6 +554,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
      * @param jobId CMT Deployment Job Id to check the status for
      * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
+     * TODO Refactor this to work for FilterGroup+FilterRule as well as for Rollups
      * @return DeploymentResult
      */
     @auraEnabled
@@ -563,15 +564,18 @@ public with sharing class CRLP_RollupUI_SVC {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
                 String result = deploymentStatus.get(jobId);
-                if (result == 'Succeeded') {
+                if (result == Metadata.DeployStatus.Succeeded.name()) {
                     try {
-                        // TODO Get this down to a single query
                         Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                         DeploymentResult response = new DeploymentResult();
                         response.completed = true;
                         response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupsById(rollupId));
                         return response;
-                    } catch (Exception ex) {}
+                    } catch (Exception ex) {
+                        // error retrieving the metadata record
+                        throw new AuraHandledException(ex.getMessage());
+                    }
+
                 } else {
 
                     // If there is an error, parse the message to remove the metadata recordname leaving just the error message itself
