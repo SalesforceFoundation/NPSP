@@ -58,6 +58,8 @@
     <aura:attribute name="operators" type="List" description="List of filter group operators" access="private"/>
     <aura:attribute name="objectDetails" type="Map" description="Mapped objects to all related fields." access="private"/>
     <aura:attribute name="filteredFields" type="List" description="List of mapped filter fields for the selected object" access="private"/>
+    <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" access="private"/>
+    <aura:attribute name="filterRuleConstantPicklist" type="List" description="Picklist values corresponding to the selected field"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -179,6 +181,7 @@
                         </lightning:layoutItem>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
                             <lightning:select class="slds-p-around_small" label="{!v.labels.field}" value="{!v.activeFilterRule.fieldName}" onchange="{!c.onChangeFilterRuleField}">
+                                <option value="" text=""/>
                                 <aura:iteration items="{!v.filteredFields}" var="option">
                                     <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.fieldName}"/>
                                 </aura:iteration>
@@ -193,7 +196,18 @@
                             </lightning:select>
                         </lightning:layoutItem>
                         <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                            <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text" value="{!v.activeFilterRule.constant}"/>
+                            <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.constant}" value="{!v.activeFilterRule.constantName}">
+                                    <option value="" text=""/>
+                                    <aura:iteration items="{!v.filterRuleConstantPicklist}" var="option">
+                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.constantName}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                                <aura:set attribute="else">
+                                    <!--todo: add date/datetime check here-->
+                                    <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text" value="{!v.activeFilterRule.constant}"/>
+                                </aura:set>
+                            </aura:if>
                         </lightning:layoutItem>
                     </lightning:layout>
                 </div>

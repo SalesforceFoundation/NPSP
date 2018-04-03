@@ -102,7 +102,8 @@
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp){
-        cmp.set("v.activeFilterRule", "{objectName: '', fieldName: '', operatorName: '', constant: ''}");
+        var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
+        cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
     },
 

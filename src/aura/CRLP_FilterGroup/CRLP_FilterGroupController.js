@@ -34,9 +34,8 @@
 
                 var labels = cmp.get("v.labels");
 
-                var actions = [{label: labels.edit, name:'edit'}
-                    , {label: labels.clone, name:'clone'}
-                    , {label: labels.delete, name:'delete'}
+                var actions = [{label: labels.edit, name: 'edit'}
+                    , {label: labels.delete, name: 'delete'}
                 ];
 
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
@@ -75,6 +74,7 @@
     */
     addFilterRule: function(cmp, event, helper){
         helper.openFilterRuleModal(cmp);
+        console.log(JSON.stringify(cmp.get("v.activeFilterRule")));
     },
 
     /* @description: cancels the pop up for filter rule and clears the active filter rule
@@ -115,6 +115,13 @@
             var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup.valueOf()));
+
+            //remove unsaved filter rules, those without ids
+            var filterRuleList = cmp.get("v.filterRuleList");
+            var updatedFilterRules = filterRuleList.filter(function(rule){
+                return rule.hasOwnProperty('id');
+            });
+            cmp.set("v.filterRuleList", updatedFilterRules);
         }
 
     },
@@ -152,6 +159,8 @@
         } else if (type.toLowerCase() === 'multipicklist'){
             //todo: add multipicklist changes
         }
+
+        //todo: add operator filtering in CMT_FilterRuleUI_SVC.getAvailableOperations
     },
 
     /* @description: saves a new filter group and associated filter rules
@@ -177,7 +186,7 @@
     /* @description: saves filter rule into the list of filter rules on the filter group
     */
     saveFilterRule: function(cmp, event, helper){
-        //todo: add exception handling
+        //todo: add exception handling + duplicate checking
         //todo: save to DB first
         //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
