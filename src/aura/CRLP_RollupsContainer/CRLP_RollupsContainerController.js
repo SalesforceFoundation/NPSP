@@ -216,13 +216,13 @@
             }
             else{
                 //verify no rollups use the filter group before deleting
-                if(row.countRollups){
+                if(!row.countRollups){
                     var rows = cmp.get("v.filterGroupList");
                     var rowIndex = rows.indexOf(row);
                     rows.splice(rowIndex, 1);
                     cmp.set("v.filterGroupList", rows);
                 } else {
-                    //error or modal to alert user that filter group can't be deleted
+                    helper.toggleFilterRuleModal(cmp);
                 }
             }
         }
@@ -267,5 +267,11 @@
             cmp.set("v.filterGroupList", data);
         }
 
+    },
+
+    /* @description: toggles a modal popup and backdrop
+    */
+    toggleFilterRuleModal: function(cmp, event, helper){
+        helper.toggleFilterRuleModal(cmp);
     },
 })

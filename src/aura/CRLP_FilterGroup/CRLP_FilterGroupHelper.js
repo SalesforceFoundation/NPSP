@@ -24,15 +24,6 @@
         }
     },
 
-    /* @description: closes modal popup
-     */
-    closeFilterRuleModal: function(cmp){
-        var backdrop = cmp.find('backdrop');
-        $A.util.removeClass(backdrop, 'slds-backdrop_open');
-        var modal = cmp.find('modaldialog');
-        $A.util.removeClass(modal, 'slds-fade-in-open');
-    },
-
     /* @description: filters the full rollup data to find which rollups use a particular filter group
     * @param filterGroupLabel: label of the selected filter group
     * @param labels: labels for the rollups UI
@@ -80,15 +71,6 @@
 
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
-    openFilterRuleModal: function(cmp){
-        var backdrop = cmp.find('backdrop');
-        $A.util.addClass(backdrop, 'slds-backdrop_open');
-        var modal = cmp.find('modaldialog');
-        $A.util.addClass(modal, 'slds-fade-in-open');
-    },
-
-    /* @description: opens a modal popup so user can add or edit a filter rule
-     */
     resetActiveFilterRule: function(cmp){
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
@@ -125,6 +107,15 @@
             }
         }
         return label;
+    },
+
+    /* @description: toggles a modal popup and backdrop
+    */
+    toggleFilterRuleModal: function(cmp){
+        var backdrop = cmp.find('backdrop');
+        $A.util.toggleClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.toggleClass(modal, 'slds-fade-in-open');
     },
 
     /* @description: verifies all required fields have been populated before saving the filter group

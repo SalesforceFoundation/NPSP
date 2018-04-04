@@ -596,12 +596,28 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupDeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
+        <value>You can not delete this filter group because there are rollups associated with it. View this filter group for more information on these rollups.</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterNew</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>New filter group button</shortDescription>
         <value>New Filter Group</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDeleteWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
+        <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
     </labels>
     <labels>
         <fullName>ConfirmDeleteAccount</fullName>
@@ -6322,6 +6338,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelONS</shortDescription>
         <value>Opportunity Name Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOK</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOK</shortDescription>
+        <value>OK</value>
     </labels>
     <labels>
         <fullName>stgLabelOppBatchProgress</fullName>

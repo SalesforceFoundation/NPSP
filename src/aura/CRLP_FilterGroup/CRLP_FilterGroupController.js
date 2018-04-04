@@ -82,13 +82,13 @@
     */
     addFilterRule: function(cmp, event, helper){
         cmp.set("v.filterRuleMode", 'create');
-        helper.openFilterRuleModal(cmp);
+        helper.toggleFilterRuleModal(cmp);
     },
 
     /* @description: cancels the pop up for filter rule and clears the active filter rule
     */
     cancelFilterRule: function(cmp, event, helper){
-        helper.closeFilterRuleModal(cmp);
+        helper.toggleFilterRuleModal(cmp);
         helper.resetActiveFilterRule(cmp);
         cmp.set("v.filterRuleMode", '');
     },
@@ -103,13 +103,13 @@
         if(action.name !== 'delete'){
             //handle modal popup
             cmp.set("v.filterRuleMode", 'edit');
-            helper.openFilterRuleModal(cmp);
+            helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, row.objectName);
             console.log(JSON.stringify(cmp.get("v.activeFilterRule")));
         } else {
             //caution user about deleting the filter rule?
             cmp.set("v.filterRuleMode", 'delete');
-            helper.openFilterRuleModal(cmp);
+            helper.toggleFilterRuleModal(cmp);
         }
     },
 
@@ -219,7 +219,7 @@
         }
         cmp.set("v.filterRuleList", filterRuleList);
 
-        helper.closeFilterRuleModal(cmp);
+        helper.toggleFilterRuleModal(cmp);
         helper.resetActiveFilterRule(cmp);
 
     },
