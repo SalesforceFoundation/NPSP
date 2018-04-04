@@ -338,6 +338,12 @@ public class CRLP_RollupCMT {
             }
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
+            // Add the md to the cachedRollups for testing since we don't actually deploy during tests.
+            if (Test.isRunningTest()) {
+                System.debug('+++++md here is not right data type: '+md);
+                //CRLP_Rollup_SEL.cachedRollups.add((Rollup__mdt)md);
+            }
+
             return md;
         }
     }
