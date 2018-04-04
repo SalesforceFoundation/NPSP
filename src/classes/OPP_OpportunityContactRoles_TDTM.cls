@@ -288,7 +288,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (!listPrimaryOCRForInsert.isEmpty()) {
             insert listPrimaryOCRForInsert;
             if (!primaryContactsToOpportunities.isEmpty()) {
-                OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+                List<sObject> relationshipOCRs
+                    = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+                dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
             }
         }
     }
@@ -363,11 +365,6 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 //first, manage primary contact role if the primary contact has changed
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_PRIMARY_CONTACT)) {
                     managePrimaryOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), isIndividualAccount);
-
-                    // Create Relationship Soft Credits accordingly
-                    if (!primaryContactsToOpportunities.isEmpty()) {
-                        OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
-                    }
                 }
                 //then manage honoree, if it has changed and it's not the same as the primary contact
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT)) {
@@ -377,6 +374,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
                     manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT);
                 }
+            }
+
+            // Create Relationship Soft Credits accordingly
+            if (!primaryContactsToOpportunities.isEmpty()) {
+                List<sObject> relationshipOCRs
+                    = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+                dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
             }
         }
     }
@@ -620,7 +624,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
 
     /*********************************************************************************************************
-    * @description Populates a Map of Primary Contct to Opportunity Id.
+    * @description Populates a Map of Primary Contact to Opportunity Id.
     * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
     * @param oppAccountDetails A Map containing the Opportunities' related Accounts.
     * @return Map<Id, Id> contains associated Primary Contacts and Opportunity Ids.

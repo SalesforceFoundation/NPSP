@@ -648,25 +648,22 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void testPopulateAccountDetails() {
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
-        Account acct = new Account(Name = 'PopulateAccountDetails');
-        acct.npe01__SYSTEMIsIndividual__c = false;
-        insert acct;
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
 
-        Opportunity oppty = new Opportunity(
-            Name = 'Update Primary Contact Test Oppty',
-            AccountId = acct.Id,
-            Amount = 100,
-            CloseDate = System.today(),
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
 
         Test.startTest();
-        insert oppty;
+        insert testOpptys;
 
-        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(new List<Opportunity>{oppty});
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
         Test.stopTest();
 
-        System.assertEquals(1, accountDetails.size());
-        System.assertEquals(acct.Id, accountDetails.get(acct.Id).Id);
+        System.assertEquals(5, accountDetails.size());
+        System.assertEquals(testContacts[0].AccountId, accountDetails.get(testContacts[0].AccountId).Id);
+        System.assertEquals(testContacts[3].AccountId, accountDetails.get(testContacts[3].AccountId).Id);
     }
 
 
@@ -680,32 +677,24 @@ private class OPP_OpportunityContactRoles_TEST {
         Map<Id, Id> primaryContactToOpportunity = new Map<Id, Id>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
-        Account acct = new Account(Name = 'PopulateAccountDetails');
-        acct.npe01__SYSTEMIsIndividual__c = true;
-        insert acct;
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
 
-        Contact con = new Contact(FirstName = 'Primary', LastName = 'Contact', AccountId = acct.Id);
-        insert con;
-
-        Opportunity oppty = new Opportunity(
-            Name = 'Update Primary Contact Test Oppty',
-            AccountId = con.AccountId,
-            Primary_Contact__c = con.Id,
-            Amount = 100,
-            CloseDate = System.today(),
-            StageName = UTIL_UnitTestData_TEST.getClosedWonStage());
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
 
         Test.startTest();
-        insert oppty;
+        insert testOpptys;
 
-        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(new List<Opportunity>{oppty});
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
 
-        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(new List<Opportunity>{oppty}, accountDetails);
+        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(testOpptys, accountDetails);
         Test.stopTest();
 
-        System.assertEquals(1, primaryContactToOpportunity.size());
-        System.assertEquals(con.Id, new List<Id>(primaryContactToOpportunity.keySet())[0]);
-        System.assertEquals(oppty.Id, primaryContactToOpportunity.get(con.Id));
+        System.assertEquals(5, primaryContactToOpportunity.size());
+        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id));
+        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id));
     }
 
 

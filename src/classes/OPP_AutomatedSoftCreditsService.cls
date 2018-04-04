@@ -54,16 +54,16 @@ public class OPP_AutomatedSoftCreditsService {
     /*********************************************************************************************************
     * @description Calls the methods that handle creating Opportunity Contact Roles for Relationship records.
     * @param primaryContactIdToOpportunityId Map of Primary Contacts to Opportunities.
-    * @return void
+    * @return List<OpportunityContactRole> The newly created Opportunity Contact Role records.
     **********************************************************************************************************/
-    public static void createRelationshipOCRs(Map<Id, Id> primaryContactIdToOpportunityId) {
+    public static List<OpportunityContactRole>  createRelationshipOCRs(Map<Id, Id> primaryContactIdToOpportunityId) {
         // Retrieve Relationships for Primary Contact
         Map<Id, List<npe4__Relationship__c>> primaryContactToRelatedContacts = retrieveRelationships(primaryContactIdToOpportunityId.keySet());
 
         // Create Opportunity Contact Roles (OCR) records for the Related Contacts
         List<OpportunityContactRole> relationshipOCRs = buildRelationshipOCRs(primaryContactIdToOpportunityId, primaryContactToRelatedContacts);
 
-        insert relationshipOCRs;
+        return relationshipOCRs;
     }
 
 
@@ -73,32 +73,31 @@ public class OPP_AutomatedSoftCreditsService {
     * @return Map<Id, List<npe4__Relationship__c>> Map of the Primary Contact to its Relationship records.
     **********************************************************************************************************/
     public static Map<Id, List<npe4__Relationship__c>> retrieveRelationships(Set<Id> primaryContactIds) {
-        Map<Id, List<npe4__Relationship__c>> primaryContactToRelationship = new Map<Id, List<npe4__Relationship__c>>();
+        Map<Id, List<npe4__Relationship__c>> primaryContactToRelationships = new Map<Id, List<npe4__Relationship__c>>();
 
         if (primaryContactIds.isEmpty()) {
-            return primaryContactToRelationship;
+            return primaryContactToRelationships;
         }
 
-        List<npe4__Relationship__c> allSoftCreditRelationships
+        List<npe4__Relationship__c> allRelationships
             = new List<npe4__Relationship__c>([SELECT Id, Name, npe4__Contact__c, npe4__RelatedContact__c, Related_Opportunity_Contact_Role__c
                                                 FROM npe4__Relationship__c
                                                 WHERE npe4__Contact__c IN :primaryContactIds]);
 
         // Process the records that have a value in the Related_Opportunity_Contact_Role__c field
-        for (npe4__Relationship__c eachRelationship : allSoftCreditRelationships) {
+        for (npe4__Relationship__c eachRelationship : allRelationships) {
             if (eachRelationship.Related_Opportunity_Contact_Role__c != null
                 && !eachRelationship.Related_Opportunity_Contact_Role__c.containsIgnoreCase(RELATED_OPPORTUNITY_CONTACT_ROLE_NONE)) {
-                if (primaryContactToRelationship.containsKey(eachRelationship.npe4__Contact__c)) {
-                    List<npe4__Relationship__c> relationships = primaryContactToRelationship.get(eachRelationship.npe4__Contact__c);
+                if (primaryContactToRelationships.containsKey(eachRelationship.npe4__Contact__c)) {
+                    List<npe4__Relationship__c> relationships = primaryContactToRelationships.get(eachRelationship.npe4__Contact__c);
                     relationships.add(eachRelationship);
-                    primaryContactToRelationship.put(eachRelationship.npe4__Contact__c, relationships);
                 } else {
-                    primaryContactToRelationship.put(eachRelationship.npe4__Contact__c, new List<npe4__Relationship__c>{ eachRelationship });
+                    primaryContactToRelationships.put(eachRelationship.npe4__Contact__c, new List<npe4__Relationship__c>{ eachRelationship });
                 }
             }
         }
 
-        return primaryContactToRelationship;
+        return primaryContactToRelationships;
     }
 
 
@@ -116,7 +115,7 @@ public class OPP_AutomatedSoftCreditsService {
             return relationshipOCRs;
         }
 
-        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = retrieveOpportunityContactRoles(primaryContactIdToOpportunityId);
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = retrieveOpportunityContactRoles(primaryContactIdToOpportunityId.values());
 
         for (Id primaryContactKey : primaryContactToRelatedContacts.keySet()) {
             for (npe4__Relationship__c eachRelationship : primaryContactToRelatedContacts.get(primaryContactKey)) {
@@ -138,25 +137,24 @@ public class OPP_AutomatedSoftCreditsService {
 
     /*********************************************************************************************************
     * @description Retrieves the Opportunity Contact Role records related to the Opportunities.
-    * @param recordIdToOpportunityId Map of record Ids (Primary Contacts/Accounts) to Opportunity Ids.
+    * @param opportunityIds List of Opportunity Ids.
     * @return Map<Id, List<OpportunityContactRole>> Map of the Opportunity to Opportunity Contact Roles.
     **********************************************************************************************************/
-    public static Map<Id, List<OpportunityContactRole>> retrieveOpportunityContactRoles(Map<Id, Id> recordIdToOpportunityId) {
+    public static Map<Id, List<OpportunityContactRole>> retrieveOpportunityContactRoles(List<Id> opportunityIds) {
         Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        if (recordIdToOpportunityId.isEmpty()) {
+        if (opportunityIds.isEmpty()) {
             return opportunityIdToOCR;
         }
 
         List<OpportunityContactRole> allOCRs = [SELECT OpportunityId, ContactId, Role
                                                 FROM OpportunityContactRole
-                                                WHERE OpportunityId IN :recordIdToOpportunityId.values()];
+                                                WHERE OpportunityId IN :opportunityIds];
 
         for (OpportunityContactRole eachOCR : allOCRs) {
             if (opportunityIdToOCR.containsKey(eachOCR.OpportunityId)) {
                 List<OpportunityContactRole> ocrs = opportunityIdToOCR.get(eachOCR.OpportunityId);
                 ocrs.add(eachOCR);
-                opportunityIdToOCR.put(eachOCR.OpportunityId, ocrs);
             } else {
                 opportunityIdToOCR.put(eachOCR.OpportunityId, new List<OpportunityContactRole>{ eachOCR });
             }
@@ -185,6 +183,7 @@ public class OPP_AutomatedSoftCreditsService {
             if (eachOCR.ContactId ==  relatedContact
                 && eachOCR.Role == role) {
                 isDuplicateRelationship = true;
+                break;
             }
         }
 
