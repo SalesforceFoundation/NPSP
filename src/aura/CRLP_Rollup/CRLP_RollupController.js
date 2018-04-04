@@ -28,6 +28,7 @@
 
         action.setParams({rollupId: activeRollupId, targetObjectNames: summaryNames, detailObjectNames: detailNames});
 
+        helper.toggleSpinner(cmp, true);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -67,6 +68,7 @@
                     console.log("Unknown error");
                 }
             }
+            helper.toggleSpinner(cmp, false);
         });
 
         $A.enqueueAction(action);
@@ -143,11 +145,16 @@
             } else if(fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
             } else if(fieldName === 'amountField'){
-                cmp.set("v.activeRollup.Amount_Field__r.Label", label);
+                cmp.set("v.activeRollup.amountFieldLabel", label);
             } else if(fieldName === 'dateField'){
-                cmp.set("v.activeRollup.Date_Field__r.Label", label);
+                cmp.set("v.activeRollup.dateFieldLabel", label);
             }
         }
+    },
+
+    closeNotificationWindow : function(cmp, event, helper) {
+        console.log('Close Window');
+        cmp.set("v.notificationClasses", "slds-hide");
     }
 
 })

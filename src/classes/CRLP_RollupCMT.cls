@@ -38,14 +38,6 @@
 public class CRLP_RollupCMT {
 
     /**
-     * @description When this is set to true, the CMT recordname (DeveloperName) value is auto-generated
-     * as a unique random GUID format string. If false, the recordname (DeveloperName) is generated as a 
-     * more friendly formatted string value using the label text. The later is ONLY used when generating
-     * the default Filter Groups, Rules and Rollups. All customer created records will use the unique GUID.
-     */
-    public static Boolean useRandomGeneratedDeveloperName = true;
-
-    /**
      * @description Enum of the supported MetadataType objects (without the __mdt suffix)
      */
     public enum MetadataObject {
@@ -69,7 +61,7 @@ public class CRLP_RollupCMT {
 
         public FilterGroup(String label) {
             this.label = label.trim();
-            this.recordName = generateRecordName(this.label);
+            this.recordName = generateRecordName(this.label, false);
             this.rules = new List<FilterRule>();
         }
 
@@ -90,6 +82,10 @@ public class CRLP_RollupCMT {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Group.Name() + '__mdt';
+
+            if (this.recordName == null) {
+                this.recordName = generateRecordName(this.label, true);
+            }
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -140,7 +136,7 @@ public class CRLP_RollupCMT {
 
         public FilterRule(String filterGroupRecordName, String label) {
             this.label = label.trim();
-            this.recordName = generateRecordName(this.label);
+            this.recordName = generateRecordName(this.label, false);
             this.filterGroupRecordName = filterGroupRecordName;
         }
 
@@ -150,7 +146,11 @@ public class CRLP_RollupCMT {
             this.filterGroupRecordName = filterRule.Filter_Group__r.DeveloperName;
             this.operation = filterRule.Operator__c;
             this.objectName = filterRule.Object__r.QualifiedApiName;
-            this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
+            if (filterRule.Field__c != null && filterRule.Field__r.QualifiedApiName.contains('.')) {
+                this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
+            } else {
+                this.fieldName = filterRule.Field__r.QualifiedApiName;
+            }
             this.value = filterRule.Constant__c;
             this.isDeleted = filterRule.Is_Deleted__c;
         }
@@ -164,6 +164,14 @@ public class CRLP_RollupCMT {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
+
+            if (this.label == null) {
+                this.label = (this.filterGroupRecordName.left(20) + 'Rule: ' + this.objectName + '.' + this.fieldName +
+                        ' ' + this.operation).left(40);
+            }
+            if (this.recordName == null) {
+                this.recordName = generateRecordName(this.label, true);
+            }
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -197,16 +205,25 @@ public class CRLP_RollupCMT {
         public String recordName;
         public String label;
         public String filterGroupRecordName;
+        public String filterGroupLabel;
         public String description;
         public String operation;
         public String timeBoundOperationType;
         public String summaryObject;
+        public String summaryObjectLabel;
         public String summaryField;
+        public String summaryFieldlabel;
         public String detailObject;
+        public String detailObjectLabel;
         public String detailField;
+        public String detailFieldLabel;
         public String amountObject;
+        public String amountObjectLabel;
         public String amountField;
+        public String amountFieldLabel;
         public String dateObject;
+        public String dateObjectLabel;
+        public String dateFieldLabel;
         public String dateField;
         public Boolean isActive;
         public Boolean isDeleted;
@@ -215,7 +232,7 @@ public class CRLP_RollupCMT {
 
         public Rollup(String label) {
             this.label = label.trim();
-            this.recordName = generateRecordName(this.label);
+            this.recordName = generateRecordName(this.label, false);
             this.useFiscalYear = false;
             this.isActive = true;
         }
@@ -228,17 +245,47 @@ public class CRLP_RollupCMT {
             this.operation = rlp.Operation__c;
             this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
-            this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
-            this.detailField = parseObjectField(rlp.Detail_Field__r.QualifiedApiName)[1];
             this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
-            this.amountField = parseObjectField(rlp.Amount_Field__r.QualifiedApiName)[1];
             this.dateObject = rlp.Date_Object__r.QualifiedApiName;
-            this.dateField = parseObjectField(rlp.Date_Field__r.QualifiedApiName)[1];
+
+            if (rlp.Summary_Field__c != null && rlp.Summary_Field__r.QualifiedApiName.contains('.')) {
+                this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
+            } else {
+                this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
+            }
+            if (rlp.Detail_Field__c != null && rlp.Detail_Field__r.QualifiedApiName.contains('.')) {
+                this.detailField = parseObjectField(rlp.Detail_Field__r.QualifiedApiName)[1];
+            } else {
+                this.detailField = rlp.Detail_Field__r.QualifiedApiName;
+            }
+            if (rlp.Amount_Field__c != null && rlp.Amount_Field__r.QualifiedApiName.contains('.')) {
+                this.amountField = parseObjectField(rlp.Amount_Field__r.QualifiedApiName)[1];
+            } else {
+                this.amountField = rlp.Amount_Field__r.QualifiedApiName;
+            }
+            if (rlp.Date_Field__c != null && rlp.Date_Field__r.QualifiedApiName.contains('.')) {
+                this.dateField = parseObjectField(rlp.Date_Field__r.QualifiedApiName)[1];
+            } else {
+                this.dateField = rlp.Date_Field__r.QualifiedApiName;
+            }
+
             this.useFiscalYear = rlp.Use_Fiscal_Year__c;
             this.intValue = (rlp.Integer__c != null ? rlp.Integer__c.intValue() : null);
             this.isDeleted = false;
             this.isActive = rlp.Active__c;
+
+            try {
+                this.filterGroupLabel = rlp.Filter_Group__r.MasterLabel;
+                this.summaryObjectLabel = rlp.Summary_Object__r.Label;
+                this.summaryFieldLabel = rlp.Summary_Field__r.Label;
+                this.detailObjectLabel = rlp.Detail_Object__r.Label;
+                this.detailFieldLabel = rlp.Detail_Field__r.Label;
+                this.amountObjectLabel = rlp.Amount_Object__r.Label;
+                this.amountFieldLabel = rlp.Amount_Field__r.Label;
+                this.dateObjectLabel = rlp.Date_Object__r.Label;
+                this.dateFieldLabel = rlp.Date_Field__r.Label;
+            } catch (Exception ex) {}
         }
 
         /**
@@ -250,6 +297,10 @@ public class CRLP_RollupCMT {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
+
+            if (this.recordName == null) {
+                this.recordName = generateRecordName(this.label, true);
+            }
 
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -297,26 +348,27 @@ public class CRLP_RollupCMT {
      * @param label String
      * @return DeveloperName format string
      */
-    private static String generateRecordName(String label) {
+    public static String generateRecordName(String label, Boolean makeUnique) {
 
-        if (useRandomGeneratedDeveloperName == false) {
-            // replace all special characters and double underscores
-            String recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+        // Shorten specific words
+        String recordName = label.replace('General Accounting Unit', 'GAU').replace('Account', 'Acct').
+                replace('Contact', 'Cnct').replace('Recurring Donation', 'RD').
+                replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
 
-            //remove leading underscores
-            recordName = recordName.left(1) == '_' ? recordName.substring(1) : recordName;
+        // replace all special characters and double underscores
+        recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
 
-            //remove trailing underscores
-            recordName = recordName.right(1) == '_' ? recordName.substring(0, recordName.length() - 1) : recordName;
+        //remove leading and trailing underscores
+        recordName = recordName.removeStart('_').removeEnd('_');
 
-            return recordName;
-        } else {
+        if (makeUnique == true) {
             // Create a GUID format unique string
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
-            return 'C' + UserInfo.getUserId().left(15).right(6).toUpperCase() + '_' + h.SubString(8,12) + '_' +
-                    h.SubString(12,16) + '_' + h.SubString(16,20) + '_' + h.substring(20);
+            recordName += '_' + h.substring(4);
         }
+        recordName = recordName.left(39).removeEnd('_');
+        return recordName;
     }
 
     /**

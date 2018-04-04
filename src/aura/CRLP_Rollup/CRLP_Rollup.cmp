@@ -74,6 +74,11 @@
     <aura:attribute name="isIncomplete" type="Boolean" description="Controls whether Save button is disabled"
                     access="private" default="false"/>
 
+    <!-- TODO Refactor the notifications dialog with something better at some point -->
+    <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
+                    access="private" default="slds-hide"/>
+    <aura:attribute name="notificationMessage" type="String" description="Message to display" access="private"/>
+
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
@@ -86,6 +91,25 @@
 
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
+
+        <div class="spinnerDiv">
+            <!--Hide the spinner by default-->
+            <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
+        </div>
+
+        <div class="slds-container_center" style="text-align: center;">
+            <section id="notificationWindow" class="{! 'slds-popover slds-popover_large slds-nubbin_bottom ' + v.notificationClasses}" role="dialog"
+                     aria-label="Dialog Title" aria-describedby="dialog-body-id-2">
+                <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" title="Close dialog"
+                    onclick="{!c.closeNotificationWindow}">
+                    <lightning:buttonIcon iconName="utility:close" alternativeText="Close dialog"  />
+                </button>
+                <div class="slds-popover__body" id="dialog-body-id-2">
+                    <p>{!v.notificationMessage}</p>
+                </div>
+            </section>
+        </div>
+
         <form>
             <lightning:layout>
                 <lightning:layoutItem size="12" largeDeviceSize="8">
@@ -97,8 +121,8 @@
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="summaryObject"
                                             fieldLabel="{!v.labels.summaryObject}"
-                                            entityLabel="{!v.activeRollup.Summary_Object__r.Label}"
-                                            apiName="{!v.activeRollup.Summary_Object__r.QualifiedApiName}"
+                                            entityLabel="{!v.activeRollup.summaryObjectLabel}"
+                                            apiName="{!v.activeRollup.summaryObject}"
                                             options="{!v.summaryObjects}"
                                             isRequired="true"
                                             mediumDeviceSize="4"
@@ -107,8 +131,8 @@
                         <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                             auraId="summaryField"
                                             fieldLabel="{!v.labels.summaryField}"
-                                            entityLabel="{!v.activeRollup.Summary_Field__r.Label}"
-                                            apiName="{!v.activeRollup.Summary_Field__r.QualifiedApiName}"
+                                            entityLabel="{!v.activeRollup.summaryFieldLabel}"
+                                            apiName="{!v.activeRollup.summaryField}"
                                             options="{!v.summaryFields}"
                                             isRequired="true"
                                             mediumDeviceSize="4"
@@ -119,7 +143,7 @@
                             <aura:if isTrue="{!v.isReadOnly}">
                                 <!--todo: how can this be screen-readable?-->
                                 <div class="slds-form-element rollupOutputCheckbox">
-                                    <ui:outputCheckbox value="{!v.activeRollup.Active__c}" class="rollupCheckbox slds-form-element__control"
+                                    <ui:outputCheckbox value="{!v.activeRollup.isActive}" class="rollupCheckbox slds-form-element__control"
                                                        altChecked="{!v.labels.active + ' ' + v.labels.checkboxTrue}"
                                                        altUnchecked="{!v.labels.active + ' ' + v.labels.checkboxFalse}"
                                     />
@@ -129,7 +153,7 @@
                                     <lightning:input aura:id="activeCheckbox" class="rollupInputCheckbox"
                                                      type="checkbox"
                                                      label="{!v.labels.active}"
-                                                     checked="{!v.activeRollup.Active__c}"
+                                                     checked="{!v.activeRollup.isActive}"
                                                      variant="label-hidden"/>
                                     <c:CRLP_Tooltip helpText="{!v.labels.createActiveHelp}" fieldLabel="{!v.labels.active}"/>
                                 </aura:set>
@@ -145,7 +169,7 @@
                                 <lightning:textarea aura:id="descriptionInput" class="rollupField"
                                                     label="{!v.labels.description}"
                                                     name="{!v.labels.description}"
-                                                    value="{!v.activeRollup.Description__c}"
+                                                    value="{!v.activeRollup.description}"
                                                     readonly="{!v.isReadOnly}"
                                                     required="{!v.isReadOnly ? 'false' : 'true'}"
                                                     variant="{!v.isReadOnly ? '' : 'label-hidden'}"
@@ -161,7 +185,7 @@
                                                 auraId="operation"
                                                 fieldLabel="{!v.labels.operation}"
                                                 entityLabel="{!v.selectedOperationLabel}"
-                                                apiName="{!v.activeRollup.Operation__c}"
+                                                apiName="{!v.activeRollup.operation}"
                                                 options="{!v.allowedOperations}"
                                                 mediumDeviceSize="3"
                                                 isRequired="true"
@@ -175,18 +199,18 @@
                                     <!--todo: how can this be screen-readable-->
                                     <div class="slds-form-element rollupOutputCheckbox">
                                         <ui:outputCheckbox aura:id="fiscalYearCheckboxOutput" class="rollupCheckbox slds-form-element__control"
-                                                           value="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                                           value="{!v.activeRollup.useFiscalYear}"
                                                            altChecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxTrue}"
                                                            altUnchecked="{!v.labels.useFiscalYear + ' ' + v.labels.checkboxFalse}"
                                         />
-                                        <span role="checkbox" aria-checked="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                        <span role="checkbox" aria-checked="{!v.activeRollup.useFiscalYear}"
                                               class="slds-form-element__label">{!v.labels.useFiscalYear}</span>
                                     </div>
                                     <aura:set attribute="else">
                                         <lightning:input aura:id="fiscalYearCheckbox" class="rollupInputCheckbox"
                                                          type="checkbox"
                                                          label="{!v.labels.useFiscalYear}"
-                                                         checked="{!v.activeRollup.Use_Fiscal_Year__c}"
+                                                         checked="{!v.activeRollup.useFiscalYear}"
                                                          readonly="{!v.isReadOnly}"
                                                          variant="label-hidden"/>
                                         <c:CRLP_Tooltip helpText="{!v.labels.createFiscalYearHelp}" fieldLabel="{!v.labels.useFiscalYear}"/>
@@ -199,7 +223,7 @@
                                                 auraId="timeBoundOperation"
                                                 fieldLabel="{!v.labels.timeBoundOperationType}"
                                                 entityLabel="{!v.selectedTimeBoundOperationLabel}"
-                                                apiName="{!v.activeRollup.Time_Bound_Operation_Type__c}"
+                                                apiName="{!v.activeRollup.timeBoundOperationType}"
                                                 options="{!v.timeBoundOperations}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
@@ -215,7 +239,7 @@
                                 <lightning:input aura:id="integerInput"
                                                  type="{!v.isReadOnly ? 'text' : 'number'}"
                                                  label="{!v.selectedTimeBoundOperationLabel}"
-                                                 value="{!v.activeRollup.Integer__c}"
+                                                 value="{!v.activeRollup.intValue}"
                                                  readonly="{!v.isReadOnly}"
                                                  min="0"
                                                  step="1"
@@ -229,7 +253,7 @@
                                                 auraId="integer"
                                                 fieldLabel="{!v.selectedTimeBoundOperationLabel}"
                                                 entityLabel="{!v.selectedIntegerLabel}"
-                                                apiName="{!v.activeRollup.Integer__c}"
+                                                apiName="{!v.activeRollup.intValue}"
                                                 options="{!v.integerList}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
@@ -246,7 +270,7 @@
                                                 auraId="rollupType"
                                                 fieldLabel="{!v.labels.rollupType}"
                                                 entityLabel="{!v.selectedRollupType.label}"
-                                                apiName="{!v.activeRollup.Detail_Object__r.QualifiedApiName}"
+                                                apiName="{!v.activeRollup.detailObject}"
                                                 options="{!v.rollupTypes}"
                                                 isRequired="true"
                                                 mediumDeviceSize="6"
@@ -258,8 +282,8 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="filterGroup"
                                                 fieldLabel="{!v.labels.filterGroupLabel}"
-                                                entityLabel="{!v.activeRollup.Filter_Group__r.MasterLabel}"
-                                                apiName="{!v.activeRollup.Filter_Group__r.QualifiedApiName}"
+                                                entityLabel="{!v.activeRollup.filterGroupLabel}"
+                                                apiName="{!v.activeRollup.filterGroupRecordName}"
                                                 options="{!v.filterGroups}"
                                                 isRequired="false"
                                                 hasNullOption="false"
@@ -283,11 +307,11 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Detail_Field__r.Label}"
-                                                apiName="{!v.activeRollup.Detail_Field__r.QualifiedApiName}"
+                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.detailFieldLabel}"
+                                                apiName="{!v.activeRollup.detailField}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
-                                                objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
+                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 isRequired="true"
                                                 helpText="{!v.labels.createDetailFieldHelp}"
                             />
@@ -296,10 +320,10 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="dateField"
                                                 fieldLabel="{!v.labels.dateField}"
-                                                entityLabel="{!v.activeRollup.Date_Object__r.Label+': '+v.activeRollup.Date_Field__r.Label}"
-                                                apiName="{!v.activeRollup.Date_Field__r.QualifiedApiName}"
+                                                entityLabel="{!v.activeRollup.dateObjectLabel+': '+v.activeRollup.dateFieldLabel}"
+                                                apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
-                                                objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
+                                                objectLabel="{!v.activeRollup.dateObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
@@ -308,10 +332,10 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.Detail_Object__r.Label+': '+v.activeRollup.Amount_Field__r.Label}"
-                                                apiName="{!v.activeRollup.Amount_Field__r.QualifiedApiName}"
+                                                entityLabel="{!v.activeRollup.amountObjectLabel+': '+v.activeRollup.amountFieldLabel}"
+                                                apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                objectLabel="{!v.activeRollup.Detail_Object__r.Label + ': '}"
+                                                objectLabel="{!v.activeRollup.amountObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
@@ -333,7 +357,6 @@
                 <aura:if isTrue="{!v.mode!='view'}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
-                            <!--TODO: this button needs an onclick function to save stuff-->
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
                             <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"
                                               disabled="{!v.isIncomplete}"/>
