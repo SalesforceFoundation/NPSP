@@ -596,12 +596,28 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupDeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
+        <value>You can not delete this filter group because there are rollups associated with it. View this filter group for more information on these rollups.</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterNew</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>New filter group button</shortDescription>
         <value>New Filter Group</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDeleteWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
+        <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
     </labels>
     <labels>
         <fullName>ConfirmDeleteAccount</fullName>
@@ -4567,6 +4583,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Active</value>
     </labels>
     <labels>
+        <fullName>stgAdd</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To add to a list</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -4797,14 +4821,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgCountOf</shortDescription>
         <value>Count of</value>
-    </labels>
-    <labels>
-        <fullName>stgCreate</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>stgCreate</shortDescription>
-        <value>Create</value>
     </labels>
     <labels>
         <fullName>stgCRLPHouseholdAccountError</fullName>
@@ -6322,6 +6338,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelONS</shortDescription>
         <value>Opportunity Name Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOK</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOK</shortDescription>
+        <value>OK</value>
     </labels>
     <labels>
         <fullName>stgLabelOppBatchProgress</fullName>

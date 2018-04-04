@@ -59,5 +59,14 @@
         return function (a, b) {
             return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
         }
-    }
+    },
+
+    /* @description: toggles a modal popup and backdrop
+    */
+    toggleFilterRuleModal: function(cmp){
+        var backdrop = cmp.find('backdrop');
+        $A.util.toggleClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.toggleClass(modal, 'slds-fade-in-open');
+    },
 })

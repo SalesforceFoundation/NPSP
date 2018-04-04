@@ -46,6 +46,7 @@
     <aura:attribute name="activeRecord" type="Map" description="Active item to display in detail view. Set to null once detail is hidden."/>
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
     <aura:attribute name="summaryObjects" type="List" description="List summary objects as maps with name and label keys."/>
+    <aura:attribute name="detailObjects" type="List" description="List detail objects as maps with name and label keys."/>
 
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
@@ -199,8 +200,8 @@
 
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
-        <div class="slds-p-horizontal_large slds-p-bottom_large">
-            <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
+        <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
+            <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container" style="height: 300px;">
                 <lightning:datatable data="{!v.filterGroupList}"
                                      columns="{!v.filterGroupColumns}"
                                      class="lightningTable"
@@ -210,14 +211,15 @@
                                      onrowaction="{!c.handleRowAction}"
                                      sortedBy="{!v.sortedBy}"
                                      sortedDirection="{!v.sortedDirection}"
-                                     defaultSortDirection="asc"/>
+                                     defaultSortDirection="asc"
+                />
                 <aura:set attribute="else">
                     <ui:message severity="info" closable="false">
                         {!v.labels.noFilterGroups}
                     </ui:message>
                 </aura:set>
-            </aura:if>
-        </div>
+            </div>
+        </aura:if>
     </aura:if>
     <!--END FILTER GROUPS GRID-->
 
@@ -225,7 +227,7 @@
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}"/>
+                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->
@@ -234,9 +236,27 @@
     <aura:if isTrue="{!v.isFilterGroupDetail}">
         <div class="slds-p-bottom_large">
             <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}" activeFilterGroupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"/>
+                           mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}" detailObjects="{#v.detailObjects}"/>
         </div>
     </aura:if>
     <!--END FILTER GROUP DETAIL-->
+
+    <!--START MODAL-->
+    <div>
+        <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header slds-modal__header_empty"></header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <p>{!v.labels.filterGroupDeleteWarning}</p>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_brand"
+                            onclick="{!c.toggleFilterRuleModal}">{!v.labels.ok}</button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+    </div>
 
 </aura:component>

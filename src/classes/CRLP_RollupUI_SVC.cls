@@ -76,8 +76,11 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class FilterRulesTableItem{
         @AuraEnabled public String objectLabel;
+        @AuraEnabled public String objectName;
         @AuraEnabled public String fieldLabel;
-        @AuraEnabled public String operator;
+        @AuraEnabled public String fieldName;
+        @AuraEnabled public String operatorName;
+        @AuraEnabled public String operatorLabel;
         @AuraEnabled public String constant;
         @AuraEnabled public Id id;
     }
@@ -112,6 +115,8 @@ public with sharing class CRLP_RollupUI_SVC {
     public class FilterGroupModel {
         @AuraEnabled public Filter_Group__mdt filterGroup;
         @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
+        @AuraEnabled public Map<String,String> operators;
+        @AuraEnabled public Map<String,List<Map<String,String>>> filterFieldsByDataType;
 
     }
 
@@ -281,7 +286,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static FilterGroupModel getFilterGroupById(Id id) {
+    public static FilterGroupModel setupFilterGroupDetail(Id id, List<String> objectNames) {
 
         List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
         Map<String,String> operators = getfilterRuleOperations();
@@ -293,25 +298,37 @@ public with sharing class CRLP_RollupUI_SVC {
         FROM Filter_Group__mdt
         WHERE Id = :id];
 
-        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Object__r.MasterLabel FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
+        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Field__r.QualifiedApiName, Object__r.MasterLabel, Object__r.QualifiedApiName FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
 
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterRulesTableItem item = new FilterRulesTableItem();
 
             String c = mdtList[i].Constant__c;
             item.constant = c.replace(';', '\n');
-            item.operator = operators.get(mdtList[i].Operator__c);
+            item.operatorName = mdtList[i].Operator__c;
+            item.operatorLabel = operators.get(mdtList[i].Operator__c);
             item.fieldLabel = mdtList[i].Field__r.MasterLabel;
+            item.fieldName = mdtList[i].Field__r.QualifiedApiName;
             item.objectLabel = mdtList[i].Object__r.MasterLabel;
+            item.objectName = mdtList[i].Object__r.QualifiedApiName;
             item.id = mdtList[i].id;
 
             mdtTableList.add(item);
+        }
+
+        Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
+
+        for(String obj : objectNames){
+            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
+            objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
         }
 
         FilterGroupModel model = new FilterGroupModel();
 
         model.filterGroup = filterGroup;
         model.filterRuleList = mdtTableList;
+        model.operators = operators;
+        model.filterFieldsByDataType = objNameToFieldTypeMap;
 
         return model;
     }
@@ -389,6 +406,7 @@ public with sharing class CRLP_RollupUI_SVC {
             {
                 'action' => Label.stgLabelActionColumn,
                 'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
+                'add' => Label.stgAdd,
                 'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
                 'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
                 'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
@@ -400,7 +418,6 @@ public with sharing class CRLP_RollupUI_SVC {
                 'clone' => Label.stgBtnClone,
                 'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
                 'countOf' => Label.stgCountOf,
-                'create' => Label.stgCreate,
                 'createIntroHelp' => Label.CRLP_CreateRollupIntroHelpText,
                 'createTargetObjectHelp' => Label.CRLP_CreateRollupTargetObjectHelpText,
                 'createTargetFieldHelp' => Label.CRLP_CreateRollupTargetFieldHelpText,
@@ -425,10 +442,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
+                'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'hardCredit' => Label.CRLP_HardCredit,
@@ -486,6 +505,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'softCredit' => Label.CRLP_SoftCredit,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
+                'ok' => Label.stgLabelOK,
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
                 'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()

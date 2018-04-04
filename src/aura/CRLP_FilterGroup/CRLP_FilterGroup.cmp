@@ -37,30 +37,45 @@
 
 <aura:component description="CRLP_FilterGroup" controller="CRLP_RollupUI_SVC">
     <!-- public attributes -->
-    <aura:attribute name="labels" type="Map" description="All available labels for the app."/>
+    <aura:attribute name="labels" type="Map" description="All available labels for the app." access="public"/>
     <aura:attribute name="activeFilterGroupId" type="Id"/>
     <aura:attribute name="activeFilterGroup" type="Map"
                     description="The active filter group displayed. Only populated from Clone, View and Edit."/>
     <aura:attribute name="cachedFilterGroup" type="Map"
                     description="The active filter group displayed. Only populated from Clone, View and Edit."/>
-    <aura:attribute name="mode" type="String"
+    <aura:attribute name="activeFilterRule" type="Map" description="Selected values for actively edited filter rule." access="public"
+                    default="{objectName: '', fieldName: '', operatorName: '', constant: ''}"/>
+    <aura:attribute name="mode" type="String" access="public"
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
                     description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="rollupList" type="List" description="List of related rollups for the filter group" access="public"/>
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
-    <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
+    <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="rollupItems" type="Object"/>
+    <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule." access="public"/>
+    <!-- private attributes -->
+    <aura:attribute name="filterRuleColumns" type="List" description="List of available filter rules" access="private"/>
+    <aura:attribute name="filterRuleActionColumns" type="List" description="List of available filter rules" access="private"/>
+    <aura:attribute name="operators" type="List" description="List of filter group operators" access="private"/>
+    <aura:attribute name="objectDetails" type="Map" description="Mapped objects to all related fields." access="private"/>
+    <aura:attribute name="filteredFields" type="List" description="List of mapped filter fields for the selected object" access="private"/>
+    <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" access="private"/>
+    <aura:attribute name="filterRuleConstantPicklist" type="List" description="Picklist values corresponding to the selected field"/>
+    <aura:attribute name="filterRuleMode" type="String" access="private"
+                    description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
     <!-- events we fire -->
     <aura:registerEvent name="NavigateEvent" type="c:CRLP_NavigateEvent"/>
+    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
 
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
-        <form class="slds-form_stacked">
+        <div class="slds-form_stacked">
             <lightning:layout>
                 <lightning:layoutItem size="12">
 
@@ -86,42 +101,47 @@
                     </lightning:layout>
 
                     <!--START FILTER GROUP DATATABLE-->
+
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
-                            <h3 class="slds-text-heading_label slds-p-bottom_small">{!v.labels.filterRuleLabelPlural}</h3>
-                            <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                <lightning:datatable data="{!v.filterRuleList}"
-                                                     columns="{!v.filterRuleColumns}"
-                                                     keyField="id"
-                                                     hideCheckboxColumn="true"
-                                                     />
-                                <aura:set attribute="else">
-                                    <aura:if isTrue="{!and(v.mode != 'view', !empty(v.filterRuleColumns))}">
-                                        <lightning:button variant="brand" label="{!v.labels.create}" onclick="{!c.createFilterRule}" />
-                                        <aura:set attribute="else">
-                                            <ui:message severity="info" closable="false">
-                                                {!v.labels.noFilterRules}
-                                            </ui:message>
-                                        </aura:set>
+                            <lightning:card iconName="utility:rules" title="{!v.labels.filterRuleLabelPlural}">
+                                <aura:set attribute="actions">
+                                    <aura:if isTrue="{!v.mode != 'view'}">
+                                        <lightning:button label="{!v.labels.add}" onclick="{!c.addFilterRule}" variant="brand"/>
                                     </aura:if>
                                 </aura:set>
-                            </aura:if>
+                                <aura:if isTrue="{! !empty(v.filterRuleList)}">
+                                    <lightning:datatable data="{!v.filterRuleList}"
+                                                         columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
+                                                         keyField="id"
+                                                         hideCheckboxColumn="true"
+                                                         onrowaction="{!c.handleRowAction}"
+                                    />
+                                    <aura:set attribute="else">
+                                        <ui:message severity="info" closable="false">
+                                            {!v.labels.noFilterRules}
+                                        </ui:message>
+                                    </aura:set>
+                                </aura:if>
+                            </lightning:card>
                         </lightning:layoutItem>
                     </lightning:layout>
                     <!--END FILTER GROUP DATATABLE-->
 
-                    <!--START ROLLUP LIST-->
-                    <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
-                            <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
-                            <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
-                        </lightning:layoutItem>
-                    </lightning:layout>
-                    <!--END ROLLUP LIST-->
+                    <!--START RELATED ROLLUP LIST-->
+                    <aura:if isTrue="{!v.mode=='view'}">
+                        <lightning:layout multipleRows="true" verticalAlign="start">
+                            <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
+                                <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
+                                <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
+                            </lightning:layoutItem>
+                        </lightning:layout>
+                    </aura:if>
+                    <!--END RELATED ROLLUP LIST-->
 
                 </lightning:layoutItem>
             </lightning:layout>
-        </form>
+        </div>
     </div>
     <!--END FORM-->
 
@@ -141,5 +161,76 @@
         </lightning:layout>
     </div>
     <!--END BUTTONS-->
+
+    <!--START MODAL-->
+    <div>
+        <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal">
+            <div class="slds-modal__container">
+                <lightning:buttonIcon alternativeText="{!v.labels.cancel}" iconName="utility:close" class="slds-modal__close"
+                                      onclick="{!c.cancelFilterRule}" size="large" variant="bare-inverse"/>
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading" class="slds-text-heading_medium slds-hyphenate">
+                        {!if(v.filterRuleMode == 'create', v.labels.add, if(v.filterRuleMode == 'edit', v.labels.edit, v.labels.delete)) + ' ' + v.labels.filterRuleLabel}
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <lightning:layout>
+                        <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
+                            <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.object}" value="{!v.activeFilterRule.objectName}" onchange="{!c.onChangeFilterRuleObject}">
+                                    <option value="" text=""/>
+                                    <aura:iteration items="{!v.detailObjects}" var="option">
+                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.objectName}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.field}" value="{!v.activeFilterRule.fieldName}" onchange="{!c.onChangeFilterRuleField}">
+                                    <option value="" text=""/>
+                                    <aura:iteration items="{!v.filteredFields}" var="option">
+                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.fieldName}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.operator}" value="{!v.activeFilterRule.operatorName}">
+                                    <option value="" text=""/>
+                                    <aura:iteration items="{!v.operators}" var="option">
+                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.operatorName}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                            <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
+                                <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
+                                    <lightning:select class="slds-p-around_small" label="{!v.labels.constant}" value="{!v.activeFilterRule.constantName}">
+                                        <option value="" text=""/>
+                                        <aura:iteration items="{!v.filterRuleConstantPicklist}" var="option">
+                                            <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.constantName}"/>
+                                        </aura:iteration>
+                                    </lightning:select>
+                                    <aura:set attribute="else">
+                                        <!--todo: add date/datetime check here-->
+                                        <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text" value="{!v.activeFilterRule.constant}"/>
+                                    </aura:set>
+                                </aura:if>
+                            </lightning:layoutItem>
+                            <aura:set attribute="else">
+                                <p>{!v.labels.filterRuleDeleteWarning}</p>
+                            </aura:set>
+                        </aura:if>
+                    </lightning:layout>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                            onclick="{!c.cancelFilterRule}">{!v.labels.cancel}</button>
+                    <button class="slds-button slds-button_brand"
+                            onclick="{!c.saveFilterRule}">{!if(v.filterRuleMode == 'delete', v.labels.delete, v.labels.save)}</button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+    </div>
+    <!--END MODAL-->
 
 </aura:component>

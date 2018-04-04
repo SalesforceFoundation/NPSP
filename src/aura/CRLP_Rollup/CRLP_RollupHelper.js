@@ -271,7 +271,7 @@
                 renderMap["filterGroup"] = false;
             }
             cmp.set("v.activeRollup.filterGroup", labels.na);
-            this.onChangeFilterGroup(cmp, na);
+            this.onChangeFilterGroup(cmp, labels.na);
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
@@ -906,7 +906,7 @@
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
                 'message': masterLabel,
-                'channel': 'rollupNameChange'
+                'channel': 'nameChange'
             });
             sendMessage.fire();
         }
