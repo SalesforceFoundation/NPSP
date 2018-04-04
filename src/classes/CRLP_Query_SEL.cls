@@ -354,7 +354,6 @@
                 String whereClause = fieldName;
                 // If the field is RecordTypeId, switch it to RecordType.DeveloperName to match the
                 // constant values used which are DeveloperName values.
-                // TODO Refactor this to do comparisons by RecordTypeId rather than DeveloperName
                 if (fieldName == 'RecordTypeId') {
                     whereClause = 'RecordType.DeveloperName';
                 }

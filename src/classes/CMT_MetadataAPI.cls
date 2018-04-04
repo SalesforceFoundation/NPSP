@@ -147,7 +147,7 @@ public class CMT_MetadataAPI {
                 String errMsg = '';
                 for (Integer n=0; n < result.details.componentFailures.size(); n++) {
                     errMsg += (n > 0 ? '\n' : '') + '* ' + result.details.componentFailures[n].fullName +
-                            ': ' + result.details.componentFailures[n].problem;
+                            '> ' + result.details.componentFailures[n].problem;
                 }
                 // The custom settings field is a max of 255 characters, but need space for the serialized json overhead
                 statusMap.put(this.jobId, errMsg.left(220));

@@ -11,9 +11,9 @@
             this.fieldSetup(cmp);
         } else {
             //set active default as true
-            cmp.set("v.activeRollup.Active__c", true);
+            cmp.set("v.activeRollup.isActive", true);
             // check for a summary object filter to see if summary fields need to be set
-            var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+            var summaryObject = cmp.get("v.activeRollup.summaryObject");
             var summaryObjects = cmp.get("v.summaryObjects");
             var label = this.retrieveFieldLabel(summaryObject, summaryObjects);
 
@@ -73,10 +73,10 @@
     fieldSetup: function(cmp){
         this.resetAllFields(cmp);
         this.updateAllowedOperations(cmp);
-        this.onChangeOperation(cmp, cmp.get("v.activeRollup.Operation__c"));
+        this.onChangeOperation(cmp, cmp.get("v.activeRollup.operation"));
         this.setIntegerYearList(cmp);
         this.onChangeTimeBoundOperationsOptions(cmp, false);
-        this.onChangeInteger(cmp, cmp.get("v.activeRollup.Integer__c"));
+        this.onChangeInteger(cmp, cmp.get("v.activeRollup.intValue"));
     },
 
     /* @description: filters a picklist of fields by their type
@@ -107,7 +107,7 @@
     */
     filterDetailFieldsBySummaryField: function (cmp, detailObject) {
         //current version filters strictly; update will include type conversion fields
-        var summaryField = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        var summaryField = cmp.get("v.activeRollup.summaryField");
 
         //need to get all detail fields, or we filter on a subset of all options
         var allFields = cmp.get("v.objectDetails")[detailObject];
@@ -132,7 +132,7 @@
             cmp.set("v.detailFields", newFields);
         }
         //reset detail field to null to prompt user selection
-        cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+        cmp.set("v.activeRollup.detailField", null);
     },
 
     /* @description: gets the type of a field
@@ -167,13 +167,13 @@
         console.log("hitting onChangeSummaryObjectHelper");
 
         this.resetFields(cmp, summaryObject, 'summary');
-        cmp.set("v.activeRollup.Summary_Field__r.QualifiedApiName", null);
-        cmp.set("v.activeRollup.Summary_Object__r.Label", label);
-        cmp.set("v.activeRollup.Description__c", null);
-        cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", null);
-        cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
-        cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
-        cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
+        cmp.set("v.activeRollup.summaryField", null);
+        cmp.set("v.activeRollup.summaryObjectLabel", label);
+        cmp.set("v.activeRollup.description", null);
+        cmp.set("v.activeRollup.detailObject", null);
+        cmp.set("v.activeRollup.detailField", null);
+        cmp.set("v.activeRollup.amountField", null);
+        cmp.set("v.activeRollup.dateField", null);
 
         this.resetRollupTypes(cmp);
 
@@ -187,7 +187,7 @@
     onChangeDetailField: function (cmp, detailField, label) {
         console.log('in helper on change detail');
         this.verifyRollupSaveActive(cmp, detailField);
-        cmp.set("v.activeRollup.Detail_Field__r.Label", label);
+        cmp.set("v.activeRollup.detailFieldLabel", label);
     },
 
     /* @description: sets the filter group master label when the filter group is changed
@@ -195,7 +195,7 @@
     */
     onChangeFilterGroup: function (cmp, label) {
         console.log('in helper on change filter group');
-        cmp.set("v.activeRollup.Filter_Group__r.MasterLabel", label);
+        cmp.set("v.activeRollup.filterGroupLabel", label);
     },
 
     /* @description: stores the selected years back integer value for years to be used when the page is in view mode
@@ -228,7 +228,7 @@
         } else {
             renderMap["timeBoundOperation"] = false;
             renderMap["rollupType"] = false;
-            cmp.set(("v.activeRollup.Time_Bound_Operation_Type__c"), 'All_Time');
+            cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
             var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
             cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
             renderMap["integerDays"] = false;
@@ -249,7 +249,7 @@
         cmp.set("v.selectedOperationLabel", label);
 
         //check that detail field and rollup type have been populated before saving
-        this.verifyRollupSaveActive(cmp, cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName"));
+        this.verifyRollupSaveActive(cmp, cmp.get("v.activeRollup.detailField"));
 
     },
 
@@ -270,12 +270,12 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.Filter_Group__r.QualifiedApiName", labels.na);
+            cmp.set("v.activeRollup.filterGroup", labels.na);
             this.onChangeFilterGroup(cmp, na);
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        var operation = cmp.get("v.activeRollup.Operation__c");
+        var operation = cmp.get("v.activeRollup.operation");
         renderMap = this.renderAmountField(cmp, operation, rollupLabel, renderMap);
         renderMap = this.renderDateField(cmp, operation, rollupLabel, renderMap);
         renderMap = this.renderDetailField(cmp, operation, rollupLabel, renderMap);
@@ -285,7 +285,7 @@
         //set detail object label explicitly since detail obj name is bound to rollup type field, but the label is not
         var detailObjects = cmp.get("v.detailObjects");
         var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
-        cmp.set("v.activeRollup.Detail_Object__r.Label", detailLabel);
+        cmp.set("v.activeRollup.detailObjectLabel", detailLabel);
         cmp.set("v.selectedRollupType", {label: rollupLabel, name: detailObject});
 
         //reset amount fields
@@ -295,19 +295,19 @@
         //set date object label and api name based on the selected detail object then reset fields + selected value
         //defaults field to Payment on the payment object, and CloseDate for everything else
         if (detailObject === labels.objectPayment) {
-            cmp.set("v.activeRollup.Date_Object__r.Label", labels.labelPayment);
-            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", labels.objectPayment);
-            this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
-            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "npe01__Payment_Date__c");
+            cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
+            cmp.set("v.activeRollup.dateObject", labels.objectPayment);
+            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
         } else {
-            cmp.set("v.activeRollup.Date_Object__r.Label", labels.labelOpportunity);
-            cmp.set("v.activeRollup.Date_Object__r.QualifiedApiName", labels.objectOpportunity);
-            this.resetFields(cmp, cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName"), "date");
-            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "CloseDate");
+            cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
+            cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
+            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            cmp.set("v.activeRollup.dateField", "CloseDate");
         }
 
         //check if save button can be activated
-        var detailField = cmp.get("v.activeRollup.Detail_Field__r.QualifiedApiName");
+        var detailField = cmp.get("v.activeRollup.detailField");
         this.verifyRollupSaveActive(cmp, detailField);
 
     },
@@ -328,32 +328,32 @@
                 renderMap["operation"] = false;
             }
             cmp.set("v.renderMap", renderMap);
-            cmp.set("v.activeRollup.Operation__c", '');
+            cmp.set("v.activeRollup.operation", '');
             this.onChangeOperation(cmp, '');
         }
 
         //sets rollup type automatically if there is only 1
         var rollupTypes = cmp.get("v.rollupTypes");
         if (rollupTypes.length === 1 && label) {
-            cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", rollupTypes[0].name);
+            cmp.set("v.activeRollup.detailObject", rollupTypes[0].name);
             cmp.set("v.selectedRollupType", {label: rollupTypes[0].label, name: rollupTypes[0].name});
             this.onChangeRollupType(cmp, rollupTypes[0].name, rollupTypes[0].label);
         } else {
             cmp.set("v.selectedRollupType", {name: '', label: ''});
-            cmp.set("v.activeRollup.Detail_Object__r.QualifiedApiName", '');
+            cmp.set("v.activeRollup.detailObject", '');
             this.onChangeRollupType(cmp, '', '');
         }
 
         //reset operation if selected operation isn't in the list
         this.updateAllowedOperations(cmp);
-        var operationLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.Operation__c"), cmp.get("v.allowedOperations"));
+        var operationLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.operation"), cmp.get("v.allowedOperations"));
         if(!operationLabel){
-            cmp.set("v.activeRollup.Operation__c", '');
+            cmp.set("v.activeRollup.operation", '');
             this.onChangeOperation(cmp, '');
         }
 
         this.updateRollupName(cmp);
-        cmp.set("v.activeRollup.Summary_Field__r.Label", label);
+        cmp.set("v.activeRollup.summaryFieldLabel", label);
     },
 
     /* @description: fires when time bound operations options is changed or when set up
@@ -362,7 +362,7 @@
     */
     onChangeTimeBoundOperationsOptions: function (cmp, isOnChange, label) {
         console.log("in helper changeTimeBoundOperationsOptions");
-        var operation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
+        var operation = cmp.get("v.activeRollup.timeBoundOperationType");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
             //disable fiscal year, disable integer, and reset values
@@ -370,8 +370,8 @@
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
             if (isOnChange) {
-                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
-                cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+                cmp.set("v.activeRollup.useFiscalYear", cmp.get("v.cachedRollup.useFiscalYear"));
+                cmp.set("v.activeRollup.intValue", cmp.get("v.cachedRollup.intValue"));
                 this.onChangeInteger(cmp, 0);
             }
         } else if (operation === 'Years_Ago') {
@@ -381,7 +381,7 @@
             renderMap["integerYears"] = true;
             //set a default integer of 0
             if (isOnChange) {
-                cmp.set("v.activeRollup.Integer__c", 0);
+                cmp.set("v.activeRollup.intValue", 0);
                 this.onChangeInteger(cmp, 0);
             }
         } else if (operation === 'Days_Back') {
@@ -391,8 +391,8 @@
             renderMap["integerYears"] = false;
             //set a default integer of 0 and the default fiscal year
             if (isOnChange) {
-                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
-                cmp.set("v.activeRollup.Integer__c", 0);
+                cmp.set("v.activeRollup.useFiscalYear", cmp.get("v.cachedRollup.useFiscalYear"));
+                cmp.set("v.activeRollup.intValue", 0);
                 this.onChangeInteger(cmp, 0);
             }
         } else {
@@ -400,8 +400,8 @@
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
             if (isOnChange) {
-                cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
-                cmp.set("v.activeRollup.Integer__c", cmp.get("v.cachedRollup.Integer__c"));
+                cmp.set("v.activeRollup.useFiscalYear", cmp.get("v.cachedRollup.useFiscalYear"));
+                cmp.set("v.activeRollup.intValue", cmp.get("v.cachedRollup.intValue"));
                 this.onChangeInteger(cmp, 0);
             }
         }
@@ -434,19 +434,27 @@
             || operation === 'Count'
             || operation === 'Average')
             && rollupLabel) {
+
             //enable amount field
             renderMap["amountField"] = true;
 
-            //set the default amount field based on the selected detail object
-            if (cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName") === 'npe01__OppPayment__c') {
-                cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", 'npe01__Payment_Amount__c');
+            var labels = cmp.get("v.labels");
+
+            // Set the default amount field based on the selected detail object
+            if (cmp.get("v.activeRollup.amountField") && cmp.get("v.activeRollup.amountField") !== '') {
+                // there is already a value in this field. do nothing
+            } else if (cmp.get("v.activeRollup.detailObject") === 'npe01__OppPayment__c') {
+                cmp.set("v.activeRollup.amountField", 'npe01__Payment_amount__c');
+            } else if (cmp.get("v.activeRollup.detailObject") === labels.objectAllocation) {
+                cmp.set("v.activeRollup.amountField", labels.namespacePrefix + 'Amount__c');
             } else {
-                cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", 'Amount');
+                cmp.set("v.activeRollup.amountField", 'Amount');
             }
+
         } else {
             //disable amount field and clear values
             renderMap["amountField"] = false;
-            cmp.set("v.activeRollup.Amount_Field__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.amountField", null);
         }
         return renderMap;
     },
@@ -463,18 +471,18 @@
             || operation === 'Days_Back')
             && rollupLabel) {
             //enable date field and set defaults based on the dateObject, which is set from the rollup type
-            var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+            var dateObject = cmp.get("v.activeRollup.dateObject");
             if (dateObject === 'npe01__OppPayment__c') {
-                cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "npe01__Payment_Date__c");
+                cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
             } else {
-                cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", "CloseDate");
+                cmp.set("v.activeRollup.dateField", "CloseDate");
             }
             //enable date field
             renderMap["dateField"] = true;
         } else {
             //disable date field and clear values
             renderMap["dateField"] = false;
-            cmp.set("v.activeRollup.Date_Field__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.dateField", null);
         }
 
         return renderMap;
@@ -496,7 +504,7 @@
         } else {
             //disable detail field and and clear values
             renderMap["detailField"] = false;
-            cmp.set("v.activeRollup.Detail_Field__r.QualifiedApiName", null);
+            cmp.set("v.activeRollup.detailField", null);
         }
 
         return renderMap;
@@ -509,8 +517,8 @@
     * @return: updated render map
     */
     renderFiscalYear: function (cmp, renderMap) {
-        var operation = cmp.get("v.activeRollup.Operation__c");
-        var timeBoundOperation = cmp.get("v.activeRollup.Time_Bound_Operation_Type__c");
+        var operation = cmp.get("v.activeRollup.operation");
+        var timeBoundOperation = cmp.get("v.activeRollup.timeBoundOperationType");
 
         if ((operation === 'Donor_Streak'
             || operation === 'Years_Donated'
@@ -523,7 +531,7 @@
         } else {
             //disable detail field and and clear values
             renderMap["fiscalYear"] = false;
-            cmp.set("v.activeRollup.Use_Fiscal_Year__c", cmp.get("v.cachedRollup.Use_Fiscal_Year__c"));
+            cmp.set("v.activeRollup.useFiscalYear", cmp.get("v.cachedRollup.useFiscalYear"));
         }
 
         return renderMap;
@@ -563,8 +571,12 @@
     resetAllFields: function (cmp) {
         //todo: refactor to see if/when is even necessary
 
-        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        var activeRollup = cmp.get("v.activeRollup");
+        var summaryObject = activeRollup.summaryObject;
+        var detailObject = activeRollup.detailObject;
+
+        console.log("Summary Object=" + summaryObject);
+        console.log("Detail Object=" + detailObject);
 
         this.resetFields(cmp, summaryObject, 'summary');
 
@@ -572,7 +584,9 @@
         this.resetFields(cmp, detailObject, 'amount');
         this.resetFields(cmp, detailObject, 'detail');
 
-        var dateObject = cmp.get("v.activeRollup.Date_Object__r.QualifiedApiName");
+        var dateObject = activeRollup.dateObject;
+        console.log("Date Object=" + dateObject);
+
         this.resetFields(cmp, dateObject, 'date');
 
         this.resetRollupTypes(cmp);
@@ -582,7 +596,8 @@
     /* @description: resets the list of rollup types based on the selected summary object
     */
     resetRollupTypes: function (cmp) {
-        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        var activeRollup = cmp.get("v.activeRollup");
+        var summaryObject = activeRollup.summaryObject;
         var labels = cmp.get("v.labels");
         var templateList = [];
         if (summaryObject === labels.objectAccount) {
@@ -655,16 +670,57 @@
     * @param activeRollup:
     */
     saveRollup: function (cmp, activeRollup) {
+        // Set the mode to view while the save is running
         cmp.set("v.mode", 'view');
-        //save record here
+
+        this.toggleSpinner(cmp, true);
+
+        var rollupCMT = cmp.get("v.activeRollup");
+        var action = cmp.get("c.saveRollup");
+        action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            console.log('STATE=' + state);
+
+            if (state === "SUCCESS") {
+                // Response value will be in the format of "JobId-RecordDeveloperName"
+                var responseText = response.getReturnValue();
+                var jobId = responseText.split("-")[0];
+                var recordName = responseText.split("-")[1];
+
+                console.log('Response = ' + response.getReturnValue());
+                console.log('Returned jobId = ' + jobId);
+                console.log('Returned RecordName = ' + recordName);
+
+                cmp.set("v.activeRollup.recordName", recordName);
+                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                    cmp.set("v.cachedRollup.recordName", recordName);
+                }
+
+                console.log('Calling pollForDeploymentStatus');
+                this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+
+            } else if (state === "ERROR") {
+
+                var errors = response.getError();
+                var msg = "Unknown error";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
+                }
+                this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                this.toggleSpinner(cmp, false);
+            }
+        });
+        this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+        $A.enqueueAction(action);
     },
 
     /* @description: sets the selected rollup type based on detail and summary objects when a record is loaded
     */
     setRollupType: function (cmp) {
         console.log('IN SET ROLLUP TYPE FUNCTION.');
-        var summaryObject = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
-        var detailObject = cmp.get("v.activeRollup.Detail_Object__r.QualifiedApiName");
+        var summaryObject = cmp.get("v.activeRollup.summaryObject");
+        var detailObject = cmp.get("v.activeRollup.detailObject");
         var labels = cmp.get("v.labels");
         var rollupType = {};
 
@@ -739,7 +795,7 @@
     */
     uniqueSummaryFieldCheck: function (cmp, newFields){
         var mode = cmp.get("v.mode");
-        var summaryField = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        var summaryField = cmp.get("v.activeRollup.summaryField");
         if(mode === 'clone'){
             //remove if it's in the list
             for (var i = 0; i < newFields.length; i++) {
@@ -759,7 +815,7 @@
         //start with all operations
         var ops = cmp.get("v.operations");
 
-        var field = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        var field = cmp.get("v.activeRollup.summaryField");
         var summaryFields = cmp.get("v.summaryFields");
 
         var type;
@@ -798,32 +854,51 @@
 
     },
 
-    /* @description: sets the rollup name with a simple concatenation of the summary object and summary field
+    /** 
+    * @description: sets the rollup name with a simple concatenation of the summary object and summary field
     * also sends the updated name to the parent component to display as the page title
     */
     updateRollupName: function (cmp, event) {
-        var summaryObjectAPI = cmp.get("v.activeRollup.Summary_Object__r.QualifiedApiName");
+        var summaryObjectAPI = cmp.get("v.activeRollup.summaryObject");
         var summaryObjects = cmp.get("v.summaryObjects");
         var summaryObjectName = this.retrieveFieldLabel(summaryObjectAPI, summaryObjects);
 
-        var summaryFieldAPI = cmp.get("v.activeRollup.Summary_Field__r.QualifiedApiName");
+        var summaryFieldAPI = cmp.get("v.activeRollup.summaryField");
         var summaryFields = cmp.get("v.summaryFields");
         var summaryFieldName = this.retrieveFieldLabel(summaryFieldAPI, summaryFields);
 
         var label = summaryObjectName + ': ' + summaryFieldName;
+
+        // shrink the label size since it's limited to 40 characters
+        label = label.replace('Account', 'Acct').replace('Contact', 'Cnct').
+        replace('General Accounting Unit', 'GAU').replace('Recurring Donation', 'RD').
+        replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
+
+        var recordName = cmp.get("v.activeRollup.recordName");
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
         if(mode === 'create' && (!summaryObjectName || !summaryFieldName)){
             masterLabel = cmp.get("v.labels.rollupNew");
-            cmp.set("v.activeRollup.MasterLabel", masterLabel);
+            cmp.set("v.activeRollup.label", masterLabel);
         } else if (mode === 'create') {
-            masterLabel = cmp.get("v.labels.rollupNew") + ' - ' + label;
-            cmp.set("v.activeRollup.MasterLabel", masterLabel);
+            masterLabel = "UDR: " + label;
+            cmp.set("v.activeRollup.label", masterLabel);
         } else if (summaryObjectName && summaryFieldName) {
-            //only reset the name once summary object and field are selected for edit and clone modes
-            masterLabel = label;
-            cmp.set("v.activeRollup.MasterLabel", masterLabel);
+            // Only reset the name once summary object and field are selected for edit and clone modes
+            // Don't add the UDR prefix if modifying a packaged rollup definition
+            if (!recordName.startsWith('NPSP')) {
+                masterLabel = "UDR: " + label;
+            } else {
+                masterLabel = label;
+            }
+            cmp.set("v.activeRollup.label", masterLabel);
+        }
+        if (masterLabel.length > 40) {
+            masterLabel = masterLabel.substring(0,39);
+            if (masterLabel.endsWith('_')) {
+                masterLabel = masterLabel.substring(0,38);
+            }
         }
 
         //sends the message to the parent cmp RollupsContainer
@@ -837,13 +912,130 @@
         }
     },
 
-    /* @description: verifies all required fields have been populated before saving the component
+    /**
+     * @description Inserting or updating a CMT record is an asynchronous deployment process. This method uses the
+     * unique jobId and the Rollup__mdt.DeveloperName value to recursively call an apex controller method to determine
+     * when the deployment has completed (by looking in a custom settings object). If it completes, the final recordId
+     * is returned. Otherwise an error message to render is returned. If the return is null, then it calls this method
+     * again to wait another second an try again.
+     * @param jobId The returns CMT deployment job id to query status for
+     * @param recordName Unique record name value (that was just inserted/updated) to query for.
+     */
+    pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
+        var helper=this;
+        var maxPollingRetryCount = 30;
+        var poller = window.setTimeout(
+            $A.getCallback(function() {
+                counter++;
+                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
+                var action = cmp.get("c.getDeploymentStatus");
+                action.setParams({jobId: jobId, recordName: recordName});
+                action.setCallback(this, function (response) {
+                    console.log('getDeploymentStatus.callback');
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        // Response will be a deployResult wrapper class
+                        var deployResult = response.getReturnValue();
+                        deployResult = helper.restructureResponse(deployResult);
+                        console.log('deployResult=' + deployResult);
+                        // if there is a record id response
+                        if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
+
+                            // Save the inserted/updated record id
+                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
+                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+
+                            // for a new record, copy the activeRollup map to the cachedRollup map
+                            if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                                var activeRollup = cmp.get("v.activeRollup");
+                                var cachedRollup = cmp.get("v.cachedRollup");
+                                for (var key in activeRollup) {
+                                    if (activeRollup.hasOwnProperty(key)) {
+                                        cachedRollup[key] = activeRollup[key];
+                                    }
+                                }
+                                cmp.set("v.cachedRollup", cachedRollup);
+                            }
+
+                            // Send a message with the changed or new Rollup to the RollupContainer Component
+                            var sendMessage = $A.get('e.ltng:sendMessage');
+                            sendMessage.setParams({
+                                'message': deployResult.rollupItem,
+                                'channel': 'rollupRecordChange'
+                            });
+                            sendMessage.fire();
+
+                        } else {
+                            // No record id, so run call this method again to check in another 1 second
+                            if (counter < maxPollingRetryCount) {
+                                helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
+                            } else {
+                                // When the counter hits the max, need to tell the user what happened
+                                this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveTimeout"));
+                                helper.toggleSpinner(cmp, false);
+                            }
+                        }
+                    } else {
+                        // If an error is returned, parse the message, display and remove the spinner
+                        var errors = response.getError();
+                        var msg = "Unknown error";
+                        if (errors && errors[0] && errors[0].message) {
+                            msg = errors[0].message;
+                        }
+                        helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                        window.clearTimeout(poller);
+                        helper.toggleSpinner(cmp, false);
+                    }
+                });
+                $A.enqueueAction(action);
+            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+        );
+    },
+
+    /**
+     * @description Show a message on the screen
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast : function(cmp, type, title, message) {
+        console.log(message);
+        cmp.set("v.notificationClasses", "notification-" + type);
+        cmp.set("v.notificationMessage", message);
+        // TODO Get Toasts to work or replace with something better
+        /*var toastEvent = $A.get("e.force:showToast");
+        toastEvent.setParams({
+            "type":type,
+            "title": title,
+            "message": message
+        });
+        toastEvent.fire();*/
+    },
+
+    /**
+     * @description Show or Hide the page spinner
+     * @param showSpinner - true to show; false to hide
+     */
+    toggleSpinner : function(cmp, showSpinner) {
+        var spinner = cmp.find("waitingSpinner");
+        if (showSpinner === true) {
+            $A.util.removeClass(spinner, "slds-hide");
+        } else {
+            $A.util.addClass(spinner, "slds-hide");
+        }
+    },
+
+    /**
+    * @description: verifies all required fields have been populated before saving the component
     * @return: if cmp can be saved
     */
     validateFields: function(cmp){
         //todo: find any other combinations that may be missing before validating on save
         var canSave = true;
-        var description = cmp.get("v.activeRollup.Description__c");
+        var description = cmp.get("v.activeRollup.description");
 
         if(!description){
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
@@ -853,7 +1045,8 @@
         return canSave;
     },
 
-    /* @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't selected
+    /** 
+    * @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't selected
     * @param detailField: selected detail field API name
     */
     verifyRollupSaveActive: function(cmp, detailField){
