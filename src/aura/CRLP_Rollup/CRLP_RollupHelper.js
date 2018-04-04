@@ -270,7 +270,7 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.filterGroupLabel", labels.na);
+            cmp.set("v.activeRollup.filterGroup", labels.na);
             this.onChangeFilterGroup(cmp, na);
         }
 
@@ -667,27 +667,7 @@
 
         this.toggleSpinner(cmp, true);
 
-        //save record here
-
-        var rollupCMT = {};
-        rollupCMT.recordName = cmp.get("v.activeRollup.recordName");
-        rollupCMT.label = cmp.get("v.activeRollup.label");
-        rollupCMT.summaryObject = cmp.get("v.activeRollup.summaryObject");
-        rollupCMT.summaryField = cmp.get("v.activeRollup.summaryField");
-        rollupCMT.detailObject = cmp.get("v.activeRollup.detailObject");
-        rollupCMT.detailField = cmp.get("v.activeRollup.detailField");
-        rollupCMT.dateObject = cmp.get("v.activeRollup.dateObject");
-        rollupCMT.dateField = cmp.get("v.activeRollup.dateField");
-        rollupCMT.amountObject = cmp.get("v.activeRollup.amountObject");
-        rollupCMT.amountField = cmp.get("v.activeRollup.amountField");
-        rollupCMT.filterGroupRecordName = cmp.get("v.activeRollup.filterGroupRecordName");
-        rollupCMT.description = cmp.get("v.activeRollup.description");
-        rollupCMT.operation = cmp.get("v.activeRollup.operation");
-        rollupCMT.timeBoundOperationType = cmp.get("v.activeRollup.timeBoundOperationType");
-        rollupCMT.intValue = cmp.get("v.activeRollup.intValue");
-        rollupCMT.useFiscalYear = cmp.get("v.activeRollup.useFiscalYear");
-        rollupCMT.isActive = cmp.get("v.activeRollup.isActive");
-
+        var rollupCMT = cmp.get("v.activeRollup");
         var action = cmp.get("c.saveRollup");
         action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
@@ -702,11 +682,11 @@
 
                 console.log('Response = ' + response.getReturnValue());
                 console.log('Returned jobId = ' + jobId);
-                console.log('Returned DeveloperName = ' + recordName);
+                console.log('Returned RecordName = ' + recordName);
 
                 cmp.set("v.activeRollup.recordName", recordName);
                 if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                    cmp.set("v.cachedRollup.DeveloperName", recordName);
+                    cmp.set("v.cachedRollup.recordName", recordName);
                 }
 
                 console.log('Calling pollForDeploymentStatus');
@@ -930,9 +910,8 @@
      * when the deployment has completed (by looking in a custom settings object). If it completes, the final recordId
      * is returned. Otherwise an error message to render is returned. If the return is null, then it calls this method
      * again to wait another second an try again.
-     * @param cmp Relevant Component
      * @param jobId The returns CMT deployment job id to query status for
-     * @param recordName Uniqude record name value (that was just inserted/updated) to query for.
+     * @param recordName Unique record name value (that was just inserted/updated) to query for.
      */
     pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
         var helper=this;
@@ -986,7 +965,7 @@
                             if (counter < maxPollingRetryCount) {
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
-                                // When the counter hits the max, need to give the tell the user what happened
+                                // When the counter hits the max, need to tell the user what happened
                                 this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveTimeout"));
                                 helper.toggleSpinner(cmp, false);
                             }
@@ -1010,7 +989,6 @@
 
     /**
      * @description Show a message on the screen
-     * @param cmp Relevant Component
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
@@ -1031,7 +1009,6 @@
 
     /**
      * @description Show or Hide the page spinner
-     * @param cmp
      * @param showSpinner - true to show; false to hide
      */
     toggleSpinner : function(cmp, showSpinner) {
