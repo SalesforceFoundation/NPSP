@@ -73,8 +73,8 @@
     /* @description: creates a new filter rule
     */
     addFilterRule: function(cmp, event, helper){
+        cmp.set("v.filterRuleMode", 'create');
         helper.openFilterRuleModal(cmp);
-        console.log(JSON.stringify(cmp.get("v.activeFilterRule")));
     },
 
     /* @description: cancels the pop up for filter rule and clears the active filter rule
@@ -82,6 +82,7 @@
     cancelFilterRule: function(cmp, event, helper){
         helper.closeFilterRuleModal(cmp);
         helper.resetActiveFilterRule(cmp);
+        cmp.set("v.filterRuleMode", '');
     },
 
     /* @description: handles individual row events for the filter rule table
@@ -89,16 +90,18 @@
     handleRowAction: function(cmp, event, helper){
         var action = event.getParam('action');
         var row = event.getParam('row');
+        cmp.set("v.activeFilterRule", row);
 
         if(action.name !== 'delete'){
             //handle modal popup
+            cmp.set("v.filterRuleMode", 'edit');
             helper.openFilterRuleModal(cmp);
+            helper.resetFilterRuleFields(cmp, row.objectName);
+            console.log(JSON.stringify(cmp.get("v.activeFilterRule")));
         } else {
             //caution user about deleting the filter rule?
-            helper.openFilterRuleDeleteModal(cmp);
-            var rowIndex = rows.indexOf(row);
-            rows.splice(rowIndex, 1);
-            cmp.set("v.filterRuleList", rows);
+            cmp.set("v.filterRuleMode", 'delete');
+            helper.openFilterRuleModal(cmp);
         }
     },
 
@@ -136,8 +139,7 @@
     */
     onChangeFilterRuleObject: function(cmp, event, helper){
         var object = event.getSource().get("v.value");
-        var objectDetails = cmp.get("v.objectDetails");
-        cmp.set("v.filteredFields", objectDetails[object]);
+        helper.resetFilterRuleFields(cmp);
     },
 
     /* @description: checks for type on filter rule field to update eligible values
@@ -193,9 +195,26 @@
         filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
         filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
         filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.operators"));
-
         var filterRuleList = cmp.get("v.filterRuleList");
-        filterRuleList.push(filterRule);
+
+        var mode = cmp.get("v.filterRuleMode");
+        if(mode === 'create'){
+            filterRuleList.push(filterRule);
+        } else {
+            var i;
+            for (i = 0; i < filterRuleList.length; i++) {
+                if (filterRuleList[i].id === filterRule.id) {
+                    break;
+                }
+            }
+            if (mode === 'edit') {
+                filterRuleList[i] = filterRule;
+            } else {
+                console.log('index to delete ' + i);
+                filterRuleList.splice(i, 1);
+                console.log(JSON.stringify(filterRuleList));
+            }
+        }
         cmp.set("v.filterRuleList", filterRuleList);
 
         helper.closeFilterRuleModal(cmp);

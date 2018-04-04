@@ -78,18 +78,6 @@
         cmp.set("v.rollupItems", itemList);
     },
 
-    /* @description: opens a modal popup to warn user about
-     */
-    openFilterRuleDeleteModal: function(cmp, row){
-        if(row){
-            //editing rule
-
-        } else {
-            //adding new rule
-
-        }
-    },
-
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
     openFilterRuleModal: function(cmp){
@@ -105,6 +93,13 @@
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
+    },
+
+    /* @description: opens a modal popup so user can add or edit a filter rule
+     */
+    resetFilterRuleFields: function(cmp, object){
+        var objectDetails = cmp.get("v.objectDetails");
+        cmp.set("v.filteredFields", objectDetails[object]);
     },
 
     /* @description: restructures returned Apex response to preserve separate variables
