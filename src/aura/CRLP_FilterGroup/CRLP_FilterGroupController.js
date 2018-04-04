@@ -42,12 +42,20 @@
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
                     , {label: labels.constant, fieldName: 'constant', type: 'string'}
+                ];
+
+                var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
+                    , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
+                    , {label: labels.constant, fieldName: 'constant', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
-                cmp.set("v.filterRuleList", model.filterRuleList);
+                cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
+                cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
                 console.log(model.filterRuleList);
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
+                cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
                 helper.filterRollupList(cmp, model.filterGroup.MasterLabel, labels);
                 helper.changeMode(cmp);
@@ -118,13 +126,7 @@
             var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup.valueOf()));
-
-            //remove unsaved filter rules, those without ids
-            var filterRuleList = cmp.get("v.filterRuleList");
-            var updatedFilterRules = filterRuleList.filter(function(rule){
-                return rule.hasOwnProperty('id');
-            });
-            cmp.set("v.filterRuleList", updatedFilterRules);
+            cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
         }
 
     },
@@ -139,7 +141,7 @@
     */
     onChangeFilterRuleObject: function(cmp, event, helper){
         var object = event.getSource().get("v.value");
-        helper.resetFilterRuleFields(cmp);
+        helper.resetFilterRuleFields(cmp, object);
     },
 
     /* @description: checks for type on filter rule field to update eligible values

@@ -51,10 +51,12 @@
                     description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="rollupList" type="List" description="List of related rollups for the filter group" access="public"/>
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
-    <aura:attribute name="filterRuleColumns" type="Object[]" description="List of available filter rules" access="public"/>
+    <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="rollupItems" type="Object"/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule." access="public"/>
     <!-- private attributes -->
+    <aura:attribute name="filterRuleColumns" type="List" description="List of available filter rules" access="private"/>
+    <aura:attribute name="filterRuleActionColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="operators" type="List" description="List of filter group operators" access="private"/>
     <aura:attribute name="objectDetails" type="Map" description="Mapped objects to all related fields." access="private"/>
     <aura:attribute name="filteredFields" type="List" description="List of mapped filter fields for the selected object" access="private"/>
@@ -110,7 +112,7 @@
                                 </aura:set>
                                 <aura:if isTrue="{! !empty(v.filterRuleList)}">
                                     <lightning:datatable data="{!v.filterRuleList}"
-                                                         columns="{!v.filterRuleColumns}"
+                                                         columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
                                                          keyField="id"
                                                          hideCheckboxColumn="true"
                                                          onrowaction="{!c.handleRowAction}"
