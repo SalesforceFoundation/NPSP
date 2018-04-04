@@ -37,6 +37,8 @@
 
 public with sharing class CRLP_RollupUI_SVC {
 
+    private static final String SUCCESS_RESPONSE = 'SUCCESS';
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
     */
@@ -50,11 +52,13 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String filterGroupName;
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
+        @AuraEnabled public String recordName;
         @AuraEnabled public String summaryObject;
         @AuraEnabled public String summaryObjectApiName;
         @AuraEnabled public Id id;
 
     }
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
     */
@@ -94,7 +98,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
     public class RollupDetailModel {
-        @AuraEnabled public Rollup__mdt rollup;
+        @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
         @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
         @AuraEnabled public Map<String, String> timeBoundOperations;
         @AuraEnabled public Map<String, String> operations;
@@ -109,6 +113,15 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Filter_Group__mdt filterGroup;
         @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
 
+    }
+
+    /*******************************************************************************************************
+    * @description Response model returned by the getDeploymentResult() method
+    */
+    public class DeploymentResult {
+        @AuraEnabled public Boolean completed = false;
+        @AuraEnabled public RollupTableItem rollupItem;
+        @AuraEnabled public FilterGroupModel filterGroupItem;
     }
 
     /*******************************************************************************************************
@@ -129,7 +142,8 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves rollup definitions and creates the rollup model.
+    * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
+    * during the init() function to retrieve and set up the LEX page for view/edit
     * @param targetObjectNames list of target objects used in rollups
     * @param detailObjectNames list of detail objects used in rollups
     * @return model with optional rollup and fields with data types
@@ -139,10 +153,10 @@ public with sharing class CRLP_RollupUI_SVC {
         RollupDetailModel model = new RollupDetailModel();
         String summaryField = '';
 
-        if(rollupId != ''){
-            Id id = Id.valueOf(rollupId);
-            model.rollup = getRollupById(id);
-            summaryField = model.rollup.Summary_Field__r.QualifiedApiName;
+        if(!String.isEmpty(rollupId)){
+            Rollup__mdt rlp = CRLP_Rollup_SEL.getRollupsById(Id.valueOf(rollupId));
+            model.rollup = new CRLP_RollupCMT.Rollup(rlp);
+            summaryField = model.rollup.summaryField;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
         model.timeBoundOperations = getTimeBoundOperations();
@@ -162,50 +176,56 @@ public with sharing class CRLP_RollupUI_SVC {
     public static List<RollupTableItem> getRollupDefinitions() {
         List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
 
-        List<Rollup__mdt> mdtList = CRLP_Rollup_SEL.getRollupDefinitions();
-        Map<CRLP_Operation.RollupType, String> operationTypes = CRLP_Operation.getRollupOperationTypes();
-
-        for(Integer i=0; i<mdtList.size(); i++){
-            RollupTableItem item = new RollupTableItem();
-
-            if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Account'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                item.creditType = Label.CRLP_SoftCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-                item.creditType = Label.CRLP_HardCredit;
-            } else if(mdtList[i].Summary_Object__r.QualifiedAPIName == 'Contact'
-                    && mdtList[i].Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                item.creditType = Label.CRLP_SoftCredit;
-            } else {
-                item.creditType = Label.stgNotApplicable;
-            }
-            item.detailObject = mdtList[i].Detail_Object__r.Label;
-            item.summaryObject = mdtList[i].Summary_Object__r.Label;
-            item.summaryObjectApiName = mdtList[i].Summary_Object__r.QualifiedApiName;
-            item.rollupName = mdtList[i].MasterLabel;
-            item.detailField = mdtList[i].Detail_Field__r.Label;
-            item.description = mdtList[i].Description__c;
-            item.filterGroupName = mdtList[i].Filter_Group__r.MasterLabel;
-            item.operation = mdtList[i].Operation__c.replace('_', ' ');
-            if(mdtList[i].Active__c){
-                item.activeIcon = 'utility:check';
-            } else {
-                item.activeIcon = 'utility:close';
-            }
-            item.id = mdtList[i].Id;
-
-            mdtTableList.add(item);
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
+        for(Rollup__mdt rlp : rollups){
+            mdtTableList.add(createRollupItem(rlp));
         }
 
         return mdtTableList;
+    }
 
+    /**
+     * @description Build a RollupTableItem wrapper for a given Rollup__mdt record
+     * @param rlpm Rollup__mdt
+     * @return RollupTableItem
+     */
+    private static RollupTableItem createRollupItem(Rollup__mdt rlp) {
+        RollupTableItem item = new RollupTableItem();
+
+        if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else {
+            item.creditType = Label.stgNotApplicable;
+        }
+        item.detailObject = rlp.Detail_Object__r.Label;
+        item.summaryObject = rlp.Summary_Object__r.Label;
+        item.summaryObjectApiName = rlp.Summary_Object__r.QualifiedApiName;
+        item.recordName = rlp.DeveloperName;
+        item.rollupName = rlp.MasterLabel;
+        item.detailField = rlp.Detail_Field__r.Label;
+        item.description = rlp.Description__c;
+        item.filterGroupName = rlp.Filter_Group__r.MasterLabel;
+        item.operation = rlp.Operation__c.replace('_', ' ');
+        if(rlp.Active__c){
+            item.activeIcon = 'utility:check';
+        } else {
+            item.activeIcon = 'utility:close';
+        }
+        item.id = rlp.Id;
+        return item;
     }
 
     /*******************************************************************************************************
@@ -227,7 +247,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.name = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
-            item.countRollups = rollupsByFilterGroup.get(mdtList[i].Id).size();
+            item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
             item.id = mdtList[i].Id;
 
             mdtTableList.add(item);
@@ -332,19 +352,6 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    @description Fetches a single Rollup__mdt record by Id.
-    * @return a Rollup__mdt record.
-    */
-
-    @AuraEnabled
-    public static Rollup__mdt getRollupById(Id id) {
-
-        Rollup__mdt rollup = CRLP_Rollup_SEL.getRollupsById(Id);
-
-        return rollup;
-    }
-
-    /*******************************************************************************************************
     @description Fetches all field labels, mapped to their data types, for a list of objects.
     * @param summaryField a summary field already being used to include in the type list
     * @param targetObjectNames list of target or summary objects to query
@@ -436,6 +443,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'labelPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'labelRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'name' => Label.stgLabelName,
+                'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
                 'noFields' => Label.stgLabelPaymentMapNoValidFields,
@@ -466,6 +474,12 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
+                /* TODO Refactor this to use custom labels when have all save logic in place */
+                'rollupSaveProgress' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveTimeout' => String.format('Saving the {0} has timed out. Please see the Customizable Rollups documentation for more information.',
+                        new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
@@ -484,6 +498,91 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return labels;
+    }
+
+    /**
+     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
+     * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
+     * the insert (deployment) completes.
+     */
+    @auraEnabled
+    public static String saveRollup(String rollupCMT) {
+        try {
+            // For new records, the RecordName property will be null by default. The process of deploying the
+            // CMT data will generate a unique RecordName to use for the new record.
+            CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
+
+            // TODO Remove this code after the UI properly sets the fields. For need it to test inserting new rollups
+            if (rollupCMTObj.amountObject == null) {
+                rollupCMTObj.amountObject = 'Opportunity';
+            }
+            if (rollupCMTObj.dateObject == null) {
+                rollupCMTObj.dateObject = 'Opportunity';
+            }
+            if (rollupCMTObj.detailObject == null) {
+                rollupCMTObj.detailObject = 'Opportunity';
+            }
+
+            // Queue up the deployment
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+
+            // Trigger the asynchronous deployment process
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+
+            // Return the unique record DeveloperName value
+            return jobId + '-' + rollupCMTObj.recordName;
+        } catch (Exception ex) {
+            throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
+
+        }
+    }
+
+    /**
+     * @description When a new Rollup record is inserted, the page will only have a unique DeveloperName value to match
+     * the record. However, to re-load the record and allow for editing we need to have the actual record Id.
+     * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
+     * @param jobId CMT Deployment Job Id to check the status for
+     * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
+     * TODO Refactor this to work for FilterGroup+FilterRule as well as for Rollups
+     * @return DeploymentResult
+     */
+    @auraEnabled
+    public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
+        Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
+        if (crs.CMT_API_Status__c != null) {
+            Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
+            if (deploymentStatus.containsKey(jobId)) {
+                String result = deploymentStatus.get(jobId);
+                if (result == Metadata.DeployStatus.Succeeded.name()) {
+                    try {
+                        Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
+                        DeploymentResult response = new DeploymentResult();
+                        response.completed = true;
+                        response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupsById(rollupId));
+                        return response;
+                    } catch (Exception ex) {
+                        // error retrieving the metadata record
+                        throw new AuraHandledException(ex.getMessage());
+                    }
+
+                } else {
+
+                    // If there is an error, parse the message to remove the metadata recordname leaving just the error message itself
+                    List<String> errors = result.split('\n');
+                    String errMsg = '';
+                    for (String er : errors) {
+                        if (er.contains('>')) {
+                            er = er.split('>')[1];
+                            errMsg += er + '\n';
+                        }
+                    }
+                    throw new AuraHandledException(!String.isEmpty(errMsg) ? errMsg : result);
+                }
+            }
+        }
+        return null;
     }
 
     /*******************************************************************************************************

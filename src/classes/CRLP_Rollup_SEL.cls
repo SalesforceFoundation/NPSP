@@ -55,10 +55,12 @@ public class CRLP_Rollup_SEL {
                                 Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
                                 Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
                         FROM Rollup__mdt
-                        ORDER BY Summary_Object__c, MasterLabel];
+                        ORDER BY Summary_Object__c, MasterLabel
+                ];
             }
             return cachedRollups;
-        } private set;
+        }
+        private set;
     }
 
     /**
@@ -125,6 +127,15 @@ public class CRLP_Rollup_SEL {
     }
 
     /**
+     * @description Queries a single Rollup Definition using the specified DeveloperName
+     * @return Record Id or null
+     */
+    public static Id getRollupIdByDeveloperName(String developerName) {
+        Rollup__mdt rollup = [SELECT Id FROM Rollup__mdt WHERE DeveloperName = :developerName LIMIT 1];
+        return rollup.Id;
+    }
+
+    /**
      * @description Queries a single Rollup Definition based on the requested Id
      * @return requested rollup__mdt
      */
@@ -137,7 +148,7 @@ public class CRLP_Rollup_SEL {
                 , Time_Bound_Operation_Type__c
                 , Description__c
                 , Filter_Group__c
-                , Filter_Group__r.QualifiedApiName
+                , Filter_Group__r.DeveloperName
                 , Filter_Group__r.MasterLabel
                 , Operation__c
                 , Integer__c

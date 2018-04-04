@@ -85,10 +85,10 @@
 
     displayNewRollupForm: function (cmp, event, helper) {
         cmp.set("v.activeRecord", {});
-        cmp.set("v.activeRecord.MasterLabel", cmp.get("v.labels.rollupNew"));
+        cmp.set("v.activeRecord.label", cmp.get("v.labels.rollupNew"));
         var summaryFilterObject = cmp.find("selectSummaryObject").get("v.value");
         if(summaryFilterObject !== 'All'){
-            cmp.set("v.activeRecord.Summary_Object__r.QualifiedApiName", summaryFilterObject);
+            cmp.set("v.activeRecord.summaryObject", summaryFilterObject);
         }
 
         //toggle grid and detail views, set detail mode to create
@@ -149,12 +149,32 @@
         var message = event.getParam("message");
         var channel = event.getParam("channel");
 
+        console.log("handleMessage: " + channel);
+
+        //message is the masterLabel
         if(channel === 'rollupNameChange'){
-            //message is the masterLabel
             //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
+
             cmp.set("v.activeRecord", activeRecord);
+        } else if (channel === 'rollupRecordChange') {
+console.log("Message: " + message);
+            // message will inserted or updated the Rollup__mdt record
+            var rollupsList = cmp.get("v.rollupList");
+            var newItem = true;
+            for (var i = 0; i < rollupsList.length; i++) {
+                if (rollupsList[i].id === message.id) {
+                    // if the Id matches, update that record
+                    console.log("Replace Row for " + message.id);
+                    rollupsList[i] = message;
+                    newItem = false;
+                }
+            }
+            if (newItem === true) {
+                rollupsList.push(message);
+            }
+            cmp.set("v.rollupList", rollupsList);
         }
     },
 

@@ -118,17 +118,24 @@ public class CRLP_Operation_SVC {
             amountValue = (Decimal) amtSObject.get(amtField);
         }
 
+        // If multi currency is enabled in the organization, get the "From" CurrencyCode to use for conversion
+        String fromCurrCode = UserInfo.getDefaultCurrency(); // default just in case there's an issue getting the detail record currency
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
+            try {
+                // Try to get the CurrencyIsoCode
+                Object currObj = detailSObject.get('CurrencyIsoCode');
+                if (currObj != null) {
+                    fromCurrCode = (String)currObj;
+                }
+            } catch (Exception ex) { }
+        }
+
         // If the amount is not null or zero, then convert to the Account currency as required
         if (amountValue != null && amountValue != 0) {
             // If multi currency is enabled in the organization, convert the Amount value to the
             // summary objects currency.
             if (UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                // Convert the Amount to the currency of the target record
-                String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
-                try {
-                    fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                } catch (Exception ex) { }
-                amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurr, rollup.currCode);
+                amountValue = UTIL_CurrencyConversion.convertAmount(amountValue, dateValue, fromCurrCode, rollup.currCode);
             }
         }
 
@@ -153,13 +160,7 @@ public class CRLP_Operation_SVC {
                 // then convert it to the target currency
                 if (resultVal != null && rollup.resultFieldDisplaytype == DisplayType.CURRENCY &&
                         UTIL_Currency.getInstance().isMultiCurrencyOrganization()) {
-                    // Convert the Amount to the currency of the target record
-                    String fromCurr = rollup.currCode; // default just in case there's an issue getting the detail record currency
-                    try {
-                        fromCurr = (String) detailSObject.get('CurrencyIsoCode');
-                    } catch (Exception ex) {
-                    }
-                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurr, rollup.currCode);
+                    resultVal = UTIL_CurrencyConversion.convertAmount((Decimal) resultVal, dateValue, fromCurrCode, rollup.currCode);
                 }
             }
 
