@@ -60,8 +60,8 @@ public class CRLP_RollupRD_SVC extends CRLP_VRollupHandler {
      * filter passes, then the detail record(s) are passed to the Rollup.doOperation() method to handle tha actual
      * rollup operations. The state of the rollup (across all detail records) is kept in the instace of the Rollup.
      * @param details List of detail records being rolled up to the Summary object defined in the constructor.
-     * @param childRecordsByDetailId Payments for each Opportunity. Split out into a Map by Detail (Opp) Id to
-     * support LDV orgs where querying the payments in an Opportunity sub-query might cause a CPU timeout
+     * @param childRecordsByDetailId Not supporting Payment rollups to RDs, so this param is not handled
+     * in this implementation
      * @return none
      */
     public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {

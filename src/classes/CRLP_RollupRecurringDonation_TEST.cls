@@ -153,7 +153,8 @@ private class CRLP_RollupRecurringDonation_TEST {
         UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
                 new npe03__Recurring_Donations_Settings__c(
                         npe03__Maximum_Donations__c = 50,
-                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name()
+                        npe03__Open_Opportunity_Behavior__c = RD_RecurringDonations.RecurringDonationCloseOptions.Mark_Opportunities_Closed_Lost.name(),
+                        Recurring_Donation_Batch_Size__c = 50
                 ));
 
         // Create the test data

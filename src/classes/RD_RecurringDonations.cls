@@ -161,7 +161,7 @@ public class RD_RecurringDonations {
     */
     public static void updateRecurringDonationOnOppChange(set<id> RDids, TDTM_Runnable.DmlWrapper dmlWrapper) {
 
-        Boolean CRLPEnabled = UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
+        Boolean CRLPEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
 
         // only use this hard-coded RD rollup code if Customizable Rollups aren't enabled
         if (!CRLPEnabled) {
