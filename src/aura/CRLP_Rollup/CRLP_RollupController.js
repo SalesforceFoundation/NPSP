@@ -8,10 +8,7 @@
          /*
          * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
-        var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
-            , {label: labels.labelPartialSoftCredit, name: labels.objectPartialSoftCredit}
-            , {label: labels.labelPayment, name: labels.objectPayment}
-            , {label: labels.labelAllocation, name: labels.objectAllocation}];
+        var detailObjects = cmp.get("v.detailObjects");
         var summaryObjects = cmp.get("v.summaryObjects");
         cmp.set("v.detailObjects", detailObjects);
 
@@ -37,11 +34,8 @@
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
-                console.log(model.rollup);
-                console.log(model.fieldsByDataType);
                 //note: the duplicate parsing is important to avoid a shared reference
                 if(activeRollupId){
-                    console.log('before set active rollups')
                     cmp.set("v.activeRollup", helper.restructureResponse(model.rollup));
                     cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
                 }
@@ -59,7 +53,6 @@
                 cmp.set("v.objectDetails", model.fieldsByDataType);
                 console.log('before change mode');
                 //change mode needs to be fired here because the sibling change of mode isn't being registered
-                // todo: check if this is necessary
                 helper.changeMode(cmp);
                 helper.setObjectAndFieldDependencies(cmp);
 
