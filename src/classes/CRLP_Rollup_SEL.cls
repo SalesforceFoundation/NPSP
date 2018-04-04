@@ -148,7 +148,7 @@ public class CRLP_Rollup_SEL {
                 , Time_Bound_Operation_Type__c
                 , Description__c
                 , Filter_Group__c
-                , Filter_Group__r.QualifiedApiName
+                , Filter_Group__r.DeveloperName
                 , Filter_Group__r.MasterLabel
                 , Operation__c
                 , Integer__c

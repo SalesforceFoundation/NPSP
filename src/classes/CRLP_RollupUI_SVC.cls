@@ -58,6 +58,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Id id;
 
     }
+
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
     */
@@ -97,7 +98,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * Retrieving labels in Apex instead of lightning components avoids namespace complications.
     */
     public class RollupDetailModel {
-        @AuraEnabled public Rollup__mdt rollup;
+        @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
         @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
         @AuraEnabled public Map<String, String> timeBoundOperations;
         @AuraEnabled public Map<String, String> operations;
@@ -141,7 +142,8 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves rollup definitions and creates the rollup model.
+    * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
+    * during the init() function to retrieve and set up the LEX page for view/edit
     * @param targetObjectNames list of target objects used in rollups
     * @param detailObjectNames list of detail objects used in rollups
     * @return model with optional rollup and fields with data types
@@ -152,8 +154,9 @@ public with sharing class CRLP_RollupUI_SVC {
         String summaryField = '';
 
         if(!String.isEmpty(rollupId)){
-            model.rollup = getRollupById(Id.valueOf(rollupId));
-            summaryField = model.rollup.Summary_Field__r.QualifiedApiName;
+            Rollup__mdt rlp = CRLP_Rollup_SEL.getRollupsById(Id.valueOf(rollupId));
+            model.rollup = new CRLP_RollupCMT.Rollup(rlp);
+            summaryField = model.rollup.summaryField;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
         model.timeBoundOperations = getTimeBoundOperations();
@@ -346,19 +349,6 @@ public with sharing class CRLP_RollupUI_SVC {
             timeBoundOperations.put(f.getValue(), f.getLabel());
         }
         return timeBoundOperations;
-    }
-
-    /*******************************************************************************************************
-    @description Fetches a single Rollup__mdt record by Id.
-    * @return a Rollup__mdt record.
-    */
-
-    @AuraEnabled
-    public static Rollup__mdt getRollupById(Id id) {
-
-        Rollup__mdt rollup = CRLP_Rollup_SEL.getRollupsById(Id);
-
-        return rollup;
     }
 
     /*******************************************************************************************************

@@ -85,10 +85,10 @@
 
     displayNewRollupForm: function (cmp, event, helper) {
         cmp.set("v.activeRecord", {});
-        cmp.set("v.activeRecord.MasterLabel", cmp.get("v.labels.rollupNew"));
+        cmp.set("v.activeRecord.label", cmp.get("v.labels.rollupNew"));
         var summaryFilterObject = cmp.find("selectSummaryObject").get("v.value");
         if(summaryFilterObject !== 'All'){
-            cmp.set("v.activeRecord.Summary_Object__r.QualifiedApiName", summaryFilterObject);
+            cmp.set("v.activeRecord.summaryObject", summaryFilterObject);
         }
 
         //toggle grid and detail views, set detail mode to create

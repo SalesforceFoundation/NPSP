@@ -146,7 +146,11 @@ public class CRLP_RollupCMT {
             this.filterGroupRecordName = filterRule.Filter_Group__r.DeveloperName;
             this.operation = filterRule.Operator__c;
             this.objectName = filterRule.Object__r.QualifiedApiName;
-            this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
+            if (filterRule.Field__c != null && filterRule.Field__r.QualifiedApiName.contains('.')) {
+                this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
+            } else {
+                this.fieldName = filterRule.Field__r.QualifiedApiName;
+            }
             this.value = filterRule.Constant__c;
             this.isDeleted = filterRule.Is_Deleted__c;
         }
@@ -201,16 +205,25 @@ public class CRLP_RollupCMT {
         public String recordName;
         public String label;
         public String filterGroupRecordName;
+        public String filterGroupLabel;
         public String description;
         public String operation;
         public String timeBoundOperationType;
         public String summaryObject;
+        public String summaryObjectLabel;
         public String summaryField;
+        public String summaryFieldlabel;
         public String detailObject;
+        public String detailObjectLabel;
         public String detailField;
+        public String detailFieldLabel;
         public String amountObject;
+        public String amountObjectLabel;
         public String amountField;
+        public String amountFieldLabel;
         public String dateObject;
+        public String dateObjectLabel;
+        public String dateFieldLabel;
         public String dateField;
         public Boolean isActive;
         public Boolean isDeleted;
@@ -232,17 +245,47 @@ public class CRLP_RollupCMT {
             this.operation = rlp.Operation__c;
             this.timeBoundOperationType = rlp.Time_Bound_Operation_Type__c;
             this.summaryObject = rlp.Summary_Object__r.QualifiedApiName;
-            this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
             this.detailObject = rlp.Detail_Object__r.QualifiedApiName;
-            this.detailField = parseObjectField(rlp.Detail_Field__r.QualifiedApiName)[1];
             this.amountObject = rlp.Amount_Object__r.QualifiedApiName;
-            this.amountField = parseObjectField(rlp.Amount_Field__r.QualifiedApiName)[1];
             this.dateObject = rlp.Date_Object__r.QualifiedApiName;
-            this.dateField = parseObjectField(rlp.Date_Field__r.QualifiedApiName)[1];
+
+            if (rlp.Summary_Field__c != null && rlp.Summary_Field__r.QualifiedApiName.contains('.')) {
+                this.summaryField = parseObjectField(rlp.Summary_Field__r.QualifiedApiName)[1];
+            } else {
+                this.summaryField = rlp.Summary_Field__r.QualifiedApiName;
+            }
+            if (rlp.Detail_Field__c != null && rlp.Detail_Field__r.QualifiedApiName.contains('.')) {
+                this.detailField = parseObjectField(rlp.Detail_Field__r.QualifiedApiName)[1];
+            } else {
+                this.detailField = rlp.Detail_Field__r.QualifiedApiName;
+            }
+            if (rlp.Amount_Field__c != null && rlp.Amount_Field__r.QualifiedApiName.contains('.')) {
+                this.amountField = parseObjectField(rlp.Amount_Field__r.QualifiedApiName)[1];
+            } else {
+                this.amountField = rlp.Amount_Field__r.QualifiedApiName;
+            }
+            if (rlp.Date_Field__c != null && rlp.Date_Field__r.QualifiedApiName.contains('.')) {
+                this.dateField = parseObjectField(rlp.Date_Field__r.QualifiedApiName)[1];
+            } else {
+                this.dateField = rlp.Date_Field__r.QualifiedApiName;
+            }
+
             this.useFiscalYear = rlp.Use_Fiscal_Year__c;
             this.intValue = (rlp.Integer__c != null ? rlp.Integer__c.intValue() : null);
             this.isDeleted = false;
             this.isActive = rlp.Active__c;
+
+            try {
+                this.filterGroupLabel = rlp.Filter_Group__r.MasterLabel;
+                this.summaryObjectLabel = rlp.Summary_Object__r.Label;
+                this.summaryFieldLabel = rlp.Summary_Field__r.Label;
+                this.detailObjectLabel = rlp.Detail_Object__r.Label;
+                this.detailFieldLabel = rlp.Detail_Field__r.Label;
+                this.amountObjectLabel = rlp.Amount_Object__r.Label;
+                this.amountFieldLabel = rlp.Amount_Field__r.Label;
+                this.dateObjectLabel = rlp.Date_Object__r.Label;
+                this.dateFieldLabel = rlp.Date_Field__r.Label;
+            } catch (Exception ex) {}
         }
 
         /**
