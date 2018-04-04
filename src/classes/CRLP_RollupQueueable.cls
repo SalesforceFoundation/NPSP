@@ -116,7 +116,6 @@ public class CRLP_RollupQueueable implements System.Queueable {
                 && !soql.contains('npo02__NumberOfClosedOpps__c')) {
             soql = soql.replace('SELECT ','SELECT npo02__NumberOfClosedOpps__c,');
         }
-        System.debug('++++++queueable query results: '+Database.query(soql));
         List<SObject> summaryRecords = Database.query(soql);
 
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);

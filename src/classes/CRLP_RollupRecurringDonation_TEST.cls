@@ -107,19 +107,15 @@ private class CRLP_RollupRecurringDonation_TEST {
     }
 
     static testMethod void test_Rollups_Queueable() {
-        System.debug('+++++calling testRollupsServices with TestType.TestQueueable');
         testRollupsServices(TestType.TestQueueuable);
     }
     static testMethod void test_Rollups_Batch() {
-        System.debug('+++++calling testRollupsServices with TestType.TestBatch');
         testRollupsServices(TestType.TestBatch);
     }
     static testMethod void test_Rollups_SkewBatch() {
-        System.debug('+++++calling testRollupsServices with TestType.TestSkewBatch');
         testRollupsServices(TestType.testSkewBatch);
     }
     static testMethod void test_Rollups_Trigger() {
-        System.debug('+++++calling testRollupsServices with TestType.TestTrigger');
         testRollupsServices(TestType.TestTrigger);
     }
 
@@ -198,8 +194,6 @@ private class CRLP_RollupRecurringDonation_TEST {
         List<Opportunity> originalOpps = [SELECT Id
         FROM Opportunity
         WHERE npe03__Recurring_Donation__c = :rd.id];
-
-        System.debug(originalOpps);
 
         System.assertEquals(numOpps, originalOpps.size());
 

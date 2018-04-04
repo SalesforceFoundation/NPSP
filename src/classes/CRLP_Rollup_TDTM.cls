@@ -129,8 +129,6 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
      */
     private static void executeRollupsForSpecifiedRecords(List<SObject> detailRecordsToRollup) {
 
-        System.debug('+++++hitting executeRollups in RollupTDTM');
-
         SObjectType detailObjType = detailRecordsToRollup[0].getSObjectType();
 
         List<Id> accountIds = new List<Id>();
