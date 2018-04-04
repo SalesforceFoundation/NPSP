@@ -44,6 +44,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static final String RELATIONSHIP_STATUS_CURRENT = 'Current';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR = 'Solicitor';
+    private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
 
 
     /*********************************************************************************************************
@@ -164,12 +165,16 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
         List<OpportunityContactRole> retrievedOCR
-            = [SELECT Id, ContactId, Role FROM OpportunityContactRole WHERE ContactId = :testCon.Id];
+            = [SELECT Id, ContactId, Role
+                FROM OpportunityContactRole
+                WHERE ContactId = :testCon.Id
+                AND Role = :RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT];
+
+        System.assertEquals(1, retrievedOCR.size());
 
         Test.stopTest();
 
         System.assertEquals(testCon.Id, retrievedOCR[0].ContactId);
-        System.assertEquals(RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT, retrievedOCR[0].Role);
     }
 
 
@@ -316,7 +321,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         Test.startTest();
 
         List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole WHERE ContactId = :testCon1.Id];
-        retrievedOCRs[0].Role = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
+        retrievedOCRs[0].Role = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE;
         update retrievedOCRs;
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon0.Id });
