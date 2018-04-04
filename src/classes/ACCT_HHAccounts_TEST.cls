@@ -956,6 +956,9 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    the system fields on the account are set correctly
     **********************************************************************************************************/            
     static testMethod void newHHAccountWithRecordTypeOnly() {
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'newHHAccountWithRecordTypeOnly') return;
         
         ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
@@ -977,6 +980,9 @@ private with sharing class ACCT_HHAccounts_TEST {
     *    the system fields on the account are set correctly
     **********************************************************************************************************/            
     static testMethod void updateAccountToHHRecordType() {
+        //skip the test if Advancement is installed
+        if(Advancement_Info.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'updateAccountToHHRecordType') return;
         
         ID rtIdAccountHH = ACCT_IndividualAccounts_TDTM.rtIdForAccountModel(true);
