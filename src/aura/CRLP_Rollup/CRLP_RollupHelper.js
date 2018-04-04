@@ -434,15 +434,23 @@
             || operation === 'Count'
             || operation === 'Average')
             && rollupLabel) {
+
             //enable amount field
             renderMap["amountField"] = true;
 
-            //set the default amount field based on the selected detail object
-            if (cmp.get("v.activeRollup.detailObject") === 'npe01__OppPayment__c') {
+            var labels = cmp.get("v.labels");
+
+            // Set the default amount field based on the selected detail object
+            if (cmp.get("v.activeRollup.amountField") && cmp.get("v.activeRollup.amountField") !== '') {
+                // there is already a value in this field. do nothing
+            } else if (cmp.get("v.activeRollup.detailObject") === 'npe01__OppPayment__c') {
                 cmp.set("v.activeRollup.amountField", 'npe01__Payment_amount__c');
+            } else if (cmp.get("v.activeRollup.detailObject") === labels.objectAllocation) {
+                cmp.set("v.activeRollup.amountField", labels.namespacePrefix + 'Amount__c');
             } else {
                 cmp.set("v.activeRollup.amountField", 'Amount');
             }
+
         } else {
             //disable amount field and clear values
             renderMap["amountField"] = false;

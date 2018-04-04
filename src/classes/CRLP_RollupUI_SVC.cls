@@ -443,6 +443,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'labelPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
                 'labelRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
                 'name' => Label.stgLabelName,
+                'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
                 'noFields' => Label.stgLabelPaymentMapNoValidFields,
