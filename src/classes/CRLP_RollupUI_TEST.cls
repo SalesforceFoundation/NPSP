@@ -119,18 +119,59 @@ public class CRLP_RollupUI_TEST {
     */
     public static testMethod void testSaveRollup() {
 
-        // Create the test CMDT data
-        mockRollupCMTValues();
+        CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup('test');
+        rollup.summaryObject = 'Account';
+        rollup.summaryField = 'CustomerPriority__c';
+        rollup.summaryObjectLabel = 'Account';
+        rollup.detailObject = 'Opportunity';
+        rollup.detailField = 'npe01__Member_Level__c';
+        rollup.amountField = 'Amount';
+        rollup.dateField = 'CloseDate';
+        rollup.operation = 'Smallest';
+        rollup.timeBoundOperationType = 'All_Time';
+        rollup.detailObjectLabel = 'Opportunity';
+        rollup.dateObjectLabel = 'Opportunity';
+        rollup.dateObject = 'Opportunity';
+        rollup.summaryFieldlabel = 'Customer Priority';
+        rollup.filterGroupRecordName = 'NPSP_Allocations_Filter';
+        rollup.detailFieldLabel = 'Member Level';
 
-        List<CRLP_RollupUI_SVC.RollupTableItem> rollups = CRLP_RollupUI_SVC.getRollupDefinitions();
-        System.assertEquals(2,rollups.size());
+        String rollupString = JSON.serialize(rollup);
 
-        // note: string pulled from debug logs based on an actual call
-        String rollupString = '{"label":"UDR: Acct: Customer Priority","summaryObject":"Account","summaryField":"CustomerPriority__c","isActive":true,"summaryObjectLabel":"Account","description":"testing json","detailObject":"Opportunity","detailField":"npe01__Member_Level__c","amountField":"Amount","dateField":"CloseDate","operation":"Smallest","timeBoundOperationType":"All_Time","useFiscalYear":null,"filterGroup":"N/A","filterGroupLabel":"Allocations: Closed Won excluding RTs","detailObjectLabel":"Opportunity","dateObjectLabel":"Opportunity","dateObject":"Opportunity","summaryFieldLabel":"Customer Priority","filterGroupRecordName":"NPSP_Allocations_Filter","detailFieldLabel":"Member Level"}';
         CRLP_RollupUI_SVC.saveRollup(rollupString);
 
-        rollups = CRLP_RollupUI_SVC.getRollupDefinitions();
-        //System.assertEquals(3,rollups.size());
+        // nothing to assert since CMDTs can't be inserted/updated in unit tests
+
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getDeploymentStatus()
+    */
+    public static testMethod void testGetDeploymentStatus() {
+
+        //test a failure
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                CMT_API_Status__c = '{ "jobId" : "Some Text" }'
+        ));
+
+        try {
+            // we know this will fail because the rollupName is not found
+            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName');
+        } catch (Exception e) {
+            System.assertNotEquals(null, e.getMessage());
+        }
+
+        //test a success
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
+                Customizable_Rollups_Enabled__c = true,
+                CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
+        ));
+
+        String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
+        CRLP_RollupUI_SVC.DeploymentResult response = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName);
+
+        System.assertNotEquals(null, response);
 
     }
 

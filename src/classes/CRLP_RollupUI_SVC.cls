@@ -565,7 +565,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @auraEnabled
     public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
-        Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
+        Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
