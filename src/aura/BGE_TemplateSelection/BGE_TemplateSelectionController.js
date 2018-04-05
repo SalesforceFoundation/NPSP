@@ -9,6 +9,7 @@
 		}
 
 		var action = component.get('c.loadTemplates');
+
 		action.setCallback(this, function (response) {
 			//store state of response
 			var state = response.getState();
@@ -72,13 +73,14 @@
 				{
 					"template": currentTemplate,
 					"toEdit": true,
-					"toCreate": false
+					"toCreate": false,
+					"showBackButton":true
 				},
 
 				function (newComp, event, helper) {
 
 					var content = component.find("body");
-					content.set("v.body", newComp);
+					content.set("v.body", newComp);				
 				});
 		}
 		else if (value == 2) {
@@ -89,13 +91,14 @@
 				{ 
 					"template": currentTemplate,
 					"toClone": true,
-					"toCreate": false
+					"toCreate": false,
+					"showBackButton":true
 				},
-
+ 
 				function (newComp, event, helper) {
 
 					var content = component.find("body");
-					content.set("v.body", newComp);
+					content.set("v.body", newComp);				
 				});
 		}
 		else if (value == 3) {
@@ -106,19 +109,19 @@
 
 	nextToTemplateCreation: function (component, event, helper) {
 
-
 		$A.createComponent(
 			"c:BGE_TemplateCreation",
 			{
-				"toCreate": true
+				"toCreate": true,
+				"showBackButton":true
 			},
 
 			function (newComp, event, helper) {
 
 				var content = component.find("body");
-				content.set("v.body", newComp);
+				content.set("v.body", newComp);			
 			});
-		
+
 	},
 
 	nextToInitial: function (component, event, helper) {

@@ -21,23 +21,30 @@
 
         <style>
 
-            .slds-scope button {
+            /* All headers */
 
-                overflow: hidden;
+            .ht_master tr:nth-of-type(odd) > td {
+               background-color: #f4f6f9;
             }
 
-            .slds-scope td, .slds-scope th {
-
-                padding: 4px;
+            .handsontable td.htInvalid {
+                background-color: white !important;
+                border: 2px solid red !important;
             }
 
-            .handsontable thead th .relative {
-
-                padding: 4px 4px;
+            .pagination-section {
+                color: #758696 !important;
             }
 
             .handsontable th {
-                text-align: center
+                text-align: center;
+                border-right: none;
+                color: #758696 !important;
+                border-bottom: 1px solid #cccccc !important;
+            }
+
+            .handsontable td {
+                color: #536787 !important;
             }
 
             .fixed-horizontal {
@@ -49,6 +56,25 @@
                 top: 0px;
                 left: 0px;
             }
+
+            .tooltip-column {
+                border: none !important;
+                border-right: 1px solid #cccccc !important;
+                background: white !important;
+            }
+
+            .handsontable th:first-child {
+                border: none !important;
+                border-right: 1px solid #cccccc !important;
+            }
+
+	        .fixedHeader {
+                overflow: hidden;
+                position: fixed; /* Set the navbar to fixed position */
+                top: 0; /* Position the navbar at the top of the page */
+                width: 100%; /* Full width */
+            }
+
         </style>
 
         <!-- Custom Javascript -->
@@ -67,6 +93,9 @@
 
                 table = document.getElementById('my-hot-table');
                 searchField = document.getElementById('handsonSearch');
+                wasEnterPressed = false;
+		wasUpArrowPressed = false;
+
                 $scope.totalPages = '{!totalOfPages}';
 
                 var changesToSave = {};
@@ -137,7 +166,7 @@
                 errorCol.title = ' ';
                 errorCol.type = 'text';
                 errorCol.data = 'Errors';
-                errorCol.className = "htCenter htMiddle";
+                errorCol.className = "htCenter htMiddle tooltip-column";
                 errorCol.wordWrap = false;
 
                 dynamicColumns.push(errorCol);
@@ -188,6 +217,8 @@
                     dynamicColumns.push(col);
                 }
 
+                var tableWidth = window.innerWidth * 93 / 100;
+                var tableHeight = window.innerHeight * 75 /100;
                 // BEGINNING OF TABLE CONFIGURATION
 
                 hot = new Handsontable(table, {
@@ -207,9 +238,18 @@
                     autoWrapRow: true,
                     currentRowClassName: 'currentRow',
                     stretchH: 'all',
-                    minSpareRows:0,
-                    minRows:50,
-                    maxRows:50,
+                    minSpareRows: 0,
+                    width: tableWidth,
+                    height: tableHeight,
+                    minRows: 50,
+                    maxRows: 50,
+                    manualColumnResize: [50],
+                    colWidths: 150,
+                    rowHeights: 40,
+                    colHeaders: true,
+                    columnHeaderHeight: 40,
+
+                    //padding: 6px 6px !important;
                     columns: dynamicColumns,
 
                     cells: function (row, col, prop) {
@@ -353,28 +393,35 @@
                                 $scope.currentDataImport = this.getDataAtRow(row);
                                 changesToSave[dataRowId][prop] = newValue;
 
-                                triggerUpdateCell(newValue, prop, dataRowId, function(result) {
+                                if(!wasEnterPressed) { //Enter keycode
 
-                                    var cell = self.getCellMeta(row, getColumnFromName(prop));
+                                    triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
-                                    if (!result.success) {
-                                        
-                                        cell.valid = false;
-                                        cell.hasError = true;
+                                        var cell = self.getCellMeta(row, getColumnFromName(prop));
 
-                                    }
-                                    else {
-                                        cell.valid = true;
-                                        cell.hasError = false;
-                                    }
+                                        if (!result.success) {
 
-                                    if (!dataRowId) {
+                                            cell.valid = false;
+                                            cell.hasError = true;
+                                        }
+                                        else {
 
-                                        self.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
+                                            cell.valid = true;
+                                            cell.hasError = false;
+                                        }
 
-                                        dataRowId  = result.dataImportIds[0];
-                                    }
-                                });
+                                        if (!dataRowId) {
+
+                                            self.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
+
+                                            dataRowId  = result.dataImportIds[0];
+                                        }
+                                    });
+
+                                }
+
+
+
                             }
 
                             var pBatchId = getAllUrlParams().batchid;
@@ -412,6 +459,12 @@
                             if (lastSelectedRow !== null && lastSelectedRow !== row) {
 
                                 if (changesToSave[dataRowId]) {
+
+                                    if (wasUpArrowPressed) {
+
+                                        row = row+2;
+                                        wasUpArrowPressed = false;
+                                    }
 
                                     triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
 
@@ -501,46 +554,37 @@
 
 
                 function addTooltip (dataRowId, row, result, messages) {
-   
-                    window.scrollTo(0,0);
 
                     var messageStyle = 'slds-theme_error';
                     var iconStyle = 'warning';
                     var styleSuccess = '';
-                    var styleTop = -5 - messages.length;
+                    var styleTop = -5 -  messages.length;
 
                     var htmlTooltipId = 'selector' + dataRowId;
+                    var htmlTooltipIdParam = '\'#selector' + dataRowId + '\'';
                     var newRowClass = '';
 
 
                     if (!dataRowId) {
 
                         htmlTooltipId = row + 'selectorNew';
+                        htmlTooltipIdParam = '\'#' + row + 'selectorNew\'';
                     }
-                    var htmlIcon = '<div id='+ htmlTooltipId + '><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
-                    var htmlTooltip = $('<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left '  + messageStyle + '"' + ' style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>');
+
+                    var htmlIcon = '<div id='+ htmlTooltipId + ' onmouseout="removeMessage(' + htmlTooltipIdParam + ');" onmouseover="addMessage(' + htmlTooltipIdParam + ', \'' + messages + '\', \'' + styleTop +  '\');" ><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
+
+                    var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
+
                     var escaped = Handsontable.helper.stringify(htmlIcon);
 
-                    setTimeout(function() {
+                    setTimeout(function() { 
+                        $('#' + htmlTooltipId).append(htmlTooltip);
+                     }, 10);
 
-                        if (dataRowId) {
+                    setTimeout(function() { 
+                        $('#' + htmlTooltipId).find( "span:last" ).remove();
+                     }, 2000);
 
-                            $('#selector' + dataRowId).hover(function() {
-                                    $( this ).append(htmlTooltip);
-                                }, function() {
-                                    $( this ).find( "span:last" ).remove();
-                                });
-                            $('#selector' + dataRowId).removeClass('selectorNew');
-                        }
-                        else {
-
-                            $('#' + row + 'selectorNew').hover(function() {
-                                    $( this ).append(htmlTooltip);
-                                }, function() {
-                                    $( this ).find( "span:last" ).remove();
-                                });
-                        }
-                    }, 10);
                     return escaped;
                 }
 
@@ -557,7 +601,7 @@
                         messages = [];
                     }
                     else if (messages.length > 0 ) {
-                        messages.push('<br>');
+                        messages.push('\<br\>');
                     }
 
                     cellsMeta.forEach(function(cell) {
@@ -569,7 +613,7 @@
                             if(cell.required && !value) {
 
                                 cell.valid = false;
-                                messages.push( '"' + cell.data + '" field is required  <br>');
+                                messages.push(cell.data + ' field is required \<br\>');
                             }
                             else if (cell.hasError) {
                                 cell.valid = false;
@@ -954,8 +998,54 @@
                     }
                 });
 
+                Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
+
+                    wasEnterPressed = false;
+		    wasUpArrowPressed = false;
+
+                    if (e.keyCode === 9) {
+
+                        var selection = hot.getSelected();
+                        var rowIndex = selection[0];
+                        var colIndex = selection[1];
+                        var numerOfColumns = hot.countCols();
+
+                        if (colIndex == numerOfColumns - 1) {
+
+                            rowIndex++;
+                            colIndex = 0;
+                        }
+
+                        hot.selectCell(rowIndex,colIndex);
+                    }
+                    else if (e.keyCode === 13 || e.keyCode === 40) {
+                        // Enter or arrow down was pressed.
+                        wasEnterPressed = true
+                    }
+                    else if (e.keyCode === 38) {
+
+                        wasUpArrowPressed = true;
+                    }
+                });
+
                 // END DEFINING ANGULAR FUNCTIONS
             });
+	    
+	    function removeMessage(dataRowId) {
+
+                setTimeout(function() { 
+                    $(dataRowId).find( "span:last" ).remove();
+                }, 10);
+            }
+
+            function addMessage(dataRowId, messages, styleTop) {
+
+                var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
+
+                setTimeout(function() { 
+                    $(dataRowId).append(htmlTooltip);
+                }, 10);
+            }
 
 
         </script>
@@ -966,68 +1056,54 @@
             <div id="notifications"></div>
             <div id="wrapper" class="slds-form" ng-controller="MainCtrl as ctrl">
 
-                <!-- HEADER -->
-                <div class="slds-page-header fixed-horizontal">
-                    <div class="slds-grid slds-wrap slds-grid_pull-padded">
-                        <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_4-of-6 slds-large-size_3-of-12">
-                            <input type="search" id="handsonSearch" placeholder="search" class="slds-input" style="width: 230px;align:right;" />
-                        </div>
+                <!-- TABLE -->
+                <div class="slds-m-horizontal_xx-large">
 
-                        <div class="slds-p-horizontal_small slds-size_1-of-2 slds-medium-size_2-of-6 slds-large-size_2-of-12">
-                            <button class="deletebutton slds-button slds-button_neutral" title="Delete Selected Rows">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/action-sprite/svg/symbols.svg#delete" />
-                                </svg>
-                                Delete
-                            </button>
+                    <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
+                        <div class="slds-float_right">
+                            <button class="slds-button slds-button_brand" title="Commit and Save"> Commit and Save </button>
+                            <button class="slds-button slds-button_brand" title="Commit and Exit"> Commit and Exit </button>
                         </div>
                     </div>
-                </div>
-                <!-- / HEADER -->
 
-                <!-- TABLE -->
-                <div class="slds-m-vertical_xx-large" >
-                    <div id="my-hot-table" class="handsontable" style="margin-top: 7em;"/>
+                    <div class="slds-m-horizontal_xx-large slds-grid slds-m-bottom_medium">
+
+                        <div class="slds-grid pagination-section">
+
+                            <button class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="previous page" id="previousPageButton" disabled="true">
+                                <p class="slds-text-heading_medium slds-align_absolute-center">&lt;</p>
+                            </button>
+
+                            <p class="slds-align_absolute-center slds-size_4-of-6">
+                                Page &nbsp;
+                                <output type="number" min="1" id="currentPageNumber" placeholder="1" />
+                                &nbsp; of &nbsp;
+                                <output type="number" min="1" ng-bind-html="totalPages" placeholder="1" />
+
+                            </p>
+
+                            <button class="nextButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="next page" id="nextPageButton">
+                                <p class="slds-text-heading_medium slds-align_absolute-center">&gt;</p>
+                            </button>
+                        </div>
+
+                        <div class="slds-col slds-size_1-of-2 slds-clearfix">
+                            <div class="slds-float_right">
+                                <div class="slds-size_1-of-2 slds-medium-size_4-of-6 slds-large-size_3-of-12">
+                                    <input type="search" id="handsonSearch" placeholder="search" class="slds-input" style="width: 230px;align:right;" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                	 <div id="my-hot-table" class="handsontable" />
                 </div>
                 <!-- / TABLE -->
 
                 <!-- FOOTER -->
-                <div class="slds-align_absolute-center">
 
-                    <div class="slds-grid slds-gutters">
-                        <div class="slds-col slds-size_1-of-3">
-                            <button class="previousButton slds-button slds-button_neutral" title="previous page" id="previousPageButton" disabled="true">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#chevronleft" />
-                                </svg>
-                                Previous
-                            </button>
-                        </div>
-
-                        <div class="slds-col slds-size_1-of-3">
-                            <div >
-                                <p>
-                                    <b>SHOWING PAGE # </b>&nbsp;
-                                    <output type="number" min="1" id="currentPageNumber" placeholder="1" />
-                                    OF
-                                    <p ng-bind-html="totalPages"></p>
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="slds-col slds-size_1-of-3">
-                            <button class="nextButton slds-button slds-button_neutral" title="next page" id="nextPageButton">
-                                <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
-                                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#chevronright" />
-                                </svg>
-                                Next
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-
-                 <apex:outputpanel styleclass="slds-m-around_small" style="text-align: center;">
+                <apex:outputpanel styleclass="slds-m-around_small" style="text-align: center;">
                     <div >
                         <b>TOTAL OF RECORDS: </b>&nbsp;
                         <output id="totalOfRecords" placeholder="0" style="width: 150px;"/>

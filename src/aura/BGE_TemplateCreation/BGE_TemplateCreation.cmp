@@ -1,4 +1,8 @@
-<aura:component controller="BGE_AuraController" Implements="flexipage:availableForRecordHome,force:hasRecordId,lightning:actionOverride,force:lightningQuickAction" access="global">
+<aura:component controller="BGE_AuraController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+
+    <ltng:require scripts="{!$Resource.BGEResources + '/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptLoaded}" />
+
+    <aura:attribute name="isjQueryLoaded" type="Boolean" default="false"/>
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:attribute name="template" type="Batch_Template__c" access="global" default="{sobjectType : 'Batch_Template__c'}" />
@@ -10,21 +14,26 @@
     <aura:attribute name="toCreate" type="Boolean" access="global" default="true" />
     <aura:attribute name="toClone" type="Boolean" access="global" default="false" />
     <aura:attribute name="toEdit" type="Boolean" access="global" default="false" />
-    
-
+    <aura:attribute name="showBackButton" type="Boolean" access="global" default="false" />
 
     <aura:attribute name="listOptions" type="Batch_Template_Field__c[]" default="[]"/>
     <aura:attribute name="defaultOptions" type="Batch_Template_Field__c[]" default="[]"/>
     <aura:attribute name="requiredOptions" type="List" default="[]"/>
 
 
- <!--Aura Attribute for store Contact Object List as Array-->    
+    <!--Aura Attribute for store Contact Object List as Array-->
     <aura:attribute name="templateFields" type="Batch_Template_Field__c[]" />
+    <aura:attribute name="templateFieldSelected" type="Batch_Template_Field__c" />
     <aura:attribute name="templateFieldsToDelete" type="Batch_Template_Field__c[]" />
 
-    <div aura:id="body">
 
-        <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
+    <aura:attribute name="requiredValue" type="Boolean" default="false"/>
+    <aura:handler name="change" value="{!v.requiredValue}" action="{!c.onRequiredChange}" />
+
+    <div aura:id="body">
+        <aura:if isTrue="{!v.showBackButton}">
+            <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
+        </aura:if>
 
         <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
 
@@ -38,13 +47,40 @@
                 <lightning:textarea name="description" label="Descripcion" maxlength="300" value="{!v.template.Description__c}"/>
             </div>
 
-            <lightning:dualListbox class="slds-m-horizontal_medium" aura:id="selectOptions" name="Select Options" label="Select Options" 
+            <div class="slds-size_1-of-1 slds-grid slds-wrap">
+
+                <div class="slds-size_2-of-3">
+                    <lightning:dualListbox class="slds-m-horizontal_medium" aura:id="selectOptions" name="Select Options" label="Select Options" 
                            sourceLabel="Available Template Fields" 
                            selectedLabel="Active Template Fields" 
                            options="{! v.listOptions }"
                            value="{! v.defaultOptions }"
                            requiredOptions="{! v.requiredOptions }"
                            onchange="{! c.handleChange }"/>
+                </div>
+                <div class="slds-size_1-of-3 slds-m-vertical_x-large">
+                    <div class="slds-popover slds-nubbin_top-left toggle slds-m-top_x-large" style="position:absolute;" role="tooltip" id="help" aura:id="tooltip">
+
+                        <lightning:buttonIcon class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.display}" />
+
+                        <!-- Set properties of each template field -->
+                        <div class="slds-popover__body">
+
+                            <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+
+                                <lightning:icon iconName="standard:work_order_item" size="small" alternativeText="Indicates approval" />
+                                <h1 class="slds-m-left_small">Template field </h1>
+                            </div>
+
+                            <lightning:input class="slds-m-top_small" type="checkbox" label="Required" name="required" checked="{!v.requiredValue}" />
+                            <lightning:input type="checkbox" label="Visible" name="visible" checked="true"/>
+
+                        </div>
+                    </div>
+
+                    <lightning:buttonIcon class="slds-button__icon_medium" iconName="utility:settings" size="large" variant="bare" alternativeText="Settings" onclick="{!c.display}" iconClass="dark icon-properties"/>
+                </div>
+            </div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">
                 <div class="slds-size_1-of-2 slds-grid slds-wrap">

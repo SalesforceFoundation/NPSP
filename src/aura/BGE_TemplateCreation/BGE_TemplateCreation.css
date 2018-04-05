@@ -1,2 +1,7 @@
-.THIS {
-}
+.THIS .toggle {
+   display: none;
+ }
+
+  .THIS .icon-properties {
+    padding: 2.5px !important;
+ }

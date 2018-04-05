@@ -517,6 +517,7 @@
         <members>HH_ContainerLoadedEvent</members>
         <members>HH_HouseholdSavedEvent</members>
         <members>ManageHHApp</members>
+        <members>SearchKeyChange</members>
         <members>autocomplete</members>
         <members>autocompleteOption</members>
         <members>autocompleteSelectListOption</members>

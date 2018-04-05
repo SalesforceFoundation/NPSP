@@ -42,13 +42,21 @@
 
                         var templateFields = response.getReturnValue();
                         var defaultOptions = [];
+                        var requiredOptions = [];
+
                         templateFields.forEach(function (templateField) {
 
                             defaultOptions.push(templateField['Name']);
+                            var required = templateField['Required__c'];
+
+                            if (required) {
+                                requiredOptions.push(templateField['Name']);
+                            }
                         });
 
                         component.set('v.templateFields', response.getReturnValue());
                         component.set('v.defaultOptions', defaultOptions);
+                        component.set('v.requiredOptions', requiredOptions);
                     }
                 }
             });
@@ -153,24 +161,121 @@
         var rowItemList = component.get("v.templateFields");
         var index = rowItemList.length;
 
-        while (rowItemList.length > 0) {
-            rowItemList.pop();
+        /************CODE TO DELETE OLD TEMPLATE FIELD ITEMS***********************/
+        var selectedIndexVar = 0;
+        var existsToDelete = false;
+
+        for (var existingIndexVar = 0; existingIndexVar < rowItemList.length; existingIndexVar++) {
+
+            selectedIndexVar = 0;
+            existsToDelete = false;
+
+            var existingTemplateField = rowItemList[existingIndexVar];
+            while (!existsToDelete && selectedIndexVar < selectedOptionsList.length) {
+
+                var selectedTemplateField = selectedOptionsList[selectedIndexVar];
+                if (existingTemplateField.Name === selectedTemplateField) {
+                    existsToDelete = true;
+                }
+                else {
+                    selectedIndexVar++;
+                }
+            }
+            if (!existsToDelete) { 
+
+                var index = rowItemList.indexOf(existingTemplateField);
+
+                console.log('DELETE ' + rowItemList[index]);
+
+                if (index > -1) {
+                    rowItemList.splice(index, 1);
+                }
+            }
+        }
+        /************CODE TO DELETE OLD TEMPLATE FIELD ITEMS***********************/
+
+        /************CODE TO ADD NEW TEMPLATE FIELD ITEMS***********************/
+        var existingIndexVar = 0;
+        var existsToAdd = false;
+
+        for (var selectedIndexVar = 0; selectedIndexVar < selectedOptionsList.length; selectedIndexVar++) {
+
+            existingIndexVar = 0;
+            existsToAdd = false;
+
+            var selectedTemplateField = selectedOptionsList[selectedIndexVar];
+
+            while (!existsToAdd && existingIndexVar < rowItemList.length) {
+
+                var existingTemplateField = rowItemList[existingIndexVar];
+
+                if (existingTemplateField.Name == selectedTemplateField) {
+
+                    existsToAdd = true;
+                }
+                else {
+                    existingIndexVar++;
+                }
+            }
+
+            if (!existsToAdd) {
+
+                //Add new item for template fields with default values.
+                rowItemList.push({
+                    'sobjectType': 'Batch_Template_Field__c',
+                    'Name': selectedOptionsList[selectedIndexVar],
+                    'Order__c': selectedIndexVar + 1,
+                    'Read_Only__c': false,
+                    'Required__c': false,
+                    'Sticky_Field__c': false,
+                    'Sticky_Field_Value__c': '',
+                    'Sticky_Field_Visibility__c': false
+                });
+            }
         }
 
-        for (var indexVar = 0; indexVar < selectedOptionsList.length; indexVar++) {
-
-            rowItemList.push({
-                'sobjectType': 'Batch_Template_Field__c',
-                'Name': selectedOptionsList[indexVar],
-                'Order__c': indexVar+1,
-                'Read_Only__c': false,
-                'Required__c': false,
-                'Sticky_Field__c': false,
-                'Sticky_Field_Value__c': '',
-                'Sticky_Field_Visibility__c': false
-            });
-        }
-
+        /************CODE TO ADD NEW TEMPLATE FIELD ITEMS***********************/
         component.set("v.templateFields", rowItemList);
+    },
+    onRequiredChange: function (component, event, helper) {
+
+        var value = event.getParam("value");
+
+        var templateFieldSelected = component.get("v.templateFieldSelected");
+        var templateFields = component.get("v.templateFields");
+
+        templateFieldSelected.Required__c = value;
+
+        templateFields.forEach(function (templateField) {
+
+            if (templateField['Name'] === templateFieldSelected.Name) {
+
+                console.log('HERE RADIO');
+                templateField = templateFieldSelected;
+                var requiredOptions = component.get('v.requiredOptions');
+
+                if (value) {
+
+                    requiredOptions.push(templateFieldSelected.Name);
+                    component.set('v.requiredOptions', requiredOptions);
+                }
+                else {
+
+                    var index = requiredOptions.indexOf(templateFieldSelected.Name);
+
+                    requiredOptions.splice(index, 1);
+                    component.set('v.requiredOptions', requiredOptions);
+
+                }
+            }
+        });
+    },
+
+    display: function (component, event, helper) {
+        helper.toggleHelper(component, event);
+    },
+
+    displayOut: function (component, event, helper) {
+        helper.toggleHelper(component, event);
     }
 })
