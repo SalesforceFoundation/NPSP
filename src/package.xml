@@ -79,6 +79,16 @@
         <members>BDI_PostProcess_TEST</members>
         <members>BDI_SettingsUI_CTRL</members>
         <members>BDI_SettingsUI_TEST</members>
+        <members>BGE_AuraController</members>
+        <members>BGE_AuraController_TEST</members>
+        <members>BGE_BatchController</members>
+        <members>BGE_DynamicalColumnWrapper</members>
+        <members>BGE_HandsOnGridController</members>
+        <members>BGE_HandsOnGridControllerForTest</members>
+        <members>BGE_HandsOnGridTemplateHelper</members>
+        <members>BGE_TemplateController</members>
+        <members>BGE_TemplateNameHelper</members>
+        <members>BGE_TemplateTriggerHandler</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -367,6 +377,7 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
+        <members>BGE_HandsOnGrid</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
         <members>CON_DeleteContactOverride</members>
@@ -427,6 +438,7 @@
         <name>ApexPage</name>
     </types>
     <types>
+        <members>BGE_TemplateTrigger</members>
         <members>TDTM_Account</members>
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
@@ -449,6 +461,46 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>BGE_AddTemplateFieldRowEvent</members>
+        <members>BGE_Application</members>
+        <members>BGE_Batch</members>
+        <members>BGE_BatchContainer</members>
+        <members>BGE_BatchCreation</members>
+        <members>BGE_BatchDataImport</members>
+        <members>BGE_BatchDataImportNew</members>
+        <members>BGE_BatchGrid</members>
+        <members>BGE_BatchList</members>
+        <members>BGE_BatchListTable</members>
+        <members>BGE_BatchListTableRow</members>
+        <members>BGE_BatchListTableRowSelectEvent</members>
+        <members>BGE_BatchMenu</members>
+        <members>BGE_BatchMenuDismissModalEvent</members>
+        <members>BGE_BatchMenuShowGrid</members>
+        <members>BGE_BatchMenuShowGridEvent</members>
+        <members>BGE_BatchMenuShowModalEvent</members>
+        <members>BGE_BatchNew</members>
+        <members>BGE_BatchSelection</members>
+        <members>BGE_EnterData</members>
+        <members>BGE_GiftSelectionChange</members>
+        <members>BGE_Header</members>
+        <members>BGE_Initial</members>
+        <members>BGE_InputDate</members>
+        <members>BGE_POC</members>
+        <members>BGE_PageChange</members>
+        <members>BGE_Paginator</members>
+        <members>BGE_ProgressIndicator</members>
+        <members>BGE_RegisterEvent</members>
+        <members>BGE_RemoveTemplateFieldRowEvent</members>
+        <members>BGE_ReviewScreen</members>
+        <members>BGE_SearchBar</members>
+        <members>BGE_TemplateCreation</members>
+        <members>BGE_TemplateFieldDynamicRow</members>
+        <members>BGE_TemplateRow</members>
+        <members>BGE_TemplateSelection</members>
+        <members>BGE_ValidateANDCommit</members>
+        <members>BatchDataEntryPOCGrid</members>
+        <members>BatchDataImportMain</members>
+        <members>BatchDataImportPOCGrid</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>
         <members>HH_AutoComplete</members>
@@ -605,6 +657,7 @@
         <members>DataImportBatch__c.Account_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Batch_Description__c</members>
         <members>DataImportBatch__c.Batch_Process_Size__c</members>
+        <members>DataImportBatch__c.Batch_Template__c</members>
         <members>DataImportBatch__c.Contact_Custom_Unique_ID__c</members>
         <members>DataImportBatch__c.Contact_Matching_Rule__c</members>
         <members>DataImportBatch__c.Donation_Date_Range__c</members>
@@ -617,6 +670,7 @@
         <members>DataImportBatch__c.Records_Failed__c</members>
         <members>DataImportBatch__c.Records_Successfully_Processed__c</members>
         <members>DataImportBatch__c.Run_Opportunity_Rollups_while_Processing__c</members>
+        <members>DataImportBatch__c.Status__c</members>
         <members>DataImport__c.Account1ImportStatus__c</members>
         <members>DataImport__c.Account1Imported__c</members>
         <members>DataImport__c.Account1_City__c</members>
@@ -2140,6 +2194,7 @@
         <name>ReportType</name>
     </types>
     <types>
+        <members>BGEResources</members>
         <members>CumulusStaticResources</members>
         <members>SLDS</members>
         <name>StaticResource</name>

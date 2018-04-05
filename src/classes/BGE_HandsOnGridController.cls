@@ -45,6 +45,9 @@ global class BGE_HandsOnGridController {
         // Variable json String will be used to load the data into the grid.
         jsonString = JSON.serialize(data);
 
+        // Escape json string.
+        jsonString = String.escapeSingleQuotes(jsonString);
+
         totalOfRecords = calculateTotalOfRecords(batchId);
 
         totalDonationAmount = calculateTotalAmount(batchId);
