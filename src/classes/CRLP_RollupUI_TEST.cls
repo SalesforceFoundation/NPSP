@@ -149,6 +149,9 @@ public class CRLP_RollupUI_TEST {
     */
     public static testMethod void testGetDeploymentStatus() {
 
+        // Create the test CMDT data
+        mockRollupCMTValues();
+
         //test a failure
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,

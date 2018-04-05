@@ -134,8 +134,16 @@ public class CRLP_Rollup_SEL {
      * @return Record Id or null
      */
     public static Id getRollupIdByDeveloperName(String developerName) {
-        Rollup__mdt rollup = [SELECT Id FROM Rollup__mdt WHERE DeveloperName = :developerName LIMIT 1];
+
+        Rollup__mdt rollup = new Rollup__mdt();
+        for (Rollup__mdt rlp : cachedRollups) {
+            if (developerName == rlp.DeveloperName) {
+                rollup = rlp;
+                break;
+            }
+        }
         return rollup.Id;
+
     }
 
     /**
