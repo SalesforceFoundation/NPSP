@@ -26,11 +26,7 @@
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
 
-                var operators = [];
-                for(var i in model.operators){
-                    operators.push({name: i, label: model.operators[i]});
-                }
-                cmp.set("v.operators", operators);
+                cmp.set("v.operatorMap", model.operators);
 
                 var labels = cmp.get("v.labels");
 
@@ -53,7 +49,6 @@
 
                 cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
                 cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
-                console.log(model.filterRuleList);
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
@@ -148,23 +143,19 @@
     */
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
-        var filteredFields = cmp.get("v.filteredFields");
-        var type;
+        var type = helper.getFieldType(cmp, field);
+        cmp.set("v.activeFilterRule.operatorName", "");
+        cmp.set("v.filterRuleFieldType", "text");
+        helper.getAvailableOperations(cmp, type);
+    },
 
-        for (var i = 0; i < filteredFields.length; i++) {
-            if (filteredFields[i].name === field) {
-                type = filteredFields[i].type;
-                break;
-            }
-        }
+    /* @description:
+    */
+    onChangeFilterRuleOperator: function(cmp, event, helper){
+        var operator = event.getSource().get("v.value");
+        var type = helper.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
 
-        if(type.toLowerCase() === 'picklist'){
-            //todo: add picklist changes
-        } else if (type.toLowerCase() === 'multipicklist'){
-            //todo: add multipicklist changes
-        }
-
-        //todo: add operator filtering in CMT_FilterRuleUI_SVC.getAvailableOperations
+        helper.rerenderValue(cmp, operator, type);
     },
 
     /* @description: saves a new filter group and associated filter rules

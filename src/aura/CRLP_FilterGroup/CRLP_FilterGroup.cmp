@@ -54,13 +54,15 @@
     <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="rollupItems" type="Object"/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule." access="public"/>
+    <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" default="text"/>
+
     <!-- private attributes -->
     <aura:attribute name="filterRuleColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="filterRuleActionColumns" type="List" description="List of available filter rules" access="private"/>
-    <aura:attribute name="operators" type="List" description="List of filter group operators" access="private"/>
+    <aura:attribute name="operatorMap" type="Map" description="Map of operators with key value pairs of API names and labels" access="private"/>
+    <aura:attribute name="filteredOperators" type="List" description="List of filter group operators" access="private"/>
     <aura:attribute name="objectDetails" type="Map" description="Mapped objects to all related fields." access="private"/>
     <aura:attribute name="filteredFields" type="List" description="List of mapped filter fields for the selected object" access="private"/>
-    <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" access="private"/>
     <aura:attribute name="filterRuleConstantPicklist" type="List" description="Picklist values corresponding to the selected field"/>
     <aura:attribute name="filterRuleMode" type="String" access="private"
                     description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
@@ -175,6 +177,7 @@
                     </h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    Type: {!v.filterRuleFieldType}
                     <lightning:layout>
                         <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
                             <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
@@ -194,16 +197,16 @@
                                 </lightning:select>
                             </lightning:layoutItem>
                             <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                                <lightning:select class="slds-p-around_small" label="{!v.labels.operator}" value="{!v.activeFilterRule.operatorName}">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.operator}" value="{!v.activeFilterRule.operatorName}" onchange="{!c.onChangeFilterRuleOperator}">
                                     <option value="" text=""/>
-                                    <aura:iteration items="{!v.operators}" var="option">
+                                    <aura:iteration items="{!v.filteredOperators}" var="option">
                                         <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.operatorName}"/>
                                     </aura:iteration>
                                 </lightning:select>
                             </lightning:layoutItem>
                             <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
-                                    <lightning:select class="slds-p-around_small" label="{!v.labels.constant}" value="{!v.activeFilterRule.constantName}">
+                                    <lightning:select aura:id="constantSelect" class="slds-p-around_small" label="{!v.labels.constant}" value="{!v.activeFilterRule.constantName}">
                                         <option value="" text=""/>
                                         <aura:iteration items="{!v.filterRuleConstantPicklist}" var="option">
                                             <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.constantName}"/>
@@ -211,7 +214,7 @@
                                     </lightning:select>
                                     <aura:set attribute="else">
                                         <!--todo: add date/datetime check here-->
-                                        <lightning:input class="slds-p-around_small" label="{!v.labels.constant}" type="text" value="{!v.activeFilterRule.constant}"/>
+                                        <lightning:input aura:id="constantInput" class="slds-p-around_small" label="{!v.labels.constant}" type="{!v.filterRuleFieldType}" value="{!v.activeFilterRule.constant}"/>
                                     </aura:set>
                                 </aura:if>
                             </lightning:layoutItem>

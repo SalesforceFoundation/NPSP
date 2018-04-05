@@ -35,7 +35,7 @@
             return rollup.filterGroupName === filterGroupLabel;
         });
 
-        //todo: should summary obj be dynamic?
+        //todo: should summary obj be dynamic? --> probably should update this
         var rollupsBySummaryObj = [{label: labels.labelAccount, list: []}
                                 , {label: labels.labelContact, list: []}
                                 , {label: labels.labelGAU, list: []}];
@@ -44,7 +44,7 @@
         //filter rollup list by type
         filteredRollupList.forEach(function (rollup){
             var item = {label: rollup.rollupName, name: rollup.id};
-            if(rollup.summaryObject === labels.labelAccount){
+            if (rollup.summaryObject === labels.labelAccount){
                 rollupsBySummaryObj[0].list.push(item);
             } else if (rollup.summaryObject === labels.labelContact){
                 rollupsBySummaryObj[1].list.push(item);
@@ -55,7 +55,7 @@
 
         //only add object to list if there are rollups with matching summary objects
         rollupsBySummaryObj.forEach(function(objList){
-           if(objList.list.length > 1){
+           if (objList.list.length > 1){
                var obj = {label: objList.label
                          , name: "title"
                          , expanded: false
@@ -71,13 +71,107 @@
 
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
+    getAvailableOperations: function(cmp, type){
+        var opMap = cmp.get("v.operatorMap");
+        var operators = [{name: 'Equals', label: opMap.Equals}, {name: 'Not_Equals', label: opMap.Not_Equals}];
+
+        if (type === 'boolean') {
+            //equals/not equals are only matches
+        } else if (type === 'reference'){
+            operators.push({name: 'In_List', label: opMap.In_List});
+            operators.push({name: 'Not_In_List', label: opMap.Not_In_List});
+        } else if (type === 'date' || type === 'datetime' || type === 'time'
+            || type === 'double' || type === 'integer' || type === 'currency' || type === 'percent'){
+            operators.push({name: 'Greater', label: opMap.Greater});
+            operators.push({name: 'Greater_or_Equal', label: opMap.Greater_or_Equal});
+            operators.push({name: 'Less', label: opMap.Less});
+            operators.push({name: 'Less_or_Equal', label: opMap.Less_or_Equal});
+        } else {
+            operators.push({name: 'Starts_With', label: opMap.Starts_With});
+            operators.push({name: 'Contains', label: opMap.Contains});
+            operators.push({name: 'Does_Not_Contain', label: opMap.Does_Not_Contain});
+
+            if (type === 'multipicklist'){
+                operators.push({name: 'Is_Included', label: opMap.Is_Included});
+                operators.push({name: 'Is_Not_Included', label: opMap.Is_Not_Included});
+            } else if (type != 'textarea'){
+                operators.push({name: 'In_List', label: opMap.In_List});
+                operators.push({name: 'Not_In_List', label: opMap.Not_In_List});
+            }
+        }
+
+        cmp.set("v.filteredOperators", operators);
+
+    },
+
+    /* @description: opens a modal popup so user can add or edit a filter rule
+     * @param field - field name
+     */
+    getFieldType: function(cmp, field){
+        var filteredFields = cmp.get("v.filteredFields");
+        var type;
+
+        for (var i = 0; i < filteredFields.length; i++) {
+            if (filteredFields[i].name === field) {
+                type = filteredFields[i].type.toLowerCase();
+                break;
+            }
+        }
+        return type;
+    },
+
+    /* @description - changes picklist values or input type based on field type
+     * @param operator - selected filter rule operator
+     * @param type - DisplayType of the selected field transformed to lower case
+     */
+    rerenderValue: function(cmp, operator, type){
+        if (type === 'boolean'){
+            cmp.set("v.filterRuleFieldType", 'picklist');
+            var options = ['true', 'false'];
+            cmp.set("v.filterRuleConstantPicklist", options);
+        } else if (type === 'date'){
+            cmp.set("v.filterRuleFieldType", 'date');
+        } else if (type === 'datetime') {
+            cmp.set("v.filterRuleFieldType", 'datetime-local');
+        } else if (type === 'picklist' || type === 'multipicklist'){
+            if(operator === 'equals' || operator === 'notEquals'){
+                cmp.set("v.filterRuleFieldType", 'picklist');
+                //todo: add options for picklist + multipicklist
+                var options = [];
+                cmp.set("v.filterRuleConstantPicklist", options);
+            } else if (operator === 'startsWith' || operator === 'contains' ||  operator === 'doesNotContain'){
+                cmp.set("v.filterRuleFieldType", 'text');
+            } else{
+                //todo: add options for picklist + multipicklist
+                cmp.set("v.filterRuleFieldType", 'picklist');
+                var options = [];
+                cmp.set("v.filterRuleConstantPicklist", options);
+            }
+        } else if (type === 'reference'){
+            cmp.set("v.filterRuleFieldType", 'text');
+        } else if (type === 'time'){
+            cmp.set("v.filterRuleFieldType", 'time');
+        } else if (type === 'double' || type === 'integer'
+            || type === 'currency' || type === 'percent'){
+            cmp.set("v.filterRuleFieldType", 'number');
+        } else {
+            cmp.set("v.filterRuleFieldType", 'text');
+        }
+
+        //todo: see if it's possible to use a custom function to rerender the constantInput
+        var constantInput = cmp.find("constantInput");
+        constantInput.rerender();
+    },
+
+    /* @description: opens a modal popup so user can add or edit a filter rule
+     */
     resetActiveFilterRule: function(cmp){
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
     },
 
-    /* @description: opens a modal popup so user can add or edit a filter rule
+    /* @description: resets the list of filter rules based on the
      */
     resetFilterRuleFields: function(cmp, object){
         var objectDetails = cmp.get("v.objectDetails");
@@ -130,11 +224,11 @@
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
         //todo: where to put error message for filter rules? or can a filter group be saved w/o filter rules?
 
-        if(!description){
+        if (!description){
             canSave = false;
-        } else if(!name){
+        } else if (!name){
             canSave = false;
-        } else if(filterRuleList.length === 0){
+        } else if (filterRuleList.length === 0){
             canSave = false;
         }
 

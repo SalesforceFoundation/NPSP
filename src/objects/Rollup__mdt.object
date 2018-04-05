@@ -190,7 +190,7 @@
         <fullName>Summary_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Summary Field</label>
+        <label>Target Field</label>
         <metadataRelationshipControllingField>Rollup__mdt.Summary_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>RollupsSummary</relationshipLabel>
@@ -203,7 +203,7 @@
         <fullName>Summary_Object__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Summary Object</label>
+        <label>Target Object</label>
         <referenceTo>EntityDefinition</referenceTo>
         <relationshipLabel>RollupsSummary</relationshipLabel>
         <relationshipName>RollupsSummary</relationshipName>
