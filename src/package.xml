@@ -626,6 +626,15 @@
         <members>Allocations_Settings__c.Use_Fiscal_Year_for_Rollups__c</members>
         <members>Batch_Data_Entry_Settings__c.Allow_Blank_Opportunity_Names__c</members>
         <members>Batch_Data_Entry_Settings__c.Opportunity_Naming__c</members>
+        <members>Batch_Template_Field__c.Batch_Template__c</members>
+        <members>Batch_Template_Field__c.Label__c</members>
+        <members>Batch_Template_Field__c.Order__c</members>
+        <members>Batch_Template_Field__c.Read_Only__c</members>
+        <members>Batch_Template_Field__c.Required__c</members>
+        <members>Batch_Template_Field__c.Sticky_Field_Value__c</members>
+        <members>Batch_Template_Field__c.Sticky_Field_Visibility__c</members>
+        <members>Batch_Template_Field__c.Sticky_Field__c</members>
+        <members>Batch_Template__c.Description__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
         <members>Batch__c.Number_of_Items__c</members>
@@ -1773,6 +1782,8 @@
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
+        <members>Batch_Template_Field__c</members>
+        <members>Batch_Template__c</members>
         <members>Batch__c</members>
         <members>DataImportBatch__c</members>
         <members>DataImport__c</members>
@@ -2122,6 +2133,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>Batch_Template__c.All</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
