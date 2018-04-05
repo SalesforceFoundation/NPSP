@@ -159,13 +159,12 @@
 
         //message is the masterLabel
         if(channel === 'rollupNameChange'){
-            //note: javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't
+            //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
 
             cmp.set("v.activeRecord", activeRecord);
         } else if (channel === 'rollupRecordChange') {
-console.log("Message: " + message);
             // message will inserted or updated the Rollup__mdt record
             var rollupsList = cmp.get("v.rollupList");
             var newItem = true;
@@ -184,7 +183,7 @@ console.log("Message: " + message);
         }
     },
 
-    /* @description: handles the selection of a specific rollup from the filter group view and the return to filter group
+    /* @description: handles the selection of a specific rollup from the filter group view and then return to filter group
     */
     handleNavigateEvent: function(cmp, event, helper){
         var id = event.getParam('id');

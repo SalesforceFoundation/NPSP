@@ -887,7 +887,7 @@
         } else if (summaryObjectName && summaryFieldName) {
             // Only reset the name once summary object and field are selected for edit and clone modes
             // Don't add the UDR prefix if modifying a packaged rollup definition
-            if (!recordName.startsWith('NPSP')) {
+            if (recordName && !recordName.startsWith('NPSP')) {
                 masterLabel = "UDR: " + label;
             } else {
                 masterLabel = label;
@@ -903,12 +903,7 @@
 
         //sends the message to the parent cmp RollupsContainer
         if(masterLabel){
-            var sendMessage = $A.get('e.ltng:sendMessage');
-            sendMessage.setParams({
-                'message': masterLabel,
-                'channel': 'nameChange'
-            });
-            sendMessage.fire();
+            this.sendMessage(cmp, 'rollupNameChange', masterLabel);
         }
     },
 
@@ -961,12 +956,7 @@
                             }
 
                             // Send a message with the changed or new Rollup to the RollupContainer Component
-                            var sendMessage = $A.get('e.ltng:sendMessage');
-                            sendMessage.setParams({
-                                'message': deployResult.rollupItem,
-                                'channel': 'rollupRecordChange'
-                            });
-                            sendMessage.fire();
+                            helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
@@ -974,7 +964,7 @@
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened
-                                this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveTimeout"));
+                                helper.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveTimeout"));
                                 helper.toggleSpinner(cmp, false);
                             }
                         }
@@ -996,23 +986,31 @@
     },
 
     /**
+     * @description Sends a lightning message to all listening components
+     * @param channel - intended channel to hear the message
+     * @param message - body of the message
+     */
+    sendMessage: function(cmp, channel, message){
+        var sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
+    },
+
+    /**
      * @description Show a message on the screen
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
      */
     showToast : function(cmp, type, title, message) {
-        console.log(message);
-        cmp.set("v.notificationClasses", "notification-" + type);
-        cmp.set("v.notificationMessage", message);
-        // TODO Get Toasts to work or replace with something better
-        /*var toastEvent = $A.get("e.force:showToast");
-        toastEvent.setParams({
-            "type":type,
-            "title": title,
-            "message": message
-        });
-        toastEvent.fire();*/
+        cmp.set("v.toastStatus", type);
+        var altText = cmp.get("v.labels." + type);
+        var text = {message: message, title: title, alternativeText: altText};
+        cmp.set("v.notificationText", text);
+        cmp.set("v.notificationClasses", "");
     },
 
     /**

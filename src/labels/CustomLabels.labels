@@ -1007,6 +1007,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Error</value>
     </labels>
     <labels>
+        <fullName>PageMessagesInfo</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Info</shortDescription>
+        <value>Info</value>
+    </labels>
+    <labels>
         <fullName>PageMessagesFatal</fullName>
         <categories>PageMessages</categories>
         <language>en_US</language>

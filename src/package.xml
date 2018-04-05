@@ -1130,6 +1130,7 @@
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
+        <members>PageMessagesInfo</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesWarning</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>

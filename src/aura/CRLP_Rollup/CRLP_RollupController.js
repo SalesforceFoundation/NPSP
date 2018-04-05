@@ -153,7 +153,6 @@
     },
 
     closeNotificationWindow : function(cmp, event, helper) {
-        console.log('Close Window');
         cmp.set("v.notificationClasses", "slds-hide");
     }
 

@@ -441,6 +441,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
+                'error' => Label.PageMessagesError,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
                 'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
@@ -451,6 +452,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'hardCredit' => Label.CRLP_HardCredit,
+                'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
@@ -503,12 +505,14 @@ public with sharing class CRLP_RollupUI_SVC {
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
                 'softCredit' => Label.CRLP_SoftCredit,
+                'success' => Label.PageMessagesConfirm,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'ok' => Label.stgLabelOK,
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
-                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
+                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
+                'warning' => Label.PageMessagesWarning
             };
 
         for (Integer i = 2; i < 21; i++) {
