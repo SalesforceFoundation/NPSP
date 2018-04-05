@@ -125,6 +125,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 // In here, we only set it to false.
                 stgService.saveAll();
             }
+            stgService.submitFeatureTelemetryToLMO();
             UTIL_MasterSchedulableHelper.setScheduledJobs();
         } catch (Exception e) {
             Database.rollback(sp);
