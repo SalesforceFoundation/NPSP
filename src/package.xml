@@ -734,6 +734,7 @@
         <members>DataImport__c.Contact2_Title__c</members>
         <members>DataImport__c.Contact2_Work_Email__c</members>
         <members>DataImport__c.Contact2_Work_Phone__c</members>
+        <members>DataImport__c.Contact_Name__c</members>
         <members>DataImport__c.DonationImportStatus__c</members>
         <members>DataImport__c.DonationImported__c</members>
         <members>DataImport__c.Donation_Amount__c</members>
@@ -1781,6 +1782,7 @@
         <members>Address__c</members>
         <members>Allocation__c</members>
         <members>Allocations_Settings__c</members>
+        <members>BGE_Status_list__c</members>
         <members>Batch_Data_Entry_Settings__c</members>
         <members>Batch_Template_Field__c</members>
         <members>Batch_Template__c</members>
@@ -2090,6 +2092,7 @@
         <members>Contact.BDE_Entry_FS</members>
         <members>Contact.BDE_List_FS</members>
         <members>Contact.ContactMergeFoundFS</members>
+        <members>DataImport__c.Data_Import_Field_Set</members>
         <members>Engagement_Plan_Template__c.ManageEPTemplateFS</members>
         <members>Lead.BDE_Entry_FS</members>
         <members>Lead.BDE_List_FS</members>
@@ -2104,6 +2107,8 @@
         <members>Account-Organization Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
+        <members>Batch_Template_Field__c-Batch Template Field Layout</members>
+        <members>Batch_Template__c-BGE Batch Template Layout</members>
         <members>Batch__c-Batch Layout</members>
         <members>Campaign-NPSP Campaign Layout</members>
         <members>Contact-Contact Layout</members>
