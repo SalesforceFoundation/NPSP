@@ -284,17 +284,22 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     **********************************************************************************************************/
     private static testMethod void testIsDuplicateOCR() {
         Boolean isDuplicate = false;
+        List<Id> opptyIds = new List<Id>();
 
-        Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
-        Contact testCon1 = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
-        Opportunity oppty = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon0.Id][0];
+        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
+        List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
+        for (Opportunity eachOppty : opptys) {
+            opptyIds.add(eachOppty.Id);
+        }
 
         Test.startTest();
 
-        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole WHERE ContactId = :testCon1.Id];
-        Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon0.Id });
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
+        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0]);
 
-        npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon0.Id)[0];
+        Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
+        npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];
+
         isDuplicate = OPP_AutomatedSoftCreditsService.isDuplicateOCR(retrievedOCRs,
                                                                      currentRelationship.npe4__RelatedContact__c,
                                                                      currentRelationship.Related_Opportunity_Contact_Role__c);
@@ -313,20 +318,24 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     **********************************************************************************************************/
     private static testMethod void testIsNotDuplicateOCR() {
         Boolean isDuplicate = false;
+        List<Id> opptyIds = new List<Id>();
 
-        Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
-        Contact testCon1 = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
-        Opportunity oppty = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon0.Id][0];
+        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
+        List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
+        for (Opportunity eachOppty : opptys) {
+            opptyIds.add(eachOppty.Id);
+        }
 
         Test.startTest();
 
-        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole WHERE ContactId = :testCon1.Id];
-        retrievedOCRs[0].Role = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE;
-        update retrievedOCRs;
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
+        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0]);
 
-        Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon0.Id });
+        Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
+        npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];
+        currentRelationship.Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE;
+        update currentRelationship;
 
-        npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon0.Id)[0];
         isDuplicate = OPP_AutomatedSoftCreditsService.isDuplicateOCR(retrievedOCRs,
                                                                      currentRelationship.npe4__RelatedContact__c,
                                                                      currentRelationship.Related_Opportunity_Contact_Role__c);
