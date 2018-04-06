@@ -2216,6 +2216,10 @@
         <name>EmailTemplate</name>
     </types>
     <types>
+        <members>IsEnabled_CustomizableRollups</members>
+        <name>FeatureParameterBoolean</name>
+    </types>
+    <types>
         <members>Account.BDE_Entry_FS</members>
         <members>Account.BDE_List_FS</members>
         <members>Account.Manage_Household_Custom</members>
