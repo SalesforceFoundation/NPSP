@@ -179,7 +179,7 @@ private class CRLP_RollupRecurringDonation_TEST {
         Date nextPaymentDate = lastPaymentDate.addMonths(1);
 
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
-                Name = 'updateFixedLengthRecurringDonationIncrease',
+                Name = 'testRollupsServices',
                 npe03__Installments__c = numOpps,
                 npe03__Contact__c = con.Id,
                 npe03__Amount__c = instAmt,
@@ -190,6 +190,16 @@ private class CRLP_RollupRecurringDonation_TEST {
         );
 
         insert rd;
+
+        rd = [SELECT npe03__Total_Paid_Installments__c
+                , npe03__Next_Payment_Date__c
+                , npe03__Last_Payment_Date__c
+                , npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c WHERE Id = :rd.Id];
+
+        System.assertEquals(0, rd.npe03__Total_Paid_Installments__c);
+        System.assertEquals(startDate, rd.npe03__Next_Payment_Date__c);
+        System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
+        System.assertEquals(0, rd.npe03__Paid_Amount__c);
 
         List<Opportunity> originalOpps = [SELECT Id
         FROM Opportunity
