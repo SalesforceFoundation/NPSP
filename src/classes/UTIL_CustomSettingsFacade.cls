@@ -897,6 +897,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Rollups_Skew_Dispatcher_Batch_Size__c = mySettings.Rollups_Skew_Dispatcher_Batch_Size__c;
         customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = mySettings.Rollups_Limit_on_Attached_Opps_for_Skew__c;
         customizableRollupSettings.Disable_Related_Records_Filter__c = mySettings.Disable_Related_Records_Filter__c;
+        customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;
 
