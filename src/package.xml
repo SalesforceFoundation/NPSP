@@ -159,6 +159,7 @@
         <members>CRLP_RollupSoftCredit_SVC</members>
         <members>CRLP_RollupSoftCredit_TEST</members>
         <members>CRLP_RollupUI_SVC</members>
+        <members>CRLP_RollupUI_TEST</members>
         <members>CRLP_Rollup_SEL</members>
         <members>CRLP_Rollup_SEL_TEST</members>
         <members>CRLP_Rollup_SVC</members>

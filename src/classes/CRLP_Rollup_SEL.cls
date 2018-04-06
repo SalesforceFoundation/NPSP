@@ -48,12 +48,15 @@ public class CRLP_Rollup_SEL {
                 cachedRollups = [
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
-                                Amount_Field__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, Time_Bound_Operation_Type__c,
-                                Date_Field__r.QualifiedApiName, Date_Object__r.QualifiedApiName,
-                                Detail_Field__r.QualifiedApiName, Detail_Field__r.Label,
-                                Detail_Object__r.QualifiedApiName, Detail_Object__r.Label,
-                                Summary_Field__r.QualifiedApiName, Summary_Field__r.Label,
-                                Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
+                                Time_Bound_Operation_Type__c
+                                , Summary_Field__r.QualifiedApiName, Summary_Field__r.Label
+                                , Summary_Object__r.QualifiedApiName, Summary_Object__r.Label
+                                , Detail_Field__r.QualifiedApiName, Detail_Field__r.Label
+                                , Detail_Object__r.QualifiedApiName, Detail_Object__r.Label
+                                , Amount_Field__r.QualifiedApiName, Amount_Field__r.Label
+                                , Amount_Object__r.QualifiedApiName, Amount_Object__r.Label
+                                , Date_Field__r.QualifiedApiName, Date_Field__r.Label
+                                , Date_Object__r.QualifiedApiName, Date_Object__r.Label
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c, MasterLabel
                 ];
@@ -131,47 +134,40 @@ public class CRLP_Rollup_SEL {
      * @return Record Id or null
      */
     public static Id getRollupIdByDeveloperName(String developerName) {
-        Rollup__mdt rollup = [SELECT Id FROM Rollup__mdt WHERE DeveloperName = :developerName LIMIT 1];
+
+        Rollup__mdt rollup = new Rollup__mdt();
+        for (Rollup__mdt rlp : cachedRollups) {
+            if (developerName == rlp.DeveloperName) {
+                rollup = rlp;
+                break;
+            }
+        }
         return rollup.Id;
+
+    }
+
+    /**
+     * @description Returns a Map of Rollup records by Rollup Id
+     * @return requested rollup__mdt
+     */
+    public static Map<Id, Rollup__mdt> getRollupsById() {
+
+        Map<Id, Rollup__mdt> rollupsById = new Map<Id, Rollup__mdt>();
+        for (Rollup__mdt rollup : cachedRollups) {
+            rollupsById.put(rollup.Id, rollup);
+        }
+        return rollupsById;
+
     }
 
     /**
      * @description Queries a single Rollup Definition based on the requested Id
      * @return requested rollup__mdt
      */
-    public static Rollup__mdt getRollupsById(Id id) {
-        Rollup__mdt rollup = [SELECT Id
-                , DeveloperName
-                , MasterLabel
-                , Active__c
-                , Use_Fiscal_Year__c
-                , Time_Bound_Operation_Type__c
-                , Description__c
-                , Filter_Group__c
-                , Filter_Group__r.DeveloperName
-                , Filter_Group__r.MasterLabel
-                , Operation__c
-                , Integer__c
-                , Summary_Field__r.QualifiedApiName
-                , Summary_Field__r.Label
-                , Summary_Object__r.QualifiedApiName
-                , Summary_Object__r.Label
-                , Detail_Field__r.QualifiedApiName
-                , Detail_Field__r.Label
-                , Detail_Object__r.QualifiedApiName
-                , Detail_Object__r.Label
-                , Amount_Field__r.QualifiedApiName
-                , Amount_Field__r.Label
-                , Amount_Object__r.QualifiedApiName
-                , Amount_Object__r.Label
-                , Date_Field__r.QualifiedApiName
-                , Date_Field__r.Label
-                , Date_Object__r.QualifiedApiName
-                , Date_Object__r.Label
-        FROM Rollup__mdt
-        WHERE Id = :id];
+    public static Rollup__mdt getRollupById(Id id) {
 
-        return rollup;
+        return getRollupsById().get(id);
+
     }
 
     /**

@@ -159,7 +159,7 @@ public with sharing class CRLP_RollupUI_SVC {
         String summaryField = '';
 
         if(!String.isEmpty(rollupId)){
-            Rollup__mdt rlp = CRLP_Rollup_SEL.getRollupsById(Id.valueOf(rollupId));
+            Rollup__mdt rlp = CRLP_Rollup_SEL.getRollupById(Id.valueOf(rollupId));
             model.rollup = new CRLP_RollupCMT.Rollup(rlp);
             summaryField = model.rollup.summaryField;
         }
@@ -291,14 +291,9 @@ public with sharing class CRLP_RollupUI_SVC {
         List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
         Map<String,String> operators = getfilterRuleOperations();
 
-        Filter_Group__mdt filterGroup = [SELECT Id
-                , DeveloperName
-                , MasterLabel
-                , Description__c
-        FROM Filter_Group__mdt
-        WHERE Id = :id];
+        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(id);
 
-        List<Filter_Rule__mdt> mdtList = [SELECT Id, Operator__c, Constant__c, Field__r.MasterLabel, Field__r.QualifiedApiName, Object__r.MasterLabel, Object__r.QualifiedApiName FROM Filter_Rule__mdt WHERE Filter_Group__c = :id];
+        List<Filter_Rule__mdt> mdtList = CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id);
 
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterRulesTableItem item = new FilterRulesTableItem();
@@ -570,7 +565,8 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @auraEnabled
     public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
-        Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
+        Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
@@ -580,7 +576,7 @@ public with sharing class CRLP_RollupUI_SVC {
                         Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                         DeploymentResult response = new DeploymentResult();
                         response.completed = true;
-                        response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupsById(rollupId));
+                        response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
                         return response;
                     } catch (Exception ex) {
                         // error retrieving the metadata record
