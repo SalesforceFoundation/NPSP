@@ -182,18 +182,24 @@
                     <lightning:layout>
                         <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
                             <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                                <lightning:select class="slds-p-around_small" label="{!v.labels.object}" value="{!v.activeFilterRule.objectName}" onchange="{!c.onChangeFilterRuleObject}">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.object}"
+                                                  value="{!v.activeFilterRule.objectName}"
+                                                  onchange="{!c.onChangeFilterRuleObject}">
                                     <option value="" text=""/>
                                     <aura:iteration items="{!v.detailObjects}" var="option">
-                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.objectName}"/>
+                                        <option value="{!option.name}" text="{!option.label}"
+                                                selected="{!option.name == v.activeFilterRule.objectName}"/>
                                     </aura:iteration>
                                 </lightning:select>
                             </lightning:layoutItem>
                             <lightning:layoutItem size="12" mediumDeviceSize="3" smallDeviceSize="6">
-                                <lightning:select class="slds-p-around_small" label="{!v.labels.field}" value="{!v.activeFilterRule.fieldName}" onchange="{!c.onChangeFilterRuleField}">
+                                <lightning:select class="slds-p-around_small" label="{!v.labels.field}"
+                                                  value="{!v.activeFilterRule.fieldName}"
+                                                  onchange="{!c.onChangeFilterRuleField}">
                                     <option value="" text=""/>
                                     <aura:iteration items="{!v.filteredFields}" var="option">
-                                        <option value="{!option.name}" text="{!option.label}" selected="{!option.name == v.activeFilterRule.fieldName}"/>
+                                        <option value="{!option.name}" text="{!option.label}"
+                                                selected="{!option.name == v.activeFilterRule.fieldName}"/>
                                     </aura:iteration>
                                 </lightning:select>
                             </lightning:layoutItem>
@@ -209,7 +215,10 @@
                                 <!--START CONSTANT OPTIONS-->
                                 <aura:if isTrue="{!and(notequals(v.filterRuleFieldType, 'picklist'), notequals(v.filterRuleFieldType, 'multipicklist'))}">
                                     <!--todo: add date/datetime check here-->
-                                    <lightning:input aura:id="constantInput" class="slds-p-around_small" label="{!v.labels.constant}" type="{!v.filterRuleFieldType}" value="{!v.activeFilterRule.constant}"/>
+                                    <!--<lightning:input aura:id="constantInput" class="slds-p-around_small" label="{!v.labels.constant}" type="{!v.filterRuleFieldType}" value="{!v.activeFilterRule.constantName}"/>-->
+                                    <lightning:textarea class="slds-p-around_small" name="myTextArea" value="{!v.activeFilterRule.constantName}"
+                                                        label="{!v.labels.constant}" maxlength="300" />
+
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
                                     <lightning:select aura:id="constantSelect" class="slds-p-around_small" label="{!v.labels.constant}" value="{!v.activeFilterRule.constantName}">
@@ -220,8 +229,8 @@
                                     </lightning:select>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'multipicklist')}">
-                                    <ui:inputSelect id="constantMultiPicklistInput" aura:id="constantMultiPicklist" label="{!v.labels.constant}" multiple="true"
-                                                    change="{!c.onChangeFilterRuleConstantPicklist}">
+                                    <ui:inputSelect aura:id="constantMultiPicklist" class="slds-p-around_small" label="{!v.labels.constant}"
+                                                    multiple="true" change="{!c.onChangeFilterRuleConstantPicklist}">
                                         <aura:iteration items="{!v.filterRuleConstantPicklist}" var="option">
                                             <ui:inputSelectOption text="{!option.value}" label="{!option.label}"/>
                                         </aura:iteration>
@@ -232,8 +241,8 @@
                             <aura:set attribute="else">
                                 <p>{!v.labels.filterRuleDeleteWarning}</p>
                             </aura:set>
-                        </aura:if>
-                    </lightning:layout>
+                    </aura:if>
+                </lightning:layout>
                 </div>
                 <footer class="slds-modal__footer">
                     <button class="slds-button slds-button_neutral"

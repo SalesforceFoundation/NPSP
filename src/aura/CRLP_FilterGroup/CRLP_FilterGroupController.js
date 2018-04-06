@@ -34,16 +34,17 @@
                     , {label: labels.delete, name: 'delete'}
                 ];
 
+                //todo: refactor for constant label in the case of picklists
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constant', type: 'string'}
+                    , {label: labels.constant, fieldName: 'constantName', type: 'string'}
                 ];
 
                 var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constant', type: 'string'}
+                    , {label: labels.constant, fieldName: 'constantName', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
@@ -100,7 +101,10 @@
             cmp.set("v.filterRuleMode", 'edit');
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, row.objectName);
-            console.log(JSON.stringify(cmp.get("v.activeFilterRule")));
+            helper.resetFilterRuleOperators(cmp, row.fieldName);
+            helper.rerenderValue(cmp, row.operatorName);
+
+
         } else {
             //caution user about deleting the filter rule?
             cmp.set("v.filterRuleMode", 'delete');
@@ -143,22 +147,15 @@
     */
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
-        var type = helper.getFieldType(cmp, field);
-        if(type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId'){
-            helper.getPicklistOptions(cmp, field);
-        }
+        helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operatorName", "");
-        cmp.set("v.filterRuleFieldType", "text");
-        helper.getAvailableOperations(cmp, type);
     },
 
     /* @description: renders constant value based on selected operator
     */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
-        var type = helper.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
-
-        helper.rerenderValue(cmp, operator, type);
+        helper.rerenderValue(cmp, operator);
     },
 
     /* @description: adds constant field to selected list
@@ -198,9 +195,17 @@
         var filterRule = cmp.get("v.activeFilterRule");
         filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
         filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
-        filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.operators"));
+        filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
         var filterRuleList = cmp.get("v.filterRuleList");
 
+        //fix formatting on list items
+        //todo: fix this regex to add line breaks only to new semicolons
+        if(filterRule.constantName.indexOf(';') > 0 && (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List')){
+            console.log('replacing field label');
+            filterRule.constantName = filterRule.constantName.replace(/;![\n]/g, ';\n')
+        }
+
+        //if mode is create, just add to list, otherwise update the item in the existing list
         var mode = cmp.get("v.filterRuleMode");
         if(mode === 'create'){
             filterRuleList.push(filterRule);

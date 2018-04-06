@@ -120,14 +120,48 @@
         return type;
     },
 
+    /* @description: queries for picklist options to populate filterRuleConstantPicklist
+     * @param field - field name
+     */
+    getPicklistOptions: function(cmp, field){
+        var action = cmp.get("c.getFilterRuleConstantPicklistOptions");
+        action.setParams({objectName: cmp.get("v.activeFilterRule.objectName"), selectedField: field});
+        console.log(cmp.get("v.activeFilterRule.objectName"), field);
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                console.log(JSON.stringify(response.getReturnValue()));
+                cmp.set("v.filterRuleConstantPicklist", response.getReturnValue());
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+
+        console.log('before enqueue')
+        $A.enqueueAction(action);
+    },
+
     /* @description - changes picklist values or input type based on field type
-     * @param operator - selected filter rule operator
+     * @param operator - selected filter rule operator API name
      * @param type - DisplayType of the selected field transformed to lower case
      */
-    rerenderValue: function(cmp, operator, type){
+    rerenderValue: function(cmp, operator){
+        var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
+        console.log('type is ' + type);
+        console.log('operator is ' + operator);
         if (type === 'boolean'){
+            //boolean fields don't have official translations (confirmed in process builder)
             cmp.set("v.filterRuleFieldType", 'picklist');
-            var options = ['true', 'false'];
+            var options = [{name: 'true', label: 'True'}, {name: 'false', label: 'False'}];
             cmp.set("v.filterRuleConstantPicklist", options);
         } else if (type === 'date'){
             cmp.set("v.filterRuleFieldType", 'date');
@@ -173,10 +207,24 @@
     },
 
     /* @description: resets the list of filter rules based on the
+     * @param object - selected object API name
      */
     resetFilterRuleFields: function(cmp, object){
         var objectDetails = cmp.get("v.objectDetails");
         cmp.set("v.filteredFields", objectDetails[object]);
+    },
+
+    /* @description: resets the possible list of operations based on the selected filter rule
+     * @param field - selected field API name
+     * @param type - type of the selected field
+     */
+    resetFilterRuleOperators: function(cmp, field){
+        var type = this.getFieldType(cmp, field);
+        if(type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId'){
+            this.getPicklistOptions(cmp, field);
+        }
+        cmp.set("v.filterRuleFieldType", "text");
+        this.getAvailableOperations(cmp, type);
     },
 
     /* @description: restructures returned Apex response to preserve separate variables

@@ -81,7 +81,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String fieldName;
         @AuraEnabled public String operatorName;
         @AuraEnabled public String operatorLabel;
-        @AuraEnabled public String constant;
+        @AuraEnabled public String constantName;
         @AuraEnabled public Id id;
     }
 
@@ -304,7 +304,7 @@ public with sharing class CRLP_RollupUI_SVC {
             FilterRulesTableItem item = new FilterRulesTableItem();
 
             String c = mdtList[i].Constant__c;
-            item.constant = c.replace(';', '\n');
+            item.constantName = c.replace(';', ';\n');
             item.operatorName = mdtList[i].Operator__c;
             item.operatorLabel = operators.get(mdtList[i].Operator__c);
             item.fieldLabel = mdtList[i].Field__r.MasterLabel;
@@ -524,7 +524,7 @@ public with sharing class CRLP_RollupUI_SVC {
         return labels;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Handle the save (insert/update) of a Rollup__mdt record
      * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
@@ -563,7 +563,7 @@ public with sharing class CRLP_RollupUI_SVC {
         }
     }
 
-    /**
+    /*******************************************************************************************************
      * @description When a new Rollup record is inserted, the page will only have a unique DeveloperName value to match
      * the record. However, to re-load the record and allow for editing we need to have the actual record Id.
      * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
