@@ -649,7 +649,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
-        <value>PLACEHOLDER - text for when/why users may need to use the amount, date, or detail fields.</value>
+        <value>The fields that appear in this area are determined by the selected Operation.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>

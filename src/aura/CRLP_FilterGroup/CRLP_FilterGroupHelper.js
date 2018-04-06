@@ -35,24 +35,24 @@
             return rollup.filterGroupName === filterGroupLabel;
         });
 
-        //todo: should summary obj be dynamic? --> probably should update this
-        var rollupsBySummaryObj = [{label: labels.labelAccount, list: []}
-                                , {label: labels.labelContact, list: []}
-                                , {label: labels.labelGAU, list: []}];
-        var itemList = [];
+        var summaryObjects = cmp.get("v.summaryObjects");
+        var rollupsBySummaryObj = [];
+        for(var i=0; i<summaryObjects.length; i++){
+            var listItem = {label: summaryObjects[i].label, list: []};
+            rollupsBySummaryObj.push(listItem);
+        }
 
         //filter rollup list by type
         filteredRollupList.forEach(function (rollup){
-            var item = {label: rollup.rollupName, name: rollup.id};
-            if (rollup.summaryObject === labels.labelAccount){
-                rollupsBySummaryObj[0].list.push(item);
-            } else if (rollup.summaryObject === labels.labelContact){
-                rollupsBySummaryObj[1].list.push(item);
-            } else if (rollup.summaryObject === labels.labelGAU){
-                rollupsBySummaryObj[2].list.push(item);
+            var item = {label: rollup.rollupName, name: rollup.id}
+            for(i=0; i<rollupsBySummaryObj.length; i++){
+                if (rollup.summaryObject === rollupsBySummaryObj[i].label){
+                    rollupsBySummaryObj[i].list.push(item);
+                }
             }
         });
 
+        var itemList = [];
         //only add object to list if there are rollups with matching summary objects
         rollupsBySummaryObj.forEach(function(objList){
            if (objList.list.length > 1){
@@ -134,21 +134,26 @@
         } else if (type === 'datetime') {
             cmp.set("v.filterRuleFieldType", 'datetime-local');
         } else if (type === 'picklist' || type === 'multipicklist'){
-            if(operator === 'equals' || operator === 'notEquals'){
+            if(operator === 'Equals' || operator === 'Not_Equals'){
                 cmp.set("v.filterRuleFieldType", 'picklist');
-                //todo: add options for picklist + multipicklist
-                var options = [];
-                cmp.set("v.filterRuleConstantPicklist", options);
-            } else if (operator === 'startsWith' || operator === 'contains' ||  operator === 'doesNotContain'){
+            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
                 cmp.set("v.filterRuleFieldType", 'text');
-            } else{
-                //todo: add options for picklist + multipicklist
-                cmp.set("v.filterRuleFieldType", 'picklist');
-                var options = [];
-                cmp.set("v.filterRuleConstantPicklist", options);
+            } else if (operator === 'In_List' || operator === 'Not_In_List'
+                || operator === 'Is_Included' || operator === 'Is_Not_Included'){
+                cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
         } else if (type === 'reference'){
-            cmp.set("v.filterRuleFieldType", 'text');
+            var field = cmp.get("v.activeFilterRule.fieldName");
+            //record type is a special case where we want to exactly match options and provide picklists
+            if (field !== 'RecordTypeId'){
+                cmp.set("v.filterRuleFieldType", 'text');
+            } else {
+                if (operator === 'Equals' || operator === 'Not_Equals'){
+                    cmp.set("v.filterRuleFieldType", 'picklist');
+                } else if (operator === 'In_List' || operator === 'Not_In_List'){
+                    cmp.set("v.filterRuleFieldType", 'multipicklist');
+                }
+            }
         } else if (type === 'time'){
             cmp.set("v.filterRuleFieldType", 'time');
         } else if (type === 'double' || type === 'integer'
@@ -157,10 +162,6 @@
         } else {
             cmp.set("v.filterRuleFieldType", 'text');
         }
-
-        //todo: see if it's possible to use a custom function to rerender the constantInput
-        var constantInput = cmp.find("constantInput");
-        constantInput.rerender();
     },
 
     /* @description: opens a modal popup so user can add or edit a filter rule

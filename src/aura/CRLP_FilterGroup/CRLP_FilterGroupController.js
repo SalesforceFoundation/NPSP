@@ -144,18 +144,29 @@
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
         var type = helper.getFieldType(cmp, field);
+        if(type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId'){
+            helper.getPicklistOptions(cmp, field);
+        }
         cmp.set("v.activeFilterRule.operatorName", "");
         cmp.set("v.filterRuleFieldType", "text");
         helper.getAvailableOperations(cmp, type);
     },
 
-    /* @description:
+    /* @description: renders constant value based on selected operator
     */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
         var type = helper.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
 
         helper.rerenderValue(cmp, operator, type);
+    },
+
+    /* @description: adds constant field to selected list
+    */
+    onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
+        var constant = event.getSource().get("v.value");
+        var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
+        console.log(JSON.stringify(constantPicklist));
     },
 
     /* @description: saves a new filter group and associated filter rules

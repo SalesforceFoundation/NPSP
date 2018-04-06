@@ -24,6 +24,7 @@
                     , {label: labels.delete, name:'delete'}
                 ];
 
+                //these are the current lists of summary + detail objects in the app
                 var summaryObjects = [{label: labels.labelAccount, name: labels.objectAccount}
                     , {label: labels.labelContact, name: labels.objectContact}
                     , {label: labels.labelGAU, name: labels.objectGAU}

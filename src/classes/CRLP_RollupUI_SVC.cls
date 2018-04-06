@@ -572,7 +572,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * TODO Refactor this to work for FilterGroup+FilterRule as well as for Rollups
      * @return DeploymentResult
      */
-    @auraEnabled
+    @AuraEnabled
     public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
         Customizable_Rollup_Settings__c crs = [SELECT CMT_API_Status__c FROM Customizable_Rollup_Settings__c LIMIT 1];
         if (crs.CMT_API_Status__c != null) {
@@ -610,6 +610,36 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Finds picklist values or record types for the constant field.
+    * @param objectName the name of the object to look up
+    * @param selectedField the name of the selected summary field.
+    * @return List<Map<String, String>> a list of mapped name to label options.
+    */
+    @AuraEnabled
+    public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
+
+        List<Map<String, String>> optionsList = new List<Map<String, String>>();
+        List<SelectOption> picklistValues = new List<SelectOption>();
+
+        if (selectedField != 'RecordTypeId') {
+            picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
+        } else {
+            Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
+            picklistValues = UTIL_RecordTypes.getRecordTypesForSelectList(sObjectType);
+        }
+
+        for (SelectOption o: picklistValues) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('name', o.getValue());
+            labeledOption.put('label', o.getLabel());
+
+            optionsList.add(labeledOption);
+        }
+
+        return optionsList;
+    }
+
+    /*******************************************************************************************************
     * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
     *              Includes an exception for a set summary field on the rollup detail.
     * @param objectName the name of the object to look up
@@ -634,8 +664,8 @@ public with sharing class CRLP_RollupUI_SVC {
             //check that summary field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
-                    || selectedField.equals(dfr.name)){
+            if ((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
+                    || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);
