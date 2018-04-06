@@ -32,10 +32,10 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
+* @description Unit Tests for the Lightning Component Apex Controller for the CRLP UI.
 */
 
-@isTest
+@isTest(IsParallel=true)
 public class CRLP_RollupUI_TEST {
 
     /*********************************************************************************************************
