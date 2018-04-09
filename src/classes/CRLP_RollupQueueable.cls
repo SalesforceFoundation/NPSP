@@ -54,7 +54,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
      * @param recordIds List<Id> list of Summary Record Id's to roll up for
      */
     public CRLP_RollupQueueable(List<Id> summaryRecordIds) {
-        this.queueOfSummaryIds = new List<List<Id>>{ summaryRecordIds};
+        this.queueOfSummaryIds = new List<List<Id>>{summaryRecordIds};
     }
     public CRLP_RollupQueueable(List<List<Id>> queueOfSummaryIds) {
         this.queueOfSummaryIds = queueOfSummaryIds;
@@ -103,31 +103,38 @@ public class CRLP_RollupQueueable implements System.Queueable {
         } else if (objType == Contact.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
             options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+        } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
+            options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
         }
 
         // Query the parent records
         Set<Id> parentIds = new Set<Id>(summaryRecordIds);
+
         String soql = CRLP_Query_SEL.buildObjectQueryForRollup(objType) + ' WHERE Id IN :parentIds';
-        if (!soql.contains('npo02__NumberOfClosedOpps__c')) {
+        if ((objType == Account.SObjectType || objType == Contact.SObjectType)
+                && !soql.contains('npo02__NumberOfClosedOpps__c')) {
             soql = soql.replace('SELECT ','SELECT npo02__NumberOfClosedOpps__c,');
         }
-        List<SObject> summaryRecords = database.query(soql);
+        List<SObject> summaryRecords = Database.query(soql);
 
         Boolean includeChildPayments = CRLP_Rollup_SVC.hasActivePaymentRollupsForSObject(objType);
 
-        // If the summary record has more child opportunities and possibly payments than can be handled in
-        // this queueable (non-async job), remove it from this processing queue
-        Integer maxOppsToAllow = (MAX_ATTACHED_OPPS_FOR_QUEUABLE / summaryRecords.size());
-        if (includeChildPayments) {
-            // If there are payment rollups, then assume at least one payment per opp, which effectively cuts
-            // the max number of records that can be queried in half
-            maxOppsToAllow = maxOppsToAllow / 2;
-        }
-        for (Integer n=0; n<summaryRecords.size(); n++) {
-            if (summaryRecords[n].get('npo02__NumberOfClosedOpps__c') != null &&
-                    (Double)summaryRecords[n].get('npo02__NumberOfClosedOpps__c') > maxOppsToAllow) {
-                summaryRecords.remove(n);
-                n--;
+        if (objType == Account.SObjectType || objType == Contact.SObjectType) {
+            // If the summary record has more child opportunities and possibly payments than can be handled in
+            // this queueable (non-async job), remove it from this processing queue
+            Integer maxOppsToAllow = (MAX_ATTACHED_OPPS_FOR_QUEUABLE / summaryRecords.size());
+            if (includeChildPayments) {
+                // If there are payment rollups, then assume at least one payment per opp, which effectively cuts
+                // the max number of records that can be queried in half
+                maxOppsToAllow = maxOppsToAllow / 2;
+            }
+            for (Integer n = 0; n < summaryRecords.size(); n++) {
+                if (summaryRecords[n].get('npo02__NumberOfClosedOpps__c') != null &&
+                        (Double) summaryRecords[n].get('npo02__NumberOfClosedOpps__c') > maxOppsToAllow) {
+                    summaryRecords.remove(n);
+                    n--;
+                }
             }
         }
 

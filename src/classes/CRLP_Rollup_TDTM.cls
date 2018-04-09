@@ -128,10 +128,12 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
      * @param detailRecordsToRollup
      */
     private static void executeRollupsForSpecifiedRecords(List<SObject> detailRecordsToRollup) {
+
         SObjectType detailObjType = detailRecordsToRollup[0].getSObjectType();
 
         List<Id> accountIds = new List<Id>();
         List<Id> contactIds = new List<Id>();
+        List<Id> rdIds = new List<Id>();
 
         // Unit Tests cannot chain queuable rollups, so all rollups are done real-time. As such,
         // don't use this static set to prevent rollups from running multiple times on the same
@@ -157,11 +159,11 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                     oppIds.add(pmt.npe01__Opportunity__c);
                 }
             }
-            opps = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Id IN :oppIds];
+            opps = [SELECT Id, AccountId, Primary_Contact__c, npe03__Recurring_Donation__c FROM Opportunity WHERE Id IN :oppIds];
 
         }
 
-        // If there are Opportunities, get the Account and/or Contact Ids to roll up to
+        // If there are Opportunities, get the Account and/or Contact or RD Ids to roll up to
         if (!opps.isEmpty()) {
             for (Opportunity opp : opps) {
                 if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {
@@ -172,19 +174,26 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                     contactIds.add(opp.Primary_Contact__c);
                     alreadyQueuedForRollupJob.add(opp.Primary_Contact__c);
                 }
+                if (opp.npe03__Recurring_Donation__c != null && !alreadyQueuedForRollupJob.contains(opp.npe03__Recurring_Donation__c)) {
+                    rdIds.add(opp.npe03__Recurring_Donation__c);
+                    alreadyQueuedForRollupJob.add(opp.npe03__Recurring_Donation__c);
+                }
             }
 
             // Execute the roll-ups in real-time instead of asynchronously in the following cases:
             // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
             // - Called from a Batch Job, @Future or Queueable context
-            Integer numTotalSummaryObjects = accountIds.size() + contactIds.size();
-            if ((Test.isRunningTest() && numTotalSummaryObjects < 3)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
+            Integer numTotalSummaryObjects = accountIds.size() + contactIds.size() + rdIds.size();
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 4)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
                 // Immediate execution
                 if (!accountIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(accountIds);
                 }
                 if (!contactIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(contactIds);
+                }
+                if (!rdIds.isEmpty()) {
+                    CRLP_RollupQueueable.runRollupsForIds(rdIds);
                 }
 
             } else  {
@@ -196,6 +205,9 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 }
                 if (!contactIds.isEmpty()) {
                     queueOfSummaryIds.add(contactIds);
+                }
+                if (!rdIds.isEmpty()) {
+                    queueOfSummaryIds.add(rdIds);
                 }
 
                 // Since can't queue up two jobs at the same time, pass in a list of a list of Id's to roll-up

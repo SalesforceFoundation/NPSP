@@ -4866,7 +4866,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>stgDeploymentInProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgDeploymentInProgress</shortDescription>
         <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
     </labels>
@@ -4874,7 +4874,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>stgDeploymentTryAgain</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
-        <protected>false</protected>
+        <protected>true</protected>
         <shortDescription>stgDeploymentTryAgain</shortDescription>
         <value>You can try again immediately.</value>
     </labels>

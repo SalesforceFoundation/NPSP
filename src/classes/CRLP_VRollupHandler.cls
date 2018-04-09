@@ -51,6 +51,8 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     protected final String gauObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String allocObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
+    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
+    protected final String rdObjectName = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
 
     /* @description The SObject record being rolled up to. Not visible to classes that extend this virtual class */
     private SObject record;
@@ -96,7 +98,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
 
     /**
      * @description Since this class can't be instantiated with a constructor that passes parameters, the
-     * constructor accepts no parms, and this method is called with the record Id
+     * constructor accepts no params, and this method is called with the record Id
      * @param objectId Id of the 'Summary' record being rolled up to
      */
     public void setRecordId(Id objectId) {
