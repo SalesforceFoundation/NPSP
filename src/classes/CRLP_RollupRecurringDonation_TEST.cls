@@ -196,10 +196,13 @@ private class CRLP_RollupRecurringDonation_TEST {
                 , npe03__Last_Payment_Date__c
                 , npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c WHERE Id = :rd.Id];
 
-        System.assertEquals(0, rd.npe03__Total_Paid_Installments__c);
-        System.assertEquals(startDate, rd.npe03__Next_Payment_Date__c);
-        System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
-        System.assertEquals(0, rd.npe03__Paid_Amount__c);
+        // in trigger context, the initial pledged donations should've rolled up as follows:
+        if (tt == TestType.TestTrigger) {
+            System.assertEquals(0, rd.npe03__Total_Paid_Installments__c);
+            System.assertEquals(startDate, rd.npe03__Next_Payment_Date__c);
+            System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
+            System.assertEquals(0, rd.npe03__Paid_Amount__c);
+        }
 
         List<Opportunity> originalOpps = [SELECT Id
         FROM Opportunity
