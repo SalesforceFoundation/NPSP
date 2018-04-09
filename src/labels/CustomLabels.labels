@@ -620,6 +620,14 @@
         <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterRuleDuplicateError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
+        <value>This filter rule already exists on this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
         <fullName>ConfirmDeleteAccount</fullName>
         <categories>Error, Delete</categories>
         <language>en_US</language>

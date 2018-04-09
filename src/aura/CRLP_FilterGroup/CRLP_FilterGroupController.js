@@ -34,7 +34,6 @@
                     , {label: labels.delete, name: 'delete'}
                 ];
 
-                //todo: refactor for constant label in the case of picklists
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
@@ -106,7 +105,7 @@
 
 
         } else {
-            //caution user about deleting the filter rule?
+            //cautions user about deleting filter rule
             cmp.set("v.filterRuleMode", 'delete');
             helper.toggleFilterRuleModal(cmp);
         }
@@ -124,7 +123,7 @@
             cmp.set("v.mode", "view");
             var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
             //json shenanigans to avoid shared reference
-            cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup.valueOf()));
+            cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup));
             cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
         }
 
@@ -162,6 +161,8 @@
     */
     onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
         var constant = event.getSource().get("v.value");
+        var fieldCmp = cmp.find("filterRuleUIField");
+        var value = fieldCmp.get("v.value");
         var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
         console.log(JSON.stringify(constantPicklist));
     },
@@ -196,21 +197,18 @@
         filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
         filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
         filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
-        var filterRuleList = cmp.get("v.filterRuleList");
 
-        var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
+        var filterRuleList = cmp.get("v.filterRuleList");
+        var mode = cmp.get("v.filterRuleMode");
+        var canSave = true;
+
+        if (mode !== 'delete') {
+            console.log(JSON.stringify(filterRule.constantName));
+            canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
+        }
 
         if(canSave) {
-
-            //fix formatting on list items
-            //todo: fix this regex to add line breaks only to new semicolons
-            if (filterRule.constantName.indexOf(';') > 0 && (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List')) {
-                console.log('replacing field label');
-                filterRule.constantName = filterRule.constantName.replace(/;![\n]/g, ';\n')
-            }
-
             //if mode is create, just add to list, otherwise update the item in the existing list
-            var mode = cmp.get("v.filterRuleMode");
             if (mode === 'create') {
                 filterRuleList.push(filterRule);
             } else {

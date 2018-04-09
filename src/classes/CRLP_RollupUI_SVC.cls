@@ -444,6 +444,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
+                'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'hardCredit' => Label.CRLP_HardCredit,

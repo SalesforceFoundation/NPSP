@@ -2,7 +2,7 @@
     /* @description: changes field visibility and save button access based on the mode
     * this is bound to a change handler to the mode attribute
     */
-    changeMode: function(cmp){
+    changeMode: function(cmp) {
         var mode = cmp.get("v.mode");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
@@ -28,25 +28,25 @@
     * @param filterGroupLabel: label of the selected filter group
     * @param labels: labels for the rollups UI
     */
-    filterRollupList: function(cmp, filterGroupLabel, labels){
+    filterRollupList: function(cmp, filterGroupLabel, labels) {
         //filters row data based selected filter group
         var rollupList = cmp.get("v.rollupList");
-        var filteredRollupList = rollupList.filter(function(rollup){
+        var filteredRollupList = rollupList.filter(function(rollup) {
             return rollup.filterGroupName === filterGroupLabel;
         });
 
         var summaryObjects = cmp.get("v.summaryObjects");
         var rollupsBySummaryObj = [];
-        for(var i=0; i<summaryObjects.length; i++){
+        for (var i=0; i<summaryObjects.length; i++) {
             var listItem = {label: summaryObjects[i].label, list: []};
             rollupsBySummaryObj.push(listItem);
         }
 
         //filter rollup list by type
-        filteredRollupList.forEach(function (rollup){
+        filteredRollupList.forEach(function (rollup) {
             var item = {label: rollup.rollupName, name: rollup.id}
-            for(i=0; i<rollupsBySummaryObj.length; i++){
-                if (rollup.summaryObject === rollupsBySummaryObj[i].label){
+            for (i=0; i<rollupsBySummaryObj.length; i++){
+                if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
                 }
             }
@@ -55,7 +55,7 @@
         var itemList = [];
         //only add object to list if there are rollups with matching summary objects
         rollupsBySummaryObj.forEach(function(objList){
-           if (objList.list.length > 1){
+           if (objList.list.length > 1) {
                var obj = {label: objList.label
                          , name: "title"
                          , expanded: false
@@ -107,7 +107,7 @@
     /* @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
-    getFieldType: function(cmp, field){
+    getFieldType: function(cmp, field) {
         var filteredFields = cmp.get("v.filteredFields");
         var type;
 
@@ -123,14 +123,13 @@
     /* @description: queries for picklist options to populate filterRuleConstantPicklist
      * @param field - field name
      */
-    getPicklistOptions: function(cmp, field){
+    getPicklistOptions: function(cmp, field) {
         var action = cmp.get("c.getFilterRuleConstantPicklistOptions");
         action.setParams({objectName: cmp.get("v.activeFilterRule.objectName"), selectedField: field});
         console.log(cmp.get("v.activeFilterRule.objectName"), field);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                console.log(JSON.stringify(response.getReturnValue()));
                 cmp.set("v.filterRuleConstantPicklist", response.getReturnValue());
             }
             else if (state === "ERROR") {
@@ -146,7 +145,6 @@
             }
         });
 
-        console.log('before enqueue')
         $A.enqueueAction(action);
     },
 
@@ -158,17 +156,17 @@
         var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
-        if (type === 'boolean'){
+        if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
             cmp.set("v.filterRuleFieldType", 'picklist');
             var options = [{name: 'true', label: 'True'}, {name: 'false', label: 'False'}];
             cmp.set("v.filterRuleConstantPicklist", options);
-        } else if (type === 'date'){
+        } else if (type === 'date') {
             cmp.set("v.filterRuleFieldType", 'date');
         } else if (type === 'datetime') {
             cmp.set("v.filterRuleFieldType", 'datetime-local');
-        } else if (type === 'picklist' || type === 'multipicklist'){
-            if(operator === 'Equals' || operator === 'Not_Equals'){
+        } else if (type === 'picklist' || type === 'multipicklist') {
+            if (operator === 'Equals' || operator === 'Not_Equals') {
                 cmp.set("v.filterRuleFieldType", 'picklist');
             } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
                 cmp.set("v.filterRuleFieldType", 'text');
@@ -176,22 +174,22 @@
                 || operator === 'Is_Included' || operator === 'Is_Not_Included'){
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
-        } else if (type === 'reference'){
+        } else if (type === 'reference') {
             var field = cmp.get("v.activeFilterRule.fieldName");
             //record type is a special case where we want to exactly match options and provide picklists
-            if (field !== 'RecordTypeId'){
+            if (field !== 'RecordTypeId') {
                 cmp.set("v.filterRuleFieldType", 'text');
             } else {
-                if (operator === 'Equals' || operator === 'Not_Equals'){
+                if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.filterRuleFieldType", 'picklist');
-                } else if (operator === 'In_List' || operator === 'Not_In_List'){
+                } else if (operator === 'In_List' || operator === 'Not_In_List') {
                     cmp.set("v.filterRuleFieldType", 'multipicklist');
                 }
             }
-        } else if (type === 'time'){
+        } else if (type === 'time') {
             cmp.set("v.filterRuleFieldType", 'time');
         } else if (type === 'double' || type === 'integer'
-            || type === 'currency' || type === 'percent'){
+            || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
         } else {
             cmp.set("v.filterRuleFieldType", 'text');
@@ -200,7 +198,7 @@
 
     /* @description: opens a modal popup so user can add or edit a filter rule
      */
-    resetActiveFilterRule: function(cmp){
+    resetActiveFilterRule: function(cmp) {
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
@@ -209,7 +207,7 @@
     /* @description: resets the list of filter rules based on the
      * @param object - selected object API name
      */
-    resetFilterRuleFields: function(cmp, object){
+    resetFilterRuleFields: function(cmp, object) {
         var objectDetails = cmp.get("v.objectDetails");
         cmp.set("v.filteredFields", objectDetails[object]);
     },
@@ -218,9 +216,9 @@
      * @param field - selected field API name
      * @param type - type of the selected field
      */
-    resetFilterRuleOperators: function(cmp, field){
+    resetFilterRuleOperators: function(cmp, field) {
         var type = this.getFieldType(cmp, field);
-        if(type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId'){
+        if (type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId') {
             this.getPicklistOptions(cmp, field);
         }
         cmp.set("v.filterRuleFieldType", "text");
@@ -254,7 +252,7 @@
 
     /* @description: toggles a modal popup and backdrop
     */
-    toggleFilterRuleModal: function(cmp){
+    toggleFilterRuleModal: function(cmp) {
         var backdrop = cmp.find('backdrop');
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
         var modal = cmp.find('modaldialog');
@@ -264,7 +262,7 @@
     /* @description: verifies all required fields have been populated before saving the filter group
      * @return: boolean canSave confirming if filter group can be saved
      */
-    validateFilterGroupFields: function(cmp){
+    validateFilterGroupFields: function(cmp) {
         var canSave = true;
         var name = cmp.get("v.activeFilterGroup.MasterLabel");
         var description = cmp.get("v.activeFilterGroup.Description__c");
@@ -273,11 +271,11 @@
         cmp.find("nameInput").showHelpMessageIfInvalid();
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
 
-        if (!description){
+        if (!description) {
             canSave = false;
-        } else if (!name){
+        } else if (!name) {
             canSave = false;
-        } else if (filterRuleList.length === 0){
+        } else if (filterRuleList.length === 0) {
             canSave = false;
         }
 
@@ -287,28 +285,42 @@
     /* @description: verifies filter rule isn't a duplicate and that all fields are provided
      * @return: boolean canSave confirming if filter group can be saved
      */
-    validateFilterRuleFields: function(cmp, filterRule, filterRuleList){
+    validateFilterRuleFields: function(cmp, filterRule, filterRuleList) {
         var canSave = true;
+        var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
-        var objectValidity = cmp.find("objectSelect").get("v.validity");
-        var fieldValidity = cmp.find("fieldSelect").get("v.validity");
-        var operatorValidity = cmp.find("operatorSelect").get("v.validity");
-        var constantValidity = cmp.find("constantInput").get("v.validity");
+        var allValid = cmp.find("filterRuleField").reduce(function (validSoFar, filterRuleCmp) {
+            filterRuleCmp.showHelpMessageIfInvalid();
+            return validSoFar && filterRuleCmp.get("v.validity").valid;
+        }, true);
 
-        if(!(objectValidity.valid && fieldValidity.valid && operatorValidity.valid && constantValidity.valid)){
-            //todo: set validity here
-            return canSave = false;
-        }
-
-        for (var i = 0; i < filterRuleList.length; i++) {
-            if (filterRuleList[i].objectName === filterRule.objectName
-                && filterRuleList[i].fieldName === filterRule.fieldName
-                && filterRuleList[i].operatorName === filterRule.operatorName
-                && filterRuleList[i].constantName === filterRule.constantName) {
-                return canSave = false;
+        if(filterRuleFieldType === 'multipicklist'){
+            var constantValue = cmp.find("filterRuleUIField").get("v.value");
+            if(!constantValue){
+                allValid = false;
+                //todo: set error text here dynamically with better labels, maybe reusing value from filterRuleField
+                cmp.find("filterRuleUIField").set("v.errors", "Complete this field.");
             }
         }
 
-        return canSave;
+        if (allValid) {
+            if (cmp.get("v.filterRuleMode") === 'create') {
+                //check for specific API names instead of the full row to avoid issues with the ID not matching
+                for (var i = 0; i < filterRuleList.length; i++) {
+                    if (filterRuleList[i].objectName === filterRule.objectName
+                        && filterRuleList[i].fieldName === filterRule.fieldName
+                        && filterRuleList[i].operatorName === filterRule.operatorName
+                        && filterRuleList[i].constantName === filterRule.constantName) {
+                        cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                        return canSave = false;
+                    }
+                }
+                cmp.set("v.filterRuleError", "");
+            }
+            return canSave;
+        } else {
+            return canSave = false;
+        }
+
     }
 })
