@@ -198,37 +198,40 @@
         filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
         var filterRuleList = cmp.get("v.filterRuleList");
 
-        //fix formatting on list items
-        //todo: fix this regex to add line breaks only to new semicolons
-        if(filterRule.constantName.indexOf(';') > 0 && (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List')){
-            console.log('replacing field label');
-            filterRule.constantName = filterRule.constantName.replace(/;![\n]/g, ';\n')
-        }
+        var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
 
-        //if mode is create, just add to list, otherwise update the item in the existing list
-        var mode = cmp.get("v.filterRuleMode");
-        if(mode === 'create'){
-            filterRuleList.push(filterRule);
-        } else {
-            var i;
-            for (i = 0; i < filterRuleList.length; i++) {
-                if (filterRuleList[i].id === filterRule.id) {
-                    break;
+        if(canSave) {
+
+            //fix formatting on list items
+            //todo: fix this regex to add line breaks only to new semicolons
+            if (filterRule.constantName.indexOf(';') > 0 && (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List')) {
+                console.log('replacing field label');
+                filterRule.constantName = filterRule.constantName.replace(/;![\n]/g, ';\n')
+            }
+
+            //if mode is create, just add to list, otherwise update the item in the existing list
+            var mode = cmp.get("v.filterRuleMode");
+            if (mode === 'create') {
+                filterRuleList.push(filterRule);
+            } else {
+                var i;
+                for (i = 0; i < filterRuleList.length; i++) {
+                    if (filterRuleList[i].id === filterRule.id) {
+                        break;
+                    }
+                }
+                if (mode === 'edit') {
+                    filterRuleList[i] = filterRule;
+                } else {
+                    filterRuleList.splice(i, 1);
                 }
             }
-            if (mode === 'edit') {
-                filterRuleList[i] = filterRule;
-            } else {
-                console.log('index to delete ' + i);
-                filterRuleList.splice(i, 1);
-                console.log(JSON.stringify(filterRuleList));
-            }
+            cmp.set("v.filterRuleList", filterRuleList);
+
+            helper.toggleFilterRuleModal(cmp);
+            helper.resetActiveFilterRule(cmp);
+
         }
-        cmp.set("v.filterRuleList", filterRuleList);
-
-        helper.toggleFilterRuleModal(cmp);
-        helper.resetActiveFilterRule(cmp);
-
     },
 
     /* @description: navigates the user to the selected rollup from the filter group detail page

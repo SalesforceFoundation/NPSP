@@ -262,6 +262,7 @@
     },
 
     /* @description: verifies all required fields have been populated before saving the filter group
+     * @return: boolean canSave confirming if filter group can be saved
      */
     validateFilterGroupFields: function(cmp){
         var canSave = true;
@@ -271,7 +272,6 @@
 
         cmp.find("nameInput").showHelpMessageIfInvalid();
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
-        //todo: where to put error message for filter rules? or can a filter group be saved w/o filter rules?
 
         if (!description){
             canSave = false;
@@ -279,6 +279,34 @@
             canSave = false;
         } else if (filterRuleList.length === 0){
             canSave = false;
+        }
+
+        return canSave;
+    },
+
+    /* @description: verifies filter rule isn't a duplicate and that all fields are provided
+     * @return: boolean canSave confirming if filter group can be saved
+     */
+    validateFilterRuleFields: function(cmp, filterRule, filterRuleList){
+        var canSave = true;
+
+        var objectValidity = cmp.find("objectSelect").get("v.validity");
+        var fieldValidity = cmp.find("fieldSelect").get("v.validity");
+        var operatorValidity = cmp.find("operatorSelect").get("v.validity");
+        var constantValidity = cmp.find("constantInput").get("v.validity");
+
+        if(!(objectValidity.valid && fieldValidity.valid && operatorValidity.valid && constantValidity.valid)){
+            //todo: set validity here
+            return canSave = false;
+        }
+
+        for (var i = 0; i < filterRuleList.length; i++) {
+            if (filterRuleList[i].objectName === filterRule.objectName
+                && filterRuleList[i].fieldName === filterRule.fieldName
+                && filterRuleList[i].operatorName === filterRule.operatorName
+                && filterRuleList[i].constantName === filterRule.constantName) {
+                return canSave = false;
+            }
         }
 
         return canSave;
