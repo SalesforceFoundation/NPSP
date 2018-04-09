@@ -76,6 +76,13 @@ public class CRLP_DefaultConfigBuilder {
     /** @description The RecordName for the default filter group to use for Allocations Rollups */
     public static final String FilterGroup_Allocations = RecordNamePrefix + 'Allocations_Filter';
 
+    /** @description The RecordName for the default filter group of Pledged Donations (Unique to Recurring Donations Rollups) */
+    public static final String FilterGroup_PledgedDonations = RecordNamePrefix + 'Pledged_Donations';
+
+    /** @description The RecordName for the default filter group of Closed Won Donations without RT Exclusions(Unique to Recurring Donations Rollups) */
+    public static final String FilterGroup_ClosedWonOpps_NoRTExclusions = RecordNamePrefix + 'ClosedWon_Opps_No_RT_Exclusions';
+
+
     // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
     private static final String allocAmountFld = 'Allocation__c.Amount__c';
     private static final String oppAmountFld = 'Opportunity.Amount';
@@ -266,7 +273,18 @@ public class CRLP_DefaultConfigBuilder {
             'General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c' =>
                     new List<String>{ allocAmountFld, FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
             'General_Accounting_Unit__c.Total_Number_of_Allocations__c' =>
-                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' }
+                    new List<String>{ 'Allocation__c', FilterGroup_Allocations, allocAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
+
+            /* ======== Opportunity to Recurring Donation ======== */
+            'npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_PledgedDonations, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+            'npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c' =>
+                    new List<String>{ oppCloseDateFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+            'npe03__Recurring_Donation__c.npe03__Paid_Amount__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
+            'npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c' =>
+                    new List<String>{ oppAmountFld, FilterGroup_ClosedWonOpps_NoRTExclusions, oppAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' }
+
     };
 
     /** @description Map of Rollup Name & Descriptions; Keeping these separate from the Rollup details map just
@@ -452,7 +470,18 @@ public class CRLP_DefaultConfigBuilder {
             'General_Accounting_Unit__c.Total_Allocations_This_Year__c' =>
                     new List<String>{ 'GAU: Total Allocations This Year', 'Total of all Allocation Amounts in the current calendar year to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Two_Years_Ago__c' =>
-                    new List<String>{ 'GAU: Total Allocations Two Years Ago', 'Total of all Allocation Amounts two calendar years ago to this GAU' }
+                    new List<String>{ 'GAU: Total Allocations Two Years Ago', 'Total of all Allocation Amounts two calendar years ago to this GAU' },
+
+            /* ======== Opportunity to Recurring Donation ======== */
+            'npe03__Recurring_Donation__c.npe03__Next_Payment_Date__c' =>
+                    new List<String>{ 'RD: Next Payment Date', 'Date of the next Opportunity set to close' },
+            'npe03__Recurring_Donation__c.npe03__Last_Payment_Date__c' =>
+                    new List<String>{ 'RD: Last Payment Date', 'Date of the last Closed Won Opportunity' },
+            'npe03__Recurring_Donation__c.npe03__Paid_Amount__c' =>
+                    new List<String>{ 'RD: Paid Amount', 'Sum of Opportunity Amounts of all Closed Won Opportunities' },
+            'npe03__Recurring_Donation__c.npe03__Total_Paid_Installments__c' =>
+                    new List<String>{ 'RD: Total Paid Installments', 'Count of all Closed Won Opportunities' }
+
     };
 
 }

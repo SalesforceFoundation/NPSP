@@ -100,8 +100,8 @@ private class CRLP_DefaultConfigBuilder_TEST {
             }
         }
 
-        System.assertEquals(3, fgCount, 'There should be 3 filter groups');
-        System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 83 rollups');
+        System.assertEquals(5, fgCount, 'There should be 5 filter groups');
+        System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 
     /**
@@ -146,7 +146,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
         }
 
 
-        System.assertEquals(4, fgCount, 'There should be 3 filter groups');
-        System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 83 rollups');
+        System.assertEquals(6, fgCount, 'There should be 6 filter groups');
+        System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 }
