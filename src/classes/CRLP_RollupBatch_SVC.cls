@@ -52,6 +52,8 @@ public class CRLP_RollupBatch_SVC {
             return Contact.SObjectType;
         } if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             return General_Accounting_Unit__c.SObjectType;
+        } if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            return npe03__Recurring_Donation__c.SObjectType;
         }
         return null;
     }
@@ -179,7 +181,7 @@ public class CRLP_RollupBatch_SVC {
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-               // TBD
+               database.executeBatch(new CRLP_RDSkew_BATCH(recordIds, lastIdProcessed), batchSize);
             }
         } else {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
@@ -194,7 +196,7 @@ public class CRLP_RollupBatch_SVC {
                 // Technically this job is always processed in "skew" mode
                 database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                // TBD
+                database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
             }
         }
     }

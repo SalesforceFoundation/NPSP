@@ -273,7 +273,7 @@ private class CRLP_RollupAccount_TEST {
                 'There should be 1 written off payment record on a closed won opp');
         system.assertEquals(10800, ([SELECT Sum(npe01__Payment_Amount__c) Amt FROM npe01__OppPayment__c
                                 WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
-                'There should be 1 written off payment record on a closed won opp');
+                'The total Amount of all Paid Payments should be $10800');
 
         String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
         Account a = database.query(acctQuery);

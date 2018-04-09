@@ -215,6 +215,10 @@ public abstract class CRLP_Batch_Base {
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             this.detailObjectType = OpportunityContactRole.SObjectType;
             this.keyField = 'Contact.AccountId';
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            this.detailObjectType = Opportunity.SObjectType;
+            this.keyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
         }
     }
 
@@ -238,6 +242,9 @@ public abstract class CRLP_Batch_Base {
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType);
+
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+            hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(npe03__Recurring_Donation__c.SObjectType);
         }
         return hasActiveRollups;
     }
