@@ -196,12 +196,20 @@ private class CRLP_RollupRecurringDonation_TEST {
                 , npe03__Last_Payment_Date__c
                 , npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c WHERE Id = :rd.Id];
 
-        // in trigger context, the initial pledged donations should've rolled up as follows:
+        // In trigger context, the initial pledged opportunities should've rolled up as follows:
         if (tt == TestType.TestTrigger) {
             System.assertEquals(0, rd.npe03__Total_Paid_Installments__c);
             System.assertEquals(startDate, rd.npe03__Next_Payment_Date__c);
             System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
             System.assertEquals(0, rd.npe03__Paid_Amount__c);
+        }
+
+        // In all other contexts, since triggers aren't running, just make sure everything is null first!
+        if (tt != TestType.TestTrigger) {
+            System.assertEquals(null, rd.npe03__Paid_Amount__c);
+            System.assertEquals(null, rd.npe03__Total_Paid_Installments__c);
+            System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
+            System.assertEquals(null, rd.npe03__Next_Payment_Date__c);
         }
 
         List<Opportunity> originalOpps = [SELECT Id
@@ -229,14 +237,6 @@ private class CRLP_RollupRecurringDonation_TEST {
         Id rdId = rd.Id;
         String rdQuery = CRLP_Query_SEL.buildObjectQueryForRollup(npe03__Recurring_Donation__c.SObjectType) + ' WHERE Id = :rdId LIMIT 1';
         rd = database.query(rdQuery);
-
-        // Make sure everything is null first!
-        if (tt != TestType.TestTrigger) {
-            System.assertEquals(null, rd.npe03__Paid_Amount__c);
-            System.assertEquals(null, rd.npe03__Total_Paid_Installments__c);
-            System.assertEquals(null, rd.npe03__Last_Payment_Date__c);
-            System.assertEquals(null, rd.npe03__Next_Payment_Date__c);
-        }
 
         // Now test the rollups to the Recurring Donation from the Opportunity
         if (tt == TestType.TestTrigger) {
