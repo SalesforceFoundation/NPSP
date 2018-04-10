@@ -12,7 +12,7 @@
         <categories>address, error</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Batch Address Verification Not Supported</shortDescription>
+        <shortDescription>edit it</shortDescription>
         <value>The specified service does not support batch address verification.</value>
     </labels>
     <labels>
