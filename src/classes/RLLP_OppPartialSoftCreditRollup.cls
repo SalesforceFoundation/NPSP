@@ -66,9 +66,8 @@ public class RLLP_OppPartialSoftCreditRollup {
         string pscQuery = RLLP_OppRollup_UTIL.buildSoftCreditPSCQuery();
         Set<Id> hardCreditOCRs = new Set<Id>();
         Map<Id, List<OpportunityContactRole>> opportunityContactRoles = new Map<Id, List<OpportunityContactRole>>();
-        Boolean alwaysRollupToPrimaryContact = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c;
         for (OpportunityContactRole ocr : database.query(ocrQuery)) {
-            if (isHardCredit(ocr, alwaysRollupToPrimaryContact)) {
+            if (isHardCredit(ocr)) {
                 hardCreditOCRs.add(ocr.Id);
             }
             if (!opportunityContactRoles.containsKey(ocr.ContactId)) {
@@ -170,13 +169,15 @@ public class RLLP_OppPartialSoftCreditRollup {
     /*******************************************************************************************************
     * @description Checks if the Opportunity should be considered as Hard Credit.
     * @param OpportunityContactRole The Opportunity Contact Role.
-    * @param Boolean The Always Rollup Primary Contact settings.
     * @return Boolean.
     */ 
-    private static Boolean isHardCredit(OpportunityContactRole ocr, Boolean alwaysRollupToPrimaryContact) {
-        return ocr.IsPrimary && (
-            alwaysRollupToPrimaryContact || (alwaysRollupToPrimaryContact == false && ocr.Opportunity.Account.npe01__SYSTEMIsIndividual__c)
-        );
+    private static Boolean isHardCredit(OpportunityContactRole ocr) {
+        if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c) {
+            return ocr.IsPrimary;
+        } else {
+            //primary OCR is a hard credit only for individual donations
+            return ocr.IsPrimary && ocr.Opportunity.Account.npe01__SYSTEMIsIndividual__c;
+        }
     }
     
     /*******************************************************************************************************
