@@ -66,13 +66,9 @@ public class RLLP_OppPartialSoftCreditRollup {
         string pscQuery = RLLP_OppRollup_UTIL.buildSoftCreditPSCQuery();
         Set<Id> hardCreditOCRs = new Set<Id>();
         Map<Id, List<OpportunityContactRole>> opportunityContactRoles = new Map<Id, List<OpportunityContactRole>>();
+        Boolean alwaysRollupToPrimaryContact = UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c;
         for (OpportunityContactRole ocr : database.query(ocrQuery)) {
-            if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c == false &&
-                ocr.Opportunity.Account.npe01__SYSTEMIsIndividual__c && ocr.isPrimary
-            ) {
-                hardCreditOCRs.add(ocr.Id);
-            }
-            if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c == true && ocr.isPrimary) {
+            if (isHardCredit(ocr, alwaysRollupToPrimaryContact)) {
                 hardCreditOCRs.add(ocr.Id);
             }
             if (!opportunityContactRoles.containsKey(ocr.ContactId)) {
@@ -169,6 +165,18 @@ public class RLLP_OppPartialSoftCreditRollup {
         }
 
         UTIL_DMLService.updateRecordBatchAndLogErrors(toUpdate, ERR_Handler_API.Context.RLLP.name());
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if the Opportunity should be considered as Hard Credit.
+    * @param OpportunityContactRole The Opportunity Contact Role.
+    * @param Boolean The Always Rollup Primary Contact settings.
+    * @return Boolean.
+    */ 
+    private static Boolean isHardCredit(OpportunityContactRole ocr, Boolean alwaysRollupToPrimaryContact) {
+        return ocr.IsPrimary && (
+            alwaysRollupToPrimaryContact || (alwaysRollupToPrimaryContact == false && ocr.Opportunity.Account.npe01__SYSTEMIsIndividual__c)
+        );
     }
     
     /*******************************************************************************************************
