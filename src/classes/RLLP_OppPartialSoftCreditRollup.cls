@@ -64,14 +64,15 @@ public class RLLP_OppPartialSoftCreditRollup {
         set<id> rectypeset = RLLP_OppRollup_UTIL.recordTypesToExcludeCons;
         string ocrQuery = RLLP_OppRollup_UTIL.buildSoftCreditOCRQuery();
         string pscQuery = RLLP_OppRollup_UTIL.buildSoftCreditPSCQuery();
-        Set<Id> primaryOCRs = new Set<Id>();
-        
+        Set<Id> hardCreditOCRs = new Set<Id>();
         Map<Id, List<OpportunityContactRole>> opportunityContactRoles = new Map<Id, List<OpportunityContactRole>>();
         for (OpportunityContactRole ocr : database.query(ocrQuery)) {
-            if (ocr.isPrimary) // keep track of primary OCR to exclude from SC rollup.
-                primaryOCRs.add(ocr.Id);
-            if (!opportunityContactRoles.containsKey(ocr.ContactId)) 
+            if (isHardCredit(ocr)) {
+                hardCreditOCRs.add(ocr.Id);
+            }
+            if (!opportunityContactRoles.containsKey(ocr.ContactId)) {
                 opportunityContactRoles.put(ocr.ContactId, new List<OpportunityContactRole>());
+            }
             opportunityContactRoles.get(ocr.ContactId).add(ocr);
         }
         
@@ -117,7 +118,7 @@ public class RLLP_OppPartialSoftCreditRollup {
             Set<Id> ocrForPSCIds = new Set<Id>();
             if (partialSoftCredits.containsKey(c.Id)) {
                 for (Partial_Soft_Credit__c psc : partialSoftCredits.get(c.Id)) {
-                    if (!primaryOCRs.contains(psc.Contact_Role_ID__c))
+                    if (!hardCreditOCRs.contains(psc.Contact_Role_ID__c))
                         newC = countPartialSoftCredits(newC, psc, currentYearStart);
                     ocrForPSCIds.add(psc.Contact_Role_ID__c);
                 }
@@ -128,7 +129,7 @@ public class RLLP_OppPartialSoftCreditRollup {
                 for (OpportunityContactRole ocr : opportunityContactRoles.get(c.Id)) {
                     if (ocrForPSCIds.contains(ocr.Id)) continue; // partial soft credit
                     if (processedOpportunityIds.contains(ocr.OpportunityId)) continue;
-                    if (!primaryOCRs.contains(ocr.Id))
+                    if (!hardCreditOCRs.contains(ocr.Id))
                         newC = countOpportunityContactRoles(newC, ocr, currentYearStart);
                     processedOpportunityIds.add(ocr.OpportunityId);
                 }
@@ -163,6 +164,20 @@ public class RLLP_OppPartialSoftCreditRollup {
         }
 
         UTIL_DMLService.updateRecordBatchAndLogErrors(toUpdate, ERR_Handler_API.Context.RLLP.name());
+    }
+
+    /*******************************************************************************************************
+    * @description Checks if the Opportunity should be considered as Hard Credit.
+    * @param OpportunityContactRole The Opportunity Contact Role.
+    * @return Boolean.
+    */ 
+    private static Boolean isHardCredit(OpportunityContactRole ocr) {
+        if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Always_Rollup_to_Primary_Contact__c) {
+            return ocr.IsPrimary;
+        } else {
+            //primary OCR is a hard credit only for individual donations
+            return ocr.IsPrimary && ocr.Opportunity.Account.npe01__SYSTEMIsIndividual__c;
+        }
     }
     
     /*******************************************************************************************************
