@@ -444,9 +444,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     @isTest static void test_ContactApplySoftCredit_AlwaysRollupToPrimaryContactIsFalse() {
         String role = 'Soft Credit';
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-            npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-            npo02__Household_Contact_Roles_On__c = true,
             npo02__Always_Rollup_to_Primary_Contact__c = false,
             npo02__Soft_Credit_Roles__c = role
         ));
@@ -531,9 +528,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     @isTest static void test_ContactApplyPartialSoftCredit_AlwaysRollupToPrimaryContactIsFalse() {
         String role = 'Soft Credit';
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-            npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-            npo02__Household_Contact_Roles_On__c = true,
             npo02__Always_Rollup_to_Primary_Contact__c = false,
             npo02__Soft_Credit_Roles__c = role
         ));
@@ -626,9 +620,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     @isTest static void test_ContactApplySoftCredit_AlwaysRollupToPrimaryContactIsTrue() {
         String role = 'Soft Credit';
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-            npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-            npo02__Household_Contact_Roles_On__c = true,
             npo02__Always_Rollup_to_Primary_Contact__c = true,
             npo02__Soft_Credit_Roles__c = role
         ));
@@ -708,9 +699,6 @@ private class RLLP_OppPartialSoftCreditRollup_TEST {
     @isTest static void test_ContactApplyPartialSoftCredit_AlwaysRollupToPrimaryContactIsTrue() {
         String role = 'Soft Credit';
         UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(new npo02__Households_Settings__c (
-            npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
-            npo02__Household_Member_Contact_Role__c = label.npo02.Household_Member_Contact_Role,
-            npo02__Household_Contact_Roles_On__c = true,
             npo02__Always_Rollup_to_Primary_Contact__c = true,
             npo02__Soft_Credit_Roles__c = role
         ));
