@@ -82,6 +82,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String operatorName;
         @AuraEnabled public String operatorLabel;
         @AuraEnabled public String constantName;
+        @AuraEnabled public String constantLabel;
         @AuraEnabled public Id id;
     }
 
@@ -298,8 +299,8 @@ public with sharing class CRLP_RollupUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterRulesTableItem item = new FilterRulesTableItem();
 
-            String c = mdtList[i].Constant__c;
-            item.constantName = c.replace(';', ';\n');
+            item.constantName = mdtList[i].Constant__c;
+            item.constantLabel = item.constantName.replace(';', ';\n');
             item.operatorName = mdtList[i].Operator__c;
             item.operatorLabel = operators.get(mdtList[i].Operator__c);
             item.fieldLabel = mdtList[i].Field__r.MasterLabel;
@@ -527,7 +528,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
      * the insert (deployment) completes.
      */
-    @auraEnabled
+    @AuraEnabled
     public static String saveRollup(String rollupCMT) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -627,7 +628,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for (SelectOption o: picklistValues) {
             Map<String, String> labeledOption = new Map<String, String>();
-            labeledOption.put('name', o.getValue());
+            labeledOption.put('value', o.getValue());
             labeledOption.put('label', o.getLabel());
 
             optionsList.add(labeledOption);

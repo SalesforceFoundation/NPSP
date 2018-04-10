@@ -37,13 +37,13 @@
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantName', type: 'string'}
+                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
                 ];
 
                 var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantName', type: 'string'}
+                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
@@ -159,13 +159,13 @@
 
     /* @description: adds constant field to selected list
     */
-    onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
+    /*onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
         var constant = event.getSource().get("v.value");
         var fieldCmp = cmp.find("filterRuleUIField");
         var value = fieldCmp.get("v.value");
         var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
         console.log(JSON.stringify(constantPicklist));
-    },
+    },*/
 
     /* @description: saves a new filter group and associated filter rules
     */
@@ -177,6 +177,8 @@
         if(canSave){
             cmp.set("v.mode", 'view');
 
+            //todo: add save code here
+
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
@@ -187,48 +189,51 @@
         }
     },
 
-    /* @description: saves filter rule into the list of filter rules on the filter group
+    /* @description: adds, edits or deletes filter on the list of filter rules on the filter group
     */
     saveFilterRule: function(cmp, event, helper){
-        //todo: add exception handling + duplicate checking
-        //todo: save to DB first
+        //todo: duplicate checking
         //set field labels first
+        debugger;
         var filterRule = cmp.get("v.activeFilterRule");
-        filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
-        filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
-        filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
-
         var filterRuleList = cmp.get("v.filterRuleList");
         var mode = cmp.get("v.filterRuleMode");
-        var canSave = true;
 
         if (mode !== 'delete') {
-            console.log(JSON.stringify(filterRule.constantName));
-            canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
-        }
+            var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
 
-        if(canSave) {
-            //if mode is create, just add to list, otherwise update the item in the existing list
-            if (mode === 'create') {
-                filterRuleList.push(filterRule);
-            } else {
-                var i;
-                for (i = 0; i < filterRuleList.length; i++) {
-                    if (filterRuleList[i].id === filterRule.id) {
-                        break;
-                    }
-                }
-                if (mode === 'edit') {
-                    filterRuleList[i] = filterRule;
+            if (canSave) {
+
+                //set field labels directly
+                filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
+                filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
+                filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
+
+                //special reformatting for multipicklists and semi-colon delimited lists
+                if (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List') {
+                    filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operatorName);
                 } else {
-                    filterRuleList.splice(i, 1);
+                    filterRule.constantLabel = filterRule.constantName;
                 }
-            }
-            cmp.set("v.filterRuleList", filterRuleList);
 
+                //if mode is create, just add to list, otherwise update the item in the existing list
+                if (mode === 'create') {
+                    filterRuleList.push(filterRule);
+                } else {
+                    var index = helper.getActiveRollupIndex(cmp, filterRuleList, filterRule);
+                    filterRuleList[index] = filterRule;
+                }
+                cmp.set("v.filterRuleList", filterRuleList);
+
+                helper.toggleFilterRuleModal(cmp);
+                helper.resetActiveFilterRule(cmp);
+            }
+        } else {
+            var index = helper.getActiveRollupIndex(cmp, filterRuleList, filterRule);
+            filterRuleList.splice(index, 1);
+            cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);
             helper.resetActiveFilterRule(cmp);
-
         }
     },
 

@@ -73,30 +73,30 @@
      */
     getAvailableOperations: function(cmp, type){
         var opMap = cmp.get("v.operatorMap");
-        var operators = [{name: 'Equals', label: opMap.Equals}, {name: 'Not_Equals', label: opMap.Not_Equals}];
+        var operators = [{value: 'Equals', label: opMap.Equals}, {value: 'Not_Equals', label: opMap.Not_Equals}];
 
         if (type === 'boolean') {
             //equals/not equals are only matches
         } else if (type === 'reference'){
-            operators.push({name: 'In_List', label: opMap.In_List});
-            operators.push({name: 'Not_In_List', label: opMap.Not_In_List});
+            operators.push({value: 'In_List', label: opMap.In_List});
+            operators.push({value: 'Not_In_List', label: opMap.Not_In_List});
         } else if (type === 'date' || type === 'datetime' || type === 'time'
             || type === 'double' || type === 'integer' || type === 'currency' || type === 'percent'){
-            operators.push({name: 'Greater', label: opMap.Greater});
-            operators.push({name: 'Greater_or_Equal', label: opMap.Greater_or_Equal});
-            operators.push({name: 'Less', label: opMap.Less});
-            operators.push({name: 'Less_or_Equal', label: opMap.Less_or_Equal});
+            operators.push({value: 'Greater', label: opMap.Greater});
+            operators.push({value: 'Greater_or_Equal', label: opMap.Greater_or_Equal});
+            operators.push({value: 'Less', label: opMap.Less});
+            operators.push({value: 'Less_or_Equal', label: opMap.Less_or_Equal});
         } else {
-            operators.push({name: 'Starts_With', label: opMap.Starts_With});
-            operators.push({name: 'Contains', label: opMap.Contains});
-            operators.push({name: 'Does_Not_Contain', label: opMap.Does_Not_Contain});
+            operators.push({value: 'Starts_With', label: opMap.Starts_With});
+            operators.push({value: 'Contains', label: opMap.Contains});
+            operators.push({value: 'Does_Not_Contain', label: opMap.Does_Not_Contain});
 
             if (type === 'multipicklist'){
-                operators.push({name: 'Is_Included', label: opMap.Is_Included});
-                operators.push({name: 'Is_Not_Included', label: opMap.Is_Not_Included});
+                operators.push({value: 'Is_Included', label: opMap.Is_Included});
+                operators.push({value: 'Is_Not_Included', label: opMap.Is_Not_Included});
             } else if (type != 'textarea'){
-                operators.push({name: 'In_List', label: opMap.In_List});
-                operators.push({name: 'Not_In_List', label: opMap.Not_In_List});
+                operators.push({value: 'In_List', label: opMap.In_List});
+                operators.push({value: 'Not_In_List', label: opMap.Not_In_List});
             }
         }
 
@@ -146,6 +146,41 @@
         });
 
         $A.enqueueAction(action);
+    },
+
+    /* @description: gets the index for the row by ID for edit and
+     * @param filterRuleList - list of all filter rules
+     * @param filterRule - specific filterRule
+     * @return i - returns the index of the active rollup in filterRuleList
+     */
+    getActiveRollupIndex: function(cmp, filterRuleList, filterRule) {
+        //todo: add duplicate checking + checking w/o IDs
+        var i;
+        for (i = 0; i < filterRuleList.length; i++) {
+            if (filterRuleList[i].id === filterRule.id) {
+                break;
+            }
+        }
+        return i;
+    },
+
+    /* @description: parses the constant label into constant name form depending on the format of the value
+     * @param constantName - API name of the constant
+     * @param operatorName - API name of the operator
+     * @return constantLabel - formatted name for display in the lightning:datatable
+     */
+    reformatConstantLabel: function(cmp, constantName, operatorName){
+        var updatedLabel;
+
+        var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
+
+        if (filterRuleFieldType === "multipicklist") {
+            updatedLabel = constantName.join(";\n");
+        } else if (filterRuleFieldType === "text" && constantName.indexOf(";") > 0) {
+            //
+        }
+
+        return updatedLabel;
     },
 
     /* @description - changes picklist values or input type based on field type
@@ -202,6 +237,7 @@
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
+        cmp.set("v.filterRuleFieldType", "text");
     },
 
     /* @description: resets the list of filter rules based on the
@@ -241,7 +277,7 @@
         var label;
         if (entityList) {
             for (var i = 0; i < entityList.length; i++) {
-                if (entityList[i].name === apiName) {
+                if (entityList[i].name === apiName || entityList[i].value === apiName) {
                     label = entityList[i].label;
                     break;
                 }
@@ -294,14 +330,15 @@
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
 
-        if(filterRuleFieldType === 'multipicklist'){
-            var constantValue = cmp.find("filterRuleUIField").get("v.value");
-            if(!constantValue){
-                allValid = false;
-                //todo: set error text here dynamically with better labels, maybe reusing value from filterRuleField
-                cmp.find("filterRuleUIField").set("v.errors", "Complete this field.");
-            }
-        }
+        /*var fieldList = cmp.find("filterRuleField");
+        fieldList.forEach(function(comp) {
+            console.log(comp.get("v.label"));
+            console.log(JSON.stringify(comp.get("v.validity")));
+            console.log(comp.get("v.validity").valid);
+            comp.showHelpMessageIfInvalid();
+        });
+
+        var allValid = false;*/
 
         if (allValid) {
             if (cmp.get("v.filterRuleMode") === 'create') {

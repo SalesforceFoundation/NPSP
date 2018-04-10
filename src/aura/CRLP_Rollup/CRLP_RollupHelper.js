@@ -715,8 +715,9 @@
         $A.enqueueAction(action);
     },
 
-    /* @description: sets the selected rollup type based on detail and summary objects when a record is loaded
-    */
+    /**
+     * @description: sets the selected rollup type based on detail and summary objects when a record is loaded
+     */
     setRollupType: function (cmp) {
         console.log('IN SET ROLLUP TYPE FUNCTION.');
         var summaryObject = cmp.get("v.activeRollup.summaryObject");
@@ -773,8 +774,9 @@
         cmp.set("v.selectedRollupType", rollupType);
     },
 
-    /* @description: creates the integer picklist for years, and is only called during setup
-    */
+    /**
+     * @description: creates the integer picklist for years, and is only called during setup
+     */
     setIntegerYearList: function (cmp) {
         var integerList = [];
         var labels = cmp.get("v.labels");
@@ -789,14 +791,15 @@
         cmp.set("v.integerList", integerList);
     },
 
-    /* @description: checks the mode to see if record's summary field needs to be added to or removed from summary field list
-    *  @param newFields: list of all fields in name and label key value pairs
-    *  @return: updated list of newFields
-    */
+    /**
+     *  @description: checks the mode to see if record's summary field needs to be added to or removed from summary field list
+     *  @param newFields: list of all fields in name and label key value pairs
+     *  @return: updated list of newFields
+     */
     uniqueSummaryFieldCheck: function (cmp, newFields){
         var mode = cmp.get("v.mode");
         var summaryField = cmp.get("v.activeRollup.summaryField");
-        if(mode === 'clone'){
+        if (mode === 'clone') {
             //remove if it's in the list
             for (var i = 0; i < newFields.length; i++) {
                 if (newFields[i].name === summaryField) {
@@ -808,8 +811,9 @@
         return newFields
     },
 
-    /* @description: resets allowed operations based on the summary field type
-    */
+    /**
+     * @description: resets allowed operations based on the summary field type
+     */
     updateAllowedOperations: function (cmp) {
 
         //start with all operations
