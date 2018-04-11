@@ -1,6 +1,7 @@
 ({
-    /* @description: setup for the filter group component which sets the active filter group and datatable
-    */
+    /**
+     * @description: setup for the filter group component which sets the active filter group and datatable
+     */
     doInit: function (cmp, event, helper) {
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
@@ -73,23 +74,36 @@
 
     },
 
-    /* @description: creates a new filter rule
-    */
+    /**
+     * @description: creates a new filter rule
+     */
     addFilterRule: function(cmp, event, helper){
         cmp.set("v.filterRuleMode", 'create');
         helper.toggleFilterRuleModal(cmp);
     },
 
-    /* @description: cancels the pop up for filter rule and clears the active filter rule
-    */
+    /**
+     * @description: cancels the pop up for filter rule and clears the active filter rule
+     */
     cancelFilterRule: function(cmp, event, helper){
         helper.toggleFilterRuleModal(cmp);
         helper.resetActiveFilterRule(cmp);
-        cmp.set("v.filterRuleMode", '');
+        cmp.set("v.filterRuleMode", "");
+        cmp.set("v.filterRuleError", "")
+        //clean up shared references for unsaved data
+        cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
     },
 
-    /* @description: handles individual row events for the filter rule table
-    */
+    /**
+     * @description: closes the toast notification window
+     */
+    closeNotificationWindow : function(cmp, event, helper) {
+        cmp.set("v.notificationClasses", "slds-hide");
+    },
+
+    /**
+     * @description: handles individual row events for the filter rule table
+     */
     handleRowAction: function(cmp, event, helper){
         var action = event.getParam('action');
         var row = event.getParam('row');
@@ -102,7 +116,7 @@
             helper.resetFilterRuleFields(cmp, row.objectName);
             helper.resetFilterRuleOperators(cmp, row.fieldName);
             helper.rerenderValue(cmp, row.operatorName);
-
+            helper.setActiveRollupIndex(cmp, row);
 
         } else {
             //cautions user about deleting filter rule
@@ -111,8 +125,9 @@
         }
     },
 
-    /* @description: handles the cancel action during the edit of a filter group
-    */
+    /**
+     * @description: handles the cancel action during the edit of a filter group
+     */
     onCancel: function(cmp, event, helper){
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeFilterGroupId") === null){
             //set off cancel event for container
@@ -129,36 +144,41 @@
 
     },
 
-    /* @description: fires when mode is changed and handles the readonly
-    */
+    /**
+     * @description: fires when mode is changed and handles the readonly
+     */
     onChangeMode: function(cmp, event, helper){
         helper.changeMode(cmp);
     },
 
-    /* @description: filters the filter fields when filter rule objects is changed
-    */
+    /**
+     * @description: filters the filter fields when filter rule objects is changed
+     */
     onChangeFilterRuleObject: function(cmp, event, helper){
         var object = event.getSource().get("v.value");
         helper.resetFilterRuleFields(cmp, object);
     },
 
-    /* @description: checks for type on filter rule field to update eligible values
-    */
+    /**
+     * @description: checks for type on filter rule field to update eligible values
+     */
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operatorName", "");
     },
 
-    /* @description: renders constant value based on selected operator
-    */
+    /**
+     * @description: renders constant value based on selected operator
+     */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
         helper.rerenderValue(cmp, operator);
     },
 
-    /* @description: adds constant field to selected list
-    */
+    /**
+     * @description: adds constant field to selected list
+     */
     /*onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
         var constant = event.getSource().get("v.value");
         var fieldCmp = cmp.find("filterRuleUIField");
@@ -167,8 +187,9 @@
         console.log(JSON.stringify(constantPicklist));
     },*/
 
-    /* @description: saves a new filter group and associated filter rules
-    */
+    /**
+     * @description: saves a new filter group and associated filter rules
+     */
     onSave: function(cmp, event, helper){
         //placeholder for on cancel function in !view mode
         //add check for description, name and a filter rule
@@ -189,12 +210,11 @@
         }
     },
 
-    /* @description: adds, edits or deletes filter on the list of filter rules on the filter group
-    */
+    /**
+     * @description: adds, edits or deletes filter on the list of filter rules on the filter group
+     */
     saveFilterRule: function(cmp, event, helper){
-        //todo: duplicate checking
         //set field labels first
-        debugger;
         var filterRule = cmp.get("v.activeFilterRule");
         var filterRuleList = cmp.get("v.filterRuleList");
         var mode = cmp.get("v.filterRuleMode");
@@ -203,13 +223,12 @@
             var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
 
             if (canSave) {
-
                 //set field labels directly
                 filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
                 filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
                 filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
 
-                //special reformatting for multipicklists and semi-colon delimited lists
+                //special reformatting for multipicklist and semi-colon delimited lists
                 if (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List') {
                     filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operatorName);
                 } else {
@@ -220,8 +239,7 @@
                 if (mode === 'create') {
                     filterRuleList.push(filterRule);
                 } else {
-                    var index = helper.getActiveRollupIndex(cmp, filterRuleList, filterRule);
-                    filterRuleList[index] = filterRule;
+                    filterRuleList[filterRule.index] = filterRule;
                 }
                 cmp.set("v.filterRuleList", filterRuleList);
 
@@ -229,16 +247,16 @@
                 helper.resetActiveFilterRule(cmp);
             }
         } else {
-            var index = helper.getActiveRollupIndex(cmp, filterRuleList, filterRule);
-            filterRuleList.splice(index, 1);
+            filterRuleList.splice(filterRule.index, 1);
             cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);
             helper.resetActiveFilterRule(cmp);
         }
     },
 
-    /* @description: navigates the user to the selected rollup from the filter group detail page
-    */
+    /**
+     * @description: navigates the user to the selected rollup from the filter group detail page
+     */
     selectRollup: function(cmp, event, helper){
         //select rollup for navigation
         var rollupId = event.getParam('name');

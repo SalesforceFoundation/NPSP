@@ -68,6 +68,12 @@
     <aura:attribute name="filterRuleMode" type="String" access="private"
                     description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
     <aura:attribute name="filterRuleError" type="String" access="private" description="Inline error text when editing a filter rule."/>
+    <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
+                    access="private" default="slds-hide"/>
+    <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
+    <aura:attribute name="toastStatus" type="String" description="Controls the color and icon of the toast. Options are info, success, error, or warning."
+                    access="private" default="success"/>
+
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -79,6 +85,29 @@
 
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
+
+        <!--START SPINNER-->
+        <div class="spinnerDiv">
+            <!--Hide the spinner by default-->
+            <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
+        </div>
+        <!--END SPINNER-->
+
+        <!--START TOAST-->
+        <div class="slds-notify_container slds-float_left">
+            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}" role="alert">
+                <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse" size="small" alternativeText="{!v.notificationText.alternativeText}"/>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.notificationText.title}</h2>
+                    <p>{!v.notificationText.message}</p>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" class="slds-notify__close" size="large"
+                                      onclick="{!c.closeNotificationWindow}" alternativeText="{!v.labels.ok}"
+                                      title="{!v.labels.close}"/>
+            </div>
+        </div>
+        <!--END TOAST-->
+
         <div class="slds-form_stacked">
             <lightning:layout>
                 <lightning:layoutItem size="12">
@@ -180,9 +209,11 @@
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content">
                     <lightning:layout>
-                        <div aura:id="filterRuleErrorDiv" class="slds-text-color_error">
-                            {!v.filterRuleError}
-                        </div>
+                        <aura:if isTrue="{! !empty(v.filterRuleError)}">
+                            <div aura:id="filterRuleErrorDiv" class="slds-text-color_error slds-p-around_small">
+                                {!v.filterRuleError}
+                            </div>
+                        </aura:if>
                     </lightning:layout>
                     <lightning:layout>
                         <aura:if isTrue="{!v.filterRuleMode != 'delete'}">

@@ -75,9 +75,9 @@
                     access="private" default="false"/>
     <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
                     access="private" default="slds-hide"/>
+    <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
     <aura:attribute name="toastStatus" type="String" description="Controls the color and icon of the toast. Options are info, success, error, or warning."
                     access="private" default="success"/>
-    <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -92,11 +92,14 @@
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
 
+        <!--START SPINNER -->
         <div class="spinnerDiv">
             <!--Hide the spinner by default-->
             <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
         </div>
+        <!--END SPINNER-->
 
+        <!--START TOAST-->
         <div class="slds-notify_container slds-float_left">
             <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}" role="alert">
                 <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse" size="small" alternativeText="{!v.notificationText.alternativeText}"/>
@@ -109,6 +112,7 @@
                                       title="{!v.labels.close}"/>
             </div>
         </div>
+        <!--END TOAST-->
 
         <form>
             <lightning:layout>

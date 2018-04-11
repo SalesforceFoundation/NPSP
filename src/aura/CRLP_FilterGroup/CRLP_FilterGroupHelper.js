@@ -1,7 +1,8 @@
 ({
-    /* @description: changes field visibility and save button access based on the mode
-    * this is bound to a change handler to the mode attribute
-    */
+    /**
+     * @description: changes field visibility and save button access based on the mode
+     * this is bound to a change handler to the mode attribute
+     */
     changeMode: function(cmp) {
         var mode = cmp.get("v.mode");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
@@ -24,10 +25,11 @@
         }
     },
 
-    /* @description: filters the full rollup data to find which rollups use a particular filter group
-    * @param filterGroupLabel: label of the selected filter group
-    * @param labels: labels for the rollups UI
-    */
+    /**
+     * @description: filters the full rollup data to find which rollups use a particular filter group
+     * @param filterGroupLabel: label of the selected filter group
+     * @param labels: labels for the rollups UI
+     */
     filterRollupList: function(cmp, filterGroupLabel, labels) {
         //filters row data based selected filter group
         var rollupList = cmp.get("v.rollupList");
@@ -69,7 +71,8 @@
         cmp.set("v.rollupItems", itemList);
     },
 
-    /* @description: opens a modal popup so user can add or edit a filter rule
+    /**
+     * @description: opens a modal popup so user can add or edit a filter rule
      */
     getAvailableOperations: function(cmp, type){
         var opMap = cmp.get("v.operatorMap");
@@ -77,11 +80,11 @@
 
         if (type === 'boolean') {
             //equals/not equals are only matches
-        } else if (type === 'reference'){
+        } else if (type === 'reference') {
             operators.push({value: 'In_List', label: opMap.In_List});
             operators.push({value: 'Not_In_List', label: opMap.Not_In_List});
         } else if (type === 'date' || type === 'datetime' || type === 'time'
-            || type === 'double' || type === 'integer' || type === 'currency' || type === 'percent'){
+            || type === 'double' || type === 'integer' || type === 'currency' || type === 'percent') {
             operators.push({value: 'Greater', label: opMap.Greater});
             operators.push({value: 'Greater_or_Equal', label: opMap.Greater_or_Equal});
             operators.push({value: 'Less', label: opMap.Less});
@@ -91,10 +94,10 @@
             operators.push({value: 'Contains', label: opMap.Contains});
             operators.push({value: 'Does_Not_Contain', label: opMap.Does_Not_Contain});
 
-            if (type === 'multipicklist'){
+            if (type === 'multipicklist') {
                 operators.push({value: 'Is_Included', label: opMap.Is_Included});
                 operators.push({value: 'Is_Not_Included', label: opMap.Is_Not_Included});
-            } else if (type != 'textarea'){
+            } else if (type !== 'textarea') {
                 operators.push({value: 'In_List', label: opMap.In_List});
                 operators.push({value: 'Not_In_List', label: opMap.Not_In_List});
             }
@@ -104,7 +107,8 @@
 
     },
 
-    /* @description: opens a modal popup so user can add or edit a filter rule
+    /**
+     * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
     getFieldType: function(cmp, field) {
@@ -120,7 +124,8 @@
         return type;
     },
 
-    /* @description: queries for picklist options to populate filterRuleConstantPicklist
+    /**
+     * @description: queries for picklist options to populate filterRuleConstantPicklist
      * @param field - field name
      */
     getPicklistOptions: function(cmp, field) {
@@ -130,6 +135,8 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
+                console.log('picklist options');
+                console.log(response.getReturnValue());
                 cmp.set("v.filterRuleConstantPicklist", response.getReturnValue());
             }
             else if (state === "ERROR") {
@@ -148,23 +155,8 @@
         $A.enqueueAction(action);
     },
 
-    /* @description: gets the index for the row by ID for edit and
-     * @param filterRuleList - list of all filter rules
-     * @param filterRule - specific filterRule
-     * @return i - returns the index of the active rollup in filterRuleList
-     */
-    getActiveRollupIndex: function(cmp, filterRuleList, filterRule) {
-        //todo: add duplicate checking + checking w/o IDs
-        var i;
-        for (i = 0; i < filterRuleList.length; i++) {
-            if (filterRuleList[i].id === filterRule.id) {
-                break;
-            }
-        }
-        return i;
-    },
-
-    /* @description: parses the constant label into constant name form depending on the format of the value
+    /**
+     * @description: parses the constant label into constant name form depending on the format of the value
      * @param constantName - API name of the constant
      * @param operatorName - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
@@ -183,7 +175,8 @@
         return updatedLabel;
     },
 
-    /* @description - changes picklist values or input type based on field type
+    /**
+     * @description - changes picklist values or input type based on field type
      * @param operator - selected filter rule operator API name
      * @param type - DisplayType of the selected field transformed to lower case
      */
@@ -194,7 +187,7 @@
         if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
             cmp.set("v.filterRuleFieldType", 'picklist');
-            var options = [{name: 'true', label: 'True'}, {name: 'false', label: 'False'}];
+            var options = [{value: 'true', label: 'True'}, {value: 'false', label: 'False'}];
             cmp.set("v.filterRuleConstantPicklist", options);
         } else if (type === 'date') {
             cmp.set("v.filterRuleFieldType", 'date');
@@ -231,7 +224,8 @@
         }
     },
 
-    /* @description: opens a modal popup so user can add or edit a filter rule
+    /**
+     * @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp) {
         var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
@@ -240,7 +234,8 @@
         cmp.set("v.filterRuleFieldType", "text");
     },
 
-    /* @description: resets the list of filter rules based on the
+    /**
+     * @description: resets the list of filter rules based on the
      * @param object - selected object API name
      */
     resetFilterRuleFields: function(cmp, object) {
@@ -248,7 +243,8 @@
         cmp.set("v.filteredFields", objectDetails[object]);
     },
 
-    /* @description: resets the possible list of operations based on the selected filter rule
+    /**
+     * @description: resets the possible list of operations based on the selected filter rule
      * @param field - selected field API name
      * @param type - type of the selected field
      */
@@ -261,9 +257,10 @@
         this.getAvailableOperations(cmp, type);
     },
 
-    /* @description: restructures returned Apex response to preserve separate variables
-    * @return: the parsed and stringified JSON
-    */
+    /**
+     * @description: restructures returned Apex response to preserve separate variables
+     * @return: the parsed and stringified JSON
+     */
     restructureResponse: function (resp) {
         return JSON.parse(JSON.stringify(resp));
     },
@@ -286,8 +283,38 @@
         return label;
     },
 
-    /* @description: toggles a modal popup and backdrop
-    */
+    /**
+     * @description: set the index on the activeFilterRule based on its position in the filterGroupList
+     * @param filterRule - specific filterRule
+     */
+    setActiveRollupIndex: function(cmp, filterRule) {
+        var filterRuleList = cmp.get("v.filterRuleList");
+
+        for (var i = 0; i < filterRuleList.length; i++) {
+            if (filterRuleList[i] === filterRule) {
+                cmp.set("v.activeFilterRule.index", i);
+                return;
+            }
+        }
+    },
+
+    /**
+     * @description Show a message on the screen
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast: function(cmp, type, title, message) {
+        cmp.set("v.toastStatus", type);
+        var altText = cmp.get("v.labels." + type);
+        var text = {message: message, title: title, alternativeText: altText};
+        cmp.set("v.notificationText", text);
+        cmp.set("v.notificationClasses", "");
+    },
+
+    /**
+     * @description: toggles a modal popup and backdrop
+     */
     toggleFilterRuleModal: function(cmp) {
         var backdrop = cmp.find('backdrop');
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
@@ -295,7 +322,21 @@
         $A.util.toggleClass(modal, 'slds-fade-in-open');
     },
 
-    /* @description: verifies all required fields have been populated before saving the filter group
+    /**
+     * @description Show or Hide the page spinner
+     * @param showSpinner - true to show; false to hide
+     */
+    toggleSpinner: function(cmp, showSpinner) {
+        var spinner = cmp.find("waitingSpinner");
+        if (showSpinner === true) {
+            $A.util.removeClass(spinner, "slds-hide");
+        } else {
+            $A.util.addClass(spinner, "slds-hide");
+        }
+    },
+
+    /**
+     * @description: verifies all required fields have been populated before saving the filter group
      * @return: boolean canSave confirming if filter group can be saved
      */
     validateFilterGroupFields: function(cmp) {
@@ -318,13 +359,15 @@
         return canSave;
     },
 
-    /* @description: verifies filter rule isn't a duplicate and that all fields are provided
+    /**
+     * @description: verifies filter rule that all fields are provided and isn't a duplicate
      * @return: boolean canSave confirming if filter group can be saved
      */
     validateFilterRuleFields: function(cmp, filterRule, filterRuleList) {
         var canSave = true;
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
+        //check for field validity
         var allValid = cmp.find("filterRuleField").reduce(function (validSoFar, filterRuleCmp) {
             filterRuleCmp.showHelpMessageIfInvalid();
             return validSoFar && filterRuleCmp.get("v.validity").valid;
@@ -340,24 +383,34 @@
 
         var allValid = false;*/
 
-        if (allValid) {
-            if (cmp.get("v.filterRuleMode") === 'create') {
-                //check for specific API names instead of the full row to avoid issues with the ID not matching
-                for (var i = 0; i < filterRuleList.length; i++) {
-                    if (filterRuleList[i].objectName === filterRule.objectName
-                        && filterRuleList[i].fieldName === filterRule.fieldName
-                        && filterRuleList[i].operatorName === filterRule.operatorName
-                        && filterRuleList[i].constantName === filterRule.constantName) {
-                        cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                        return canSave = false;
-                    }
+        //check for duplicates
+        if (cmp.get("v.filterRuleMode") === 'create') {
+            //check for specific API names instead of the full row to avoid issues with the ID not matching
+            for (var i = 0; i < filterRuleList.length; i++) {
+                if (filterRuleList[i].objectName === filterRule.objectName
+                    && filterRuleList[i].fieldName === filterRule.fieldName
+                    && filterRuleList[i].operatorName === filterRule.operatorName
+                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                    return canSave = false;
                 }
-                cmp.set("v.filterRuleError", "");
             }
-            return canSave;
         } else {
-            return canSave = false;
+            for (var i = 0; i < filterRuleList.length; i++) {
+                if (i !== filterRule.index
+                    && filterRuleList[i].objectName === filterRule.objectName
+                    && filterRuleList[i].fieldName === filterRule.fieldName
+                    && filterRuleList[i].operatorName === filterRule.operatorName
+                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                    return canSave = false;
+                }
+            }
         }
+
+        cmp.set("v.filterRuleError", "");
+
+        return canSave;
 
     }
 })
