@@ -277,7 +277,7 @@
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'number')}">
                                     <lightning:input class="slds-p-around_small" value="{!v.activeFilterRule.constantName}"
-                                                     required="true" label="{!v.labels.constant}" type="number"/>
+                                                     required="true" label="{!v.labels.constant}" type="number" step="any"/>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
                                     <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.constant}"
@@ -298,7 +298,8 @@
                         <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), equals(v.filterRuleFieldType, 'multipicklist'))}">
                             <lightning:dualListbox aura:id="filterRuleField" label="" class="slds-p-around_small"
                                                    sourceLabel="{!'Available ' + v.labels.constant}" selectedLabel="{!'Selected ' + v.labels.constant}"
-                                                   options="{!v.filterRuleConstantPicklist}" value="{!v.activeFilterRule.constantName}"/>
+                                                   options="{!v.filterRuleConstantPicklist}" value="{!v.activeFilterRule.constantName}"
+                                                   min="1"/>
                         </aura:if>
                     </lightning:layout>
                     <!--END CONSTANT INPUT OPTIONS-->

@@ -90,8 +90,6 @@
         helper.resetActiveFilterRule(cmp);
         cmp.set("v.filterRuleMode", "");
         cmp.set("v.filterRuleError", "")
-        //clean up shared references for unsaved data
-        cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
     },
 
     /**
@@ -107,16 +105,20 @@
     handleRowAction: function(cmp, event, helper){
         var action = event.getParam('action');
         var row = event.getParam('row');
-        cmp.set("v.activeFilterRule", row);
+        var rows = cmp.get("v.filterRuleList");
+        row.index = rows.indexOf(row);
+
+        //break the shared reference to avoid accidental data updates
+        var cleanRow = helper.restructureResponse(row);
+        cmp.set("v.activeFilterRule", cleanRow);
 
         if(action.name !== 'delete'){
             //handle modal popup
             cmp.set("v.filterRuleMode", 'edit');
             helper.toggleFilterRuleModal(cmp);
-            helper.resetFilterRuleFields(cmp, row.objectName);
-            helper.resetFilterRuleOperators(cmp, row.fieldName);
-            helper.rerenderValue(cmp, row.operatorName);
-            helper.setActiveRollupIndex(cmp, row);
+            helper.resetFilterRuleFields(cmp, cleanRow.objectName);
+            helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
+            helper.rerenderValue(cmp, cleanRow.operatorName);
 
         } else {
             //cautions user about deleting filter rule

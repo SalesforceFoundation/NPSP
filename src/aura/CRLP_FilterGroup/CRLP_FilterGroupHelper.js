@@ -135,8 +135,6 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                console.log('picklist options');
-                console.log(response.getReturnValue());
                 cmp.set("v.filterRuleConstantPicklist", response.getReturnValue());
             }
             else if (state === "ERROR") {
@@ -166,10 +164,15 @@
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
-        if (filterRuleFieldType === "multipicklist") {
+        if (filterRuleFieldType === "multipicklist" && constantName) {
             updatedLabel = constantName.join(";\n");
-        } else if (filterRuleFieldType === "text" && constantName.indexOf(";") > 0) {
-            //
+        } else if (filterRuleFieldType === "text" && constantName.indexOf(";") > 0 && constantName) {
+            var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
+            updatedLabel = constantName.replace(labelRe, ";\n");
+
+            var nameRe = /\n| /g;
+            var newConstantName = constantName.replace(nameRe, "");
+            cmp.set("v.activeFilterRule.constantName", newConstantName);
         }
 
         return updatedLabel;
@@ -180,7 +183,7 @@
      * @param operator - selected filter rule operator API name
      * @param type - DisplayType of the selected field transformed to lower case
      */
-    rerenderValue: function(cmp, operator){
+    rerenderValue: function(cmp, operator) {
         var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
@@ -284,21 +287,6 @@
     },
 
     /**
-     * @description: set the index on the activeFilterRule based on its position in the filterGroupList
-     * @param filterRule - specific filterRule
-     */
-    setActiveRollupIndex: function(cmp, filterRule) {
-        var filterRuleList = cmp.get("v.filterRuleList");
-
-        for (var i = 0; i < filterRuleList.length; i++) {
-            if (filterRuleList[i] === filterRule) {
-                cmp.set("v.activeFilterRule.index", i);
-                return;
-            }
-        }
-    },
-
-    /**
      * @description Show a message on the screen
      * @param type - error, success, info
      * @param title - message title
@@ -364,24 +352,12 @@
      * @return: boolean canSave confirming if filter group can be saved
      */
     validateFilterRuleFields: function(cmp, filterRule, filterRuleList) {
-        var canSave = true;
-        var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
         //check for field validity
-        var allValid = cmp.find("filterRuleField").reduce(function (validSoFar, filterRuleCmp) {
+        var canSave = cmp.find("filterRuleField").reduce(function (validSoFar, filterRuleCmp) {
             filterRuleCmp.showHelpMessageIfInvalid();
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
-
-        /*var fieldList = cmp.find("filterRuleField");
-        fieldList.forEach(function(comp) {
-            console.log(comp.get("v.label"));
-            console.log(JSON.stringify(comp.get("v.validity")));
-            console.log(comp.get("v.validity").valid);
-            comp.showHelpMessageIfInvalid();
-        });
-
-        var allValid = false;*/
 
         //check for duplicates
         if (cmp.get("v.filterRuleMode") === 'create') {
