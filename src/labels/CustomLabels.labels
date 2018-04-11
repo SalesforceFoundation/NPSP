@@ -6124,6 +6124,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Automatic Contact Roles</value>
     </labels>
     <labels>
+        <fullName>stgLabelBatchJobSizes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchJobSizes</shortDescription>
+        <value>Rollup Batch Job Sizes</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchJobRollupSkewSizes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchJobRollupSkewSizes</shortDescription>
+        <value>Rollup Batch Job Skew Mode Sizes</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchProcessingOptions</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelBatchProcessingOptions</shortDescription>
+        <value>Batch Processing Options</value>
+    </labels>
+    <labels>
         <fullName>stgLabelBDESettings</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6738,6 +6762,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavAllocations</shortDescription>
         <value>GAU Allocations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBatchProcessSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBatchProcessSettings</shortDescription>
+        <value>Batch Process Settings</value>
     </labels>
     <labels>
         <fullName>stgNavBDE</fullName>
