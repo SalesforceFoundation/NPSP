@@ -15,7 +15,7 @@
         />
 
     <apex:attribute name="escMsg"
-        description="If true, the page message will be escaped, by default it will not."
+        description="If false, the page message will be not be escaped, by default the message will be escaped."
         type="Boolean"
         default="true"
         required="false"
