@@ -70,7 +70,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     /**
      * @description Wrapper for UserInfo.isMultiCurrencyOrganization()
      */
-    public Boolean isMultiCurrencyOrganization() {
+    public static Boolean isMultiCurrencyOrganization() {
         return UserInfo.isMultiCurrencyOrganization();
     }
 
@@ -79,8 +79,8 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
      * - technically this will return true even if the Admin disables ACM after it's enabled the first time
      * - TODO: working on a solution for this still
      */
-    private Boolean isACMEnabled = null;
-    public Boolean isAdvancedCurrencyManagementEnabled() {
+    public static Boolean isACMEnabled = null;
+    public static Boolean isAdvancedCurrencyManagementEnabled() {
         if (isACMEnabled == null) {
             if (isMultiCurrencyOrganization()) {
                 isACMEnabled = Schema.getGlobalDescribe().containsKey('DatedConversionRate');

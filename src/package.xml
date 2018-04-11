@@ -1767,6 +1767,9 @@
         <members>stgLabelAreYouSure</members>
         <members>stgLabelAutoContactRoles</members>
         <members>stgLabelBDESettings</members>
+        <members>stgLabelBatchJobRollupSkewSizes</members>
+        <members>stgLabelBatchJobSizes</members>
+        <members>stgLabelBatchProcessingOptions</members>
         <members>stgLabelBatchStatus</members>
         <members>stgLabelCreateMissingPayments</members>
         <members>stgLabelCurrentUDR</members>
@@ -1843,6 +1846,7 @@
         <members>stgNavAffiliations</members>
         <members>stgNavAllocations</members>
         <members>stgNavBDE</members>
+        <members>stgNavBatchProcessSettings</members>
         <members>stgNavBulkProcesses</members>
         <members>stgNavConnections</members>
         <members>stgNavContactRoles</members>
