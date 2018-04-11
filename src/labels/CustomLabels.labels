@@ -620,6 +620,14 @@
         <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterRuleDuplicateError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
+        <value>This filter rule already exists on this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
         <fullName>ConfirmDeleteAccount</fullName>
         <categories>Error, Delete</categories>
         <language>en_US</language>
@@ -649,7 +657,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
-        <value>PLACEHOLDER - text for when/why users may need to use the amount, date, or detail fields.</value>
+        <value>The fields that appear in this area are determined by the selected Operation.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
@@ -1005,6 +1013,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>true</protected>
         <shortDescription>Error</shortDescription>
         <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesInfo</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Info</shortDescription>
+        <value>Info</value>
     </labels>
     <labels>
         <fullName>PageMessagesFatal</fullName>

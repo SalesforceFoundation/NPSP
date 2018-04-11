@@ -363,6 +363,13 @@ public class CRLP_DefaultConfigBuilder_SVC {
     private static List<CRLP_RollupCMT.Rollup> buildUserDefinedRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
+        Map<String, String> convertUDROperationMap = new Map<String, String>{
+                'MIN' => CRLP_Operation.RollupType.Smallest.name(),
+                'MAX' => CRLP_Operation.RollupType.Largest.name(),
+                'AVG' => CRLP_Operation.RollupType.Average.name(),
+                'SUM' => CRLP_Operation.RollupType.Sum.name()
+        };
+
         for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
             String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_','') + ' to ' +
                     udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_','');
@@ -380,7 +387,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rollup.amountField = 'Amount';
             rollup.dateObject = 'Opportunity';
             rollup.dateField = 'CloseDate';
-            rollup.operation = CRLP_Operation.getRollupTypeFromString(udr.npo02__Field_Action__c).name();
+            rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
             rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
             rollups.add(rollup);
         }

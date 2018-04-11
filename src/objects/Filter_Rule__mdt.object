@@ -80,12 +80,12 @@
                 <value>
                     <fullName>Greater</fullName>
                     <default>false</default>
-                    <label>Greater</label>
+                    <label>Greater Than</label>
                 </value>
                 <value>
                     <fullName>Less</fullName>
                     <default>false</default>
-                    <label>Less</label>
+                    <label>Less Than</label>
                 </value>
                 <value>
                     <fullName>Greater_or_Equal</fullName>

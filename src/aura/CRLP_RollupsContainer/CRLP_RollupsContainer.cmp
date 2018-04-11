@@ -227,7 +227,8 @@
     <aura:if isTrue="{!v.isRollupDetail}">
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}" summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
+                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
+                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->
@@ -236,7 +237,8 @@
     <aura:if isTrue="{!v.isFilterGroupDetail}">
         <div class="slds-p-bottom_large">
             <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}" activeFilterGroupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}" detailObjects="{#v.detailObjects}"/>
+                                mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
+                                summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </div>
     </aura:if>
     <!--END FILTER GROUP DETAIL-->

@@ -212,7 +212,7 @@ public class CRLP_RollupCMT {
         public String summaryObject;
         public String summaryObjectLabel;
         public String summaryField;
-        public String summaryFieldlabel;
+        public String summaryFieldLabel;
         public String detailObject;
         public String detailObjectLabel;
         public String detailField;
