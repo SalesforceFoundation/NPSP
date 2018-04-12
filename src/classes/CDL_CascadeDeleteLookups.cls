@@ -327,7 +327,8 @@ public class CDL_CascadeDeleteLookups {
         private String getHTMLChildrenList(Map<Id, String> childRecords) {
             List<String> result = new List<String>{'<ul>'};
             for (Id childrenRecordId : childRecords.keySet()) {
-                result.add(String.format(HTML_TEXT_CHILD_RECORDS_FORMAT, new List<String>{childrenRecordId, childRecords.get(childrenRecordId)}));
+                result.add(String.format(HTML_TEXT_CHILD_RECORDS_FORMAT,
+                    new List<String>{childrenRecordId, childRecords.get(childrenRecordId).escapeHtml4()}));
             }
             result.add('</ul>');
             
@@ -342,7 +343,7 @@ public class CDL_CascadeDeleteLookups {
         private String getPlainTextChildrenList(Map<Id, String> childRecords) {
             List<String> result = new List<String>();
             for (Id childrenRecordId : childRecords.keySet()) {
-                result.add(childRecords.get(childrenRecordId));
+                result.add(childRecords.get(childrenRecordId).escapeHtml4());
             }
             
             return String.join(result, ', ');
