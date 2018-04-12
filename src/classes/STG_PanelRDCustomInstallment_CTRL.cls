@@ -169,7 +169,7 @@ public with sharing class STG_PanelRDCustomInstallment_CTRL extends STG_Panel {
         	if (!setValues.contains(ci.Name)) {
         		isValid = false;
 	            ctrl.createDR(label.stgNavRecurringDonations, STG_PanelHealthCheck_CTRL.statusError, 
-	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name}), 
+	                string.format(label.healthDetailsInvalidRDCustomPeriod, new string[]{ci.Name.escapeHtml4()}),
 	                label.healthSolutionInvalidRDCustomPeriod);
         	}
         }
