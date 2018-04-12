@@ -20,9 +20,11 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>Default</type>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>Follow</actionName>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>List</actionName>
@@ -30,9 +32,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>SaveEdit</actionName>
@@ -328,7 +328,17 @@
         <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
-    <visibility>Public</visibility>
+    <webLinks>
+        <fullName>Batch_Gift_Entry</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Batch Gift Entry</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
+    </webLinks>
     <webLinks>
         <fullName>Process_Batch</fullName>
         <availability>online</availability>
