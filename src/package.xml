@@ -2139,6 +2139,7 @@
         <name>Letterhead</name>
     </types>
     <types>
+        <members>Batch_Template_Field__c.All</members>
         <members>Batch_Template__c.All</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
@@ -2235,6 +2236,7 @@
         <members>Address__c.Verify_Address</members>
         <members>Allocation__c.Manage_Allocations</members>
         <members>Contact.Merge_Contacts</members>
+        <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Process_Batch</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
