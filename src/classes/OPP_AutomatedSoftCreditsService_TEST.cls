@@ -212,7 +212,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testBuildRelationshipOCRs() {
         List<OpportunityContactRole> creatededOCRs = new List<OpportunityContactRole>();
 
-        Map<Id, Id> primaryContactIdToOpportunityId = new Map<Id, Id>();
+        Map<Id, List<Id>> primaryContactIdToOpportunityId = new Map<Id, List<Id>>();
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
 
         Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
@@ -220,7 +220,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         List<Opportunity> opptys = [SELECT Id, Primary_Contact__c FROM Opportunity];
         for (Opportunity eachOppty : opptys) {
-            primaryContactIdToOpportunityId.put(eachOppty.Primary_Contact__c, eachOppty.Id);
+            primaryContactIdToOpportunityId.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
         }
 
         relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(primaryContactIdToOpportunityId.keySet());
@@ -257,12 +257,12 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     * @return void
     **********************************************************************************************************/
     private static testMethod void testRetrieveOpportunityContactRoles() {
-        List<Id> opptyIds = new List<Id>();
+        List<List<Id>> opptyIds = new List<List<Id>>();
 
         Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
-            opptyIds.add(eachOppty.Id);
+            opptyIds.add(new List<Id>{ eachOppty.Id });
         }
 
         Test.startTest();
@@ -284,18 +284,18 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     **********************************************************************************************************/
     private static testMethod void testIsDuplicateOCR() {
         Boolean isDuplicate = false;
-        List<Id> opptyIds = new List<Id>();
+        List<List<Id>> opptyIds = new List<List<Id>>();
 
         Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
-            opptyIds.add(eachOppty.Id);
+            opptyIds.add(new List<Id>{ eachOppty.Id });
         }
 
         Test.startTest();
 
         Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
-        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0]);
+        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0][0]);
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
         npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];
@@ -318,18 +318,18 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     **********************************************************************************************************/
     private static testMethod void testIsNotDuplicateOCR() {
         Boolean isDuplicate = false;
-        List<Id> opptyIds = new List<Id>();
+        List<List<Id>> opptyIds = new List<List<Id>>();
 
         Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
-            opptyIds.add(eachOppty.Id);
+            opptyIds.add(new List<Id>{ eachOppty.Id });
         }
 
         Test.startTest();
 
         Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
-        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0]);
+        List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0][0]);
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
         npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];

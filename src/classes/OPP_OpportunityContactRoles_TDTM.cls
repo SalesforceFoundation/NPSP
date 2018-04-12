@@ -227,7 +227,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
 
         // Retrieve the Primary Contacts for the Opportunities
-        Map<Id, Id> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
 
         //Get existing primary contact roles for the trigger opps. 
         for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE IsPrimary = true and OpportunityId IN :listOpps]) {
@@ -287,11 +287,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         if (!listPrimaryOCRForInsert.isEmpty()) {
             insert listPrimaryOCRForInsert;
-            if (!primaryContactsToOpportunities.isEmpty()) {
-                List<sObject> relationshipOCRs
-                    = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
-                dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
-            }
+        }
+
+        if (!primaryContactsToOpportunities.isEmpty()) {
+            List<sObject> relationshipOCRs
+                = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+            dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
         }
     }
 
@@ -335,7 +336,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
 
         // Retrieve the Primary Contacts for the Opportunities
-        Map<Id, Id> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
 
         //find changed opportunities and instantiate a map entry to hold OCRs
         for (integer i=0; i<listOpps.size(); i++) {
@@ -627,10 +628,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @description Populates a Map of Primary Contact to Opportunity Id.
     * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
     * @param oppAccountDetails A Map containing the Opportunities' related Accounts.
-    * @return Map<Id, Id> contains associated Primary Contacts and Opportunity Ids.
+    * @return Map<Id, List<Id>> contains associated Primary Contacts and Opportunity Ids.
     **********************************************************************************************************/
-    public static  Map<Id, Id> populatePrimaryContactToOpportunity(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
-        Map<Id, Id> primaryContactToOpportunity = new Map<Id, Id>();
+    public static  Map<Id, List<Id>> populatePrimaryContactToOpportunity(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
+        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
 
         if (currentOpportunities.isEmpty()) {
             return primaryContactToOpportunity;
@@ -640,7 +641,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             if (eachOppty.Primary_Contact__c != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
                 && oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c) {
-                primaryContactToOpportunity.put(eachOppty.Primary_Contact__c, eachOppty.Id);
+                if (primaryContactToOpportunity.containsKey(eachOppty.Primary_Contact__c)) {
+                    List<Id> opportunities = primaryContactToOpportunity.get(eachOppty.Primary_Contact__c);
+                    opportunities.add(eachOppty.Id);
+                } else {
+                    primaryContactToOpportunity.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
+                }
             }
         }
 

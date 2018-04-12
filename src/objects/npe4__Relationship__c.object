@@ -9,9 +9,9 @@
     </compactLayouts>
     <fields>
         <fullName>Related_Opportunity_Contact_Role__c</fullName>
-        <description>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship. The Opportunity Amount rolls up to the Soft Credit Totals for the Related Contact.</description>
+        <description>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship. The Opportunity Amount rolls up to the Soft Credit Totals for the Related Contact.</inlineHelpText>
+        <inlineHelpText>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship.</inlineHelpText>
         <label>Related Opportunity Contact Role</label>
         <picklist>
             <picklistValues>

@@ -674,7 +674,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return void
     *********************************************************************************************************/
     static testMethod void testPopulatePrimaryContactToOpportunity() {
-        Map<Id, Id> primaryContactToOpportunity = new Map<Id, Id>();
+        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -693,8 +693,8 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
 
         System.assertEquals(5, primaryContactToOpportunity.size());
-        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id));
-        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id));
+        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id)[0]);
+        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id)[0]);
     }
 
 
