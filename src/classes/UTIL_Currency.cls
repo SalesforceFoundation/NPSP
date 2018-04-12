@@ -84,7 +84,8 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         if (isACMEnabled == null) {
             isACMEnabled = false;
             if (isMultiCurrencyOrganization()) {
-                Integer DCRCount = [SELECT Count() FROM DatedConversionRate LIMIT 1];
+                // Using a string in Database.query because this query won't compile if multicurrency isn't enabled
+                Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate LIMIT 1').size();
                 if (DCRCount == 1) {
                     isACMEnabled = true;
                 }
