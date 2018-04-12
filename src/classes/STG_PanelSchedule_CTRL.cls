@@ -34,9 +34,21 @@
 * @description Controller for the Schedule panel.
 */
 public with sharing class STG_PanelSchedule_CTRL extends STG_Panel {
-        
+
     /*********************************************************************************************************
-    * @description Returns the string Id of the Schedule panel. 
+    * @description Returns the string Id of the Schedule panel.
     */
-    public override string idPanel() { return 'idPanelSchedule'; }
+    public override string idPanel() {
+        return 'idPanelSchedule';
+    }
+
+    /*********************************************************************************************************
+    * @description Returns whether Advanced Currency Management is enabled or not
+    */
+    public Boolean isACMEnabled {
+        get {
+            return UTIL_Currency.isAdvancedCurrencyManagementEnabled();
+        }
+        set;
+    }
 }

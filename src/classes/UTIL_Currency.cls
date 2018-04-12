@@ -77,15 +77,17 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     /**
      * @description Returns true if Advanced Currency Management is enabled in the org
      * - technically this will return true even if the Admin disables ACM after it's enabled the first time
-     * - TODO: working on a solution for this still
+     * - This is as accurate an assessment as we can get within Apex at present.
      */
-    public static Boolean isACMEnabled = null;
+    private static Boolean isACMEnabled = null;
     public static Boolean isAdvancedCurrencyManagementEnabled() {
         if (isACMEnabled == null) {
+            isACMEnabled = false;
             if (isMultiCurrencyOrganization()) {
-                isACMEnabled = Schema.getGlobalDescribe().containsKey('DatedConversionRate');
-            } else {
-                isACMEnabled = false;
+                Integer DCRCount = [SELECT Count() FROM DatedConversionRate LIMIT 1];
+                if (DCRCount == 1) {
+                    isACMEnabled = true;
+                }
             }
         }
         return isACMEnabled;

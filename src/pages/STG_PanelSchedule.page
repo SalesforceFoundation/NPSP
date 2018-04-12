@@ -103,7 +103,7 @@
         <div class="slds-section-title--divider" >{!$Label.stgLabelBatchProcessingOptions}</div>
 
         <div class="slds-form--horizontal slds-m-around--large">
-            <div class="slds-form-element">
+            <div class="slds-form-element" style="{!IF(isACMEnabled, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Use_Dated_Conversion_Rates__c.Label}" for="cbxDatedConv" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isEditMode}" id="cbxDatedConv" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
