@@ -73,11 +73,11 @@
     <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
     <aura:attribute name="isIncomplete" type="Boolean" description="Controls whether Save button is disabled"
                     access="private" default="false"/>
-
-    <!-- TODO Refactor the notifications dialog with something better at some point -->
     <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
                     access="private" default="slds-hide"/>
-    <aura:attribute name="notificationMessage" type="String" description="Message to display" access="private"/>
+    <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
+    <aura:attribute name="toastStatus" type="String" description="Controls the color and icon of the toast. Options are info, success, error, or warning."
+                    access="private" default="success"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -92,23 +92,27 @@
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
 
+        <!--START SPINNER -->
         <div class="spinnerDiv">
             <!--Hide the spinner by default-->
             <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
         </div>
+        <!--END SPINNER-->
 
-        <div class="slds-container_center" style="text-align: center;">
-            <section id="notificationWindow" class="{! 'slds-popover slds-popover_large slds-nubbin_bottom ' + v.notificationClasses}" role="dialog"
-                     aria-label="Dialog Title" aria-describedby="dialog-body-id-2">
-                <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" title="Close dialog"
-                    onclick="{!c.closeNotificationWindow}">
-                    <lightning:buttonIcon iconName="utility:close" alternativeText="Close dialog"  />
-                </button>
-                <div class="slds-popover__body" id="dialog-body-id-2">
-                    <p>{!v.notificationMessage}</p>
+        <!--START TOAST-->
+        <div class="slds-notify_container slds-float_left">
+            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}" role="alert">
+                <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse" size="small" alternativeText="{!v.notificationText.alternativeText}"/>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.notificationText.title}</h2>
+                    <p>{!v.notificationText.message}</p>
                 </div>
-            </section>
+                <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" class="slds-notify__close" size="large"
+                                      onclick="{!c.closeNotificationWindow}" alternativeText="{!v.labels.ok}"
+                                      title="{!v.labels.close}"/>
+            </div>
         </div>
+        <!--END TOAST-->
 
         <form>
             <lightning:layout>
@@ -332,10 +336,10 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.amountObjectLabel+': '+v.activeRollup.amountFieldLabel}"
+                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.amountFieldLabel}"
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                objectLabel="{!v.activeRollup.amountObjectLabel + ': '}"
+                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"

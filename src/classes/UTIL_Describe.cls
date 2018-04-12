@@ -466,7 +466,7 @@ public class UTIL_Describe {
         if (describeField.getType() == Schema.DisplayType.PICKLIST) {
             for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
                 if (entry.isActive()) {
-                    result.add(new SelectOption(entry.getLabel(), entry.getValue()));
+                    result.add(new SelectOption(entry.getValue(), entry.getLabel()));
                 }
             }
         }

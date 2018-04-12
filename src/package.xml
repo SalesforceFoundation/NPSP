@@ -1042,6 +1042,7 @@
         <members>CMT_FilterGroupDeleteError</members>
         <members>CMT_FilterNew</members>
         <members>CMT_FilterRuleDeleteWarning</members>
+        <members>CMT_FilterRuleDuplicateError</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -1135,6 +1136,7 @@
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
+        <members>PageMessagesInfo</members>
         <members>PageMessagesFatal</members>
         <members>PageMessagesWarning</members>
         <members>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</members>

@@ -47,8 +47,8 @@ public class CMT_FilterRuleUI_SVC {
         return new Map<CMT_FilterRule.FilterOperation, String>{
                 CMT_FilterRule.FilterOperation.Equals => 'Equals',
                 CMT_FilterRule.FilterOperation.Not_Equals => 'Not_Equals',
-                CMT_FilterRule.FilterOperation.Greater => 'Greater',
-                CMT_FilterRule.FilterOperation.Less => 'Less',
+                CMT_FilterRule.FilterOperation.Greater => 'Greater Than',
+                CMT_FilterRule.FilterOperation.Less => 'Less Than',
                 CMT_FilterRule.FilterOperation.Greater_or_Equal => 'Greater_or_Equal',
                 CMT_FilterRule.FilterOperation.Less_or_Equal => 'Less_or_Equal',
                 CMT_FilterRule.FilterOperation.Starts_With => 'Starts_With',

@@ -81,7 +81,8 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String fieldName;
         @AuraEnabled public String operatorName;
         @AuraEnabled public String operatorLabel;
-        @AuraEnabled public String constant;
+        @AuraEnabled public String constantName;
+        @AuraEnabled public String constantLabel;
         @AuraEnabled public Id id;
     }
 
@@ -298,8 +299,8 @@ public with sharing class CRLP_RollupUI_SVC {
         for(Integer i=0; i<mdtList.size(); i++) {
             FilterRulesTableItem item = new FilterRulesTableItem();
 
-            String c = mdtList[i].Constant__c;
-            item.constant = c.replace(';', '\n');
+            item.constantName = mdtList[i].Constant__c;
+            item.constantLabel = item.constantName.replace(';', ';\n');
             item.operatorName = mdtList[i].Operator__c;
             item.operatorLabel = operators.get(mdtList[i].Operator__c);
             item.fieldLabel = mdtList[i].Field__r.MasterLabel;
@@ -436,6 +437,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
                 'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
                 'edit' => Label.stgBtnEdit,
+                'error' => Label.PageMessagesError,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
                 'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
@@ -443,9 +445,11 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
+                'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'hardCredit' => Label.CRLP_HardCredit,
+                'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
@@ -498,12 +502,14 @@ public with sharing class CRLP_RollupUI_SVC {
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
                 'softCredit' => Label.CRLP_SoftCredit,
+                'success' => Label.PageMessagesConfirm,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'ok' => Label.stgLabelOK,
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
-                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel()
+                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
+                'warning' => Label.PageMessagesWarning
             };
 
         for (Integer i = 2; i < 21; i++) {
@@ -515,14 +521,14 @@ public with sharing class CRLP_RollupUI_SVC {
         return labels;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Handle the save (insert/update) of a Rollup__mdt record
      * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
      * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
      * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
      * the insert (deployment) completes.
      */
-    @auraEnabled
+    @AuraEnabled
     public static String saveRollup(String rollupCMT) {
         try {
             // For new records, the RecordName property will be null by default. The process of deploying the
@@ -554,7 +560,7 @@ public with sharing class CRLP_RollupUI_SVC {
         }
     }
 
-    /**
+    /*******************************************************************************************************
      * @description When a new Rollup record is inserted, the page will only have a unique DeveloperName value to match
      * the record. However, to re-load the record and allow for editing we need to have the actual record Id.
      * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
@@ -563,7 +569,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * TODO Refactor this to work for FilterGroup+FilterRule as well as for Rollups
      * @return DeploymentResult
      */
-    @auraEnabled
+    @AuraEnabled
     public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
         Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         System.debug(crs);
@@ -602,6 +608,36 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
+    * @description Finds picklist values or record types for the constant field.
+    * @param objectName the name of the object to look up
+    * @param selectedField the name of the selected summary field.
+    * @return List<Map<String, String>> a list of mapped name to label options.
+    */
+    @AuraEnabled
+    public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
+
+        List<Map<String, String>> optionsList = new List<Map<String, String>>();
+        List<SelectOption> picklistValues = new List<SelectOption>();
+
+        if (selectedField != 'RecordTypeId') {
+            picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
+        } else {
+            Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
+            picklistValues = UTIL_RecordTypes.getRecordTypesForSelectList(sObjectType);
+        }
+
+        for (SelectOption o: picklistValues) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', o.getValue());
+            labeledOption.put('label', o.getLabel());
+
+            optionsList.add(labeledOption);
+        }
+
+        return optionsList;
+    }
+
+    /*******************************************************************************************************
     * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
     *              Includes an exception for a set summary field on the rollup detail.
     * @param objectName the name of the object to look up
@@ -626,8 +662,8 @@ public with sharing class CRLP_RollupUI_SVC {
             //check that summary field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
-                    || selectedField.equals(dfr.name)){
+            if ((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
+                    || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);
