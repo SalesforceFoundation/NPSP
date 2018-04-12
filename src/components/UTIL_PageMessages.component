@@ -14,6 +14,13 @@
         required="false"
         />
 
+    <apex:attribute name="escMsg"
+        description="If false, the page message will be not be escaped, by default the message will be escaped."
+        type="Boolean"
+        default="true"
+        required="false"
+        />
+
     <apex:outputText rendered="{!NOT(useToast)}">
         <style type="text/css">
             #page_messages .slds-notify_toast, #page_messages .slds-notify--toast {
@@ -61,9 +68,9 @@
                             <div class="slds-media__body">
                                 <h2 class="slds-text-heading_small slds-text-heading--small">
                                     <apex:outputText value="{!m.severityLabel}: " rendered="{!'' != m.severityLabel}"/>
-                                    <apex:outputText value="{!m.summary}" escape="false"/>
+                                    <apex:outputText value="{!m.summary}" escape="{!escMsg}"/>
                                 </h2>
-                                <apex:outputText styleClass="slds-m-top_medium slds-m-top--medium" value="{!m.detail}" escape="false" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
+                                <apex:outputText styleClass="slds-m-top_medium slds-m-top--medium" value="{!m.detail}" escape="{!escMsg}" rendered="{!AND(NOT(ISBLANK(m.detail)), NOT(m.summary == m.detail))}"/>
                             </div>
                         </div>
                     </div>
