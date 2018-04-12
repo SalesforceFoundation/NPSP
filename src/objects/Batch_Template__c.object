@@ -18,8 +18,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <content>BGE_TemplateCreation</content>
-        <formFactor>Large</formFactor>
+        <content>BGE_TemplateCreation</content>        
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -33,8 +32,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>BGE_TemplateCreation</content>
-        <formFactor>Large</formFactor>
+        <content>BGE_TemplateCreation</content>        
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
