@@ -1740,6 +1740,7 @@
         <members>stgHelpRollupExcludeContactOppType</members>
         <members>stgHelpRollupNDayValue</members>
         <members>stgHelpRollupPrimaryContact</members>
+        <members>stgHelpRollupSkewLimit</members>
         <members>stgHelpSalesforceSetup</members>
         <members>stgHelpSimpleAddrChangeIsUpdate</members>
         <members>stgHelpSoftCreditRoles</members>
@@ -1756,6 +1757,7 @@
         <members>stgHelpUDROperation</members>
         <members>stgHelpUDROppField</members>
         <members>stgHelpUDRTargetObject</members>
+        <members>stgHelpUseDatedConvRates</members>
         <members>stgInstallScriptError</members>
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>

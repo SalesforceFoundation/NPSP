@@ -148,17 +148,13 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPayments}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPaymentMappings}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAllocations}</a></li>
-                                <apex:outputPanel id="donorStatsTreeItem">
-                                    <!--in an output panel so it can be rerendered when CRLP enablement changes-->
-                                    <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavDonorStatistics}</a></li>
-                                </apex:outputPanel>
+                                <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><apex:outputLink id="donorStatsTreeItem" value="#" onClick="ShowPanel('idPanelOppRollup');return false;" styleClass="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavDonorStatistics}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavContactRoles}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppCampMembers}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBDE}</a></li>
-                                <apex:outputPanel id="UDRsTreeItem">
-                                    <!--in an output panel so it can be rerendered when CRLP enablement changes-->
-                                    <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow slds-m-left_large"  style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavUserDefinedRollups}</a></li>
-                                </apex:outputPanel>
+                                <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><apex:outputLink id="UDRsTreeItem" value="#" onClick="ShowPanel('idPanelUserRollup');return false;" styleClass="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavUserDefinedRollups}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.CRLP_RollupSummary}</a></li>
                             </ul>
                             <!-- Recurring Donations -->

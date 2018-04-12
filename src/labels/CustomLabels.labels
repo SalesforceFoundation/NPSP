@@ -5915,6 +5915,14 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact. Note that only the Account on the Opportunity will receive hard credit. So, if the Account Name on the Opportunity is an Organization, that Organization and the Primary Contact will receive hard credit; the Contact&apos;s Household or 1:1 Account will NOT receive hard credit. If left unselected, and the Opportunity&apos;s Account is an Organization, only the Organization will receive credit for the Opportunity.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRollupSkewLimit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupSkewLimit</shortDescription>
+        <value>The maximum number of related Opportunities on an Account or Contact allowed in the non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpSalesforceSetup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6041,6 +6049,14 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <protected>false</protected>
         <shortDescription>stgHelpUDRTargetObject</shortDescription>
         <value>The object on which the rollup information will appear.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpUseDatedConvRates</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUseDatedConvRates</shortDescription>
+        <value>When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled.</value>
     </labels>
     <labels>
         <fullName>stgInstallScriptError</fullName>

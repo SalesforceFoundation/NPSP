@@ -67,10 +67,7 @@
                         <apex:outputField value="{!stgService.stgCRLP.Rollups_Limit_on_Attached_Opps_for_Skew__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                         <apex:inputField value="{!stgService.stgCRLP.Rollups_Limit_on_Attached_Opps_for_Skew__c}" type="number" rendered="{!isEditMode}" id="tbxSkewLimit" html-aria-describedby="{!$Component.tbxSkewLimitHelp}" styleClass="slds-input" />
                         <apex:outputPanel id="tbxSkewLimitHelp" layout="block">
-                            <!--
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpCRLPSkewLimit}"/>
--->
-                            <apex:outputText styleClass="slds-form-element__help" value="The maximum number of related Opportunities on an Account or Contact allowed in the non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode."/>
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpRollupSkewLimit}"/>
                         </apex:outputPanel>
                     </div>
                 </div>
@@ -109,10 +106,7 @@
                     <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isEditMode}" id="cbxDatedConv" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
                     <apex:inputCheckbox value="{!stgService.stgHH.Use_Dated_Conversion_Rates__c}" rendered="{!isReadOnlyMode}" disabled="true" id="cbxDatedConvOff" html-aria-describedby="{!$Component.cbxDatedConvHelp}" styleClass="slds-checkbox"/>
                     <apex:outputPanel id="cbxDatedConvHelp" layout="block">
-<!--
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgDontAutoScheduleHelpText}" escape="false"/>
--->
-                        <apex:outputText styleClass="slds-form-element__help" value="When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled." escape="false"/>
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpUseDatedConvRates}" escape="false"/>
                     </apex:outputPanel>
                 </div>
             </div>
