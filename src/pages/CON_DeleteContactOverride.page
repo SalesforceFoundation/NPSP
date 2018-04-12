@@ -13,7 +13,7 @@
             />
 
             <!-- PAGE MESSAGE -->
-            <c:UTIL_PageMessages allowClose="false" id="msgs"/>
+            <c:UTIL_PageMessages allowClose="false" id="msgs" escMsg="false"/>
             
             <div class="slds-p-around_small" id="btnDiv">
                 <apex:commandButton value="{!$Label.DeleteContactLeaveAccount}"
