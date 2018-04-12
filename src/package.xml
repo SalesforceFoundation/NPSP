@@ -2138,8 +2138,7 @@
         <members>NPSP_Sample_Letterhead</members>
         <name>Letterhead</name>
     </types>
-    <types>
-        <members>Batch_Template_Field__c.All</members>
+    <types>        
         <members>Batch_Template__c.All</members>
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
