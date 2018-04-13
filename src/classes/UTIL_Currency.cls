@@ -70,7 +70,7 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     /**
      * @description Wrapper for UserInfo.isMultiCurrencyOrganization()
      */
-    public static Boolean isMultiCurrencyOrganization() {
+    public Boolean isMultiCurrencyOrganization() {
         return UserInfo.isMultiCurrencyOrganization();
     }
 
@@ -79,8 +79,8 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
      * - technically this will return true even if the Admin disables ACM after it's enabled the first time
      * - This is as accurate an assessment as we can get within Apex at present.
      */
-    private static Boolean isACMEnabled = null;
-    public static Boolean isAdvancedCurrencyManagementEnabled() {
+    private Boolean isACMEnabled = null;
+    public Boolean isAdvancedCurrencyManagementEnabled() {
         if (isACMEnabled == null) {
             isACMEnabled = false;
             if (isMultiCurrencyOrganization()) {
