@@ -147,7 +147,4 @@
     <pluralLabel>Batch Template Fields</pluralLabel>
     <searchLayouts/>
     <sharingModel>ControlledByParent</sharingModel>
-    <visibility>Public</visibility>
 </CustomObject>
-
-

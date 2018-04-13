@@ -781,7 +781,6 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <shortDescription>More ClosedWon donations than Installments</shortDescription>
         <value>There are more Closed Won Opportunities associated with this Recurring Donation than the number of Installments defined.</value>
     </labels>
-    RD_ErrorNotEnoughClosedValueForFixedLength
     <labels>
         <fullName>RD_ErrorNotEnoughClosedValueForFixedLength</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -2352,14 +2351,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidRecordtypeId</shortDescription>
         <value>Recordtype Id {0} is invalid.</value>
-    </labels>
-    <labels>
-        <fullName>healthDetailsInvalidRecordtypeName</fullName>
-        <categories>Health Check</categories>
-        <language>en_US</language>
-        <protected>false</protected>
-        <shortDescription>healthDetailsInvalidRecordtypeName</shortDescription>
-        <value>Recordtype Name {0} is invalid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidScheduledJob</fullName>

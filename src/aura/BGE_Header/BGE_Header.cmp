@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component >
 
     <div class="slds-grid slds-wrap slds-m-bottom_medium border-style" style="background-color: #f7f9fb;">
 		
