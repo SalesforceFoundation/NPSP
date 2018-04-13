@@ -45,9 +45,9 @@ public with sharing class STG_PanelSchedule_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Returns whether Advanced Currency Management is enabled or not
     */
-    public Boolean isACMEnabled {
+    public static Boolean isACMEnabled {
         get {
-            return UTIL_Currency.isAdvancedCurrencyManagementEnabled();
+            return UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled();
         }
         set;
     }
