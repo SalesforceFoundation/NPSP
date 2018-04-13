@@ -23,12 +23,6 @@
         <type>LightningComponent</type>
     </actionOverrides>
     <actionOverrides>
-        <actionName>Edit</actionName>
-        <content>BGE_TemplateCreation</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>LightningComponent</type>
-    </actionOverrides>
-    <actionOverrides>
         <actionName>Follow</actionName>
         <type>Default</type>
     </actionOverrides>
