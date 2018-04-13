@@ -351,12 +351,12 @@ public class CRLP_RollupCMT {
     public static String generateRecordName(String label, Boolean makeUnique) {
 
         // Shorten specific words
-        String recordName = label.toLowerCase().replace('general accounting unit', 'gau').replace('account', 'acct').
-                replace('contact', 'cnct').replace('recurring donation', 'rd').
-                replace('number', 'num').replace(' of ', '').replace('count', 'cnt').replace('total', 'ttl');
+        String recordName = label.replace('General Accounting Unit', 'GAU').replace('Account', 'Acct').
+                replace('Contact', 'Cnct').replace('Recurring Donation', 'RD').
+                replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
 
         // replace all special characters and double underscores
-        recordName = recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+        recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
 
         //remove leading and trailing underscores
         recordName = recordName.removeStart('_').removeEnd('_');
