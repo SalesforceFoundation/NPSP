@@ -85,9 +85,15 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
             isACMEnabled = false;
             if (isMultiCurrencyOrganization()) {
                 // Using a string in Database.query because this query won't compile if multicurrency isn't enabled
-                Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate LIMIT 1').size();
-                if (DCRCount == 1) {
-                    isACMEnabled = true;
+                // Using try/catch in case platform bug gets fixed whereby
+                // DatedConverstionRate will (accurately) not exist in MultiCurrency org without ACM enabled
+                try {
+                    Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate LIMIT 1').size();
+                    if (DCRCount == 1) {
+                        isACMEnabled = true;
+                    }
+                } catch (Exception e) {
+                    // Nothing to do, ACM = false
                 }
             }
         }
