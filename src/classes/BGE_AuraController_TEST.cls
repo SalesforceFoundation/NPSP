@@ -35,6 +35,8 @@ private class BGE_AuraController_TEST {
         Batch_Template__c templateToInsert = new Batch_Template__c();
         DataImportBatch__c dataImportBatchToInsert = new DataImportBatch__c();
 
+        templateToInsert.Name = 'Test';
+
         insert templateToInsert;
         insert dataImportBatchToInsert;
 
