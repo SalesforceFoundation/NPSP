@@ -439,6 +439,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
+                'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveTimeout' => String.format(System.Label.CRLP_SaveTimeout, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'hardCredit' => Label.CRLP_HardCredit,
                 'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
@@ -470,6 +474,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'objectOpportunity' => Schema.SObjectType.Opportunity.getName(),
                 'objectPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getName(),
                 'objectRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getName(),
+                'ok' => Label.stgLabelOK,
                 'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
                 'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
@@ -482,13 +487,11 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
+                'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveTimeout' => String.format(System.Label.CRLP_SaveTimeout, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'save' => Label.stgBtnSave,
-                /* TODO Refactor this to use custom labels when have all save logic in place */
-                'rollupSaveProgress' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
-                'rollupSaveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
-                'rollupSaveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
-                'rollupSaveTimeout' => String.format('Saving the {0} has timed out. Please see the Customizable Rollups documentation for more information.',
-                        new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'saveAndNew' => Label.lvlBtnSaveAndNew,
                 'selectOne' => Label.stgSelectOne,
                 'selectAll' => Label.conMergeSelectAll,
@@ -496,10 +499,9 @@ public with sharing class CRLP_RollupUI_SVC {
                 'success' => Label.PageMessagesConfirm,
                 'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
-                'ok' => Label.stgLabelOK,
+                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'view' => Label.stgLabelView,
-                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
                 'warning' => Label.PageMessagesWarning
             };
 
@@ -543,11 +545,40 @@ public with sharing class CRLP_RollupUI_SVC {
             // Trigger the asynchronous deployment process
             String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
 
-            // Return the unique record DeveloperName value
+            // Return the unique record DeveloperName value of the Rollup__mdt record
             return jobId + '-' + rollupCMTObj.recordName;
         } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
             throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
 
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
+     * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
+     * the insert (deployment) completes.
+     */
+    @AuraEnabled
+    public static String saveFilterGroupAndRules(String filterGroupCMT) {
+        try {
+            // For new records, the RecordName property will be null by default. The process of deploying the
+            // CMT data will generate a unique RecordName to use for the new record.
+            CRLP_RollupCMT.FilterGroup filterGroupCMTObj = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(filterGroupCMT, CRLP_RollupCMT.FilterGroup.class);
+
+            // Queue up the deployment
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup>{filterGroupCMTObj});
+
+            // Trigger the asynchronous deployment process
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+
+            // Return the unique record DeveloperName value of the FilterGroup__mdt record
+            return jobId + '-' + filterGroupCMTObj.recordName;
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
         }
     }
 

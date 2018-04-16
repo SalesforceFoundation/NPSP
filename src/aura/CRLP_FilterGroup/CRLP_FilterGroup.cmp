@@ -44,7 +44,7 @@
     <aura:attribute name="cachedFilterGroup" type="Map"
                     description="The active filter group displayed. Only populated from Clone, View and Edit."/>
     <aura:attribute name="activeFilterRule" type="Map" description="Selected values for actively edited filter rule." access="public"
-                    default="{objectName: '', fieldName: '', operatorName: '', constant: ''}"/>
+                    default="{objectName: '', fieldName: '', operation: '', value: ''}"/>
     <aura:attribute name="mode" type="String" access="public"
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
@@ -58,6 +58,8 @@
     <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" default="text"/>
 
     <!-- private attributes -->
+    <aura:attribute name="deletedRuleList" type="List" description="Filter Rules that were deleted" access="private"/>
+    <aura:attribute name="isPageDirty" type="Boolean" default="false" access="private" description="True when there are changes to be saved"/>
     <aura:attribute name="filterRuleColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="filterRuleActionColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="operatorMap" type="Map" description="Map of operators with key value pairs of API names and labels" access="private"/>
@@ -186,7 +188,7 @@
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
-                            <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSave}"/>
+                            <lightning:button label="{!v.labels.save}" variant="brand" onclick="{!c.onSaveFilterGroupAndRules}"/>
                         </lightning:layout>
                     </div>
                 </aura:if>
@@ -247,12 +249,12 @@
                         <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.operator}"
-                                                  value="{!v.activeFilterRule.operatorName}"
+                                                  value="{!v.activeFilterRule.operation}"
                                                   required="true"
                                                   onchange="{!c.onChangeFilterRuleOperator}">
                                     <option value="" text=""/>
                                     <aura:iteration items="{!v.filteredOperators}" var="option">
-                                        <option value="{!option.value}" text="{!option.label}" selected="{!option.value == v.activeFilterRule.operatorName}"/>
+                                        <option value="{!option.value}" text="{!option.label}" selected="{!option.value == v.activeFilterRule.operation}"/>
                                     </aura:iteration>
                                 </lightning:select>
                             </lightning:layoutItem>
@@ -309,7 +311,7 @@
                     <button class="slds-button slds-button_neutral"
                             onclick="{!c.cancelFilterRule}">{!v.labels.cancel}</button>
                     <button class="slds-button slds-button_brand"
-                            onclick="{!c.saveFilterRule}">{!if(v.filterRuleMode == 'delete', v.labels.delete, v.labels.save)}</button>
+                            onclick="{!c.onQueueFilterRuleSave}">{!if(v.filterRuleMode == 'delete', v.labels.delete, v.labels.save)}</button>
                 </footer>
             </div>
         </section>

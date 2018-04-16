@@ -183,7 +183,11 @@ public class CRLP_RollupCMT {
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
             if (this.label == null) {
-                this.label = (this.filterGroupRecordName.left(20) + 'Rule: ' + this.objectName + '.' + this.fieldName +
+                String prefix = this.filterGroupRecordName;
+                if (prefix.countMatches('_') > 1) {
+                    prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
+                }
+                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
                         ' ' + this.operation).left(40);
             }
             if (this.recordName == null) {
@@ -368,9 +372,7 @@ public class CRLP_RollupCMT {
     public static String generateRecordName(String label, Boolean makeUnique) {
 
         // Shorten specific words
-        String recordName = label.replace('General Accounting Unit', 'GAU').replace('Account', 'Acct').
-                replace('Contact', 'Cnct').replace('Recurring Donation', 'RD').
-                replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
+        String recordName = abbreviateForSpace(label);
 
         // replace all special characters and double underscores
         recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
@@ -415,5 +417,17 @@ public class CRLP_RollupCMT {
      */
     private static String combineObjectAndField(String objName, String fieldName) {
         return objName + (fieldName != null ? '.' + fieldName : '');
+    }
+
+    private static String abbreviateForSpace(String txt) {
+        return txt.replace('General Accounting Unit', 'GAU').
+                replace('Opportunity', 'Opp').
+                replace('Account', 'Acct').
+                replace('Contact', 'Cnct').
+                replace('Recurring Donation', 'RD').
+                replace('Partial Soft Credit', 'PSC').
+                replace('Payment', 'Pmt').
+                replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
+                replace('number', 'num').replace('count', 'cnt').replace('total', 'sum').replace(' of ', '');
     }
 }

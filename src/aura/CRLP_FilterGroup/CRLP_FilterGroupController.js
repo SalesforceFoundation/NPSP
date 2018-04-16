@@ -22,15 +22,11 @@
             if (state === "SUCCESS") {
                 var data = helper.restructureResponse(response.getReturnValue());
                 var model = JSON.parse(data);
-// console.log(JSON.stringify(model));
                 if(activeFilterGroupId){
                     //note: the parsing is important to avoid a shared reference
                     cmp.set("v.activeFilterGroup", helper.restructureResponse(model.filterGroup));
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
-console.log(model.filterGroup.description);
-console.log(model.filterGroup);
-
                 cmp.set("v.operatorMap", model.operators);
 
                 var labels = cmp.get("v.labels");
@@ -52,8 +48,11 @@ console.log(model.filterGroup);
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
-                cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
-                cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
+                var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                cmp.set("v.filterRuleList", filterRuleList);
+                cmp.set("v.cachedFilterRuleList", filterRuleListCached);
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
@@ -196,15 +195,18 @@ console.log(model.filterGroup);
     /**
      * @description: saves a new filter group and associated filter rules
      */
-    onSave: function(cmp, event, helper){
+    onSaveFilterGroupAndRules: function(cmp, event, helper){
         //placeholder for on cancel function in !view mode
         //add check for description, name and a filter rule
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
-        var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
+        var filterRuleList = cmp.get("v.filterRuleList");
+        var deletedRuleList = cmp.get("v.deletedRuleList");
+        var canSave = helper.validateFilterGroupFields(cmp);
         if(canSave){
             cmp.set("v.mode", 'view');
 
             //todo: add save code here
+            helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
@@ -218,8 +220,9 @@ console.log(model.filterGroup);
 
     /**
      * @description: adds, edits or deletes filter on the list of filter rules on the filter group
+     * Only flags the row record for saving
      */
-    saveFilterRule: function(cmp, event, helper){
+    onQueueFilterRuleSave: function(cmp, event, helper){
         //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
         var filterRuleList = cmp.get("v.filterRuleList");
@@ -248,11 +251,17 @@ console.log(model.filterGroup);
                     filterRuleList[filterRule.index] = filterRule;
                 }
                 cmp.set("v.filterRuleList", filterRuleList);
+                cmp.set("v.isPageDirty", true);
 
                 helper.toggleFilterRuleModal(cmp);
                 helper.resetActiveFilterRule(cmp);
             }
         } else {
+            if (filterRule.recordId) {
+                var deletedRuleList = cmp.get("v.deletedRuleList");
+                deletedRuleList.push(filterRule);   // queue this rule for deleting if was previously saved
+                cmp.set("v.deletedRuleList", deletedRuleList);
+            }
             filterRuleList.splice(filterRule.index, 1);
             cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);

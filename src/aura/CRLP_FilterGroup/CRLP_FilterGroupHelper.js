@@ -155,24 +155,24 @@
 
     /**
      * @description: parses the constant label into constant name form depending on the format of the value
-     * @param constantName - API name of the constant
-     * @param operatorName - API name of the operator
+     * @param valueApiName - API name of the constant
+     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatConstantLabel: function(cmp, constantName, operatorName){
+    reformatConstantLabel: function(cmp, valueApiName, operation){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
-        if (filterRuleFieldType === "multipicklist" && constantName) {
-            updatedLabel = constantName.join(";\n");
-        } else if (filterRuleFieldType === "text" && constantName.indexOf(";") > 0 && constantName) {
+        if (filterRuleFieldType === "multipicklist" && valueApiName) {
+            updatedLabel = valueApiName.join(";\n");
+        } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
-            updatedLabel = constantName.replace(labelRe, ";\n");
+            updatedLabel = valueApiName.replace(labelRe, ";\n");
 
             var nameRe = /\n| /g;
-            var newConstantName = constantName.replace(nameRe, "");
-            cmp.set("v.activeFilterRule.constantName", newConstantName);
+            var newValueApiName = valueApiName.replace(nameRe, "");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         }
 
         return updatedLabel;
@@ -231,7 +231,7 @@
      * @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp) {
-        var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
+        var defaultFilterRule = {objectName: '', fieldName: '', operation: '', constant: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
         cmp.set("v.filterRuleFieldType", "text");
@@ -284,6 +284,68 @@
             }
         }
         return label;
+    },
+
+    /**
+     * @description Save the filter group and any modified filter rules
+     * @param activeFilterGroup
+     * @param filterRuleList
+     * @param deletedRuleList
+     */
+    saveFilterGroupAndRules : function(cmp, activeFilterGroup, filterRuleList, deletedRuleList) {
+        this.toggleSpinner(cmp, true);
+
+        var filterGroupCMT = activeFilterGroup;
+        filterGroupCMT.rules = filterRuleList;
+        if (deletedRuleList) {
+            for (var i = 0; i < deletedRuleList.length; i++) {
+                deletedRuleList[i].isDeleted = true;
+                filterGroupCMT.rules.push(deletedRuleList[i]);
+            }
+        }
+        // Ensure all rules are attached to the current FilterGroup
+        for (var i = 0; i < filterGroupCMT.rules.length; i++) {
+            filterGroupCMT.rules[i].filterGroupRecordName = filterGroupCMT.recordName;
+        }
+
+        console.log(JSON.stringify(filterGroupCMT));
+
+        var action = cmp.get("c.saveFilterGroupAndRules");
+        action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            console.log('STATE=' + state);
+
+            if (state === "SUCCESS") {
+                // Response value will be in the format of "JobId-RecordDeveloperName"
+                var responseText = response.getReturnValue();
+                var jobId = responseText.split("-")[0];
+                var recordName = responseText.split("-")[1];
+
+                console.log('Response = ' + response.getReturnValue());
+                console.log('Returned jobId = ' + jobId);
+                console.log('Returned RecordName = ' + recordName);
+
+                /*cmp.set("v.activeRollup.recordName", recordName);
+                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                    cmp.set("v.cachedRollup.recordName", recordName);
+                }*/
+
+                console.log('Calling pollForDeploymentStatus');
+                // this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+            } else if (state === "ERROR") {
+
+                var errors = response.getError();
+                var msg = "Unknown error";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
+                }
+                this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                this.toggleSpinner(cmp, false);
+            }
+        });
+        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        $A.enqueueAction(action);
     },
 
     /**
@@ -365,8 +427,8 @@
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operatorName === filterRule.operatorName
-                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    && filterRuleList[i].operation === filterRule.operation
+                    && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;
                 }
@@ -376,8 +438,8 @@
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operatorName === filterRule.operatorName
-                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    && filterRuleList[i].operation === filterRule.operation
+                    && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;
                 }
