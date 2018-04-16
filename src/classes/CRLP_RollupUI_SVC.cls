@@ -74,7 +74,7 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_rule__mdt records for the filter group detail.
     */
-    public class FilterRulesTableItem{
+    /*public class FilterRulesTableItem{
         @AuraEnabled public String objectLabel;
         @AuraEnabled public String objectName;
         @AuraEnabled public String fieldLabel;
@@ -84,7 +84,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String constantName;
         @AuraEnabled public String constantLabel;
         @AuraEnabled public Id id;
-    }
+    }*/
 
     /*******************************************************************************************************
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
@@ -114,8 +114,8 @@ public with sharing class CRLP_RollupUI_SVC {
     * Filter rules need to be flattened for use within the lightning:datatable.
     */
     public class FilterGroupModel {
-        @AuraEnabled public Filter_Group__mdt filterGroup;
-        @AuraEnabled public List<FilterRulesTableItem> filterRuleList;
+        @AuraEnabled public CRLP_RollupCMT.FilterGroup filterGroup;
+        @AuraEnabled public List<CRLP_RollupCMT.FilterRule> filterRuleList;
         @AuraEnabled public Map<String,String> operators;
         @AuraEnabled public Map<String,List<Map<String,String>>> filterFieldsByDataType;
 
@@ -287,29 +287,20 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static FilterGroupModel setupFilterGroupDetail(Id id, List<String> objectNames) {
+    public static FilterGroupModel setupFilterGroupDetail(Id groupId, List<String> objectNames) {
 
-        List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
+        List<CRLP_RollupCMT.FilterRule> mdtTableList = new List<CRLP_RollupCMT.FilterRule>();
         Map<String,String> operators = getfilterRuleOperations();
 
-        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(id);
+        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(groupId);
 
         List<Filter_Rule__mdt> mdtList = CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id);
 
         for(Integer i=0; i<mdtList.size(); i++) {
-            FilterRulesTableItem item = new FilterRulesTableItem();
+            CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(mdtList[i]);
+            ruleItem.operationLabel = operators.get(ruleItem.operation);
 
-            item.constantName = mdtList[i].Constant__c;
-            item.constantLabel = item.constantName.replace(';', ';\n');
-            item.operatorName = mdtList[i].Operator__c;
-            item.operatorLabel = operators.get(mdtList[i].Operator__c);
-            item.fieldLabel = mdtList[i].Field__r.MasterLabel;
-            item.fieldName = mdtList[i].Field__r.QualifiedApiName;
-            item.objectLabel = mdtList[i].Object__r.MasterLabel;
-            item.objectName = mdtList[i].Object__r.QualifiedApiName;
-            item.id = mdtList[i].id;
-
-            mdtTableList.add(item);
+            mdtTableList.add(ruleItem);
         }
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
@@ -321,7 +312,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         FilterGroupModel model = new FilterGroupModel();
 
-        model.filterGroup = filterGroup;
+        model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
         model.filterRuleList = mdtTableList;
         model.operators = operators;
         model.filterFieldsByDataType = objNameToFieldTypeMap;

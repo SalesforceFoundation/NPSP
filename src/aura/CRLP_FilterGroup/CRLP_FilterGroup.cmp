@@ -117,7 +117,7 @@
                             <lightning:input aura:id="nameInput"
                                              label="{!v.labels.name}"
                                              name="{!v.labels.name}"
-                                             value="{!v.activeFilterGroup.MasterLabel}"
+                                             value="{!v.activeFilterGroup.label}"
                                              required="{! !v.isReadOnly}"
                                              readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
@@ -128,7 +128,7 @@
                             <lightning:textarea aura:id="descriptionInput"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
-                                                value="{!v.activeFilterGroup.Description__c}"
+                                                value="{!v.activeFilterGroup.description}"
                                                 readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
                     </lightning:layout>

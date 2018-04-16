@@ -72,13 +72,14 @@ public class CRLP_RollupUI_TEST {
         // Create the test CMDT data
         mockRollupCMTValues();
 
-        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.cachedFilterGroups[0];
+        Filter_Group__mdt filterGroupMdt = CMT_FilterRule_SEL.cachedFilterGroups[0];
+        CRLP_RollupCMT.FilterGroup filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroupMdt);
 
         List<String> objectList = new List<String>{'Opportunity'};
 
-        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.Id, objectList);
+        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.recordId, objectList);
 
-        System.assertEquals(filterGroup,filterGroupModel.filterGroup, 'The Filter Group should match what was passed in');
+        System.assertEquals(filterGroup.recordName,filterGroupModel.filterGroup.recordName, 'The Filter Group should match what was passed in');
         System.assertEquals(3,filterGroupModel.filterRuleList.size(), 'There should be 3 Filter Rules');
         System.assertEquals(13,filterGroupModel.operators.size(), 'There should be 13 operators');
         System.assertEquals(objectList.size(),filterGroupModel.filterFieldsByDataType.size(), 'There should be one entry for each object passed in');

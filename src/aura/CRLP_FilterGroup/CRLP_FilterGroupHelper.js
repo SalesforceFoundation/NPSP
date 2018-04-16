@@ -329,8 +329,8 @@
      */
     validateFilterGroupFields: function(cmp) {
         var canSave = true;
-        var name = cmp.get("v.activeFilterGroup.MasterLabel");
-        var description = cmp.get("v.activeFilterGroup.Description__c");
+        var name = cmp.get("v.activeFilterGroup.label");
+        var description = cmp.get("v.activeFilterGroup.description");
         var filterRuleList = cmp.get("v.filterRuleList");
 
         cmp.find("nameInput").showHelpMessageIfInvalid();

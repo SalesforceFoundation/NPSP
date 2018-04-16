@@ -37,13 +37,13 @@
 
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
-                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
                     , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
                 ];
 
                 var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
-                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
                     , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
@@ -53,7 +53,7 @@
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
-                helper.filterRollupList(cmp, model.filterGroup.MasterLabel, labels);
+                helper.filterRollupList(cmp, model.filterGroup.label, labels);
                 helper.changeMode(cmp);
 
             }
@@ -118,7 +118,7 @@
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
-            helper.rerenderValue(cmp, cleanRow.operatorName);
+            helper.rerenderValue(cmp, cleanRow.operation);
 
         } else {
             //cautions user about deleting filter rule
@@ -167,7 +167,7 @@
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
-        cmp.set("v.activeFilterRule.operatorName", "");
+        cmp.set("v.activeFilterRule.operation", "");
     },
 
     /**
@@ -205,7 +205,7 @@
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
-                'message': activeFilterGroup.MasterLabel,
+                'message': activeFilterGroup.label,
                 'channel': 'nameChange'
             });
             sendMessage.fire();
@@ -228,13 +228,13 @@
                 //set field labels directly
                 filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
                 filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
-                filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
+                filterRule.operationLabel = helper.retrieveFieldLabel(filterRule.operation, cmp.get("v.filteredOperators"));
 
                 //special reformatting for multipicklist and semi-colon delimited lists
-                if (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List') {
-                    filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operatorName);
+                if (filterRule.operation === 'In_List' || filterRule.operation === 'Not_In_List') {
+                    filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operation);
                 } else {
-                    filterRule.constantLabel = filterRule.constantName;
+                    filterRule.valueLabel = filterRule.valueName;
                 }
 
                 //if mode is create, just add to list, otherwise update the item in the existing list
