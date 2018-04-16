@@ -24,10 +24,10 @@
 
             <apex:actionPoller action="{!checkDeploymentStatus}"
                                enabled="{!isPolling}"
-                               reRender="form, fullTree"
+                               reRender="form"
                                interval="5"
                                status="deploymentStatus"
-                               onComplete="reRenderTree({!stgService.stgCRLP.Customizable_Rollups_Enabled__c})"/>
+                               />
 
             <div class="{!IF(isHHAccount, '', 'slds-hide')}">
 
@@ -49,7 +49,7 @@
                 </div>
 
                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status" styleClass="slds-button slds-button_small slds-button_brand" onClick="reRenderTree()"/>
+                    <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
                     <apex:commandButton id="cancelOppRollups" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
                     <apex:commandButton id="navigate" value="Go to Customizable Rollup Summaries Setup" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>

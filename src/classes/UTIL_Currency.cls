@@ -77,15 +77,24 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     /**
      * @description Returns true if Advanced Currency Management is enabled in the org
      * - technically this will return true even if the Admin disables ACM after it's enabled the first time
-     * - TODO: working on a solution for this still
+     * - This is as accurate an assessment as we can get within Apex at present.
      */
     private Boolean isACMEnabled = null;
     public Boolean isAdvancedCurrencyManagementEnabled() {
         if (isACMEnabled == null) {
+            isACMEnabled = false;
             if (isMultiCurrencyOrganization()) {
-                isACMEnabled = Schema.getGlobalDescribe().containsKey('DatedConversionRate');
-            } else {
-                isACMEnabled = false;
+                // Using a string in Database.query because this query won't compile if multicurrency isn't enabled
+                // Using try/catch in case platform bug gets fixed whereby
+                // DatedConverstionRate will (accurately) not exist in MultiCurrency org without ACM enabled
+                try {
+                    Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate LIMIT 1').size();
+                    if (DCRCount == 1) {
+                        isACMEnabled = true;
+                    }
+                } catch (Exception e) {
+                    // Nothing to do, ACM = false
+                }
             }
         }
         return isACMEnabled;
