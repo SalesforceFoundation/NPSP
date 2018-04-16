@@ -77,7 +77,8 @@ public class CRLP_RollupUI_TEST {
 
         List<String> objectList = new List<String>{'Opportunity'};
 
-        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.recordId, objectList);
+        String modelString = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.recordId, objectList);
+        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = (CRLP_RollupUI_SVC.FilterGroupModel)JSON.deserialize(modelString, CRLP_RollupUI_SVC.FilterGroupModel.class);
 
         System.assertEquals(filterGroup.recordName,filterGroupModel.filterGroup.recordName, 'The Filter Group should match what was passed in');
         System.assertEquals(3,filterGroupModel.filterRuleList.size(), 'There should be 3 Filter Rules');
