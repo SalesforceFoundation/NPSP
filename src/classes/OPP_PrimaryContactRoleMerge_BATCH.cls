@@ -48,15 +48,8 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     * @return void.
     ********************************************************************************************************/
     public void execute(Database.BatchableContext BC, List<Opportunity> scope) {
-        List<AggregateResult> primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(scope);
-        if (primaryOCRsAggregateResult.isEmpty()) {
-            return;
-        }
-
-        OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs  = new OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
-        String settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
-        validateOpportunityOCRs(duplicatePrimaryOCRs, settingsRole);
-        mergeDuplicatePrimaryOCRs(duplicatePrimaryOCRs, settingsRole);
+        OPP_PrimaryContactRoleMerge primaryContactRoleMerge = new OPP_PrimaryContactRoleMerge(scope);
+        primaryContactRoleMerge.run();
     }
 
     /******************************************************************************************************
@@ -64,63 +57,5 @@ public class OPP_PrimaryContactRoleMerge_BATCH  implements Database.Batchable<sO
     */
     public void finish(Database.BatchableContext info) {
         
-    }
-
-    /*******************************************************************************************************
-    * @description Gets the Opportunities with duplicate primary OCRs.
-    * @param List<Opportunity> The List of the Opportunities.
-    * @return List<AggregateResult> The Aggregate Result that contains the List of the duplicate primary OCRs.
-    ********************************************************************************************************/
-    private List<AggregateResult> getPrimaryOCRsAggregateResult(List<Opportunity> opportunities) {
-        return [
-            SELECT OpportunityId 
-            FROM OpportunityContactRole 
-            WHERE IsPrimary = true 
-            AND OpportunityId IN :opportunities
-            GROUP BY OpportunityId 
-            HAVING COUNT(Id) > 1
-        ];
-    }
-
-    /*******************************************************************************************************
-    * @description Validates if the Opportunity primary OCRs contains at least the Role defined
-    * in the NPSP Settings. If there is no OCR with NPSP Settings Role, then logs an error.
-    * @param DuplicatePrimaryOCRs The Duplicate Primary OCRs object.
-    * @param String The Role defined in NPSP Settings.
-    * @return void.
-    ********************************************************************************************************/
-    private void validateOpportunityOCRs(OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
-        OPP_PrimaryContactRoleMerge.Errors errors = new OPP_PrimaryContactRoleMerge.Errors();
-        for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs(opportunityRecord);
-
-            if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
-                errors.add(opportunityRecord);
-            }
-        }
-        errors.processDML();
-    }
-
-    /*******************************************************************************************************
-    * @description Merges the Opportunity primary OCRs, by deleting the OCRs with blank roles and
-    * roles different than the one defined in the NPSP Settings. 
-    * @param DuplicatePrimaryOCRs The Duplicate Primary OCRs object.
-    * @param String The Role defined in NPSP Settings.
-    * @return void.
-    ********************************************************************************************************/
-    private void mergeDuplicatePrimaryOCRs(OPP_PrimaryContactRoleMerge.DuplicatePrimaryOCRs duplicatePrimaryOCRs, String settingsRole) {
-        for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OPP_PrimaryContactRoleMerge.OpportunityPrimaryOCRs(opportunityRecord);
-
-            if (opportunityPrimaryOCRs.containsRole(settingsRole)) {
-                duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getBlankRole());
-                duplicatePrimaryOCRs.deleteRecords(opportunityPrimaryOCRs.getRoleNotEquals(settingsRole));
-                List<OpportunityContactRole> settingsRoleOCRs = opportunityPrimaryOCRs.getRoleEquals(settingsRole);
-                duplicatePrimaryOCRs.makePrimary(settingsRoleOCRs[0]);
-                settingsRoleOCRs.remove(0);
-                duplicatePrimaryOCRs.deleteRecords(settingsRoleOCRs);
-            }
-        }
-        duplicatePrimaryOCRs.processDML();
     }
 }
