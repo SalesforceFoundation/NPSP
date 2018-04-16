@@ -38,8 +38,9 @@
 private class OPP_PrimaryContactRoleMerge_TEST {
 
     /*********************************************************************************************************
-    * @description Given an Opportunity with multiple primary OCRs with Role != NPSP Settings Role 
-    * when the batch runs, then an error log created, containing a link to the Opportunity.
+    * @description Given an Opportunity with blank Primary Contact AND the Opportunity has duplicate primary 
+    * OCRs with Role != NPSP Settings Role, when the batch runs, then an error log created, containing a link 
+    * to the Opportunity.
     */
     @isTest static void test_LogErrorIfNoOCRsRoleDefinedInNPSPSettings() {
         String nonNPSPRole = 'NON_NPSP_ROLE';
@@ -52,7 +53,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             Name = 'TEST_OPPORTUNITY',
             StageName = UTIL_UnitTestData_TEST.getOpenStage(),
             CloseDate = Date.today(),
-            AccountId = account.Id
+            AccountId = account.Id,
+            Primary_Contact__c = null
         );
         insert opportunity;
 
@@ -103,7 +105,6 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
             FROM Error__c
         ];
-
         System.assertEquals(1, errors.size(), 'An Error Log should be created');
         System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
         System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
@@ -112,13 +113,12 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Given an Opportunity with multiple primary OCRs and the OCRs have Role equals to 
-    * (NPSP Settings Role, blank, NOT “NPSP Settings Role”) when the Batch runs, then the primary OCRs
-    * with blank role AND role not defined in NPSP Settings, should be deleted. The Opportunity should have 
-    * only 1 primary OCR with role equals to the NPSP Settings Role. The Opportunity's field Primary Contact
-    * should be equals to the Contact on the primary OCR.
+    * @description Given an Opportunity with blank Primary Contact AND the Opportunity has duplicate primary  
+    * OCRs AND the OCRs have Role equals to (NPSP Settings Role, blank, NOT “NPSP Settings Role”) when the 
+    * Batch runs, then the primary OCRs with blank role AND role not defined in NPSP Settings, should be 
+    * deleted. The Opportunity should have only 1 primary OCR with role equals to the NPSP Settings Role.
     */
-    @isTest static void test_SingleContact_DeleteBlankAndNonNPSPRole() {
+    @isTest static void test_DeleteBlankAndNonNPSPRole() {
         String npspRole = 'DONOR';
         String nonNPSPRole = 'NON_NPSP_ROLE';
 
@@ -133,7 +133,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             Name = 'TEST_Opportunity',
             StageName = UTIL_UnitTestData_TEST.getOpenStage(),
             CloseDate = Date.today(),
-            AccountId = account.Id
+            AccountId = account.Id,
+            Primary_Contact__c = null
         );
         insert opportunity;
 
@@ -205,6 +206,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             SELECT Name, (
                 SELECT OpportunityId, ContactId, IsPrimary, Role
                 FROM OpportunityContactRoles
+                WHERE IsPrimary = true
             )
             FROM Opportunity
             WHERE Id = :opportunity.Id
@@ -215,7 +217,95 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         System.assertEquals(1, expectedOpportunities[0].OpportunityContactRoles.size());
         System.assert(contact.Id == expectedOpportunities[0].OpportunityContactRoles[0].ContactId);
         System.assert(npspRole == expectedOpportunities[0].OpportunityContactRoles[0].Role);
-        System.assertEquals(true, expectedOpportunities[0].OpportunityContactRoles[0].IsPrimary);
+
+        List<Error__c> errors = [
+            SELECT Object_Type__c, Full_Message__c 
+            FROM Error__c
+        ];
+
+        System.assertEquals(0, errors.size(), 'No Error Log should be created.');
+    }
+
+    /*********************************************************************************************************
+    * @description Given an Opportunity with a Primary Contact AND the Opportunity has duplicate primary OCRs,
+    * AND the duplicate Primary OCRs Contact != Opportunity Primary Contact, when the Batch runs, then the primary
+    * OCR the Opportunity should have only 1 primary Contact with Contact = Opportunity Primary Contact.
+    */
+    @isTest static void test_PrimaryContactToNonPrimaryOCR() {
+
+        deactivateTriggers();
+        Account account = new Account(Name = 'TEST_ACCOUNT');
+        insert account;
+        
+        Contact firstContact = new Contact(LastName = 'TEST_FIRST_CONTACT');
+        Contact secondContact = new Contact(LastName = 'TEST_SECOND_CONTACT');
+        insert new List<Contact>{firstContact, secondContact};
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'TEST_Opportunity',
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            CloseDate = Date.today(),
+            AccountId = account.Id,
+            Primary_Contact__c = secondContact.Id
+        );
+        insert opportunity;
+
+        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = firstContact.Id,
+                IsPrimary = true
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = firstContact.Id,
+                IsPrimary = true
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = secondContact.Id,
+                IsPrimary = false
+            )
+        };
+        insert ocrs;
+        activateTriggers();
+
+        List<Opportunity> expectedOpportunities = [
+            SELECT Name, (
+                SELECT OpportunityId, ContactId, IsPrimary, Role
+                FROM OpportunityContactRoles
+            )
+            FROM Opportunity
+            WHERE Id = :opportunity.Id
+        ];
+        
+        System.assertEquals(1, expectedOpportunities.size());
+        System.assertEquals(3, expectedOpportunities[0].OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : expectedOpportunities[0].OpportunityContactRoles) {
+            System.assertEquals(
+                (expectedOCR.ContactId == firstContact.Id), 
+                expectedOCR.IsPrimary
+            );
+        }
+
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Test.stopTest();
+
+        expectedOpportunities = [
+            SELECT Name, (
+                SELECT OpportunityId, ContactId
+                FROM OpportunityContactRoles
+                WHERE IsPrimary = true
+            )
+            FROM Opportunity
+            WHERE Id = :opportunity.Id
+        ];
+        
+        // Opportunity should have only 1 primary OCR, with ContactId = Opportunity Primary Contact.
+        System.assertEquals(1, expectedOpportunities.size());
+        System.assertEquals(1, expectedOpportunities[0].OpportunityContactRoles.size());
+        System.assert(secondContact.Id == expectedOpportunities[0].OpportunityContactRoles[0].ContactId);
 
         List<Error__c> errors = [
             SELECT Object_Type__c, Full_Message__c 
@@ -225,6 +315,95 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         System.assertEquals(0, errors.size(), 'No Error Log should be created.');
     }
     
+    /*********************************************************************************************************
+    * @description Given an Opportunity with a Primary Contact AND the Opportunity has duplicate primary OCRs,
+    * AND the duplicate Primary OCRs Contact = Opportunity Primary Contact, when the Batch runs, then the primary
+    * OCR the Opportunity should have only 1 primary Contact with Contact = Opportunity Primary Contact.
+    */
+    @isTest static void test_PrimaryContactToPrimaryOCR() {
+
+        deactivateTriggers();
+        Account account = new Account(Name = 'TEST_ACCOUNT');
+        insert account;
+        
+        Contact firstContact = new Contact(LastName = 'TEST_FIRST_CONTACT');
+        Contact secondContact = new Contact(LastName = 'TEST_SECOND_CONTACT');
+        insert new List<Contact>{firstContact, secondContact};
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'TEST_Opportunity',
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            CloseDate = Date.today(),
+            AccountId = account.Id,
+            Primary_Contact__c = firstContact.Id
+        );
+        insert opportunity;
+
+        List<OpportunityContactRole> ocrs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = firstContact.Id,
+                IsPrimary = true
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = firstContact.Id,
+                IsPrimary = true
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = secondContact.Id,
+                IsPrimary = false
+            )
+        };
+        insert ocrs;
+        activateTriggers();
+
+        List<Opportunity> expectedOpportunities = [
+            SELECT Name, (
+                SELECT OpportunityId, ContactId, IsPrimary, Role
+                FROM OpportunityContactRoles
+            )
+            FROM Opportunity
+            WHERE Id = :opportunity.Id
+        ];
+        
+        System.assertEquals(1, expectedOpportunities.size());
+        System.assertEquals(3, expectedOpportunities[0].OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : expectedOpportunities[0].OpportunityContactRoles) {
+            System.assertEquals(
+                (expectedOCR.ContactId == firstContact.Id), 
+                expectedOCR.IsPrimary
+            );
+        }
+
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Test.stopTest();
+
+        expectedOpportunities = [
+            SELECT Name, (
+                SELECT OpportunityId, ContactId
+                FROM OpportunityContactRoles
+                WHERE IsPrimary = true
+            )
+            FROM Opportunity
+            WHERE Id = :opportunity.Id
+        ];
+        
+        // Opportunity should have only 1 primary OCR, with ContactId = Opportunity Primary Contact.
+        System.assertEquals(1, expectedOpportunities.size());
+        System.assertEquals(1, expectedOpportunities[0].OpportunityContactRoles.size());
+        System.assert(firstContact.Id == expectedOpportunities[0].OpportunityContactRoles[0].ContactId);
+
+        List<Error__c> errors = [
+            SELECT Object_Type__c, Full_Message__c 
+            FROM Error__c
+        ];
+
+        System.assertEquals(0, errors.size(), 'No Error Log should be created.');
+    }
+
     /*******************************************************************************************************
     * @description Deactivates all the Triggers.
     * @return void.
