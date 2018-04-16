@@ -80,7 +80,7 @@ public with sharing class BGE_TemplateController {
             try {
 
                 insert templateRecord;
-                Batch_Template_Field__c templateFieldId = new Batch_Template_Field__c(Read_Only__c = false, Batch_Template__c=templateRecord.Id, Order__c=2, Required__c=false, Sticky_Field_Visibility__c=false, Name='Id', Sticky_Field__c=false);
+                Batch_Template_Field__c templateFieldId = new Batch_Template_Field__c(Read_Only__c = false, Batch_Template__c=templateRecord.Id, Order__c=2, Required__c=false, Sticky_Field_Visibility__c=false, Name='Id');
                 batchTemplateFields.add(templateFieldId);
                 saveTemplateFields(templateFields, templateRecord.Id);
             }
@@ -229,12 +229,16 @@ public with sharing class BGE_TemplateController {
 
                 templateField.Batch_Template__c = templateId;
             }
+
             templateFieldsToSave.add(templateField);
         }
 
         if (!templateFieldsToSave.isEmpty()) {
+
             upsert templateFieldsToSave;
         }
+
+
     }
 
     private static void cloneTemplateFields (Batch_Template_Field__c[] templateFields, Id templateId) {
@@ -248,10 +252,8 @@ public with sharing class BGE_TemplateController {
                                                             Name = templateField.Name,
                                                             Order__c = templateField.Order__c,
                                                             Read_Only__c = templateField.Read_Only__c,
-                                                            Required__c = templateField.Required__c,
-                                                            Sticky_Field__c = templateField.Sticky_Field__c,
-                                                            Sticky_Field_Value__c = templateField.Sticky_Field_Value__c,
-                                                            Sticky_Field_Visibility__c = templateField.Sticky_Field_Visibility__c);
+                                                            Required__c = templateField.Required__c
+                                                            );
 
             if (templateToClone != null) {
                 templateFieldsToSave.add(templateToClone);
@@ -306,12 +308,10 @@ public with sharing class BGE_TemplateController {
                                 Order__c,
                                 Read_Only__c,
                                 Required__c,
-                                Sticky_Field__c,
-                                Sticky_Field_Value__c,
-                                Sticky_Field_Visibility__c,
                                 Batch_Template__c
                             FROM Batch_Template_Field__c
                             WHERE Batch_Template__c = :templateId
+                            ORDER BY Order__c
                             LIMIT :SQL_MAJOR_LIMIT];
 
         if (templateFields.isEmpty()) {
@@ -330,12 +330,10 @@ public with sharing class BGE_TemplateController {
                                                             Order__c,
                                                             Read_Only__c,
                                                             Required__c,
-                                                            Sticky_Field__c,
-                                                            Sticky_Field_Value__c,
-                                                            Sticky_Field_Visibility__c,
                                                             Batch_Template__c
                                                         FROM Batch_Template_Field__c
                                                         WHERE Batch_Template__c = :templateId
+                                                        ORDER BY Order__c
                                                         LIMIT :SQL_MAJOR_LIMIT])
                 templateFieldsMap.put(templateField.Name, templateField);
 
@@ -377,5 +375,14 @@ public with sharing class BGE_TemplateController {
 		}
 
         return templateFields;
+    }
+
+
+
+    public static Batch_Template__c loadtemplateName(Id templateId) {
+
+        Batch_Template__c templateName = [SELECT Name, Description__c FROM Batch_Template__c WHERE Id =: templateId LIMIT 1][0];
+
+        return templateName;
     }
 }

@@ -68,7 +68,11 @@ public with sharing class BGE_AuraController {
 
 			return BGE_TemplateController.loadDataImportApiNames();
 	}
-	
 
+	@AuraEnabled
+	public static Batch_Template__c loadtemplateName(Id templateId) {
+ 
+			return BGE_TemplateController.loadtemplateName(templateId);
+	}
 
 }

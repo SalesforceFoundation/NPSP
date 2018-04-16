@@ -28,7 +28,7 @@
             }
 
             .handsontable td.htInvalid {
-                background-color: white !important;
+                background-color: transparent !important;
                 border: 2px solid red !important;
             }
 
@@ -68,7 +68,7 @@
                 border-right: 1px solid #cccccc !important;
             }
 
-	        .fixedHeader {
+            .fixedHeader {
                 overflow: hidden;
                 position: fixed; /* Set the navbar to fixed position */
                 top: 0; /* Position the navbar at the top of the page */
@@ -92,11 +92,13 @@
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
-                searchField = document.getElementById('handsonSearch');
+            //    searchField = document.getElementById('handsonSearch');
                 wasEnterPressed = false;
-		wasUpArrowPressed = false;
+                wasUpArrowPressed = false;
+		$scope.totalPages = '{!totalOfPages}';
 
-                $scope.totalPages = '{!totalOfPages}';
+		//Map to save cells with invalid format values
+                updatedCellsMap = {};
 
                 var changesToSave = {};
                 var lastSelectedRow = null;
@@ -145,14 +147,32 @@
                             $('#' + dataRowId).css( "border-top", "none");
                             $('#' + dataRowId).css( "border-bottom", "none");
                             $('#' + dataRowId).attr( "readonly", "readonly");
-                            
                         }
 
                         var escaped = Handsontable.helper.stringify(value);
                         td.innerHTML = escaped;
                         return td;
-
                     }
+                }
+
+                //To display action column icons
+                function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+                    Handsontable.TextCell.renderer.apply(this, arguments);
+
+                    var dataRowId = instance.getDataAtRowProp(row, 'Id');
+
+                    var isDisabled = 'disabled=\"false\"';
+
+                    if (dataRowId) {
+                        isDisabled = '';
+                    }
+
+                    var actionsMenu = '<div id="'+ row + 'menu" class="slds-m-top_x-large slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Check Erros</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Attempt Matching</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Remove Row</button></div></div></div></div>';
+                    var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
+                    td.innerHTML = actionIcon;
+                    return td;
+
                 }
                 $(document).ready(function() {
                 
@@ -168,6 +188,12 @@
                 errorCol.data = 'Errors';
                 errorCol.className = "htCenter htMiddle tooltip-column";
                 errorCol.wordWrap = false;
+
+                var actionCol = new Object();
+                actionCol.title = 'ACTIONS';
+                actionCol.type = 'text';
+                actionCol.data = 'Actions';
+                actionCol.className = "htCenter htMiddle";
 
                 dynamicColumns.push(errorCol);
 
@@ -217,8 +243,12 @@
                     dynamicColumns.push(col);
                 }
 
+                dynamicColumns.push(actionCol);
+
                 var tableWidth = window.innerWidth * 93 / 100;
                 var tableHeight = window.innerHeight * 75 /100;
+                var colCount = dynamicColumns.length;
+
                 // BEGINNING OF TABLE CONFIGURATION
 
                 hot = new Handsontable(table, {
@@ -232,7 +262,7 @@
                     manualColumnResize: true,
                     manualRowResize: true,
                     readOnly: false,
-                    search: true,
+               //     search: true,
                     sortIndicator: true,
                     fillHandle:  true,
                     autoWrapRow: true,
@@ -251,12 +281,18 @@
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
+                    contextMenu: ['remove_row', 'make_read_only', 'alignment'],
 
                     cells: function (row, col, prop) {
 
                         if (col == 0) {
                             return { type: { renderer: cellsRenderer } };
                         }
+                        else if (col == colCount-1) {
+
+                            return { type: { renderer: actionCellsRenderer } };
+                        }
+
                     },
 
                     beforeRemoveRow: function(index, amount){
@@ -326,212 +362,212 @@
                     },
 
 
-                        afterRemoveRow: function(index, amount){
+                    afterRemoveRow: function(index, amount){
 
-                            var pBatchId = getAllUrlParams().batchid;
-                            totalOfRecords = 0;
+                        var pBatchId = getAllUrlParams().batchid;
+                        totalOfRecords = 0;
 
-                            Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
-                            pBatchId,
-                            function (result) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
+                        pBatchId,
+                        function (result) {
 
-                                document.getElementById("totalOfRecords").value = result;
-                                totalOfRecords = parseInt(result);
+                            document.getElementById("totalOfRecords").value = result;
+                            totalOfRecords = parseInt(result);
 
-                                $scope.totalPages = calculateTotalPages(totalOfRecords);
-                                $scope.$apply();
-                            });
+                            $scope.totalPages = calculateTotalPages(totalOfRecords);
+                            $scope.$apply();
+                        });
 
-                            Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
-                            pBatchId,
-                            function (result) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
+                        pBatchId,
+                        function (result) {
 
-                                document.getElementById("totalAmount").value = result;
-                            });
+                            document.getElementById("totalAmount").value = result;
+                        });
 
-                            reloadCurrentPageOfTheGrid();
-                        },
+                        reloadCurrentPageOfTheGrid();
+                    },
 
 
-                        afterChange: function (changes, source) {
+                    afterChange: function (changes, source) {
 
-                            // restore table after reload of a page
-                            if (source === 'loadData') {
+                        // restore table after reload of a page
+                        if (source === 'loadData') {
 
-                                return;
+                            return;
+                        }
+
+                        if((source === 'paste'  || source === 'autofill') && deletingRecords === false) {
+
+                            // Save all records
+                            triggerSaveAll(changes);
+                        }
+                        else if (stickyEdit === true && deletingRecords === false) {
+
+                            stickyEdit = false;
+
+                            // Save all records
+                            triggerSaveAll(changes);
+                        }
+                        else {
+
+                            var row  = changes[0][0];
+                            var prop = changes[0][1];
+                            var oldValue = changes[0][2];
+                            var newValue = changes[0][3];
+
+                            var dataRowId = this.getDataAtRowProp(row, 'Id');
+
+                            if (!changesToSave[dataRowId]) {
+
+                                changesToSave[dataRowId] = {};
                             }
-
-                            if((source === 'paste'  || source === 'autofill') && deletingRecords === false) {
-
-                                // Save all records
-                                triggerSaveAll(changes);
-                            }
-                            else if (stickyEdit === true && deletingRecords === false) {
-
-                                stickyEdit = false;
-
-                                // Save all records
-                                triggerSaveAll(changes);
-                            }
-                            else {
-
-                                var row  = changes[0][0];
-                                var prop = changes[0][1];
-                                var oldValue = changes[0][2];
-                                var newValue = changes[0][3];
-                                var self = this;
-
-                                var dataRowId = this.getDataAtRowProp(row, 'Id');
-
-                                if (!changesToSave[dataRowId]) {
-
-                                    changesToSave[dataRowId] = {};
-                                }
-
-                                $scope.currentDataImport = this.getDataAtRow(row);
-                                changesToSave[dataRowId][prop] = newValue;
 
                                 if(!wasEnterPressed) { //Enter keycode
 
-                                    triggerUpdateCell(newValue, prop, dataRowId, function(result) {
+                                triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
-                                        var cell = self.getCellMeta(row, getColumnFromName(prop));
+                                    	var cell = hot.getCellMeta(row, getColumnFromName(prop));
 
-                                        if (!result.success) {
+                                    if (!result.success) {
 
-                                            cell.valid = false;
-                                            cell.hasError = true;
-                                        }
-                                        else {
+                                        cell.valid = false;
+                                        cell.hasError = true;
+                                    }
+                                    else {
 
-                                            cell.valid = true;
-                                            cell.hasError = false;
-                                        }
-
-                                        if (!dataRowId) {
-
-                                            self.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
-
-                                            dataRowId  = result.dataImportIds[0];
-                                        }
-                                    });
-
-                                }
-
-
-
-                            }
-
-                            var pBatchId = getAllUrlParams().batchid;
-                            totalOfRecords = 0;
-
-                            Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
-                            pBatchId,
-                            function (result) {
-
-                                document.getElementById("totalOfRecords").value = result;
-                                totalOfRecords = parseInt(result);
-
-                                $scope.totalPages = calculateTotalPages(totalOfRecords);
-                                $scope.$apply();
-                            });
-
-
-
-                            Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
-                            pBatchId,
-                            function (result) {
-
-                                document.getElementById("totalAmount").value = result;
-                            });
-                        },
-
-                        afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
-
-                            var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
-                            var dataAtRow = this.getDataAtRow(lastSelectedRow);
-                            var self = this;
-
-                            if (lastSelectedRow !== null && lastSelectedRow !== row) {
-
-                                if (changesToSave[dataRowId]) {
-
-                                    if (wasUpArrowPressed) {
-
-                                        row = row+2;
-                                        wasUpArrowPressed = false;
+                                        cell.valid = true;
+                                        cell.hasError = false;
                                     }
 
-                                    triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
+                                    if (!dataRowId) {
 
-                                        if (!dataRowId) {
-
-                                            self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
-
+                                            hot.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
                                             dataRowId  = result.dataImportIds[0];
                                         }
-
-                                        var messages = validateRequiredFields(row, result.messages, false);
-
-                                        if (messages && messages.length > 0) {
-
-                                            //Add tooltip message
-                                            var escaped = addTooltip(dataRowId, row, result, messages);
-                                            data[row-1]['Errors'] = escaped;
-                                        }
-                                        else {
-                                            data[row-1]['Errors'] = '';
-                                        }
-
-                                        var cellsToUpdate = [];
-
-                                        cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
-
-                                        self.setDataAtCell(cellsToUpdate);
-
-                                        changesToSave = {};
                                     });
 
+                                }
+                                $scope.currentDataImport = this.getDataAtRow(row);
+                                changesToSave[dataRowId][prop] = newValue;
+                            }
+
+                        var pBatchId = getAllUrlParams().batchid;
+                        totalOfRecords = 0;
+
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
+                        pBatchId,
+                        function (result) {
+
+                            document.getElementById("totalOfRecords").value = result;
+                            totalOfRecords = parseInt(result);
+
+                            $scope.totalPages = calculateTotalPages(totalOfRecords);
+                            $scope.$apply();
+                        });
+
+
+
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
+                        pBatchId,
+                        function (result) {
+
+                            document.getElementById("totalAmount").value = result;
+                        });
+                    },
+
+                    afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
+
+                        var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
+                        var dataAtRow = this.getDataAtRow(lastSelectedRow);
+                        var self = this;
+
+                        if (lastSelectedRow !== null && lastSelectedRow !== row) {
+
+                            if (changesToSave[dataRowId]) {
+
+                                if (wasUpArrowPressed) {
+
+                                    row = row+2;
+                                    wasUpArrowPressed = false;
+                                }
+
+                                triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
+
+                                    if (!dataRowId) {
+
+                                        self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
+
+                                        dataRowId  = result.dataImportIds[0];
+                                    }
+
+                                    var messages = validateRequiredFields(row, result.messages, false);
+
+                                    if (messages && messages.length > 0) {
+
+                                        // Add tooltip message
+                                        var escaped = addTooltip(dataRowId, row, result, messages);
+                                        data[row-1]['Errors'] = escaped;
+                                    }
+                                    else {
+
+                                        data[row-1]['Errors'] = '';
+                                    }
+
+                                    var cellsToUpdate = [];
+
+                                    cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
+
+                                    self.setDataAtCell(cellsToUpdate);
+
                                     changesToSave = {};
-                                }
-                            }
+                                });
 
-                            lastSelectedRow = row;
-                        },
-
-                        afterOnCellMouseDown: function(event, coords){
-                            // 'coords.row < 0' because we only want to handle clicks on the header row
-                            if (coords.row < 0){
-
-                                hot.deselectCell();
-                            }
-                        },
-                        afterInit: function () {
-
-                            renderState = true;
-                        },
-                        afterCreateRow: function(index, amount) {
-
-                            if(renderState == true) {
-
-                                for (var i = 0; i < columnsData.length; i++) {
-
-                                    var column = columnsData[i];
-                                }
-
-                                hot.render();
+                                changesToSave = {};
                             }
                         }
+
+                        lastSelectedRow = row;
+                    },
+
+                    afterOnCellMouseDown: function(event, coords){
+                        // 'coords.row < 0' because we only want to handle clicks on the header row
+                        if (coords.row < 0){
+
+                            hot.deselectCell();
+                        }
+                    },
+                    afterInit: function () {
+
+                        renderState = true;
+                    },
+                    afterCreateRow: function(index, amount) {
+
+                        if(renderState == true) {
+
+                            for (var i = 0; i < columnsData.length; i++) {
+
+                                var column = columnsData[i];
+                            }
+
+                            hot.render();
+                        }
+                    }
                 });
 
                 // END OF TABLE CONFIGURATION
 
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
+
+                hot.view.wt.update('onCellDblClick', function (row,cell) {
+
+                    console.log("double click");
+                });
 
                 function getColumnFromName(name){
 
@@ -594,13 +630,16 @@
                     var col = 0;
 
                     if (!onMass) {
+
                         row = row - 1;
                     }
                     
                     if (!messages) {
+
                         messages = [];
                     }
                     else if (messages.length > 0 ) {
+
                         messages.push('\<br\>');
                     }
 
@@ -618,8 +657,17 @@
                             else if (cell.hasError) {
                                 cell.valid = false;
                             }
-                            else if (!cell.hasError) {
+                            else if (cell.hasError != undefined && !cell.hasError) {
+
                                 cell.valid = true;
+                            }
+
+                            //Get cell errors, for errors of type format (like email) - To outline the cell on red.
+                            var indexMap = cell.row + cell.prop;
+                            var cellOnMass = updatedCellsMap[indexMap];
+
+                            if (cellOnMass && cellOnMass.hasError) {
+                                cell.valid = false;
                             }
 
                             col++;
@@ -724,9 +772,38 @@
                     for (var r = start; r <= end; r++) {
                         (function(r) {
 
+                            var arrayOfChanges = JSON.stringify(changes);
+                            var changesSplit = arrayOfChanges.split(',');
+
                             var row = gridData[r];
                             var dataRowId = row[getColumnFromName('Id')];
-                            
+
+                            var prop = changesSplit[1];
+                            var propSplit = prop.split('"');
+                            prop = propSplit[1];
+                            var oldValue = changesSplit[2];
+                            var newValue = changesSplit[3];
+                            var newValueSplit = newValue.split('"');
+                            newValue = newValueSplit[1];
+
+                            triggerUpdateCell(newValue, prop, dataRowId, function(result) {
+
+                                var cell = hot.getCellMeta(row, getColumnFromName(prop));
+
+                                if (!result.success) {
+
+                                    cell.valid = false;
+                                    cell.hasError = true;
+
+                                }
+                                else {
+                                    cell.valid = true;
+                                    cell.hasError = false;
+                                }
+                                var indexMap = r + prop;
+                                updatedCellsMap[indexMap] = cell;
+                            });
+
                             triggerSave(dataRowId, row, r, hot, function(result) {
 
                                 if (dataRowId === null) {
@@ -827,7 +904,7 @@
                         }
                     });
                 }
-                
+
                 
                 function reloadCurrentPageOfTheGrid() {
 
@@ -841,7 +918,7 @@
                         hot.loadData(result);
                     });
                 }
-                
+
 
                 function calculateTotalPages(pTotalOfRecords) {
 
@@ -986,7 +1063,7 @@
                     return rows;
                 }
 
-                Handsontable.Dom.addEvent(searchField, 'keyup', function (event) {
+            /*    Handsontable.Dom.addEvent(searchField, 'keyup', function (event) {
 
                     hot.loadData(data);
 
@@ -996,7 +1073,7 @@
 
                         hot.render();
                     }
-                });
+                });*/
 
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
@@ -1047,6 +1124,20 @@
                 }, 10);
             }
 
+            function displayActionMenu(row){
+
+                if ($('#' + row + 'menu').hasClass('slds-hide')) {
+
+                    $('.is-displayed').addClass("slds-hide");
+                    $('.is-displayed').removeClass("is-displayed");
+                    $('#' + row + 'menu').removeClass("slds-hide");
+                    $('#' + row + 'menu').addClass("is-displayed");
+
+                }
+                else {
+                    $('#' + row + 'menu').addClass("slds-hide");
+                }
+            }
 
         </script>
 
@@ -1087,17 +1178,17 @@
                             </button>
                         </div>
 
-                        <div class="slds-col slds-size_1-of-2 slds-clearfix">
+                    <!--    <div class="slds-col slds-truncate slds-clearfix">
                             <div class="slds-float_right">
-                                <div class="slds-size_1-of-2 slds-medium-size_4-of-6 slds-large-size_3-of-12">
+                                <div class="slds-truncate slds-medium-size_4-of-6 slds-large-size_3-of-12">
                                     <input type="search" id="handsonSearch" placeholder="search" class="slds-input" style="width: 230px;align:right;" />
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
-                	 <div id="my-hot-table" class="handsontable" />
+                    <div id="my-hot-table" class="handsontable" />
                 </div>
                 <!-- / TABLE -->
 

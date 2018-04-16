@@ -2,6 +2,10 @@
    display: none;
  }
 
-  .THIS .icon-properties {
+.THIS .icon-properties {
     padding: 2.5px !important;
  }
+
+.THIS {
+  background-color: white; 
+}

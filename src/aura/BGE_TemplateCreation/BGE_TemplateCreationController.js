@@ -1,6 +1,5 @@
 ({
-    doInit: function(component, event, helper) {
-
+    doInit: function (component, event, helper) {
 
         var actionLoad = component.get('c.loadDataImportApiNames');
 
@@ -9,22 +8,92 @@
             var state = response.getState();
             if (state === "SUCCESS") {
 
-                    var templateFields = response.getReturnValue();
-                    var options = [];
-                    templateFields.forEach(function (templateField) {
+                var templateFields = response.getReturnValue();
+                var options = [];
+                templateFields.forEach(function (templateField) {
 
-                        options.push({ value: templateField['Name'], label: templateField['Label__c'] });
-                    });
+                    options.push({ value: templateField['Name'], label: templateField['Label__c'] });
+                });
 
-                    component.set('v.listOptions', options);
+                component.set('v.listOptions', options);
 
-                } else {
-                    console.log('Failed with state: ' + state);
-                }
-            });
+            } else {
+                console.log('Failed with state: ' + state);
+            }
+        });
         $A.enqueueAction(actionLoad);
 
         var template = component.get("v.template");
+        var recordId = component.get("v.recordId");
+
+        // If we have a record id, that means we are editing from the button.
+        if (recordId) {
+
+            component.set('v.toCreate', false);
+            component.set('v.toEdit', true);
+
+            template.Id = recordId;
+
+            var loadTemplateName = component.get('c.loadtemplateName');
+
+            loadTemplateName.setParams({
+                "templateId": template.Id
+            });
+
+            loadTemplateName.setCallback(this, function (response,component) {
+
+                // store state of response
+                var state = response.getState();
+                
+                if (state === "SUCCESS") {
+
+                    var loadedTemplate = response.getReturnValue();
+
+                //    template.Name = loadedTemplate.Name;
+                //    template.Description__c = loadedTemplate.Description__c;
+                                        
+                    component.set("v.templateNameAttribute", loadedTemplate.Name);
+                    component.set("v.templateDescriptionAttribute", loadedTemplate.Description__c);
+
+                //    component.find("templateName").set("v.value",component.get("v.templateNameAttribute"));
+                //    component.find("templateDescription").set("v.value",component.get("v.templateDescriptionAttribute"));
+                }
+                else {
+
+                    console.log('Failed with state: ' + state);
+                }
+
+
+                /*
+                // store state of response
+                var state = response.getState();
+
+                if (state === "SUCCESS") {
+
+                    var loadedTemplate = response.getReturnValue();
+
+                    template.Name = loadedTemplate.Name;
+                    template.Description__c = loadedTemplate.Description__c;
+
+                    var name = '';
+                    var description = '';
+
+                    name = template.Name ? "'" + template.Name + "'" : '';
+                    description = template.Description__c ? "'" + template.Description__c + "'" : '';
+
+                    component.find("templateName").set("v.value",name);
+                    component.find("templateDescription").set("v.value",description);
+                }
+                else {
+
+                    console.log('Failed with state: ' + state);
+                }
+                */
+
+            });
+            $A.enqueueAction(loadTemplateName);
+
+        }
 
         if (template.Id != null) {
 
@@ -56,20 +125,19 @@
 
                         component.set('v.templateFields', response.getReturnValue());
                         component.set('v.defaultOptions', defaultOptions);
-                        component.set('v.requiredOptions', requiredOptions);
                     }
                 }
             });
             $A.enqueueAction(action);
 
         }
- 
+
         // create a Default RowItem [Contact Instance] on first time Component Load
-        // by call this helper function  
+        // by call this helper function
         helper.createObjectData(component, event);
     },
 
-    lightningInputOnChange: function(component, event, helper) {
+    lightningInputOnChange: function (component, event, helper) {
 
         var templateName = component.find("templateName").get("v.value")
 
@@ -81,6 +149,18 @@
     save: function (component, event, helper) {
 
         var template = component.get('v.template');
+        var recordId = component.get("v.recordId");
+
+        if (recordId) {
+
+            template.Id = recordId;
+            //component.set("v.template.Name", component.get("v.templateNameAttribute"));
+            //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
+        }
+
+        template.Name = component.get("v.templateNameAttribute");
+        template.Description__c = component.get("v.templateDescriptionAttribute");
+
         var batchTemplateFields = component.get('v.templateFields');
         var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
 
@@ -115,49 +195,12 @@
             });
     },
 
-    // function for create new object Row in Contact List 
-    addNewRow: function (component, event, helper) {
-
-        // call the comman "createObjectData" helper method for add new Object Row to List  
-        helper.createObjectData(component, event);
-    },
-
-    // function for delete the row 
-    removeRow: function (component, event, helper) {
-
-        // get the selected row Index for delete, from Lightning Event Attribute  
-        var index = event.getParam("indexVar");
-        var fieldToDelete = event.getParam("templateFieldToDelete");
-        var templateFieldsToDelete = component.get("v.templateFieldsToDelete");
-
-        if (fieldToDelete.Id != undefined) {
-
-            templateFieldsToDelete.push(fieldToDelete);
-            component.set("v.templateFieldsToDelete", templateFieldsToDelete);
-        }
-
-        console.log('FIELD TO DELETE ' + fieldToDelete.Id);
-        console.log('FIELDS TO DELETE ' + component.get("v.templateFieldsToDelete"));
-        // get the all List (templateFields attribute) and remove the Object Element Using splice method
-        var AllRowsList = component.get("v.templateFields");
-        AllRowsList.splice(index, 1);
-        // set the templateFields after remove selected row element
-        component.set("v.templateFields", AllRowsList);
-    },
-
-    validateLabel: function (component, event, helper) {
-
-        var data = component.get("v.labelsApiNames");
-        var labelValue = component.get("v.labelValue");
-
-        alert('API NAME ' + data[labelValue]);
-    },
 
     handleChange: function (component, event) {
+
         // Get the list of the "value" attribute on all the selected options
         var selectedOptionsList = event.getParam("value");
         //var selectedOptionsLabels = event.getParam("label");
-
         var rowItemList = component.get("v.templateFields");
         var index = rowItemList.length;
 
@@ -181,7 +224,7 @@
                     selectedIndexVar++;
                 }
             }
-            if (!existsToDelete) { 
+            if (!existsToDelete) {
 
                 var index = rowItemList.indexOf(existingTemplateField);
 
@@ -237,6 +280,11 @@
         /************CODE TO ADD NEW TEMPLATE FIELD ITEMS***********************/
         component.set("v.templateFields", rowItemList);
     },
+
+    scriptLoaded: function (component, event, helper) {
+        component.set("v.isjQueryLoaded", true);
+    },
+
     onRequiredChange: function (component, event, helper) {
 
         var value = event.getParam("value");
@@ -271,11 +319,4 @@
         });
     },
 
-    display: function (component, event, helper) {
-        helper.toggleHelper(component, event);
-    },
-
-    displayOut: function (component, event, helper) {
-        helper.toggleHelper(component, event);
-    }
 })

@@ -1,10 +1,9 @@
-<aura:component controller="BGE_AuraController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader" access="global">
+<aura:component controller="BGE_AuraController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
 
     <ltng:require scripts="{!$Resource.BGEResources + '/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptLoaded}" />
 
-    <aura:attribute name="isjQueryLoaded" type="Boolean" default="false"/>
-
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
     <aura:attribute name="template" type="Batch_Template__c" access="global" default="{sobjectType : 'Batch_Template__c'}" />
     <aura:attribute name="fields" type="Batch_Template_Field__c[]" access="global" default="{sobjectType : 'Batch_Template_Field__c[]'}" />
     <aura:attribute name="selectedTemplateFields" type="Batch_Template_Field__c[]" default="{sobjectType : 'Batch_Template_Field__c[]'}" />
@@ -18,17 +17,21 @@
 
     <aura:attribute name="listOptions" type="Batch_Template_Field__c[]" default="[]"/>
     <aura:attribute name="defaultOptions" type="Batch_Template_Field__c[]" default="[]"/>
-    <aura:attribute name="requiredOptions" type="List" default="[]"/>
 
+    <aura:attribute name="isjQueryLoaded" type="Boolean" default="false"/>
 
     <!--Aura Attribute for store Contact Object List as Array-->
     <aura:attribute name="templateFields" type="Batch_Template_Field__c[]" />
     <aura:attribute name="templateFieldSelected" type="Batch_Template_Field__c" />
     <aura:attribute name="templateFieldsToDelete" type="Batch_Template_Field__c[]" />
+    
+    <aura:attribute name="templateNameAttribute" type="String" default="" access="global"/>
+    <aura:attribute name="templateDescriptionAttribute" type="String" default="" access="global" />
 
-
-    <aura:attribute name="requiredValue" type="Boolean" default="false"/>
-    <aura:handler name="change" value="{!v.requiredValue}" action="{!c.onRequiredChange}" />
+    <!-- Removing required template fields setting -->
+    <!-- <aura:attribute name="requiredValue" type="Boolean" default="false"/>
+    <aura:attribute name="requiredOptions" type="List" default="[]"/>
+    <aura:handler name="change" value="{!v.requiredValue}" action="{!c.onRequiredChange}" /> -->
 
     <div aura:id="body">
         <aura:if isTrue="{!v.showBackButton}">
@@ -40,30 +43,34 @@
             <h2 class="slds-text-heading_medium slds-m-bottom_x-large">New Template</h2>
 
             <div class="slds-form-element">
-                <lightning:input type="text" name="template name" label="Template Name" value="{!v.template.Name}"/>
+            <!--    <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.template.Name}"/> -->
+                <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.templateNameAttribute}"/>
+                
             </div>
 
             <div class="slds-form-element">
-                <lightning:textarea name="description" label="Descripcion" maxlength="300" value="{!v.template.Description__c}"/>
+                <!-- <lightning:textarea name="description" label="Description" aura:id="templateDescription" maxlength="300" value="{!v.template.Description__c}"/> -->
+                <lightning:textarea name="description" label="Description" aura:id="templateDescription" maxlength="300" value="{!v.templateDescriptionAttribute}"/>
             </div>
 
             <div class="slds-size_1-of-1 slds-grid slds-wrap">
 
-                <div class="slds-size_2-of-3">
-                    <lightning:dualListbox class="slds-m-horizontal_medium" aura:id="selectOptions" name="Select Options" label="Select Options" 
-                           sourceLabel="Available Template Fields" 
-                           selectedLabel="Active Template Fields" 
-                           options="{! v.listOptions }"
-                           value="{! v.defaultOptions }"
-                           requiredOptions="{! v.requiredOptions }"
-                           onchange="{! c.handleChange }"/>
-                </div>
-                <div class="slds-size_1-of-3 slds-m-vertical_x-large">
+                <lightning:dualListbox class="slds-m-horizontal_medium byClass2" aura:id="selectOptions" name="Select Options" label="Select Options"
+                        sourceLabel="Available Template Fields"
+                        selectedLabel="Active Template Fields"
+                        options="{! v.listOptions }"
+                        value="{! v.defaultOptions }"
+                        onchange="{! c.handleChange }"/>
+
+                        <!-- To set required fields with icon
+                        requiredOptions="{! v.requiredOptions } -->
+
+                <!-- Logic to set settings on each template field -->
+                <!-- <div class="slds-m-vertical_x-large">
                     <div class="slds-popover slds-nubbin_top-left toggle slds-m-top_x-large" style="position:absolute;" role="tooltip" id="help" aura:id="tooltip">
 
                         <lightning:buttonIcon class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" iconName="utility:close" variant="bare" alternativeText="Settings" onclick="{!c.display}" />
 
-                        <!-- Set properties of each template field -->
                         <div class="slds-popover__body">
 
                             <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
@@ -79,14 +86,17 @@
                     </div>
 
                     <lightning:buttonIcon class="slds-button__icon_medium" iconName="utility:settings" size="large" variant="bare" alternativeText="Settings" onclick="{!c.display}" iconClass="dark icon-properties"/>
-                </div>
-            </div>
+                </div> -->
+			</div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">
-                <div class="slds-size_1-of-2 slds-grid slds-wrap">
-                    <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
-                    <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
-                </div>
+
+                <aura:if isTrue="{!v.showBackButton}">
+                    <div class="slds-size_1-of-2 slds-grid slds-wrap">
+                        <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
+                        <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
+                    </div>
+                </aura:if>
 
                 <div class="slds-size_1-of-2 slds-clearfix">
                     <div class="slds-float_right">
