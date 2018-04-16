@@ -1740,6 +1740,7 @@
         <members>stgHelpRollupExcludeContactOppType</members>
         <members>stgHelpRollupNDayValue</members>
         <members>stgHelpRollupPrimaryContact</members>
+        <members>stgHelpRollupSkewLimit</members>
         <members>stgHelpSalesforceSetup</members>
         <members>stgHelpSimpleAddrChangeIsUpdate</members>
         <members>stgHelpSoftCreditRoles</members>
@@ -1756,6 +1757,7 @@
         <members>stgHelpUDROperation</members>
         <members>stgHelpUDROppField</members>
         <members>stgHelpUDRTargetObject</members>
+        <members>stgHelpUseDatedConvRates</members>
         <members>stgInstallScriptError</members>
         <members>stgLabelActionColumn</members>
         <members>stgLabelAddressVerification</members>
@@ -1767,6 +1769,9 @@
         <members>stgLabelAreYouSure</members>
         <members>stgLabelAutoContactRoles</members>
         <members>stgLabelBDESettings</members>
+        <members>stgLabelBatchJobRollupSkewSizes</members>
+        <members>stgLabelBatchJobSizes</members>
+        <members>stgLabelBatchProcessingOptions</members>
         <members>stgLabelBatchStatus</members>
         <members>stgLabelCreateMissingPayments</members>
         <members>stgLabelCurrentUDR</members>
@@ -1843,6 +1848,7 @@
         <members>stgNavAffiliations</members>
         <members>stgNavAllocations</members>
         <members>stgNavBDE</members>
+        <members>stgNavBatchProcessSettings</members>
         <members>stgNavBulkProcesses</members>
         <members>stgNavConnections</members>
         <members>stgNavContactRoles</members>
