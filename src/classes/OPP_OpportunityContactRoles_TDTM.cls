@@ -44,6 +44,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     /** @description DmlWrapper holds dml transactions for processing classes. */
     private DmlWrapper dmlWrapper = new DmlWrapper();
 
+
     /*******************************************************************************************************
     * @description Trigger Handler on Opportunity that handles Contact Role support.
     * @param listNew the list of Opportunities from trigger new. 
@@ -82,6 +83,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         return new DmlWrapper();
     }
+
 
     /*******************************************************************************************************
     * @description Fills 1:1 and HH accounts for Opportunities where the Contact Id is supplied. Fills the
@@ -155,6 +157,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }       
     }
 
+
     /*******************************************************************************************************
     * @description Detects changes in the opportunity Honoree Contact, and Notification Recipient Contact 
     * fields and updates Honoree Name and Notification Recipient Name fields.
@@ -207,27 +210,31 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
     }
 
+
     /*******************************************************************************************************
     * @description Creates Contact Role records when an opp is inserted and there is no primary CR. Updates
     * existing primary CRs with the correct role value if it is null. Updates existing opps' Primary Contact
     * based on existing CRs.
     * @param opportunties List of opportunities meeting trigger criteria
     ********************************************************************************************************/
-    private void upsertContactRolesAfterInsert(list<Opportunity> listOpp) {
+    private void upsertContactRolesAfterInsert(List<Opportunity> listOpps) {
         Map<Id, OpportunityContactRole> mapOppIdPrimaryOCR = new Map<Id, OpportunityContactRole>();
 
         //primary contact OCRs need to be inserted for opportunity naming code that runs after this
-        list<OpportunityContactRole> listPrimaryOCRForInsert = new list<OpportunityContactRole>();
+        List<OpportunityContactRole> listPrimaryOCRForInsert = new List<OpportunityContactRole>();
 
         // Retrieve details/information about the Opportunity's associated Account
-        Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpp);
+        Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
+
+        // Retrieve the Primary Contacts for the Opportunities
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
 
         //Get existing primary contact roles for the trigger opps. 
-        for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE IsPrimary = true and OpportunityId IN :listOpp]) {
+        for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE IsPrimary = true and OpportunityId IN :listOpps]) {
             mapOppIdPrimaryOCR.put(ocr.OpportunityId, ocr);
         }
 
-        for (Opportunity opp : listOpp) {
+        for (Opportunity opp : listOpps) {
             //cloned opportunity is necessary in order to modify the Primary Contact lookup and update the record in the trigger set
             Opportunity clonedOpp = opp.clone(true,true,false,true);
 
@@ -281,7 +288,14 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (!listPrimaryOCRForInsert.isEmpty()) {
             insert listPrimaryOCRForInsert;
         }
+
+        if (!primaryContactsToOpportunities.isEmpty()) {
+            List<sObject> relationshipOCRs
+                = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+            dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
+        }
     }
+
 
     /*******************************************************************************************************
     * @description Runs opportunities through opportunity naming.
@@ -308,17 +322,21 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
     }
 
+
     /*******************************************************************************************************
     * @description Detects changes in the opportunity Primary Contact, Honoree Contact, and Notification 
     * Recipient Contact fields and creates, updates or deletes the associated opportunity contact roles.
     * @param listOpps List of opportunities from trigger.new
     * @param listOldOpps List of opportunities from trigger.old
     ********************************************************************************************************/
-    private void upsertContactRolesAfterUpdate(list<Opportunity> listOpps, list<Opportunity> listOldOpps) { 
+    private void upsertContactRolesAfterUpdate(List<Opportunity> listOpps, List<Opportunity> listOldOpps) {
         Map<Id, Map<Id, OpportunityContactRole>> mapOppIdMapConIdOCR = new Map<Id, Map<Id, OpportunityContactRole>>();
 
         // Retrieve details/information about the Opportunity's associated Account
         Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
+
+        // Retrieve the Primary Contacts for the Opportunities
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
 
         //find changed opportunities and instantiate a map entry to hold OCRs
         for (integer i=0; i<listOpps.size(); i++) {
@@ -358,8 +376,16 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT);
                 }
             }
+
+            // Create Relationship Soft Credits accordingly
+            if (!primaryContactsToOpportunities.isEmpty()) {
+                List<sObject> relationshipOCRs
+                    = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
+                dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
+            }
         }
     }
+
 
     /*******************************************************************************************************
     * @description Manages create and update of the primary Opportunity Contact Role.
@@ -368,7 +394,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param mapConIdOCR A map of contact id to Opportunity Contact Role records for this opportunity.
     * @return void This method adds records to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private void managePrimaryOCR(Opportunity opp, Opportunity oldOpp, map<id,OpportunityContactRole> mapConIdOCR, Boolean isIndividualAccount) {
+    private void managePrimaryOCR(Opportunity opp, Opportunity oldOpp, Map<id,OpportunityContactRole> mapConIdOCR, Boolean isIndividualAccount) {
         Id idNewPrimaryCon = opp.Primary_Contact__c;
         Id idOldCon = oldOpp.Primary_Contact__c;
 
@@ -421,6 +447,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
     }
 
+
     /*******************************************************************************************************
     * @description Manages create and update of the Opportunity Contact Roles for the Honoree and Notification
     * Recipient contact lookup fields.
@@ -439,7 +466,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         if (idNewCon == null) {
             //if the lookup field was blanked out, and an OCR matches the previous contact with the correct role, delete it
             if (idOldCon!=null && ocrOldCon!=null) {
-                if (ocrOldCon.Role == getRole(fieldName, null)) {
+                if (ocrOldCon.Role == getRole(fieldName)) {
                     dmlWrapper.objectsToDelete.add((SObject)ocrOldCon);
                 }
             }
@@ -452,7 +479,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //contact lookup changed from one contact to another
             if (idOldCon != null) {
                 //an OCR for the old contact exists, and has the role for this field
-                if (ocrOldCon != null && ocrOldCon.Role == getRole(fieldName, null)) {
+                if (ocrOldCon != null && ocrOldCon.Role == getRole(fieldName)) {
                     //our new contact doesn't yet have an OCR, so update the old one to the new contact
                     if (ocrNewCon == null) {
                         ocrOldCon.ContactId = idNewCon;
@@ -468,6 +495,18 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
         }
     }
+
+
+    /*******************************************************************************************************
+    * @description For a given opportunity contact lookup field, returns the role value associated with that
+    * field as defined in settings.
+    * @param fieldName The name of the Opportunity field.
+    * @return String The role value associated with the field.
+    ********************************************************************************************************/
+    private String getRole(String fieldName) {
+        return getRole(fieldName, null);
+    }
+
 
     /*******************************************************************************************************
     * @description For a given opportunity contact lookup field, returns the role value associated with that
@@ -494,6 +533,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         return result;
     }
 
+
     /*******************************************************************************************************
     * @description Returns a new OpportunityContactRole record, based on an opportunity and the API name of 
     * the contact lookup field.
@@ -504,6 +544,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     private OpportunityContactRole getOCR(Opportunity opp, String fieldName) {
         return getOCR(opp, fieldName, null);
     }
+
 
     /*******************************************************************************************************
     * @description Returns a new OpportunityContactRole record, based on an Opportunity, the API name of
@@ -524,6 +565,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         return ocr;
     }
 
+
     /*******************************************************************************************************
     * @description Verifies if an opportunity contact lookup needs autoamtic management of the Opportunity 
     * Contact Role associated with that field. For automatic management, the lookup field's associated role custom
@@ -534,9 +576,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param fieldName The API name of the field to verify
     * @return boolean Whether this opportunity and field needs OCR handling.
     ********************************************************************************************************/
-    private boolean needsManageOCR(Opportunity opp, Opportunity oldOpp, string fieldName) {
+    private boolean needsManageOCR(Opportunity opp, Opportunity oldOpp, String fieldName) {
         //no role for this field
-        if (String.isBlank(getRole(fieldName, null)))
+        if (String.isBlank(getRole(fieldName)))
             return false;
         //field value hasn't changed
         if (opp.get(fieldName) == oldOpp.get(fieldName))
@@ -565,7 +607,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         List<Id> accountIds = new List<Id>();
 
         if (currentOpportunities.isEmpty()) {
-            return accountDetails;
+            return accountDetails = new Map<Id, Account>();
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
@@ -574,11 +616,41 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
         }
 
-        accountDetails = new Map<Id, Account>([SELECT Id, Name, RecordTypeId, npe01__SYSTEMIsIndividual__c
+        accountDetails = new Map<Id, Account>([SELECT Id, Name, npe01__SYSTEMIsIndividual__c
                                                 FROM Account
                                                 WHERE Id IN :accountIds]);
 
         return accountDetails;
+    }
+
+
+    /*********************************************************************************************************
+    * @description Populates a Map of Primary Contact to Opportunity Id.
+    * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
+    * @param oppAccountDetails A Map containing the Opportunities' related Accounts.
+    * @return Map<Id, List<Id>> contains associated Primary Contacts and Opportunity Ids.
+    **********************************************************************************************************/
+    public static  Map<Id, List<Id>> populatePrimaryContactToOpportunity(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
+        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+
+        if (currentOpportunities.isEmpty()) {
+            return primaryContactToOpportunity;
+        }
+
+        for (Opportunity eachOppty : currentOpportunities) {
+            if (eachOppty.Primary_Contact__c != null
+                && oppAccountDetails.get(eachOppty.AccountId) != null
+                && oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c) {
+                if (primaryContactToOpportunity.containsKey(eachOppty.Primary_Contact__c)) {
+                    List<Id> opportunities = primaryContactToOpportunity.get(eachOppty.Primary_Contact__c);
+                    opportunities.add(eachOppty.Id);
+                } else {
+                    primaryContactToOpportunity.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
+                }
+            }
+        }
+
+        return primaryContactToOpportunity;
     }
 
 
