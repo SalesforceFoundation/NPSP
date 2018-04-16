@@ -104,6 +104,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public virtual override PageReference saveSettings() {
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Savepoint sp = Database.setSavepoint();
         isEditMode = false;
         try {
