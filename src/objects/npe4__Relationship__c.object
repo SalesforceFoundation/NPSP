@@ -7,4 +7,30 @@
         <fields>npe4__RelatedContact__c</fields>
         <label>NPSP Relationship Compact Layout</label>
     </compactLayouts>
+    <fields>
+        <fullName>Related_Opportunity_Contact_Role__c</fullName>
+        <description>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity Contact Role created for the Related Contact when you create an Opportunity for the Contact in this Relationship.</inlineHelpText>
+        <label>Related Opportunity Contact Role</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Soft Credit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Solicitor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Tribute</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
 </CustomObject>

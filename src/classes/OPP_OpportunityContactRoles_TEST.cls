@@ -638,4 +638,64 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(oppty.Primary_Contact__c, ocrsUpdated[0].ContactId);
     }
 
+
+    /*********************************************************************************************************
+    * @description Tests retrieving the Opportunity's associated Account's details.
+    * verify:
+    *   The Opportunity's Account details are retrieved.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulateAccountDetails() {
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        Test.startTest();
+        insert testOpptys;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        Test.stopTest();
+
+        System.assertEquals(5, accountDetails.size());
+        System.assertEquals(testContacts[0].AccountId, accountDetails.get(testContacts[0].AccountId).Id);
+        System.assertEquals(testContacts[3].AccountId, accountDetails.get(testContacts[3].AccountId).Id);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests retrieving the Opportunity's associated Primary Contact's details.
+    * verify:
+    *   The updated Opportunity's Primary Contact details are retrieved.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulatePrimaryContactToOpportunity() {
+        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        Test.startTest();
+        insert testOpptys;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+
+        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(testOpptys, accountDetails);
+        Test.stopTest();
+
+        System.assertEquals(5, primaryContactToOpportunity.size());
+        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id)[0]);
+        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id)[0]);
+    }
+
+
 }
