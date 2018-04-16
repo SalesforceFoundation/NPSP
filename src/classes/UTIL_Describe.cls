@@ -230,33 +230,6 @@ public class UTIL_Describe {
         return fieldObjectList;
     }
 
-    /*******************************************************************************************************
-    * @description Returns a map of field names to data types, excluding system fields
-    * @param objectName the name of the object to look up
-    * @param excludedTypes set of types not included in the returned list
-    * @return List<Map<String, String>> an object with field api names, labels and data type.
-    */
-    public static List<Map<String, String>> getAllFieldsWithType(String objectName, Set<String> excludedTypes) {
-
-        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
-
-        Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
-
-        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
-            String type = dfr.getType().Name();
-            if(!dfr.name.toLowerCase().contains('__system') && !excludedTypes.contains(type)) {
-                Map<String, String> fieldObject = new Map<String, String>();
-                fieldObject.put('name', dfr.name);
-                fieldObject.put('label', dfr.label);
-                fieldObject.put('type', type);
-
-                fieldObjectList.add(fieldObject);
-            }
-        }
-
-        return fieldObjectList;
-    }
-
 
     /*******************************************************************************************************
     * @description Returns the Name field of any given object.

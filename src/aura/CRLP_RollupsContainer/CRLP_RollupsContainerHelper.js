@@ -1,7 +1,7 @@
 ({
     /* @description: resets the view assignments, clears detail information, and displays rollup grid
     */
-    displayRollupsGrid: function(cmp){
+    displayRollupsGrid: function(cmp) {
         cmp.set("v.isRollupsGrid", true);
         cmp.set("v.isFilterGroupsGrid", false);
         cmp.set("v.isRollupDetail", false);
@@ -15,7 +15,7 @@
 
     /* @description: resets the view assignments, clears detail information, and displays filter group grid
     */
-    displayFilterGroupsGrid: function(cmp){
+    displayFilterGroupsGrid: function(cmp) {
         cmp.set("v.isFilterGroupsGrid",true);
         cmp.set("v.isRollupsGrid", false);
         cmp.set("v.isFilterGroupDetail", false);
@@ -28,7 +28,7 @@
 
     /* @description: filters row data based on user's selection of summary object
     */
-    filterData: function(cmp, object){
+    filterData: function(cmp, object) {
         var cachedRollupList = cmp.get("v.cachedRollupList");
         if(object === 'All'){
             cmp.set("v.rollupList", cachedRollupList);
@@ -40,9 +40,42 @@
         }
     },
 
+    /**
+     *  @description: merges and saves the updated row item into the existing list of rows
+     *  @param list - list of items to merge into
+     *  @param item - item to be merged into the list
+     *  @param context - context running the merge
+     */
+    mergeRowItem: function(cmp, list, item, context){
+        var newItem = true;
+        for (var i = 0; i < list.length; i++) {
+            //todo: refactor to lowercase Id after CMT save information is added
+            if (list[i].id === item.id || list[i].id === item.Id) {
+                //update filter group information on rollups only if master label has changed
+                if (list[i].MasterLabel !== item.MasterLabel && context === 'filterGroup') {
+                    this.requeryRollups(cmp);
+                }
+                // if the Id matches, update that record
+                list[i] = item;
+                newItem = false;
+                break;
+            }
+        }
+        if (newItem === true) {
+            list.push(item);
+        }
+
+        //save the updated list
+        if(context === 'rollup'){
+            cmp.set("v.rollupList", list);
+        } else if (context === 'filterGroup'){
+            cmp.set("v.filterGroupList", list);
+        }
+    },
+
     /* @description: sorts data by user's selected field and field direction
     */
-    sortData: function(cmp, fieldName, sortDirection, data){
+    sortData: function(cmp, fieldName, sortDirection, data) {
         var reverse = sortDirection !== 'asc';
         data.sort(this.sortBy(fieldName, reverse));
         return data;
@@ -63,10 +96,42 @@
 
     /* @description: toggles a modal popup and backdrop
     */
-    toggleFilterRuleModal: function(cmp){
+    toggleFilterRuleModal: function(cmp) {
         var backdrop = cmp.find('backdrop');
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
         var modal = cmp.find('modaldialog');
         $A.util.toggleClass(modal, 'slds-fade-in-open');
     },
+
+    /**
+    * @description: queries the rollups to update filter group name references
+    */
+    requeryRollups: function(cmp) {
+        var action = cmp.get("c.getRollupDefinitions");
+
+        //requery rollup records
+        action.setCallback(this, function(response) {
+            console.log('requeried rollup definitions');
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var rollupList = JSON.parse(JSON.stringify(response.getReturnValue()));
+
+                cmp.set("v.rollupList", rollupList);
+                cmp.set("v.cachedRollupList", rollupList);
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        console.log("Error message: " +
+                            errors[0].message);
+                    }
+                } else {
+                    console.log("Unknown error");
+                }
+            }
+        });
+
+        $A.enqueueAction(action);
+    }
 })

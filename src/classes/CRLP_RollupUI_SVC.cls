@@ -62,7 +62,7 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
     */
-    public class FilterGroupTableItem{
+    public class FilterGroupTableItem {
         @AuraEnabled public String label;
         @AuraEnabled public String description;
         @AuraEnabled public Integer countFilterRules;
@@ -74,7 +74,7 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description a class to hold only the required information from the filter_rule__mdt records for the filter group detail.
     */
-    public class FilterRulesTableItem{
+    public class FilterRulesTableItem {
         @AuraEnabled public String objectLabel;
         @AuraEnabled public String objectName;
         @AuraEnabled public String fieldLabel;
@@ -318,10 +318,10 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
-        Set<String> excludedTypes = new Set<String>{'TIME'};
+        Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
 
         for(String obj : objectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj, excludedTypes);
+            List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
             objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
         }
 
@@ -393,11 +393,10 @@ public with sharing class CRLP_RollupUI_SVC {
 
 
     /*******************************************************************************************************
-    @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
+    * @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
     * If any additional labels are required, they should be added here.
     * @return a list of all labels used in the rollups UI.
     */
-    //TODO: should the labels live in an enum or elsewhere to be easily accessible for other pages?
     public static Map<String, String> getRollupLabels() {
 
             Map<String, String> labels = new Map<String,String>
@@ -637,6 +636,34 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return optionsList;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system, deleted and other non-value fields
+    * @param objectName the name of the object to look up
+    * @param excludedTypes set of types not included in the returned list
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    public static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String> excludedTypes) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'SyncedQuoteID'};
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            String type = dfr.getType().Name();
+            if(!dfr.name.toLowerCase().contains('__system') && !excludedTypes.contains(type) && !excludedFields.contains(dfr.name)) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', type);
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
     }
 
     /*******************************************************************************************************

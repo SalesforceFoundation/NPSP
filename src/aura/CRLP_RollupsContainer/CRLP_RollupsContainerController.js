@@ -149,38 +149,32 @@
         }
     },
 
-    /* @description: handles the ltng:message event
-    * currently listens for the rollup name change on the Rollup cmp since this doesn't bind correctly
-    */
+    /**
+     * @description: handles the ltng:message event to update the rollup name or to update rollup or filter groups in the grid
+     */
     handleMessage: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");
 
         console.log("handleMessage: " + channel);
 
-        //message is the masterLabel
-        if(channel === 'rollupNameChange'){
+        //message is the masterLabel used for either filter group or record
+        if (channel === 'rollupNameChange') {
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
-
             cmp.set("v.activeRecord", activeRecord);
+
         } else if (channel === 'rollupRecordChange') {
-            // message will inserted or updated the Rollup__mdt record
-            var rollupsList = cmp.get("v.rollupList");
-            var newItem = true;
-            for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].id === message.id) {
-                    // if the Id matches, update that record
-                    console.log("Replace Row for " + message.id);
-                    rollupsList[i] = message;
-                    newItem = false;
-                }
-            }
-            if (newItem === true) {
-                rollupsList.push(message);
-            }
-            cmp.set("v.rollupList", rollupsList);
+            helper.mergeRowItem(cmp, cmp.get("v.rollupList"), message, 'rollup');
+
+        } else if (channel === 'filterRuleRecordChange') {
+            helper.mergeRowItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
+
+            //update record name for the detail page
+            var activeRecord = cmp.get("v.activeRecord");
+            activeRecord.MasterLabel = message.MasterLabel;
+            cmp.set("v.activeRecord", activeRecord);
         }
     },
 

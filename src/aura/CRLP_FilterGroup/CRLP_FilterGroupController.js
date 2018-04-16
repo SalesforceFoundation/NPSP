@@ -186,16 +186,17 @@
         //add check for description, name and a filter rule
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
         var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
-        if(canSave){
+        if (canSave) {
             cmp.set("v.mode", 'view');
 
             //todo: add save code here
+            //todo note: only sendMessage once filter rule has been deployed successfully
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
-                'message': activeFilterGroup.MasterLabel,
-                'channel': 'nameChange'
+                'message': activeFilterGroup,
+                'channel': 'filterRuleRecordChange'
             });
             sendMessage.fire();
         }
