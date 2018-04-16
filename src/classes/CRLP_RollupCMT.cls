@@ -57,7 +57,7 @@ public class CRLP_RollupCMT {
         public String recordId;
         public String label;
         public String description;
-        public Boolean isDeleted;
+        public Boolean isDeleted = false;
         public List<FilterRule> rules;
 
         public FilterGroup(String label) {
@@ -69,10 +69,12 @@ public class CRLP_RollupCMT {
         public FilterGroup(Filter_Group__mdt groupRecord) {
             this.label = groupRecord.MasterLabel;
             this.recordName = groupRecord.DeveloperName;
-            this.isDeleted = groupRecord.Is_Deleted__c;
             this.description = groupRecord.Description__c;
             this.rules = new List<FilterRule>();
-            this.recordId = groupRecord.Id;
+            try {
+                this.recordId = groupRecord.Id;
+                this.isDeleted = groupRecord.Is_Deleted__c;
+            } catch (Exception ex) {}
         }
 
         /**
@@ -139,7 +141,7 @@ public class CRLP_RollupCMT {
         public String operationLabel;
         public String value;
         public String valueLabel;
-        public Boolean isDeleted;
+        public Boolean isDeleted = false;
 
         public FilterRule(String filterGroupRecordName, String label) {
             this.label = label.trim();
@@ -159,7 +161,6 @@ public class CRLP_RollupCMT {
                 this.fieldName = filterRule.Field__r.QualifiedApiName;
             }
             this.value = filterRule.Constant__c;
-            this.isDeleted = filterRule.Is_Deleted__c;
             this.recordId = filterRule.Id;
 
             try {
@@ -167,6 +168,7 @@ public class CRLP_RollupCMT {
                 this.fieldLabel = filterRule.Field__r.MasterLabel;
                 this.operationLabel = this.operation; // will to be updated in the RollupUI lgic
                 this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
         }
 

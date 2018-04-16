@@ -283,11 +283,10 @@ public with sharing class CRLP_RollupUI_SVC {
     /*******************************************************************************************************
     * @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
     * @param id the filter group ID
-    * @return a FilterGroup__mdt record and related FilterRule__mdt records.
+    * @return A serialized instance of the FilterGroupModel inner class
     */
-
     @AuraEnabled
-    public static FilterGroupModel setupFilterGroupDetail(Id groupId, List<String> objectNames) {
+    public static String setupFilterGroupDetail(Id groupId, List<String> objectNames) {
 
         List<CRLP_RollupCMT.FilterRule> mdtTableList = new List<CRLP_RollupCMT.FilterRule>();
         Map<String,String> operators = getfilterRuleOperations();
@@ -317,9 +316,10 @@ public with sharing class CRLP_RollupUI_SVC {
         model.operators = operators;
         model.filterFieldsByDataType = objNameToFieldTypeMap;
 
-        return model;
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
     }
-
 
     /*******************************************************************************************************
     * @description Queries from the Rollup operations to fetch all rollup operation values.

@@ -15,17 +15,21 @@
         }
 
         var action = cmp.get("c.setupFilterGroupDetail");
-        action.setParams({id: activeFilterGroupId, objectNames: objectNames});
+        action.setParams({groupId: activeFilterGroupId, objectNames: objectNames});
 
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var model = helper.restructureResponse(response.getReturnValue());
+                var data = helper.restructureResponse(response.getReturnValue());
+                var model = JSON.parse(data);
+// console.log(JSON.stringify(model));
                 if(activeFilterGroupId){
                     //note: the parsing is important to avoid a shared reference
                     cmp.set("v.activeFilterGroup", helper.restructureResponse(model.filterGroup));
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
+console.log(model.filterGroup.description);
+console.log(model.filterGroup);
 
                 cmp.set("v.operatorMap", model.operators);
 
@@ -38,13 +42,13 @@
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
+                    , {label: labels.constant, fieldName: 'valueLabel', type: 'string'}
                 ];
 
                 var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
                     , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
+                    , {label: labels.constant, fieldName: 'valueLabel', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
@@ -232,7 +236,7 @@
 
                 //special reformatting for multipicklist and semi-colon delimited lists
                 if (filterRule.operation === 'In_List' || filterRule.operation === 'Not_In_List') {
-                    filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operation);
+                    filterRule.valueLabel = helper.reformatvalueLabel(cmp, filterRule.value, filterRule.operation);
                 } else {
                     filterRule.valueLabel = filterRule.valueName;
                 }
