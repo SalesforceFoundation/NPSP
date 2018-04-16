@@ -107,8 +107,8 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
+        isEditMode = false;
         try {
-            isEditMode = false;
             if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
                 String oldStatus = STG_Panel.stgService.stgCRLP.CMT_API_Status__c;
                 // Only start polling if it's their first time or the last deployment wasn't a success
@@ -130,6 +130,8 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            isPolling = false;
+            crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
         return null;
     }
