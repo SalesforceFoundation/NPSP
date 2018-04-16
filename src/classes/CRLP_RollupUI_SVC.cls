@@ -287,42 +287,44 @@ public with sharing class CRLP_RollupUI_SVC {
     */
 
     @AuraEnabled
-    public static FilterGroupModel setupFilterGroupDetail(Id id, List<String> objectNames) {
-
+    public static FilterGroupModel setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
+        FilterGroupModel model = new FilterGroupModel();
         List<FilterRulesTableItem> mdtTableList = new List<FilterRulesTableItem>();
         Map<String,String> operators = getfilterRuleOperations();
 
-        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(id);
+        if(!String.isEmpty(filterGroupId)) {
+            Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(Id.valueOf(filterGroupId));
 
-        List<Filter_Rule__mdt> mdtList = CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id);
+            List<Filter_Rule__mdt> mdtList = CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id);
 
-        for(Integer i=0; i<mdtList.size(); i++) {
-            FilterRulesTableItem item = new FilterRulesTableItem();
+            for (Integer i = 0; i < mdtList.size(); i++) {
+                FilterRulesTableItem item = new FilterRulesTableItem();
 
-            item.constantName = mdtList[i].Constant__c;
-            item.constantLabel = item.constantName.replace(';', ';\n');
-            item.operatorName = mdtList[i].Operator__c;
-            item.operatorLabel = operators.get(mdtList[i].Operator__c);
-            item.fieldLabel = mdtList[i].Field__r.MasterLabel;
-            item.fieldName = mdtList[i].Field__r.QualifiedApiName;
-            item.objectLabel = mdtList[i].Object__r.MasterLabel;
-            item.objectName = mdtList[i].Object__r.QualifiedApiName;
-            item.id = mdtList[i].id;
+                item.constantName = mdtList[i].Constant__c;
+                item.constantLabel = item.constantName.replace(';', ';\n');
+                item.operatorName = mdtList[i].Operator__c;
+                item.operatorLabel = operators.get(mdtList[i].Operator__c);
+                item.fieldLabel = mdtList[i].Field__r.MasterLabel;
+                item.fieldName = mdtList[i].Field__r.QualifiedApiName;
+                item.objectLabel = mdtList[i].Object__r.MasterLabel;
+                item.objectName = mdtList[i].Object__r.QualifiedApiName;
+                item.id = mdtList[i].id;
 
-            mdtTableList.add(item);
+                mdtTableList.add(item);
+            }
+
+            model.filterGroup = filterGroup;
+            model.filterRuleList = mdtTableList;
         }
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
+        Set<String> excludedTypes = new Set<String>{'TIME'};
 
         for(String obj : objectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
+            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj, excludedTypes);
             objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
         }
 
-        FilterGroupModel model = new FilterGroupModel();
-
-        model.filterGroup = filterGroup;
-        model.filterRuleList = mdtTableList;
         model.operators = operators;
         model.filterFieldsByDataType = objNameToFieldTypeMap;
 

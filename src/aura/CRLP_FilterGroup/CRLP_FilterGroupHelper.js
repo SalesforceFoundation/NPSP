@@ -141,11 +141,10 @@
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
+                        this.showToast(cmp, "error", cmp.get("v.labels.error"), errors[0].message);
                     }
                 } else {
-                    console.log("Unknown error");
+                    this.showToast(cmp, "error", cmp.get("v.labels.error"), "Unknown Error");
                 }
             }
         });
@@ -336,12 +335,13 @@
         cmp.find("nameInput").showHelpMessageIfInvalid();
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
 
-        if (!description) {
+        if (!description || !name) {
             canSave = false;
-        } else if (!name) {
+        }
+
+        if (filterRuleList.length === 0) {
             canSave = false;
-        } else if (filterRuleList.length === 0) {
-            canSave = false;
+            cmp.find("noFilterRulesMessage").set("v.severity", "error");
         }
 
         return canSave;
@@ -358,6 +358,18 @@
             filterRuleCmp.showHelpMessageIfInvalid();
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
+
+        //check for specific API name duplicates instead of the full row to avoid issues with the ID not matching
+        for (var i = 0; i < filterRuleList.length; i++) {
+            if (i !== filterRule.index
+                && filterRuleList[i].objectName === filterRule.objectName
+                && filterRuleList[i].fieldName === filterRule.fieldName
+                && filterRuleList[i].operatorName === filterRule.operatorName
+                && filterRuleList[i].constantName === filterRule.constantName) {
+                cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                return canSave = false;
+            }
+        }
 
         //check for duplicates
         if (cmp.get("v.filterRuleMode") === 'create') {

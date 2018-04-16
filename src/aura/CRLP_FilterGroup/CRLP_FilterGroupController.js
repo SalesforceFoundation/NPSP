@@ -15,7 +15,7 @@
         }
 
         var action = cmp.get("c.setupFilterGroupDetail");
-        action.setParams({id: activeFilterGroupId, objectNames: objectNames});
+        action.setParams({filterGroupId: activeFilterGroupId, objectNames: objectNames});
 
         action.setCallback(this, function (response) {
             var state = response.getState();
@@ -25,6 +25,9 @@
                     //note: the parsing is important to avoid a shared reference
                     cmp.set("v.activeFilterGroup", helper.restructureResponse(model.filterGroup));
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
+                    cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
+                    cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
+                    helper.filterRollupList(cmp, model.filterGroup.MasterLabel, labels);
                 }
 
                 cmp.set("v.operatorMap", model.operators);
@@ -48,12 +51,9 @@
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
-                cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
-                cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
-                helper.filterRollupList(cmp, model.filterGroup.MasterLabel, labels);
                 helper.changeMode(cmp);
 
             }
@@ -177,17 +177,6 @@
         var operator = event.getSource().get("v.value");
         helper.rerenderValue(cmp, operator);
     },
-
-    /**
-     * @description: adds constant field to selected list
-     */
-    /*onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
-        var constant = event.getSource().get("v.value");
-        var fieldCmp = cmp.find("filterRuleUIField");
-        var value = fieldCmp.get("v.value");
-        var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
-        console.log(JSON.stringify(constantPicklist));
-    },*/
 
     /**
      * @description: saves a new filter group and associated filter rules
