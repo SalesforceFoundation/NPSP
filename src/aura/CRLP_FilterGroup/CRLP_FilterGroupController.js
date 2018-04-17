@@ -3,6 +3,7 @@
      * @description: setup for the filter group component which sets the active filter group and datatable
      */
     doInit: function (cmp, event, helper) {
+
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
         var objectList = cmp.get("v.detailObjects");
@@ -73,10 +74,10 @@
                     console.log("Unknown error");
                 }
             }
+            helper.toggleSpinner(cmp, false);
         });
 
         $A.enqueueAction(action);
-
     },
 
     /**

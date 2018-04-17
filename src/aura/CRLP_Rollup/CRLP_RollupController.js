@@ -28,7 +28,6 @@
 
         action.setParams({rollupId: activeRollupId, targetObjectNames: summaryNames, detailObjectNames: detailNames});
 
-        helper.toggleSpinner(cmp, true);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
