@@ -293,7 +293,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * @param filterGroupId
      * @return FilterGroupModel with just the FilterGroup and FilterRuleList properties populated
      */
-    private static FilterGroupModel createFilterGroupModel(Id filterGroupId) {
+    private static FilterGroupModel createFilterGroupModel(String filterGroupId) {
         FilterGroupModel model = new FilterGroupModel();
         model.filterRuleList = new List<CRLP_RollupCMT.FilterRule>();
         if (!String.isEmpty(filterGroupId)) {
@@ -517,20 +517,6 @@ public with sharing class CRLP_RollupUI_SVC {
             // For new records, the RecordName property will be null by default. The process of deploying the
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
-
-            // TODO Remove this code after the UI properly sets the fields. For need it to test inserting new rollups
-            if (rollupCMTObj.amountObject == null) {
-                rollupCMTObj.amountObject = 'Opportunity';
-            }
-            if (rollupCMTObj.dateObject == null) {
-                rollupCMTObj.dateObject = 'Opportunity';
-            }
-            if (rollupCMTObj.detailObject == null) {
-                rollupCMTObj.detailObject = 'Opportunity';
-            }
-            if (String.isEmpty(rollupCMTObj.filterGroupRecordName)) {
-                rollupCMTObj.filterGroupRecordName = null;
-            }
 
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});

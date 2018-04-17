@@ -172,14 +172,15 @@
             activeRecord.MasterLabel = message;
 
             cmp.set("v.activeRecord", activeRecord);
+
         } else if (channel === 'rollupRecordChange') {
-            // message will inserted or updated the Rollup__mdt record
+            // message will inserted or updated the RollupCMT object
             var rollupsList = cmp.get("v.rollupList");
             var newItem = true;
             for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].recordId === message.id) {
+                if (rollupsList[i].recordId === message.recordId) {
                     // if the Id matches, update that record
-                    console.log("Replace Row for " + message.id);
+                    console.log("Replace Row for " + message.recordId);
                     rollupsList[i] = message;
                     newItem = false;
                 }
@@ -188,6 +189,23 @@
                 rollupsList.push(message);
             }
             cmp.set("v.rollupList", rollupsList);
+
+        } else if (channel === 'filterRecordChange') {
+            // message will inserted or updated the FilterGroupCMT object
+            var filterGroupList = cmp.get("v.filterGroupList");
+            var newItem = true;
+            for (var i = 0; i < filterGroupList.length; i++) {
+                if (filterGroupList[i].recordId === message.recordId) {
+                    // if the Id matches, update that record
+                    console.log("Replace Row for " + message.recordId);
+                    filterGroupList[i] = message;
+                    newItem = false;
+                }
+            }
+            if (newItem === true) {
+                filterGroupList.push(message);
+            }
+            cmp.set("v.filterGroupList", filterGroupList);
         }
     },
 

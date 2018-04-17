@@ -329,6 +329,11 @@ public class CRLP_RollupCMT {
             customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
+            // Convert an empty string ('') value into null for the entity reference to save properly.
+            if (String.isEmpty(this.filterGroupRecordName)) {
+                this.filterGroupRecordName = null;
+            }
+
             Map<String, Object> fldValues;
             if (this.isDeleted != true) {
                 fldValues = new Map<String, Object>{

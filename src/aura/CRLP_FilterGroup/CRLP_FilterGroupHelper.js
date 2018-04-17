@@ -217,9 +217,27 @@
 
                             cmp.set("v.filterRuleList", filterRuleList);
                             cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                            var rollupItems = cmp.get("v.rollupItems");
+
+                            // need to sent back an object with the following properties
+                            var filterGroupTableItem = {};
+                            filterGroupTableItem.label = model.filterGroup.label;
+                            filterGroupTableItem.description = model.filterGroup.description;
+                            filterGroupTableItem.name = model.filterGroup.recordName;
+                            filterGroupTableItem.recordId = model.filterGroup.recordId;
+                            if (filterRuleList) {
+                                filterGroupTableItem.countFilterRules = filterRuleList.length;
+                            } else {
+                                filterGroupTableItem.countFilterRules = 0;
+                            }
+                            if (rollupItems) {
+                                filterGroupTableItem.countRollups = rollupItems.length;
+                            } else {
+                                filterGroupTableItem.countRollups = 0;
+                            }
 
                             // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'filterRecordChange', model);
+                            helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
@@ -435,6 +453,20 @@
         });
         this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description Sends a lightning message to all listening components
+     * @param channel - intended channel to hear the message
+     * @param message - body of the message
+     */
+    sendMessage: function(cmp, channel, message){
+        var sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
     },
 
     /**
