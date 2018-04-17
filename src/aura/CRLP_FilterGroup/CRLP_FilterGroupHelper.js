@@ -18,6 +18,14 @@
                 cmp.set("v.activeFilterGroupId", null);
                 cmp.set("v.activeFilterGroup.recordId", null);
                 cmp.set("v.activeFilterGroup.recordName", null);
+
+                var filterRuleList = cmp.get("v.filterRuleList");
+                for (var i = 0; i < filterRuleList.length; i++) {
+                    filterRuleList[i].recordId = null;
+                    filterRuleList[i].recordName = null;
+                }
+                cmp.set("v.filterRuleList", filterRuleList);
+
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
@@ -181,7 +189,7 @@
                         var deployResult = JSON.parse(response.getReturnValue());
                         console.log('deployResult=' + deployResult);
                         // if there is a record id response
-                        if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
+                        if (deployResult && deployResult.completed === true && deployResult.filterGroupItem) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
                             helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
@@ -413,7 +421,7 @@
                 }*/
 
                 console.log('Calling pollForDeploymentStatus');
-                // this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+                this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
             } else if (state === "ERROR") {
 
                 var errors = response.getError();
