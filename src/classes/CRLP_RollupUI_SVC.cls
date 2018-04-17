@@ -286,35 +286,29 @@ public with sharing class CRLP_RollupUI_SVC {
     * @return A serialized instance of the FilterGroupModel inner class
     */
     @AuraEnabled
-    public static String setupFilterGroupDetail(Id groupId, List<String> objectNames) {
-
-        List<CRLP_RollupCMT.FilterRule> mdtTableList = new List<CRLP_RollupCMT.FilterRule>();
-        Map<String,String> operators = getfilterRuleOperations();
-
-        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(groupId);
-
-        List<Filter_Rule__mdt> mdtList = CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id);
-
-        for(Integer i=0; i<mdtList.size(); i++) {
-            CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(mdtList[i]);
-            ruleItem.operationLabel = operators.get(ruleItem.operation);
-
-            mdtTableList.add(ruleItem);
-        }
+    public static String setupFilterGroupDetail(String groupId, List<String> objectNames) {
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
-
         for(String obj : objectNames){
             List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(obj);
             objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
         }
 
         FilterGroupModel model = new FilterGroupModel();
-
-        model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
-        model.filterRuleList = mdtTableList;
-        model.operators = operators;
+        model.operators = getfilterRuleOperations();
         model.filterFieldsByDataType = objNameToFieldTypeMap;
+        model.filterRuleList = new List<CRLP_RollupCMT.FilterRule>();
+
+        if(!String.isEmpty(groupId)) {
+            Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(groupId);
+            model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
+
+            for(Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
+                CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
+                ruleItem.operationLabel = model.operators.get(ruleItem.operation);
+                model.filterRuleList.add(ruleItem);
+            }
+        }
 
         //serialize to avoid passing inner classes, which is technically unsupported
         String modelString = JSON.serialize(model);

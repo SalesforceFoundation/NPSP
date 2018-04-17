@@ -303,12 +303,6 @@
                 filterGroupCMT.rules.push(deletedRuleList[i]);
             }
         }
-        // Ensure all rules are attached to the current FilterGroup
-        for (var i = 0; i < filterGroupCMT.rules.length; i++) {
-            filterGroupCMT.rules[i].filterGroupRecordName = filterGroupCMT.recordName;
-        }
-
-        console.log(JSON.stringify(filterGroupCMT));
 
         var action = cmp.get("c.saveFilterGroupAndRules");
         action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
@@ -402,7 +396,7 @@
             canSave = false;
         } else if (!name) {
             canSave = false;
-        } else if (filterRuleList.length === 0) {
+        } else if (!filterRuleList || filterRuleList.length === 0) {
             canSave = false;
         }
 
@@ -422,7 +416,9 @@
         }, true);
 
         //check for duplicates
-        if (cmp.get("v.filterRuleMode") === 'create') {
+        if (!filterRuleList) {
+            // nothong to compare
+        } else if (cmp.get("v.filterRuleMode") === 'create') {
             //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (filterRuleList[i].objectName === filterRule.objectName

@@ -22,7 +22,7 @@
             if (state === "SUCCESS") {
                 var data = helper.restructureResponse(response.getReturnValue());
                 var model = JSON.parse(data);
-                if(activeFilterGroupId){
+                if (activeFilterGroupId){
                     //note: the parsing is important to avoid a shared reference
                     cmp.set("v.activeFilterGroup", helper.restructureResponse(model.filterGroup));
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
@@ -56,7 +56,9 @@
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
-                helper.filterRollupList(cmp, model.filterGroup.label, labels);
+                if (model.filterGroup) {
+                    helper.filterRollupList(cmp, model.filterGroup.label, labels);
+                }
                 helper.changeMode(cmp);
 
             }
