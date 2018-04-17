@@ -528,6 +528,9 @@ public with sharing class CRLP_RollupUI_SVC {
             if (rollupCMTObj.detailObject == null) {
                 rollupCMTObj.detailObject = 'Opportunity';
             }
+            if (String.isEmpty(rollupCMTObj.filterGroupRecordName)) {
+                rollupCMTObj.filterGroupRecordName = null;
+            }
 
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});

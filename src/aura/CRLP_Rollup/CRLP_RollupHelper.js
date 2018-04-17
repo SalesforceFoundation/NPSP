@@ -28,7 +28,7 @@
         //update filter group list to contain none as a first option
         //note: unshift can't be used here due to an issue with bound values
         var filterGroups = cmp.get("v.filterGroups");
-        var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
+        var tempList = [{"name": "", "label": cmp.get("v.labels.na")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
 
