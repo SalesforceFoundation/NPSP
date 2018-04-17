@@ -94,7 +94,7 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fldValues;
@@ -197,7 +197,7 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fldValues;
@@ -326,7 +326,7 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fldValues;
