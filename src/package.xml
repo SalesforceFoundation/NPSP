@@ -1037,6 +1037,7 @@
         <members>addrHHAddressAlwaysDefault</members>
         <members>addrSeasonalOverlap</members>
         <members>addrSeasonalPartial</members>
+        <members>advConfigException</members>
         <members>alloAddRow</members>
         <members>alloAddRowAtPosition</members>
         <members>alloAmountOrPercent</members>
