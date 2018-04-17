@@ -32,19 +32,19 @@
 * @date 2017
 * @group TDTM
 * @group-content ../../ApexDocContent/TDTM.htm
-* @description Tests for Advancement_Adapter
+* @description Tests for ADV_Adapter
 **/
 @isTest
-public class Advancement_Adapter_TEST {
+public class ADV_Adapter_TEST {
     /*********************************************************************************************************
     * @description Throw exception if Adv is not installed
     */
     @isTest
     public static void getDefaultTdtmConfigTokensThrowException() {
         //skip the test if Advancement is installed
-        if (Advancement_Info.useAdv()) return;
+        if (ADV_Info.useAdv()) return;
 
-        Advancement_Adapter theAdapter = new Advancement_Adapter();
+        ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
         try {
             List<Trigger_Handler__c> triggerHandlers = theAdapter.getDefaultTdtmConfigNpspRecords(null);
@@ -60,9 +60,9 @@ public class Advancement_Adapter_TEST {
     @isTest
     public static void rollupAccountThrowException() {
         //skip the test if Advancement is installed
-        if (Advancement_Info.useAdv()) return;
+        if (ADV_Info.useAdv()) return;
 
-        Advancement_Adapter theAdapter = new Advancement_Adapter();
+        ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
         try {
             theAdapter.rollupAccounts(null);
@@ -78,9 +78,9 @@ public class Advancement_Adapter_TEST {
     @isTest
     public static void moveOppsToContactAccountThrowException() {
         //skip the test if Advancement is installed
-        if (Advancement_Info.useAdv()) return;
+        if (ADV_Info.useAdv()) return;
 
-        Advancement_Adapter theAdapter = new Advancement_Adapter();
+        ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
         try {
             theAdapter.moveOppsToContactAccount(null, null);
@@ -96,9 +96,9 @@ public class Advancement_Adapter_TEST {
     @isTest
     public static void configAccountForContactThrowException() {
         //skip the test if Advancement is installed
-        if (Advancement_Info.useAdv()) return;
+        if (ADV_Info.useAdv()) return;
 
-        Advancement_Adapter theAdapter = new Advancement_Adapter();
+        ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
         try {
             theAdapter.configAccountForContact(null);
@@ -114,9 +114,9 @@ public class Advancement_Adapter_TEST {
     @isTest
     public static void configAccountTDTMThrowException() {
         //skip the test if Advancement is installed
-        if (Advancement_Info.useAdv()) return;
+        if (ADV_Info.useAdv()) return;
 
-        Advancement_Adapter theAdapter = new Advancement_Adapter();
+        ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
         try {
             theAdapter.configAccountTDTM(null, null, null);

@@ -91,8 +91,8 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      */
     public static list<Trigger_Handler__c> listTH {
         get {
-            if(Advancement_Info.useAdv() && Advancement_Info.getApiNPSP() != null) {
-                listTH = Advancement_Info.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
+            if(ADV_Info.useAdv() && ADV_Info.getApiNPSP() != null) {
+                listTH = ADV_Info.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
             } else {
                 if (listTH == null) {
                     listTH =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,

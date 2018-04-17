@@ -720,7 +720,7 @@ public with sharing class HH_Households_TEST {
     */
     public static testMethod void testCaseChanges() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests
             (new npo02__Households_Settings__c (npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR, npo02__Advanced_Household_Naming__c = true));

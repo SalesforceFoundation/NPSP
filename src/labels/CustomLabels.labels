@@ -1108,6 +1108,13 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
+        <fullName>advConfigException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Config Error in Adv</shortDescription>
+        <value>The Gift Processing package is not config correctly. Please contact your Admin for more details.</value>
+    </labels>
+    <labels>
         <fullName>alloAddRow</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>

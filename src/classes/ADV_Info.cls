@@ -34,16 +34,17 @@
 * @group-content ../../ApexDocContent/TDTM.htm
 * @description Provides the Advancement Information to NPSP class.
 **/
-public with sharing class Advancement_Info {
+
+public with sharing class ADV_Info {
     /*******************************************************************************************************
     * @description  The boolean value to determine if Adv project is installed.
     *******************************************************************************************************/
     private static Boolean useAdv = false;
 
     /*******************************************************************************************************
-    * @description  The adapter class from Adv to override the default behavior of Advancement_Adapter.
+    * @description  The adapter class from Adv to override the default behavior of ADV_Adapter.
     *******************************************************************************************************/
-    private static Advancement_Adapter apiNPSP = null;
+    private static ADV_Adapter apiNPSP = null;
 
     /*******************************************************************************************************
     * @description  The boolean value to determine if the setup is called before.
@@ -55,28 +56,46 @@ public with sharing class Advancement_Info {
     * @return void
     *******************************************************************************************************/
     private static void setup() {
-        //Check if Advancement is installed and enabled.
-        try {
-            //This function checks if the current user is licensed to Advancement
-            //If the Advancement is not installed, then it will throw TypeException: Package corresponding to namespace prefix not found
-            Boolean isUserLicensed = UserInfo.isCurrentUserLicensed('adv1');
-            if(isUserLicensed) {
-                List<SObject> advSettings = Database.query('select adv1__Use_Advancement__c, adv1__API_NPSP_Class__c from adv1__Advancement_Setting__mdt');
-                useAdv = (Boolean)advSettings[0].get('adv1__Use_Advancement__c');
-                String apiNPSPClass = (String)advSettings[0].get('adv1__API_NPSP_Class__c');
 
-                if(String.isNotBlank(apiNPSPClass)) {
-                    Type classType = Type.forName(apiNPSPClass);
-                    if (classType != null) {
-                        Object classInstance = classType.newInstance();
-                        if (classInstance instanceof Advancement_Adapter) {
-                            apiNPSP = (Advancement_Adapter) classInstance;
+        //Check if setup() is being called. If yes, just return
+        if(setupCalled) return;
+
+        //Check if Advancement is installed and Licensed
+        Boolean isUserLicensed = false;
+
+        try {
+            //If the Advancement is not installed, then it will throw TypeException. Otherwise, it will return True/False
+            isUserLicensed = UserInfo.isCurrentUserLicensed('adv1');
+        } catch (Exception e) {
+            // Advancement not installed. Just Return
+            return;
+        }
+
+        //If Adv is installed, we need to throw exception if Adv is not configured correctly
+        Boolean hasConfigError = true;
+
+        if(isUserLicensed) {
+            List<SObject> advSettings = Database.query('select adv1__Use_Advancement__c, adv1__API_NPSP_Class__c from adv1__Advancement_Setting__mdt');
+            if(advSettings != null && advSettings.size() > 0) {
+                useAdv = (Boolean)advSettings[0].get('adv1__Use_Advancement__c');
+                if(useAdv) {
+                    String apiNPSPClass = (String)advSettings[0].get('adv1__API_NPSP_Class__c');
+                    if(String.isNotBlank(apiNPSPClass)) {
+                        Type classType = Type.forName(apiNPSPClass);
+                        if (classType != null) {
+                            Object classInstance = classType.newInstance();
+                            if (classInstance instanceof ADV_Adapter) {
+                                apiNPSP = (ADV_Adapter) classInstance;
+                                hasConfigError = false;
+                            }
                         }
                     }
                 }
             }
-        } catch(Exception e) {
-            // Advancement not installed. Nothing to do
+        }
+
+        if(hasConfigError) {
+            throw new ADVException(Label.advConfigException);
         }
 
         setupCalled = true;
@@ -87,21 +106,22 @@ public with sharing class Advancement_Info {
     * @return useAdv The boolean value to determine if Adv project is installed.
     *******************************************************************************************************/
     public static Boolean useAdv() {
-        if(!setupCalled) {
-            setup();
-        }
+        setup();
         return useAdv;
     }
 
     /*******************************************************************************************************
     * @description The method for other class to get the API_NPSP class instance
-    * @return Advancement_Adapter The adapter class from Adv to override the default behavior of
-    * Advancement_Adapter.
+    * @return ADV_Adapter The adapter class from Adv to override the default behavior of
+    * ADV_Adapter.
     *******************************************************************************************************/
-    public static Advancement_Adapter getApiNPSP() {
-        if(!setupCalled) {
-            setup();
-        }
+    public static ADV_Adapter getApiNPSP() {
+        setup();
         return apiNPSP;
     }
+
+    /*******************************************************************************************************
+    * @description This is the expection class for ADV_Info class
+    ********************************************************************************************************/
+    private class ADVException extends Exception{}
 }

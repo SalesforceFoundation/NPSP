@@ -283,7 +283,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     */
     static testMethod void mergeContactsDifferentHHAccountAddressOverride() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountAddressOverride') return;
         

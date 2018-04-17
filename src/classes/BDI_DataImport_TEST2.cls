@@ -185,7 +185,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIDuplicateEmailExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailExistingContacts') return;
             
@@ -238,7 +238,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIOverlappingEmailExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingEmailExistingContacts') return;
             
@@ -289,7 +289,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIOverlappingPhoneExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingPhoneExistingContacts') return;
             
@@ -343,7 +343,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
             
@@ -388,7 +388,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDISalesforceIdMatchingExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingContacts') return;
             
@@ -435,7 +435,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDISalesforceIdMatchingExistingAndNewContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingAndNewContacts') return;
             
@@ -490,7 +490,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void OneDISalesforceIdMatchingExistingAndNewContact() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'OneDISalesforceIdMatchingExistingAndNewContact') return;
             
@@ -539,7 +539,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void SingleDISalesforceIdMatchingExistingHousehold() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'SingleDISalesforceIdMatchingExistingHousehold') return;
             
@@ -663,7 +663,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdMatchingNewAndExistingContacts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
             
@@ -1305,7 +1305,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDITestAddressDataErrorHandling() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestAddressDataErrorHandling') return;
             
@@ -1481,7 +1481,7 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void testInvalidAddressHandling() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
             

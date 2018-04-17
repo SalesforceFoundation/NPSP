@@ -59,7 +59,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidAddress() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
 
@@ -125,7 +125,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddresses() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         Integer batchSize = 100;
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
@@ -188,7 +188,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void oneValidZipcode() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
 
@@ -236,7 +236,7 @@ public with sharing class ADDR_Validator_Batch_TEST {
     
     public static testmethod void multipleValidAddressessZipcodes() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
 

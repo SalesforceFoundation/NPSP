@@ -35,8 +35,7 @@
 * @description Provides an adapter for Advancement package to be able to inject customizations into NPSP and provide API to inject to other project.
 **/
 
-global virtual with sharing class Advancement_Adapter {
-
+global virtual with sharing class ADV_Adapter {
     /*******************************************************************************************************
     * @description To be called by the NPSP TDTM trigger dispatcher. Advancement will disable some NPSP trigger
     * handlers records (since they conflict with HEDA version) and return the rest.
@@ -44,7 +43,7 @@ global virtual with sharing class Advancement_Adapter {
     * @return List<Trigger_Handler__c> The list of Trigger Handler record for TDTM to use.
     ********************************************************************************************************/
     global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
-        if(!Advancement_Info.useAdv()) {
+        if(!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -58,7 +57,7 @@ global virtual with sharing class Advancement_Adapter {
     * @return void
     ********************************************************************************************************/
     global void rollupAccounts(List<Id> listAccountId) {
-        if(!Advancement_Info.useAdv()) {
+        if(!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -74,7 +73,7 @@ global virtual with sharing class Advancement_Adapter {
     * @return void
     ********************************************************************************************************/
     global void moveOppsToContactAccount(Map<Id,Id> mapContactIdAccountIdNew, Map<Id,Id> mapContactIdAccountIdOld) {
-        if(!Advancement_Info.useAdv()) {
+        if(!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -89,7 +88,7 @@ global virtual with sharing class Advancement_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountForContact(Account a) {
-        if(!Advancement_Info.useAdv()) {
+        if(!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -107,7 +106,7 @@ global virtual with sharing class Advancement_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld, String action) {
-        if(!Advancement_Info.useAdv()) {
+        if(!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -117,7 +116,7 @@ global virtual with sharing class Advancement_Adapter {
     }
 
     /*******************************************************************************************************
-    * @description This is the expection class for Advancement Adapter class
+    * @description This is the expection class for ADV_Adapter class
     ********************************************************************************************************/
-    global class AdapterException extends Exception{}
+    private class AdapterException extends Exception{}
 }

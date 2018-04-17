@@ -129,7 +129,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static testMethod void testGivingRollupOne2One(){
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupOne2One') return;
         testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -139,7 +139,7 @@ public with sharing class RLLP_OppRollup_TEST {
     */
     static testMethod void testGivingRollupHHAccount(){
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupHHAccount') return;
         testGivingRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);

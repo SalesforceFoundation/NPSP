@@ -289,7 +289,7 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDIExistingHomeAddresses() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -339,7 +339,7 @@ public with sharing class BDI_DryRun_TEST {
     **********************************************************************************************************/
     static testMethod void manyDIUpdatedHomeAddresses() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         // existing contacts
         List<Contact> listConExisting = new List<Contact>();

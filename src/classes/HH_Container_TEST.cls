@@ -204,7 +204,7 @@ private class HH_Container_TEST {
     */
     public static testMethod void testGetAddresses() { 
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         initTestData();
 
@@ -425,7 +425,7 @@ private class HH_Container_TEST {
     **********************************************************************************************************/ 
     private static testMethod void saveShouldAddRemovedContactToNewHousehold() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         Integer accountSize = 2;
         Account[] accounts = buildAccounts(accountSize);
@@ -551,7 +551,7 @@ private class HH_Container_TEST {
     public static testMethod void testAddContactAddresses() { 
         
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         initTestData();
 

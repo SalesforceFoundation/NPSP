@@ -63,7 +63,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAddress() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactAddress') return;
         
@@ -111,7 +111,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactInvalidAddress() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactInvalidAddress') return;
         
@@ -145,7 +145,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test400() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test400') return;
         
@@ -179,7 +179,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test401() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test401') return;
         
@@ -213,7 +213,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test402() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test402') return;
         
@@ -247,7 +247,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void test500() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test500') return;
         
@@ -281,7 +281,7 @@ public with sharing class ADDR_Validator_TEST {
     
     static testMethod void testContactAmbiguousAddress() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactAmbiguousAddress') return;
         
@@ -317,7 +317,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactZipOnly() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactZipOnly') return;
         
@@ -356,7 +356,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void testContactCityAndStateOnly() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactCityAndStateOnly') return;
         
@@ -455,7 +455,7 @@ public with sharing class ADDR_Validator_TEST {
 
     static testMethod void dontValidatePreviouslyValidatedAddresses() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'dontValidatePreviouslyValidatedAddresses') return;
         

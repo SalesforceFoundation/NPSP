@@ -661,7 +661,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void newDupeAccountAddrNonDefault() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'newDupeAccountAddrNonDefault') return;
         
@@ -723,7 +723,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void newDupeContactAddrNonDefault() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'newDupeContactAddrNonDefault') return;
         
@@ -788,7 +788,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateConAddrWithOverride() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithOverride') return;
         
@@ -873,7 +873,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateConAddrWithExternalOverride() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateConAddrWithExternalOverride') return;
         
@@ -949,7 +949,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void insertConWithNoAddrToExistingHH() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertConWithNoAddrToExistingHH') return;
         
@@ -986,7 +986,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void insertConWithAddrToExistingHH() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertConWithAddrToExistingHH') return;
         
@@ -1033,7 +1033,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void insertConWithDefaultAddrToExistingHH() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertConWithDefaultAddrToExistingHH') return;
         
@@ -1085,7 +1085,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void insertContactWithMultilineStreetAddress() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'insertContactWithMultilineStreetAddress') return;
         
@@ -1171,7 +1171,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateAccMultilineStreetAddr() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddr') return;
         
@@ -1223,7 +1223,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateAccMultilineStreetAddrNL() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateAccMultilineStreetAddrNL') return;
         
@@ -1274,7 +1274,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void newOrgAccounts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'newOrgAccounts') return;
         
@@ -1318,7 +1318,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateOrgAccounts() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateOrgAccounts') return;
         
@@ -1442,7 +1442,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void testDisabledHHAccountAddr() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testDisabledHHAccountAddr') return;
         
@@ -1487,7 +1487,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void clearConAddrExisting() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'clearConAddrExisting') return;
         
@@ -1558,7 +1558,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void setConAddrOverrideAndLookupOnNewContact() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'setConAddrOverrideAndLookupOnNewContact') return;
         
@@ -1596,7 +1596,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateOrgContactToHH() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
         
@@ -1631,7 +1631,7 @@ public with sharing class ADDR_Addresses_TEST2 {
     **********************************************************************************************************/            
     static testMethod void updateHHContactToNewHH() {
         //skip the test if Advancement is installed
-        if(Advancement_Info.useAdv()) return;
+        if(ADV_Info.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'updateOrgContactToHH') return;
         

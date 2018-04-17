@@ -36,6 +36,9 @@
         <members>ADDR_Validator_REST</members>
         <members>ADDR_Validator_TDTM</members>
         <members>ADDR_Validator_TEST</members>
+        <members>ADV_Adapter</members>
+        <members>ADV_Adapter_TEST</members>
+        <members>ADV_Info</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
         <members>ALLO_Allocations_TDTM</members>
@@ -48,9 +51,6 @@
         <members>ALLO_RollupBTN_CTRL</members>
         <members>ALLO_Rollup_SCHED</members>
         <members>ALLO_Rollup_TEST</members>
-        <members>Advancement_Adapter</members>
-        <members>Advancement_Adapter_TEST</members>
-        <members>Advancement_Info</members>
         <members>BDE_BatchDataEntry</members>
         <members>BDE_BatchDataEntry_TEST</members>
         <members>BDE_BatchEntry_CTRL</members>
