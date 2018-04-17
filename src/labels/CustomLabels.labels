@@ -682,7 +682,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for target field.</shortDescription>
-        <value>Custom field on the selected Target Object that you are rolling up donation data to. Fields must be of the following types: Date, Datetime, Double, ID, MultiPicklist, Picklist, String, TextArea. Note that a Target Field can only be associated with one rollup.</value>
+        <value>Custom fields on the selected Target Object that you are rolling up donation data to. Fields must be of the following types: Date, Datetime, Double, ID, MultiPicklist, Picklist, String, TextArea. Note that a Target Field can only be associated with one rollup.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupActiveHelpText</fullName>
