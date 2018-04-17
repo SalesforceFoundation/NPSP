@@ -118,6 +118,14 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>IsDeleted</label>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Operation__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>

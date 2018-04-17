@@ -63,6 +63,9 @@
                 cmp.set("v.isIncomplete", true);
                 cmp.set("v.isReadOnly", false);
                 this.hideAllFields(cmp);
+            } else if (mode === "delete") {
+                var activeRollup = cmp.get("v.activeRollup");
+                this.deleteRollup(cmp, activeRollup);
             }
         }
     },
@@ -715,6 +718,56 @@
         $A.enqueueAction(action);
     },
 
+    /* @description: "deletes" the active rollup (save with isDeleted=true and isActive=false) and fires a confirmation toast
+    * @param activeRollup:
+    */
+    deleteRollup: function (cmp, activeRollup) {
+        console.log("In deleteRollup");
+
+        this.toggleSpinner(cmp, true);
+
+        cmp.set("v.activeRollup.isDeleted",true);
+        cmp.set("v.activeRollup.isActive",false);
+        var rollupCMT = cmp.get("v.activeRollup");
+        var action = cmp.get("c.saveRollup");
+        action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            console.log('STATE=' + state);
+
+            if (state === "SUCCESS") {
+                // Response value will be in the format of "JobId-RecordDeveloperName"
+                var responseText = response.getReturnValue();
+                var jobId = responseText.split("-")[0];
+                var recordName = responseText.split("-")[1];
+
+                console.log('Response = ' + response.getReturnValue());
+                console.log('Returned jobId = ' + jobId);
+                console.log('Returned RecordName = ' + recordName);
+
+                cmp.set("v.activeRollup.recordName", recordName);
+                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                    cmp.set("v.cachedRollup.recordName", recordName);
+                }
+
+                console.log('Calling pollForDeploymentStatus');
+                this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+
+            } else if (state === "ERROR") {
+
+                var errors = response.getError();
+                var msg = "Unknown error";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
+                }
+                this.showToast(cmp, 'error', cmp.get("v.labels.rollupDeleteFail"), msg);
+                this.toggleSpinner(cmp, false);
+            }
+        });
+        this.showToast(cmp, 'info', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteProgress"));
+        $A.enqueueAction(action);
+    },
+
     /**
      * @description: sets the selected rollup type based on detail and summary objects when a record is loaded
      */
@@ -941,26 +994,42 @@
                         if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
-                            // Save the inserted/updated record id
-                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
-                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+                            var mode = cmp.get("v.mode");
 
-                            // for a new record, copy the activeRollup map to the cachedRollup map
-                            if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                                var activeRollup = cmp.get("v.activeRollup");
-                                var cachedRollup = cmp.get("v.cachedRollup");
-                                for (var key in activeRollup) {
-                                    if (activeRollup.hasOwnProperty(key)) {
-                                        cachedRollup[key] = activeRollup[key];
+                            if(mode !== "delete") {
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
+
+                                // Save the inserted/updated record id
+                                cmp.set("v.activeRollupId", deployResult.rollupItem.id);
+                                cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+
+                                // for a new record, copy the activeRollup map to the cachedRollup map
+                                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                                    var activeRollup = cmp.get("v.activeRollup");
+                                    var cachedRollup = cmp.get("v.cachedRollup");
+                                    for (var key in activeRollup) {
+                                        if (activeRollup.hasOwnProperty(key)) {
+                                            cachedRollup[key] = activeRollup[key];
+                                        }
                                     }
+                                    cmp.set("v.cachedRollup", cachedRollup);
                                 }
-                                cmp.set("v.cachedRollup", cachedRollup);
+                            } else {
+                                // fire cancel event to nav back to rollup grid
+                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+                                cancelEvent.setParams({grid: 'rollup'});
+                                cancelEvent.fire();
+                                console.log('firing cancel event');
                             }
 
-                            // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            if(mode !== "delete") {
+                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            } else {
+                                // Send a message with the deleted Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupDeleted', deployResult.rollupItem);
+                            }
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second

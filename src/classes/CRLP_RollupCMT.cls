@@ -334,7 +334,7 @@ public class CRLP_RollupCMT {
                     fldValues.put('Date_Field__c', combineObjectAndField(dateObject, dateField));
                 }
             } else {
-                fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
+                fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted , 'Active__c' => isActive };
             }
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 

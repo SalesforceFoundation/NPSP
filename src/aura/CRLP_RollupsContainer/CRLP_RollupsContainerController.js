@@ -181,6 +181,18 @@
                 rollupsList.push(message);
             }
             cmp.set("v.rollupList", rollupsList);
+        } else if (channel === 'rollupDeleted') {
+            var rollupsList = cmp.get("v.rollupList");
+            for (var i = 0; i < rollupsList.length; i++) {
+                if (rollupsList[i].id === message.id) {
+                    // if the Id matches, delete that record
+                    console.log("Delete Row for " + message.id);
+                    rollupsList.splice(i,1);
+                    break;
+                }
+            }
+            cmp.set("v.rollupList", rollupsList);
+            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
         }
     },
 
@@ -294,4 +306,12 @@
     toggleFilterRuleModal: function(cmp, event, helper){
         helper.toggleFilterRuleModal(cmp);
     },
+
+    /**
+     * @description: closes the toast notification window
+     */
+    closeNotificationWindow : function(cmp, event, helper) {
+        cmp.set("v.notificationClasses", "slds-hide");
+    }
+
 })

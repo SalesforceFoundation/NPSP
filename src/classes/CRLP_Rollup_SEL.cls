@@ -57,6 +57,7 @@ public class CRLP_Rollup_SEL {
                                 , Amount_Object__r.QualifiedApiName, Amount_Object__r.Label
                                 , Date_Field__r.QualifiedApiName, Date_Field__r.Label
                                 , Date_Object__r.QualifiedApiName, Date_Object__r.Label
+                                , Is_Deleted__c
                         FROM Rollup__mdt
                         ORDER BY Summary_Object__c, MasterLabel
                 ];
