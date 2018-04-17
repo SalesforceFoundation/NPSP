@@ -55,7 +55,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String recordName;
         @AuraEnabled public String summaryObject;
         @AuraEnabled public String summaryObjectApiName;
-        @AuraEnabled public Id id;
+        @AuraEnabled public String recordId;
 
     }
 
@@ -68,23 +68,8 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
-        @AuraEnabled public Id id;
+        @AuraEnabled public String recordId;
     }
-
-    /*******************************************************************************************************
-    * @description a class to hold only the required information from the filter_rule__mdt records for the filter group detail.
-    */
-    /*public class FilterRulesTableItem{
-        @AuraEnabled public String objectLabel;
-        @AuraEnabled public String objectName;
-        @AuraEnabled public String fieldLabel;
-        @AuraEnabled public String fieldName;
-        @AuraEnabled public String operatorName;
-        @AuraEnabled public String operatorLabel;
-        @AuraEnabled public String constantName;
-        @AuraEnabled public String constantLabel;
-        @AuraEnabled public Id id;
-    }*/
 
     /*******************************************************************************************************
     * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
@@ -230,7 +215,7 @@ public with sharing class CRLP_RollupUI_SVC {
         } else {
             item.activeIcon = 'utility:close';
         }
-        item.id = rlp.Id;
+        item.recordId = rlp.Id;
         return item;
     }
 
@@ -254,7 +239,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
-            item.id = mdtList[i].Id;
+            item.recordId = mdtList[i].Id;
 
             mdtTableList.add(item);
         }
@@ -286,7 +271,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @return A serialized instance of the FilterGroupModel inner class
     */
     @AuraEnabled
-    public static String setupFilterGroupDetail(String groupId, List<String> objectNames) {
+    public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
 
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
         for(String obj : objectNames){
@@ -294,25 +279,36 @@ public with sharing class CRLP_RollupUI_SVC {
             objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
         }
 
-        FilterGroupModel model = new FilterGroupModel();
+        FilterGroupModel model = createFilterGroupModel(filterGroupId);
         model.operators = getfilterRuleOperations();
         model.filterFieldsByDataType = objNameToFieldTypeMap;
-        model.filterRuleList = new List<CRLP_RollupCMT.FilterRule>();
-
-        if(!String.isEmpty(groupId)) {
-            Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(groupId);
-            model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
-
-            for(Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
-                CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
-                ruleItem.operationLabel = model.operators.get(ruleItem.operation);
-                model.filterRuleList.add(ruleItem);
-            }
-        }
 
         //serialize to avoid passing inner classes, which is technically unsupported
         String modelString = JSON.serialize(model);
         return modelString;
+    }
+
+    /**
+     * @description Build a FilterGroupModel wrapper for a given FilterGroup Id
+     * @param filterGroupId
+     * @return FilterGroupModel with just the FilterGroup and FilterRuleList properties populated
+     */
+    private static FilterGroupModel createFilterGroupModel(Id filterGroupId) {
+        FilterGroupModel model = new FilterGroupModel();
+        model.filterRuleList = new List<CRLP_RollupCMT.FilterRule>();
+        if (!String.isEmpty(filterGroupId)) {
+            Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(filterGroupId);
+            model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
+
+            Map<String,String> operatorMap = getfilterRuleOperations();
+            for(Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
+                CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
+                ruleItem.operationLabel = operatorMap.get(ruleItem.operation);
+                model.filterRuleList.add(ruleItem);
+            }
+        }
+
+        return model;
     }
 
     /*******************************************************************************************************
@@ -582,11 +578,11 @@ public with sharing class CRLP_RollupUI_SVC {
      * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
      * @param jobId CMT Deployment Job Id to check the status for
      * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
-     * TODO Refactor this to work for FilterGroup+FilterRule as well as for Rollups
+     * @param objectType 'Rollup' or 'Filter'
      * @return DeploymentResult
      */
     @AuraEnabled
-    public static DeploymentResult getDeploymentStatus(String jobId, String recordName) {
+    public static String getDeploymentStatus(String jobId, String recordName, String objectType) {
         Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
@@ -595,11 +591,17 @@ public with sharing class CRLP_RollupUI_SVC {
                 String result = deploymentStatus.get(jobId);
                 if (result == Metadata.DeployStatus.Succeeded.name()) {
                     try {
-                        Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                         DeploymentResult response = new DeploymentResult();
-                        response.completed = true;
-                        response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
-                        return response;
+                        if (objectType == 'Rollup') {
+                            Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
+                            response.completed = true;
+                            response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                        } else if (objectType == 'Filter') {
+                            Id groupId = CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(recordName);
+                            response.completed = true;
+                            response.filterGroupItem = createFilterGroupModel(groupId);
+                        }
+                        return JSON.serialize(response);
                     } catch (Exception ex) {
                         // error retrieving the metadata record
                         throw new AuraHandledException(ex.getMessage());

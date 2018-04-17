@@ -52,6 +52,8 @@
                 cmp.set("v.isReadOnly", true);
             } else if (mode === "clone") {
                 cmp.set("v.activeRollupId", null);
+                cmp.set("v.activeRollup.recordId", null);
+                cmp.set("v.activeRollup.recordName", null);
                 cmp.set("v.isReadOnly", false);
                 var newSummary = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
                 cmp.set("v.summaryFields", newSummary);
@@ -928,14 +930,13 @@
                 counter++;
                 console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
-                action.setParams({jobId: jobId, recordName: recordName});
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup'});
                 action.setCallback(this, function (response) {
                     console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     if (state === "SUCCESS") {
-                        // Response will be a deployResult wrapper class
-                        var deployResult = response.getReturnValue();
-                        deployResult = helper.restructureResponse(deployResult);
+                        // Response will be a serialized deployResult wrapper class
+                        var deployResult = JSON.parse(response.getReturnValue());
                         console.log('deployResult=' + deployResult);
                         // if there is a record id response
                         if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
@@ -944,8 +945,8 @@
                             helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
                             // Save the inserted/updated record id
-                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
-                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+                            cmp.set("v.activeRollupId", deployResult.rollupItem.recordId);
+                            cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
 
                             // for a new record, copy the activeRollup map to the cachedRollup map
                             if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {

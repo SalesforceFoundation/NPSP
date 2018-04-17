@@ -423,11 +423,14 @@ public class CRLP_RollupCMT {
         return txt.replace('General Accounting Unit', 'GAU').
                 replace('Opportunity', 'Opp').
                 replace('Account', 'Acct').
-                replace('Contact', 'Cnct').
+                replace('Contact', 'Con').
                 replace('Recurring Donation', 'RD').
                 replace('Partial Soft Credit', 'PSC').
+                replace('Allocations', 'Allo').
                 replace('Payment', 'Pmt').
                 replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
+                replace('soft credit', 'sftCr').replace('hard credit', 'hrdCr').
+                replace('#', 'num').replace('year', 'yr').
                 replace('number', 'num').replace('count', 'cnt').replace('total', 'sum').replace(' of ', '');
     }
 }

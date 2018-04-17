@@ -16,6 +16,8 @@
                 cmp.set("v.isReadOnly", true);
             } else if (mode === "clone") {
                 cmp.set("v.activeFilterGroupId", null);
+                cmp.set("v.activeFilterGroup.recordId", null);
+                cmp.set("v.activeFilterGroup.recordName", null);
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
@@ -151,6 +153,91 @@
         });
 
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description Inserting or updating a CMT record is an asynchronous deployment process. This method uses the
+     * unique jobId and the Filter_Group__mdt.DeveloperName value to recursively call an apex controller method to determine
+     * when the deployment has completed (by looking in a custom settings object). If it completes, the final recordId
+     * is returned. Otherwise an error message to render is returned. If the return is null, then it calls this method
+     * again to wait another second an try again.
+     * @param jobId The returns CMT deployment job id to query status for
+     * @param recordName Unique record name value (that was just inserted/updated) to query for.
+     */
+    pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
+        var helper=this;
+        var maxPollingRetryCount = 30;
+        var poller = window.setTimeout(
+            $A.getCallback(function() {
+                counter++;
+                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
+                var action = cmp.get("c.getDeploymentStatus");
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter'});
+                action.setCallback(this, function (response) {
+                    console.log('getDeploymentStatus.callback');
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        // Response will be a serialized deployResult wrapper class
+                        var deployResult = JSON.parse(response.getReturnValue());
+                        console.log('deployResult=' + deployResult);
+                        // if there is a record id response
+                        if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
+
+                            var model = helper.restructureResponse(deployResult.filterGroupItem);
+
+                            // Save the inserted/updated record id
+                            cmp.set("v.activeFilterGroup", model.filterGroup);
+                            cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+
+                            // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
+                            if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
+                                var activeFilterGroup = cmp.get("v.activeFilterGroup");
+                                var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
+                                for (var key in activeFilterGroup) {
+                                    if (activeFilterGroup.hasOwnProperty(key)) {
+                                        cachedFilterGroup[key] = activeFilterGroup[key];
+                                    }
+                                }
+                                cmp.set("v.cachedFilterGroup", cachedFilterGroup);
+                            }
+
+                            var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                            var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                            cmp.set("v.filterRuleList", filterRuleList);
+                            cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+
+                            // Send a message with the changed or new Rollup to the RollupContainer Component
+                            helper.sendMessage(cmp, 'filterRecordChange', model);
+
+                        } else {
+                            // No record id, so run call this method again to check in another 1 second
+                            if (counter < maxPollingRetryCount) {
+                                helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
+                            } else {
+                                // When the counter hits the max, need to tell the user what happened
+                                helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                helper.toggleSpinner(cmp, false);
+                            }
+                        }
+                    } else {
+                        // If an error is returned, parse the message, display and remove the spinner
+                        var errors = response.getError();
+                        var msg = "Unknown error";
+                        if (errors && errors[0] && errors[0].message) {
+                            msg = errors[0].message;
+                        }
+                        helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                        window.clearTimeout(poller);
+                        helper.toggleSpinner(cmp, false);
+                    }
+                });
+                $A.enqueueAction(action);
+            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+        );
     },
 
     /**

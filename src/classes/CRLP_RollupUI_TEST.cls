@@ -149,12 +149,12 @@ public class CRLP_RollupUI_TEST {
     /*********************************************************************************************************
     * @description Tests getDeploymentStatus()
     */
-    public static testMethod void testGetDeploymentStatus() {
+    public static testMethod void testGetDeploymentStatus_Rollup() {
 
         // Create the test CMDT data
         mockRollupCMTValues();
 
-        //test a failure
+        // Rest a failure
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "Some Text" }'
@@ -162,19 +162,21 @@ public class CRLP_RollupUI_TEST {
 
         try {
             // we know this will fail because the rollupName is not found
-            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName');
+            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName', 'Rollup');
         } catch (Exception e) {
             System.assertNotEquals(null, e.getMessage());
         }
 
-        //test a success
+        // Test a success
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
         ));
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
-        CRLP_RollupUI_SVC.DeploymentResult response = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName);
+        String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup');
+        System.debug(resultString);
+        CRLP_RollupUI_SVC.DeploymentResult response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
         System.assertNotEquals(null, response);
 

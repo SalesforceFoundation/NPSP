@@ -15,7 +15,7 @@
         }
 
         var action = cmp.get("c.setupFilterGroupDetail");
-        action.setParams({groupId: activeFilterGroupId, objectNames: objectNames});
+        action.setParams({filterGroupId: activeFilterGroupId, objectNames: objectNames});
 
         action.setCallback(this, function (response) {
             var state = response.getState();

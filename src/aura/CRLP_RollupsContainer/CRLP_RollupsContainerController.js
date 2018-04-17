@@ -177,7 +177,7 @@
             var rollupsList = cmp.get("v.rollupList");
             var newItem = true;
             for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].id === message.id) {
+                if (rollupsList[i].recordId === message.id) {
                     // if the Id matches, update that record
                     console.log("Replace Row for " + message.id);
                     rollupsList[i] = message;
@@ -225,7 +225,7 @@
 
         if(action.name !== 'delete'){
             cmp.set("v.detailMode", action.name);
-            cmp.set("v.activeRecordId", row.id);
+            cmp.set("v.activeRecordId", row.recordId);
             //check which grid is displayed
             if(isRollupsGrid){
                 cmp.set("v.isRollupsGrid", false);
