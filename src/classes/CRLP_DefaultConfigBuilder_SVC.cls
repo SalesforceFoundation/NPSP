@@ -325,7 +325,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
 
             CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-            rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).replace('_365_', '_N_');
+            rollup.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName;
             rollup.description = rollupText[1];
             rollup.filterGroupRecordName = rollupDetails[1];
             rollup.summaryObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(summaryObjectField)[0]);
