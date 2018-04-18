@@ -7,4 +7,30 @@
         <fields>npe5__Contact__c</fields>
         <label>NPSP Affiliation Compact Layout</label>
     </compactLayouts>
+    <fields>
+        <fullName>Related_Opportunity_Contact_Role__c</fullName>
+        <description>The Opportunity Contact Role created for the Contact in this Affiliation when you create an Opportunity for the Organization.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The Opportunity Contact Role created for the Contact in this Affiliation when you create an Opportunity for the Organization.</inlineHelpText>
+        <label>Related Opportunity Contact Role</label>
+        <picklist>
+            <picklistValues>
+                <fullName>Soft Credit</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Solicitor</fullName>
+                <default>false</default>
+            </picklistValues>
+            <picklistValues>
+                <fullName>Matching Gift</fullName>
+                <default>false</default>
+            </picklistValues>
+            <sorted>false</sorted>
+        </picklist>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+    </fields>
 </CustomObject>

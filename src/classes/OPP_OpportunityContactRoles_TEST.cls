@@ -673,7 +673,7 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The updated Opportunity's Primary Contact details are retrieved.
     * @return void
     *********************************************************************************************************/
-    static testMethod void testPopulatePrimaryContactToOpportunity() {
+    static testMethod void testPopulatePrimaryContactToOpportunities() {
         Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
@@ -689,7 +689,7 @@ private class OPP_OpportunityContactRoles_TEST {
 
         accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
 
-        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(testOpptys, accountDetails);
+        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
         System.assertEquals(5, primaryContactToOpportunity.size());
@@ -697,5 +697,41 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id)[0]);
     }
 
+
+    /*********************************************************************************************************
+    * @description Tests populating a Map of the Opportunity's associated Account Id to  Opportunity Ids.
+    * verify:
+    *   The Map was populated accordingly.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulateAccountToOpportunities() {
+        Map<Id, List<Id>> accountToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+        List<Account> testAccounts = new List<Account>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        Test.startTest();
+        insert testOpptys;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        for (Account eachAccount : accountDetails.values()) {
+            eachAccount.npe01__SYSTEMIsIndividual__c = false;
+            testAccounts.add(eachAccount);
+        }
+        update testAccounts;
+
+        accountToOpportunity = OPP_OpportunityContactRoles_TDTM.populateAccountToOpportunities(testOpptys, accountDetails);
+        Test.stopTest();
+
+        System.assertEquals(5, accountToOpportunity.size());
+        System.assertEquals(testOpptys[0].Id, accountToOpportunity.get(testContacts[0].AccountId)[0]);
+        System.assertEquals(testOpptys[3].Id, accountToOpportunity.get(testContacts[3].AccountId)[0]);
+    }
 
 }
