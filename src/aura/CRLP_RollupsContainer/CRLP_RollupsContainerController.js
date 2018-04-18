@@ -22,7 +22,6 @@
 
                 var actions = [{label: labels.edit, name:'edit'}
                     , {label: labels.clone, name:'clone'}
-                    , {label: labels.delete, name:'delete'}
                 ];
 
                 //these are the current lists of summary + detail objects in the app
@@ -78,6 +77,13 @@
         });
 
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: closes the toast notification window
+     */
+    closeNotificationWindow: function (cmp, event, helper) {
+        cmp.set("v.notificationClasses", "slds-hide");
     },
 
     /**
@@ -206,6 +212,18 @@
                 filterGroupList.push(message);
             }
             cmp.set("v.filterGroupList", filterGroupList);
+
+        } else if (channel === 'rollupDeleted') {
+            var rollupsList = cmp.get("v.rollupList");
+            for (var i = 0; i < rollupsList.length; i++) {
+                if (rollupsList[i].id === message.id) {
+                    // if the Id matches, delete that record
+                    rollupsList.splice(i, 1);
+                    break;
+                }
+            }
+            cmp.set("v.rollupList", rollupsList);
+            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
         }
     },
 
@@ -255,22 +273,14 @@
                 cmp.set("v.width", 8);
             }
         } else {
-            if(isRollupsGrid){
-                var rows = cmp.get("v.rollupList");
+            //verify no rollups use the filter group before deleting
+            if(!row.countRollups){
+                var rows = cmp.get("v.filterGroupList");
                 var rowIndex = rows.indexOf(row);
                 rows.splice(rowIndex, 1);
-                cmp.set("v.rollupList", rows);
-            }
-            else{
-                //verify no rollups use the filter group before deleting
-                if(!row.countRollups){
-                    var rows = cmp.get("v.filterGroupList");
-                    var rowIndex = rows.indexOf(row);
-                    rows.splice(rowIndex, 1);
-                    cmp.set("v.filterGroupList", rows);
-                } else {
-                    helper.toggleFilterRuleModal(cmp);
-                }
+                cmp.set("v.filterGroupList", rows);
+            } else {
+                helper.toggleFilterRuleModal(cmp);
             }
         }
     },
@@ -325,4 +335,5 @@
     toggleFilterRuleModal: function(cmp, event, helper){
         helper.toggleFilterRuleModal(cmp);
     }
+
 })

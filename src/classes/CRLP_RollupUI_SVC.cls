@@ -169,7 +169,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
         for(Rollup__mdt rlp : rollups){
-            mdtTableList.add(createRollupItem(rlp));
+            if(!rlp.Is_Deleted__c) {
+                mdtTableList.add(createRollupItem(rlp));
+            }
         }
 
         return mdtTableList;
@@ -477,6 +479,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
+                'rollupDeleteProgress' => String.format('Deleting the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteSuccess' => String.format('{0} Successfully Deleted', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
