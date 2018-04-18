@@ -97,7 +97,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     * @param Opportunity. The Opportunity with the error.
     * @return Error__c.
     ********************************************************************************************************/
-    public Error__c createError(Opportunity opportunity) {
+    private Error__c createError(Opportunity opportunity) {
         return new Error__c(
             Datetime__c = System.now(),
             Full_Message__c = String.format(ERROR_MESSAGE, new List<String>{opportunity.Name}),
@@ -111,7 +111,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     * @description The Duplicate Primary Opportunity Contact Roles Wrapper. It contains the logic that loads  
     * and manages the duplicate Primary OCRs and the related Opportunities.
     ********************************************************************************************************/
-    public class DuplicatePrimaryOCRs {
+    class DuplicatePrimaryOCRs {
         private Map<Id, Opportunity> opportunityRecords;
         private Map<Id, OpportunityContactRole> ocrRecordsToUpdate;
         private Map<Id, OpportunityContactRole> ocrRecordsToDelete;
@@ -142,13 +142,15 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         public void makePrimary(OpportunityContactRole inputOCR) {
             Opportunity opportunityToUpdate = opportunityRecords.get(inputOCR.OpportunityId);
             for (OpportunityContactRole ocr : opportunityToUpdate.OpportunityContactRoles) {
-                if (ocr.Id == inputOCR.Id) {
-                    ocr.IsPrimary = true;
-                    ocrRecordsToUpdate.put(ocr.Id, ocr);
-                }
                 // Delete the inputOCR duplicates (same Contact)
                 if (ocr.Id != inputOCR.Id && ocr.ContactId == inputOCR.ContactId) {
                     ocrRecordsToDelete.put(ocr.Id, ocr);
+                }
+                // After a delete of one duplicate Primary OCR, Salesforce update all the OCR IsPrimary to false.
+                // So, we need to force the update of the input OCR even if the OCR is already a Primary OCR.
+                if (ocr.Id == inputOCR.Id ) {
+                    ocr.IsPrimary = true;
+                    ocrRecordsToUpdate.put(ocr.Id, ocr);
                 }
             }
         }
@@ -187,7 +189,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     /*******************************************************************************************************
     * @description Class that wraps an Opportunity and its related duplicate Primary OCRs.
     ********************************************************************************************************/
-    public class OpportunityOCRs {
+    class OpportunityOCRs {
         private Opportunity record;
 
         /*********************************************************************************************************
