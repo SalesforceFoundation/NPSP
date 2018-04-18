@@ -82,21 +82,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description action method run on page load to check account model and admin status of running user
-    * and add pagemessages as needed
-    */
-    public void checkPermissions() {
-        // throw an error if the org isn't on HH account model
-        if (!isHHAccount) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgCRLPHouseholdAccountError));
-        }
-        // throw an error if the user isn't an admin
-        if (!isAdmin) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgCRLPNonAdminError));
-        }
-    }
-
-    /*******************************************************************************************************
     * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
     * and reschedule Scheduled Jobs
     * @return void

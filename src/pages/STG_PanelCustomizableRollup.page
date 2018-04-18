@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelCustomizableRollup_CTRL" action="{!checkPermissions}"  >
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" >
 
     <apex:slds/>
     <div class="slds-scope">
@@ -12,7 +12,58 @@
                     </p>
                 </div>
             </div>
-            <c:UTIL_PageMessages allowClose="false" id="messages"/>
+            <c:UTIL_PageMessages id="messages"/>
+
+            <apex:outputPanel rendered="{! !isHHAccount }">
+                <div class="slds" id="page_messages">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_error slds-theme--error">
+
+                        <div class="notify__content">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <apex:outputText>
+                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
+                                            <path d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 19.4c-4.6 0-8.3-3.7-8.3-8.3S7.4 3.7 12 3.7s8.3 3.7 8.3 8.3-3.7 8.3-8.3 8.3zm4.8-9.7H7.2c-.4 0-.6.3-.7.6v1.6c.1.4.3.6.7.6h9.6c.4 0 .6-.3.7-.6v-1.6c-.1-.3-.3-.6-.7-.6z" />
+                                        </svg>
+                                    </apex:outputText>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                        <apex:outputText value="{!$Label.PageMessagesError}: " />
+                                        <apex:outputText value="{!$Label.stgCRLPHouseholdAccountError}"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
+
+
+            <apex:outputPanel rendered="{! !isAdmin }">
+                <div class="slds" id="page_messages">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_error slds-theme--error">
+
+                        <div class="notify__content">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <apex:outputText>
+                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
+                                            <path d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 19.4c-4.6 0-8.3-3.7-8.3-8.3S7.4 3.7 12 3.7s8.3 3.7 8.3 8.3-3.7 8.3-8.3 8.3zm4.8-9.7H7.2c-.4 0-.6.3-.7.6v1.6c.1.4.3.6.7.6h9.6c.4 0 .6-.3.7-.6v-1.6c-.1-.3-.3-.6-.7-.6z" />
+                                        </svg>
+                                    </apex:outputText>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                        <apex:outputText value="{!$Label.PageMessagesError}: " />
+                                        <apex:outputText value="{!$Label.stgCRLPNonAdminError}"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
 
             <div class="slds-card {!IF(isPolling,'','slds-hide')}">
                 <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
