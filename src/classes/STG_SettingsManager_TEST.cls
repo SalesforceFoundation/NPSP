@@ -924,7 +924,6 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(false, ApexPages.hasMessages());
         System.assert(panel.isHHAccount);
         System.assert(panel.isAdmin);
-        panel.checkPermissions();
         System.assertEquals(false, ApexPages.hasMessages());
         STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
         panel.saveSettings();
