@@ -1037,7 +1037,6 @@
         <members>addrHHAddressAlwaysDefault</members>
         <members>addrSeasonalOverlap</members>
         <members>addrSeasonalPartial</members>
-        <members>advConfigException</members>
         <members>alloAddRow</members>
         <members>alloAddRowAtPosition</members>
         <members>alloAmountOrPercent</members>
@@ -1160,6 +1159,8 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>giftProcessingAccountException</members>
+        <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>

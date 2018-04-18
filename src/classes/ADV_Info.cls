@@ -58,7 +58,8 @@ public with sharing class ADV_Info {
     private static void setup() {
 
         //Check if setup() is being called. If yes, just return
-        if(setupCalled) return;
+        if (setupCalled)
+            return;
 
         //Check if Advancement is installed and Licensed
         Boolean isUserLicensed = false;
@@ -68,6 +69,7 @@ public with sharing class ADV_Info {
             isUserLicensed = UserInfo.isCurrentUserLicensed('adv1');
         } catch (Exception e) {
             // Advancement not installed. Just Return
+            setupCalled = true;
             return;
         }
 
@@ -90,15 +92,17 @@ public with sharing class ADV_Info {
                             }
                         }
                     }
+                } else {
+                    hasConfigError = false;
                 }
             }
         }
 
-        if(hasConfigError) {
-            throw new ADVException(Label.advConfigException);
-        }
-
         setupCalled = true;
+
+        if(hasConfigError) {
+            throw new ADVException(Label.giftProcessingConfigException);
+        }
     }
 
     /*******************************************************************************************************

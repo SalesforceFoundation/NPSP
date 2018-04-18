@@ -43,7 +43,7 @@ global virtual with sharing class ADV_Adapter {
     * @return List<Trigger_Handler__c> The list of Trigger Handler record for TDTM to use.
     ********************************************************************************************************/
     global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
-        if(!ADV_Info.useAdv()) {
+        if (!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -57,7 +57,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void rollupAccounts(List<Id> listAccountId) {
-        if(!ADV_Info.useAdv()) {
+        if (!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -73,7 +73,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void moveOppsToContactAccount(Map<Id,Id> mapContactIdAccountIdNew, Map<Id,Id> mapContactIdAccountIdOld) {
-        if(!ADV_Info.useAdv()) {
+        if (!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -88,10 +88,14 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountForContact(Account a) {
-        if(!ADV_Info.useAdv()) {
+        if (!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
+        if (CAO_Constants.isBucketModel()) {
+            throw new AdapterException(Label.giftProcessingAccountException);
+        }
+        
         a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
         a.Type = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_TYPE : '';
         a.npe01__SYSTEMISINDIVIDUAL__c = true;
@@ -106,7 +110,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld, String action) {
-        if(!ADV_Info.useAdv()) {
+        if (!ADV_Info.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 

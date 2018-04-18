@@ -48,6 +48,8 @@ public class ADV_Adapter_TEST {
         Test.startTest();
         try {
             List<Trigger_Handler__c> triggerHandlers = theAdapter.getDefaultTdtmConfigNpspRecords(null);
+            //Add this to make sure it throws exception
+            System.assert(false);
         } catch (Exception ex) {
             System.assertEquals(Label.adapterException, ex.getMessage());
         }
@@ -66,6 +68,8 @@ public class ADV_Adapter_TEST {
         Test.startTest();
         try {
             theAdapter.rollupAccounts(null);
+            //Add this to make sure it throws exception
+            System.assert(false);
         } catch (Exception ex) {
             System.assertEquals(Label.adapterException, ex.getMessage());
         }
@@ -84,6 +88,8 @@ public class ADV_Adapter_TEST {
         Test.startTest();
         try {
             theAdapter.moveOppsToContactAccount(null, null);
+            //Add this to make sure it throws exception
+            System.assert(false);
         } catch (Exception ex) {
             System.assertEquals(Label.adapterException, ex.getMessage());
         }
@@ -102,6 +108,8 @@ public class ADV_Adapter_TEST {
         Test.startTest();
         try {
             theAdapter.configAccountForContact(null);
+            //Add this to make sure it throws exception
+            System.assert(false);
         } catch (Exception ex) {
             System.assertEquals(Label.adapterException, ex.getMessage());
         }
@@ -120,6 +128,8 @@ public class ADV_Adapter_TEST {
         Test.startTest();
         try {
             theAdapter.configAccountTDTM(null, null, null);
+            //Add this to make sure it throws exception
+            System.assert(false);
         } catch (Exception ex) {
             System.assertEquals(Label.adapterException, ex.getMessage());
         }
