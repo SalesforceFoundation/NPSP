@@ -59,7 +59,6 @@
 
     <!-- private attributes -->
     <aura:attribute name="deletedRuleList" type="List" description="Filter Rules that were deleted" access="private"/>
-    <aura:attribute name="isPageDirty" type="Boolean" default="false" access="private" description="True when there are changes to be saved"/>
     <aura:attribute name="filterRuleColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="filterRuleActionColumns" type="List" description="List of available filter rules" access="private"/>
     <aura:attribute name="operatorMap" type="Map" description="Map of operators with key value pairs of API names and labels" access="private"/>

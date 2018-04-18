@@ -219,7 +219,7 @@
                             cmp.set("v.cachedFilterRuleList", filterRuleListCached);
                             var rollupItems = cmp.get("v.rollupItems");
 
-                            // need to sent back an object with the following properties
+                            // need to send back an object with the following properties
                             var filterGroupTableItem = {};
                             filterGroupTableItem.label = model.filterGroup.label;
                             filterGroupTableItem.description = model.filterGroup.description;
@@ -272,7 +272,7 @@
      * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatConstantLabel: function(cmp, valueApiName, operation){
+    reformatValueLabel: function(cmp, valueApiName, operation){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
@@ -344,7 +344,7 @@
      * @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp) {
-        var defaultFilterRule = {objectName: '', fieldName: '', operation: '', constant: ''};
+        var defaultFilterRule = {objectName: '', fieldName: '', operation: '', value: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
         cmp.set("v.filterRuleFieldType", "text");
@@ -433,12 +433,6 @@
                 console.log('Returned jobId = ' + jobId);
                 console.log('Returned RecordName = ' + recordName);
 
-                /*cmp.set("v.activeRollup.recordName", recordName);
-                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                    cmp.set("v.cachedRollup.recordName", recordName);
-                }*/
-
-                console.log('Calling pollForDeploymentStatus');
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
             } else if (state === "ERROR") {
 
@@ -544,7 +538,7 @@
 
         //check for duplicates
         if (!filterRuleList) {
-            // nothong to compare
+            // nothing to compare
         } else if (cmp.get("v.filterRuleMode") === 'create') {
             //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {

@@ -208,7 +208,6 @@
         if(canSave){
             cmp.set("v.mode", 'view');
 
-            //todo: add save code here
             helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
 
             //sends the message to the parent cmp RollupsContainer
@@ -242,7 +241,7 @@
 
                 //special reformatting for multipicklist and semi-colon delimited lists
                 if (filterRule.operation === 'In_List' || filterRule.operation === 'Not_In_List') {
-                    filterRule.valueLabel = helper.reformatvalueLabel(cmp, filterRule.value, filterRule.operation);
+                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operation);
                 } else {
                     filterRule.valueLabel = filterRule.valueName;
                 }
@@ -254,7 +253,6 @@
                     filterRuleList[filterRule.index] = filterRule;
                 }
                 cmp.set("v.filterRuleList", filterRuleList);
-                cmp.set("v.isPageDirty", true);
 
                 helper.toggleFilterRuleModal(cmp);
                 helper.resetActiveFilterRule(cmp);

@@ -154,7 +154,7 @@ public class CRLP_RollupUI_TEST {
         // Create the test CMDT data
         mockRollupCMTValues();
 
-        // Rest a failure
+        // Test a failure
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "Some Text" }'
