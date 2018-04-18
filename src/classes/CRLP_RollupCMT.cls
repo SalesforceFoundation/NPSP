@@ -252,7 +252,7 @@ public class CRLP_RollupCMT {
         public Integer intValue;
 
         public Rollup(String label) {
-            this.label = label.trim();
+            this.label = label.replace('Number', '#').left(40).trim();
             this.recordName = generateRecordName(this.label, false);
             this.useFiscalYear = false;
             this.isActive = true;
