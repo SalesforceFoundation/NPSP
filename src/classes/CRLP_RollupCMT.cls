@@ -252,7 +252,7 @@ public class CRLP_RollupCMT {
         public Integer intValue;
 
         public Rollup(String label) {
-            this.label = label.replace('Number', '#').left(40).trim();
+            this.label = label.replace('Number', 'Num').left(40).trim();
             this.recordName = generateRecordName(this.label, false);
             this.useFiscalYear = false;
             this.isActive = true;
@@ -450,9 +450,9 @@ public class CRLP_RollupCMT {
                     replace('Contact', 'Con').
                     replace('Payment', 'Pmt').
                     replace('Allocations', 'Allo').
-                    replace('soft credit', 'sftCr').replace('hard credit', 'hrdCr').
+                    replace('Soft_Credit', 'sftCr').replace('Hard_Credit', 'hrdCr').
                     replace('#', 'num').replace('year', 'yr').
-                    replace('number', 'num').replace('count', 'cnt').replace('total', 'sum');
+                    replace('Number', 'Num').replace('Count', 'cnt');
         }
         return txt;
     }
