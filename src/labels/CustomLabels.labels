@@ -1108,13 +1108,6 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>An address must have all or none of its Seasonal fields set.</value>
     </labels>
     <labels>
-        <fullName>advConfigException</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Config Error in Adv</shortDescription>
-        <value>The Gift Processing package is not config correctly. Please contact your Admin for more details.</value>
-    </labels>
-    <labels>
         <fullName>alloAddRow</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -2095,6 +2088,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsError</shortDescription>
         <value>You do not have permissions to modify {0}.</value>
+    </labels>
+    <labels>
+        <fullName>giftProcessingAccountException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing Account Model error</shortDescription>
+        <value>Gift Processing currently does not support Bucket Account Model!</value>
+    </labels>
+    <labels>
+        <fullName>giftProcessingConfigException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing configuration error</shortDescription>
+        <value>Your org is missing required configuration for Gift Processing. Contact your admin for help.</value>
     </labels>
     <labels>
         <fullName>healthButtonRun</fullName>
