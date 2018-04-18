@@ -50,7 +50,7 @@
         var newItem = true;
         for (var i = 0; i < list.length; i++) {
             //todo: refactor to lowercase Id after CMT save information is added
-            if (list[i].id === item.id || list[i].id === item.Id) {
+            if (list[i].recordId === item.recordId) {
                 //update filter group information on rollups only if master label has changed
                 if (list[i].MasterLabel !== item.MasterLabel && context === 'filterGroup') {
                     this.requeryRollups(cmp);
@@ -133,5 +133,19 @@
         });
 
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description Show a message on the screen
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast : function(cmp, type, title, message) {
+        cmp.set("v.toastStatus", type);
+        var altText = cmp.get("v.labels." + type);
+        var text = {message: message, title: title, alternativeText: altText};
+        cmp.set("v.notificationText", text);
+        cmp.set("v.notificationClasses", "");
     }
 })

@@ -28,7 +28,7 @@
         //update filter group list to contain none as a first option
         //note: unshift can't be used here due to an issue with bound values
         var filterGroups = cmp.get("v.filterGroups");
-        var tempList = [{"name": cmp.get("v.labels.na"), "label": cmp.get("v.labels.na")}];
+        var tempList = [{"name": "", "label": cmp.get("v.labels.na")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
 
@@ -52,6 +52,8 @@
                 cmp.set("v.isReadOnly", true);
             } else if (mode === "clone") {
                 cmp.set("v.activeRollupId", null);
+                cmp.set("v.activeRollup.recordId", null);
+                cmp.set("v.activeRollup.recordName", null);
                 cmp.set("v.isReadOnly", false);
                 var newSummary = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
                 cmp.set("v.summaryFields", newSummary);
@@ -63,6 +65,9 @@
                 cmp.set("v.isIncomplete", true);
                 cmp.set("v.isReadOnly", false);
                 this.hideAllFields(cmp);
+            } else if (mode === "delete") {
+                var activeRollup = cmp.get("v.activeRollup");
+                this.saveRollup(cmp, activeRollup);
             }
         }
     },
@@ -261,6 +266,7 @@
         console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
+        var activeRollup = cmp.get("v.activeRollup");
         //during create, visibility of operation and filter group are toggled
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel) {
@@ -275,10 +281,9 @@
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        var operation = cmp.get("v.activeRollup.operation");
-        renderMap = this.renderAmountField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDateField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDetailField(cmp, operation, rollupLabel, renderMap);
+        renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupLabel, renderMap);
+        renderMap = this.renderDateField(cmp, activeRollup.operation, rollupLabel, renderMap);
+        renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
 
@@ -290,6 +295,11 @@
 
         //reset amount fields
         this.resetFields(cmp, detailObject, 'amount');
+        //todo: fix this for all cases, not just opportunity amount
+        if(!activeRollup.amountObject){
+            cmp.set("v.activeRollup.amountObjectLabel", activeRollup.detailObjectLabel);
+            cmp.set("v.activeRollup.amountObject", activeRollup.detailObject);
+        }
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
@@ -297,18 +307,17 @@
         if (detailObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
             cmp.set("v.activeRollup.dateObject", labels.objectPayment);
-            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            this.resetFields(cmp, activeRollup.dateObject, "date");
             cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
         } else {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
             cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
-            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            this.resetFields(cmp, activeRollup.dateObject, "date");
             cmp.set("v.activeRollup.dateField", "CloseDate");
         }
 
         //check if save button can be activated
-        var detailField = cmp.get("v.activeRollup.detailField");
-        this.verifyRollupSaveActive(cmp, detailField);
+        this.verifyRollupSaveActive(cmp, activeRollup.detailField);
 
     },
 
@@ -666,12 +675,17 @@
         return label;
     },
 
-    /* @description: saves the active rollup and sets the mode to view
+    /* @description: saves the active rollup and sets the mode to view OR punts back to grid in the case of a soft "delete"
     * @param activeRollup:
     */
     saveRollup: function (cmp, activeRollup) {
-        // Set the mode to view while the save is running
-        cmp.set("v.mode", 'view');
+        var currentMode = cmp.get("v.mode");
+        if (currentMode === 'delete') {
+            cmp.set("v.activeRollup.isDeleted",true);
+            cmp.set("v.activeRollup.isActive",false);
+        } else {
+            cmp.set("v.mode", 'view');
+        }
 
         this.toggleSpinner(cmp, true);
 
@@ -707,11 +721,19 @@
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                if (currentMode === 'delete') {
+                    this.showToast(cmp, 'error', cmp.get("v.labels.rollupDeleteFail"), msg);
+                } else {
+                    this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                }
                 this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+        if (currentMode === 'delete') {
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteProgress"));
+        } else {
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+        }
         $A.enqueueAction(action);
     },
 
@@ -873,10 +895,8 @@
 
         var label = summaryObjectName + ': ' + summaryFieldName;
 
-        // shrink the label size since it's limited to 40 characters
-        label = label.replace('Account', 'Acct').replace('Contact', 'Cnct').
-        replace('General Accounting Unit', 'GAU').replace('Recurring Donation', 'RD').
-        replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
+        // The label is limited to 40 characters, so use these two shortened names for space
+        label = label.replace(cmp.get("v.labels.labelGAU"), 'GAU').replace(cmp.get("v.labels.labelRD"), 'RD');
 
         var recordName = cmp.get("v.activeRollup.recordName");
         var masterLabel = '';
@@ -886,16 +906,11 @@
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.label", masterLabel);
         } else if (mode === 'create') {
-            masterLabel = "UDR: " + label;
+            masterLabel = label;
             cmp.set("v.activeRollup.label", masterLabel);
         } else if (summaryObjectName && summaryFieldName) {
             // Only reset the name once summary object and field are selected for edit and clone modes
-            // Don't add the UDR prefix if modifying a packaged rollup definition
-            if (recordName && !recordName.startsWith('NPSP')) {
-                masterLabel = "UDR: " + label;
-            } else {
-                masterLabel = label;
-            }
+            masterLabel = label;
             cmp.set("v.activeRollup.label", masterLabel);
         }
         if (masterLabel.length > 40) {
@@ -907,7 +922,7 @@
 
         //sends the message to the parent cmp RollupsContainer
         if(masterLabel){
-            this.sendMessage(cmp, 'rollupNameChange', masterLabel);
+            this.sendMessage(cmp, 'nameChange', masterLabel);
         }
     },
 
@@ -928,39 +943,57 @@
                 counter++;
                 console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
-                action.setParams({jobId: jobId, recordName: recordName});
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup'});
                 action.setCallback(this, function (response) {
                     console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     if (state === "SUCCESS") {
-                        // Response will be a deployResult wrapper class
-                        var deployResult = response.getReturnValue();
-                        deployResult = helper.restructureResponse(deployResult);
+                        // Response will be a serialized deployResult wrapper class
+                        var deployResult = JSON.parse(response.getReturnValue());
                         console.log('deployResult=' + deployResult);
                         // if there is a record id response
                         if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
-                            // Save the inserted/updated record id
-                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
-                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+                            var mode = cmp.get("v.mode");
 
-                            // for a new record, copy the activeRollup map to the cachedRollup map
-                            if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                                var activeRollup = cmp.get("v.activeRollup");
-                                var cachedRollup = cmp.get("v.cachedRollup");
-                                for (var key in activeRollup) {
-                                    if (activeRollup.hasOwnProperty(key)) {
-                                        cachedRollup[key] = activeRollup[key];
+                            if(mode === "delete") {
+                                // fire cancel event to nav back to rollup grid
+                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+                                cancelEvent.setParams({grid: 'rollup'});
+                                cancelEvent.fire();
+                                console.log('firing cancel event');
+
+                            } else {
+
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
+
+                                // Save the inserted/updated record id
+                                cmp.set("v.activeRollupId", deployResult.rollupItem.recordId);
+                                cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
+
+                                // for a new record, copy the activeRollup map to the cachedRollup map
+                                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                                    var activeRollup = cmp.get("v.activeRollup");
+                                    var cachedRollup = cmp.get("v.cachedRollup");
+                                    for (var key in activeRollup) {
+                                        if (activeRollup.hasOwnProperty(key)) {
+                                            cachedRollup[key] = activeRollup[key];
+                                        }
                                     }
+                                    cmp.set("v.cachedRollup", cachedRollup);
                                 }
-                                cmp.set("v.cachedRollup", cachedRollup);
+
                             }
 
-                            // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            if(mode === "delete") {
+                                // Send a message with the deleted Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupDeleted', deployResult.rollupItem);
+                            } else {
+                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            }
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second

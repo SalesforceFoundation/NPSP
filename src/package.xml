@@ -964,6 +964,7 @@
         <members>Rollup__mdt.Detail_Object__c</members>
         <members>Rollup__mdt.Filter_Group__c</members>
         <members>Rollup__mdt.Integer__c</members>
+        <members>Rollup__mdt.Is_Deleted__c</members>
         <members>Rollup__mdt.Operation__c</members>
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>
@@ -1106,6 +1107,8 @@
         <members>CRLP_CreateRollupDateFieldHelpText</members>
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
+        <members>CRLP_DeleteProgress</members>
+        <members>CRLP_DeleteSuccess</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
         <members>CRLP_Return</members>
@@ -1113,6 +1116,10 @@
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
         <members>CRLP_RollupType</members>
+        <members>CRLP_SaveError</members>
+        <members>CRLP_SaveProgress</members>
+        <members>CRLP_SaveSuccess</members>
+        <members>CRLP_SaveTimeout</members>
         <members>CRLP_SoftCredit</members>
         <members>CampaignMemberStatusOmit</members>
         <members>CascadeDeletionError</members>

@@ -72,7 +72,7 @@
         <fullName>Detail_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Detail Field</label>
+        <label>Field to Roll Up</label>
         <metadataRelationshipControllingField>Rollup__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>RollupsDetail</relationshipLabel>
@@ -116,6 +116,14 @@
         <scale>0</scale>
         <type>Number</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Is_Deleted__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <fieldManageability>DeveloperControlled</fieldManageability>
+        <label>IsDeleted</label>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Operation__c</fullName>

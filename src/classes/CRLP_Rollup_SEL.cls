@@ -57,7 +57,9 @@ public class CRLP_Rollup_SEL {
                                 , Amount_Object__r.QualifiedApiName, Amount_Object__r.Label
                                 , Date_Field__r.QualifiedApiName, Date_Field__r.Label
                                 , Date_Object__r.QualifiedApiName, Date_Object__r.Label
+                                , Is_Deleted__c
                         FROM Rollup__mdt
+                        WHERE Is_Deleted__c = false
                         ORDER BY Summary_Object__c, MasterLabel
                 ];
             }
@@ -135,15 +137,12 @@ public class CRLP_Rollup_SEL {
      */
     public static Id getRollupIdByDeveloperName(String developerName) {
 
-        Rollup__mdt rollup = new Rollup__mdt();
         for (Rollup__mdt rlp : cachedRollups) {
             if (developerName == rlp.DeveloperName) {
-                rollup = rlp;
-                break;
+                return rlp.Id;
             }
         }
-        return rollup.Id;
-
+        return null;
     }
 
     /**
