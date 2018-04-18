@@ -92,8 +92,9 @@
 
                 table = document.getElementById('my-hot-table');
 
-                wasEnterPressed = false;
-                wasUpArrowPressed = false;
+            //    wasEnterPressed = false;
+            //    wasUpArrowPressed = false;
+                movedSideWays = false;
 
         		$scope.totalPages = '{!totalOfPages}';
 
@@ -259,7 +260,6 @@
                     manualColumnResize: true,
                     manualRowResize: true,
                     readOnly: false,
-               //     search: true,
                     sortIndicator: true,
                     fillHandle:  true,
                     autoWrapRow: true,
@@ -415,9 +415,10 @@
                                 changesToSave[dataRowId] = {};
                             }
 
-                                if(!wasEnterPressed) { //Enter keycode
+                            //  if(!wasEnterPressed) { //Enter keycode
+                                if(movedSideWays) {
 
-                                triggerUpdateCell(newValue, prop, dataRowId, function(result) {
+                                    triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
                                     	var cell = hot.getCellMeta(row, getColumnFromName(prop));
 
@@ -438,8 +439,8 @@
                                             dataRowId  = result.dataImportIds[0];
                                         }
                                     });
-
                                 }
+
                                 $scope.currentDataImport = this.getDataAtRow(row);
                                 changesToSave[dataRowId][prop] = newValue;
                             }
@@ -480,11 +481,11 @@
 
                             if (changesToSave[dataRowId]) {
 
-                                if (wasUpArrowPressed) {
+                            /*    if (wasUpArrowPressed) {
 
                                     row = row+2;
                                     wasUpArrowPressed = false;
-                                }
+                                }*/
 
                                 triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
 
@@ -1039,9 +1040,11 @@
 
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
-                    wasEnterPressed = false;
-		            wasUpArrowPressed = false;
+                //    wasEnterPressed = false;
+		        //    wasUpArrowPressed = false;
+                    movedSideWays = false;
 
+                    /*
                     if (e.keyCode === 9) {
 
                         var selection = hot.getSelected();
@@ -1058,18 +1061,28 @@
                         hot.selectCell(rowIndex,colIndex);
                     }
                     else if (e.keyCode === 13 || e.keyCode  === 38 || e.keyCode === 40) {
-                        // Enter or arrow down or up was pressed.
+                        // Enter, arrow down or up was pressed.
                         wasEnterPressed = true;
                         wasUpArrowPressed = true;
                     }
+                    else if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
+                        // Arrow right, arrow left or tab was pressed.
+                        movedSideWays = true;
+                    }*/
+
+                    if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
+                        // Arrow right, arrow left or tab was pressed.
+                        movedSideWays = true;
+                    }
+
                 });
 
                 // END DEFINING ANGULAR FUNCTIONS
             });
-	    
+
 	    function removeMessage(dataRowId) {
 
-                setTimeout(function() { 
+                setTimeout(function() {
                     $(dataRowId).find( "span:last" ).remove();
                 }, 10);
             }
