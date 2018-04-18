@@ -93,7 +93,7 @@
                 table = document.getElementById('my-hot-table');
 
             //    wasEnterPressed = false;
-            //    wasUpArrowPressed = false;
+                wasUpArrowPressed = false;
                 movedSideWays = false;
 
         		$scope.totalPages = '{!totalOfPages}';
@@ -472,7 +472,7 @@
                     },
 
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
-
+                        console.log('ROW ' + row);
                         var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
                         var dataAtRow = this.getDataAtRow(lastSelectedRow);
                         var self = this;
@@ -481,11 +481,11 @@
 
                             if (changesToSave[dataRowId]) {
 
-                            /*    if (wasUpArrowPressed) {
+                                if (wasUpArrowPressed) {
 
                                     row = row+2;
                                     wasUpArrowPressed = false;
-                                }*/
+                                }
 
                                 triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
 
@@ -1041,7 +1041,7 @@
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
                 //    wasEnterPressed = false;
-		        //    wasUpArrowPressed = false;
+		            wasUpArrowPressed = false;
                     movedSideWays = false;
 
                     /*
@@ -1070,7 +1070,11 @@
                         movedSideWays = true;
                     }*/
 
-                    if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
+                    if (e.keyCode  === 38) {
+                        // Arrow up was pressed.
+                        wasUpArrowPressed = true;
+                    }
+                    else if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
                         // Arrow right, arrow left or tab was pressed.
                         movedSideWays = true;
                     }
