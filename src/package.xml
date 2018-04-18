@@ -964,6 +964,7 @@
         <members>Rollup__mdt.Detail_Object__c</members>
         <members>Rollup__mdt.Filter_Group__c</members>
         <members>Rollup__mdt.Integer__c</members>
+        <members>Rollup__mdt.Is_Deleted__c</members>
         <members>Rollup__mdt.Operation__c</members>
         <members>Rollup__mdt.Summary_Field__c</members>
         <members>Rollup__mdt.Summary_Object__c</members>

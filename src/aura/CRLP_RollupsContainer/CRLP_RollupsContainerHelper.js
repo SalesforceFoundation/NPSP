@@ -69,4 +69,18 @@
         var modal = cmp.find('modaldialog');
         $A.util.toggleClass(modal, 'slds-fade-in-open');
     },
+
+    /**
+     * @description Show a message on the screen
+     * @param type - error, success, info
+     * @param title - message title
+     * @param message - message to display
+     */
+    showToast : function(cmp, type, title, message) {
+        cmp.set("v.toastStatus", type);
+        var altText = cmp.get("v.labels." + type);
+        var text = {message: message, title: title, alternativeText: altText};
+        cmp.set("v.notificationText", text);
+        cmp.set("v.notificationClasses", "");
+    }
 })

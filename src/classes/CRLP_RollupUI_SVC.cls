@@ -184,7 +184,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
         for(Rollup__mdt rlp : rollups){
-            mdtTableList.add(createRollupItem(rlp));
+            if(!rlp.Is_Deleted__c) {
+                mdtTableList.add(createRollupItem(rlp));
+            }
         }
 
         return mdtTableList;
@@ -493,6 +495,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupType' => Label.CRLP_RollupType,
                 'save' => Label.stgBtnSave,
                 /* TODO Refactor this to use custom labels when have all save logic in place */
+                'rollupDeleteProgress' => String.format('Deleting the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteSuccess' => String.format('{0} Successfully Deleted', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format('Saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveSuccess' => String.format('{0} Successfully Saved', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveFail' => String.format('Error saving the {0}', new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
