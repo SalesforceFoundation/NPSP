@@ -88,16 +88,16 @@
             myApp.controller('MainCtrl', function($scope, $compile) {
 
                 var data = JSON.parse('{!jsonString}');
-                var activeData = JSON.parse('{!jsonString}');
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
-            //    searchField = document.getElementById('handsonSearch');
+
                 wasEnterPressed = false;
                 wasUpArrowPressed = false;
-		$scope.totalPages = '{!totalOfPages}';
 
-		//Map to save cells with invalid format values
+        		$scope.totalPages = '{!totalOfPages}';
+
+        		//Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -108,9 +108,6 @@
 
                 // Flag to prevent a bug when deleting multiple records.
                 var deletingRecords = false;
-
-                // Flag for updating using sticky fields
-                stickyEdit = false;
 
                 // Needed for afterCreateRow:as it fires before afterInit: & confuses all
                 var renderState = false;
@@ -347,7 +344,7 @@
                                     hot.deselectCell();
 
                                     // Set the flag back on false so we can continue deleting records individualy.
-                                    deletingRecords = false;                                                                       
+                                    deletingRecords = false;
                                 }
                                 else {
 
@@ -400,13 +397,6 @@
                         }
 
                         if((source === 'paste'  || source === 'autofill') && deletingRecords === false) {
-
-                            // Save all records
-                            triggerSaveAll(changes);
-                        }
-                        else if (stickyEdit === true && deletingRecords === false) {
-
-                            stickyEdit = false;
 
                             // Save all records
                             triggerSaveAll(changes);
@@ -772,37 +762,8 @@
                     for (var r = start; r <= end; r++) {
                         (function(r) {
 
-                            var arrayOfChanges = JSON.stringify(changes);
-                            var changesSplit = arrayOfChanges.split(',');
-
                             var row = gridData[r];
                             var dataRowId = row[getColumnFromName('Id')];
-
-                            var prop = changesSplit[1];
-                            var propSplit = prop.split('"');
-                            prop = propSplit[1];
-                            var oldValue = changesSplit[2];
-                            var newValue = changesSplit[3];
-                            var newValueSplit = newValue.split('"');
-                            newValue = newValueSplit[1];
-
-                            triggerUpdateCell(newValue, prop, dataRowId, function(result) {
-
-                                var cell = hot.getCellMeta(row, getColumnFromName(prop));
-
-                                if (!result.success) {
-
-                                    cell.valid = false;
-                                    cell.hasError = true;
-
-                                }
-                                else {
-                                    cell.valid = true;
-                                    cell.hasError = false;
-                                }
-                                var indexMap = r + prop;
-                                updatedCellsMap[indexMap] = cell;
-                            });
 
                             triggerSave(dataRowId, row, r, hot, function(result) {
 
@@ -820,6 +781,7 @@
                                     data[r]['Errors'] = escaped;
                                 }
                                 else {
+
                                     data[r]['Errors'] = '';
                                 }
 
@@ -1078,7 +1040,7 @@
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
                     wasEnterPressed = false;
-		    wasUpArrowPressed = false;
+		            wasUpArrowPressed = false;
 
                     if (e.keyCode === 9) {
 
@@ -1095,12 +1057,9 @@
 
                         hot.selectCell(rowIndex,colIndex);
                     }
-                    else if (e.keyCode === 13 || e.keyCode === 40) {
-                        // Enter or arrow down was pressed.
-                        wasEnterPressed = true
-                    }
-                    else if (e.keyCode === 38) {
-
+                    else if (e.keyCode === 13 || e.keyCode  === 38 || e.keyCode === 40) {
+                        // Enter or arrow down or up was pressed.
+                        wasEnterPressed = true;
                         wasUpArrowPressed = true;
                     }
                 });
