@@ -44,11 +44,8 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Group__mdt> cachedFilterGroups {
         get {
             if (cachedFilterGroups == null) {
-                cachedFilterGroups = [SELECT Id
-                        , MasterLabel
-                        , DeveloperName
-                        , Description__c
-                        , (SELECT Id FROM Filter_Rules__r)
+                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Description__c,
+                            (SELECT Id, Is_Deleted__c FROM Filter_Rules__r)
                         FROM Filter_Group__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY MasterLabel];
@@ -62,7 +59,7 @@ public without sharing class CMT_FilterRule_SEL {
         get {
             if (cachedFilterRules == null) {
                 cachedFilterRules = [SELECT Id, MasterLabel, DeveloperName, Filter_Group__r.DeveloperName,
-                                Filter_Group__c, Field__r.QualifiedApiName, Field__r.MasterLabel,
+                                Filter_Group__c, Field__r.QualifiedApiName, Field__r.MasterLabel, Is_Deleted__c,
                                 Object__r.QualifiedApiName, Object__r.MasterLabel, Operator__c, Constant__c
                         FROM Filter_Rule__mdt
                         WHERE Is_Deleted__c = false
@@ -101,6 +98,21 @@ public without sharing class CMT_FilterRule_SEL {
             filterGroupsById.put(fg.Id, fg);
         }
         return filterGroupsById;
+    }
+
+    /**
+     * @description Queries a single Rollup Definition using the specified DeveloperName
+     * @return Record Id or null
+     */
+    public static Id getFilterGroupIdByDeveloperName(String developerName) {
+
+        for (Filter_Group__mdt fg : cachedFilterGroups) {
+            if (developerName == fg.DeveloperName) {
+                return fg.Id;
+            }
+        }
+        return null;
+
     }
 
     /**

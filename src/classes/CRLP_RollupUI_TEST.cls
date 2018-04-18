@@ -72,13 +72,15 @@ public class CRLP_RollupUI_TEST {
         // Create the test CMDT data
         mockRollupCMTValues();
 
-        Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.cachedFilterGroups[0];
+        Filter_Group__mdt filterGroupMdt = CMT_FilterRule_SEL.cachedFilterGroups[0];
+        CRLP_RollupCMT.FilterGroup filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroupMdt);
 
         List<String> objectList = new List<String>{'Opportunity'};
 
-        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.Id, objectList);
+        String modelString = CRLP_RollupUI_SVC.setupFilterGroupDetail(filterGroup.recordId, objectList);
+        CRLP_RollupUI_SVC.FilterGroupModel filterGroupModel = (CRLP_RollupUI_SVC.FilterGroupModel)JSON.deserialize(modelString, CRLP_RollupUI_SVC.FilterGroupModel.class);
 
-        System.assertEquals(filterGroup,filterGroupModel.filterGroup, 'The Filter Group should match what was passed in');
+        System.assertEquals(filterGroup.recordName,filterGroupModel.filterGroup.recordName, 'The Filter Group should match what was passed in');
         System.assertEquals(3,filterGroupModel.filterRuleList.size(), 'There should be 3 Filter Rules');
         System.assertEquals(13,filterGroupModel.operators.size(), 'There should be 13 operators');
         System.assertEquals(objectList.size(),filterGroupModel.filterFieldsByDataType.size(), 'There should be one entry for each object passed in');
@@ -147,12 +149,12 @@ public class CRLP_RollupUI_TEST {
     /*********************************************************************************************************
     * @description Tests getDeploymentStatus()
     */
-    public static testMethod void testGetDeploymentStatus() {
+    public static testMethod void testGetDeploymentStatus_Rollup() {
 
         // Create the test CMDT data
         mockRollupCMTValues();
 
-        //test a failure
+        // Test a failure
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "Some Text" }'
@@ -160,19 +162,21 @@ public class CRLP_RollupUI_TEST {
 
         try {
             // we know this will fail because the rollupName is not found
-            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName');
+            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName', 'Rollup');
         } catch (Exception e) {
             System.assertNotEquals(null, e.getMessage());
         }
 
-        //test a success
+        // Test a success
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
                 CMT_API_Status__c = '{ "jobId" : "'+Metadata.DeployStatus.Succeeded.name()+'" }'
         ));
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
-        CRLP_RollupUI_SVC.DeploymentResult response = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName);
+        String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup');
+        System.debug(resultString);
+        CRLP_RollupUI_SVC.DeploymentResult response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
         System.assertNotEquals(null, response);
 

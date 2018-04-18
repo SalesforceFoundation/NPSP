@@ -797,6 +797,22 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Progress Message</shortDescription>
+        <value>Deleting the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteSuccess</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>{0} Successfully Deleted</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -851,6 +867,38 @@
         <protected>true</protected>
         <shortDescription>Type of custom rollup</shortDescription>
         <value>Rollup Type</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error Deploying Customizable Rollup data</shortDescription>
+        <value>Error saving the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saving Progress Message</shortDescription>
+        <value>Saving the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveSuccess</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Saved</shortDescription>
+        <value>{0} Successfully Saved</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveTimeout</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Timeout error message</shortDescription>
+        <value>Saving the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
     </labels>
     <labels>
         <fullName>CRLP_SoftCredit</fullName>

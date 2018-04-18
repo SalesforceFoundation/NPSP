@@ -58,6 +58,7 @@ public class CRLP_ConfigBuilder_SVC {
         for (CRLP_RollupCMT.FilterGroup fg : groupsAndRules) {
             groups.add(fg.getMetadataRecord());
             for (CRLP_RollupCMT.FilterRule fr : fg.rules) {
+                fr.filterGroupRecordName = fg.recordName;
                 rules.add(fr.getMetadataRecord());
             }
         }
