@@ -16,6 +16,16 @@
                 cmp.set("v.isReadOnly", true);
             } else if (mode === "clone") {
                 cmp.set("v.activeFilterGroupId", null);
+                cmp.set("v.activeFilterGroup.recordId", null);
+                cmp.set("v.activeFilterGroup.recordName", null);
+
+                var filterRuleList = cmp.get("v.filterRuleList");
+                for (var i = 0; i < filterRuleList.length; i++) {
+                    filterRuleList[i].recordId = null;
+                    filterRuleList[i].recordName = null;
+                }
+                cmp.set("v.filterRuleList", filterRuleList);
+
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
@@ -154,25 +164,128 @@
     },
 
     /**
+     * @description Inserting or updating a CMT record is an asynchronous deployment process. This method uses the
+     * unique jobId and the Filter_Group__mdt.DeveloperName value to recursively call an apex controller method to determine
+     * when the deployment has completed (by looking in a custom settings object). If it completes, the final recordId
+     * is returned. Otherwise an error message to render is returned. If the return is null, then it calls this method
+     * again to wait another second an try again.
+     * @param jobId The returns CMT deployment job id to query status for
+     * @param recordName Unique record name value (that was just inserted/updated) to query for.
+     */
+    pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
+        var helper=this;
+        var maxPollingRetryCount = 30;
+        var poller = window.setTimeout(
+            $A.getCallback(function() {
+                counter++;
+                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
+                var action = cmp.get("c.getDeploymentStatus");
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter'});
+                action.setCallback(this, function (response) {
+                    console.log('getDeploymentStatus.callback');
+                    var state = response.getState();
+                    if (state === "SUCCESS") {
+                        // Response will be a serialized deployResult wrapper class
+                        var deployResult = JSON.parse(response.getReturnValue());
+                        console.log('deployResult=' + deployResult);
+                        // if there is a record id response
+                        if (deployResult && deployResult.completed === true && deployResult.filterGroupItem) {
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
+
+                            var model = helper.restructureResponse(deployResult.filterGroupItem);
+
+                            // Save the inserted/updated record id
+                            cmp.set("v.activeFilterGroup", model.filterGroup);
+                            cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+
+                            // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
+                            if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
+                                var activeFilterGroup = cmp.get("v.activeFilterGroup");
+                                var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
+                                for (var key in activeFilterGroup) {
+                                    if (activeFilterGroup.hasOwnProperty(key)) {
+                                        cachedFilterGroup[key] = activeFilterGroup[key];
+                                    }
+                                }
+                                cmp.set("v.cachedFilterGroup", cachedFilterGroup);
+                            }
+
+                            var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                            var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                            cmp.set("v.filterRuleList", filterRuleList);
+                            cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                            var rollupItems = cmp.get("v.rollupItems");
+
+                            // need to send back an object with the following properties
+                            var filterGroupTableItem = {};
+                            filterGroupTableItem.label = model.filterGroup.label;
+                            filterGroupTableItem.description = model.filterGroup.description;
+                            filterGroupTableItem.name = model.filterGroup.recordName;
+                            filterGroupTableItem.recordId = model.filterGroup.recordId;
+                            if (filterRuleList) {
+                                filterGroupTableItem.countFilterRules = filterRuleList.length;
+                            } else {
+                                filterGroupTableItem.countFilterRules = 0;
+                            }
+                            if (rollupItems) {
+                                filterGroupTableItem.countRollups = rollupItems.length;
+                            } else {
+                                filterGroupTableItem.countRollups = 0;
+                            }
+
+                            // Send a message with the changed or new Rollup to the RollupContainer Component
+                            helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
+
+                        } else {
+                            // No record id, so run call this method again to check in another 1 second
+                            if (counter < maxPollingRetryCount) {
+                                helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
+                            } else {
+                                // When the counter hits the max, need to tell the user what happened
+                                helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                helper.toggleSpinner(cmp, false);
+                            }
+                        }
+                    } else {
+                        // If an error is returned, parse the message, display and remove the spinner
+                        var errors = response.getError();
+                        var msg = "Unknown error";
+                        if (errors && errors[0] && errors[0].message) {
+                            msg = errors[0].message;
+                        }
+                        helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                        window.clearTimeout(poller);
+                        helper.toggleSpinner(cmp, false);
+                    }
+                });
+                $A.enqueueAction(action);
+            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+        );
+    },
+
+    /**
      * @description: parses the constant label into constant name form depending on the format of the value
-     * @param constantName - API name of the constant
-     * @param operatorName - API name of the operator
+     * @param valueApiName - API name of the constant
+     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatConstantLabel: function(cmp, constantName, operatorName){
+    reformatValueLabel: function(cmp, valueApiName, operation){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
-        if (filterRuleFieldType === "multipicklist" && constantName) {
-            updatedLabel = constantName.join(";\n");
-        } else if (filterRuleFieldType === "text" && constantName.indexOf(";") > 0 && constantName) {
+        if (filterRuleFieldType === "multipicklist" && valueApiName) {
+            updatedLabel = valueApiName.join(";\n");
+        } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
-            updatedLabel = constantName.replace(labelRe, ";\n");
+            updatedLabel = valueApiName.replace(labelRe, ";\n");
 
             var nameRe = /\n| /g;
-            var newConstantName = constantName.replace(nameRe, "");
-            cmp.set("v.activeFilterRule.constantName", newConstantName);
+            var newValueApiName = valueApiName.replace(nameRe, "");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         }
 
         return updatedLabel;
@@ -231,7 +344,7 @@
      * @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp) {
-        var defaultFilterRule = {objectName: '', fieldName: '', operatorName: '', constant: ''};
+        var defaultFilterRule = {objectName: '', fieldName: '', operationName: '', value: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
         cmp.set("v.filterRuleFieldType", "text");
@@ -287,6 +400,70 @@
     },
 
     /**
+     * @description Save the filter group and any modified filter rules
+     * @param activeFilterGroup
+     * @param filterRuleList
+     * @param deletedRuleList
+     */
+    saveFilterGroupAndRules : function(cmp, activeFilterGroup, filterRuleList, deletedRuleList) {
+        this.toggleSpinner(cmp, true);
+
+        var filterGroupCMT = activeFilterGroup;
+        filterGroupCMT.rules = filterRuleList;
+        if (deletedRuleList) {
+            for (var i = 0; i < deletedRuleList.length; i++) {
+                deletedRuleList[i].isDeleted = true;
+                filterGroupCMT.rules.push(deletedRuleList[i]);
+            }
+        }
+
+        var action = cmp.get("c.saveFilterGroupAndRules");
+        action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            console.log('STATE=' + state);
+
+            if (state === "SUCCESS") {
+                // Response value will be in the format of "JobId-RecordDeveloperName"
+                var responseText = response.getReturnValue();
+                var jobId = responseText.split("-")[0];
+                var recordName = responseText.split("-")[1];
+
+                console.log('Response = ' + response.getReturnValue());
+                console.log('Returned jobId = ' + jobId);
+                console.log('Returned RecordName = ' + recordName);
+
+                this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
+            } else if (state === "ERROR") {
+
+                var errors = response.getError();
+                var msg = "Unknown error";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
+                }
+                this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                this.toggleSpinner(cmp, false);
+            }
+        });
+        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        $A.enqueueAction(action);
+    },
+
+    /**
+     * @description Sends a lightning message to all listening components
+     * @param channel - intended channel to hear the message
+     * @param message - body of the message
+     */
+    sendMessage: function(cmp, channel, message){
+        var sendMessage = $A.get('e.ltng:sendMessage');
+        sendMessage.setParams({
+            'channel': channel,
+            'message': message
+        });
+        sendMessage.fire();
+    },
+
+    /**
      * @description Show a message on the screen
      * @param type - error, success, info
      * @param title - message title
@@ -329,8 +506,8 @@
      */
     validateFilterGroupFields: function(cmp) {
         var canSave = true;
-        var name = cmp.get("v.activeFilterGroup.MasterLabel");
-        var description = cmp.get("v.activeFilterGroup.Description__c");
+        var name = cmp.get("v.activeFilterGroup.label");
+        var description = cmp.get("v.activeFilterGroup.description");
         var filterRuleList = cmp.get("v.filterRuleList");
 
         cmp.find("nameInput").showHelpMessageIfInvalid();
@@ -340,7 +517,7 @@
             canSave = false;
         } else if (!name) {
             canSave = false;
-        } else if (filterRuleList.length === 0) {
+        } else if (!filterRuleList || filterRuleList.length === 0) {
             canSave = false;
         }
 
@@ -360,13 +537,15 @@
         }, true);
 
         //check for duplicates
-        if (cmp.get("v.filterRuleMode") === 'create') {
+        if (!filterRuleList) {
+            // nothing to compare
+        } else if (cmp.get("v.filterRuleMode") === 'create') {
             //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operatorName === filterRule.operatorName
-                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    && filterRuleList[i].operationName === filterRule.operationName
+                    && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;
                 }
@@ -376,8 +555,8 @@
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operatorName === filterRule.operatorName
-                    && filterRuleList[i].constantName === filterRule.constantName) {
+                    && filterRuleList[i].operationName === filterRule.operationName
+                    && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;
                 }
