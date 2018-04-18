@@ -797,6 +797,22 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Progress Message</shortDescription>
+        <value>Deleting the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteSuccess</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>{0} Successfully Deleted</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
