@@ -63,6 +63,9 @@
                 cmp.set("v.isIncomplete", true);
                 cmp.set("v.isReadOnly", false);
                 this.hideAllFields(cmp);
+            } else if (mode === "delete") {
+                var activeRollup = cmp.get("v.activeRollup");
+                this.saveRollup(cmp, activeRollup);
             }
         }
     },
@@ -666,12 +669,17 @@
         return label;
     },
 
-    /* @description: saves the active rollup and sets the mode to view
+    /* @description: saves the active rollup and sets the mode to view OR punts back to grid in the case of a soft "delete"
     * @param activeRollup:
     */
     saveRollup: function (cmp, activeRollup) {
-        // Set the mode to view while the save is running
-        cmp.set("v.mode", 'view');
+        var currentMode = cmp.get("v.mode");
+        if (currentMode === 'delete') {
+            cmp.set("v.activeRollup.isDeleted",true);
+            cmp.set("v.activeRollup.isActive",false);
+        } else {
+            cmp.set("v.mode", 'view');
+        }
 
         this.toggleSpinner(cmp, true);
 
@@ -707,11 +715,19 @@
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                if (currentMode === 'delete') {
+                    this.showToast(cmp, 'error', cmp.get("v.labels.rollupDeleteFail"), msg);
+                } else {
+                    this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                }
                 this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+        if (currentMode === 'delete') {
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteProgress"));
+        } else {
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+        }
         $A.enqueueAction(action);
     },
 
@@ -941,26 +957,43 @@
                         if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
-                            // Save the inserted/updated record id
-                            cmp.set("v.activeRollupId", deployResult.rollupItem.id);
-                            cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+                            var mode = cmp.get("v.mode");
 
-                            // for a new record, copy the activeRollup map to the cachedRollup map
-                            if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                                var activeRollup = cmp.get("v.activeRollup");
-                                var cachedRollup = cmp.get("v.cachedRollup");
-                                for (var key in activeRollup) {
-                                    if (activeRollup.hasOwnProperty(key)) {
-                                        cachedRollup[key] = activeRollup[key];
+                            if(mode === "delete") {
+                                // fire cancel event to nav back to rollup grid
+                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+                                cancelEvent.setParams({grid: 'rollup'});
+                                cancelEvent.fire();
+                                console.log('firing cancel event');
+                            } else {
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
+
+                                // Save the inserted/updated record id
+                                cmp.set("v.activeRollupId", deployResult.rollupItem.id);
+                                cmp.set("v.activeRollup.id", deployResult.rollupItem.id);
+
+                                // for a new record, copy the activeRollup map to the cachedRollup map
+                                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                                    var activeRollup = cmp.get("v.activeRollup");
+                                    var cachedRollup = cmp.get("v.cachedRollup");
+                                    for (var key in activeRollup) {
+                                        if (activeRollup.hasOwnProperty(key)) {
+                                            cachedRollup[key] = activeRollup[key];
+                                        }
                                     }
+                                    cmp.set("v.cachedRollup", cachedRollup);
                                 }
-                                cmp.set("v.cachedRollup", cachedRollup);
+
                             }
 
-                            // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            if(mode === "delete") {
+                                // Send a message with the deleted Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupDeleted', deployResult.rollupItem);
+                            } else {
+                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
+                            }
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
