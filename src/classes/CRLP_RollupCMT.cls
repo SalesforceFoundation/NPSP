@@ -137,7 +137,7 @@ public class CRLP_RollupCMT {
         public String objectLabel;
         public String fieldName;
         public String fieldLabel;
-        public String operation;
+        public String operationName;
         public String operationLabel;
         public String value;
         public String valueLabel;
@@ -153,7 +153,7 @@ public class CRLP_RollupCMT {
             this.label = filterRule.MasterLabel;
             this.recordName = filterRule.DeveloperName;
             this.filterGroupRecordName = filterRule.Filter_Group__r.DeveloperName;
-            this.operation = filterRule.Operator__c;
+            this.operationName = filterRule.Operator__c;
             this.objectName = filterRule.Object__r.QualifiedApiName;
             if (filterRule.Field__c != null && filterRule.Field__r.QualifiedApiName.contains('.')) {
                 this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
@@ -166,7 +166,7 @@ public class CRLP_RollupCMT {
             try {
                 this.objectLabel = filterRule.Object__r.MasterLabel;
                 this.fieldLabel = filterRule.Field__r.MasterLabel;
-                this.operationLabel = this.operation; // will to be updated in the RollupUI lgic
+                this.operationLabel = this.operationName; // will to be updated in the RollupUI lgic
                 this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
@@ -188,7 +188,7 @@ public class CRLP_RollupCMT {
                     prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
                 }
                 this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
-                        ' ' + this.operation, false).left(40);
+                        ' ' + this.operationName, false).left(40);
             }
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -206,7 +206,7 @@ public class CRLP_RollupCMT {
                     'Filter_Group__c' => filterGroupRecordName,
                     'Object__c' => this.objectName,
                     'Field__c' => combineObjectAndField(this.objectName, this.fieldName),
-                    'Operator__c' => operation,
+                    'Operator__c' => operationName,
                     'Constant__c' => value,
                     'Is_Deleted__c' => isDeleted
                 };

@@ -544,7 +544,7 @@
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operation === filterRule.operation
+                    && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;
@@ -555,7 +555,7 @@
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
                     && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operation === filterRule.operation
+                    && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
                     return canSave = false;

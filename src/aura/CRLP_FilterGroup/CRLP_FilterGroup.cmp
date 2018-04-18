@@ -248,12 +248,12 @@
                         <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.operator}"
-                                                  value="{!v.activeFilterRule.operation}"
+                                                  value="{!v.activeFilterRule.operationName}"
                                                   required="true"
                                                   onchange="{!c.onChangeFilterRuleOperator}">
                                     <option value="" text=""/>
                                     <aura:iteration items="{!v.filteredOperators}" var="option">
-                                        <option value="{!option.value}" text="{!option.label}" selected="{!option.value == v.activeFilterRule.operation}"/>
+                                        <option value="{!option.value}" text="{!option.label}" selected="{!option.value == v.activeFilterRule.operationName}"/>
                                     </aura:iteration>
                                 </lightning:select>
                             </lightning:layoutItem>

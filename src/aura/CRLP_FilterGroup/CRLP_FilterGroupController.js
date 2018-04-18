@@ -237,11 +237,11 @@
                 //set field labels directly
                 filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
                 filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
-                filterRule.operationLabel = helper.retrieveFieldLabel(filterRule.operation, cmp.get("v.filteredOperators"));
+                filterRule.operationLabel = helper.retrieveFieldLabel(filterRule.operationName, cmp.get("v.filteredOperators"));
 
                 //special reformatting for multipicklist and semi-colon delimited lists
-                if (filterRule.operation === 'In_List' || filterRule.operation === 'Not_In_List') {
-                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operation);
+                if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
+                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operationName);
                 } else {
                     filterRule.valueLabel = filterRule.valueName;
                 }
