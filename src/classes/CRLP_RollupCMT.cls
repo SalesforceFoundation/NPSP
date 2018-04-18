@@ -188,7 +188,7 @@ public class CRLP_RollupCMT {
                     prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
                 }
                 this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
-                        ' ' + this.operation).left(40);
+                        ' ' + this.operation, false).left(40);
             }
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -319,6 +319,10 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
 
+            if (this.label.length() > 40) {
+                this.label = abbreviateForSpace(this.label, false).left(40);
+            }
+
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
             }
@@ -377,10 +381,10 @@ public class CRLP_RollupCMT {
     public static String generateRecordName(String label, Boolean makeUnique) {
 
         // Shorten specific words
-        String recordName = abbreviateForSpace(label);
+        String recordName = abbreviateForSpace(label, false);
 
         // replace all special characters and double underscores
-        recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_'), true);
 
         //remove leading and trailing underscores
         recordName = recordName.removeStart('_').removeEnd('_');
@@ -424,18 +428,32 @@ public class CRLP_RollupCMT {
         return objName + (fieldName != null ? '.' + fieldName : '');
     }
 
-    private static String abbreviateForSpace(String txt) {
-        return txt.replace('General Accounting Unit', 'GAU').
-                replace('Opportunity', 'Opp').
-                replace('Account', 'Acct').
-                replace('Contact', 'Con').
+    /**
+     * @description Replace specific Object and other terms with shortened versions to deal with the 40 character
+     * limitation for the CMT MasterLabel and DeveloperName fields.
+     * @param txt Text to Shorten
+     * @param forDeveloperName True if shortening for the DeveloperName - which can be much shorter.
+     * @return Updated Text
+     */
+    private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
+
+        // TODO Talk to Beth about LowerCase().
+        txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
                 replace('Partial Soft Credit', 'PSC').
-                replace('Allocations', 'Allo').
-                replace('Payment', 'Pmt').
                 replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
-                replace('soft credit', 'sftCr').replace('hard credit', 'hrdCr').
-                replace('#', 'num').replace('year', 'yr').
-                replace('number', 'num').replace('count', 'cnt').replace('total', 'sum').replace(' of ', '');
+                replace(' of ', '');
+
+        if (forDeveloperName) {
+            txt = txt.replace('Opportunity', 'Opp').
+                    replace('Account', 'Acct').
+                    replace('Contact', 'Con').
+                    replace('Payment', 'Pmt').
+                    replace('Allocations', 'Allo').
+                    replace('soft credit', 'sftCr').replace('hard credit', 'hrdCr').
+                    replace('#', 'num').replace('year', 'yr').
+                    replace('number', 'num').replace('count', 'cnt').replace('total', 'sum');
+        }
+        return txt;
     }
 }
