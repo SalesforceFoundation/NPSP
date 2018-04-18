@@ -124,7 +124,7 @@
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
-            helper.rerenderValue(cmp, cleanRow.operation);
+            helper.rerenderValue(cmp, cleanRow.operationName);
 
         } else {
             //cautions user about deleting filter rule
@@ -173,7 +173,7 @@
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
-        cmp.set("v.activeFilterRule.operation", "");
+        cmp.set("v.activeFilterRule.operationName", "");
     },
 
     /**

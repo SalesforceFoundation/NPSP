@@ -44,7 +44,7 @@
     <aura:attribute name="cachedFilterGroup" type="Map"
                     description="The active filter group displayed. Only populated from Clone, View and Edit."/>
     <aura:attribute name="activeFilterRule" type="Map" description="Selected values for actively edited filter rule." access="public"
-                    default="{objectName: '', fieldName: '', operation: '', value: ''}"/>
+                    default="{objectName: '', fieldName: '', operationName: '', value: ''}"/>
     <aura:attribute name="mode" type="String" access="public"
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true"

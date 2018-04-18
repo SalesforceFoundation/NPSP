@@ -344,7 +344,7 @@
      * @description: opens a modal popup so user can add or edit a filter rule
      */
     resetActiveFilterRule: function(cmp) {
-        var defaultFilterRule = {objectName: '', fieldName: '', operation: '', value: ''};
+        var defaultFilterRule = {objectName: '', fieldName: '', operationName: '', value: ''};
         cmp.set("v.activeFilterRule", defaultFilterRule);
         cmp.set("v.filteredFields", "");
         cmp.set("v.filterRuleFieldType", "text");
