@@ -231,7 +231,7 @@ public class CRLP_RollupCMT {
         public Integer intValue;
 
         public Rollup(String label) {
-            this.label = label.trim();
+            this.label = label.replace('Number', '#').left(40).trim();
             this.recordName = generateRecordName(this.label, false);
             this.useFiscalYear = false;
             this.isActive = true;
@@ -351,12 +351,14 @@ public class CRLP_RollupCMT {
     public static String generateRecordName(String label, Boolean makeUnique) {
 
         // Shorten specific words
-        String recordName = label.replace('General Accounting Unit', 'GAU').replace('Account', 'Acct').
-                replace('Contact', 'Cnct').replace('Recurring Donation', 'RD').
-                replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
+        String recordName = label.toLowerCase().replace('#', 'num').replace('general accounting unit', 'gau').replace('account', 'acc').
+                replace('contact', 'con').replace('recurring donation', 'rd').
+                replace('allocations', 'allo').replace(' n ', 'n').
+                replace('number', 'num').replace(' of', '').replace('count', 'cnt').
+                replace('year', 'yr').replace('soft credit', 'sftCr').replace('hard credit', 'hrdCr');
 
         // replace all special characters and double underscores
-        recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+        recordName = recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
 
         //remove leading and trailing underscores
         recordName = recordName.removeStart('_').removeEnd('_');
