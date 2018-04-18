@@ -386,6 +386,7 @@
         <members>UTIL_MasterSchedulableHelper</members>
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
+        <members>UTIL_OrgTelemetry_SVC</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>

@@ -233,46 +233,4 @@ public with sharing class STG_SettingsService {
             upsert stgCRLP;
         }
     }
-
-    /*********************************************************************************************************
-    * @description Submit specific feature enablement statistics back to the License Management Org to assist
-    * with understanding how our customers are using our functionality. There's no way to unit test this though.
-    * Each feature below must be matched to a SubscriberToLmo feature of the same name.
-    * This should called in two places: 1) When the Settings page is loaded; 2) When a tracked area is saved.
-    */
-    public void submitFeatureTelemetryToLMO() {
-        submitFeatureTelemetryToLMO_ASync();
-    }
-
-    /*********************************************************************************************************
-    * @description FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
-    */
-    @future
-    private static void submitFeatureTelemetryToLMO_ASync() {
-        STG_SettingsService stgSvc = new STG_SettingsService();
-
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups', (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
-
-        /*
-        // TODO -- Determine what else we want to track in the future. Below are some simple boolean possibilities
-        System.FeatureManagement.setPackageBooleanValue('IsNonEnglishOrg', !UserInfo.getLocale().startsWith('en'));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_MultiCurrency', UserInfo.isMultiCurrencyOrganization());
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_ScheduledJobs', (stgSvc.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c != true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel', stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments', (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_DefaultGAU', stgSvc.stgAllo.Default__c != null);
-
-        Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification', (addrVerifSettings.Enable_Automatic_Verification__c == true));
-
-        Boolean hasUserManagedTrigger = false;
-        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
-            if (th.User_Managed__c == true || th.Active__c == false) {
-                hasUserManagedTrigger = true;
-                break;
-            }
-        }
-        System.FeatureManagement.setPackageBooleanValue('hasUserManagedTDM', hasUserManagedTrigger);
-        */
-    }
 }
