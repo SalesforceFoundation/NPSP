@@ -41,7 +41,7 @@ private class RLLP_OppRollupBATCH_TEST {
     // if you only want to run one test in this class, fill in its name here.
     // if you want to run all tests, then use '*'
     private static string strTestOnly = '*';
-    
+
     static void setup() {
     	npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
@@ -67,6 +67,9 @@ private class RLLP_OppRollupBATCH_TEST {
     }
     
     static testMethod void testOppAcctRollupBatch() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
     	if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
     	setup();
     	
