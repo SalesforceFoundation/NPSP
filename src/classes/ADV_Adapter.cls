@@ -29,7 +29,7 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group TDTM
 * @group-content ../../ApexDocContent/TDTM.htm
 * @description Provides an adapter for Advancement package to be able to inject customizations into NPSP and provide API to inject to other project.
