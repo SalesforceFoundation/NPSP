@@ -43,7 +43,7 @@ global virtual with sharing class ADV_Adapter {
     * @return List<Trigger_Handler__c> The list of Trigger Handler record for TDTM to use.
     ********************************************************************************************************/
     global virtual List<Trigger_Handler__c> getDefaultTdtmConfigNpspRecords(List<Trigger_Handler__c> listTH) {
-        if (!ADV_Info.useAdv()) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -57,7 +57,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void rollupAccounts(List<Id> listAccountId) {
-        if (!ADV_Info.useAdv()) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -73,7 +73,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void moveOppsToContactAccount(Map<Id,Id> mapContactIdAccountIdNew, Map<Id,Id> mapContactIdAccountIdOld) {
-        if (!ADV_Info.useAdv()) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -88,7 +88,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountForContact(Account a) {
-        if (!ADV_Info.useAdv()) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 
@@ -110,7 +110,7 @@ global virtual with sharing class ADV_Adapter {
     * @return void
     ********************************************************************************************************/
     global void configAccountTDTM(List<SObject> listNew, List<SObject> listOld, String action) {
-        if (!ADV_Info.useAdv()) {
+        if (!ADV_PackageInfo_SVC.useAdv()) {
             throw new AdapterException(Label.adapterException);
         }
 

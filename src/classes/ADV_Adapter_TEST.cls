@@ -42,7 +42,7 @@ public class ADV_Adapter_TEST {
     @isTest
     public static void getDefaultTdtmConfigTokensThrowException() {
         //skip the test if Advancement is installed
-        if (ADV_Info.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
@@ -62,7 +62,7 @@ public class ADV_Adapter_TEST {
     @isTest
     public static void rollupAccountThrowException() {
         //skip the test if Advancement is installed
-        if (ADV_Info.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
@@ -82,7 +82,7 @@ public class ADV_Adapter_TEST {
     @isTest
     public static void moveOppsToContactAccountThrowException() {
         //skip the test if Advancement is installed
-        if (ADV_Info.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
@@ -102,7 +102,7 @@ public class ADV_Adapter_TEST {
     @isTest
     public static void configAccountForContactThrowException() {
         //skip the test if Advancement is installed
-        if (ADV_Info.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();
@@ -122,7 +122,7 @@ public class ADV_Adapter_TEST {
     @isTest
     public static void configAccountTDTMThrowException() {
         //skip the test if Advancement is installed
-        if (ADV_Info.useAdv()) return;
+        if (ADV_PackageInfo_SVC.useAdv()) return;
 
         ADV_Adapter theAdapter = new ADV_Adapter();
         Test.startTest();

@@ -359,7 +359,7 @@ public class HH_HouseholdNaming_TEST {
     **********************************************************************************************************/  
     private static testMethod void testUpdateNamesIsAppliedToSpecifiedHHsOnly() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
         UTIL_UnitTestData_TEST.setupHHNamingSettings();
@@ -419,7 +419,7 @@ public class HH_HouseholdNaming_TEST {
     */
     public static testMethod void testCaseChanges() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testCaseChanges') return;
   
@@ -450,7 +450,7 @@ public class HH_HouseholdNaming_TEST {
     */
     public static testMethod void testNamingOrder2() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamingOrder2') return;
   
@@ -667,7 +667,7 @@ public class HH_HouseholdNaming_TEST {
     **********************************************************************************************************/  
     private static testMethod void testGetHouseholdContactsReturnsDataForSpecifiedHHOnly() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c(
             npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR

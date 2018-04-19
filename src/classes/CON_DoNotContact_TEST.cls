@@ -88,7 +88,7 @@ private class CON_DoNotContact_TEST {
     */
     static testMethod void testDeceasedInHousehold() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testDeceasedInHousehold') return;
 

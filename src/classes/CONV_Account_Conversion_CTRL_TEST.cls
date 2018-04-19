@@ -44,7 +44,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
     public static testmethod void testConversionCtrl() {
 
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);

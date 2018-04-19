@@ -46,7 +46,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     */
     public testmethod static void testAccountConversion1to1(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
         //setup 1x1 model and test account creation
@@ -112,7 +112,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     */
     public testmethod static void testAccountConversionBucket(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
 
@@ -171,7 +171,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     */
     public testMethod static void testSingleContactAddress(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
 
@@ -223,7 +223,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     */
     public testMethod static void test2ContactAddresses(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'test2ContactAddresses') return;
 
@@ -299,7 +299,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     */
     public testMethod static void testContactDisableAddresses(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testContactDisableAddresses') return;
 

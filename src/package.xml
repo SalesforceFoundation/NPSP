@@ -38,7 +38,7 @@
         <members>ADDR_Validator_TEST</members>
         <members>ADV_Adapter</members>
         <members>ADV_Adapter_TEST</members>
-        <members>ADV_Info</members>
+        <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
         <members>ALLO_Allocations_TDTM</members>

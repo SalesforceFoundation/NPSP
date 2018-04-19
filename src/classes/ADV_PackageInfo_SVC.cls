@@ -29,13 +29,12 @@
 */
 /**
 * @author Salesforce.org
-* @date 2017
+* @date 2018
 * @group TDTM
 * @group-content ../../ApexDocContent/TDTM.htm
 * @description Provides the Advancement Information to NPSP class.
 **/
-
-public with sharing class ADV_Info {
+public with sharing class ADV_PackageInfo_SVC {
     /*******************************************************************************************************
     * @description  The boolean value to determine if Adv project is installed.
     *******************************************************************************************************/
@@ -58,8 +57,9 @@ public with sharing class ADV_Info {
     private static void setup() {
 
         //Check if setup() is being called. If yes, just return
-        if (setupCalled)
+        if (setupCalled) {
             return;
+        }
 
         //Check if Advancement is installed and Licensed
         Boolean isUserLicensed = false;

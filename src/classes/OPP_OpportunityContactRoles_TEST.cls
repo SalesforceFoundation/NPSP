@@ -138,7 +138,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForOneToOneContact() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneContact') return;
 
@@ -174,7 +174,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForIndividualContact() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualContact') return;
 
@@ -212,7 +212,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForOneToOneAccount() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneAccount') return;
 
@@ -245,7 +245,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void oppRolesForIndividualAccount() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualAccount') return;
 
@@ -478,7 +478,7 @@ private class OPP_OpportunityContactRoles_TEST {
     */
     static testMethod void avoidDuplicateCRs(){
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'avoidDuplicateCRs') return;
         

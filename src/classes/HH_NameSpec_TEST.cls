@@ -645,7 +645,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNaming() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNaming') return;
 
@@ -716,7 +716,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingWithCustom() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingWithCustom') return;
         
@@ -821,7 +821,7 @@ private with sharing class HH_NameSpec_TEST {
     **********************************************************************************************************/            
     static testMethod void testRefreshAllHHNamingManyHH() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testRefreshAllHHNamingManyHH') return;
         

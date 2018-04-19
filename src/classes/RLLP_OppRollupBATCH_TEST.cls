@@ -68,7 +68,7 @@ private class RLLP_OppRollupBATCH_TEST {
     
     static testMethod void testOppAcctRollupBatch() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
     	if (strTestOnly != '*' && strTestOnly != 'testOppAcctRollupBatch') return;
     	setup();
