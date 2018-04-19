@@ -44,79 +44,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     * FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
     */
     @future
-    public static void submitFeatureTelemetryToLMO_ASync() {
+    public static void submitFeatureTelemetryToLMO() {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
         System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups', (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
-
-        // TODO -- Determine what else we want to track in the future. Below are some sample possibilities
-        /*
-        // NPSP Settings Detail
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_ScheduledJobs', (stgSvc.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c != true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel', stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments', (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_DefaultGAU', stgSvc.stgAllo.Default__c != null);
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification', (addrVerifSettings.Enable_Automatic_Verification__c == true));
-        System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', getHasUserManagedTriggers());
-
-        // Org Shape Information
-        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_MultiCurrency', UTIL_Currency.getInstance().isMultiCurrencyOrganization());
-        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled());
-        System.FeatureManagement.setPackageBooleanValue('Org_HasNonEnglishUsers', getHasNonEnglishUsers());
-        System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', getOldestCloseDate());
-        System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps', getMaxNumRelatedOpps());
-        */
     }
-
-    /**
-     * @description Returns true if there are any active User records with a local language that does not start with "EN"
-     */
-    /*private static Boolean getHasNonEnglishUsers() {
-        Integer userCnt = [SELECT Count() FROM User WHERE IsActive = True AND UserType = 'Standard'
-            AND (NOT LanguageLocaleKey LIKE 'en_%') LIMIT 1];
-        return userCnt > 0;
-    }*/
-
-    /**
-     * @description Returns true if there are any TDTM Handler records with User_Managed__c=true or Active=false
-     */
-    /*private static Boolean getHasUserManagedTriggers() {
-        Boolean hasUserManagedTrigger = false;
-        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
-            if (th.User_Managed__c == true || th.Active__c == false) {
-                hasUserManagedTrigger = true;
-                break;
-            }
-        }
-        return hasUserManagedTrigger;
-    }*/
-
-    /**
-     * @description Returns the oldest CloseDate from the Opportunity object
-     */
-    /*private static Date getOldestCloseDate() {
-        try {
-            Opportunity opp = [SELECT CloseDate FROM Opportunity ORDER BY CloseDate ASC LIMIT 1];
-            if (opp != null) {
-                return opp.CloseDate;
-            }
-        } catch (Exception ex) {}
-        return null;
-    }*/
-
-    /**
-     * @description Returns the max number of attached opportunities (going by 'Total Number of Donations') for
-     * all Accounts.
-     */
-    /*private static Integer getMaxNumRelatedOpps() {
-        try {
-            Account acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account
-                                ORDER BY npo02__NumberOfClosedOpps__c DESC LIMIT 1];
-            if (acct != null && acct.npo02__NumberOfClosedOpps__c != null) {
-                return acct.npo02__NumberOfClosedOpps__c.intValue();
-            }
-        } catch (Exception ex) {}
-        return null;
-    }*/
 }
