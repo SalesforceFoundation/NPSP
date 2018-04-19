@@ -71,6 +71,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   Addresses are merged.
     */
     static testMethod void testMergeTwoHHAccounts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoHHAccounts') return;
         integer cHH;
         integer cCon;
@@ -150,6 +153,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   - default address correctly pushed to appropriate contacts. 
     */
     static testMethod void testMergeThreeHHAccountsManyAddr() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeHHAccountsManyAddr') return;
         integer cHH;
         integer cCon;
@@ -224,6 +230,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   Opp Rollups are recalculated.
     */
     static testMethod void testMergeTwoOne2OneAccounts() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoOne2OneAccounts') return;
         
         setAccountModelForTest(CAO_Constants.ONE_TO_ONE_PROCESSOR);
@@ -282,6 +291,9 @@ private with sharing class ACCT_AccountMerge_TEST {
     *   - only one default address
     */
     static testMethod void testMergeThreeOrgAccountsManyAddr() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeOrgAccountsManyAddr') return;
         
         TDTM_DefaultConfig.startTestDataInit();
