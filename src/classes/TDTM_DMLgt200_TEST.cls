@@ -46,7 +46,7 @@ private class TDTM_DMLgt200_TEST {
     /* @description The number of records to insert for these tests. Inserting more than 200 records at once
     * will cause triggers to be called twice - once for the first group of 200 and then again for the remainder.
     */
-    private static Integer insertCnt = 210  ;
+    private static Integer insertCnt = 210;
 
     /*********************************************************************************************************
     * @description Test creating 200+ Contacts with Affiliations
@@ -54,6 +54,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_affiliations() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
@@ -105,6 +107,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_primary_affiliations() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
@@ -143,6 +147,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_contacts_with_relationships() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
@@ -317,6 +323,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_addresses() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
@@ -355,6 +363,9 @@ private class TDTM_DMLgt200_TEST {
     @isTest
     static void test_household_account_naming() {
 
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         UTIL_Debug.disableDebugLogging();     // Override debug logging for this test because it's an expensive operation
         UTIL_UnitTestData_TEST.disableAffiliationsTriggers();
         UTIL_UnitTestData_TEST.disableRelationshipTriggers();
@@ -391,6 +402,8 @@ private class TDTM_DMLgt200_TEST {
     */
     @isTest
     static void test_address_validation() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         ADDR_Validator_TEST.createDefaultSettings();
         Test.setMock(HttpCalloutMock.class, new ADDR_MockHttpRespGenerator_TEST());
