@@ -2093,8 +2093,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <fullName>giftProcessingAccountException</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Gift Processing Account Model error</shortDescription>
-        <value>Gift Processing currently does not support Bucket Account Model!</value>
+        <shortDescription>Gift Processing account model error</shortDescription>
+        <value>Gift Processing doesn&apos;t support the Individual (&quot;Bucket&quot;) account model.</value>
     </labels>
     <labels>
         <fullName>giftProcessingConfigException</fullName>
