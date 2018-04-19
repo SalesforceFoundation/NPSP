@@ -58,14 +58,14 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments', (stgSvc.stgCon.npe01__Payments_Enabled__c == true));
         System.FeatureManagement.setPackageBooleanValue('IsEnabled_DefaultGAU', stgSvc.stgAllo.Default__c != null);
         System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification', (addrVerifSettings.Enable_Automatic_Verification__c == true));
-        System.FeatureManagement.setPackageBooleanValue('hasUserManagedTDTM', getHasUserManagedTriggers());
+        System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', getHasUserManagedTriggers());
 
         // Org Shape Information
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_MultiCurrency', UTIL_Currency.getInstance().isMultiCurrencyOrganization());
-        System.FeatureManagement.setPackageBooleanValue('IsEnabled_AdvancedMultiCurrency', UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled());
-        System.FeatureManagement.setPackageBooleanValue('HasNonEnglishUsers', getHasNonEnglishUsers());
-        System.FeatureManagement.setPackageDateValue('OldestOppCloseDate', getOldestCloseDate());
-        System.FeatureManagement.setPackageIntegerValue('MaxNumRelatedDonations', getMaxNumRelatedOpps());
+        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_MultiCurrency', UTIL_Currency.getInstance().isMultiCurrencyOrganization());
+        System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled());
+        System.FeatureManagement.setPackageBooleanValue('Org_HasNonEnglishUsers', getHasNonEnglishUsers());
+        System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', getOldestCloseDate());
+        System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps', getMaxNumRelatedOpps());
         */
     }
 
@@ -73,12 +73,13 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * @description Returns true if there are any active User records with a local language that does not start with "EN"
      */
     /*private static Boolean getHasNonEnglishUsers() {
-        Integer userCnt = [SELECT Count() FROM User WHERE IsActive = True AND (NOT LanguageLocaleKey LIKE 'en_%')];
+        Integer userCnt = [SELECT Count() FROM User WHERE IsActive = True AND UserType = 'Standard'
+            AND (NOT LanguageLocaleKey LIKE 'en_%') LIMIT 1];
         return userCnt > 0;
     }*/
 
     /**
-     * @description Returns true if there are any active TDTM Handler records with User_Managed__c=true
+     * @description Returns true if there are any TDTM Handler records with User_Managed__c=true or Active=false
      */
     /*private static Boolean getHasUserManagedTriggers() {
         Boolean hasUserManagedTrigger = false;
@@ -96,10 +97,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     /*private static Date getOldestCloseDate() {
         try {
-            AggregateResult ag = [SELECT Min(CloseDate) oldestDate FROM Opportunity];
-            if (ag != null && ag.get('oldestDate') != null) {
-                Date dt = (Date) ag.get('oldestDate');
-                return dt;
+            Opportunity opp = [SELECT CloseDate FROM Opportunity ORDER BY CloseDate ASC LIMIT 1];
+            if (opp != null) {
+                return opp.CloseDate;
             }
         } catch (Exception ex) {}
         return null;
@@ -111,10 +111,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     /*private static Integer getMaxNumRelatedOpps() {
         try {
-            AggregateResult ag = [SELECT Max(npo02__NumberOfClosedOpps__c) maxCount FROM Account];
-            if (ag != null && ag.get('maxCount') != null) {
-                Integer cnt = (Integer) ag.get('maxCount');
-                return cnt;
+            Account acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account
+                                ORDER BY npo02__NumberOfClosedOpps__c DESC LIMIT 1];
+            if (acct != null && acct.npo02__NumberOfClosedOpps__c != null) {
+                return acct.npo02__NumberOfClosedOpps__c.intValue();
             }
         } catch (Exception ex) {}
         return null;
