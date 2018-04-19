@@ -1,7 +1,7 @@
 <aura:component controller="BGE_AuraController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
 
     <ltng:require scripts="{!$Resource.BGEResources + '/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptLoaded}" />
-
+    
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <aura:attribute name="template" type="Batch_Template__c" access="global" default="{sobjectType : 'Batch_Template__c'}" />
@@ -90,17 +90,17 @@
 			</div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">
-
+ 
                 <aura:if isTrue="{!v.showBackButton}">
                     <div class="slds-size_1-of-2 slds-grid slds-wrap">
                         <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
                         <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
                     </div>
                 </aura:if>
-
+ 
                 <div class="slds-size_1-of-2 slds-clearfix">
                     <div class="slds-float_right">
-                        <lightning:button class="button-style button-size" label="Save Template" onclick="{! c.save }" />
+                        <lightning:button aura:id="saveButton" disabled="true" class="button-style button-size" label="Save Template" onclick="{! c.save }" />
                     </div>
                 </div>
             </div>

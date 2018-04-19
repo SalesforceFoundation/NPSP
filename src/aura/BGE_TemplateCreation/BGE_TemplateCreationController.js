@@ -163,8 +163,15 @@
 
         var batchTemplateFields = component.get('v.templateFields');
         var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
+        
+	    helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);            
 
-        helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
+		var url = window.location.href; 
+    	var value = url.substr(0,url.lastIndexOf('/') + 1);
+
+	    window.history.back();
+
+    	return false;        
     },
 
     nextToInitial: function (component, event, helper) {
@@ -217,10 +224,13 @@
             while (!existsToDelete && selectedIndexVar < selectedOptionsList.length) {
 
                 var selectedTemplateField = selectedOptionsList[selectedIndexVar];
+                
                 if (existingTemplateField.Name === selectedTemplateField) {
+                    
                     existsToDelete = true;
                 }
                 else {
+                    
                     selectedIndexVar++;
                 }
             }
@@ -228,11 +238,10 @@
 
                 var index = rowItemList.indexOf(existingTemplateField);
 
-                console.log('DELETE ' + rowItemList[index]);
-
                 if (index > -1) {
+                    
                     rowItemList.splice(index, 1);
-                }
+                }               
             }
         }
         /************CODE TO DELETE OLD TEMPLATE FIELD ITEMS***********************/
@@ -269,16 +278,24 @@
                     'Name': selectedOptionsList[selectedIndexVar],
                     'Order__c': selectedIndexVar + 1,
                     'Read_Only__c': false,
-                    'Required__c': false,
-                    'Sticky_Field__c': false,
-                    'Sticky_Field_Value__c': '',
-                    'Sticky_Field_Visibility__c': false
+                    'Required__c': false                    
                 });
             }
         }
-
+		
+       
+        
         /************CODE TO ADD NEW TEMPLATE FIELD ITEMS***********************/
         component.set("v.templateFields", rowItemList);
+        
+        if (rowItemList.length > 0) {
+            
+            component.find("saveButton").set("v.disabled", false);
+        }
+        else {
+            
+            component.find("saveButton").set("v.disabled", true);
+        }
     },
 
     scriptLoaded: function (component, event, helper) {
@@ -298,7 +315,6 @@
 
             if (templateField['Name'] === templateFieldSelected.Name) {
 
-                console.log('HERE RADIO');
                 templateField = templateFieldSelected;
                 var requiredOptions = component.get('v.requiredOptions');
 
