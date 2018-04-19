@@ -36,6 +36,9 @@
         <members>ADDR_Validator_REST</members>
         <members>ADDR_Validator_TDTM</members>
         <members>ADDR_Validator_TEST</members>
+        <members>ADV_Adapter</members>
+        <members>ADV_Adapter_TEST</members>
+        <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
         <members>ALLO_Allocations_TDTM</members>
@@ -1183,6 +1186,7 @@
         <members>SmartyStreets_Help_Text</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnHHObjOnly</members>
         <members>addrGeneralSettings</members>
@@ -1312,6 +1316,8 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>giftProcessingAccountException</members>
+        <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
