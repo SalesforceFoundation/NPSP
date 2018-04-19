@@ -72,7 +72,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeTwoHHAccounts() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoHHAccounts') return;
         integer cHH;
@@ -154,7 +154,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeThreeHHAccountsManyAddr() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeHHAccountsManyAddr') return;
         integer cHH;
@@ -231,7 +231,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeTwoOne2OneAccounts() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeTwoOne2OneAccounts') return;
         
@@ -292,7 +292,7 @@ private with sharing class ACCT_AccountMerge_TEST {
     */
     static testMethod void testMergeThreeOrgAccountsManyAddr() {
         //skip the test if Advancement is installed
-        if(ADV_Info.useAdv()) return;
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testMergeThreeOrgAccountsManyAddr') return;
         

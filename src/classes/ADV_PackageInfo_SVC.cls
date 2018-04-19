@@ -117,7 +117,7 @@ public with sharing class ADV_PackageInfo_SVC {
     /*******************************************************************************************************
     * @description The method for other class to get the API_NPSP class instance
     * @return ADV_Adapter The adapter class from Adv to override the default behavior of
-    * ADV_Adapter.
+    * ADV_Adapter
     *******************************************************************************************************/
     public static ADV_Adapter getApiNPSP() {
         setup();
@@ -125,7 +125,7 @@ public with sharing class ADV_PackageInfo_SVC {
     }
 
     /*******************************************************************************************************
-    * @description This is the expection class for ADV_Info class
+    * @description This is the expection class for ADV_PackageInfo_SVC class
     ********************************************************************************************************/
     private class ADVException extends Exception{}
 }
