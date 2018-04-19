@@ -72,7 +72,7 @@
         <fullName>Detail_Field__c</fullName>
         <externalId>false</externalId>
         <fieldManageability>DeveloperControlled</fieldManageability>
-        <label>Detail Field</label>
+        <label>Field to Roll Up</label>
         <metadataRelationshipControllingField>Rollup__mdt.Detail_Object__c</metadataRelationshipControllingField>
         <referenceTo>FieldDefinition</referenceTo>
         <relationshipLabel>RollupsDetail</relationshipLabel>
