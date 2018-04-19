@@ -85,10 +85,9 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
         activateTriggers();
 
-        List<Opportunity> createdOpportunities = loadCreatedOppsWithOCRs(opportunity.Id);
-        System.assertEquals(1, createdOpportunities.size());
-        System.assertEquals(2, createdOpportunities[0].OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunities[0].OpportunityContactRoles) {
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
             System.assert(
                 expectedOCR.ContactId == contact.Id && 
                 expectedOCR.Role == NON_NPSP_ROLE && 
@@ -100,10 +99,10 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
         Test.stopTest();
 
-        Opportunity expectedOpportunity = loadExpectedOppWithPrimaryOCRs(createdOpportunities[0].Id);
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
         // Opportunity and the related Opportunity Contact Roles should not change.
         System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
-        System.assertEquals(2, createdOpportunities[0].OpportunityContactRoles.size());
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
         for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
             System.assert(
                 expectedOCR.ContactId == contact.Id && 
@@ -143,7 +142,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert contact;
 
         Opportunity opportunity = new Opportunity(
-            Name = 'TEST_Opportunity',
+            Name = 'TEST_OPPORTUNITY',
             StageName = UTIL_UnitTestData_TEST.getOpenStage(),
             CloseDate = Date.today(),
             AccountId = account.Id,
@@ -192,10 +191,9 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert primaryOCRs;
         activateTriggers();
 
-        List<Opportunity> createdOpportunities = loadCreatedOppsWithOCRs(opportunity.Id);
-        System.assertEquals(1, createdOpportunities.size());
-        System.assertEquals(6, createdOpportunities[0].OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunities[0].OpportunityContactRoles) {
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(6, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
             System.assertEquals(contact.Id, expectedOCR.ContactId);
             System.assertEquals(true, expectedOCR.IsPrimary);
         }
@@ -204,7 +202,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
         Test.stopTest();
 
-        Opportunity expectedOpportunity = loadExpectedOppWithPrimaryOCRs(createdOpportunities[0].Id);
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
         // Opportunity should have only 1 primary OCR with role = NPSP Setting Role.
         System.assertEquals(1, expectedOpportunity.OpportunityContactRoles.size());
         System.assert(contact.Id == expectedOpportunity.OpportunityContactRoles[0].ContactId);
@@ -233,7 +231,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert new List<Contact>{contact, otherContact};
 
         Opportunity opportunity = new Opportunity(
-            Name = 'TEST_Opportunity',
+            Name = 'TEST_OPPORTUNITY',
             StageName = UTIL_UnitTestData_TEST.getOpenStage(),
             CloseDate = Date.today(),
             AccountId = account.Id,
@@ -261,12 +259,11 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert ocrs;
         activateTriggers();
 
-        List<Opportunity> createdOpportunities = loadCreatedOppsWithOCRs(opportunity.Id);
-        System.assertEquals(1, createdOpportunities.size());
-        System.assertEquals(3, createdOpportunities[0].OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunities[0].OpportunityContactRoles) {
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(3, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
             System.assertEquals(
-                (expectedOCR.ContactId == contact.Id), 
+                expectedOCR.ContactId == contact.Id,
                 expectedOCR.IsPrimary
             );
         }
@@ -275,7 +272,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
         Test.stopTest();
 
-        Opportunity expectedOpportunity = loadExpectedOppWithPrimaryOCRs(createdOpportunities[0].Id);
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
         // Opportunity should have only 1 primary OCR, with ContactId = Opportunity Primary Contact.
         System.assertEquals(1, expectedOpportunity.OpportunityContactRoles.size());
         System.assert(otherContact.Id == expectedOpportunity.OpportunityContactRoles[0].ContactId);
@@ -303,7 +300,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert new List<Contact>{contact, otherContact};
 
         Opportunity opportunity = new Opportunity(
-            Name = 'TEST_Opportunity',
+            Name = 'TEST_OPPORTUNITY',
             StageName = UTIL_UnitTestData_TEST.getOpenStage(),
             CloseDate = Date.today(),
             AccountId = account.Id,
@@ -331,12 +328,11 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         insert ocrs;
         activateTriggers();
 
-        List<Opportunity> createdOpportunities = loadCreatedOppsWithOCRs(opportunity.Id);
-        System.assertEquals(1, createdOpportunities.size());
-        System.assertEquals(3, createdOpportunities[0].OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunities[0].OpportunityContactRoles) {
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(3, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
             System.assertEquals(
-                (expectedOCR.ContactId == contact.Id), 
+                expectedOCR.ContactId == contact.Id,
                 expectedOCR.IsPrimary
             );
         }
@@ -345,7 +341,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
         Test.stopTest();
 
-        Opportunity expectedOpportunity = loadExpectedOppWithPrimaryOCRs(createdOpportunities[0].Id);
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
         // Opportunity should have only 1 primary OCR, with ContactId = Opportunity Primary Contact.
         System.assertEquals(1, expectedOpportunity.OpportunityContactRoles.size());
         System.assert(contact.Id == expectedOpportunity.OpportunityContactRoles[0].ContactId);
@@ -379,9 +375,10 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
     /*******************************************************************************************************
     * @description Get Opportunity with the related Primary OCRs.
-    * @return Opportunity.
+    * @param Id. The Id of the Opportunity to load.
+    * @return Opportunity. The Opportunity with the related Primary OCRs.
     ********************************************************************************************************/
-    private static Opportunity loadExpectedOppWithPrimaryOCRs(Id opportunityId) {
+    private static Opportunity loadOpportunityWithPrimaryOCRs(Id opportunityId) {
         List<Opportunity> result = [
             SELECT Name, (
                 SELECT OpportunityId, ContactId, IsPrimary, Role
@@ -396,11 +393,12 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     }
 
     /*******************************************************************************************************
-    * @description Get created Opportunity with the related OCRs.
-    * @return List<Opportunity>.
+    * @description Get the Opportunity with the related OCRs.
+    * @param Id. The Id of the Opportunity to load.
+    * @return Opportunity. The Opportunity with the related OCRs.
     ********************************************************************************************************/
-    private static List<Opportunity> loadCreatedOppsWithOCRs(Id opportunityId) {
-        return [
+    private static Opportunity loadOpportunityWithOCRs(Id opportunityId) {
+        List<Opportunity> result = [
             SELECT Name, (
                 SELECT OpportunityId, ContactId, IsPrimary, Role
                 FROM OpportunityContactRoles
@@ -408,5 +406,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             FROM Opportunity
             WHERE Id = :opportunityId
         ];
+        System.assertEquals(1, result.size());
+        return result[0];
     }
 }
