@@ -1052,6 +1052,13 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>You cannot verify more than 100 zipcodes at a time.</value>
     </labels>
     <labels>
+        <fullName>adapterException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Throw exception to external call</shortDescription>
+        <value>Invalid call. This function is reserved for Salesforce use.</value>
+    </labels>
+    <labels>
         <fullName>addrCiceroMissingAPIKey</fullName>
         <categories>Cicero address verification service</categories>
         <language>en_US</language>
@@ -2088,6 +2095,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>flsError</shortDescription>
         <value>You do not have permissions to modify {0}.</value>
+    </labels>
+    <labels>
+        <fullName>giftProcessingAccountException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing account model error</shortDescription>
+        <value>Gift Processing doesn&apos;t support the Individual (&quot;Bucket&quot;) account model.</value>
+    </labels>
+    <labels>
+        <fullName>giftProcessingConfigException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing configuration error</shortDescription>
+        <value>Your org is missing required configuration for Gift Processing. Contact your admin for help.</value>
     </labels>
     <labels>
         <fullName>healthButtonRun</fullName>
