@@ -266,6 +266,7 @@
         console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
+        var activeRollup = cmp.get("v.activeRollup");
         //during create, visibility of operation and filter group are toggled
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel) {
@@ -280,10 +281,9 @@
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        var operation = cmp.get("v.activeRollup.operation");
-        renderMap = this.renderAmountField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDateField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDetailField(cmp, operation, rollupLabel, renderMap);
+        renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupLabel, renderMap);
+        renderMap = this.renderDateField(cmp, activeRollup.operation, rollupLabel, renderMap);
+        renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
 
@@ -295,6 +295,11 @@
 
         //reset amount fields
         this.resetFields(cmp, detailObject, 'amount');
+        //todo: fix this for all cases, not just opportunity amount
+        if(!activeRollup.amountObject){
+            cmp.set("v.activeRollup.amountObjectLabel", activeRollup.detailObjectLabel);
+            cmp.set("v.activeRollup.amountObject", activeRollup.detailObject);
+        }
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
@@ -302,18 +307,17 @@
         if (detailObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
             cmp.set("v.activeRollup.dateObject", labels.objectPayment);
-            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            this.resetFields(cmp, activeRollup.dateObject, "date");
             cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
         } else {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
             cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
-            this.resetFields(cmp, cmp.get("v.activeRollup.dateObject"), "date");
+            this.resetFields(cmp, activeRollup.dateObject, "date");
             cmp.set("v.activeRollup.dateField", "CloseDate");
         }
 
         //check if save button can be activated
-        var detailField = cmp.get("v.activeRollup.detailField");
-        this.verifyRollupSaveActive(cmp, detailField);
+        this.verifyRollupSaveActive(cmp, activeRollup.detailField);
 
     },
 
@@ -924,7 +928,7 @@
 
         //sends the message to the parent cmp RollupsContainer
         if(masterLabel){
-            this.sendMessage(cmp, 'rollupNameChange', masterLabel);
+            this.sendMessage(cmp, 'nameChange', masterLabel);
         }
     },
 
