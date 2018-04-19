@@ -188,6 +188,9 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Tests contact role creation for 1:1 model, using contact attribution.
     */
     static testMethod void oppRolesForOneToOneContact() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneContact') return;
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
@@ -221,6 +224,9 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Tests contact role creation for individual/bucket model using contact attribution.
     */
     static testMethod void oppRolesForIndividualContact() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualContact') return;
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
@@ -255,6 +261,9 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Tests contact role creation for 1:1 model, using account attribution.
     */
     static testMethod void oppRolesForOneToOneAccount() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForOneToOneAccount') return;
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
@@ -284,6 +293,9 @@ private class OPP_OpportunityContactRoles_TEST {
     * @description Tests contact role creation for 1:1 model, using contact attribution.
     */
     static testMethod void oppRolesForIndividualAccount() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'oppRolesForIndividualAccount') return;
 
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.BUCKET_PROCESSOR,npe01__Enable_Opportunity_Contact_Role_Trigger__c = true, npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR));
@@ -512,6 +524,9 @@ private class OPP_OpportunityContactRoles_TEST {
     * roles
     */
     static testMethod void avoidDuplicateCRs(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'avoidDuplicateCRs') return;
         
         npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
