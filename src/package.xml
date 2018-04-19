@@ -387,6 +387,7 @@
         <members>UTIL_Namespace</members>
         <members>UTIL_Namespace_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
+        <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
         <members>UTIL_PerfLogger</members>
         <members>UTIL_PerfLogger_TEST</members>
@@ -2238,7 +2239,24 @@
     </types>
     <types>
         <members>IsEnabled_CustomizableRollups</members>
+        <members>IsEnabled_ScheduledJobs</members>
+        <members>IsEnabled_HouseholdAcctModel</members>
+        <members>IsEnabled_AutomaticPayments</members>
+        <members>IsEnabled_DefaultGAU</members>
+        <members>IsEnabled_AddressVerification</members>
+        <members>HasUserManagedTDTM</members>
+        <members>Org_IsEnabled_MultiCurrency</members>
+        <members>Org_IsEnabled_AdvancedMultiCurrency</members>
+        <members>Org_HasNonEnglishUsers</members>
         <name>FeatureParameterBoolean</name>
+    </types>
+    <types>
+        <members>Data_OldestOppCloseDate</members>
+        <name>FeatureParameterDate</name>
+    </types>
+    <types>
+        <members>Data_MaxNumRelatedOpps</members>
+        <name>FeatureParameterInteger</name>
     </types>
     <types>
         <members>Account.BDE_Entry_FS</members>

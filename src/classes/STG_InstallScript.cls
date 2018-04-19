@@ -39,7 +39,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     private enum InstallAction { 
         POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
-        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT 
+        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
+        UPDATE_ORG_TELEMETRY
     }
 
     /*******************************************************************************************************
@@ -72,6 +73,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
         }
 
+        if (context.isUpgrade() || context.isPush()) {
+            executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
+        }
+
         logger.log();
     }
 
@@ -97,6 +102,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
                 updateCampaignListReport();
+
+            } else if (action == InstallAction.UPDATE_ORG_TELEMETRY) {
+                UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
+
             }
 
         } catch(Exception e) {
