@@ -3,7 +3,6 @@
      * @description: setup for the filter group component which sets the active filter group and datatable
      */
     doInit: function (cmp, event, helper) {
-
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
         var objectList = cmp.get("v.detailObjects");
@@ -185,17 +184,6 @@
     },
 
     /**
-     * @description: adds constant field to selected list
-     */
-    /*onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
-        var constant = event.getSource().get("v.value");
-        var fieldCmp = cmp.find("filterRuleUIField");
-        var value = fieldCmp.get("v.value");
-        var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
-        console.log(JSON.stringify(constantPicklist));
-    },*/
-
-    /**
      * @description: saves a new filter group and associated filter rules
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
@@ -204,11 +192,12 @@
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
         var filterRuleList = cmp.get("v.filterRuleList");
         var deletedRuleList = cmp.get("v.deletedRuleList");
-        var canSave = helper.validateFilterGroupFields(cmp);
-        if(canSave){
+        var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
+        if (canSave) {
             cmp.set("v.mode", 'view');
 
             helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
+            //todo note: only sendMessage once filter rule has been deployed successfully
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
