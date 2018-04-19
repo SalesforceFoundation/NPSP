@@ -171,20 +171,22 @@ public class RD_RecurringDonations {
             TDTM_TriggerHandler.processDML(dmlWrapper);
         
         string rdQuery = strQueryRDNoWhere();
-        rdQuery += ' where npe03__Open_Ended_Status__c <> :closedLabel and id IN :RDids';
+        rdQuery += ' where id IN :RDids';
 
         //get all possible rd records that may need updating, exclude ones that are closed.  
         map<id, npe03__Recurring_Donation__c> rdMap = new map<id, npe03__Recurring_Donation__c>();
-        for (sObject rd : database.query(rdQuery))
-            rdMap.put((id)rd.get('id'), (npe03__Recurring_Donation__c)rd);
+        for (sObject rd : database.query(rdQuery)){
+            if (rd.get('npe03__Open_Ended_Status__c') <> closedLabel){
+                rdMap.put((id)rd.get('id'), (npe03__Recurring_Donation__c)rd);
+            }
+        }
 
         //get the cumulative values to update the recurring donations
         //update the rc next payment date 
         //and the paid ammounts and paid installments 
         for (sobject obj : [select count(id) oppcount, MIN(CloseDate) MinDate, MAX(CloseDate) MaxDate, SUM(Amount) Total,
                                   isClosed, npe03__Recurring_Donation__c rdid, isWon
-                                  from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel 
-                                  and npe03__Recurring_Donation__c IN :rdMap.keySet()
+                                  from Opportunity where npe03__Recurring_Donation__c IN :rdMap.keySet()
                                   group by rollup(npe03__Recurring_Donation__c, isClosed, isWon)]) {
             id rdid = (id)obj.get('rdid'); 
             
@@ -918,12 +920,20 @@ public class RD_RecurringDonations {
         
         //grab the contact id for role to take advantage of NPSP C&O if it exists
         Sobjectfield ConIDForRole = Schema.sObjectType.Opportunity.fields.getMap().get('npe01__Contact_Id_for_Role__c');
-                
+        
+        // Add Open-Ended Recurring Donation Ids to set so we can use this in selective filter later.
+        Set<Id> openRDSet = new Set<Id>();
+
+        for (npe03__Recurring_Donation__c rd:recurringDonationsToEvaluate) {
+            if (rd.npe03__Open_Ended_Status__c <> closedLabel ) {
+                openRDSet.add(rd.Id);
+            } 
+        }
+
         //get the existing donations
         list<sobject> sobjs = [select count(id) oppCount, MAX(CloseDate) MaxDate,
                                   npe03__Recurring_Donation__c rdid
-                                  from Opportunity where npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c <> :closedLabel 
-                                  and npe03__Recurring_Donation__c IN :recurringDonationsToEvaluate                                  
+                                  from Opportunity where npe03__Recurring_Donation__c IN :openRDSet                                  
                                   group by rollup(npe03__Recurring_Donation__c)]; 
         
         map<id, date> lastOppMap = new map<id, date>();
