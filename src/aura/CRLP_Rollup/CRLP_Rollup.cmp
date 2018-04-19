@@ -32,7 +32,7 @@
   @date 2018
   @group Rollups
   @group-content ../../ApexDocContent/Rollups2.htm
-  @description Component used to view, clone, or edit a Rollup__mdt record.
+  @description Component used to view, clone, delete, or edit a Rollup__mdt record.
 -->
 
 <aura:component description="CRLP_Rollup" controller="CRLP_RollupUI_SVC">
@@ -95,7 +95,7 @@
         <!--START SPINNER -->
         <div class="spinnerDiv">
             <!--Hide the spinner by default-->
-            <lightning:spinner aura:id="waitingSpinner" class="slds-hide" />
+            <lightning:spinner aura:id="waitingSpinner" />
         </div>
         <!--END SPINNER-->
 

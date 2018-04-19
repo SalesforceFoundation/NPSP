@@ -1,5 +1,6 @@
 ({
-    /* @description: setup for rollup app including cached rollups, filter groups, and labels for the app
+    /**
+    * @description: setup for rollup app including cached rollups, filter groups, and labels for the app
     */
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.setupRollupGrid");
@@ -21,7 +22,6 @@
 
                 var actions = [{label: labels.edit, name:'edit'}
                     , {label: labels.clone, name:'clone'}
-                    , {label: labels.delete, name:'delete'}
                 ];
 
                 //these are the current lists of summary + detail objects in the app
@@ -79,17 +79,25 @@
         $A.enqueueAction(action);
     },
 
-    /* @description: calls the helper function to display the filter group grid and resets shared sorting information
-    */
+    /**
+     * @description: closes the toast notification window
+     */
+    closeNotificationWindow: function (cmp, event, helper) {
+        cmp.set("v.notificationClasses", "slds-hide");
+    },
+
+    /**
+     * @description: calls the helper function to display the filter group grid and resets shared sorting information
+     */
     displayFilterGroupsGrid: function(cmp, event, helper){
         helper.displayFilterGroupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "asc");
     },
 
-    /* @description: resets the active record to ensure there is no leftover data and applies filtered summary object to the creation of a new rollup if applicable
-    */
-
+    /**
+     * @description: resets the active record to ensure there is no leftover data and applies filtered summary object to the creation of a new rollup if applicable
+     */
     displayNewRollupForm: function (cmp, event, helper) {
         cmp.set("v.activeRecord", {});
         cmp.set("v.activeRecord.label", cmp.get("v.labels.rollupNew"));
@@ -105,8 +113,9 @@
         cmp.set("v.detailMode", "create");
     },
 
-    /* @description: resets the active record and toggles the grid and detail views
-    */
+    /**
+     *  @description: resets the active record and toggles the grid and detail views
+     */
     displayNewFilterGroupForm: function (cmp, event, helper) {
         cmp.set("v.activeRecord", {});
         cmp.set("v.isFilterGroupsGrid", false);
@@ -115,23 +124,26 @@
         cmp.set("v.detailMode", "create");
     },
 
-    /* @description: calls the helper function to display the rollups grid and resets shared sorting information
-    */
+    /**
+     * @description: calls the helper function to display the rollups grid and resets shared sorting information
+     */
     displayRollupsGrid: function(cmp, event, helper){
         helper.displayRollupsGrid(cmp);
         cmp.set("v.sortedBy", "");
         cmp.set("v.sortedDirection", "asc");
     },
 
-    /* @description: filters visible rollups by the summary object picklist
-    */
+    /**
+     * @description: filters visible rollups by the summary object picklist
+     */
     filterBySummaryObject: function(cmp, event, helper){
         var object = cmp.find("selectSummaryObject").get("v.value");
         helper.filterData(cmp, object);
     },
 
-    /* @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
-    */
+    /**
+     * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
+     */
     handleCancelEvent: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
@@ -149,9 +161,9 @@
         }
     },
 
-    /* @description: handles the ltng:message event
-    * currently listens for the rollup name change on the Rollup cmp since this doesn't bind correctly
-    */
+    /**
+     * @description: handles the ltng:message event to update the rollup name or to update rollup or filter groups in the grid
+     */
     handleMessage: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");
@@ -159,33 +171,40 @@
         console.log("handleMessage: " + channel);
 
         //message is the masterLabel
-        if(channel === 'rollupNameChange'){
+        if(channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message;
-
             cmp.set("v.activeRecord", activeRecord);
+
         } else if (channel === 'rollupRecordChange') {
-            // message will inserted or updated the Rollup__mdt record
+            helper.mergeRowItem(cmp, cmp.get("v.rollupList"), message, 'rollup');
+
+        } else if (channel === 'filterRecordChange') {
+            helper.mergeRowItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
+
+            //update record name for the detail page
+            var activeRecord = cmp.get("v.activeRecord");
+            activeRecord.MasterLabel = message.MasterLabel;
+            cmp.set("v.activeRecord", activeRecord);
+
+        } else if (channel === 'rollupDeleted') {
             var rollupsList = cmp.get("v.rollupList");
-            var newItem = true;
             for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].id === message.id) {
-                    // if the Id matches, update that record
-                    console.log("Replace Row for " + message.id);
-                    rollupsList[i] = message;
-                    newItem = false;
+                if (rollupsList[i].recordId === message.recordId) {
+                    // if the Id matches, delete that record
+                    rollupsList.splice(i, 1);
+                    break;
                 }
             }
-            if (newItem === true) {
-                rollupsList.push(message);
-            }
             cmp.set("v.rollupList", rollupsList);
+            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
         }
     },
 
-    /* @description: handles the selection of a specific rollup from the filter group view and then return to filter group
-    */
+    /**
+     * @description: handles the selection of a specific rollup from the filter group view and then return to filter group
+     */
     handleNavigateEvent: function(cmp, event, helper){
         var id = event.getParam('id');
         var lastId = event.getParam('lastId');
@@ -207,8 +226,9 @@
 
     },
 
-    /* @description: handles the selected action in the either grid
-    */
+    /**
+     * @description: handles the selected action in the either grid
+     */
     handleRowAction: function(cmp, event, helper){
         var action = event.getParam('action');
         var row = event.getParam('row');
@@ -216,7 +236,7 @@
 
         if(action.name !== 'delete'){
             cmp.set("v.detailMode", action.name);
-            cmp.set("v.activeRecordId", row.id);
+            cmp.set("v.activeRecordId", row.recordId);
             //check which grid is displayed
             if(isRollupsGrid){
                 cmp.set("v.isRollupsGrid", false);
@@ -228,28 +248,21 @@
                 cmp.set("v.width", 8);
             }
         } else {
-            if(isRollupsGrid){
-                var rows = cmp.get("v.rollupList");
+            //verify no rollups use the filter group before deleting
+            if(!row.countRollups){
+                var rows = cmp.get("v.filterGroupList");
                 var rowIndex = rows.indexOf(row);
                 rows.splice(rowIndex, 1);
-                cmp.set("v.rollupList", rows);
-            }
-            else{
-                //verify no rollups use the filter group before deleting
-                if(!row.countRollups){
-                    var rows = cmp.get("v.filterGroupList");
-                    var rowIndex = rows.indexOf(row);
-                    rows.splice(rowIndex, 1);
-                    cmp.set("v.filterGroupList", rows);
-                } else {
-                    helper.toggleFilterRuleModal(cmp);
-                }
+                cmp.set("v.filterGroupList", rows);
+            } else {
+                helper.toggleFilterRuleModal(cmp);
             }
         }
     },
 
-    /* @description: used in the breadcrumb to return to the filter group grid from the filter group detail view
-    */
+    /**
+     *  @description: used in the breadcrumb to return to the filter group grid from the filter group detail view
+     */
     returnToFilterGroup: function(cmp, event, helper){
         cmp.set("v.activeRecordId", cmp.get("v.lastActiveRecordId"));
         cmp.set("v.lastActiveRecordId", null);
@@ -257,15 +270,17 @@
         cmp.set("v.isFilterGroupDetail", true);
     },
 
-    /* @description: changes the mode from the edit or clone buttons
-    */
+    /**
+     *  @description: changes the mode from the edit or clone buttons
+     */
     setMode: function(cmp, event, helper) {
         var name = event.getSource().get("v.name");
         cmp.set("v.detailMode", name);
     },
 
-    /* @description: sorts the data in either grid by the field name and current direction
-    */
+    /**
+     *  @description: sorts the data in either grid by the field name and current direction
+     */
     sortByColumns: function(cmp, event, helper){
         var col = event.getParam();
         var fieldName = event.getParam('fieldName');
@@ -289,9 +304,11 @@
 
     },
 
-    /* @description: toggles a modal popup and backdrop
-    */
+    /**
+     *  @description: toggles a modal popup and backdrop
+     */
     toggleFilterRuleModal: function(cmp, event, helper){
         helper.toggleFilterRuleModal(cmp);
-    },
+    }
+
 })

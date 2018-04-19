@@ -54,9 +54,10 @@ public class CRLP_RollupCMT {
      */
     public class FilterGroup {
         public String recordName;
+        public String recordId;
         public String label;
         public String description;
-        public Boolean isDeleted;
+        public Boolean isDeleted = false;
         public List<FilterRule> rules;
 
         public FilterGroup(String label) {
@@ -68,9 +69,12 @@ public class CRLP_RollupCMT {
         public FilterGroup(Filter_Group__mdt groupRecord) {
             this.label = groupRecord.MasterLabel;
             this.recordName = groupRecord.DeveloperName;
-            this.isDeleted = groupRecord.Is_Deleted__c;
             this.description = groupRecord.Description__c;
             this.rules = new List<FilterRule>();
+            try {
+                this.recordId = groupRecord.Id;
+                this.isDeleted = groupRecord.Is_Deleted__c;
+            } catch (Exception ex) {}
         }
 
         /**
@@ -90,7 +94,7 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fldValues;
@@ -126,13 +130,18 @@ public class CRLP_RollupCMT {
      */
     public class FilterRule {
         public String recordName;
+        public String recordId;
         public String label;
         public String filterGroupRecordName;
         public String objectName;
+        public String objectLabel;
         public String fieldName;
-        public String operation;
+        public String fieldLabel;
+        public String operationName;
+        public String operationLabel;
         public String value;
-        public Boolean isDeleted;
+        public String valueLabel;
+        public Boolean isDeleted = false;
 
         public FilterRule(String filterGroupRecordName, String label) {
             this.label = label.trim();
@@ -144,7 +153,7 @@ public class CRLP_RollupCMT {
             this.label = filterRule.MasterLabel;
             this.recordName = filterRule.DeveloperName;
             this.filterGroupRecordName = filterRule.Filter_Group__r.DeveloperName;
-            this.operation = filterRule.Operator__c;
+            this.operationName = filterRule.Operator__c;
             this.objectName = filterRule.Object__r.QualifiedApiName;
             if (filterRule.Field__c != null && filterRule.Field__r.QualifiedApiName.contains('.')) {
                 this.fieldName = parseObjectField(filterRule.Field__r.QualifiedApiName)[1];
@@ -152,7 +161,15 @@ public class CRLP_RollupCMT {
                 this.fieldName = filterRule.Field__r.QualifiedApiName;
             }
             this.value = filterRule.Constant__c;
-            this.isDeleted = filterRule.Is_Deleted__c;
+            this.recordId = filterRule.Id;
+
+            try {
+                this.objectLabel = filterRule.Object__r.MasterLabel;
+                this.fieldLabel = filterRule.Field__r.MasterLabel;
+                this.operationLabel = this.operationName; // will to be updated in the RollupUI lgic
+                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                this.isDeleted = filterRule.Is_Deleted__c;
+            } catch (Exception ex) {}
         }
 
         /**
@@ -166,8 +183,12 @@ public class CRLP_RollupCMT {
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
             if (this.label == null) {
-                this.label = (this.filterGroupRecordName.left(20) + 'Rule: ' + this.objectName + '.' + this.fieldName +
-                        ' ' + this.operation).left(40);
+                String prefix = this.filterGroupRecordName;
+                if (prefix.countMatches('_') > 1) {
+                    prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
+                }
+                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
+                        ' ' + this.operationName, false).left(40);
             }
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -176,7 +197,7 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
 
             Map<String, Object> fldValues;
@@ -185,7 +206,7 @@ public class CRLP_RollupCMT {
                     'Filter_Group__c' => filterGroupRecordName,
                     'Object__c' => this.objectName,
                     'Field__c' => combineObjectAndField(this.objectName, this.fieldName),
-                    'Operator__c' => operation,
+                    'Operator__c' => operationName,
                     'Constant__c' => value,
                     'Is_Deleted__c' => isDeleted
                 };
@@ -231,7 +252,7 @@ public class CRLP_RollupCMT {
         public Integer intValue;
 
         public Rollup(String label) {
-            this.label = label.trim();
+            this.label = label.replace('Number', 'Num').left(40).trim();
             this.recordName = generateRecordName(this.label, false);
             this.useFiscalYear = false;
             this.isActive = true;
@@ -298,6 +319,10 @@ public class CRLP_RollupCMT {
 
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
 
+            if (this.label.length() > 40) {
+                this.label = abbreviateForSpace(this.label, false).left(40);
+            }
+
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
             }
@@ -305,8 +330,13 @@ public class CRLP_RollupCMT {
             // Setup custom metadata to be created or updated in the subscriber org.
             Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
             customMd.fullName = mdTypeName + '.' + this.recordName.left(40).removeEnd('_');
-            customMd.label = this.label;
+            customMd.label = this.label.left(40);
             customMd.protected_x = IS_PROTECTED;
+
+            // Convert an empty string ('') value into null for the entity reference to save properly.
+            if (String.isEmpty(this.filterGroupRecordName)) {
+                this.filterGroupRecordName = null;
+            }
 
             Map<String, Object> fldValues;
             if (this.isDeleted != true) {
@@ -334,7 +364,7 @@ public class CRLP_RollupCMT {
                     fldValues.put('Date_Field__c', combineObjectAndField(dateObject, dateField));
                 }
             } else {
-                fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted };
+                fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted , 'Active__c' => isActive };
             }
             md = CMT_MetadataAPI.addFieldsToMetadataObject(customMd, fldValues);
 
@@ -351,12 +381,10 @@ public class CRLP_RollupCMT {
     public static String generateRecordName(String label, Boolean makeUnique) {
 
         // Shorten specific words
-        String recordName = label.replace('General Accounting Unit', 'GAU').replace('Account', 'Acct').
-                replace('Contact', 'Cnct').replace('Recurring Donation', 'RD').
-                replace('number', 'num').replace(' of ', '').replace('count', 'cnt');
+        String recordName = abbreviateForSpace(label, false);
 
         // replace all special characters and double underscores
-        recordName = label.replaceAll('[^\\w]+', '_').replaceAll('_+', '_');
+        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_'), true);
 
         //remove leading and trailing underscores
         recordName = recordName.removeStart('_').removeEnd('_');
@@ -398,5 +426,34 @@ public class CRLP_RollupCMT {
      */
     private static String combineObjectAndField(String objName, String fieldName) {
         return objName + (fieldName != null ? '.' + fieldName : '');
+    }
+
+    /**
+     * @description Replace specific Object and other terms with shortened versions to deal with the 40 character
+     * limitation for the CMT MasterLabel and DeveloperName fields.
+     * @param txt Text to Shorten
+     * @param forDeveloperName True if shortening for the DeveloperName - which can be much shorter.
+     * @return Updated Text
+     */
+    private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
+
+        // TODO Talk to Beth about LowerCase().
+        txt = txt.replace('General Accounting Unit', 'GAU').
+                replace('Recurring Donation', 'RD').
+                replace('Partial Soft Credit', 'PSC').
+                replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
+                replace(' of ', '');
+
+        if (forDeveloperName) {
+            txt = txt.replace('Opportunity', 'Opp').
+                    replace('Account', 'Acct').
+                    replace('Contact', 'Con').
+                    replace('Payment', 'Pmt').
+                    replace('Allocations', 'Allo').
+                    replace('Soft_Credit', 'sftCr').replace('Hard_Credit', 'hrdCr').
+                    replace('#', 'num').replace('year', 'yr').
+                    replace('Number', 'Num').replace('Count', 'cnt');
+        }
+        return txt;
     }
 }

@@ -90,7 +90,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage.recordName;
         ruleCloseWonStage.objectName = 'Opportunity';
         ruleCloseWonStage.fieldName = 'IsWon';
-        ruleCloseWonStage.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage.value = 'true';
         groupClosedWonDonations.rules.add(ruleCloseWonStage);
 
@@ -99,7 +99,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
-            ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleRecordType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
             groupClosedWonDonations.rules.add(ruleRecordType);
             groupClosedWonDonations.description = String.format(groupClosedWonDonations.description,
@@ -114,7 +114,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
             ruleOppType.objectName = 'Opportunity';
             ruleOppType.fieldName = 'Type';
-            ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleOppType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleOppType.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
             groupClosedWonDonations.rules.add(ruleOppType);
         }
@@ -124,7 +124,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleSoftCreditRoles.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleSoftCreditRoles.recordName;
             ruleSoftCreditRoles.objectName = SObjectType.Partial_Soft_Credit__c.getName();
             ruleSoftCreditRoles.fieldName = SObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.getName();
-            ruleSoftCreditRoles.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+            ruleSoftCreditRoles.operationName = CMT_FilterRule.FilterOperation.IN_LIST.name();
             ruleSoftCreditRoles.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c;
             groupClosedWonDonations.rules.add(ruleSoftCreditRoles);
         }
@@ -144,7 +144,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStage1.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage1.recordName;
             ruleCloseWonStage1.objectName = 'Opportunity';
             ruleCloseWonStage1.fieldName = 'IsWon';
-            ruleCloseWonStage1.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+            ruleCloseWonStage1.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
             ruleCloseWonStage1.value = 'true';
             groupClosedWonDonationsContacts.rules.add(ruleCloseWonStage1);
 
@@ -153,7 +153,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
                 ruleRecordType.objectName = 'Opportunity';
                 ruleRecordType.fieldName = 'RecordTypeId';
-                ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleRecordType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
                 groupClosedWonDonationsContacts.rules.add(ruleRecordType);
                 groupClosedWonDonationsContacts.description = String.format(groupClosedWonDonationsContacts.description,
@@ -168,7 +168,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
                 ruleOppType.objectName = 'Opportunity';
                 ruleOppType.fieldName = 'Type';
-                ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleOppType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleOppType.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
                 groupClosedWonDonationsContacts.rules.add(ruleOppType);
             }
@@ -178,7 +178,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleSoftCreditRoles.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleSoftCreditRoles.recordName;
                 ruleSoftCreditRoles.objectName = SObjectType.Partial_Soft_Credit__c.getName();
                 ruleSoftCreditRoles.fieldName = SObjectType.Partial_Soft_Credit__c.Fields.Role_Name__c.getName();
-                ruleSoftCreditRoles.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+                ruleSoftCreditRoles.operationName = CMT_FilterRule.FilterOperation.IN_LIST.name();
                 ruleSoftCreditRoles.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Soft_Credit_Roles__c;
                 groupClosedWonDonationsContacts.rules.add(ruleSoftCreditRoles);
             }
@@ -195,7 +195,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage2.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage2.recordName;
         ruleCloseWonStage2.objectName = 'Opportunity';
         ruleCloseWonStage2.fieldName = 'IsWon';
-        ruleCloseWonStage2.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage2.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage2.value = 'true';
         groupMemberships.rules.add(ruleCloseWonStage2);
 
@@ -204,7 +204,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
-            ruleRecordType.operation = CMT_FilterRule.FilterOperation.IN_LIST.name();
+            ruleRecordType.operationName = CMT_FilterRule.FilterOperation.IN_LIST.name();
             ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c, 'Membership');
             groupMemberships.rules.add(ruleRecordType);
         }
@@ -220,7 +220,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage3.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage3.recordName;
         ruleCloseWonStage3.objectName = 'Opportunity';
         ruleCloseWonStage3.fieldName = 'IsWon';
-        ruleCloseWonStage3.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage3.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage3.value = 'true';
         groupAllocations.rules.add(ruleCloseWonStage3);
 
@@ -229,7 +229,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordType.recordName;
             ruleRecordType.objectName = 'Opportunity';
             ruleRecordType.fieldName = 'RecordTypeId';
-            ruleRecordType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleRecordType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordType.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_RecTypes__c, null);
             groupAllocations.rules.add(ruleRecordType);
             groupAllocations.description = String.format(groupAllocations.description,
@@ -244,7 +244,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
             ruleOppType.objectName = 'Opportunity';
             ruleOppType.fieldName = 'Type';
-            ruleOppType.operation = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleOppType.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleOppType.value = CRLP_DefaultConfigBuilder.legacyAllocSettings.Excluded_Opp_Types__c;
             groupAllocations.rules.add(ruleOppType);
         }
@@ -262,7 +262,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleOpenStage.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOpenStage.recordName;
         ruleOpenStage.objectName = 'Opportunity';
         ruleOpenStage.fieldName = 'isClosed';
-        ruleOpenStage.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleOpenStage.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleOpenStage.value = 'false';
         groupPledgedDonations.rules.add(ruleOpenStage);
 
@@ -270,7 +270,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleNotWon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleNotWon.recordName;
         ruleNotWon.objectName = 'Opportunity';
         ruleNotWon.fieldName = 'isWon';
-        ruleNotWon.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleNotWon.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleNotWon.value = 'false';
         groupPledgedDonations.rules.add(ruleNotWon);
     
@@ -285,7 +285,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage4.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleCloseWonStage4.recordName;
         ruleCloseWonStage4.objectName = 'Opportunity';
         ruleCloseWonStage4.fieldName = 'IsWon';
-        ruleCloseWonStage4.operation = CMT_FilterRule.FilterOperation.EQUALS.name();
+        ruleCloseWonStage4.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleCloseWonStage4.value = 'true';
         groupClosedWonDonationsNoRTExclusions.rules.add(ruleCloseWonStage4);
 
@@ -323,9 +323,9 @@ public class CRLP_DefaultConfigBuilder_SVC {
         for (String summaryObjectField : CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.keySet()) {
             List<String> rollupDetails = CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.get(summaryObjectField);
             List<String> rollupText = CRLP_DefaultConfigBuilder.rollupNameAndDescriptionsBySummaryField.get(summaryObjectField);
-
             CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(rollupText[0]);
-            rollup.recordName = (CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName).replace('_365_', '_N_');
+
+            rollup.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + rollup.recordName;
             rollup.description = rollupText[1];
             rollup.filterGroupRecordName = rollupDetails[1];
             rollup.summaryObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(summaryObjectField)[0]);

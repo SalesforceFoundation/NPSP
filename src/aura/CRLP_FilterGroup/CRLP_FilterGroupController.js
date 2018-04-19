@@ -15,18 +15,18 @@
         }
 
         var action = cmp.get("c.setupFilterGroupDetail");
-        action.setParams({id: activeFilterGroupId, objectNames: objectNames});
+        action.setParams({filterGroupId: activeFilterGroupId, objectNames: objectNames});
 
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                var model = helper.restructureResponse(response.getReturnValue());
-                if(activeFilterGroupId){
+                var data = helper.restructureResponse(response.getReturnValue());
+                var model = JSON.parse(data);
+                if (activeFilterGroupId){
                     //note: the parsing is important to avoid a shared reference
                     cmp.set("v.activeFilterGroup", helper.restructureResponse(model.filterGroup));
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
-
                 cmp.set("v.operatorMap", model.operators);
 
                 var labels = cmp.get("v.labels");
@@ -37,23 +37,28 @@
 
                 var filterRuleColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
-                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
+                    , {label: labels.constant, fieldName: 'valueLabel', type: 'string'}
                 ];
 
                 var filterRuleActionColumns = [{label: labels.object, fieldName: 'objectLabel', type: 'string'}
                     , {label: labels.field, fieldName: 'fieldLabel', type: 'string'}
-                    , {label: labels.operator, fieldName: 'operatorLabel', type: 'string'}
-                    , {label: labels.constant, fieldName: 'constantLabel', type: 'string'}
+                    , {label: labels.operator, fieldName: 'operationLabel', type: 'string'}
+                    , {label: labels.constant, fieldName: 'valueLabel', type: 'string'}
                     , {type: 'action', typeAttributes: {rowActions: actions}}
                 ];
 
-                cmp.set("v.filterRuleList", helper.restructureResponse(model.filterRuleList));
-                cmp.set("v.cachedFilterRuleList", helper.restructureResponse(model.filterRuleList));
+                var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                cmp.set("v.filterRuleList", filterRuleList);
+                cmp.set("v.cachedFilterRuleList", filterRuleListCached);
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
-                helper.filterRollupList(cmp, model.filterGroup.MasterLabel, labels);
+                if (model.filterGroup) {
+                    helper.filterRollupList(cmp, model.filterGroup.label, labels);
+                }
                 helper.changeMode(cmp);
 
             }
@@ -68,10 +73,10 @@
                     console.log("Unknown error");
                 }
             }
+            helper.toggleSpinner(cmp, false);
         });
 
         $A.enqueueAction(action);
-
     },
 
     /**
@@ -118,7 +123,7 @@
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
-            helper.rerenderValue(cmp, cleanRow.operatorName);
+            helper.rerenderValue(cmp, cleanRow.operationName);
 
         } else {
             //cautions user about deleting filter rule
@@ -167,7 +172,7 @@
     onChangeFilterRuleField: function(cmp, event, helper){
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
-        cmp.set("v.activeFilterRule.operatorName", "");
+        cmp.set("v.activeFilterRule.operationName", "");
     },
 
     /**
@@ -179,33 +184,25 @@
     },
 
     /**
-     * @description: adds constant field to selected list
-     */
-    /*onChangeFilterRuleConstantPicklist: function(cmp, event, helper){
-        var constant = event.getSource().get("v.value");
-        var fieldCmp = cmp.find("filterRuleUIField");
-        var value = fieldCmp.get("v.value");
-        var constantPicklist = cmp.get("v.filterRuleConstantPicklist");
-        console.log(JSON.stringify(constantPicklist));
-    },*/
-
-    /**
      * @description: saves a new filter group and associated filter rules
      */
-    onSave: function(cmp, event, helper){
+    onSaveFilterGroupAndRules: function(cmp, event, helper){
         //placeholder for on cancel function in !view mode
         //add check for description, name and a filter rule
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
+        var filterRuleList = cmp.get("v.filterRuleList");
+        var deletedRuleList = cmp.get("v.deletedRuleList");
         var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
-        if(canSave){
+        if (canSave) {
             cmp.set("v.mode", 'view');
 
-            //todo: add save code here
+            helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
+            //todo note: only sendMessage once filter rule has been deployed successfully
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
             sendMessage.setParams({
-                'message': activeFilterGroup.MasterLabel,
+                'message': activeFilterGroup.label,
                 'channel': 'nameChange'
             });
             sendMessage.fire();
@@ -214,8 +211,9 @@
 
     /**
      * @description: adds, edits or deletes filter on the list of filter rules on the filter group
+     * Only flags the row record for saving
      */
-    saveFilterRule: function(cmp, event, helper){
+    onQueueFilterRuleSave: function(cmp, event, helper){
         //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
         var filterRuleList = cmp.get("v.filterRuleList");
@@ -228,13 +226,13 @@
                 //set field labels directly
                 filterRule.objectLabel = helper.retrieveFieldLabel(filterRule.objectName, cmp.get("v.detailObjects"));
                 filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
-                filterRule.operatorLabel = helper.retrieveFieldLabel(filterRule.operatorName, cmp.get("v.filteredOperators"));
+                filterRule.operationLabel = helper.retrieveFieldLabel(filterRule.operationName, cmp.get("v.filteredOperators"));
 
                 //special reformatting for multipicklist and semi-colon delimited lists
-                if (filterRule.operatorName === 'In_List' || filterRule.operatorName === 'Not_In_List') {
-                    filterRule.constantLabel = helper.reformatConstantLabel(cmp, filterRule.constantName, filterRule.operatorName);
+                if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
+                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operationName);
                 } else {
-                    filterRule.constantLabel = filterRule.constantName;
+                    filterRule.valueLabel = filterRule.valueName;
                 }
 
                 //if mode is create, just add to list, otherwise update the item in the existing list
@@ -249,6 +247,11 @@
                 helper.resetActiveFilterRule(cmp);
             }
         } else {
+            if (filterRule.recordId) {
+                var deletedRuleList = cmp.get("v.deletedRuleList");
+                deletedRuleList.push(filterRule);   // queue this rule for deleting if was previously saved
+                cmp.set("v.deletedRuleList", deletedRuleList);
+            }
             filterRuleList.splice(filterRule.index, 1);
             cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);
