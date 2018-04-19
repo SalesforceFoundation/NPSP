@@ -740,6 +740,7 @@
         console.log('IN SET ROLLUP TYPE FUNCTION.');
         var summaryObject = cmp.get("v.activeRollup.summaryObject");
         var detailObject = cmp.get("v.activeRollup.detailObject");
+        var amountObject = cmp.get("v.activeRollup.amountObject");
         var labels = cmp.get("v.labels");
         var rollupType = {};
 
@@ -759,10 +760,15 @@
             rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
-            rollupType.name = labels.objectOpportunity;
-            rollupType.summaryObject = labels.objectContact;
-            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
-
+            if (amountObject === labels.objectPartialSoftCredit) {
+                rollupType.name = labels.objectOpportunity;
+                rollupType.summaryObject = labels.objectContact;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectContact + ' ' + labels.softCredit;
+            } else {
+                rollupType.name = labels.objectOpportunity;
+                rollupType.summaryObject = labels.objectContact;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectContact + ' ' + labels.hardCredit;
+            }
         } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectContact) {
             rollupType.name = labels.objectPartialSoftCredit;
             rollupType.summaryObject = labels.objectContact;

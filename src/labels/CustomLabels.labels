@@ -858,7 +858,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Rollup Summary Page Title</shortDescription>
-        <value>Customizable Rollup Summaries</value>
+        <value>Customizable Rollups</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupType</fullName>
@@ -4903,6 +4903,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Only System Administrators can enable or disable Customizable Rollups.</value>
     </labels>
     <labels>
+        <fullName>stgCRLPGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPGoToSetup</shortDescription>
+        <value>Go to Customizable Rollups Setup</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5208,7 +5216,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When active, enables Customizable Rollup Summaries.
+            When active, enables Customizable Rollups.
         </value>
     </labels>
     <labels>
