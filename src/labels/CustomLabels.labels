@@ -5236,7 +5236,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch that permanently removes any duplicate Primary Opportunity Contact Roles that exist in your org. These records won&apos;t be recoverable in the recycle bin, so be careful to review expected changes in advance.&lt;br/&gt;&lt;br/&gt;
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
-This change updates Opportunity and Opportunity Contact Role records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
+This change updates Opportunity Contact Role records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
 &lt;br/&gt;
 &lt;br/&gt;
 ● Custom Validation Rules&lt;br/&gt;
