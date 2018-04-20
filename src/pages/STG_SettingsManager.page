@@ -193,6 +193,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUpdatePrimaryContactNav"><a href="#" onclick="ShowPanel('idPanelUpdatePrimaryContact');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppPrimaryContactTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPrimaryContactRoleMergeNav"><a href="#" onclick="ShowPanel('idPanelPrimaryContactRoleMergeBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelPrimaryContactRoleMergeBatch}</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -352,6 +353,10 @@
                     <apex:include pageName="STG_PanelLvlAssignBatch" />
                 </div>
 
+                <div class="panel noborder" id="idPanelPrimaryContactRoleMergeBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelPrimaryContactRoleMerge" />
+                </div>
+                
                 <div class="panel noborder" id="idPanelUpdatePrimaryContact" style="display:none" >
                     <apex:include pageName="STG_PanelUpdatePrimaryContact" />
                 </div>
