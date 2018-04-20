@@ -126,6 +126,7 @@
             var label = message[2];
             console.log("field name is " + fieldName);
             console.log("value is " + value);
+            console.log("label is " + label);
 
             if(fieldName === 'summaryObject'){
                 helper.onChangeSummaryObject(cmp, value, label);

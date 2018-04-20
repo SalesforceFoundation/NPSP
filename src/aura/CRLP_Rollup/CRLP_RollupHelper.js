@@ -264,6 +264,18 @@
     */
     onChangeRollupType: function (cmp, detailObject, rollupLabel) {
         console.log('in helper on change rollup');
+
+        var amountObject;
+        if(detailObject === 'Partial_Soft_Credit__c'){
+            detailObject = 'Opportunity';
+            cmp.set("v.activeRollup.detailObject", 'Opportunity');
+            cmp.set("v.activeRollup.detailObjectLabel", 'Opportunity');
+            amountObject = 'Partial_Soft_Credit__c';
+        } else {
+            var amountObject = detailObject;
+        }
+        cmp.set("v.activeRollup.amountObject", amountObject);
+
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         //during create, visibility of operation and filter group are toggled
@@ -292,9 +304,10 @@
         var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
         cmp.set("v.activeRollup.detailObjectLabel", detailLabel);
         cmp.set("v.selectedRollupType", {label: rollupLabel, name: detailObject});
+        console.log("SET SELECTED ROLLUP TYPE: "+rollupLabel+", "+detailObject);
 
         //reset amount fields
-        this.resetFields(cmp, detailObject, 'amount');
+        this.resetFields(cmp, amountObject, 'amount');
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
@@ -745,9 +758,15 @@
         var rollupType = {};
 
         if (detailObject === labels.objectOpportunity && summaryObject === labels.objectAccount) {
-            rollupType.name = labels.objectOpportunity;
-            rollupType.summaryObject = labels.objectAccount;
-            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
+            if (amountObject === labels.objectPartialSoftCredit) {
+                rollupType.name = labels.objectOpportunity;
+                rollupType.summaryObject = labels.objectAccount;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectAccount + ' ' + labels.softCredit;
+            } else {
+                rollupType.name = labels.objectOpportunity;
+                rollupType.summaryObject = labels.objectAccount;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectAccount + ' ' + labels.hardCredit;
+            }
 
         } else if (detailObject === labels.objectPayment && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectPayment;
