@@ -227,17 +227,21 @@
         var renderMap = cmp.get("v.renderMap");
 
         //TIME BOUND OPERATION RENDERING
-        if (operation && operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
-            renderMap["timeBoundOperation"] = true;
+        if (operation) {
+            if (operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
+                renderMap["timeBoundOperation"] = true;
+            } else {
+                renderMap["timeBoundOperation"] = false;
+                cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
+                var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
+                cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
+                renderMap["integerDays"] = false;
+                renderMap["integerYears"] = false;
+            }
             renderMap["rollupType"] = true;
         } else {
-            renderMap["timeBoundOperation"] = false;
             renderMap["rollupType"] = false;
-            cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
-            var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
-            cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
-            renderMap["integerDays"] = false;
-            renderMap["integerYears"] = false;
+            renderMap["timeBoundOperation"] = false;
         }
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         var rollupLabel = cmp.get("v.selectedRollupType").label;
@@ -267,7 +271,7 @@
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
-        //during create, visibility of operation and filter group are toggled
+        //during create, visibility of filter group is toggled
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel) {
                 renderMap["filterGroup"] = true;
@@ -296,7 +300,7 @@
         //reset amount fields
         this.resetFields(cmp, detailObject, 'amount');
         //todo: fix this for all cases, not just opportunity amount
-        if(!activeRollup.amountObject){
+        if (!activeRollup.amountObject) {
             cmp.set("v.activeRollup.amountObjectLabel", activeRollup.detailObjectLabel);
             cmp.set("v.activeRollup.amountObject", activeRollup.detailObject);
         }
