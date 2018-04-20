@@ -176,7 +176,7 @@
     },
 
     /**
-     * @description: renders constant value based on selected operator
+     * @description: renders value based on selected operator
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
@@ -232,7 +232,7 @@
                 if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
                     filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operationName);
                 } else {
-                    filterRule.valueLabel = filterRule.valueName;
+                    filterRule.valueLabel = filterRule.value;
                 }
 
                 //if mode is create, just add to list, otherwise update the item in the existing list

@@ -673,7 +673,7 @@ public with sharing class CRLP_RollupUI_SVC {
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
-        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'SyncedQuoteID'};
+        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'Fiscal', 'FiscalQuarter', 'FiscalYear', 'SyncedQuoteID'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             String type = dfr.getType().Name();

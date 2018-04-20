@@ -141,7 +141,6 @@
     getPicklistOptions: function(cmp, field) {
         var action = cmp.get("c.getFilterRuleConstantPicklistOptions");
         action.setParams({objectName: cmp.get("v.activeFilterRule.objectName"), selectedField: field});
-        console.log(cmp.get("v.activeFilterRule.objectName"), field);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -538,33 +537,18 @@
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
 
-        //check for specific API name duplicates instead of the full row to avoid issues with the ID not matching
-        for (var i = 0; i < filterRuleList.length; i++) {
-            if (i !== filterRule.index
-                && filterRuleList[i].objectName === filterRule.objectName
-                && filterRuleList[i].fieldName === filterRule.fieldName
-                && filterRuleList[i].operatorName === filterRule.operatorName
-                && filterRuleList[i].constantName === filterRule.constantName) {
-                cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                return canSave = false;
-            }
+        //custom validity to work around issue with duallistbox
+        if (!filterRule.value) {
+            var picklist = cmp.find("filterRuleFieldPicklist");
+            picklist.setCustomValidity("Value is required");
+            return false;
         }
 
         //check for duplicates
         if (!filterRuleList) {
             // nothing to compare
-        } else if (cmp.get("v.filterRuleMode") === 'create') {
-            //check for specific API names instead of the full row to avoid issues with the ID not matching
-            for (var i = 0; i < filterRuleList.length; i++) {
-                if (filterRuleList[i].objectName === filterRule.objectName
-                    && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operationName === filterRule.operationName
-                    && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
-                }
-            }
         } else {
+            //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
@@ -572,7 +556,7 @@
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
+                    return false;
                 }
             }
         }
