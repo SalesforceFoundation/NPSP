@@ -63,14 +63,16 @@
                 break;
             }
         }
-        if (newItem === true) {
+        if (newItem) {
             list.push(item);
         }
 
-        //save the updated list
-        if(context === 'rollup'){
-            cmp.set("v.rollupList", list);
-        } else if (context === 'filterGroup'){
+        //save the updated, sorted list and clear any list filtering
+        if (context === 'rollup') {
+            var sortedData = this.sortData(cmp, 'displayName', 'asc', list);
+            cmp.set("v.filteredSummaryObject", "All");
+            cmp.set("v.rollupList", sortedData);
+        } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
     },

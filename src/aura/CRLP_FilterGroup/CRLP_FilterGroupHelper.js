@@ -379,11 +379,12 @@
         return JSON.parse(JSON.stringify(resp));
     },
 
-    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
-    * @param apiName: the name of the field
-    * @param entityList: list of fields to search
-    * @return label: field label that matches the apiName
-    */
+    /**
+     * @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+     * @param apiName: the name of the field
+     * @param entityList: list of fields to search
+     * @return label: field label that matches the apiName
+     */
     retrieveFieldLabel: function (apiName, entityList) {
         var label;
         if (entityList) {

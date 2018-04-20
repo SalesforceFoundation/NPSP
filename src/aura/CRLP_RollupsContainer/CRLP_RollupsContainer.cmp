@@ -50,6 +50,7 @@
 
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
+    <aura:attribute name="filteredSummaryObject" type="String" access="private" description="Saved filtered summary object." default="All"/>
     <aura:attribute name="isRollupsGrid" type="Boolean" access="private" description="Determines if Rollups Grid is shown."/>
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
@@ -179,7 +180,8 @@
                 <lightning:layout>
                     <aura:if isTrue="{!v.isRollupsGrid}">
                         <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
-                            <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type" variant="label-hidden" onchange="{!c.filterBySummaryObject}">
+                            <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type"
+                                              variant="label-hidden" onchange="{!c.filterBySummaryObject}" value="{!v.filteredSummaryObject}">
                                 <option value="All" text="{!v.labels.selectAll}"/>
                                 <aura:iteration items="{!v.summaryObjects}" var="obj">
                                     <option value="{!obj.name}" text="{!obj.label}"/>
