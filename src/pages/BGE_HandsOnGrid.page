@@ -546,6 +546,22 @@
 
                             hot.render();
                         }
+                    },
+                    beforeKeyDown: function (e) {
+
+                        // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
+                        if (e.keyCode === 13) {
+
+                            e.stopImmediatePropagation();
+
+                            var selection = hot.getSelected();
+                            var rowIndex = selection[0];
+                            var colIndex = selection[1];
+
+                            rowIndex++;
+
+                            hot.selectCell(rowIndex,colIndex);
+                        }
                     }
                 });
 
