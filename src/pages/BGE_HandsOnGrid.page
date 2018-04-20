@@ -92,7 +92,6 @@
 
                 table = document.getElementById('my-hot-table');
 
-            //    wasEnterPressed = false;
                 wasUpArrowPressed = false;
                 movedSideWays = false;
 
@@ -414,12 +413,11 @@
                                 changesToSave[dataRowId] = {};
                             }
 
-                            //  if(!wasEnterPressed) { //Enter keycode
-                                if(movedSideWays) {
+                            if(movedSideWays) {
 
-                                    triggerUpdateCell(newValue, prop, dataRowId, function(result) {
+                                triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
-                                    	var cell = hot.getCellMeta(row, getColumnFromName(prop));
+                                    var cell = hot.getCellMeta(row, getColumnFromName(prop));
 
                                     if (!result.success) {
 
@@ -459,8 +457,6 @@
                             $scope.$apply();
                         });
 
-
-
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
                         pBatchId,
@@ -471,7 +467,7 @@
                     },
 
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
-                        console.log('ROW ' + row);
+
                         var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
                         var dataAtRow = this.getDataAtRow(lastSelectedRow);
                         var self = this;
@@ -570,10 +566,10 @@
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
 
-                hot.view.wt.update('onCellDblClick', function (row,cell) {
+            //    hot.view.wt.update('onCellDblClick', function (row,cell) {
 
-                    console.log("double click");
-                });
+            //        console.log("double click");
+            //    });
 
                 function getColumnFromName(name){
 
@@ -619,11 +615,11 @@
 
                     var escaped = Handsontable.helper.stringify(htmlIcon);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).append(htmlTooltip);
                      }, 10);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).find( "span:last" ).remove();
                      }, 2000);
 
@@ -639,7 +635,7 @@
 
                         row = row - 1;
                     }
-                    
+
                     if (!messages) {
 
                         messages = [];
@@ -687,7 +683,7 @@
                 function triggerSave(id, row, lastSelectedRow, self, callback) {
 
                     var dataAtLastSelectedRow = {};
- 
+
                     if (!dataAtLastSelectedRow[id]) {
 
                         dataAtLastSelectedRow[id] = {};
@@ -741,7 +737,7 @@
                 }
 
                 function triggerUpdateCell(newValue, prop, dataRowId, callback) {
-                    
+
                     var dataAtLastSelectedRow = {};
 
                     if (!dataAtLastSelectedRow[dataRowId]) {
@@ -883,7 +879,7 @@
                     });
                 }
 
-                
+
                 function reloadCurrentPageOfTheGrid() {
 
                     var pBatchId = getAllUrlParams().batchid;
@@ -1041,49 +1037,11 @@
                     return rows;
                 }
 
-            /*    Handsontable.Dom.addEvent(searchField, 'keyup', function (event) {
-
-                    hot.loadData(data);
-
-                    if(this.value != '') {
-
-                        var queryResult = hot.search.query(this.value);
-
-                        hot.render();
-                    }
-                });*/
 
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
-                //    wasEnterPressed = false;
 		            wasUpArrowPressed = false;
                     movedSideWays = false;
-
-                    /*
-                    if (e.keyCode === 9) {
-
-                        var selection = hot.getSelected();
-                        var rowIndex = selection[0];
-                        var colIndex = selection[1];
-                        var numerOfColumns = hot.countCols();
-
-                        if (colIndex == numerOfColumns - 1) {
-
-                            rowIndex++;
-                            colIndex = 0;
-                        }
-
-                        hot.selectCell(rowIndex,colIndex);
-                    }
-                    else if (e.keyCode === 13 || e.keyCode  === 38 || e.keyCode === 40) {
-                        // Enter, arrow down or up was pressed.
-                        wasEnterPressed = true;
-                        wasUpArrowPressed = true;
-                    }
-                    else if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
-                        // Arrow right, arrow left or tab was pressed.
-                        movedSideWays = true;
-                    }*/
 
                     if (e.keyCode  === 38) {
                         // Arrow up was pressed.
@@ -1099,7 +1057,7 @@
                 // END DEFINING ANGULAR FUNCTIONS
             });
 
-	    function removeMessage(dataRowId) {
+	        function removeMessage(dataRowId) {
 
                 setTimeout(function() {
                     $(dataRowId).find( "span:last" ).remove();
