@@ -262,23 +262,24 @@
     * @param detailObject: detail object API name stored as the name on the rollupType attribute
     * @param rollupLabel: rollup type label
     */
-    onChangeRollupType: function (cmp, detailObject, rollupLabel) {
+    onChangeRollupType: function (cmp, rollupObject, rollupLabel) {
         console.log('in helper on change rollup');
-
-        var amountObject;
-        if(detailObject === 'Partial_Soft_Credit__c'){
-            detailObject = 'Opportunity';
-            cmp.set("v.activeRollup.detailObject", 'Opportunity');
-            cmp.set("v.activeRollup.detailObjectLabel", 'Opportunity');
-            amountObject = 'Partial_Soft_Credit__c';
-        } else {
-            var amountObject = detailObject;
-        }
-        cmp.set("v.activeRollup.amountObject", amountObject);
-
+        //debugger;
+        console.log(JSON.stringify(cmp.get("v.rollupTypes")));
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
+
+        //check for partial soft credit rollup objects
+        var amountObject = rollupObject;
+        var detailObject = rollupObject;
+        if (rollupObject === labels.objectPartialSoftCredit) {
+            detailObject = labels.objectOpportunity;
+            cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
+            cmp.set("v.activeRollup.detailObjectLabel", labels.labelOpportunity);
+            amountObject = labels.objectPartialSoftCredit;
+        }
+
         //during create, visibility of operation and filter group are toggled
         if(cmp.get("v.mode") === "create"){
             if (rollupLabel) {
@@ -308,11 +309,8 @@
 
         //reset amount fields
         this.resetFields(cmp, detailObject, 'amount');
-        //todo: fix this for all cases, not just opportunity amount
-        if(!activeRollup.amountObject){
-            cmp.set("v.activeRollup.amountObjectLabel", activeRollup.detailObjectLabel);
-            cmp.set("v.activeRollup.amountObject", activeRollup.detailObject);
-        }
+        cmp.set("v.activeRollup.amountObject", amountObject);
+        cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObject, detailObjects));
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
