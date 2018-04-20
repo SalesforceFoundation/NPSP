@@ -130,6 +130,7 @@
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
                                                 value="{!v.activeFilterGroup.description}"
+                                                required="{! !v.isReadOnly}"
                                                 readonly="{!v.isReadOnly}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
@@ -152,7 +153,7 @@
                                                          onrowaction="{!c.handleRowAction}"
                                     />
                                     <aura:set attribute="else">
-                                        <ui:message severity="info" closable="false">
+                                        <ui:message aura:id="noFilterRulesMessage" severity="info" closable="false">
                                             {!v.labels.noFilterRules}
                                         </ui:message>
                                     </aura:set>
@@ -260,7 +261,7 @@
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <!--START CONSTANT INPUT OPTIONS-->
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'text')}">
-                                    <!--todo: see if text, date, datetime-local, time and number can be combined into one-->
+                                    <!--todo: combine dynamic type with 214 release-->
                                     <lightning:textarea aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
                                                         required="true" label="{!v.labels.constant}" maxlength="300" />
                                 </aura:if>
@@ -271,10 +272,6 @@
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'datetime-local')}">
                                     <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
                                                      required="true" label="{!v.labels.constant}" type="datetime-local"/>
-                                </aura:if>
-                                <aura:if isTrue="{!equals(v.filterRuleFieldType, 'time')}">
-                                    <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
-                                                     required="true" label="{!v.labels.constant}" type="time"/>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'number')}">
                                     <lightning:input class="slds-p-around_small" value="{!v.activeFilterRule.value}"
