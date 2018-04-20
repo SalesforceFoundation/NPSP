@@ -1044,6 +1044,7 @@
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
         <members>CMT_FilterGroupDeleteError</members>
+        <members>CMT_FilterGroupNameLimitError</members>
         <members>CMT_FilterNew</members>
         <members>CMT_FilterRuleDeleteWarning</members>
         <members>CMT_FilterRuleDuplicateError</members>

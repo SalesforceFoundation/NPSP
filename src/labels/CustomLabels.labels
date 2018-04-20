@@ -604,6 +604,14 @@
         <value>You can not delete this filter group because there are rollups associated with it. View this filter group for more information on these rollups.</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupNameLimitError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterNew</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

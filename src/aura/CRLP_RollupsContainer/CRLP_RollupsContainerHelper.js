@@ -46,13 +46,12 @@
      *  @param item - item to be merged into the list
      *  @param context - context running the merge
      */
-    mergeRowItem: function(cmp, list, item, context){
+    mergeRowItem: function(cmp, list, item, context) {
         var newItem = true;
         for (var i = 0; i < list.length; i++) {
-            //todo: refactor to lowercase Id after CMT save information is added
             if (list[i].recordId === item.recordId) {
                 //update filter group information on rollups only if master label has changed
-                if (list[i].MasterLabel !== item.MasterLabel && context === 'filterGroup') {
+                if (list[i].label !== item.label && context === 'filterGroup') {
                     this.requeryRollups(cmp);
                 }
                 // if the Id matches, update that record

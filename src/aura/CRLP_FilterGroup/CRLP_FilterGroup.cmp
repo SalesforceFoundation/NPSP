@@ -120,7 +120,9 @@
                                              name="{!v.labels.name}"
                                              value="{!v.activeFilterGroup.label}"
                                              required="{! !v.isReadOnly}"
-                                             readonly="{! v.isReadOnly}"/>
+                                             readonly="{! v.isReadOnly}"
+                                             pattern=".{0,40}"
+                                             messageWhenPatternMismatch="{!v.labels.filterGroupNameLimitError}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 

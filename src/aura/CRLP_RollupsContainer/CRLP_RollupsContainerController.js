@@ -37,9 +37,8 @@
                     , {label: labels.labelAllocation, name: labels.objectAllocation}];
                 cmp.set("v.detailObjects", detailObjects);
 
-                //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
-                var rollupColumns = [{label: labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
-                                , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
+                var rollupColumns = [{label: labels.name, fieldName: 'displayName', type: 'button', sortable: 'true', initialWidth: 300
+                                , typeAttributes: {label: {fieldName: 'displayName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
                             , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
                             , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
                             , {label: labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
@@ -174,7 +173,7 @@
         if(channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
-            activeRecord.MasterLabel = message;
+            activeRecord.label = message;
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupRecordChange') {

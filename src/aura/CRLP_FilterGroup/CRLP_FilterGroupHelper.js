@@ -56,7 +56,7 @@
 
         //filter rollup list by type
         filteredRollupList.forEach(function (rollup) {
-            var item = {label: rollup.rollupName, name: rollup.id}
+            var item = {label: rollup.displayName, name: rollup.id}
             for (i=0; i<rollupsBySummaryObj.length; i++){
                 if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
@@ -512,7 +512,7 @@
         cmp.find("nameInput").showHelpMessageIfInvalid();
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
 
-        if (!description || !name) {
+        if (!description || !name || name.length > 40) {
             canSave = false;
         }
 

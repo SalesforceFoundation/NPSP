@@ -125,7 +125,7 @@
                                 </div>
                                 <div class="slds-media__body">
                                     <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
-                                    <h1 class="slds-page-header__title" title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
+                                    <h1 class="slds-page-header__title" title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
                                 </div>
                             </div>
                         </aura:if>
@@ -139,7 +139,7 @@
                                     <p class="slds-text-heading_label ">{!v.labels.filterGroupLabel}</p>
                                     <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
                                         <h1 class="slds-page-header__title"
-                                            title="{!v.activeRecord.MasterLabel}">{!v.activeRecord.MasterLabel}</h1>
+                                            title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
                                         <!--Else show mode header-->
                                         <aura:set attribute="else">
                                             <h1 class="slds-page-header__title"

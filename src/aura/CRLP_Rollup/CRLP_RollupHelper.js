@@ -913,16 +913,18 @@
             masterLabel = label;
             cmp.set("v.activeRollup.label", masterLabel);
         }
+
+        //sends the message to the parent cmp RollupsContainer
+        if(masterLabel){
+            this.sendMessage(cmp, 'nameChange', masterLabel);
+        }
+
+        //shortens the label after sending so the full object + field details appear
         if (masterLabel.length > 40) {
             masterLabel = masterLabel.substring(0,39);
             if (masterLabel.endsWith('_')) {
                 masterLabel = masterLabel.substring(0,38);
             }
-        }
-
-        //sends the message to the parent cmp RollupsContainer
-        if(masterLabel){
-            this.sendMessage(cmp, 'nameChange', masterLabel);
         }
     },
 
