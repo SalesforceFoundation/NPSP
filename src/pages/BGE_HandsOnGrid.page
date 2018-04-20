@@ -119,7 +119,6 @@
 
                 var dynamicColumns = [];
 
-
                 var requiredValidator = function (value, callback) {
 
                     if (!value || String(value).length === 0) {
@@ -278,7 +277,7 @@
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
-                    contextMenu: ['remove_row', 'make_read_only', 'alignment'],
+                    contextMenu: ['remove_row'],
 
                     cells: function (row, col, prop) {
 
