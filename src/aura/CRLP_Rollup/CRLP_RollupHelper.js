@@ -110,12 +110,19 @@
     /* @description: filters possible detail fields by summary type and updates the detailFields attribute
     * @param detailObject: currently selected detail object
     */
-    filterDetailFieldsBySummaryField: function (cmp, detailObject) {
+    //filterDetailFieldsBySummaryField: function (cmp, detailObject) {
+    filterDetailFieldsBySummaryField: function (cmp, potentialDetailObjects) {
+
         //current version filters strictly; update will include type conversion fields
         var summaryField = cmp.get("v.activeRollup.summaryField");
 
         //need to get all detail fields, or we filter on a subset of all options
-        var allFields = cmp.get("v.objectDetails")[detailObject];
+        var allFields = [];
+        for (var i = 0; i<potentialDetailObjects.length; i++) {
+            var objectFields = cmp.get("v.objectDetails")[potentialDetailObjects[i]];
+            allFields = allFields.concat(objectFields);
+        }
+
         var newFields = [];
 
         //loop over all summary fields to get the type of selected field
@@ -191,8 +198,12 @@
     */
     onChangeDetailField: function (cmp, detailField, label) {
         console.log('in helper on change detail');
-        this.verifyRollupSaveActive(cmp, detailField);
         cmp.set("v.activeRollup.detailFieldLabel", label);
+        var fieldToObjectMap = cmp.get("v.fieldToObjectMap");
+        console.log('HERE IS THE fieldToObjectMap: '+fieldToObjectMap);
+        var objectName = fieldToObjectMap[label];
+        cmp.set("v.activeRollup.detailObject", objectName);
+        this.verifyRollupSaveActive(cmp, detailField);
     },
 
     /* @description: sets the filter group master label when the filter group is changed
@@ -272,11 +283,14 @@
 
         //check for partial soft credit rollup objects
         var amountObject = rollupObject;
-        var detailObject = rollupObject;
+        //var detailObject = rollupObject;
+        var potentialDetailObjects = [];
         if (rollupObject === labels.objectPartialSoftCredit) {
-            detailObject = labels.objectOpportunity;
-            cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
-            cmp.set("v.activeRollup.detailObjectLabel", labels.labelOpportunity);
+            potentialDetailObjects.push(labels.objectPartialSoftCredit);
+            potentialDetailObjects.push(labels.objectOpportunity);
+            //detailObject = labels.objectOpportunity;
+            //cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
+            //cmp.set("v.activeRollup.detailObjectLabel", labels.labelOpportunity);
             amountObject = labels.objectPartialSoftCredit;
         }
 
@@ -285,7 +299,8 @@
             if (rollupLabel) {
                 renderMap["filterGroup"] = true;
                 cmp.set("v.renderMap", renderMap);
-                this.filterDetailFieldsBySummaryField(cmp, detailObject);
+                //this.filterDetailFieldsBySummaryField(cmp, detailObject);
+                this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
             } else {
                 renderMap["filterGroup"] = false;
             }
@@ -302,20 +317,21 @@
 
         //set detail object label explicitly since detail obj name is bound to rollup type field, but the label is not
         var detailObjects = cmp.get("v.detailObjects");
-        var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
-        cmp.set("v.activeRollup.detailObjectLabel", detailLabel);
-        cmp.set("v.selectedRollupType", {label: rollupLabel, name: detailObject});
-        console.log("SET SELECTED ROLLUP TYPE: "+rollupLabel+", "+detailObject);
+        //TODO: fix this to work?
+        //var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
+        //cmp.set("v.activeRollup.detailObjectLabel", detailLabel);
+        cmp.set("v.selectedRollupType", {label: rollupLabel, name: amountObject});
+        console.log("SET SELECTED ROLLUP TYPE: "+rollupLabel+", "+amountObject);
 
         //reset amount fields
-        this.resetFields(cmp, detailObject, 'amount');
+        this.resetFields(cmp, amountObject, 'amount');
         cmp.set("v.activeRollup.amountObject", amountObject);
         cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObject, detailObjects));
 
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
         //defaults field to Payment on the payment object, and CloseDate for everything else
-        if (detailObject === labels.objectPayment) {
+        /*if (detailObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
             cmp.set("v.activeRollup.dateObject", labels.objectPayment);
             this.resetFields(cmp, activeRollup.dateObject, "date");
@@ -325,7 +341,7 @@
             cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
             this.resetFields(cmp, activeRollup.dateObject, "date");
             cmp.set("v.activeRollup.dateField", "CloseDate");
-        }
+        }*/
 
         //check if save button can be activated
         this.verifyRollupSaveActive(cmp, activeRollup.detailField);

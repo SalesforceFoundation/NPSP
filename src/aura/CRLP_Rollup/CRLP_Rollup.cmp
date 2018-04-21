@@ -64,6 +64,7 @@
     <aura:attribute name="selectedIntegerLabel" type="String"/>
     <aura:attribute name="rollupTypes" type="List"/>
     <aura:attribute name="selectedRollupType" type="Object" default="{label: '', name: ''}"/>
+    <aura:attribute name="fieldToObjectMap" type="Object[]" access="public" description="Map of Object: Field keys to Object api names."/>
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
@@ -308,6 +309,12 @@
                         </aura:if>
 
                         <aura:if isTrue="{!v.renderMap.detailField}">
+
+                            <aura:iteration items="{!v.options}" var="option">
+                                {!option.name}<br/>
+                                {!option.label}<br/>
+                            </aura:iteration>
+
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
@@ -315,7 +322,6 @@
                                                 apiName="{!v.activeRollup.detailField}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 isRequired="true"
                                                 helpText="{!v.labels.createDetailFieldHelp}"
                             />

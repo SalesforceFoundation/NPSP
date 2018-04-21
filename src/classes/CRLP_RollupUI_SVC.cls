@@ -88,7 +88,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class RollupDetailModel {
         @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
-        @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, List<Map<String, String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, String> fieldToObjectMap;
         @AuraEnabled public Map<String, String> timeBoundOperations;
         @AuraEnabled public Map<String, String> operations;
 
@@ -150,6 +151,7 @@ public with sharing class CRLP_RollupUI_SVC {
             summaryField = model.rollup.summaryField;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
+        model.fieldToObjectMap = getFieldToObjectMap(targetObjectNames, detailObjectNames);
         model.timeBoundOperations = getTimeBoundOperations();
         model.operations = getRollupOperations();
 
@@ -382,6 +384,32 @@ public with sharing class CRLP_RollupUI_SVC {
         return objNameToFieldTypeMap;
     }
 
+    /*******************************************************************************************************
+    @description Fetches a map keyed by
+    * @param targetObjectNames list of target or summary objects to query
+    * @param detailObjectNames list of detail or objects to rollup to query
+    * @return a map of strings to string-string maps. Map<String,Map<String,String>>
+    */
+
+    @AuraEnabled
+    public static Map<String,String> getFieldToObjectMap (List<String> targetObjectNames, List<String> detailObjectNames) {
+
+        Map<String,String> fieldToObjectMap = new Map<String,String>();
+
+        List<String> allObjects = new List<String>();
+        allObjects.addAll(targetObjectNames);
+        allObjects.addAll(detailObjectNames);
+
+        for(String detailObj : allObjects){
+            String objectLabel = UTIL_Describe.getObjectLabel(detailObj);
+            Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(detailObj);
+            for (DescribeFieldResult dfr : allFields.values()) {
+                fieldToObjectMap.put(objectLabel+': '+dfr.label, detailObj);
+            }
+        }
+
+        return fieldToObjectMap;
+    }
 
     /*******************************************************************************************************
     * @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.

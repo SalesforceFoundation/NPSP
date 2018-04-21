@@ -19,6 +19,8 @@
                 cmp.set("v.rollupList", model.items);
                 cmp.set("v.cachedRollupList", model.items);
                 cmp.set("v.filterGroupList", model.filterGroups);
+                cmp.set("v.fieldToObjectMap", model.fieldToObjectMap);
+                console.log(model.fieldToObjectMap);
 
                 var actions = [{label: labels.edit, name:'edit'}
                     , {label: labels.clone, name:'clone'}
