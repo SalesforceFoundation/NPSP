@@ -1633,6 +1633,7 @@
         <members>stgBtnRefreshPrimaryContacts</members>
         <members>stgBtnRunBatch</members>
         <members>stgBtnSave</members>
+        <members>stgCRLPGoToSetup</members>
         <members>stgCRLPHouseholdAccountError</members>
         <members>stgCRLPInfoOnUDRBody</members>
         <members>stgCRLPInfoOnUDRHeading</members>
