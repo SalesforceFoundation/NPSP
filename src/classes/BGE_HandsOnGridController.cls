@@ -4,6 +4,13 @@ global class BGE_HandsOnGridController {
     private static final Integer SQL_MAJOR_LIMIT = 10000;
     private static final integer PAGE_SIZE  = 50; // to set the page size to show the rows/records
 
+    public static String jsonString {get; set;}
+    public static String jsonUpdatedString {get; set;}
+    public static String jsonColumnsString {get; set;}
+    public static integer totalOfRecords {get; set;} // used to show user the total size of the list
+    public static integer totalDonationAmount {get; set;}
+    public static integer totalOfPages {get; set;}
+
     private static Id batchId;
     private static Id templateId;
     private static List<DataImport__c> data;
@@ -11,12 +18,6 @@ global class BGE_HandsOnGridController {
     private static Map<String, Schema.SObjectField> fieldsMap = Schema.SObjectType.DataImport__c.fields.getMap();
     private static Batch_Template_Field__c[] templateFields;
 
-    public static String jsonString {get; set;}
-    public static String jsonUpdatedString {get; set;}
-    public static String jsonColumnsString {get; set;}
-    public static integer totalOfRecords {get; set;} // used to show user the total size of the list
-    public static integer totalDonationAmount {get; set;}
-    public static integer totalOfPages {get; set;}
     public List<DataImport__c> errorRecords {get;set;}
     public List<DataImport__c> successRecords {get;set;}
     public Boolean validated {get; set;}
@@ -71,6 +72,7 @@ global class BGE_HandsOnGridController {
                     LIMIT :SQL_MINOR_LIMIT];
 
         if (!batches.isEmpty()) {
+
             templateId = batches[0].Batch_Template__c;
         }
     }
@@ -83,13 +85,13 @@ global class BGE_HandsOnGridController {
         columns = new BGE_DynamicalColumnWrapper[]{};
 
         templateFields = [SELECT Id,
-                                Name,
-                                Order__c,
-                                Read_Only__c,
-                                Required__c,
-                                Sticky_Field__c,
-                                Sticky_Field_Value__c,
-                                Sticky_Field_Visibility__c
+                                 Name,
+                                 Order__c,
+                                 Read_Only__c,
+                                 Required__c,
+                                 Sticky_Field__c,
+                                 Sticky_Field_Value__c,
+                                 Sticky_Field_Visibility__c
                             FROM Batch_Template_Field__c
                             WHERE Batch_Template__c =: templateId
                             ORDER BY Order__c ASC
@@ -108,25 +110,39 @@ global class BGE_HandsOnGridController {
      */
     private static void loadData(Id pBatchId) {
 
-        String query = 'SELECT ';
+        if (templateFields != null && !templateFields.isEmpty()) {
 
-        for (Batch_Template_Field__c field : templateFields) {
+            String query = 'SELECT ';
 
-            // This is the first record avoid adding the ',' character
-            if (field.Id == templateFields[0].Id) {
+            for (Batch_Template_Field__c field : templateFields) {
 
-                query = query + field.Name;
+                // This is the first record avoid adding the ',' character
+                if (field.Id == templateFields[0].Id) {
+
+                    query = query + field.Name;
+                }
+                else {
+
+                    query = query + ', ' + field.Name;
+                }
+
             }
-            else {
 
-                query = query + ', ' + field.Name;
+            query = query + ' FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = \'' +  pBatchId +'\'' + ' ORDER BY createdDate ASC LIMIT ' + PAGE_SIZE;
+
+            try {
+                data = Database.query(query);
             }
+            catch (QueryException e) {
+
+                system.debug('QUERY EXCEPTION:    ' + e.getMessage());
+            }
+        }
+        else {
+
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, 'There is no Batch Template associated with this Batch. Please associate this Batch with a Batch Template.'));
 
         }
-
-        query = query + ' FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = \'' +  pBatchId +'\'' + ' ORDER BY createdDate ASC LIMIT ' + PAGE_SIZE;
-
-        data = Database.query(query);
     }
 
     /*
@@ -152,6 +168,7 @@ global class BGE_HandsOnGridController {
             }
 
             upsert dataImportToUpdate;
+
             response.addDataImportId(dataImportToUpdate.Id);
         }
         catch (DmlException dmlEx) {
@@ -162,9 +179,36 @@ global class BGE_HandsOnGridController {
         }
         catch (JSONException jsonEx){
 
-            String error = 'EXCEPTION OF TYPE ' + jsonEx.getTypeName() + ' WAS CAUSED BY ' + jsonEx.getCause() + ' ' + jsonEx.getMessage() + ' AT LINE ' + jsonEx.getLineNumber();
+            String error = '';
 
-            response.addError(error);
+            // Numeric and date fields are treated different from the rest of the cells.
+            if (error.contains('date') || error.contains('currency')) {
+
+                if (error.contains('date')) {
+
+                    String dateError = 'Error in this field:     ' + ' Donation_Date__c' ;
+
+                    error = error + dateError;
+
+                    response.addError(error);
+                }
+
+                if(error.contains('currency')) {
+
+                    String currencyError = 'Error in this field:     ' + ' Donation_Amount__c' ;
+
+                    error = error + currencyError;
+
+                    response.addError(error);
+                }
+            }
+            else {
+
+                error = 'Incorrect value on cell, please recheck. ' + jsonEx.getMessage();
+
+                response.addError(error);
+            }
+
         }
         catch(System.LimitException limitEx) {
 
@@ -268,6 +312,7 @@ global class BGE_HandsOnGridController {
                 error = 'Error: STORAGE_LIMIT_EXCEEDED, Please validate records in the org.';
             }
             else {
+
                 error = 'Error in this field: ' + dmlEx.getDmlFieldNames(0);
             }
 
@@ -275,11 +320,38 @@ global class BGE_HandsOnGridController {
         }
         catch (JSONException jsonEx){
 
-            String error = 'Incorrect value on cell, please recheck.';
+            String error = '';
+
+            // Numeric and date fields are treated different from the rest of the cells.
+            if (error.contains('date') || error.contains('currency')) {
+
+                if (error.contains('date')) {
+
+                    String dateError = 'Error in this field:     ' + ' Donation_Date__c' ;
+
+                    error = error + dateError;
+
+                    response.addError(error);
+                }
+
+                if(error.contains('currency')) {
+
+                    String currencyError = 'Error in this field:     ' + ' Donation_Amount__c' ;
+
+                    error = error + currencyError;
+
+                    response.addError(error);
+                }
+            }
+            else {
+
+                error = 'Incorrect value on cell, please recheck. ' + jsonEx.getMessage();
+
+                response.addError(error);
+            }
 
             system.debug('EXCEPTION OF TYPE ' + jsonEx.getTypeName() + ' WAS CAUSED BY ' + jsonEx.getCause() + ' ' + jsonEx.getMessage() + ' AT LINE ' + jsonEx.getLineNumber());
 
-            response.addError(error);
         }
         catch(System.LimitException limitEx) {
 
@@ -723,20 +795,19 @@ global class BGE_HandsOnGridController {
 
         List<AggregateResult> query = [SELECT SUM(Donation_Amount__c) FROM DataImport__c WHERE NPSP_Data_Import_Batch__c =: pBatchId AND Donation_Amount__c != null];    //set the total size in the constructor
 
-        result = Integer.valueOf(query[0].get('expr0'));
+        result = Integer.valueOf(query[0].get('expr0')) == null ? 0 : Integer.valueOf(query[0].get('expr0'));
 
         return result;
     }
 
-    @RemoteAction
     global static Integer calculateTotalPages(String pBatchId, Integer pTotalOfRecords) {
 
         Integer result = 0;
-        system.debug('MODULE    ' + math.mod(pTotalOfRecords, PAGE_SIZE));
+
         if (math.mod(pTotalOfRecords, PAGE_SIZE) >= 0) {
-            system.debug('pTotalOfRecords    ' + pTotalOfRecords);
+
             result = pTotalOfRecords/PAGE_SIZE + 1;
-            system.debug('RESULT    ' + result);
+
             totalOfPages = result;
         }
         else {
