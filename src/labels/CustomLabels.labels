@@ -5244,7 +5244,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            Enable Customizable Rollups
+            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
         </value>
     </labels>
     <labels>
