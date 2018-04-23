@@ -56,8 +56,6 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     @testSetup static void createAutomatedSoftCreditsData() {
         Account acct1 = new Account(Name = 'Organization Account1');
         Account acct2 = new Account(Name = 'Organization Account2');
-        acct1.npe01__SYSTEMIsIndividual__c = false;
-        acct2.npe01__SYSTEMIsIndividual__c = false;
         insert new List<Account>{ acct1, acct2 };
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(7);
@@ -310,16 +308,22 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         Account testAcount = [SELECT Id, npe01__SYSTEMIsIndividual__c FROM Account WHERE Id = :testCon.AccountId][0];
         System.assertEquals(false, testAcount.npe01__SYSTEMIsIndividual__c);
         List<OpportunityContactRole> retrievedOCR
-            = [SELECT Id, ContactId, Role
+            = [SELECT Id, ContactId, OpportunityId, Role
                 FROM OpportunityContactRole
                 WHERE ContactId = :testCon.Id
                 AND Role = :RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT];
 
         System.assertEquals(1, retrievedOCR.size());
 
+        List<Opportunity> retrievedOppty
+            = [SELECT Id, AccountId
+                FROM Opportunity
+                WHERE Id = :retrievedOCR[0].OpportunityId];
+
         Test.stopTest();
 
         System.assertEquals(testCon.Id, retrievedOCR[0].ContactId);
+        System.assertEquals(testAcount.Id, retrievedOppty[0].AccountId);
     }
 
 

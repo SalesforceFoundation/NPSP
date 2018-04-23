@@ -663,7 +663,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.Primary_Contact__c != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
-                && oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c) {
+                && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
                 if (primaryContactToOpportunity.containsKey(eachOppty.Primary_Contact__c)) {
                     List<Id> opportunities = primaryContactToOpportunity.get(eachOppty.Primary_Contact__c);
                     opportunities.add(eachOppty.Id);
@@ -693,7 +693,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.AccountId != null
-                && !oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c) {
+                && OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
                 if (accountToOpportunity.containsKey(eachOppty.AccountId)) {
                     List<Id> opportunities = accountToOpportunity.get(eachOppty.AccountId);
                     opportunities.add(eachOppty.Id);
