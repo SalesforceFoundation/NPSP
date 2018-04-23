@@ -127,7 +127,7 @@
 
         //loop over all summary fields to get the type of selected field
         var summaryFields = cmp.get("v.summaryFields");
-        var type = this.getFieldType(cmp, summaryField, summaryFields);
+        var type = this.retrieveFieldType(cmp, summaryField, summaryFields);
 
         //TODO: maybe check if type is the same to see if need to filter?
         //if type is undefined, return all fields
@@ -145,20 +145,6 @@
         }
         //reset detail field to null to prompt user selection
         cmp.set("v.activeRollup.detailField", null);
-    },
-
-    /* @description: gets the type of a field
-    * @param field: name of the field
-    * @param fieldList: list of fields with name, type and label keys
-    * @return: the type of the field
-    */
-    getFieldType: function(cmp, field, fieldList){
-        for (var i = 0; i < fieldList.length; i++) {
-            if (fieldList[i].name === field) {
-                var type = fieldList[i].type;
-                return type;
-            }
-        }
     },
 
     /* @description: hides all fields but the summary view with the renderMap var to walk user through a create rollup flow
@@ -196,14 +182,17 @@
     * @param detailField: selected detail field API name
     * @param label: selected detail field label
     */
-    onChangeDetailField: function (cmp, detailField, label) {
+    onChangeDetailField: function (cmp, detailObjectAndField, fieldLabel) {
+
+        var stringList = detailObjectAndField.split(' ');
+        var objectName = stringList[0];
+        var fieldName = stringList[1];
         console.log('in helper on change detail');
-        cmp.set("v.activeRollup.detailFieldLabel", label);
-        var fieldToObjectMap = cmp.get("v.fieldToObjectMap");
-        console.log('HERE IS THE fieldToObjectMap: '+fieldToObjectMap);
-        var objectName = fieldToObjectMap[label];
+        var objectLabel = this.retrieveFieldLabel(objectName, cmp.get("v.detailObjects"));
+        cmp.set("v.activeRollup.detailFieldLabel", fieldLabel);
         cmp.set("v.activeRollup.detailObject", objectName);
-        this.verifyRollupSaveActive(cmp, detailField);
+        cmp.set("v.activeRollup.detailObjectLabel", objectLabel);
+        this.verifyRollupSaveActive(cmp, fieldName);
     },
 
     /* @description: sets the filter group master label when the filter group is changed
@@ -251,10 +240,10 @@
             renderMap["integerYears"] = false;
         }
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        var rollupLabel = cmp.get("v.selectedRollupType").label;
-        renderMap = this.renderAmountField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDateField(cmp, operation, rollupLabel, renderMap);
-        renderMap = this.renderDetailField(cmp, operation, rollupLabel, renderMap);
+        var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
+        renderMap = this.renderAmountField(cmp, operation, rollupTypeLabel, renderMap);
+        renderMap = this.renderDateField(cmp, operation, rollupTypeLabel, renderMap);
+        renderMap = this.renderDetailField(cmp, operation, rollupTypeLabel, renderMap);
         renderMap = this.renderFiscalYear(cmp, renderMap);
 
         cmp.set("v.renderMap", renderMap);
@@ -273,25 +262,21 @@
     * @param detailObject: detail object API name stored as the name on the rollupType attribute
     * @param rollupLabel: rollup type label
     */
-    onChangeRollupType: function (cmp, rollupObject, rollupLabel) {
+    onChangeRollupType: function (cmp, rollupTypeObject, rollupLabel) {
         console.log('in helper on change rollup');
-        //debugger;
-        console.log(JSON.stringify(cmp.get("v.rollupTypes")));
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
 
         //check for partial soft credit rollup objects
-        var amountObject = rollupObject;
-        //var detailObject = rollupObject;
+        var amountObjectName = rollupTypeObject;
         var potentialDetailObjects = [];
-        if (rollupObject === labels.objectPartialSoftCredit) {
+        if (rollupTypeObject === labels.objectPartialSoftCredit) {
             potentialDetailObjects.push(labels.objectPartialSoftCredit);
             potentialDetailObjects.push(labels.objectOpportunity);
-            //detailObject = labels.objectOpportunity;
-            //cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
-            //cmp.set("v.activeRollup.detailObjectLabel", labels.labelOpportunity);
-            amountObject = labels.objectPartialSoftCredit;
+            amountObjectName = labels.objectPartialSoftCredit;
+        } else {
+            potentialDetailObjects.push(rollupTypeObject);
         }
 
         //during create, visibility of operation and filter group are toggled
@@ -308,6 +293,47 @@
             this.onChangeFilterGroup(cmp, labels.na);
         }
 
+        cmp.set("v.selectedRollupType", {label: rollupLabel, name: rollupTypeObject});
+
+        //reset amount fields
+        this.resetFields(cmp, amountObjectName, 'amount');
+        //debugger;
+        cmp.set("v.activeRollup.amountObject", amountObjectName);
+        //this.setAmountField(cmp, amountObjectName);
+        var labels = cmp.get("v.labels");
+
+        // Set the amount field based on the selected rollup type
+        if (amountObjectName === labels.objectPayment) {
+            cmp.set("v.activeRollup.amountField", labels.objectPayment + ' npe01__Payment_amount__c');
+
+        } else if (amountObjectName === labels.objectAllocation) {
+            cmp.set("v.activeRollup.amountField", labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c');
+
+        } else if (amountObjectName === labels.objectPartialSoftCredit) {
+            cmp.set("v.activeRollup.amountField", labels.objectPartialSoftCredit + ' Amount__c');
+
+        } else {
+            cmp.set("v.activeRollup.amountField", labels.objectOpportunity + ' Amount');
+        }
+
+        var detailObjects = cmp.get("v.detailObjects");
+        cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObjectName, detailObjects));
+
+        //reset date fields
+        //set date object label and api name based on the selected detail object then reset fields + selected value
+        //defaults field to Payment on the payment object, and CloseDate for everything else
+        if (rollupTypeObject === labels.objectPayment) {
+            cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
+            cmp.set("v.activeRollup.dateObject", labels.objectPayment);
+            this.resetFields(cmp, activeRollup.dateObject, "date");
+            cmp.set("v.activeRollup.dateField", labels.objectPayment+" npe01__Payment_Date__c");
+        } else {
+            cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
+            cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
+            this.resetFields(cmp, activeRollup.dateObject, "date");
+            cmp.set("v.activeRollup.dateField", labels.objectOpportunity+" CloseDate");
+        }
+
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupLabel, renderMap);
         renderMap = this.renderDateField(cmp, activeRollup.operation, rollupLabel, renderMap);
@@ -315,33 +341,6 @@
 
         cmp.set("v.renderMap", renderMap);
 
-        //set detail object label explicitly since detail obj name is bound to rollup type field, but the label is not
-        var detailObjects = cmp.get("v.detailObjects");
-        //TODO: fix this to work?
-        //var detailLabel = this.retrieveFieldLabel(detailObject, detailObjects);
-        //cmp.set("v.activeRollup.detailObjectLabel", detailLabel);
-        cmp.set("v.selectedRollupType", {label: rollupLabel, name: amountObject});
-        console.log("SET SELECTED ROLLUP TYPE: "+rollupLabel+", "+amountObject);
-
-        //reset amount fields
-        this.resetFields(cmp, amountObject, 'amount');
-        cmp.set("v.activeRollup.amountObject", amountObject);
-        cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObject, detailObjects));
-
-        //reset date fields
-        //set date object label and api name based on the selected detail object then reset fields + selected value
-        //defaults field to Payment on the payment object, and CloseDate for everything else
-        /*if (detailObject === labels.objectPayment) {
-            cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
-            cmp.set("v.activeRollup.dateObject", labels.objectPayment);
-            this.resetFields(cmp, activeRollup.dateObject, "date");
-            cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
-        } else {
-            cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
-            cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
-            this.resetFields(cmp, activeRollup.dateObject, "date");
-            cmp.set("v.activeRollup.dateField", "CloseDate");
-        }*/
 
         //check if save button can be activated
         this.verifyRollupSaveActive(cmp, activeRollup.detailField);
@@ -371,12 +370,14 @@
         //sets rollup type automatically if there is only 1
         var rollupTypes = cmp.get("v.rollupTypes");
         if (rollupTypes.length === 1 && label) {
-            cmp.set("v.activeRollup.detailObject", rollupTypes[0].name);
+            console.log('GETTING HERE ONLY ONE');
+            cmp.set("v.activeRollup.rollupTypeObject", rollupTypes[0].name);
+            console.log('active rollup rt obj: '+cmp.get("v.activeRollup.rollupTypeObject"));
             cmp.set("v.selectedRollupType", {label: rollupTypes[0].label, name: rollupTypes[0].name});
             this.onChangeRollupType(cmp, rollupTypes[0].name, rollupTypes[0].label);
         } else {
             cmp.set("v.selectedRollupType", {name: '', label: ''});
-            cmp.set("v.activeRollup.detailObject", '');
+            cmp.set("v.activeRollup.rollupTypeObject", '');
             this.onChangeRollupType(cmp, '', '');
         }
 
@@ -462,6 +463,7 @@
     * @return: updated render map
     */
     renderAmountField: function (cmp, operation, rollupLabel, renderMap) {
+
         if ((operation === 'Largest'
             || operation === 'Smallest'
             || operation === 'Best_Year'
@@ -474,23 +476,10 @@
             //enable amount field
             renderMap["amountField"] = true;
 
-            var labels = cmp.get("v.labels");
-
-            // Set the default amount field based on the selected detail object
-            if (cmp.get("v.activeRollup.amountField") && cmp.get("v.activeRollup.amountField") !== '') {
-                // there is already a value in this field. do nothing
-            } else if (cmp.get("v.activeRollup.detailObject") === 'npe01__OppPayment__c') {
-                cmp.set("v.activeRollup.amountField", 'npe01__Payment_amount__c');
-            } else if (cmp.get("v.activeRollup.detailObject") === labels.objectAllocation) {
-                cmp.set("v.activeRollup.amountField", labels.namespacePrefix + 'Amount__c');
-            } else {
-                cmp.set("v.activeRollup.amountField", 'Amount');
-            }
-
         } else {
             //disable amount field and clear values
             renderMap["amountField"] = false;
-            cmp.set("v.activeRollup.amountField", null);
+            //cmp.set("v.activeRollup.amountField", null);
         }
         return renderMap;
     },
@@ -506,19 +495,21 @@
             || operation === 'Years_Ago'
             || operation === 'Days_Back')
             && rollupLabel) {
-            //enable date field and set defaults based on the dateObject, which is set from the rollup type
+            /*//enable date field and set defaults based on the dateObject, which is set from the rollup type
             var dateObject = cmp.get("v.activeRollup.dateObject");
             if (dateObject === 'npe01__OppPayment__c') {
                 cmp.set("v.activeRollup.dateField", "npe01__Payment_date__c");
             } else {
                 cmp.set("v.activeRollup.dateField", "CloseDate");
-            }
+            }*/
             //enable date field
             renderMap["dateField"] = true;
         } else {
             //disable date field and clear values
             renderMap["dateField"] = false;
+/*
             cmp.set("v.activeRollup.dateField", null);
+*/
         }
 
         return renderMap;
@@ -540,7 +531,7 @@
         } else {
             //disable detail field and and clear values
             renderMap["detailField"] = false;
-            cmp.set("v.activeRollup.detailField", null);
+            //cmp.set("v.activeRollup.detailField", null);
         }
 
         return renderMap;
@@ -608,22 +599,11 @@
         //todo: refactor to see if/when is even necessary
 
         var activeRollup = cmp.get("v.activeRollup");
-        var summaryObject = activeRollup.summaryObject;
-        var detailObject = activeRollup.detailObject;
 
-        console.log("Summary Object=" + summaryObject);
-        console.log("Detail Object=" + detailObject);
-
-        this.resetFields(cmp, summaryObject, 'summary');
-
-        //detail object is the provided object for amount fields because detail and amount object are ALWAYS the same
-        this.resetFields(cmp, detailObject, 'amount');
-        this.resetFields(cmp, detailObject, 'detail');
-
-        var dateObject = activeRollup.dateObject;
-        console.log("Date Object=" + dateObject);
-
-        this.resetFields(cmp, dateObject, 'date');
+        this.resetFields(cmp, activeRollup.summaryObject, 'summary');
+        this.resetFields(cmp, activeRollup.amountObject, 'amount');
+        this.resetFields(cmp, activeRollup.detailObject, 'detail');
+        this.resetFields(cmp, activeRollup.dateObject, 'date');
 
         this.resetRollupTypes(cmp);
         this.setRollupType(cmp);
@@ -684,24 +664,6 @@
         return JSON.parse(JSON.stringify(resp));
     },
 
-    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
-    * @param apiName: the name of the field. ex: 'General_Account_Unit__c'
-    * @param entityList: list of fields to search
-    * @return label: field label that matches the apiName
-    */
-    retrieveFieldLabel: function (apiName, entityList) {
-        var label;
-        if (!(entityList === undefined || entityList === null)) {
-            for (var i = 0; i < entityList.length; i++) {
-                if (entityList[i].name === apiName) {
-                    label = entityList[i].label;
-                    break;
-                }
-            }
-        }
-        return label;
-    },
-
     /* @description: saves the active rollup and sets the mode to view OR punts back to grid in the case of a soft "delete"
     * @param activeRollup:
     */
@@ -717,6 +679,18 @@
         this.toggleSpinner(cmp, true);
 
         var rollupCMT = cmp.get("v.activeRollup");
+
+        // strip back out detail/amount/date objects from fields
+        var detailObjectAndField = cmp.get("v.activeRollup.detailField");
+        var detailList = detailObjectAndField.split(' ');
+        rollupCMT.detailField = detailList[1];
+        var amountObjectAndField = cmp.get("v.activeRollup.amountField");
+        var amountList = amountObjectAndField.split(' ');
+        rollupCMT.amountField = amountList[1];
+        var dateObjectAndField = cmp.get("v.activeRollup.dateField");
+        var dateList = dateObjectAndField.split(' ');
+        rollupCMT.dateField = dateList[1];
+
         var action = cmp.get("c.saveRollup");
         action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
@@ -764,6 +738,61 @@
         $A.enqueueAction(action);
     },
 
+    /* @description: gets the type of a field
+    * @param field: name of the field
+    * @param fieldList: list of fields with name, type and label keys
+    * @return: the type of the field
+    */
+    retrieveFieldType: function(cmp, field, fieldList){
+        for (var i = 0; i < fieldList.length; i++) {
+            if (fieldList[i].name === field) {
+                var type = fieldList[i].type;
+                return type;
+            }
+        }
+    },
+
+    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+    * @param apiName: the name of the field. ex: 'General_Account_Unit__c'
+    * @param entityList: list of fields to search
+    * @return label: field label that matches the apiName
+    */
+    retrieveFieldLabel: function (apiName, entityList) {
+        var label;
+        if (!(entityList === undefined || entityList === null)) {
+            for (var i = 0; i < entityList.length; i++) {
+                if (entityList[i].name === apiName) {
+                    label = entityList[i].label;
+                    break;
+                }
+            }
+        }
+        return label;
+    },
+
+    setAmountField: function (cmp, amountObjectName) {
+        //debugger;
+        /*var labels = cmp.get("v.labels");
+
+        // Set the default amount field based on the selected detail object
+        if (cmp.get("v.activeRollup.amountField") && cmp.get("v.activeRollup.amountField") !== '') {
+            // there is already a value in this field. do nothing
+        } else if (amountObjectName === labels.objectPayment) {
+            cmp.set("v.activeRollup.amountField", labels.objectPayment + ' npe01__Payment_amount__c');
+
+        } else if (amountObjectName === labels.objectAllocation) {
+            cmp.set("v.activeRollup.amountField", labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c');
+
+        } else if (amountObjectName === labels.objectPartialSoftCredit) {
+            console.log('AMOUNT FIELD BEFORE? '+cmp.get("v.activeRollup.amountField"));
+            cmp.set("v.activeRollup.amountField", labels.objectPartialSoftCredit + ' Amount__c');
+            console.log('AMOUNT FIELD AFTER? '+cmp.get("v.activeRollup.amountField"));
+
+        } else {
+            cmp.set("v.activeRollup.amountField", labels.objectOpportunity + ' Amount');
+        }*/
+    },
+
     /**
      * @description: sets the selected rollup type based on detail and summary objects when a record is loaded
      */
@@ -779,57 +808,68 @@
             if (amountObject === labels.objectPartialSoftCredit) {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectAccount;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectAccount + ' ' + labels.softCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
+                cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
             } else {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectAccount;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectAccount + ' ' + labels.hardCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
+                cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
             }
 
         } else if (detailObject === labels.objectPayment && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectPayment;
             rollupType.summaryObject = labels.objectAccount;
             rollupType.label = labels.labelPayment + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectPayment);
 
         } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectPartialSoftCredit;
             rollupType.summaryObject = labels.objectAccount;
             rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
             if (amountObject === labels.objectPartialSoftCredit) {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectContact;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectContact + ' ' + labels.softCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit;
+                cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
             } else {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectContact;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.objectContact + ' ' + labels.hardCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
+                cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
             }
         } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectContact) {
             rollupType.name = labels.objectPartialSoftCredit;
             rollupType.summaryObject = labels.objectContact;
             rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
 
         } else if (detailObject === labels.objectPayment && summaryObject === labels.objectContact) {
             rollupType.name = labels.objectPayment;
             rollupType.summaryObject = labels.objectContact;
             rollupType.label = labels.labelPayment + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectPayment);
 
         } else if (detailObject === labels.objectAllocation && summaryObject === labels.objectGAU) {
             rollupType.name = labels.objectAllocation;
             rollupType.summaryObject = labels.objectGAU;
             rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectAllocation);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectGAU) {
             rollupType.name = labels.objectOpportunity;
             rollupType.summaryObject = labels.labelGAU;
             rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectRD){
             rollupType.name = labels.objectOpportunity;
             rollupType.summaryObject = labels.objectRD;
             rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelRD;
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
         }
 
         cmp.set("v.selectedRollupType", rollupType);

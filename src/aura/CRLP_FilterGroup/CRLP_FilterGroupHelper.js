@@ -121,7 +121,7 @@
      * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
-    getFieldType: function(cmp, field) {
+    retrieveFieldType: function(cmp, field) {
         var filteredFields = cmp.get("v.filteredFields");
         var type;
 
@@ -296,7 +296,7 @@
      * @param type - DisplayType of the selected field transformed to lower case
      */
     rerenderValue: function(cmp, operator) {
-        var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
+        var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
         if (type === 'boolean') {
@@ -364,7 +364,7 @@
      * @param type - type of the selected field
      */
     resetFilterRuleOperators: function(cmp, field) {
-        var type = this.getFieldType(cmp, field);
+        var type = this.retrieveFieldType(cmp, field);
         if (type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId') {
             this.getPicklistOptions(cmp, field);
         }

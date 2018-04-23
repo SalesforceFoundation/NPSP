@@ -47,7 +47,6 @@
     <aura:attribute name="detailMode" type="String" description="Mode of the rollup detail component. Set to null once component is hidden."/>
     <aura:attribute name="summaryObjects" type="List" description="List summary objects as maps with name and label keys."/>
     <aura:attribute name="detailObjects" type="List" description="List detail objects as maps with name and label keys."/>
-    <aura:attribute name="fieldToObjectMap" type="Object[]" access="public" description="Map of Object: Field keys to Object api names."/>
 
     <!-- private attributes -->
     <aura:attribute name="labels" type="Map" access="private" description="All available labels for the app."/>
@@ -250,7 +249,7 @@
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
                            mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
-                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}" fieldToObjectMap="{#v.fieldToObjectMap}"/>
+                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}" />
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

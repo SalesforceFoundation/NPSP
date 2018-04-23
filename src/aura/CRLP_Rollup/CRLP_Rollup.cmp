@@ -64,7 +64,6 @@
     <aura:attribute name="selectedIntegerLabel" type="String"/>
     <aura:attribute name="rollupTypes" type="List"/>
     <aura:attribute name="selectedRollupType" type="Object" default="{label: '', name: ''}"/>
-    <aura:attribute name="fieldToObjectMap" type="Object[]" access="public" description="Map of Object: Field keys to Object api names."/>
 
     <!-- private attributes -->
     <aura:attribute name="objectDetails" type="Map" description="Set list of available objects" access="private"/>
@@ -275,7 +274,7 @@
                                                 auraId="rollupType"
                                                 fieldLabel="{!v.labels.rollupType}"
                                                 entityLabel="{!v.selectedRollupType.label}"
-                                                apiName="{!v.activeRollup.detailObject}"
+                                                apiName="{!v.activeRollup.rollupTypeObject}"
                                                 options="{!v.rollupTypes}"
                                                 isRequired="true"
                                                 mediumDeviceSize="6"
@@ -333,7 +332,6 @@
                                                 entityLabel="{!v.activeRollup.dateObjectLabel+': '+v.activeRollup.dateFieldLabel}"
                                                 apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
-                                                objectLabel="{!v.activeRollup.dateObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
@@ -345,7 +343,6 @@
                                                 entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.amountFieldLabel}"
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"

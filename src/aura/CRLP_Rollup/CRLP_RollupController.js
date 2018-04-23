@@ -39,6 +39,18 @@
                     cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
                 }
 
+                // fix up detail field to include object
+                var fullDetailObjectAndField = cmp.get("v.activeRollup.detailObject") + ' ' + cmp.get("v.activeRollup.detailField");
+                cmp.set("v.activeRollup.detailField", fullDetailObjectAndField);
+
+                // fix up amount field to include object
+                var fullAmountObjectAndField = cmp.get("v.activeRollup.amountObject") + ' ' + cmp.get("v.activeRollup.amountField");
+                cmp.set("v.activeRollup.amountField", fullAmountObjectAndField);
+
+                // fix up date field to include object
+                var fullDateObjectAndField = cmp.get("v.activeRollup.dateObject") + ' ' + cmp.get("v.activeRollup.dateField");
+                cmp.set("v.activeRollup.dateField", fullDateObjectAndField);
+
                 var tOps = [];
                 for(var j in model.timeBoundOperations){
                     tOps.push({name: j, label: model.timeBoundOperations[j]});
@@ -134,19 +146,19 @@
                 helper.onChangeSummaryField(cmp, label);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp, value);
-            } else if(fieldName === 'timeBoundOperation'){
+            } else if (fieldName === 'timeBoundOperation'){
                 helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
-            } else if(fieldName === 'integer'){
+            } else if (fieldName === 'integer'){
                 helper.onChangeInteger(cmp, value);
             } else if (fieldName === 'rollupType'){
                 helper.onChangeRollupType(cmp, value, label);
             } else if (fieldName === 'filterGroup'){
                 helper.onChangeFilterGroup(cmp, label);
-            } else if(fieldName === 'detailField'){
+            } else if (fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
-            } else if(fieldName === 'amountField'){
+            } else if (fieldName === 'amountField'){
                 cmp.set("v.activeRollup.amountFieldLabel", label);
-            } else if(fieldName === 'dateField'){
+            } else if (fieldName === 'dateField'){
                 cmp.set("v.activeRollup.dateFieldLabel", label);
             }
         }
