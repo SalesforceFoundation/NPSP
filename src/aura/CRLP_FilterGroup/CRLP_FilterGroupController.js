@@ -232,8 +232,6 @@
                 //special reformatting for multipicklist and semi-colon delimited lists, as well as Record Type ID field
                 if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
                     filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value);
-                } else if (filterRule.fieldName === 'RecordTypeId') {
-                    filterRule.valueLabel = helper.retrieveFieldLabel(filterRule.value, cmp.get("v.filterRuleConstantPicklist"));
                 } else {
                     filterRule.valueLabel = filterRule.value;
                 }

@@ -167,11 +167,7 @@ public class CRLP_RollupCMT {
                 this.objectLabel = filterRule.Object__r.MasterLabel;
                 this.fieldLabel = filterRule.Field__r.MasterLabel;
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
-                if (this.fieldName == 'RecordTypeId'){
-                    this.valueLabel = UTIL_RecordTypes.getRecordTypeName(UTIL_Describe.getSObjectType(this.objectName), this.value);
-                } else {
-                    this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
-                }
+                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
         }

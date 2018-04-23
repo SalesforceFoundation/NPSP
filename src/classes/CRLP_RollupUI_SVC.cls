@@ -653,7 +653,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for (SelectOption o: picklistValues) {
             Map<String, String> labeledOption = new Map<String, String>();
-            labeledOption.put('value', o.getValue());
+            labeledOption.put('value', (selectedField != 'RecordTypeId' ? o.getValue() : o.getLabel()));
             labeledOption.put('label', o.getLabel());
 
             optionsList.add(labeledOption);

@@ -279,7 +279,6 @@
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
             updatedLabel = valueApiName.replace(labelRe, ";\n");
-
             var nameRe = /\n| /g;
             var newValueApiName = valueApiName.replace(nameRe, "");
             cmp.set("v.activeFilterRule.value", newValueApiName);
