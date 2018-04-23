@@ -267,10 +267,9 @@
     /**
      * @description: parses the constant label into constant name form depending on the format of the value
      * @param valueApiName - API name of the constant
-     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatValueLabel: function(cmp, valueApiName, operation){
+    reformatValueLabel: function(cmp, valueApiName){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
