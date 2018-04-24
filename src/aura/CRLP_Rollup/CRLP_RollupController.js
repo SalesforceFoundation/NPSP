@@ -34,23 +34,21 @@
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
-                //note: the duplicate parsing is important to avoid a shared reference
                 if(activeRollupId){
+                    // detail, amount, and date fields need to be held on client side
+                    // with their object name to support multiple object selection
+
+                    model.rollup.detailField = model.rollup.detailObject + ' ' + model.rollup.detailField;
+                    model.rollup.detailFieldLabel = model.rollup.detailObjectLabel + ': ' + model.rollup.detailFieldLabel;
+                    model.rollup.amountField = model.rollup.amountObject + ' ' + model.rollup.amountField;
+                    model.rollup.amountFieldLabel = helper.retrieveFieldLabel(model.rollup.amountObject, detailObjects)+ ': ' + model.rollup.amountFieldLabel;
+                    model.rollup.dateField = model.rollup.dateObject +' '+ model.rollup.dateField;
+                    model.rollup.dateFieldLabel = helper.retrieveFieldLabel(model.rollup.dateObject, detailObjects)+ ': ' + model.rollup.dateFieldLabel;
+
+                    //note: the duplicate parsing is important to avoid a shared reference
                     cmp.set("v.activeRollup", helper.restructureResponse(model.rollup));
                     cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
                 }
-
-                // fix up detail field to include object
-                var fullDetailObjectAndField = cmp.get("v.activeRollup.detailObject") + ' ' + cmp.get("v.activeRollup.detailField");
-                cmp.set("v.activeRollup.detailField", fullDetailObjectAndField);
-
-                // fix up amount field to include object
-                var fullAmountObjectAndField = cmp.get("v.activeRollup.amountObject") + ' ' + cmp.get("v.activeRollup.amountField");
-                cmp.set("v.activeRollup.amountField", fullAmountObjectAndField);
-
-                // fix up date field to include object
-                var fullDateObjectAndField = cmp.get("v.activeRollup.dateObject") + ' ' + cmp.get("v.activeRollup.dateField");
-                cmp.set("v.activeRollup.dateField", fullDateObjectAndField);
 
                 var tOps = [];
                 for(var j in model.timeBoundOperations){

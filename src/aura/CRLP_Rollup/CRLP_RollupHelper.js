@@ -235,15 +235,17 @@
         console.log("in helper onChangeOperation");
         var renderMap = cmp.get("v.renderMap");
 
-        //TIME BOUND OPERATION RENDERING
+        //TIME BOUND OPERATION DEFAULT AND RENDERING
+        if (!cmp.get("v.activeRollup.timeBoundOperationType")){
+            cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
+            var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
+            cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
+        }
         if (operation) {
             if (operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
                 renderMap["timeBoundOperation"] = true;
             } else {
                 renderMap["timeBoundOperation"] = false;
-                cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
-                var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
-                cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
                 renderMap["integerDays"] = false;
                 renderMap["integerYears"] = false;
             }
@@ -316,19 +318,24 @@
         cmp.set("v.activeRollup.amountObject", amountObjectName);
         var labels = cmp.get("v.labels");
 
+        var amountFields = cmp.get("v.amountFields");
+        var amountFieldName;
         // Set the amount field based on the selected rollup type
         if (amountObjectName === labels.objectPayment) {
-            cmp.set("v.activeRollup.amountField", labels.objectPayment + ' npe01__Payment_amount__c');
-
+            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
+            amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
         } else if (amountObjectName === labels.objectAllocation) {
-            cmp.set("v.activeRollup.amountField", labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c');
-
+            cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
+            amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
-            cmp.set("v.activeRollup.amountField", labels.objectPartialSoftCredit + ' Amount__c');
-
+            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
+            amountFieldName = labels.objectPartialSoftCredit + ' Amount__c';
         } else {
-            cmp.set("v.activeRollup.amountField", labels.objectOpportunity + ' Amount');
+            cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
+            amountFieldName = labels.objectOpportunity + ' Amount';
         }
+        cmp.set("v.activeRollup.amountField", amountFieldName);
+        cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
 
         var detailObjects = cmp.get("v.detailObjects");
         cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObjectName, detailObjects));
@@ -336,17 +343,21 @@
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
         //defaults field to Payment on the payment object, and CloseDate for everything else
+        var dateFields = cmp.get("v.dateFields");
+        var dateFieldName;
         if (rollupTypeObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
             cmp.set("v.activeRollup.dateObject", labels.objectPayment);
             this.resetFields(cmp, activeRollup.dateObject, "date");
-            cmp.set("v.activeRollup.dateField", labels.objectPayment+" npe01__Payment_Date__c");
+            dateFieldName = labels.objectPayment+' npe01__Payment_Date__c';
         } else {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelOpportunity);
             cmp.set("v.activeRollup.dateObject", labels.objectOpportunity);
-            this.resetFields(cmp, activeRollup.dateObject, "date");
-            cmp.set("v.activeRollup.dateField", labels.objectOpportunity+" CloseDate");
+            dateFieldName = labels.objectOpportunity+' CloseDate';
         }
+        this.resetFields(cmp, activeRollup.dateObject, "date");
+        cmp.set("v.activeRollup.dateFieldLabel", this.retrieveFieldLabel(dateFieldName, dateFields));
+        cmp.set("v.activeRollup.dateField", dateFieldName);
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupLabel, renderMap);
@@ -503,7 +514,8 @@
      * @return: updated render map
      */
     renderDateField: function (cmp, operation, rollupLabel, renderMap) {
-        if ((operation === 'First'
+        if (cmp.get("v.activeRollup.timeBoundOperationType") ||
+            (operation === 'First'
             || operation === 'Last'
             || operation === 'Years_Ago'
             || operation === 'Days_Back')
@@ -676,6 +688,40 @@
     },
 
     /**
+     * @description: gets the type of a field
+     * @param field: name of the field
+     * @param fieldList: list of fields with name, type and label keys
+     * @return: the type of the field
+     */
+    retrieveFieldType: function(cmp, field, fieldList){
+        for (var i = 0; i < fieldList.length; i++) {
+            if (fieldList[i].name === field) {
+                var type = fieldList[i].type;
+                return type;
+            }
+        }
+    },
+
+    /**
+     * @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+     * @param apiName: the name of the field. ex: 'General_Account_Unit__c'
+     * @param entityList: list of fields to search
+     * @return label: field label that matches the apiName
+     */
+    retrieveFieldLabel: function (apiName, entityList) {
+        var label;
+        if (!(entityList === undefined || entityList === null)) {
+            for (var i = 0; i < entityList.length; i++) {
+                if (entityList[i].name === apiName) {
+                    label = entityList[i].label;
+                    break;
+                }
+            }
+        }
+        return label;
+    },
+
+    /**
      * @description: saves the active rollup and sets the mode to view OR punts back to grid in the case of a soft "delete"
      * @param activeRollup:
      */
@@ -690,7 +736,7 @@
 
         this.toggleSpinner(cmp, true);
 
-        var rollupCMT = cmp.get("v.activeRollup");
+        var rollupCMT = this.restructureResponse(cmp.get("v.activeRollup"));
 
         // strip back out detail/amount/date objects from fields
         var detailObjectAndField = cmp.get("v.activeRollup.detailField");
@@ -748,40 +794,6 @@
             this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
         }
         $A.enqueueAction(action);
-    },
-
-    /**
-     * @description: gets the type of a field
-     * @param field: name of the field
-     * @param fieldList: list of fields with name, type and label keys
-     * @return: the type of the field
-     */
-    retrieveFieldType: function(cmp, field, fieldList){
-        for (var i = 0; i < fieldList.length; i++) {
-            if (fieldList[i].name === field) {
-                var type = fieldList[i].type;
-                return type;
-            }
-        }
-    },
-
-    /**
-     * @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
-     * @param apiName: the name of the field. ex: 'General_Account_Unit__c'
-     * @param entityList: list of fields to search
-     * @return label: field label that matches the apiName
-     */
-    retrieveFieldLabel: function (apiName, entityList) {
-        var label;
-        if (!(entityList === undefined || entityList === null)) {
-            for (var i = 0; i < entityList.length; i++) {
-                if (entityList[i].name === apiName) {
-                    label = entityList[i].label;
-                    break;
-                }
-            }
-        }
-        return label;
     },
 
     /**
@@ -968,7 +980,6 @@
         // The label is limited to 40 characters, so use these two shortened names for space
         label = label.replace(cmp.get("v.labels.labelGAU"), 'GAU').replace(cmp.get("v.labels.labelRD"), 'RD');
 
-        var recordName = cmp.get("v.activeRollup.recordName");
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
@@ -984,11 +995,6 @@
             cmp.set("v.activeRollup.label", masterLabel);
         }
 
-        //sends the message to the parent cmp RollupsContainer
-        if(masterLabel){
-            this.sendMessage(cmp, 'nameChange', masterLabel);
-        }
-
         //shortens the label after sending so the full object + field details appear
         if (masterLabel.length > 40) {
             masterLabel = masterLabel.substring(0,39);
@@ -996,6 +1002,12 @@
                 masterLabel = masterLabel.substring(0,38);
             }
         }
+
+        //sends the message to the parent cmp RollupsContainer
+        if(masterLabel){
+            this.sendMessage(cmp, 'nameChange', masterLabel);
+        }
+
     },
 
     /**
