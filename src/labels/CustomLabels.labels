@@ -604,6 +604,14 @@
         <value>You can't delete this filter group because there is at least one rollup using it. View the filter group detail page to see a list of associated rollups. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupNameLimitError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterNew</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -626,6 +634,14 @@
         <protected>true</protected>
         <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
         <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleFieldsMissing</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
+        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
     </labels>
     <labels>
         <fullName>ConfirmDeleteAccount</fullName>
@@ -5232,7 +5248,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
             &lt;br/&gt;● Existing Rollup settings (in NPSP Settings) are removed and saved as metadata
             &lt;br/&gt;● New Rollup Settings appear in NPSP Settings under Donations
             &lt;br/&gt;&lt;br/&gt;
-            For complete details, see this doc.
+            For complete details, see &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Things-to-Consider-Before-Enabling-Cust-Rollups&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
         </value>

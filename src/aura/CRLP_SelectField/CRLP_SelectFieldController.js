@@ -1,7 +1,8 @@
 ({
-    /* @description: gets the fieldAPIName of the the field and selected value
-    * the intended recipient of the message is the rollup component
-    */
+    /**
+     * @description: gets the fieldAPIName of the the field and selected value
+     * the intended recipient of the message is the rollup component
+     */
     changeField: function(cmp, event){
         var fieldName = cmp.get('v.auraId');
         var value = event.getSource().get("v.value");
