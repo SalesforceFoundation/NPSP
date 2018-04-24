@@ -276,6 +276,8 @@
 
         if (filterRuleFieldType === "multipicklist" && valueApiName) {
             updatedLabel = valueApiName.join(";\n");
+            var newValueApiName = valueApiName.join(";");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
             updatedLabel = valueApiName.replace(labelRe, ";\n");
@@ -309,11 +311,11 @@
             if (operator === 'Equals' || operator === 'Not_Equals') {
                 cmp.set("v.activeFilterRule.value", value);
                 cmp.set("v.filterRuleFieldType", 'picklist');
-            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
+            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
-                || operator === 'Is_Included' || operator === 'Is_Not_Included'){
-                var values = value.split(";");
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                var values = (value === "") ? [] : value.split(";");
                 cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
@@ -327,7 +329,7 @@
                     cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
-                    var values = value.split(";");
+                    var values = (value === "") ? [] : value.split(";");
                     cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');
                 }
@@ -539,6 +541,12 @@
             filterRuleCmp.showHelpMessageIfInvalid();
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
+
+        //custom error handling for multipicklist bug
+        if (cmp.get("v.filterRuleFieldType") === 'multipicklist' && filterRule.value.length < 1){
+            canSave = false;
+            cmp.find("filterRuleFieldPicklist").showHelpMessageIfInvalid();
+        }
 
         //check for duplicates
         if (!filterRuleList) {
