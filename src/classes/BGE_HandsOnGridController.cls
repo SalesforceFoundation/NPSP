@@ -2,16 +2,16 @@ global class BGE_HandsOnGridController {
 
     private static final Integer SQL_MINOR_LIMIT = 1;
     private static final Integer SQL_MAJOR_LIMIT = 10000;
-    private static final integer PAGE_SIZE  = 50; // to set the page size to show the rows/records
+    private static final Integer PAGE_SIZE  = 50; // to set the page size to show the rows/records
 
     public static String jsonString {get; set;}
     public static String jsonUpdatedString {get; set;}
     public static String jsonColumnsString {get; set;}
-    public static integer totalOfRecords {get; set;} // used to show user the total size of the list
-    public static integer totalDonationAmount {get; set;}
-    public static integer totalOfPages {get; set;}
+    public static Integer totalOfRecords {get; set;} // used to show user the total size of the list
+    public static Integer totalDonationAmount {get; set;}
+    public static Integer totalOfPages {get; set;}
 
-    private static Id batchId;
+    public static Id batchId {get; set;}
     private static Id templateId;
     private static List<DataImport__c> data;
     private static List<BGE_DynamicalColumnWrapper> columns;
@@ -21,6 +21,8 @@ global class BGE_HandsOnGridController {
     public List<DataImport__c> errorRecords {get;set;}
     public List<DataImport__c> successRecords {get;set;}
     public Boolean validated {get; set;}
+
+    public Boolean displayError {get; set;}
 
 
     public BGE_HandsOnGridController() {
@@ -33,27 +35,36 @@ global class BGE_HandsOnGridController {
         findBatchId();
         findTemplateId();
 
-        // Get all Template fields and load columns.
-        loadDynamicColumns();
+        if (templateId == null) {
 
-        // Convert loaded Template Fields objects into a JSON String to display dynamic columns.
-        jsonColumnsString = JSON.serialize(columns);
+            displayError = true;
+        }
+        else {
 
-        // Get all the Data Import sObjects from the Batch.
-        loadData(batchId);
+            displayError = false;
 
-        // Convert loaded Data Import objects into a JSON String.
-        // Variable json String will be used to load the data into the grid.
-        jsonString = JSON.serialize(data);
+            // Get all Template fields and load columns.
+            loadDynamicColumns();
 
-        // Escape json string.
-        jsonString = String.escapeSingleQuotes(jsonString);
+            // Convert loaded Template Fields objects into a JSON String to display dynamic columns.
+            jsonColumnsString = JSON.serialize(columns);
 
-        totalOfRecords = calculateTotalOfRecords(batchId);
+            // Get all the Data Import sObjects from the Batch.
+            loadData(batchId);
 
-        totalDonationAmount = calculateTotalAmount(batchId);
+            // Convert loaded Data Import objects into a JSON String.
+            // Variable json String will be used to load the data into the grid.
+            jsonString = JSON.serialize(data);
 
-        totalOfPages = calculateTotalPages(batchId, totalOfRecords);
+            // Escape json string.
+            jsonString = String.escapeSingleQuotes(jsonString);
+
+            totalOfRecords = calculateTotalOfRecords(batchId);
+
+            totalDonationAmount = calculateTotalAmount(batchId);
+
+            totalOfPages = calculateTotalPages(batchId, totalOfRecords);
+        }
     }
 
     private static void findBatchId() {
