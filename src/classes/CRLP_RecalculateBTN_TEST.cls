@@ -93,6 +93,8 @@ private class CRLP_RecalculateBTN_TEST {
         // Set a random Total Gift and Soft Credit.
         c.npo02__TotalOppAmount__c = 100;
         c.npo02__Soft_Credit_Total__c = 100;
+        update c;
+        
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
         Test.startTest();
