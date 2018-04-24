@@ -56,7 +56,7 @@
 
         //filter rollup list by type
         filteredRollupList.forEach(function (rollup) {
-            var item = {label: rollup.rollupName, name: rollup.id}
+            var item = {label: rollup.displayName, name: rollup.id}
             for (i=0; i<rollupsBySummaryObj.length; i++){
                 if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
@@ -141,7 +141,6 @@
     getPicklistOptions: function(cmp, field) {
         var action = cmp.get("c.getFilterRuleConstantPicklistOptions");
         action.setParams({objectName: cmp.get("v.activeFilterRule.objectName"), selectedField: field});
-        console.log(cmp.get("v.activeFilterRule.objectName"), field);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -268,20 +267,20 @@
     /**
      * @description: parses the constant label into constant name form depending on the format of the value
      * @param valueApiName - API name of the constant
-     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatValueLabel: function(cmp, valueApiName, operation){
+    reformatValueLabel: function(cmp, valueApiName){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
         if (filterRuleFieldType === "multipicklist" && valueApiName) {
             updatedLabel = valueApiName.join(";\n");
+            var newValueApiName = valueApiName.join(";");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
             updatedLabel = valueApiName.replace(labelRe, ";\n");
-
             var nameRe = /\n| /g;
             var newValueApiName = valueApiName.replace(nameRe, "");
             cmp.set("v.activeFilterRule.value", newValueApiName);
@@ -291,11 +290,11 @@
     },
 
     /**
-     * @description - changes picklist values or input type based on field type
+     * @description - changes picklist values or input type based on field type. Reformats values based on type.
      * @param operator - selected filter rule operator API name
-     * @param type - DisplayType of the selected field transformed to lower case
+     * @param value - active filter rule value
      */
-    rerenderValue: function(cmp, operator) {
+    rerenderValue: function(cmp, operator, value) {
         var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
@@ -310,11 +309,14 @@
             cmp.set("v.filterRuleFieldType", 'datetime-local');
         } else if (type === 'picklist' || type === 'multipicklist') {
             if (operator === 'Equals' || operator === 'Not_Equals') {
+                cmp.set("v.activeFilterRule.value", value);
                 cmp.set("v.filterRuleFieldType", 'picklist');
-            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
+            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
-                || operator === 'Is_Included' || operator === 'Is_Not_Included'){
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                var values = (value === "") ? [] : value.split(";");
+                cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
         } else if (type === 'reference') {
@@ -324,13 +326,14 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
+                    cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
+                    var values = (value === "") ? [] : value.split(";");
+                    cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');
                 }
             }
-        } else if (type === 'time') {
-            cmp.set("v.filterRuleFieldType", 'time');
         } else if (type === 'double' || type === 'integer'
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
@@ -380,11 +383,12 @@
         return JSON.parse(JSON.stringify(resp));
     },
 
-    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
-    * @param apiName: the name of the field
-    * @param entityList: list of fields to search
-    * @return label: field label that matches the apiName
-    */
+    /**
+     * @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+     * @param apiName: the name of the field
+     * @param entityList: list of fields to search
+     * @return label: field label that matches the apiName
+     */
     retrieveFieldLabel: function (apiName, entityList) {
         var label;
         if (entityList) {
@@ -512,7 +516,7 @@
         cmp.find("nameInput").showHelpMessageIfInvalid();
         cmp.find("descriptionInput").showHelpMessageIfInvalid();
 
-        if (!description || !name) {
+        if (!description || !name || name.length > 40) {
             canSave = false;
         }
 
@@ -538,33 +542,17 @@
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
 
-        //check for specific API name duplicates instead of the full row to avoid issues with the ID not matching
-        for (var i = 0; i < filterRuleList.length; i++) {
-            if (i !== filterRule.index
-                && filterRuleList[i].objectName === filterRule.objectName
-                && filterRuleList[i].fieldName === filterRule.fieldName
-                && filterRuleList[i].operatorName === filterRule.operatorName
-                && filterRuleList[i].constantName === filterRule.constantName) {
-                cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                return canSave = false;
-            }
+        //custom error handling for multipicklist bug
+        if (cmp.get("v.filterRuleFieldType") === 'multipicklist' && filterRule.value.length < 1){
+            canSave = false;
+            cmp.find("filterRuleFieldPicklist").showHelpMessageIfInvalid();
         }
 
         //check for duplicates
         if (!filterRuleList) {
             // nothing to compare
-        } else if (cmp.get("v.filterRuleMode") === 'create') {
-            //check for specific API names instead of the full row to avoid issues with the ID not matching
-            for (var i = 0; i < filterRuleList.length; i++) {
-                if (filterRuleList[i].objectName === filterRule.objectName
-                    && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operationName === filterRule.operationName
-                    && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
-                }
-            }
         } else {
+            //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
@@ -572,12 +560,16 @@
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
+                    return false;
                 }
             }
         }
 
-        cmp.set("v.filterRuleError", "");
+        if (canSave) {
+            cmp.set("v.filterRuleError", "");
+        } else {
+            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        }
 
         return canSave;
 

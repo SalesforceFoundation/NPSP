@@ -49,13 +49,15 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String description;
         @AuraEnabled public String detailField;
         @AuraEnabled public String detailObject;
+        @AuraEnabled public String displayName;
         @AuraEnabled public String filterGroupName;
         @AuraEnabled public String operation;
         @AuraEnabled public String rollupName;
+        @AuraEnabled public String recordId;
         @AuraEnabled public String recordName;
+        @AuraEnabled public String summaryField;
         @AuraEnabled public String summaryObject;
         @AuraEnabled public String summaryObjectApiName;
-        @AuraEnabled public String recordId;
 
     }
 
@@ -216,6 +218,7 @@ public with sharing class CRLP_RollupUI_SVC {
         item.detailObject = rlp.Detail_Object__r.Label;
         item.summaryObject = rlp.Summary_Object__r.Label;
         item.summaryObjectApiName = rlp.Summary_Object__r.QualifiedApiName;
+        item.summaryField = rlp.Summary_Field__r.Label;
         item.recordName = rlp.DeveloperName;
         item.rollupName = rlp.MasterLabel;
         item.detailField = rlp.Detail_Field__r.Label;
@@ -228,6 +231,15 @@ public with sharing class CRLP_RollupUI_SVC {
             item.activeIcon = 'utility:close';
         }
         item.recordId = rlp.Id;
+
+        if (item.summaryObjectApiName == Schema.SObjectType.General_Accounting_Unit__c.getName()) {
+            item.displayName = 'GAU' + ': ' + item.summaryField;
+        } else if (item.summaryObjectApiName == Schema.SObjectType.npe03__Recurring_Donation__c.getName()) {
+            item.displayName = 'RD' + ': ' + item.summaryField;
+        } else {
+            item.displayName = item.summaryObject + ': ' + item.summaryField;
+        }
+
         return item;
     }
 
@@ -464,8 +476,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'filterGroupNameLimitError' => Label.CMT_FilterGroupNameLimitError,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
                 'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
+                'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
@@ -676,7 +690,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for (SelectOption o: picklistValues) {
             Map<String, String> labeledOption = new Map<String, String>();
-            labeledOption.put('value', o.getValue());
+            labeledOption.put('value', (selectedField != 'RecordTypeId' ? o.getValue() : o.getLabel()));
             labeledOption.put('label', o.getLabel());
 
             optionsList.add(labeledOption);
@@ -696,7 +710,7 @@ public with sharing class CRLP_RollupUI_SVC {
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
-        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'SyncedQuoteID'};
+        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'Fiscal', 'FiscalQuarter', 'FiscalYear', 'SyncedQuoteID'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             String type = dfr.getType().Name();

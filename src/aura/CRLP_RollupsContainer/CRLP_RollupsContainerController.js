@@ -16,8 +16,9 @@
 
                 var labels = model.labels;
                 cmp.set("v.labels", labels);
-                cmp.set("v.rollupList", model.items);
-                cmp.set("v.cachedRollupList", model.items);
+                var sortedData = helper.sortData(cmp, 'displayName', 'asc', model.items);
+                cmp.set("v.rollupList", sortedData);
+                cmp.set("v.cachedRollupList", sortedData);
                 cmp.set("v.filterGroupList", model.filterGroups);
                 cmp.set("v.fieldToObjectMap", model.fieldToObjectMap);
                 console.log(model.fieldToObjectMap);
@@ -39,9 +40,8 @@
                     , {label: labels.labelAllocation, name: labels.objectAllocation}];
                 cmp.set("v.detailObjects", detailObjects);
 
-                //note: if lightning:datatable supports Boolean attribute in the future the 'active' column will need retesting
-                var rollupColumns = [{label: labels.name, fieldName: 'rollupName', type: 'button', sortable: 'true', initialWidth: 300
-                                , typeAttributes: {label: {fieldName: 'rollupName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
+                var rollupColumns = [{label: labels.name, fieldName: 'displayName', type: 'button', sortable: 'true', initialWidth: 300
+                                , typeAttributes: {label: {fieldName: 'displayName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
                             , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
                             , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
                             , {label: labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
@@ -116,7 +116,7 @@
     },
 
     /**
-     *  @description: resets the active record and toggles the grid and detail views
+     * @description: resets the active record and toggles the grid and detail views
      */
     displayNewFilterGroupForm: function (cmp, event, helper) {
         cmp.set("v.activeRecord", {});
@@ -176,7 +176,7 @@
         if(channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
-            activeRecord.MasterLabel = message;
+            activeRecord.label = message;
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupRecordChange') {
@@ -263,7 +263,7 @@
     },
 
     /**
-     *  @description: used in the breadcrumb to return to the filter group grid from the filter group detail view
+     * @description: used in the breadcrumb to return to the filter group grid from the filter group detail view
      */
     returnToFilterGroup: function(cmp, event, helper){
         cmp.set("v.activeRecordId", cmp.get("v.lastActiveRecordId"));
@@ -273,7 +273,7 @@
     },
 
     /**
-     *  @description: changes the mode from the edit or clone buttons
+     * @description: changes the mode from the edit or clone buttons
      */
     setMode: function(cmp, event, helper) {
         var name = event.getSource().get("v.name");
@@ -281,7 +281,7 @@
     },
 
     /**
-     *  @description: sorts the data in either grid by the field name and current direction
+     * @description: sorts the data in either grid by the field name and current direction
      */
     sortByColumns: function(cmp, event, helper){
         var col = event.getParam();
@@ -307,7 +307,7 @@
     },
 
     /**
-     *  @description: toggles a modal popup and backdrop
+     * @description: toggles a modal popup and backdrop
      */
     toggleFilterRuleModal: function(cmp, event, helper){
         helper.toggleFilterRuleModal(cmp);
