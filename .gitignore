@@ -29,3 +29,9 @@ Referenced Packages
 *.sublime-project
 *.sublime-workspace
 /config/
+log.html
+output.xml
+report.html
+*.png
+testdata/dev_org/test_data.db
+*.db

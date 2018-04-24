@@ -65,6 +65,12 @@ tasks:
         options:
             path: dev_config/delete
 
+    robot_libdoc:
+        class_path: cumulusci.tasks.robotframework.RobotLibDoc
+        options:
+            path: tests/NPSP.robot
+            output: tests/NPSP_Robot_Library.html
+            
     update_admin_profile:
         class_path: tasks.salesforce.UpdateAdminProfile
         options:
