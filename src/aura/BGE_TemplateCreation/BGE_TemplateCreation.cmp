@@ -36,6 +36,7 @@
 				    <lightning:icon iconName="custom:custom9" size="medium" alternativeText="New Batch Template"/>
 				</div>
 				<div class="slds-media__body">
+                    <p class="slds-text-body_small slds-line-height_reset">BATCH GIFT ENTRY</p>
 				    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="New Template">New Template</h1>
 				</div>
 			</div>
@@ -47,11 +48,12 @@
             <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
         </aura:if>
 
+        <div class="slds-clearfix">
+            <lightning:button aura:id="saveButton"   disabled="true" class="slds-button slds-button_brand slds-m-around_large slds-float_right" label="Save" onclick="{! c.save }" />
+            <lightning:button aura:id="cancelButton" disabled="false" class="slds-button slds-button_neutral slds-m-around_large slds-float_right" label="Cancel" onclick="{! c.return }" />
+        </div>
 
-        <lightning:button aura:id="cancelButton" disabled="false" class="slds-button slds-button_neutral" label="Cancel" onclick="{! c.return }" />
-        <lightning:button aura:id="saveButton"   disabled="true" class="slds-button slds-button_brand" label="Save" onclick="{! c.save }" />
-
-        <div class="slds-box">
+        <div class="slds-box slds-page-header">
             <p>Grid Settings</p>
         </div>
 
