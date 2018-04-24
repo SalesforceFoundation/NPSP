@@ -118,7 +118,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
         } else {
             // Legacy Roll-Ups - async action
             if (this.objType == Contact.SObjectType) {
-                calculateContactSoftCredit();
+                calculateContactSoftCredit(recordId);
                 RLLP_OppRollup.rollupContactsFuture(new Set<Id>{ recordId });
             } else if (this.objType == Account.SObjectType) {
                 RLLP_OppRollup.rollupAccountsFuture(new Set<Id>{ recordId });
@@ -135,7 +135,8 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
     * @description Calculates the Soft Credit for the Contact.
     * @return void.
     */
-    private void calculateContactSoftCredit() {
+    @future
+    private static void calculateContactSoftCredit(Id recordId) {
         RLLP_OppRollup_UTIL oppRollupUtil = new RLLP_OppRollup_UTIL();
         String contactQuery = oppRollupUtil.buildContactQuery();
         contactQuery += ' WHERE Id = \'' + recordId + '\'';
