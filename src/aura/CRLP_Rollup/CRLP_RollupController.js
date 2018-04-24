@@ -1,8 +1,9 @@
 ({
-    /* @description: fired on each init of rollup
-    *   queries active rollup ID to populate the full active rollup detail
-    *   sets operations and object details
-    */
+    /**
+     * @description: fired on each init of rollup
+     *   queries active rollup ID to populate the full active rollup detail
+     *   sets operations and object details
+     */
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
          /*
@@ -73,17 +74,19 @@
         $A.enqueueAction(action);
     },
 
-    /* @description: fires when mode is changed
-    */
+    /**
+     * @description: fires when mode is changed
+     */
     onChangeMode: function (cmp, event, helper) {
         helper.changeMode(cmp);
     },
 
-    /* @description: fires when cancel button is clicked
-    * options for cancel: return to rollup summaries or return to view
-    * if mode is clone or create and ID is null the user returns to the grid
-    * else resets mode to view to become display-only and resets rollup values
-    */
+    /**
+     * @description: fires when cancel button is clicked
+     * options for cancel: return to rollup summaries or return to view
+     * if mode is clone or create and ID is null the user returns to the grid
+     * else resets mode to view to become display-only and resets rollup values
+     */
     onCancel: function(cmp, event, helper) {
         //todo: should we make this more sensitive to a clone from edit mode: will need to also factor in uniqueSummaryFieldCheck type check
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
@@ -102,8 +105,9 @@
         }
     },
 
-    /* @description: fires when save button is clicked
-    */
+    /**
+     * @description: fires when save button is clicked
+     */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
         var canSave = helper.validateFields(cmp);
@@ -114,9 +118,10 @@
         }
     },
 
-    /* @description: listens for a message from the select field cmp to trigger a change in the rollup information
-    * fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
-    */
+    /**
+     * @description: listens for a message from the select field cmp to trigger a change in the rollup information
+     * fields are IDed by their camelcase names. ex: Summary_Object__c is summaryObject
+     */
     onSelectValueChange: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");

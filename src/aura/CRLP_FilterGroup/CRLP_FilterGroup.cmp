@@ -120,7 +120,9 @@
                                              name="{!v.labels.name}"
                                              value="{!v.activeFilterGroup.label}"
                                              required="{! !v.isReadOnly}"
-                                             readonly="{! v.isReadOnly}"/>
+                                             readonly="{! v.isReadOnly}"
+                                             pattern=".{0,40}"
+                                             messageWhenPatternMismatch="{!v.labels.filterGroupNameLimitError}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 
@@ -294,10 +296,10 @@
                     </lightning:layout>
                     <lightning:layout>
                         <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), equals(v.filterRuleFieldType, 'multipicklist'))}">
-                            <lightning:dualListbox aura:id="filterRuleField" label="" class="slds-p-around_small"
+                            <lightning:dualListbox aura:id="filterRuleFieldPicklist" label="" variant="label-hidden" class="slds-p-around_small"
                                                    sourceLabel="{!'Available ' + v.labels.constant}" selectedLabel="{!'Selected ' + v.labels.constant}"
                                                    options="{!v.filterRuleConstantPicklist}" value="{!v.activeFilterRule.value}"
-                                                   min="1"/>
+                                                   required="true"/>
                         </aura:if>
                     </lightning:layout>
                     <!--END CONSTANT INPUT OPTIONS-->
