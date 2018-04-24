@@ -296,9 +296,10 @@
                     </lightning:layout>
                     <lightning:layout>
                         <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), equals(v.filterRuleFieldType, 'multipicklist'))}">
-                            <lightning:dualListbox aura:id="filterRuleFieldPicklist" label="" class="slds-p-around_small"
+                            <lightning:dualListbox aura:id="filterRuleFieldPicklist" label="" variant="label-hidden" class="slds-p-around_small"
                                                    sourceLabel="{!'Available ' + v.labels.constant}" selectedLabel="{!'Selected ' + v.labels.constant}"
-                                                   options="{!v.filterRuleConstantPicklist}" value="{!v.activeFilterRule.value}"/>
+                                                   options="{!v.filterRuleConstantPicklist}" value="{!v.activeFilterRule.value}"
+                                                   required="true"/>
                         </aura:if>
                     </lightning:layout>
                     <!--END CONSTANT INPUT OPTIONS-->

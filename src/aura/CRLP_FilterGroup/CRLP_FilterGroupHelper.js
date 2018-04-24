@@ -267,20 +267,20 @@
     /**
      * @description: parses the constant label into constant name form depending on the format of the value
      * @param valueApiName - API name of the constant
-     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatValueLabel: function(cmp, valueApiName, operation){
+    reformatValueLabel: function(cmp, valueApiName){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
 
         if (filterRuleFieldType === "multipicklist" && valueApiName) {
             updatedLabel = valueApiName.join(";\n");
+            var newValueApiName = valueApiName.join(";");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
             updatedLabel = valueApiName.replace(labelRe, ";\n");
-
             var nameRe = /\n| /g;
             var newValueApiName = valueApiName.replace(nameRe, "");
             cmp.set("v.activeFilterRule.value", newValueApiName);
@@ -290,11 +290,11 @@
     },
 
     /**
-     * @description - changes picklist values or input type based on field type
+     * @description - changes picklist values or input type based on field type. Reformats values based on type.
      * @param operator - selected filter rule operator API name
-     * @param type - DisplayType of the selected field transformed to lower case
+     * @param value - active filter rule value
      */
-    rerenderValue: function(cmp, operator) {
+    rerenderValue: function(cmp, operator, value) {
         var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
@@ -309,11 +309,14 @@
             cmp.set("v.filterRuleFieldType", 'datetime-local');
         } else if (type === 'picklist' || type === 'multipicklist') {
             if (operator === 'Equals' || operator === 'Not_Equals') {
+                cmp.set("v.activeFilterRule.value", value);
                 cmp.set("v.filterRuleFieldType", 'picklist');
-            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
+            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
-                || operator === 'Is_Included' || operator === 'Is_Not_Included'){
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                var values = (value === "") ? [] : value.split(";");
+                cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
         } else if (type === 'reference') {
@@ -323,13 +326,14 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
+                    cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
+                    var values = (value === "") ? [] : value.split(";");
+                    cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');
                 }
             }
-        } else if (type === 'time') {
-            cmp.set("v.filterRuleFieldType", 'time');
         } else if (type === 'double' || type === 'integer'
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
@@ -538,11 +542,10 @@
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
 
-        //custom validity to work around issue with duallistbox
-        if (!filterRule.value) {
-            var picklist = cmp.find("filterRuleFieldPicklist");
-            picklist.setCustomValidity("Value is required");
-            return false;
+        //custom error handling for multipicklist bug
+        if (cmp.get("v.filterRuleFieldType") === 'multipicklist' && filterRule.value.length < 1){
+            canSave = false;
+            cmp.find("filterRuleFieldPicklist").showHelpMessageIfInvalid();
         }
 
         //check for duplicates
@@ -562,7 +565,11 @@
             }
         }
 
-        cmp.set("v.filterRuleError", "");
+        if (canSave) {
+            cmp.set("v.filterRuleError", "");
+        } else {
+            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        }
 
         return canSave;
 
