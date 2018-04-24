@@ -9,9 +9,9 @@
     </compactLayouts>
     <fields>
         <fullName>Related_Opportunity_Contact_Role__c</fullName>
-        <description>The Opportunity Contact Role created for the Contact in this Affiliation when you create an Opportunity for the Organization.</description>
+        <description>When you create an Opportunity for the Organization in this Affiliation, NPSP assigns this Opportunity Contact Role to the affiliated Contact.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The Opportunity Contact Role created for the Contact in this Affiliation when you create an Opportunity for the Organization.</inlineHelpText>
+        <inlineHelpText>When you create an Opportunity for the Organization in this Affiliation, NPSP assigns this Opportunity Contact Role to the affiliated Contact.</inlineHelpText>
         <label>Related Opportunity Contact Role</label>
         <picklist>
             <picklistValues>
