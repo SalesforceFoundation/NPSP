@@ -2,7 +2,7 @@
 
     <ltng:require scripts="{!$Resource.BGEResources + '/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptLoaded}" />
     <ltng:require styles="/resource/BGEResources/css/BGETemplateCreationStyle.css" />
-    
+
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
     <aura:attribute name="template" type="Batch_Template__c" access="global" default="{sobjectType : 'Batch_Template__c'}" />
@@ -10,7 +10,6 @@
     <aura:attribute name="selectedTemplateFields" type="Batch_Template_Field__c[]" default="{sobjectType : 'Batch_Template_Field__c[]'}" />
 
     <aura:attribute name="errorInLastRow" type="Boolean" access="global" default="false" />
-
     <aura:attribute name="toCreate" type="Boolean" access="global" default="true" />
     <aura:attribute name="toClone" type="Boolean" access="global" default="false" />
     <aura:attribute name="toEdit" type="Boolean" access="global" default="false" />
@@ -25,56 +24,69 @@
     <aura:attribute name="templateFields" type="Batch_Template_Field__c[]" />
     <aura:attribute name="templateFieldSelected" type="Batch_Template_Field__c" />
     <aura:attribute name="templateFieldsToDelete" type="Batch_Template_Field__c[]" />
-    
+
     <aura:attribute name="templateNameAttribute" type="String" default="" access="global"/>
     <aura:attribute name="templateDescriptionAttribute" type="String" default="" access="global" />
 
 
-    <div aura:id="body">
+	<div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
+    	<div class="slds-page-header">
+			<div class="slds-media">
+    			<div class="slds-media__figure">
+				    <lightning:icon iconName="custom:custom9" size="medium" alternativeText="New Batch Template"/>
+				</div>
+				<div class="slds-media__body">
+				    <h1 class="slds-page-header__title slds-truncate slds-align-middle" title="New Template">New Template</h1>
+				</div>
+			</div>
+		</div>
+	</div>
+
+    <div aura:id="body" class="slds-form slds-form slds-m-around_small">
         <aura:if isTrue="{!v.showBackButton}">
             <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
         </aura:if>
 
-        <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
 
-            <h2 class="slds-text-heading_medium slds-m-bottom_x-large">New Template</h2>
+        <lightning:button aura:id="cancelButton" disabled="false" class="slds-button slds-button_neutral" label="Cancel" onclick="{! c.return }" />
+        <lightning:button aura:id="saveButton"   disabled="true" class="slds-button slds-button_brand" label="Save" onclick="{! c.save }" />
 
-            <div class="slds-form-element">
+        <div class="slds-box">
+            <p>Grid Settings</p>
+        </div>
 
-                <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.templateNameAttribute}"/>
-                
-            </div>
+        <div class="slds-form-element slds-m-around_medium">
+            <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.templateNameAttribute}"/>
+        </div>
 
-            <div class="slds-form-element">
+        <div class="slds-form-element slds-m-around_medium">
+            <lightning:textarea name="description" label="Description" aura:id="templateDescription" maxlength="300" value="{!v.templateDescriptionAttribute}"/>
+        </div>
 
-                <lightning:textarea name="description" label="Description" aura:id="templateDescription" maxlength="300" value="{!v.templateDescriptionAttribute}"/>
-            </div>
+        <div class="slds-size_1-of-1 slds-grid slds-wrap slds-m-around_medium">
 
-            <div class="slds-size_1-of-1 slds-grid slds-wrap">
-
-                <lightning:dualListbox class="slds-m-horizontal_medium byClass2" aura:id="selectOptions" name="Select Options" label="Select Options"
+            <lightning:dualListbox class="slds-m-horizontal_medium byClass2" aura:id="selectOptions" name="Select Options" label="Select Options"
                         sourceLabel="Available Template Fields"
                         selectedLabel="Active Template Fields"
                         options="{! v.listOptions }"
                         value="{! v.defaultOptions }"
-                        onchange="{! c.handleChange }"/>                        
-			</div>
+                        onchange="{! c.handleChange }"/>
+		</div>
 
-            <div class="slds-grid slds-wrap slds-m-top_medium">
- 
-                <aura:if isTrue="{!v.showBackButton}">
-                    <div class="slds-size_1-of-2 slds-grid slds-wrap">
-                        <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
-                        <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
-                    </div>
-                </aura:if>
-                
+        <div class="slds-grid slds-wrap slds-m-top_medium slds-m-around_medium">
+
+            <aura:if isTrue="{!v.showBackButton}">
+                <div class="slds-size_1-of-2 slds-grid slds-wrap">
+                    <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
+                    <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
+                </div>
+            </aura:if>
+                <!--
                 <div class="slds-size_1-of-2 slds-clearfix">
-                    <div class="slds-float_right">                        
+                    <div class="slds-float_right">
                         <lightning:button aura:id="saveButton" disabled="true" class="button-style button-size" label="Save Template" onclick="{! c.save }" />
                     </div>
-                </div>
-            </div>
+                </div> -->
         </div>
     </div>
 </aura:component>

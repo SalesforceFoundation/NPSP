@@ -31,6 +31,7 @@
 
             component.set('v.toCreate', false);
             component.set('v.toEdit', true);
+            component.find("saveButton").set("v.disabled", false);
 
             template.Id = recordId;
 
@@ -44,51 +45,18 @@
 
                 // store state of response
                 var state = response.getState();
-                
+
                 if (state === "SUCCESS") {
 
                     var loadedTemplate = response.getReturnValue();
 
-                //    template.Name = loadedTemplate.Name;
-                //    template.Description__c = loadedTemplate.Description__c;
-                                        
                     component.set("v.templateNameAttribute", loadedTemplate.Name);
                     component.set("v.templateDescriptionAttribute", loadedTemplate.Description__c);
-
-                //    component.find("templateName").set("v.value",component.get("v.templateNameAttribute"));
-                //    component.find("templateDescription").set("v.value",component.get("v.templateDescriptionAttribute"));
                 }
                 else {
 
                     console.log('Failed with state: ' + state);
                 }
-
-
-                /*
-                // store state of response
-                var state = response.getState();
-
-                if (state === "SUCCESS") {
-
-                    var loadedTemplate = response.getReturnValue();
-
-                    template.Name = loadedTemplate.Name;
-                    template.Description__c = loadedTemplate.Description__c;
-
-                    var name = '';
-                    var description = '';
-
-                    name = template.Name ? "'" + template.Name + "'" : '';
-                    description = template.Description__c ? "'" + template.Description__c + "'" : '';
-
-                    component.find("templateName").set("v.value",name);
-                    component.find("templateDescription").set("v.value",description);
-                }
-                else {
-
-                    console.log('Failed with state: ' + state);
-                }
-                */
 
             });
             $A.enqueueAction(loadTemplateName);
@@ -164,14 +132,24 @@
         var batchTemplateFields = component.get('v.templateFields');
         var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
         
-	    helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);            
+	    helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
 
-		var url = window.location.href; 
+		var url = window.location.href;
     	var value = url.substr(0,url.lastIndexOf('/') + 1);
 
 	    window.history.back();
 
-    	return false;        
+    	return false;
+    },
+
+    return: function() {
+
+        var url = window.location.href;
+    	var value = url.substr(0,url.lastIndexOf('/') + 1);
+
+	    window.history.back();
+
+    	return false;
     },
 
     nextToInitial: function (component, event, helper) {
@@ -224,13 +202,13 @@
             while (!existsToDelete && selectedIndexVar < selectedOptionsList.length) {
 
                 var selectedTemplateField = selectedOptionsList[selectedIndexVar];
-                
+
                 if (existingTemplateField.Name === selectedTemplateField) {
-                    
+
                     existsToDelete = true;
                 }
                 else {
-                    
+
                     selectedIndexVar++;
                 }
             }
@@ -239,9 +217,9 @@
                 var index = rowItemList.indexOf(existingTemplateField);
 
                 if (index > -1) {
-                    
+
                     rowItemList.splice(index, 1);
-                }               
+                }
             }
         }
         /************CODE TO DELETE OLD TEMPLATE FIELD ITEMS***********************/
@@ -278,7 +256,7 @@
                     'Name': selectedOptionsList[selectedIndexVar],
                     'Order__c': selectedIndexVar + 1,
                     'Read_Only__c': false,
-                    'Required__c': false                    
+                    'Required__c': false
                 });
             }
         }
@@ -289,11 +267,11 @@
         component.set("v.templateFields", rowItemList);
         
         if (rowItemList.length > 0) {
-            
+
             component.find("saveButton").set("v.disabled", false);
         }
         else {
-            
+
             component.find("saveButton").set("v.disabled", true);
         }
     },
