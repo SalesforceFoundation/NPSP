@@ -178,7 +178,7 @@
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupRecordChange') {
-            helper.mergeRowItem(cmp, cmp.get("v.rollupList"), message, 'rollup');
+            helper.mergeRowItem(cmp, cmp.get("v.cachedRollupList"), message, 'rollup');
 
         } else if (channel === 'filterRecordChange') {
             helper.mergeRowItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
