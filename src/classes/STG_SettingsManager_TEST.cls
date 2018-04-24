@@ -1027,4 +1027,18 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(true, panel.isRunningBatch);
     }   
 
+    /*********************************************************************************************************
+    * @description Tests the Remove Duplicate Primary OCRs Batch panel.
+    * @return void
+    */
+    public static testMethod void testPanelPanelPrimaryContactRoleMergeBatch() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelPanelPrimaryContactRoleMergeBatch') return;
+        STG_PanelPrimaryContactRoleMerge_CTRL panel = new STG_PanelPrimaryContactRoleMerge_CTRL();
+        system.assertEquals('idPanelPrimaryContactRoleMergeBatch', panel.idPanel());
+        system.assertEquals(false, panel.isRunningBatch);
+        Test.startTest();
+        panel.runBatch();
+        Test.stopTest();
+        system.assertEquals(true, panel.isRunningBatch);
+    }
 }
