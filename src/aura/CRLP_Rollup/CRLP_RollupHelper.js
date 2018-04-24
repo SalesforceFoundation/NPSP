@@ -929,7 +929,7 @@
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
-        if(mode === 'create' && (!summaryObjectName || !summaryFieldName)){
+        if (mode === 'create' && (!summaryObjectName || !summaryFieldName)) {
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.label", masterLabel);
         } else if (mode === 'create') {
@@ -942,7 +942,7 @@
         }
 
         //sends the message to the parent cmp RollupsContainer
-        if(masterLabel){
+        if (masterLabel) {
             this.sendMessage(cmp, 'nameChange', masterLabel);
         }
 

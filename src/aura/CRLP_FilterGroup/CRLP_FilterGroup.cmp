@@ -115,25 +115,29 @@
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" smallDeviceSize="6" size="12">
-                            <lightning:input aura:id="nameInput"
+                            <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="{!v.isReadOnly}"/>
+                            <lightning:input aura:id="nameInput" class="filterGroupField"
                                              label="{!v.labels.name}"
                                              name="{!v.labels.name}"
                                              value="{!v.activeFilterGroup.label}"
                                              required="{! !v.isReadOnly}"
                                              readonly="{! v.isReadOnly}"
                                              pattern=".{0,40}"
-                                             messageWhenPatternMismatch="{!v.labels.filterGroupNameLimitError}"/>
+                                             messageWhenPatternMismatch="{!v.labels.filterGroupNameLimitError}"
+                                             variant="label-hidden"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="around-large" mediumDeviceSize="8" size="12">
-                            <lightning:textarea aura:id="descriptionInput"
+                            <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="{!v.isReadOnly}"/>
+                            <lightning:textarea aura:id="descriptionInput" class="filterGroupField"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
                                                 value="{!v.activeFilterGroup.description}"
                                                 required="{! !v.isReadOnly}"
-                                                readonly="{!v.isReadOnly}"/>
+                                                readonly="{!v.isReadOnly}"
+                                                variant="label-hidden"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 
