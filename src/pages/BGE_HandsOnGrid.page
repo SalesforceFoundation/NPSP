@@ -22,7 +22,6 @@
         <style>
 
             /* All headers */
-
             .ht_master tr:nth-of-type(odd) > td {
                background-color: #f4f6f9;
             }
@@ -30,6 +29,7 @@
             .handsontable td.htInvalid {
                 background-color: transparent !important;
                 border: 2px solid red !important;
+                color: #ff0000 !important;
             }
 
             .pagination-section {
@@ -37,14 +37,17 @@
             }
 
             .handsontable th {
-                text-align: center;
                 border-right: none;
                 color: #758696 !important;
                 border-bottom: 1px solid #cccccc !important;
+                height: 40px;
+                vertical-align: middle !important;
             }
 
             .handsontable td {
                 color: #536787 !important;
+                padding-left: 5px;
+                padding-right: 5px;
             }
 
             .fixed-horizontal {
@@ -75,6 +78,38 @@
                 width: 100%; /* Full width */
             }
 
+            .htAutocompleteArrow {
+
+                float: right;
+                font-size: 10px;
+                color: rgb(150, 150, 150) !important;
+                cursor: default;
+                width: 16px;
+                text-align: center;
+            }
+
+            .htDatepickerHolder{
+
+                width: 470px;
+            }
+
+            .pika-lendar {
+
+                float: left;
+                width: 400px;
+                margin: 32px;
+            }
+
+            .pika-button{
+
+                text-align: left;
+            }
+
+            .pika-prev, .pika-next {
+
+                margin-right: 85px !important;
+            }
+
         </style>
 
         <!-- Custom Javascript -->
@@ -88,7 +123,7 @@
             myApp.controller('MainCtrl', function($scope, $compile) {
 
                 var data = JSON.parse('{!jsonString}');
-                var activeData = JSON.parse('{!jsonString}');
+            //    var activeData = JSON.parse('{!jsonString}');
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
@@ -97,7 +132,7 @@
                 wasUpArrowPressed = false;
 		$scope.totalPages = '{!totalOfPages}';
 
-		//Map to save cells with invalid format values
+		        //Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -110,7 +145,7 @@
                 var deletingRecords = false;
 
                 // Flag for updating using sticky fields
-                stickyEdit = false;
+            //    stickyEdit = false;
 
                 // Needed for afterCreateRow:as it fires before afterInit: & confuses all
                 var renderState = false;
@@ -154,6 +189,43 @@
                         return td;
                     }
                 }
+
+
+                if(window.attachEvent) {
+
+                    window.attachEvent('onresize', function() {
+                        alert('attachEvent - resize');
+
+                        hot.updateSettings({
+                            width: calculateWindowWidth(),
+                            height: calculateWindowHeight()
+                        });
+
+                    });
+                }
+                else if(window.addEventListener) {
+
+                    window.addEventListener('resize', function() {
+                        console.log('addEventListener - resize');
+
+                        hot.updateSettings({
+                            width: calculateWindowWidth(),
+                            height: calculateWindowHeight()
+                        });
+
+                    }, true);
+                }
+
+                function calculateWindowWidth() {
+
+                    return window.innerWidth * 91 / 100;
+                }
+
+                function calculateWindowHeight() {
+
+                    return window.innerHeight * 70 /100;
+                }
+
 
                 //To display action column icons
                 function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -206,14 +278,14 @@
                     if (templateField.required) {
                         col.required = true;
                     }
-                    col.title = templateField.name.toUpperCase();
+                    col.title = '<span>' + templateField.name.toUpperCase() + '</span>';
                     col.type = templateField.type;
 
                     // Enable type checking. If for example the user places text in a numeric column, mark the cell as red
                     col.allowInvalid = true;
 
                     // Center the content of the columns
-                    col.className = "htCenter htMiddle";
+                    col.className = "htCenter htMiddle slds-truncate";
 
                     // Do not wrap the content of the column
                     col.wordWrap = false;
@@ -233,6 +305,8 @@
                     if (templateField.isDecimal === "true") {
 
                         col.format = '$0,0.00';
+                        col.className = "htRight htMiddle";
+                        col.title = '<span style="float: right">' + templateField.name.toUpperCase() + '</span>';
                     }
 
                     if (templateField.type === "email") {
@@ -240,13 +314,18 @@
                         col.type = 'text';
                     }
 
+                    if (templateField.type === "text") {
+
+                        col.className = "htLeft htMiddle";
+                    }
+
                     dynamicColumns.push(col);
                 }
 
                 dynamicColumns.push(actionCol);
 
-                var tableWidth = window.innerWidth * 93 / 100;
-                var tableHeight = window.innerHeight * 75 /100;
+                var tableWidth = window.innerWidth * 91 / 100;
+                var tableHeight = window.innerHeight * 70 /100;
                 var colCount = dynamicColumns.length;
 
                 // BEGINNING OF TABLE CONFIGURATION
@@ -275,9 +354,9 @@
                     maxRows: 50,
                     manualColumnResize: [50],
                     colWidths: 150,
-                    rowHeights: 40,
+                    rowHeights: 30,
                     colHeaders: true,
-                    columnHeaderHeight: 40,
+                    columnHeaderHeight: 30,
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
@@ -404,13 +483,13 @@
                             // Save all records
                             triggerSaveAll(changes);
                         }
-                        else if (stickyEdit === true && deletingRecords === false) {
+                    /*    else if (stickyEdit === true && deletingRecords === false) {
 
                             stickyEdit = false;
 
                             // Save all records
                             triggerSaveAll(changes);
-                        }
+                        }*/
                         else {
 
                             var row  = changes[0][0];
@@ -429,7 +508,7 @@
 
                                 triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
-                                    	var cell = hot.getCellMeta(row, getColumnFromName(prop));
+                                    var cell = hot.getCellMeta(row, getColumnFromName(prop));
 
                                     if (!result.success) {
 
@@ -444,15 +523,15 @@
 
                                     if (!dataRowId) {
 
-                                            hot.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
-                                            dataRowId  = result.dataImportIds[0];
-                                        }
-                                    });
+                                        hot.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
+                                        dataRowId  = result.dataImportIds[0];
+                                    }
+                                });
 
-                                }
-                                $scope.currentDataImport = this.getDataAtRow(row);
-                                changesToSave[dataRowId][prop] = newValue;
                             }
+                            $scope.currentDataImport = this.getDataAtRow(row);
+                            changesToSave[dataRowId][prop] = newValue;
+                        }
 
                         var pBatchId = getAllUrlParams().batchid;
                         totalOfRecords = 0;
@@ -564,10 +643,16 @@
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
 
-                hot.view.wt.update('onCellDblClick', function (row,cell) {
+            /*    hot.view.wt.update('onCellDblClick', function (row,cell) {
 
-                    console.log("double click");
-                });
+                    if(columnsData[cell.col].type == 'date') {
+
+                        // Get editor and begin edit mode on current cell (maintain current double click functionality)
+                        var activeEditor = hot.getActiveEditor();
+                        activeEditor.beginEditing();
+                    }
+
+                });*/
 
                 function getColumnFromName(name){
 
@@ -630,16 +715,13 @@
                     var col = 0;
 
                     if (!onMass) {
-
                         row = row - 1;
                     }
                     
                     if (!messages) {
-
                         messages = [];
                     }
                     else if (messages.length > 0 ) {
-
                         messages.push('\<br\>');
                     }
 
@@ -1107,10 +1189,10 @@
 
                 // END DEFINING ANGULAR FUNCTIONS
             });
-	    
-	    function removeMessage(dataRowId) {
+        
+        function removeMessage(dataRowId) {
 
-                setTimeout(function() { 
+                setTimeout(function() {
                     $(dataRowId).find( "span:last" ).remove();
                 }, 10);
             }
