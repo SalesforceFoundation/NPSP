@@ -275,6 +275,9 @@
             potentialDetailObjects.push(labels.objectPartialSoftCredit);
             potentialDetailObjects.push(labels.objectOpportunity);
             amountObjectName = labels.objectPartialSoftCredit;
+        } else if (rollupTypeObject === labels.objectAllocation) {
+            potentialDetailObjects.push(labels.objectOpportunity);
+            potentialDetailObjects.push(labels.objectAllocation);
         } else {
             potentialDetailObjects.push(rollupTypeObject);
         }
@@ -863,7 +866,7 @@
             rollupType.name = labels.objectOpportunity;
             rollupType.summaryObject = labels.labelGAU;
             rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
-            cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectAllocation);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectRD){
             rollupType.name = labels.objectOpportunity;
