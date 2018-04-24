@@ -15,7 +15,6 @@ API Create Contact
   
 Create Contact
     Go To Object Home         Contact
-    Sleep                     5
     Click Object Button       New
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
