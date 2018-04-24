@@ -1,6 +1,7 @@
 ({
-    /* @description: resets the view assignments, clears detail information, and displays rollup grid
-    */
+    /**
+     * @description: resets the view assignments, clears detail information, and displays rollup grid
+     */
     displayRollupsGrid: function(cmp) {
         cmp.set("v.isRollupsGrid", true);
         cmp.set("v.isFilterGroupsGrid", false);
@@ -13,8 +14,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
-    /* @description: resets the view assignments, clears detail information, and displays filter group grid
-    */
+    /**
+     * @description: resets the view assignments, clears detail information, and displays filter group grid
+     */
     displayFilterGroupsGrid: function(cmp) {
         cmp.set("v.isFilterGroupsGrid",true);
         cmp.set("v.isRollupsGrid", false);
@@ -26,8 +28,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
-    /* @description: filters row data based on user's selection of summary object
-    */
+    /**
+     * @description: filters row data based on user's selection of summary object
+     */
     filterData: function(cmp, object) {
         var cachedRollupList = cmp.get("v.cachedRollupList");
         if(object === 'All'){
@@ -46,13 +49,12 @@
      *  @param item - item to be merged into the list
      *  @param context - context running the merge
      */
-    mergeRowItem: function(cmp, list, item, context){
+    mergeRowItem: function(cmp, list, item, context) {
         var newItem = true;
         for (var i = 0; i < list.length; i++) {
-            //todo: refactor to lowercase Id after CMT save information is added
             if (list[i].recordId === item.recordId) {
                 //update filter group information on rollups only if master label has changed
-                if (list[i].MasterLabel !== item.MasterLabel && context === 'filterGroup') {
+                if (list[i].label !== item.label && context === 'filterGroup') {
                     this.requeryRollups(cmp);
                 }
                 // if the Id matches, update that record
@@ -61,28 +63,32 @@
                 break;
             }
         }
-        if (newItem === true) {
+        if (newItem) {
             list.push(item);
         }
 
-        //save the updated list
-        if(context === 'rollup'){
-            cmp.set("v.rollupList", list);
-        } else if (context === 'filterGroup'){
+        //save the updated, sorted list and clear any list filtering
+        if (context === 'rollup') {
+            var sortedData = this.sortData(cmp, 'displayName', 'asc', list);
+            cmp.set("v.filteredSummaryObject", "All");
+            cmp.set("v.rollupList", sortedData);
+        } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
     },
 
-    /* @description: sorts data by user's selected field and field direction
-    */
+    /**
+     * @description: sorts data by user's selected field and field direction
+     */
     sortData: function(cmp, fieldName, sortDirection, data) {
         var reverse = sortDirection !== 'asc';
         data.sort(this.sortBy(fieldName, reverse));
         return data;
     },
 
-    /* @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
-    */
+    /**
+     * @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
+     */
     sortBy: function (field, reverse, primer) {
         var key = primer ?
             function(x) {return primer(x[field])} :
@@ -94,8 +100,9 @@
         }
     },
 
-    /* @description: toggles a modal popup and backdrop
-    */
+    /**
+     * @description: toggles a modal popup and backdrop
+     */
     toggleFilterRuleModal: function(cmp) {
         var backdrop = cmp.find('backdrop');
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
@@ -111,7 +118,6 @@
 
         //requery rollup records
         action.setCallback(this, function(response) {
-            console.log('requeried rollup definitions');
             var state = response.getState();
             if (state === "SUCCESS") {
                 var rollupList = JSON.parse(JSON.stringify(response.getReturnValue()));
@@ -123,11 +129,10 @@
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
+                        this.showToast(cmp, "error", cmp.get("v.labels.error"), errors[0].message);
                     }
                 } else {
-                    console.log("Unknown error");
+                    this.showToast(cmp, "error", cmp.get("v.labels.error"), "Unknown Error");
                 }
             }
         });
