@@ -636,6 +636,14 @@
         <value>This filter rule already exists on this filter group. Edit one or more fields to create a unique filter rule.</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterRuleFieldsMissing</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
+        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
+    </labels>
+    <labels>
         <fullName>ConfirmDeleteAccount</fullName>
         <categories>Error, Delete</categories>
         <language>en_US</language>

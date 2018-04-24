@@ -124,7 +124,7 @@
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
-            helper.rerenderValue(cmp, cleanRow.operationName);
+            helper.rerenderValue(cmp, cleanRow.operationName, cleanRow.value);
 
         } else {
             //cautions user about deleting filter rule
@@ -181,7 +181,7 @@
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
-        helper.rerenderValue(cmp, operator);
+        helper.rerenderValue(cmp, operator, "");
     },
 
     /**
@@ -196,9 +196,7 @@
         var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
         if (canSave) {
             cmp.set("v.mode", 'view');
-
             helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
-            //todo note: only sendMessage once filter rule has been deployed successfully
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
@@ -232,6 +230,7 @@
                 //special reformatting for multipicklist and semi-colon delimited lists, as well as Record Type ID field
                 if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
                     filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value);
+                    filterRule.value = filterRule.value.join(";");
                 } else {
                     filterRule.valueLabel = filterRule.value;
                 }

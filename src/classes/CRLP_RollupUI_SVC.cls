@@ -443,6 +443,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupNameLimitError' => Label.CMT_FilterGroupNameLimitError,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
                 'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
+                'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
                 'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
