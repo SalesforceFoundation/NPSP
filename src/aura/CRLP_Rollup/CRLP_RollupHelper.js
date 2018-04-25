@@ -289,7 +289,9 @@
             renderMap["rollupType"] = true;
         } else {
             renderMap["rollupType"] = false;
-            renderMap["timeBoundOperation"] = false;
+            //renderMap["timeBoundOperation"] = false;
+            //renderMap["integerDays"] = false;
+            //renderMap["integerYears"] = false;
         }
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
@@ -403,7 +405,7 @@
     onChangeSummaryField: function (cmp, label) {
         console.log('in helper on change summary');
         //toggle rendering for create flow
-        if(cmp.get("v.mode") === 'create'){
+        if (cmp.get("v.mode") === 'create') {
             var renderMap = cmp.get("v.renderMap");
             if(label){
                 renderMap["description"] = true;
@@ -420,7 +422,8 @@
         //reset operation if selected operation isn't in the list
         this.updateAllowedOperations(cmp);
         var operationLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.operation"), cmp.get("v.allowedOperations"));
-        if(!operationLabel){
+        console.log('OPERATION LABEL: '+operationLabel);
+        if (!operationLabel) {
             cmp.set("v.activeRollup.operation", '');
             this.onChangeOperation(cmp, '');
         }
@@ -533,7 +536,8 @@
      * @return: updated render map
      */
     renderDateField: function (cmp, operation, rollupLabel, renderMap) {
-        if ((operation === 'First'
+        if ( cmp.get("v.activeRollup.timeBoundOperationType") !== null &&
+            (operation === 'First'
             || operation === 'Last'
             || operation === 'Years_Ago'
             || operation === 'Days_Back')
@@ -587,7 +591,8 @@
             || operation === 'Best_Year'
             || operation === 'Best_Year_Total'
             || timeBoundOperation === 'Years_Ago')
-            && operation) {
+            //&& operation
+        ) {
             //enable fiscal year
             renderMap["fiscalYear"] = true;
         } else {
