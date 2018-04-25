@@ -1098,9 +1098,10 @@
     */
     validateFields: function(cmp) {
         //create required field list
-        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperationType", "detailObject"];
+        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperation"];
         if (cmp.get("v.renderMap")["detailField"]) {
             requiredSelectFields.push("detailField");
+            requiredSelectFields.push("detailObject");
         }
         var activeRollup = cmp.get("v.activeRollup");
 
