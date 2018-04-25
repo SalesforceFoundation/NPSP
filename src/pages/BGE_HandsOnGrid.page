@@ -1,5 +1,4 @@
 <apex:page controller="BGE_HandsOnGridController" showHeader="false" sidebar="false" docType="html-5.0">
-
     <html ng-app="myApp" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
 
         <!-- AngularJs 1.6.4 -->
@@ -1201,7 +1200,7 @@
 
                 var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
 
-                setTimeout(function() { 
+                setTimeout(function() {
                     $(dataRowId).append(htmlTooltip);
                 }, 10);
             }
@@ -1229,13 +1228,37 @@
             <div id="notifications"></div>
             <div id="wrapper" class="slds-form" ng-controller="MainCtrl as ctrl">
 
+                    <!-- ALERT MESSAGE -->
+
+                <apex:outputPanel layout="block" styleClass="demo-only" style="height: 4rem; margin-top: 17%" rendered="{!displayError}">
+                    <div class="demo-only" style="height: 640px;">
+                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                            <div class="slds-modal__container">
+                                <header class="slds-modal__header">
+                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Missing Batch Template</h2>
+                                </header>
+                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                    <p class="slds-align_absolute-center">There is no Batch Template associated with this Batch. <br/>Please associate this Batch with a Batch Template.</p>
+                                </div>
+                                    <footer class="slds-modal__footer">
+                                        <a class="slds-button slds-button_brand" href="/{!batchId}">Close</a>
+                                    </footer>
+                                </div>
+                        </section>
+                        <div class="slds-backdrop slds-backdrop_open"></div>
+                    </div>
+
+                </apex:outputPanel>
+
+                <!-- ALERT MESSAGE -->
+
                 <!-- TABLE -->
-                <div class="slds-m-horizontal_xx-large">
+                <apex:outputPanel layout="block" styleClass="slds-m-horizontal_xx-large" rendered="{!NOT(displayError)}">
 
                     <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <button class="slds-button slds-button_brand" title="Commit and Save"> Commit and Save </button>
-                            <button class="slds-button slds-button_brand" title="Commit and Exit"> Commit and Exit </button>
+                            <button class="slds-button slds-button_brand" title="Save and Process"> Save and Process </button>
+                            <button class="slds-button slds-button_brand" title="Save and Exit"> Save and Exit </button>
                         </div>
                     </div>
 
@@ -1260,34 +1283,58 @@
                             </button>
                         </div>
 
-                    <!--    <div class="slds-col slds-truncate slds-clearfix">
+                        <div class="slds-col slds-size_1-of-2 slds-clearfix">
                             <div class="slds-float_right">
-                                <div class="slds-truncate slds-medium-size_4-of-6 slds-large-size_3-of-12">
+                                <div class="slds-size_1-of-2 slds-medium-size_4-of-6 slds-large-size_3-of-12">
                                     <input type="search" id="handsonSearch" placeholder="search" class="slds-input" style="width: 230px;align:right;" />
                                 </div>
                             </div>
-                        </div> -->
+                        </div>
 
                     </div>
 
-                    <div id="my-hot-table" class="handsontable" />
-                </div>
+                	<div id="my-hot-table" class="handsontable" />
+
+                </apex:outputPanel>
                 <!-- / TABLE -->
 
                 <!-- FOOTER -->
 
-                <apex:outputpanel styleclass="slds-m-around_small" style="text-align: center;">
-                    <div >
+                <apex:outputPanel layout="block" styleClass="slds-m-around_small" style="text-align: center;" rendered="{!NOT(displayError)}">
+
+                    <div>
                         <b>TOTAL OF RECORDS: </b>&nbsp;
                         <output id="totalOfRecords" placeholder="0" style="width: 150px;"/>
                     </div>
 
                     <div >
                         <b>TOTAL AMOUNT: </b>&nbsp;
-                        <output id="totalAmount"    placeholder="0" style="width: 150px;"/>
+                        <output id="totalAmount" placeholder="0" style="width: 150px;"/>
                     </div>
 
-                </apex:outputpanel>
+                    <div class="slds-m-vertical_x-large slds-hide">
+                        <div class="slds-popover toggle slds-m-top_x-large" style="position:absolute;" role="tooltip" id="help" aura:id="tooltip">
+                            <!-- Set properties of each template field -->
+                            <div class="slds-popover__body">
+
+                                <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+
+                                    <button class="slds-button slds-button_neutral" style="border: none;">Check</button>
+                                </div>
+                                <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+
+                                    <button class="slds-button slds-button_neutral">Edit</button>
+                                </div>
+                                <div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center">
+
+                                    <button class="slds-button slds-button_neutral">Commit</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </apex:outputPanel>
 
                 <!-- / FOOTER -->
             </div>
