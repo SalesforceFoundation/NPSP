@@ -7,6 +7,29 @@
             </div>        
         </div>
         <c:UTIL_PageMessages />
+
+        <div class="slds" id="page_messages">
+            <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+                <div class="notify__content">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <apex:outputText>
+                                <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
+                                    <path  d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 5.6c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4zm2.3 9.7c0 .2-.2.4-.5.4h-3.6c-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5.2 0 .4-.2.4-.4v-1.9c0-.2-.2-.5-.4-.5-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5h2.7c.3 0 .5.2.5.5v3.7c0 .2.2.4.4.4.3 0 .5.2.5.5v.9z"/>
+                                </svg>
+                            </apex:outputText>
+                        </div>
+                        <div class="slds-media__body">
+                            <h2 class="slds-text-heading_small slds-text-heading--small">
+                                <apex:outputText value="{!$Label.stgCRLPInfoOnUDRHeading}" escape="true"/>
+                            </h2>
+                            <apex:outputText styleClass="slds-m-top_medium slds-m-top--medium" value="{!$Label.stgCRLPInfoOnUDRBody}" escape="false"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
             <apex:commandButton id="newUDR" value="{!$Label.stgBtnNewUDR}" action="{!startBuild}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>

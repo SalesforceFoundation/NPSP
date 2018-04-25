@@ -1638,6 +1638,8 @@
         <members>stgBtnSave</members>
         <members>stgCRLPGoToSetup</members>
         <members>stgCRLPHouseholdAccountError</members>
+        <members>stgCRLPInfoOnUDRBody</members>
+        <members>stgCRLPInfoOnUDRHeading</members>
         <members>stgCRLPNonAdminError</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
