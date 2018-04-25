@@ -22,7 +22,6 @@
         <style>
 
             /* All headers */
-
             .ht_master tr:nth-of-type(odd) > td {
                background-color: #f4f6f9;
             }
@@ -68,11 +67,11 @@
                 border-right: 1px solid #cccccc !important;
             }
 
-            .fixedHeader {
-                overflow: hidden;
-                position: fixed; /* Set the navbar to fixed position */
-                top: 0; /* Position the navbar at the top of the page */
-                width: 100%; /* Full width */
+            /* Edit mode */
+            .handsontableInput {
+                vertical-align: middle;
+                text-align: center;
+                line-height: 40px !important;
             }
 
         </style>
@@ -101,8 +100,14 @@
 
                 table = document.getElementById('my-hot-table');
 
+                // Flag that is set true if the user have just pressed the up arrow key.
                 wasUpArrowPressed = false;
+
+                // Flag that is set true if the selected cell have just moved horizontally.
                 movedSideWays = false;
+
+                // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
+                wait = false;
 
         		$scope.totalPages = '{!totalOfPages}';
 
@@ -415,7 +420,6 @@
                             var prop = changes[0][1];
                             var oldValue = changes[0][2];
                             var newValue = changes[0][3];
-
                             var dataRowId = this.getDataAtRowProp(row, 'Id');
 
                             if (!changesToSave[dataRowId]) {
@@ -424,6 +428,8 @@
                             }
 
                             if(movedSideWays) {
+
+                                wait = true;
 
                                 triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
@@ -442,15 +448,15 @@
 
                                     if (!dataRowId) {
 
-                                            hot.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
-                                            dataRowId  = result.dataImportIds[0];
-                                        }
-                                    });
-                                }
-
-                                $scope.currentDataImport = this.getDataAtRow(row);
-                                changesToSave[dataRowId][prop] = newValue;
+                                        hot.setDataAtCell(row, getColumnFromName('Id'), result.dataImportIds[0]);
+                                        dataRowId  = result.dataImportIds[0];
+                                    }
+                                });
                             }
+
+                            $scope.currentDataImport = this.getDataAtRow(row);
+                            changesToSave[dataRowId][prop] = newValue;
+                        }
 
                         var pBatchId = getAllUrlParams().batchid;
                         totalOfRecords = 0;
@@ -478,56 +484,73 @@
 
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
 
-                        var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
-                        var dataAtRow = this.getDataAtRow(lastSelectedRow);
+                        var timeout = 0;
                         var self = this;
 
-                        if (lastSelectedRow !== null && lastSelectedRow !== row) {
+                        if (wait) {
 
-                            if (changesToSave[dataRowId]) {
-
-                                if (wasUpArrowPressed) {
-
-                                    row = row+2;
-                                    wasUpArrowPressed = false;
-                                }
-
-                                triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
-
-                                    if (!dataRowId) {
-
-                                        self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
-
-                                        dataRowId  = result.dataImportIds[0];
-                                    }
-
-                                    var messages = validateRequiredFields(row, result.messages, false);
-
-                                    if (messages && messages.length > 0) {
-
-                                        // Add tooltip message
-                                        var escaped = addTooltip(dataRowId, row, result, messages);
-                                        data[row-1]['Errors'] = escaped;
-                                    }
-                                    else {
-
-                                        data[row-1]['Errors'] = '';
-                                    }
-
-                                    var cellsToUpdate = [];
-
-                                    cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
-
-                                    self.setDataAtCell(cellsToUpdate);
-
-                                    changesToSave = {};
-                                });
-
-                                changesToSave = {};
-                            }
+                            timeout = 1000;
                         }
 
-                        lastSelectedRow = row;
+
+                        setTimeout(function() {
+
+                            wait = false;
+
+                            var dataRowId = self.getDataAtRowProp(lastSelectedRow, 'Id');
+
+                            var dataAtRow = self.getDataAtRow(lastSelectedRow);
+
+
+                            if (lastSelectedRow !== null && lastSelectedRow !== row) {
+
+                                if (changesToSave[dataRowId]) {
+
+                                    if (wasUpArrowPressed) {
+
+                                        row = row+2;
+                                        wasUpArrowPressed = false;
+                                    }
+
+                                    triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
+
+                                        if (!dataRowId) {
+
+                                            self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
+
+                                            dataRowId  = result.dataImportIds[0];
+                                        }
+
+                                        var messages = validateRequiredFields(row, result.messages, false);
+
+                                        if (messages && messages.length > 0) {
+
+                                            // Add tooltip message
+                                            var escaped = addTooltip(dataRowId, row, result, messages);
+                                            data[row-1]['Errors'] = escaped;
+                                        }
+                                        else {
+
+                                            data[row-1]['Errors'] = '';
+                                        }
+
+                                        var cellsToUpdate = [];
+
+                                        cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
+
+                                        self.setDataAtCell(cellsToUpdate);
+
+                                        changesToSave = {};
+                                    });
+
+                                    changesToSave = {};
+                                }
+                            }
+
+                            lastSelectedRow = row;
+
+                        },timeout);
+
                     },
 
                     afterOnCellMouseDown: function(event, coords){
@@ -576,10 +599,10 @@
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
 
-            //    hot.view.wt.update('onCellDblClick', function (row,cell) {
+                //    hot.view.wt.update('onCellDblClick', function (row,cell) {
 
-            //        console.log("double click");
-            //    });
+                //        console.log("double click");
+                //    });
 
                 function getColumnFromName(name){
 
@@ -744,6 +767,7 @@
                             document.getElementById("totalOfRecords").value = result;
                         });
                     }
+
                 }
 
                 function triggerUpdateCell(newValue, prop, dataRowId, callback) {
@@ -773,6 +797,7 @@
                             }
                         );
                     }
+
                 }
 
                 function triggerSaveAll(changes) {
