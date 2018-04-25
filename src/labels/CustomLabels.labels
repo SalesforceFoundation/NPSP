@@ -4971,6 +4971,29 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
     </labels>
     <labels>
+        <fullName>stgCRLPInfoOnUDRBody</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRBody</shortDescription>
+        <value>Customizable Rollups offer all the functionality of User Defined Rollups and so much more:&lt;br/&gt;
+            &lt;br/&gt;
+            ● Roll up Payments in addition to Opportunities&lt;br/&gt;
+            ● Use filters to easily exclude certain records or data&lt;br/&gt;
+            ● Roll up data for more than 2 years back&lt;br/&gt;
+            &lt;br/&gt;
+            Go to NPSP Settings | Donations | Customizable Rollups to enable Customizable Rollups and get started using them!
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRHeading</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRHeading</shortDescription>
+        <value>Why not try Customizable Rollups instead?</value>
+    </labels>
+    <labels>
         <fullName>stgCRLPNonAdminError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
