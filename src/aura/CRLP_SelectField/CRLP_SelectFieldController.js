@@ -27,5 +27,15 @@
             'channel': 'selectField'
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description: handles the ltng:message event to check for an invalid lightning input
+     */
+    handleMessage: function(cmp, event) {
+        if (event.getParam("channel") === 'validateCmp') {
+            var inputCmp = cmp.find('selectField');
+            inputCmp.showHelpMessageIfInvalid();
+        }
     }
 })

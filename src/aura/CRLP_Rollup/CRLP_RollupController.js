@@ -111,7 +111,7 @@
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
         var canSave = helper.validateFields(cmp);
-        if(canSave){
+        if (canSave) {
             helper.saveRollup(cmp, activeRollup);
             cmp.set("v.mode", 'view');
             helper.updateRollupName(cmp);

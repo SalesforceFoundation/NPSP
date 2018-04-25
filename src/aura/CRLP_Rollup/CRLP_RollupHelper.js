@@ -964,7 +964,7 @@
      * @param jobId The returns CMT deployment job id to query status for
      * @param recordName Unique record name value (that was just inserted/updated) to query for.
      */
-    pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
+    pollForDeploymentStatus: function(cmp, jobId, recordName, counter) {
         var helper=this;
         var maxPollingRetryCount = 30;
         var poller = window.setTimeout(
@@ -1094,14 +1094,31 @@
 
     /**
     * @description: verifies all required fields have been populated before saving the component
-    * @return: if cmp can be saved
+    * @return canSave: boolean value indicating if rollup can be saved
     */
-    validateFields: function(cmp){
-        //todo: find any other combinations that may be missing before validating on save
-        var canSave = true;
-        var description = cmp.get("v.activeRollup.description");
+    validateFields: function(cmp) {
+        //create required field list
+        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperationType", "detailObject"];
+        if (cmp.get("v.renderMap")["detailField"]) {
+            requiredSelectFields.push("detailField");
+        }
+        var activeRollup = cmp.get("v.activeRollup");
 
-        if(!description){
+        //check for values of required fields
+        var canSave = requiredSelectFields.reduce(function (validSoFar, field) {
+            console.log(activeRollup[field]);
+            return validSoFar && Boolean(activeRollup[field]);
+        }, true);
+
+        //show help message in each child component SelectField
+        if (!canSave) {
+            this.sendMessage(cmp, 'validateCmp');
+        }
+
+        var fields = cmp.find("selectField");
+
+        //description set separately since we have direct access to this cmp
+        if(!activeRollup.description){
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
@@ -1113,8 +1130,7 @@
     * @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't selected
     * @param detailField: selected detail field API name
     */
-    verifyRollupSaveActive: function(cmp, detailField){
-        console.log('in on change save active');
+    verifyRollupSaveActive: function(cmp, detailField) {
         var renderMap = cmp.get("v.renderMap");
         var selectedRollup = cmp.get("v.selectedRollupType");
 
