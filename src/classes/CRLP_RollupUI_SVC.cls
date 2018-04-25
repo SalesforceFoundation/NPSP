@@ -385,7 +385,7 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String detailObj : detailObjectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(detailObj);
+            List<Map<String, String>> detailNameToFieldTypeObj = getAllFieldsWithType(detailObj);
             objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
         }
         for(String targetObj : targetObjectNames){
@@ -394,6 +394,33 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return objNameToFieldTypeMap;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system fields
+    * @param objectName the name of the object to look up
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    private static List<Map<String, String>> getAllFieldsWithType(String objectName) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            if(!dfr.name.toLowerCase().contains('__system')) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', objectName+' '+dfr.name);
+                fieldObject.put('label', objectLabel+': '+dfr.label);
+                fieldObject.put('type', dfr.getType().Name());
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
     }
 
     /*******************************************************************************************************
@@ -734,7 +761,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param selectedField the name of a summary field already in use
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
+    private static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
