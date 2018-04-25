@@ -90,6 +90,11 @@ private class CRLP_RecalculateBTN_TEST {
 
         // Retrieve the dummy Contact
         Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Set a random Total Gift and Soft Credit.
+        c.npo02__TotalOppAmount__c = 100;
+        c.npo02__Soft_Credit_Total__c = 100;
+        update c;
+        
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
         Test.startTest();
@@ -103,8 +108,12 @@ private class CRLP_RecalculateBTN_TEST {
         ctlr.buttonClick();
 
         Test.stopTest();
-        // There's no way to test that an @future method executed other than to look for a change to the record
-        // which there won't be here.
+
+        // Confirm that the legacy rollup logic resets the value of the Total Gift and
+        // Soft Credit to 0;
+        c = [SELECT npo02__TotalOppAmount__c, npo02__Soft_Credit_Total__c FROM Contact LIMIT 1];
+        System.assert(c.npo02__TotalOppAmount__c == 0);
+        System.assert(c.npo02__Soft_Credit_Total__c == 0);
     }
 
     /**
@@ -171,5 +180,4 @@ private class CRLP_RecalculateBTN_TEST {
 
         Test.stopTest();
     }
-
 }
