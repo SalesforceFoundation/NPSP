@@ -435,6 +435,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'edit' => Label.stgBtnEdit,
                 'error' => Label.PageMessagesError,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
+                'filterGroupActiveRollupsHelp' => Label.CMT_FilterGroupActiveRollupsHelpText,
                 'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupDescriptionHelp' => Label.CMT_FilterGroupDescriptionHelpText,

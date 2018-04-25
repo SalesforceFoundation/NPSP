@@ -115,7 +115,9 @@
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" smallDeviceSize="6" size="12">
-                            <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="{!v.isReadOnly}"/>
+                            <aura:if isTrue="{! !v.isReadOnly}">
+                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="{!v.isReadOnly}"/>
+                            </aura:if>
                             <lightning:input aura:id="nameInput" class="filterGroupField"
                                              label="{!v.labels.name}"
                                              name="{!v.labels.name}"
@@ -124,20 +126,22 @@
                                              readonly="{! v.isReadOnly}"
                                              pattern=".{0,40}"
                                              messageWhenPatternMismatch="{!v.labels.filterGroupNameLimitError}"
-                                             variant="label-hidden"/>
+                                             variant="{!v.isReadOnly ? '' : 'label-hidden'}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="around-large" mediumDeviceSize="8" size="12">
-                            <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="{!v.isReadOnly}"/>
+                            <aura:if isTrue="{! !v.isReadOnly}">
+                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="{!v.isReadOnly}"/>
+                            </aura:if>
                             <lightning:textarea aura:id="descriptionInput" class="filterGroupField"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
                                                 value="{!v.activeFilterGroup.description}"
                                                 required="{! !v.isReadOnly}"
                                                 readonly="{!v.isReadOnly}"
-                                                variant="label-hidden"/>
+                                                variant="{!v.isReadOnly ? '' : 'label-hidden'}"/>
                         </lightning:layoutItem>
                     </lightning:layout>
 
@@ -148,6 +152,7 @@
                             <lightning:card iconName="utility:rules" title="{!v.labels.filterRuleLabelPlural}">
                                 <aura:set attribute="actions">
                                     <aura:if isTrue="{!v.mode != 'view'}">
+                                        <c:CRLP_Tooltip helpText="{!v.labels.filterRuleHelpText}" isRequired="false"/>
                                         <lightning:button label="{!v.labels.add}" onclick="{!c.addFilterRule}" variant="brand"/>
                                     </aura:if>
                                 </aura:set>
@@ -173,7 +178,8 @@
                     <aura:if isTrue="{!v.mode=='view'}">
                         <lightning:layout multipleRows="true" verticalAlign="start">
                             <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
-                                <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
+                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupActiveRollupsHelp}" fieldLabel="{!v.labels.rollupsByFilterGroup}"
+                                                textType="header" isRequired="false"/>
                                 <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
                             </lightning:layoutItem>
                         </lightning:layout>
@@ -268,8 +274,9 @@
                                 <!--START CONSTANT INPUT OPTIONS-->
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'text')}">
                                     <!--todo: combine dynamic type with 214 release-->
+                                    <c:CRLP_Tooltip helpText="{!v.labels.filterRuleValueHelp}" fieldLabel="{!v.labels.constant}" isRequired="true"/>
                                     <lightning:textarea aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
-                                                        required="true" label="{!v.labels.constant}" maxlength="300" />
+                                                        required="true" label="{!v.labels.constant}" maxlength="300" variant="label-hidden" />
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'date')}">
                                     <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"

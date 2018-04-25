@@ -36,15 +36,21 @@
 -->
 <aura:component description="CRLP_Tooltip">
     <aura:attribute name="helpText" type="String" description="Help text to appear in the tooltip"/>
-    <aura:attribute name="fieldLabel" type="String" description="Label for the field"/>
+    <aura:attribute name="fieldLabel" type="String" description="Label for the field" default=""/>
     <aura:attribute name="isRequired" type="Boolean" description="If item is required or not"/>
+    <aura:attribute name="textType" type="String" description="Allows for different font size and weight to be used for the helptext. Options: body, header." default="body"/>
 
     <!-- custom help text component -->
     <span class="slds-form-element__label">
         <aura:if isTrue="{!v.isRequired}">
             <abbr class="slds-required">*</abbr>
         </aura:if>
-        <span>{!v.fieldLabel}</span>
+        <aura:if isTrue="{!v.textType == 'body'}">
+            <span>{!v.fieldLabel}</span>
+        </aura:if>
+        <aura:if isTrue="{!v.textType == 'header'}">
+            <h3 class="slds-text-heading_label">{!v.fieldLabel}</h3>
+        </aura:if>
         <div class="slds-form-element__icon">
             <button class="slds-button slds-button--icon"
                     onclick="{!c.handleOnClick}"

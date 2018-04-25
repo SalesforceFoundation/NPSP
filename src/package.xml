@@ -1048,6 +1048,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
         <members>CMT_FilterGroupDescriptionHelpText</members>
         <members>CMT_FilterGroupNameHelpText</members>
