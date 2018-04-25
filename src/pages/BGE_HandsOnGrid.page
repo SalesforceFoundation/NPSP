@@ -88,16 +88,15 @@
             myApp.controller('MainCtrl', function($scope, $compile) {
 
                 var data = JSON.parse('{!jsonString}');
-                var activeData = JSON.parse('{!jsonString}');
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
-            //    searchField = document.getElementById('handsonSearch');
+
                 wasEnterPressed = false;
                 wasUpArrowPressed = false;
-		$scope.totalPages = '{!totalOfPages}';
+		        $scope.totalPages = '{!totalOfPages}';
 
-		//Map to save cells with invalid format values
+		        // Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -129,6 +128,7 @@
                         callback(false);
                     }
                     else {
+
                         callback(true);
                     }
                 };
@@ -221,6 +221,7 @@
                     if (templateField.apiName == "Id") {
 
                         col.readOnly = true;
+                        col.colWidths = 0.1;
                     }
 
                     if (templateField.type === "date") {
@@ -262,7 +263,6 @@
                     manualColumnResize: true,
                     manualRowResize: true,
                     readOnly: false,
-               //     search: true,
                     sortIndicator: true,
                     fillHandle:  true,
                     autoWrapRow: true,
