@@ -26,10 +26,10 @@
             this.setIntegerYearList(cmp);
         }
 
-        //update filter group list to contain none as a first option
+        //update filter group list to contain null as a first option
         //note: unshift can't be used here due to an issue with bound values
         var filterGroups = cmp.get("v.filterGroups");
-        var tempList = [{"name": "", "label": cmp.get("v.labels.na")}];
+        var tempList = [{"name": "", "label": cmp.get("v.labels.noFilterGroupSelect")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
 
@@ -240,9 +240,9 @@
         //TIME BOUND OPERATION RENDERING
         if (operation) {
             if (operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
-                renderMap["timeBoundOperation"] = true;
+                renderMap["timeBoundOperationType"] = true;
             } else {
-                renderMap["timeBoundOperation"] = false;
+                renderMap["timeBoundOperationType"] = false;
                 cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
                 var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
                 cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
@@ -252,7 +252,7 @@
             renderMap["rollupType"] = true;
         } else {
             renderMap["rollupType"] = false;
-            renderMap["timeBoundOperation"] = false;
+            renderMap["timeBoundOperationType"] = false;
         }
         //AMOUNT, DATE & DETAIL FIELD RENDERING
         var rollupLabel = cmp.get("v.selectedRollupType").label;
@@ -305,8 +305,8 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.filterGroup", labels.na);
-            this.onChangeFilterGroup(cmp, labels.na);
+            cmp.set("v.activeRollup.filterGroupRecordName", labels.noFilterGroupSelect);
+            this.onChangeFilterGroup(cmp, labels.noFilterGroupSelect);
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
@@ -1098,7 +1098,7 @@
     */
     validateFields: function(cmp) {
         //create required field list
-        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperation"];
+        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperationType"];
         if (cmp.get("v.renderMap")["detailField"]) {
             requiredSelectFields.push("detailField");
             requiredSelectFields.push("detailObject");

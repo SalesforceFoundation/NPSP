@@ -49,7 +49,7 @@
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
                     description="Determines if fields should be read-only. This only applies to View."/>
     <aura:attribute name="renderMap" type="Map"
-                    default="{description: true, rollupType: true, filterGroup: true, operation: true, fiscalYear: true, timeBoundOperation: true, integerDays: true, integerYears: true, detailField: true, amountField: true, dateField: true}"
+                    default="{description: true, rollupType: true, filterGroup: true, operation: true, fiscalYear: true, timeBoundOperationType: true, integerDays: true, integerYears: true, detailField: true, amountField: true, dateField: true}"
                     description="Dependent disabling of fields. If true, field is rendered." access="public"/>
     <aura:attribute name="operations" type="Object" description="Map of rollup operations, api name to label"/>
     <aura:attribute name="allowedOperations" type="List"
@@ -222,9 +222,9 @@
                                 </aura:if>
                             </lightning:layoutItem>
                         </aura:if>
-                        <aura:if isTrue="{!v.renderMap.timeBoundOperation}">
+                        <aura:if isTrue="{!v.renderMap.timeBoundOperationType}">
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
-                                                auraId="timeBoundOperation"
+                                                auraId="timeBoundOperationType"
                                                 fieldLabel="{!v.labels.timeBoundOperationType}"
                                                 entityLabel="{!v.selectedTimeBoundOperationLabel}"
                                                 apiName="{!v.activeRollup.timeBoundOperationType}"

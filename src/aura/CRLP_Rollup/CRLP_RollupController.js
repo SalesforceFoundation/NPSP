@@ -138,7 +138,7 @@
                 helper.onChangeSummaryField(cmp, label);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp, value);
-            } else if(fieldName === 'timeBoundOperation'){
+            } else if(fieldName === 'timeBoundOperationType'){
                 helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
             } else if(fieldName === 'integer'){
                 helper.onChangeInteger(cmp, value);

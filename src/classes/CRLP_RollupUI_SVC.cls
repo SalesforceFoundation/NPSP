@@ -213,7 +213,7 @@ public with sharing class CRLP_RollupUI_SVC {
         item.rollupName = rlp.MasterLabel;
         item.detailField = rlp.Detail_Field__r.Label;
         item.description = rlp.Description__c;
-        item.filterGroupName = rlp.Filter_Group__r.MasterLabel;
+        item.filterGroupName = String.isBlank(rlp.Filter_Group__r.MasterLabel) ? Label.CRLP_NoFilterGroupSelected : rlp.Filter_Group__r.MasterLabel;
         item.operation = rlp.Operation__c.replace('_', ' ');
         if(rlp.Active__c){
             item.activeIcon = 'utility:check';
@@ -474,8 +474,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noFields' => Label.stgLabelPaymentMapNoValidFields,
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
+                'noFilterGroupSelect' => Label.CRLP_NoFilterGroupSelected,
                 'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
-                'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'objectAccount' => Schema.SObjectType.Account.getName(),

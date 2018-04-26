@@ -877,12 +877,12 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
-        <fullName>CRLP_NoRollupType</fullName>
+        <fullName>CRLP_NoFilterGroupSelected</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
-        <value>No Rollup Type</value>
+        <shortDescription>Label when user doesn't select a filter group.</shortDescription>
+        <value>No Filter Group (Include All Records)</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>

@@ -297,7 +297,7 @@ public class CRLP_RollupCMT {
             this.isActive = rlp.Active__c;
 
             try {
-                this.filterGroupLabel = rlp.Filter_Group__r.MasterLabel;
+                this.filterGroupLabel = String.isBlank(rlp.Filter_Group__r.MasterLabel) ? System.Label.CRLP_NoFilterGroupSelected : rlp.Filter_Group__r.MasterLabel;
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
