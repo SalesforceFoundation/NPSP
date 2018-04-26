@@ -967,32 +967,30 @@
     pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
         var helper=this;
         var maxPollingRetryCount = 30;
+        var mode = cmp.get("v.mode");
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
                 console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
-                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup'});
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup', mode: mode});
                 action.setCallback(this, function (response) {
-                    console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + deployResult);
+                        console.log('deployResult=' + JSON.stringify(deployResult));
                         // if there is a record id response
-                        if (deployResult && deployResult.completed === true && deployResult.rollupItem) {
+                        var mode = cmp.get("v.mode");
+                        if (deployResult && deployResult.completed === true && (deployResult.rollupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-
-                            var mode = cmp.get("v.mode");
 
                             if(mode === "delete") {
                                 // fire cancel event to nav back to rollup grid
                                 var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
                                 cancelEvent.setParams({grid: 'rollup'});
                                 cancelEvent.fire();
-                                console.log('firing cancel event');
 
                             } else {
 
@@ -1018,7 +1016,7 @@
 
                             if(mode === "delete") {
                                 // Send a message with the deleted Rollup to the RollupContainer Component
-                                helper.sendMessage(cmp, 'rollupDeleted', deployResult.rollupItem);
+                                helper.sendMessage(cmp, 'rollupDeleted', recordName);
                             } else {
                                 // Send a message with the changed or new Rollup to the RollupContainer Component
                                 helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
