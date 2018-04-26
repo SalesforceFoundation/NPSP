@@ -2,7 +2,7 @@ public with sharing class BGE_DynamicalColumnWrapper {
 
 	private static final Map<String, String> GRID_COLUMN_TYPES = new Map<String, String>
                                                                 {  'STRING' => 'text',
-																   'PICKLIST' => 'text',
+																   'PICKLIST' => 'dropdown',
                                                                    'DATE' => 'date',
                                                                    'DATETIME' => 'date',
                                                                    'ID' => 'text',
@@ -22,9 +22,12 @@ public with sharing class BGE_DynamicalColumnWrapper {
 	public Boolean stickyFieldVisibility { get; set; }
 	public Boolean required { get; set; }
 	public Boolean allowInvalid { get; set; }
+	public List<String> pickListValuesList {get; set;}
 
 	//Constructor
 	public BGE_DynamicalColumnWrapper(Batch_Template_Field__c templateField) {
+
+		pickListValuesList = new List<String>();
 
 		Map <String, Schema.SObjectType> schemaMap = Schema.getGlobalDescribe();
 		Map <String, Schema.SObjectField> fieldMap = schemaMap.get('DataImport__c').getDescribe().fields.getMap();
@@ -39,15 +42,25 @@ public with sharing class BGE_DynamicalColumnWrapper {
 			isDecimal = 'false';
 			type = String.valueOf(field.getType());
 
-			stickyField = templateField.Sticky_Field__c;
-			stickyFieldValue = templateField.Sticky_Field_Value__c;
-			stickyFieldVisibility = templateField.Sticky_Field_Visibility__c;
 			required = templateField.Required__c;
 			allowInvalid = false;
 
 			mapFieldTypes();
+
+			if (type == 'dropdown') {
+
+				getPickListValuesIntoList(fieldMap);
+			}
+
+			if (apiName == 'Donation_Record_Type_Name__c') {
+
+				type = 'dropdown';
+				pickListValuesList.addAll(getDonationRecordtypes());
+			}
+
 		}
 		else {
+
 			name = 'ERROR';
 			type = 'text';
 		}
@@ -65,8 +78,32 @@ public with sharing class BGE_DynamicalColumnWrapper {
 			type = GRID_COLUMN_TYPES.get(type);
 		}
 		else {
+
 			type = 'text';
 		}
 
 	}
+
+	public List<String> getPickListValuesIntoList(Map <String, Schema.SObjectField> fieldMap){
+
+		Schema.DescribeFieldResult fieldResult = fieldMap.get(apiName).getDescribe();
+
+		List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+
+		for( Schema.PicklistEntry pickListVal : ple){
+
+			pickListValuesList.add(pickListVal.getLabel());
+		}
+
+		return pickListValuesList;
+    }
+
+
+	private Set<String> getDonationRecordtypes() {
+
+        Map<String,Schema.RecordTypeInfo> rtMapByName = Schema.SObjectType.Opportunity.getRecordTypeInfosByName();
+
+        return rtMapByName.keySet();
+    }
+
 }
