@@ -56,9 +56,12 @@
                 cmp.set("v.activeRollup.recordId", null);
                 cmp.set("v.activeRollup.recordName", null);
                 cmp.set("v.isReadOnly", false);
-                var newSummary = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
-                cmp.set("v.summaryFields", newSummary);
-                cmp.set("v.isIncomplete", false);
+                //reset summary fields, clear current summary field, and rerender rollup name
+                var newSummaryFields = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
+                cmp.set("v.summaryFields", newSummaryFields);
+                cmp.set("v.activeRollup.summaryField", null);
+                this.updateRollupName(cmp);
+                cmp.set("v.isIncomplete", true);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
                 cmp.set("v.isIncomplete", false);
@@ -77,7 +80,7 @@
      * @description: applies the correct labels for all underlying API values and resets allowed values
      * this is run when the page is first loaded or when a cancel event resets the page
      */
-    fieldSetup: function(cmp){
+    fieldSetup: function(cmp) {
         this.resetAllFields(cmp);
         this.updateAllowedOperations(cmp);
         this.onChangeOperation(cmp, cmp.get("v.activeRollup.operation"));
@@ -86,6 +89,7 @@
         this.onChangeInteger(cmp, cmp.get("v.activeRollup.intValue"));
         var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
         this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
+        this.updateRollupName(cmp);
     },
 
     /**
@@ -635,11 +639,9 @@
     },
 
     /**
-     * @description: resets all fields
+     * @description: resets all object fields and rollup types
      */
     resetAllFields: function (cmp) {
-        //todo: refactor to see if/when is even necessary
-
         var activeRollup = cmp.get("v.activeRollup");
 
         this.resetFields(cmp, activeRollup.summaryObject, 'summary');
@@ -996,7 +998,7 @@
     * @description: sets the rollup name with a simple concatenation of the summary object and summary field
     * also sends the updated name to the parent component to display as the page title
     */
-    updateRollupName: function (cmp, event) {
+    updateRollupName: function (cmp) {
         var summaryObjectAPI = cmp.get("v.activeRollup.summaryObject");
         var summaryObjects = cmp.get("v.summaryObjects");
         var summaryObjectName = this.retrieveFieldLabel(summaryObjectAPI, summaryObjects);
@@ -1013,28 +1015,20 @@
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
-        if(mode === 'create' && (!summaryObjectName || !summaryFieldName)){
+        if((mode === 'create' || mode === 'clone') && (!summaryObjectName || !summaryFieldName)){
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.label", masterLabel);
-        } else if (mode === 'create') {
+        } else if (mode === 'create' || mode === 'clone') {
             masterLabel = label;
             cmp.set("v.activeRollup.label", masterLabel);
         } else if (summaryObjectName && summaryFieldName) {
-            // Only reset the name once summary object and field are selected for edit and clone modes
+            // Only reset the name once summary object and field are selected for edit mode
             masterLabel = label;
             cmp.set("v.activeRollup.label", masterLabel);
         }
 
-        //shortens the label after sending so the full object + field details appear
-        if (masterLabel.length > 40) {
-            masterLabel = masterLabel.substring(0,39);
-            if (masterLabel.endsWith('_')) {
-                masterLabel = masterLabel.substring(0,38);
-            }
-        }
-
         //sends the message to the parent cmp RollupsContainer
-        if(masterLabel){
+        if (masterLabel) {
             this.sendMessage(cmp, 'nameChange', masterLabel);
         }
 

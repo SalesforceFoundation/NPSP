@@ -231,27 +231,27 @@
     /**
      * @description: handles the selected action in the either grid
      */
-    handleRowAction: function(cmp, event, helper){
+    handleRowAction: function(cmp, event, helper) {
         var action = event.getParam('action');
         var row = event.getParam('row');
         var isRollupsGrid = cmp.get("v.isRollupsGrid");
 
-        if(action.name !== 'delete'){
+        if (action.name !== 'delete') {
             cmp.set("v.detailMode", action.name);
             cmp.set("v.activeRecordId", row.recordId);
             //check which grid is displayed
-            if(isRollupsGrid){
+            if (isRollupsGrid) {
                 cmp.set("v.isRollupsGrid", false);
                 cmp.set("v.isRollupDetail", true);
                 cmp.set("v.width", 8);
-            } else{
+            } else {
                 cmp.set("v.isFilterGroupsGrid", false);
                 cmp.set("v.isFilterGroupDetail", true);
                 cmp.set("v.width", 8);
             }
         } else {
             //verify no rollups use the filter group before deleting
-            if(!row.countRollups){
+            if (!row.countRollups) {
                 var rows = cmp.get("v.filterGroupList");
                 var rowIndex = rows.indexOf(row);
                 rows.splice(rowIndex, 1);
