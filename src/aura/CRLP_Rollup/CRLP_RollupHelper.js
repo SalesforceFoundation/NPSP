@@ -106,9 +106,11 @@
         typeList.forEach(function (type) {
             if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
-                    var datatype = field.type;
-                    if (datatype === type) {
-                        newFields.push(field);
+                    if(field !== undefined) {
+                        var datatype = field.type;
+                        if (datatype === type) {
+                            newFields.push(field);
+                        }
                     }
                 });
             }
