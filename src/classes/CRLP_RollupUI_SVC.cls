@@ -71,6 +71,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
         @AuraEnabled public String recordId;
+        @AuraEnabled public boolean isDeleted;
     }
 
     /*******************************************************************************************************
@@ -254,6 +255,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
             item.recordId = mdtList[i].Id;
+            item.isDeleted = mdtList[i].Is_Deleted__c;
 
             mdtTableList.add(item);
         }
@@ -446,6 +448,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
+                'filtersDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
@@ -496,6 +502,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupType' => Label.CRLP_RollupType,
                 'rollupDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
@@ -590,7 +598,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * @return DeploymentResult
      */
     @AuraEnabled
-    public static String getDeploymentStatus(String jobId, String recordName, String objectType) {
+    public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
         Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
@@ -607,7 +615,9 @@ public with sharing class CRLP_RollupUI_SVC {
                         } else if (objectType == 'Filter') {
                             Id groupId = CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(recordName);
                             response.completed = true;
-                            response.filterGroupItem = createFilterGroupModel(groupId);
+                            if (mode != 'delete') {
+                                response.filterGroupItem = createFilterGroupModel(groupId);
+                            }
                         }
                         return JSON.serialize(response);
                     } catch (Exception ex) {

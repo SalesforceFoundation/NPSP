@@ -31,6 +31,9 @@
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "create") {
                 cmp.set("v.isReadOnly", false);
+            } else if (mode === "delete") {
+                cmp.set("v.activeFilterGroup.isDeleted", true);
+                this.saveFilterGroupAndRules(cmp,cmp.get("v.activeFilterGroup"),null,null);
             }
         }
     },
@@ -178,64 +181,81 @@
                 counter++;
                 console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
-                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter'});
+                var mode = cmp.get("v.mode");
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter', mode: mode});
                 action.setCallback(this, function (response) {
                     console.log('getDeploymentStatus.callback');
                     var state = response.getState();
+                    var mode = cmp.get("v.mode");
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
                         console.log('deployResult=' + deployResult);
                         // if there is a record id response
-                        if (deployResult && deployResult.completed === true && deployResult.filterGroupItem) {
+                        if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
 
-                            var model = helper.restructureResponse(deployResult.filterGroupItem);
+                            if(mode === 'delete') {
 
-                            // Save the inserted/updated record id
-                            cmp.set("v.activeFilterGroup", model.filterGroup);
-                            cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
 
-                            // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
-                            if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
-                                var activeFilterGroup = cmp.get("v.activeFilterGroup");
-                                var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
-                                for (var key in activeFilterGroup) {
-                                    if (activeFilterGroup.hasOwnProperty(key)) {
-                                        cachedFilterGroup[key] = activeFilterGroup[key];
+                                helper.sendMessage(cmp, 'filterGroupDeleted', recordName);
+
+                                //punt back to filterGroup grid
+                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
+                                cancelEvent.setParams({grid: 'filterGroup'});
+                                cancelEvent.fire();
+
+                            } else {
+
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
+
+                                var model = helper.restructureResponse(deployResult.filterGroupItem);
+
+                                // Save the inserted/updated record id
+                                cmp.set("v.activeFilterGroup", model.filterGroup);
+                                cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+
+                                // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
+                                if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
+                                    var activeFilterGroup = cmp.get("v.activeFilterGroup");
+                                    var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
+                                    for (var key in activeFilterGroup) {
+                                        if (activeFilterGroup.hasOwnProperty(key)) {
+                                            cachedFilterGroup[key] = activeFilterGroup[key];
+                                        }
                                     }
+                                    cmp.set("v.cachedFilterGroup", cachedFilterGroup);
                                 }
-                                cmp.set("v.cachedFilterGroup", cachedFilterGroup);
+
+                                var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                                var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                                cmp.set("v.filterRuleList", filterRuleList);
+                                cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                                var rollupItems = cmp.get("v.rollupItems");
+
+                                // need to send back an object with the following properties
+                                var filterGroupTableItem = {};
+                                filterGroupTableItem.label = model.filterGroup.label;
+                                filterGroupTableItem.description = model.filterGroup.description;
+                                filterGroupTableItem.name = model.filterGroup.recordName;
+                                filterGroupTableItem.recordId = model.filterGroup.recordId;
+                                if (filterRuleList) {
+                                    filterGroupTableItem.countFilterRules = filterRuleList.length;
+                                } else {
+                                    filterGroupTableItem.countFilterRules = 0;
+                                }
+                                if (rollupItems) {
+                                    filterGroupTableItem.countRollups = rollupItems.length;
+                                } else {
+                                    filterGroupTableItem.countRollups = 0;
+                                }
+
+                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
                             }
-
-                            var filterRuleList = helper.restructureResponse(model.filterRuleList);
-                            var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
-
-                            cmp.set("v.filterRuleList", filterRuleList);
-                            cmp.set("v.cachedFilterRuleList", filterRuleListCached);
-                            var rollupItems = cmp.get("v.rollupItems");
-
-                            // need to send back an object with the following properties
-                            var filterGroupTableItem = {};
-                            filterGroupTableItem.label = model.filterGroup.label;
-                            filterGroupTableItem.description = model.filterGroup.description;
-                            filterGroupTableItem.name = model.filterGroup.recordName;
-                            filterGroupTableItem.recordId = model.filterGroup.recordId;
-                            if (filterRuleList) {
-                                filterGroupTableItem.countFilterRules = filterRuleList.length;
-                            } else {
-                                filterGroupTableItem.countFilterRules = 0;
-                            }
-                            if (rollupItems) {
-                                filterGroupTableItem.countRollups = rollupItems.length;
-                            } else {
-                                filterGroupTableItem.countRollups = 0;
-                            }
-
-                            // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
@@ -243,8 +263,13 @@
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened
-                                helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                if (mode === 'delete') {
+                                    helper.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteTimeout"));
+                                } else {
+                                    helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                }
                                 helper.toggleSpinner(cmp, false);
+
                             }
                         }
                     } else {
@@ -254,7 +279,11 @@
                         if (errors && errors[0] && errors[0].message) {
                             msg = errors[0].message;
                         }
-                        helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                        if (mode === 'delete') {
+                            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
+                        } else {
+                            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+                        }
                         window.clearTimeout(poller);
                         helper.toggleSpinner(cmp, false);
                     }
@@ -448,7 +477,11 @@
                 this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        if (cmp.get("v.mode") === 'delete') {
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteProgress"));
+        } else {
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        }
         $A.enqueueAction(action);
     },
 

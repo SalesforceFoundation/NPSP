@@ -171,6 +171,7 @@
                             <aura:if isTrue="{!and(v.isFilterGroupDetail, v.detailMode == 'view')}">
                                 <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
                                 <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
+                                <lightning:button label="{!v.labels.delete}" name="delete" onclick="{!c.setMode}"/>
                             </aura:if>
                         </lightning:buttonGroup>
                     </lightning:layoutItem>

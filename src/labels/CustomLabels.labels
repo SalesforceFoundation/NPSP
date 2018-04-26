@@ -813,6 +813,14 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>Error deleting the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_DeleteProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -827,6 +835,14 @@
         <protected>true</protected>
         <shortDescription>Successfully Deleted</shortDescription>
         <value>{0} Successfully Deleted</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteTimeout</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Timeout error message</shortDescription>
+        <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
     </labels>
     <labels>
         <fullName>CRLP_HardCredit</fullName>

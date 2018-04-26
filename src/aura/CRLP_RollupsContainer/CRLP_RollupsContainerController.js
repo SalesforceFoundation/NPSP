@@ -199,6 +199,20 @@
             }
             cmp.set("v.rollupList", rollupsList);
             helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+
+        } else if (channel === 'filterGroupDeleted') {
+            var filterGroupList = cmp.get("v.filterGroupList");
+            console.log(JSON.stringify(filterGroupList));
+            for (var i = 0; i < filterGroupList.length; i++) {
+                if (filterGroupList[i].name === message) {
+                    // if the Id matches, delete that record
+                    filterGroupList.splice(i, 1);
+                    break;
+                }
+            }
+            cmp.set("v.filterGroupList", filterGroupList);
+            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+
         }
     },
 
