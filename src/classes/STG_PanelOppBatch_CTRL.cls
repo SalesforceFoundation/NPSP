@@ -33,13 +33,16 @@
 * @group Settings
 * @description Controller for the Batch Opp Rollups panel.
 */
-public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel { 
+public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
+
+    public Integer numJobSubmitted { get; private set; }
 
     /*********************************************************************************************************
     * @description The panel's constructor 
     */
     public STG_PanelOppBatch_CTRL() {
-        isRunningBatch = false;
+        this.isRunningBatch = false;
+        this.numJobSubmitted = 0;
     }
     
     /*********************************************************************************************************
@@ -59,9 +62,40 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
     public PageReference runBatch() {
         isRunningBatch = true;
 
-        // run batch rollup
-        RLLP_OppRollup rg = new RLLP_OppRollup();
-        rg.rollupAll();        
+        if (!CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            // run legacy batch rollups
+            RLLP_OppRollup rg = new RLLP_OppRollup();
+            rg.rollupAll();
+        } else {
+
+            // Customizable Rollup Jobs are more complicated. There are 4 base jobs, but there may be 4 more
+            // Skew jobs to execute if necessary.
+            List<CRLP_RollupProcessingOptions.RollupType> jobTypeList = new List<CRLP_RollupProcessingOptions.RollupType>{
+                    CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+            };
+            for (CRLP_RollupProcessingOptions.RollupType jobType : jobTypeList) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+                this.numJobSubmitted++;
+
+                // Determine if the SkewMode job is needed based on a simple count of the number of records
+                // that meet the skew mode criteria.
+                String objName = (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ? 'Account' : 'Contact');
+
+                String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
+                        CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
+                        ' LIMIT 1';
+
+                Boolean executeSkewMode = (database.countQuery(query) != 0);
+                if (executeSkewMode) {
+                    Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+                    this.numJobSubmitted++;
+                }
+            }
+        }
         return null;
     }
 

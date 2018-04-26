@@ -44,7 +44,10 @@ public class RLLP_OppHouseholdRollup_BATCH implements Database.Batchable<SObject
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            Database.executeBatch(new RLLP_OppHouseholdRollup_BATCH(), RLLP_OppRollup_UTIL.BATCH_SIZE);
+            if (RLLP_OppRollup_UTIL.customizableRollupEngineEnabled == false) {
+                Database.executeBatch(new RLLP_OppHouseholdRollup_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.RLLP);
         }

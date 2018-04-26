@@ -50,11 +50,18 @@ public with sharing class USER_UserService {
     public static Map<Id, Boolean> isSysAdmin(List<User> updatedUsers) {
         Map<Id, Boolean> userIdToIsSysAdmin = new Map<Id, Boolean>();
 
-        Id sysAdminId = retrieveSysAdminProfileId();
+        Map<Id, Profile> sysAdminProfiles = new Map<Id, Profile>([SELECT Id
+                , PermissionsCustomizeApplication
+                , PermissionsModifyAllData
+                , PermissionsAuthorApex
+                FROM Profile
+                WHERE PermissionsCustomizeApplication = TRUE
+                AND PermissionsModifyAllData = TRUE
+                AND PermissionsAuthorApex = TRUE]);
 
         if (updatedUsers != null && !updatedUsers.isEmpty()) {
             for (User currentUser : updatedUsers) {
-                userIdToIsSysAdmin.put(currentUser.Id, sysAdminId == currentUser.ProfileId);
+                userIdToIsSysAdmin.put(currentUser.Id, sysAdminProfiles.containsKey(currentUser.ProfileId) ? true : false);
             }
         }
 

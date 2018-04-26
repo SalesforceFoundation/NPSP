@@ -62,7 +62,8 @@ public with sharing class STG_PanelRDBatch_CTRL extends STG_Panel {
             isRunningBatch = true;
 
             // Call the batch job, using the Recurring Donations Batch Size field in Custom Settings
-            Id batchInstanceId = Database.executeBatch(new RD_RecurringDonations_BATCH(), RD_RecurringDonations_BATCH.batchSize);
+            Database.executeBatch(new RD_RecurringDonations_BATCH(), CRLP_RollupBatch_SVC.getBatchSize(
+                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
 
         }
         catch(Exception e) {

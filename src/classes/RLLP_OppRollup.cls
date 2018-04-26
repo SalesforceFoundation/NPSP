@@ -271,26 +271,18 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
         
-        for (sObject r : objectList) {
-            Id accountId = (Id)(r.get('AccountId'));
-            if (null != accountId) {
-                Account currentAccount = accountsToUpdate.get(accountId);
-
-                updateRollupFromResult((sObject)currentAccount, r, opptyCurrencies);
-
-                // Calculate Best Gift Year
-                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
-                // Handle currency conversion for the Account in a MultiCurrency org
-                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentAccount.get('CurrencyIsoCode'), yrAmt);
-                }
-                Integer yr = (Integer)r.get('CalendarYr');
-
-                // Update the Best Gift Year Total and Best Gift Year values
-                if ((yrAmt > currentAccount.npo02__Best_Gift_Year_Total__c || null == currentAccount.npo02__Best_Gift_Year_Total__c) 
-                    && (null != yr)) {
-                    currentAccount.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    currentAccount.npo02__Best_Gift_Year__c = String.valueOf(yr);
+        for (sobject r : objectList){            
+            id aid = (id)(r.get('AccountId'));
+            if (aid != null){
+                updateRollupFromResult((sobject)(accountsToUpdate.get(aid)), r, opptyCurrencies);
+                
+                //calculate best gift year
+                decimal yrAmt = (decimal)r.get('TotalOppAmount');
+                integer yr = (integer)r.get('CalendarYr');
+                Account a = accountsToUpdate.get(aid);
+                if ((yrAmt > a.npo02__Best_Gift_Year_Total__c || a.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    a.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    a.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }          
             }   
         }       
@@ -435,26 +427,24 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
-        for (sObject r : objectList) {
-            Id contactId = (Id)(r.get('ContactId'));
-            if (null != contactId) {
-                Contact currentContact = contactsToUpdate.get(contactId);
+        for (sobject r : objectList) {
+            id cid = (id)(r.get('ContactId'));
+            if (cid != null){
+                updateRollupFromResult((sobject)(contactsToUpdate.get(cid)), r, opptyCurrencies);
+                
+                //calculate best gift year
+                decimal yrAmt = (decimal)r.get('TotalOppAmount');
+                integer yr = (integer)r.get('CalendarYr');
+                
+                Contact c = contactsToUpdate.get(cid);
 
-                updateRollupFromResult((sObject)currentContact, r, opptyCurrencies);
-
-                // Calculate Best Gift Year
-                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
-                // Handle currency conversion for the Contact in a MultiCurrency org
-                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentContact.get('CurrencyIsoCode'), yrAmt);
+                if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
+                    yrAmt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)c.get('CurrencyIsoCode'),yrAmt);
                 }
-                Integer yr = (Integer)r.get('CalendarYr');
 
-                // Update the Best Gift Year Total and Best Gift Year values
-                if ((yrAmt > currentContact.npo02__Best_Gift_Year_Total__c || null == currentContact.npo02__Best_Gift_Year_Total__c) 
-                    && (null != yr) ) {
-                    currentContact.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    currentContact.npo02__Best_Gift_Year__c = String.valueOf(yr);
+                if ((yrAmt > c.npo02__Best_Gift_Year_Total__c || c.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    c.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    c.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }
             }
         }
@@ -598,25 +588,18 @@ public without sharing class RLLP_OppRollup {
         // invokes code to get the currency of npo02__CombinedRollupFieldset__c oppty
         opptyCurrencies = (RLLP_OppRollup_UTIL.isMultiCurrency() ? RLLP_OppRollup_UTIL.rcfFindCurrency(objectList) : null);
             
-        for (sObject r : objectList) {
-            Id householdId = (Id)(r.get('hhid'));
-            if (null != householdId) {
-                npo02__Household__c currentHousehold = householdsToUpdate.get(householdId);
-
-                updateRollupFromResult((sobject)currentHousehold, r, opptyCurrencies);
-
-                // Calculate best gift year
-                Decimal yrAmt = (Decimal)r.get('TotalOppAmount');
-                // Handle currency conversion for the Household in a MultiCurrency org
-                if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                    yrAmt = RLLP_OppRollup_UTIL.ConvertFromCorporate((String)currentHousehold.get('CurrencyIsoCode'), yrAmt);
-                }
-                Integer yr = (Integer)r.get('CalendarYr');
-
-                if ((yrAmt > currentHousehold.npo02__Best_Gift_Year_Total__c || null == currentHousehold.npo02__Best_Gift_Year_Total__c) 
-                    && (null != yr)) {
-                    currentHousehold.npo02__Best_Gift_Year_Total__c = yrAmt;
-                    currentHousehold.npo02__Best_Gift_Year__c = String.valueOf(yr);
+        for (sobject r : objectList) {
+            id hhid = (id)(r.get('hhid'));
+            if (hhid != null){
+                updateRollupFromResult((sobject)(householdsToUpdate.get(hhid)), r, opptyCurrencies);
+            
+                //calculate best gift year
+                decimal yrAmt = (decimal)r.get('TotalOppAmount');
+                integer yr = (integer)r.get('CalendarYr');
+                npo02__Household__c hh = householdsToUpdate.get(hhid);
+                if ((yrAmt > hh.npo02__Best_Gift_Year_Total__c || hh.npo02__Best_Gift_Year_Total__c==null ) && yr !=null){
+                    hh.npo02__Best_Gift_Year_Total__c = yrAmt;
+                    hh.npo02__Best_Gift_Year__c = string.valueOf(yr);
                 }                
             }                
         }        
@@ -788,7 +771,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllAccounts() {
         RLLP_OppAccRollup_BATCH batch = new RLLP_OppAccRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity rollups for all contacts.
@@ -796,7 +780,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllContacts() { 
         RLLP_OppContactRollup_BATCH batch = new RLLP_OppContactRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);        
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity rollups for all households.
@@ -804,7 +789,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllHouseholds(){
         RLLP_OppHouseholdRollup_BATCH batch = new RLLP_OppHouseholdRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     /*******************************************************************************************************
     * @description Runs batch opportunity soft credit rollups for all contacts.
@@ -812,7 +798,8 @@ public without sharing class RLLP_OppRollup {
     ********************************************************************************************************/
     public void rollupAllSoftCredits(){
         RLLP_OppSoftCreditRollup_BATCH batch = new RLLP_OppSoftCreditRollup_BATCH();
-        id batchProcessId = database.executeBatch(batch, RLLP_OppRollup_UTIL.BATCH_SIZE);
+        id batchProcessId = database.executeBatch(batch, CRLP_RollupBatch_SVC.getBatchSize(
+                CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
     }
     
     /*******************************************************************************************************
@@ -834,9 +821,10 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
-            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-                lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '') {
+                lastAmt = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
+            }
         }
         
         // check if this is an annual total or account total
@@ -872,10 +860,12 @@ public without sharing class RLLP_OppRollup {
             
             // calculate amounts into correct currency if needed
             if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-               obj.put('npo02__AverageAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('AverageAmount')));
-               obj.put('npo02__SmallestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('SmallestAmount')));
-               obj.put('npo02__LargestAmount__c', RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)aggrResultObj.get('LargestAmount')));
-            } else {
+                String toCurrCode = (string)obj.get('CurrencyIsoCode');
+                obj.put('npo02__AverageAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)aggrResultObj.get('AverageAmount')));
+                obj.put('npo02__SmallestAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)aggrResultObj.get('SmallestAmount')));
+                obj.put('npo02__LargestAmount__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(toCurrCode,(decimal)aggrResultObj.get('LargestAmount')));
+            }
+            else{
                obj.put('npo02__AverageAmount__c', (decimal)(aggrResultObj.get('AverageAmount')));
                obj.put('npo02__SmallestAmount__c', (decimal)(aggrResultObj.get('SmallestAmount')));
                obj.put('npo02__LargestAmount__c', (decimal)(aggrResultObj.get('LargestAmount')));
@@ -897,7 +887,7 @@ public without sharing class RLLP_OppRollup {
                         // Calculate amounts into correct currency only if the field is a Currency type field
                         Schema.DescribeFieldResult fld = UTIL_Describe.getFieldDescribe('Opportunity', udr.npo02__Source_Field__c);
                         if (fld.getType() == Schema.Displaytype.Currency && RLLP_OppRollup_UTIL.isMultiCurrency()) {
-                            obj.put(udr.npo02__Target_Field__c, RLLP_OppRollup_UTIL.ConvertFromCorporate((string) obj.get('CurrencyIsoCode'), (decimal) aggrResultObj.get(rollupName)));
+                            obj.put(udr.npo02__Target_Field__c, UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string) obj.get('CurrencyIsoCode'), (decimal) aggrResultObj.get(rollupName)));
                         } else {
                             obj.put(udr.npo02__Target_Field__c, aggrResultObj.get(rollupName));
                         }
@@ -920,8 +910,9 @@ public without sharing class RLLP_OppRollup {
         integer cnt = (integer)(r.get('NumberOfClosedOpps'));               
         
         // calculate amounts into correct currency if needed
-        if(RLLP_OppRollup_UTIL.isMultiCurrency())
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+        if(RLLP_OppRollup_UTIL.isMultiCurrency()) {
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+        }
         
         obj.put('npo02__OppAmountLastNDays__c', amt);               
         obj.put('npo02__OppsClosedLastNDays__c', cnt);
@@ -948,9 +939,10 @@ public without sharing class RLLP_OppRollup {
         string lastMemberOrigin = (rcf.size() > 3) ? rcf[3] : null;
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency()){
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
-           if(lastAmt != null && rcf.size() > 4 && rcf[4] != '')
-               lastAmt = RLLP_OppRollup_UTIL.ConvertCurrency((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);           
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
+            if(lastAmt != null && rcf.size() > 4 && rcf[4] != '') {
+                lastAmt = UTIL_CurrencyConversion.convertAmountUsingStandardRates((string)opptyCurrencies.get((Id)rcf[4]).get('CurrencyISOCode'),(string)obj.get('CurrencyIsoCode'),lastAmt);
+            }
         }
 
         // fill in summary totals
@@ -978,7 +970,7 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency())
-            amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+            amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
         
         // check if this is an annual total or account total
         if (fy != null){
@@ -1019,7 +1011,7 @@ public without sharing class RLLP_OppRollup {
         
         // calculate amounts into correct currency if needed
         if(RLLP_OppRollup_UTIL.isMultiCurrency())
-           amt = RLLP_OppRollup_UTIL.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),amt);
+           amt = UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates((string)obj.get('CurrencyIsoCode'),amt);
         
         obj.put('Soft_Credit_Last_N_Days__c', amt);               
     }
