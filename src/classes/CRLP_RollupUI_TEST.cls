@@ -162,7 +162,7 @@ public class CRLP_RollupUI_TEST {
 
         try {
             // we know this will fail because the rollupName is not found
-            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName', 'Rollup');
+            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName', 'Rollup', 'create');
         } catch (Exception e) {
             System.assertNotEquals(null, e.getMessage());
         }
@@ -174,7 +174,7 @@ public class CRLP_RollupUI_TEST {
         ));
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
-        String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup');
+        String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup', 'create');
         System.debug(resultString);
         CRLP_RollupUI_SVC.DeploymentResult response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
