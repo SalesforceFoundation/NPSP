@@ -135,7 +135,7 @@
             if(fieldName === 'summaryObject'){
                 helper.onChangeSummaryObject(cmp, value, label);
             } else if (fieldName === 'summaryField'){
-                helper.onChangeSummaryField(cmp, label);
+                helper.onChangeSummaryField(cmp, value, label);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp, value);
             } else if(fieldName === 'timeBoundOperationType'){

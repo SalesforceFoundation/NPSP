@@ -57,8 +57,7 @@
                 cmp.set("v.activeRollup.recordId", null);
                 cmp.set("v.activeRollup.recordName", null);
                 cmp.set("v.isReadOnly", false);
-                var newSummary = this.uniqueSummaryFieldCheck(cmp, cmp.get("v.summaryFields"));
-                cmp.set("v.summaryFields", newSummary);
+                this.resetFields(cmp, cmp.get("v.activeRollup.summaryObject"), "summary");
                 cmp.set("v.isIncomplete", false);
             } else if (mode === "edit") {
                 cmp.set("v.isReadOnly", false);
@@ -108,6 +107,11 @@
                 });
             }
         });
+
+        if (newFields.length === 0) {
+            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+        }
+
         return newFields;
     },
 
@@ -353,15 +357,15 @@
     /* @description: renders rollupType field, filters allowed operations by field type when summary field changes
     * @param label: summary field label
     */
-    onChangeSummaryField: function (cmp, label) {
+    onChangeSummaryField: function (cmp, value, label) {
         console.log('in helper on change summary');
         //toggle rendering for create flow
-        if(cmp.get("v.mode") === 'create'){
+        if(cmp.get("v.mode") === 'create' || cmp.get("v.mode") === 'clone'){
             var renderMap = cmp.get("v.renderMap");
-            if(label){
+            if (value) {
                 renderMap["description"] = true;
                 renderMap["operation"] = true;
-            } else{
+            } else {
                 renderMap["description"] = false;
                 renderMap["operation"] = false;
             }
@@ -373,7 +377,7 @@
         //reset operation if selected operation isn't in the list
         this.updateAllowedOperations(cmp);
         var operationLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.operation"), cmp.get("v.allowedOperations"));
-        if(!operationLabel){
+        if (!operationLabel) {
             cmp.set("v.activeRollup.operation", '');
             this.onChangeOperation(cmp, '');
         }
@@ -575,14 +579,13 @@
         console.log("Fired field reset for context [" + context + "] and object [" + object + "]");
         var newFields = cmp.get("v.objectDetails")[object];
 
-        if (newFields === undefined) {
-            newFields = [{name: 'None', label: cmp.get("v.labels.noFields")}];
+        if (newFields === undefined || newFields.length === 0) {
+            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
         }
 
         if (context === 'detail') {
             cmp.set("v.detailFields", newFields);
         } else if (context === 'summary') {
-            //check if record's summary field needs to be added
             newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
         } else if (context === 'date') {
@@ -857,6 +860,10 @@
             }
         }
 
+        if (newFields === undefined || newFields.length === 0) {
+            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+        }
+
         return newFields
     },
 
@@ -929,7 +936,7 @@
         var masterLabel = '';
         var mode = cmp.get("v.mode");
 
-        if (mode === 'create' && (!summaryObjectName || !summaryFieldName)) {
+        if (mode === 'create' && (!summaryObjectName || !summaryFieldName || !summaryFieldAPI)) {
             masterLabel = cmp.get("v.labels.rollupNew");
             cmp.set("v.activeRollup.label", masterLabel);
         } else if (mode === 'create') {
@@ -1098,16 +1105,19 @@
     */
     validateFields: function(cmp) {
         //create required field list
-        var requiredSelectFields = ["summaryObject", "summaryField", "operation", "timeBoundOperationType"];
-        if (cmp.get("v.renderMap")["detailField"]) {
+        var renderMap = cmp.get("v.renderMap");
+        var requiredSelectFields = ["summaryObject", "summaryField", "operation"];
+        if (renderMap["detailField"]) {
             requiredSelectFields.push("detailField");
             requiredSelectFields.push("detailObject");
+        }
+        if (renderMap["timeBoundOperationType"]) {
+            requiredSelectFields.push("timeBoundOperationType");
         }
         var activeRollup = cmp.get("v.activeRollup");
 
         //check for values of required fields
         var canSave = requiredSelectFields.reduce(function (validSoFar, field) {
-            console.log(activeRollup[field]);
             return validSoFar && Boolean(activeRollup[field]);
         }, true);
 
@@ -1115,8 +1125,6 @@
         if (!canSave) {
             this.sendMessage(cmp, 'validateCmp');
         }
-
-        var fields = cmp.find("selectField");
 
         //description set separately since we have direct access to this cmp
         if(!activeRollup.description){
