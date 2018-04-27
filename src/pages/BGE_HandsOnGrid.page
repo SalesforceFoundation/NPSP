@@ -22,7 +22,6 @@
         <style>
 
             /* All headers */
-
             .ht_master tr:nth-of-type(odd) > td {
                background-color: #f4f6f9;
             }
@@ -199,9 +198,6 @@
                     col.title = templateField.name.toUpperCase();
                     col.type = templateField.type;
 
-                    // Enable type checking. If for example the user places text in a numeric column, mark the cell as red
-                //    col.allowInvalid = true;
-
                     // Center the content of the columns
                     col.className = "htCenter htMiddle";
 
@@ -231,11 +227,14 @@
                     }
 
                     if (templateField.type === "dropdown") {
-                        console.log('THIS IS A DROPDOWN');
-                        console.dir(templateField);
 
+                        // Check if by any change the list containing picklist values are null empty or undefined.
                         if (templateField.pickListValuesList) {
+
+                             // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                             // In this case, the ENTER key is ignored and the editor field remains opened.
                             col.allowInvalid = false;
+
                             col.source = templateField.pickListValuesList;
                         }
                     }
