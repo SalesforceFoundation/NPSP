@@ -1241,7 +1241,7 @@
                                     <p class="slds-align_absolute-center">There is no Batch Template associated with this Batch. <br/>Please associate this Batch with a Batch Template.</p>
                                 </div>
                                     <footer class="slds-modal__footer">
-                                        <a class="slds-button slds-button_brand" href="/{!batchId}">Close</a>
+                                        <button class="slds-button slds-button_brand" onClick="window.history.back();">Close</button>
                                     </footer>
                                 </div>
                         </section>
