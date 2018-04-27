@@ -6,10 +6,10 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Create via UI
+Create Household
     ${contact_id} =  Create Contact
     &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Page Should Contain  &{contact}[FirstName] &{contact}[LastName]
+    Page Should Contain  &{contact}[FirstName] &{contact}[LastName] Household
     Header Field Should Have Link  Account Name
 
 *** Keywords ***
