@@ -601,7 +601,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
-        <value>You can not delete this filter group because there are rollups associated with it. View this filter group for more information on these rollups.</value>
+        <value>You can't delete this filter group because there is at least one rollup using it. View the filter group detail page to see a list of associated rollups. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterGroupNameLimitError</fullName>
@@ -625,7 +625,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
-        <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
+        <value>There are rollups using the filter group that this rule is part of. If you delete this filter rule, it will affect those rollup calculations. Are you sure you want to delete?</value>
     </labels>
     <labels>
         <fullName>CMT_FilterRuleDuplicateError</fullName>
@@ -633,7 +633,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
-        <value>This filter rule already exists on this filter group. Edit one or more fields to create a unique filter rule.</value>
+        <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterRuleFieldsMissing</fullName>
@@ -673,7 +673,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
-        <value>The fields that appear in this area are determined by the selected Operation.</value>
+        <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
@@ -681,7 +681,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
-        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
+        <value>Select the Target Object to determine the available fields, then select the Target Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
         </value>
     </labels>
     <labels>
@@ -698,7 +698,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for target field.</shortDescription>
-        <value>Custom field on the selected Target Object that you are rolling up donation data to. Fields must be of the following types: Date, Datetime, Double, ID, MultiPicklist, Picklist, String, TextArea. Note that a Target Field can only be associated with one rollup.</value>
+        <value>Custom field on the selected Target Object that you are rolling up donation data to. Note that a Target Field can only be associated with one rollup.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupActiveHelpText</fullName>
@@ -730,7 +730,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for rollup type.</shortDescription>
-        <value>The combination of which object you're rolling up and the attribution</value>
+        <value>The combination of which object you're rolling up data from and whether the rollup is a hard credit or soft credit.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
@@ -738,7 +738,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine what records don't get rolled up.</value>
+        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine which records don't get rolled up.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupOperationHelpText</fullName>
@@ -786,7 +786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
-        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation Type is  a single result operation (First, Last, Largest, or Smallest).</value>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This field must be of the same Type as the Target Field.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
@@ -794,7 +794,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for date field picklist.</shortDescription>
-        <value>The date field to use when calculating the rollup. The Time Bound Operation depends on this field.</value>
+        <value>The date field to use when calculating the rollup. This is the date that the Time Frame uses to figure out whether to include this record or not.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
@@ -5299,7 +5299,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When active, enables Customizable Rollups.
+            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
         </value>
     </labels>
     <labels>
