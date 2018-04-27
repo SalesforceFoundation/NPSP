@@ -277,6 +277,7 @@
     onChangeOperation: function (cmp, operation) {
         console.log("in helper onChangeOperation");
         var renderMap = cmp.get("v.renderMap");
+        var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
 
         //TIME BOUND OPERATION DEFAULT AND RENDERING
         if (!cmp.get("v.activeRollup.timeBoundOperationType")){
@@ -293,16 +294,16 @@
                 renderMap["integerYears"] = false;
             }
             renderMap["rollupType"] = true;
+            this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
         } else {
             renderMap["rollupType"] = false;
-            //renderMap["timeBoundOperation"] = false;
-            //renderMap["integerDays"] = false;
-            //renderMap["integerYears"] = false;
+            this.renderAndResetFilterGroup(cmp, '');
         }
+
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
+        //require rollup label to render advanced fields
         renderMap = this.renderAmountField(cmp, operation, rollupTypeLabel, renderMap);
-        renderMap = this.renderDateField(cmp, operation, rollupTypeLabel, renderMap);
+        renderMap = this.renderDateField(cmp, rollupTypeLabel, renderMap);
         renderMap = this.renderDetailField(cmp, operation, rollupTypeLabel, renderMap);
         renderMap = this.renderFiscalYear(cmp, renderMap);
 
@@ -321,9 +322,9 @@
     /**
      * @description: renders filter group and operation, resets fields for the amount, detail and date fields based on the detail object
      * @param rollupTypeObject: rollup type object
-     * @param rollupLabel: rollup type label
+     * @param rollupTypeLabel: rollup type label
      */
-    onChangeRollupType: function (cmp, rollupTypeObject, rollupLabel) {
+    onChangeRollupType: function (cmp, rollupTypeObject, rollupTypeLabel) {
         console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
@@ -333,19 +334,8 @@
         var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObjectName);
         this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
 
-        //during create, visibility of operation and filter group are toggled
-        if(cmp.get("v.mode") === "create"){
-            if (rollupLabel) {
-                renderMap["filterGroup"] = true;
-                cmp.set("v.renderMap", renderMap);
-            } else {
-                renderMap["filterGroup"] = false;
-            }
-            cmp.set("v.activeRollup.filterGroup", labels.na);
-            this.onChangeFilterGroup(cmp, labels.na);
-        }
-
-        cmp.set("v.selectedRollupType", {label: rollupLabel, name: rollupTypeObject});
+        cmp.set("v.selectedRollupType", {label: rollupTypeLabel, name: rollupTypeObject});
+        this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
 
         //reset amount fields
         this.resetFields(cmp, amountObjectName, 'amount');
@@ -393,9 +383,10 @@
         cmp.set("v.activeRollup.dateField", dateFieldName);
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
-        renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupLabel, renderMap);
-        renderMap = this.renderDateField(cmp, activeRollup.operation, rollupLabel, renderMap);
-        renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupLabel, renderMap);
+        //require rollup label to render advanced fields
+        renderMap = this.renderAmountField(cmp, activeRollup.operation, rollupTypeLabel, renderMap);
+        renderMap = this.renderDateField(cmp, rollupTypeLabel, renderMap);
+        renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupTypeLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
 
@@ -496,7 +487,7 @@
         }
         //check to display or clear the dateField for Years_Ago or Days_Back
         var rollupLabel = cmp.get("v.selectedRollupType").label;
-        renderMap = this.renderDateField(cmp, operation, rollupLabel, renderMap);
+        renderMap = this.renderDateField(cmp, rollupLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
 
@@ -506,6 +497,24 @@
             label = this.retrieveFieldLabel(operation, timeBoundOperations);
         }
         cmp.set("v.selectedTimeBoundOperationLabel", label);
+    },
+
+    /**
+     * @description: conditionally render filter group. During create, visibility of filter group is toggled
+     * @param rollupTypeLabel: label of the set rollup type
+     */
+    renderAndResetFilterGroup: function(cmp, rollupTypeLabel) {
+        var renderMap = cmp.get("v.renderMap");
+        if (cmp.get("v.mode") === "create") {
+            if (rollupTypeLabel) {
+                renderMap["filterGroup"] = true;
+            } else {
+                renderMap["filterGroup"] = false;
+            }
+            cmp.set("v.activeRollup.filterGroup", cmp.get("v.labels.na"));
+            this.onChangeFilterGroup(cmp, cmp.get("v.labels.na"));
+            cmp.set("v.renderMap", renderMap);
+        }
     },
 
     /**
@@ -541,12 +550,14 @@
      * @param renderMap: current map of fields to render
      * @return: updated render map
      */
-    renderDateField: function (cmp, operation, rollupLabel, renderMap) {
-        if ( cmp.get("v.activeRollup.timeBoundOperationType") !== null &&
+    renderDateField: function (cmp, rollupLabel, renderMap) {
+        var operation = cmp.get("v.activeRollup.operation");
+        var timeBoundOperation = cmp.get("v.activeRollup.timeBoundOperationType");
+        if (timeBoundOperation !== null &&
             (operation === 'First'
             || operation === 'Last'
-            || operation === 'Years_Ago'
-            || operation === 'Days_Back')
+            || timeBoundOperation === 'Years_Ago'
+            || timeBoundOperation === 'Days_Back')
             && rollupLabel) {
             //enable date field
             renderMap["dateField"] = true;
@@ -569,7 +580,7 @@
             || operation === 'Last'
             || operation === 'Smallest'
             || operation === 'Largest')
-        //    && rollupLabel
+            && rollupLabel
         ) {
             //enable detail field
             renderMap["detailField"] = true;
@@ -1079,23 +1090,10 @@
 
                                 helper.showToast(cmp, 'success', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveSuccess"));
 
-                                // Save the inserted/updated record id
+                                // Save the inserted/updated record id and update cached rollup
                                 cmp.set("v.activeRollupId", deployResult.rollupItem.recordId);
                                 cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
-
-                                // for a new record, copy the activeRollup map to the cachedRollup map
-                                if (cmp.get("v.cachedRollup") === null) {
-                                    cmp.set("v.cachedRollup", helper.restructureResponse(cmp.get("v.activeRollup")));
-                                } else if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
-                                    var activeRollup = cmp.get("v.activeRollup");
-                                    var cachedRollup = cmp.get("v.cachedRollup");
-                                    for (var key in activeRollup) {
-                                        if (cachedRollup.hasOwnProperty(key)) {
-                                            cachedRollup[key] = activeRollup[key];
-                                        }
-                                    }
-                                    cmp.set("v.cachedRollup", cachedRollup);
-                                }
+                                cmp.set("v.cachedRollup", helper.restructureResponse(cmp.get("v.activeRollup")));
                             }
 
                             if(mode === "delete") {
