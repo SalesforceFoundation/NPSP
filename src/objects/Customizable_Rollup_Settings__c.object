@@ -17,8 +17,8 @@
         <fullName>Customizable_Rollups_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>Check this box to enable the new NPSP Customizable Roll-Up Engine</inlineHelpText>
-        <label>Customizable Roll-Ups Enabled</label>
+        <inlineHelpText>Check this box to enable the new NPSP Customizable Rollup Engine</inlineHelpText>
+        <label>Enable Customizable Rollups</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -26,7 +26,7 @@
         <fullName>Disable_Related_Records_Filter__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>Check this box to prevent Hard and Soft Credit rollups on the Account and Contact from only processing Account and Contact records that have an existing related Opportunity or OpportunityContactRole record.</inlineHelpText>
+        <inlineHelpText>Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records.</inlineHelpText>
         <label>Disable Related Records Filter</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -36,7 +36,7 @@
         <defaultValue>200</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Account object</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object.</inlineHelpText>
         <label>Account Hard Credit Batch Size</label>
         <precision>6</precision>
         <required>false</required>
@@ -50,7 +50,7 @@
         <defaultValue>1000</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Account object using Skew Mode</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Account object using Skew Mode.</inlineHelpText>
         <label>Account Skew Mode Batch Size</label>
         <precision>18</precision>
         <required>false</required>
@@ -64,7 +64,7 @@
         <defaultValue>200</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor roll-ups to the Account object</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
         <label>Account Soft Credit Batch Size</label>
         <precision>6</precision>
         <required>false</required>
@@ -78,7 +78,7 @@
         <defaultValue>200</defaultValue>
         <description>Used by the old and new Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating hard credit donor roll-ups to the Contact object</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating hard credit donor rollups to the Contact object.</inlineHelpText>
         <label>Contact Hard Credit Batch Size</label>
         <precision>6</precision>
         <required>false</required>
@@ -92,7 +92,7 @@
         <defaultValue>1000</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the Contact object using Skew Mode</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the Contact object using Skew Mode.</inlineHelpText>
         <label>Contact Skew Mode Batch Size</label>
         <precision>18</precision>
         <required>false</required>
@@ -106,7 +106,7 @@
         <defaultValue>200</defaultValue>
         <description>Used by the old and new Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor roll-ups to the Contact object</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Contact object.</inlineHelpText>
         <label>Contact Soft Credit Batch Size</label>
         <precision>6</precision>
         <required>false</required>
@@ -120,7 +120,7 @@
         <defaultValue>1000</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to process when recalculating donor roll-ups to the General Accounting Unit object</inlineHelpText>
+        <inlineHelpText>Number of records per batch to process when recalculating donor rollups to the General Accounting Unit object.</inlineHelpText>
         <label>GAU Batch Size</label>
         <precision>6</precision>
         <required>false</required>
@@ -134,7 +134,7 @@
         <defaultValue>250</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>The maximum number of related Opportunities on an Account or Contact allowed in the non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</inlineHelpText>
+        <inlineHelpText>The maximum number of related Opportunities on an Account or Contact allowed in non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</inlineHelpText>
         <label>Skew Mode Threshold</label>
         <precision>6</precision>
         <required>false</required>
@@ -148,7 +148,7 @@
         <defaultValue>300</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
-        <inlineHelpText>Number of records per batch to selecting Account, Contact or GAU records for Skew Mode processing.</inlineHelpText>
+        <inlineHelpText>Number of Account, Contact, or GAU records per batch to select for Skew Mode processing.</inlineHelpText>
         <label>Skew Mode Dispatcher Batch Size</label>
         <precision>18</precision>
         <required>false</required>
