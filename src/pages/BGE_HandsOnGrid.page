@@ -200,7 +200,7 @@
                     col.type = templateField.type;
 
                     // Enable type checking. If for example the user places text in a numeric column, mark the cell as red
-                    col.allowInvalid = true;
+                //    col.allowInvalid = true;
 
                     // Center the content of the columns
                     col.className = "htCenter htMiddle";
@@ -235,7 +235,7 @@
                         console.dir(templateField);
 
                         if (templateField.pickListValuesList) {
-
+                            col.allowInvalid = false;
                             col.source = templateField.pickListValuesList;
                         }
                     }
@@ -277,6 +277,7 @@
                     rowHeights: 40,
                     colHeaders: true,
                     columnHeaderHeight: 40,
+
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
