@@ -296,8 +296,13 @@
             renderMap["rollupType"] = true;
             this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
         } else {
-            renderMap["rollupType"] = false;
-            this.renderAndResetFilterGroup(cmp, '');
+            if (cmp.get("v.mode") === 'create'){
+                renderMap["timeBoundOperation"] = false;
+                renderMap["integerDays"] = false;
+                renderMap["integerYears"] = false;
+                renderMap["rollupType"] = false;
+                this.renderAndResetFilterGroup(cmp, '');
+            }
         }
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
