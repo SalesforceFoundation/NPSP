@@ -1084,17 +1084,18 @@
                                 cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
 
                                 // for a new record, copy the activeRollup map to the cachedRollup map
-                                if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
+                                if (cmp.get("v.cachedRollup") === null) {
+                                    cmp.set("v.cachedRollup", helper.restructureResponse(cmp.get("v.activeRollup")));
+                                } else if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
                                     var activeRollup = cmp.get("v.activeRollup");
                                     var cachedRollup = cmp.get("v.cachedRollup");
                                     for (var key in activeRollup) {
-                                        if (activeRollup.hasOwnProperty(key)) {
+                                        if (cachedRollup.hasOwnProperty(key)) {
                                             cachedRollup[key] = activeRollup[key];
                                         }
                                     }
                                     cmp.set("v.cachedRollup", cachedRollup);
                                 }
-
                             }
 
                             if(mode === "delete") {
