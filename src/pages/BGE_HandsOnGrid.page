@@ -489,7 +489,7 @@
 
                         if (wait) {
 
-                            timeout = 500;
+                            timeout = 450;
                         }
 
 
