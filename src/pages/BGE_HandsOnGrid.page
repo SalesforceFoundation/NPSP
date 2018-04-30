@@ -75,6 +75,16 @@
                 line-height: 40px !important;
             }
 
+            .htAutocompleteArrow {
+
+                float: right;
+                font-size: 10px;
+                color: rgb(150, 150, 150) !important;
+                cursor: default;
+                width: 16px;
+                text-align: center;
+            }
+
         </style>
 
         <!-- Custom Javascript -->
