@@ -111,6 +111,8 @@
 
                 table = document.getElementById('my-hot-table');
 
+                wasEnterPressed = false;
+
                 // Flag that is set true if the user have just pressed the up arrow key.
                 wasUpArrowPressed = false;
 
@@ -120,9 +122,9 @@
                 // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
                 wait = false;
 
-        		$scope.totalPages = '{!totalOfPages}';
+        		    $scope.totalPages = '{!totalOfPages}';
 
-        		//Map to save cells with invalid format values
+		            // Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -150,6 +152,7 @@
                         callback(false);
                     }
                     else {
+
                         callback(true);
                     }
                 };
@@ -242,6 +245,9 @@
                     if (templateField.apiName == "Id") {
 
                         col.readOnly = true;
+                        col.colWidths = 0.1;
+
+                        dynamicColumns.splice(1, 0, col);
                     }
 
                     if (templateField.type === "date") {
@@ -261,7 +267,11 @@
                         col.type = 'text';
                     }
 
-                    dynamicColumns.push(col);
+                    if (templateField.apiName !== "Id") {
+
+                        dynamicColumns.push(col);
+                    }
+
                 }
 
                 dynamicColumns.push(actionCol);
@@ -1086,18 +1096,48 @@
 
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
-		            wasUpArrowPressed = false;
-                    movedSideWays = false;
+                    wasEnterPressed = false;
+		                wasUpArrowPressed = false;
 
                     if (e.keyCode  === 38) {
+
                         // Arrow up was pressed.
                         wasUpArrowPressed = true;
                     }
-                    else if(e.keyCode === 9 || e.keyCode === 37 || e.keyCode  === 39) {
-                        // Arrow right, arrow left or tab was pressed.
-                        movedSideWays = true;
-                    }
+                    else if (e.keyCode === 9 || e.keyCode === 39) {
 
+                        // Tab or right arrow was pressed
+                        movedSideWays = true;
+
+                        var selection = hot.getSelected();
+                        var rowIndex = selection[0];
+                        var colIndex = selection[1];
+                        var numerOfColumns = hot.countCols();
+
+                        if (colIndex === 0) {
+
+                            colIndex = 1;
+                        }
+
+                        hot.selectCell(rowIndex,colIndex);
+                    }
+                    else if (e.keyCode ===  37) {
+
+                        // Left arrow was pressed
+                        movedSideWays = true;
+
+                        var selection = hot.getSelected();
+                        var rowIndex = selection[0];
+                        var colIndex = selection[1];
+                        var numerOfColumns = hot.countCols();
+
+                        if (colIndex === 2) {
+
+                            colIndex = 1;
+                        }
+
+                        hot.selectCell(rowIndex,colIndex);
+                    }
                 });
 
                 // END DEFINING ANGULAR FUNCTIONS
