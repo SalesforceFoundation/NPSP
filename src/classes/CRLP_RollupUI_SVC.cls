@@ -407,7 +407,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
 
-        String objectLabel = UTIL_Describe.getObjectLabel(objectName);
+        String pscLabel = Schema.SObjectType.Partial_Soft_Credit__c.getLabel();
+        String scLabel = Label.CRLP_SoftCredit;
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName).replace(pscLabel,scLabel);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             if(!dfr.name.toLowerCase().contains('__system')) {

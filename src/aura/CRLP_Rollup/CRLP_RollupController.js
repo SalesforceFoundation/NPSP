@@ -34,14 +34,15 @@
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
+                var labels = cmp.get("v.labels");
                 if(activeRollupId){
                     // detail, amount, and date fields need to be held on client side
                     // with their object name to support multiple object selection
 
                     model.rollup.detailField = model.rollup.detailObject + ' ' + model.rollup.detailField;
-                    model.rollup.detailFieldLabel = model.rollup.detailObjectLabel + ': ' + model.rollup.detailFieldLabel;
+                    model.rollup.detailFieldLabel = model.rollup.detailObjectLabel.replace(labels.labelPartialSoftCredit,labels.softCredit) + ': ' + model.rollup.detailFieldLabel;
                     model.rollup.amountField = model.rollup.amountObject + ' ' + model.rollup.amountField;
-                    model.rollup.amountFieldLabel = helper.retrieveFieldLabel(model.rollup.amountObject, detailObjects)+ ': ' + model.rollup.amountFieldLabel;
+                    model.rollup.amountFieldLabel = helper.retrieveFieldLabel(model.rollup.amountObject, detailObjects).replace(labels.labelPartialSoftCredit,labels.softCredit) + ': ' + model.rollup.amountFieldLabel;
                     model.rollup.dateField = model.rollup.dateObject +' '+ model.rollup.dateField;
                     model.rollup.dateFieldLabel = helper.retrieveFieldLabel(model.rollup.dateObject, detailObjects)+ ': ' + model.rollup.dateFieldLabel;
 
