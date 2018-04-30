@@ -46,6 +46,7 @@ public class UTIL_Describe {
     //maps to hold the describe info
     private static Map<String, Schema.SObjectType> gd;
     private static Map<String, Schema.DescribeSObjectResult> objectDescribes = new Map<String, Schema.DescribeSObjectResult>();
+    private static Map<Schema.SObjectType, Schema.DescribeSObjectResult> objectDescribesByType = new Map<Schema.SObjectType, Schema.DescribeSObjectResult>();
     private static Map<String, Map<String, Schema.SObjectField>> fieldTokens = new Map<String,Map<String, Schema.SObjectField>>();
     private static Map<String, Map<String, Schema.DescribeFieldResult>> fieldDescribes = new Map<String,Map<String, Schema.DescribeFieldResult>>();
 
@@ -54,13 +55,17 @@ public class UTIL_Describe {
     ********************************************/
     static void fillMapsForObject(string objectName) {
         // get the object map the first time
-        if (gd==null) gd = Schema.getGlobalDescribe();
+        if (gd == null) {
+            gd = Schema.getGlobalDescribe();
+        }
 
         // get the object description
         if (gd.containsKey(objectName)) {
-
-            if (!objectDescribes.containsKey(objectName))
-                objectDescribes.put(objectName, gd.get(objectName).getDescribe());
+            if (!objectDescribes.containsKey(objectName)) {
+                Schema.DescribeSObjectResult objDescribe = gd.get(objectName).getDescribe();
+                objectDescribes.put(objectName, objDescribe);
+                objectDescribesByType.put(objDescribe.getSObjectType(), objDescribe);
+            }
         } else {
             throw new SchemaDescribeException('Invalid object name \'' + objectName + '\'');
         }
@@ -152,6 +157,20 @@ public class UTIL_Describe {
     }
 
     /*******************************************************************************************************
+    * @description Returns object describe data.
+    * @param objType the SObjectType of the object to lookup
+    * @return Schema.DescribeSObjectResult of the object
+    */
+    public static Schema.DescribeSObjectResult getObjectDescribe(SObjectType objType) {
+        // make sure we have this object's schema mapped
+        if (objectDescribesByType == null || !objectDescribesByType.containsKey(objType)) {
+            fillMapsForObject(objType.getDescribe().getName());
+        }
+
+        return objectDescribesByType.get(objType);
+    }
+
+    /*******************************************************************************************************
     * @description Compares Id to verify object type
     * @param salesforceId of the object
     * @param objectName
@@ -175,7 +194,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Returns all field describe data
     * @param objectName the name of the object to look up
-    * @return Map<String, Schema.DescribeFieldResult> a map of object names to describe file results.
+    * @return Map<String, Schema.DescribeFieldResult> a map of field api names to describe file results.
     */
     public static Map<String, Schema.DescribeFieldResult> getAllFieldsDescribe(String objectName) {
 
@@ -185,6 +204,32 @@ public class UTIL_Describe {
         Map<String, Schema.DescribeFieldResult> fieldMap = fieldDescribes.get(objectName);
         return fieldMap;
     }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system fields
+    * @param objectName the name of the object to look up
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    public static List<Map<String, String>> getAllFieldsWithType(String objectName) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = getAllFieldsDescribe(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            if(!dfr.name.toLowerCase().contains('__system')) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', dfr.getType().Name());
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
+    }
+
 
     /*******************************************************************************************************
     * @description Returns the Name field of any given object.
@@ -238,6 +283,16 @@ public class UTIL_Describe {
 
         Schema.DescribeFieldResult dfr = fieldDescribes.get(objectName).get(fieldName);
         return dfr.getType();
+    }
+
+    /*******************************************************************************************************
+    * @description Gets a SObjectType token given the API name of that SObject.
+    * @param qualifiedAPIName The API name of an SObject.
+    * @return Schema.SObjectType The token for the object.
+    */
+    public static Schema.SObjectType getSObjectType(String qualifiedAPIName) {
+        if (gd==null) gd = Schema.getGlobalDescribe();
+        return gd.get(qualifiedAPIName);
     }
 
     /*******************************************************************************************************
@@ -346,7 +401,8 @@ public class UTIL_Describe {
     // utility to return a list of strings from a field set.
     public static list<string> listStrFromFieldSet(string strObject, string strFS) {
         list<string> listStrFields = new list<string>();
-        Schema.SObjectType targetType = Schema.getGlobalDescribe().get(strObject);
+        if (gd==null) gd = Schema.getGlobalDescribe();
+        Schema.SObjectType targetType = gd.get(strObject);
         Schema.DescribeSObjectResult d = targetType.getDescribe(); 
         Schema.FieldSet fs = d.fieldSets.getMap().get(strFS); 
         if (fs == null) {
@@ -410,7 +466,7 @@ public class UTIL_Describe {
         if (describeField.getType() == Schema.DisplayType.PICKLIST) {
             for (Schema.PicklistEntry entry : describeField.getPicklistValues()) {
                 if (entry.isActive()) {
-                    result.add(new SelectOption(entry.getLabel(), entry.getValue()));
+                    result.add(new SelectOption(entry.getValue(), entry.getLabel()));
                 }
             }
         }

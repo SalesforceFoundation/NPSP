@@ -20,7 +20,7 @@
     </fields>
     <fields>
         <help><!-- The number of NPSP Data Import records to process in each batch. --></help>
-        <label><!-- Batch Process Size --></label>
+        <label><!-- Batch Size --></label>
         <name>Batch_Size__c</name>
     </fields>
     <fields>

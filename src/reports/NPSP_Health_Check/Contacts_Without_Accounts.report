@@ -22,6 +22,7 @@
     <filter>
         <criteriaItems>
             <column>Contact$Account</column>
+            <isUnlocked>false</isUnlocked>
             <operator>equals</operator>
             <value></value>
         </criteriaItems>

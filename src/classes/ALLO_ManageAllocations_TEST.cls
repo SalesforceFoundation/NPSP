@@ -394,21 +394,20 @@ private class ALLO_ManageAllocations_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolCallsUtilCurrency() {
+
+        Test.startTest();
+
         UTIL_Currency_TEST.UtilCurrencyMock mock = new UTIL_Currency_TEST.UtilCurrencyMock();
         mock.getCurrencySymbolReturn = 'FOO';
         UTIL_Currency.instance = mock;
 
         ALLO_ManageAllocations_CTRL controller = new ALLO_ManageAllocations_CTRL();
+        controller.parentCurrencyCode = 'FOO';
         controller.parentId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
 
         System.assertEquals(
             'FOO',
             controller.getCurrencySymbol()
-        );
-
-        System.assertEquals(
-            controller.parentId,
-            mock.getCurrencySymbolRecordId
         );
     }
 

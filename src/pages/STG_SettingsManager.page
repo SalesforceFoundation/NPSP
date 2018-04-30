@@ -39,11 +39,11 @@
 
     // page init function
     j$(function () {
-        ShowPanel(idPanelCurrent);
         var cl = j$('#mynavbar').collapsibleList('.slds-tree__branch', {search: false, animate: false});
         // start with slds-tree-container all collapsed.  couldn't figure out how to call collapseAllHeaders(),
         // but submitting the click on all li's does the trick!
         j$('div',cl).trigger('click');
+        ShowPanel(idPanelCurrent);
     });
 
     function ShowPanel(idPanel) {
@@ -59,6 +59,15 @@
         node = document.getElementById(idPanelCurrent + 'Nav');
         if (node != null) node.classList.add('slds-is-selected');
 
+        var headerNode = node.parentElement.previousElementSibling;
+        headerNode.classList.remove('collapsed');
+        siblings = node.parentNode.childNodes;
+        for (var i = 0, ii = siblings.length; i < ii; i++) {
+            if(siblings[i].nodeName !== '#text') {
+                siblings[i].style.display = 'block';
+            }
+        }
+
         // scroll the panel into view
         j$('body').scrollTop(0);
 
@@ -71,12 +80,14 @@
         if (idPanelCurrent != '{!idPanelCurrent}')
             setPanelCurrent(idPanelCurrent);
     }
+
 </script>
 <apex:form >
     <apex:actionFunction action="{!setPanelCurrent}" name="setPanelCurrent" rerender="nothing!" >
         <apex:param name="idPanel" assignTo="{!idPanelCurrent}" value="" />
     </apex:actionFunction>
 </apex:form>
+
 <apex:variable var="pathChevronRight" value="M8.3 2l9.5 9.5c.3.3.3.7 0 1L8.3 22c-.3.2-.8.2-1.1 0l-1-1c-.2-.3-.2-.8 0-1.1l7.6-7.4c.2-.3.2-.7 0-1L6.3 4.1C6 3.8 6 3.3 6.3 3l1-1c.3-.2.7-.2 1 0z"/>
 <apex:variable var="pathChevronDown" value="M22 8.2l-9.5 9.6c-.3.2-.7.2-1 0L2 8.2c-.2-.3-.2-.7 0-1l1-1c.3-.3.8-.3 1.1 0l7.4 7.5c.3.3.7.3 1 0l7.4-7.5c.3-.2.8-.2 1.1 0l1 1c.2.3.2.7 0 1z"/>
 
@@ -131,17 +142,20 @@
                                 </button>
                                 <a id="tree2-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavDonations}</a>
                             </div>
-                            <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree2-node0-link">
+                            <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree2-node0-link" >
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNamingNav"><a href="#" onclick="ShowPanel('idPanelOppNaming');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppNamingSettings}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMembershipNav"><a href="#" onclick="ShowPanel('idPanelMembership');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavMembership}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppNav"><a href="#" onclick="ShowPanel('idPanelOpp');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPayments}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPaymentMappingNav"><a href="#" onclick="ShowPanel('idPanelPaymentMapping');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavPaymentMappings}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAllocationsNav"><a href="#" onclick="ShowPanel('idPanelAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavAllocations}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><a href="#" onclick="ShowPanel('idPanelOppRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavDonorStatistics}</a></li>
+                                <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppRollupNav"><apex:outputLink id="donorStatsTreeItem" value="#" onClick="ShowPanel('idPanelOppRollup');return false;" styleClass="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavDonorStatistics}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelConRoleNav"><a href="#" onclick="ShowPanel('idPanelConRole');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavContactRoles}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppCampaignMembersNav"><a href="#" onclick="ShowPanel('idPanelOppCampaignMembers');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelOppCampMembers}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelBDENav"><a href="#" onclick="ShowPanel('idPanelBDE');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBDE}</a></li>
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><a href="#" onclick="ShowPanel('idPanelUserRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavUserDefinedRollups}</a></li>
+                                <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><apex:outputLink id="UDRsTreeItem" value="#" onClick="ShowPanel('idPanelUserRollup');return false;" styleClass="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavUserDefinedRollups}</apex:outputLink></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.CRLP_RollupSummary}</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
@@ -169,7 +183,7 @@
                                 <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
                             </div>
                             <ul class="slds-tree__group slds-nested" role="group" aria-labelledby="tree4-node0-link">
-                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelScheduleNav"><a href="#" onclick="ShowPanel('idPanelSchedule');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavSchedule}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelScheduleNav"><a href="#" onclick="ShowPanel('idPanelSchedule');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavBatchProcessSettings}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelOppBatchNav"><a href="#" onclick="ShowPanel('idPanelOppBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelAlloBatchNav"><a href="#" onclick="ShowPanel('idPanelAlloBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRollupAlloBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMakeDefaultAllocationsNav"><a href="#" onclick="ShowPanel('idPanelMakeDefaultAllocations');return false;" class="slds-grow slds-m-left--large">{!$Label.alloBatchCreateDefault}</a></li>
@@ -254,17 +268,17 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelMembership" style="display:none" >
-                    <apex:include pageName="STG_PanelMembership" />
+                    <apex:include pageName="STG_PanelMembership" id="idPanelMembership"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelOpp" style="display:none" >
                     <apex:include pageName="STG_PanelOpps" />
                 </div>
-                
+
                 <div class="panel noborder" id="idPanelPaymentMapping" style="display:none" >
                     <apex:include pageName="STG_PanelPaymentMapping" />
                 </div>
-          
+
                 <div class="panel noborder" id="idPanelAllocations" style="display:none" >
                     <apex:include pageName="STG_PanelAllocations" />
                 </div>
@@ -274,7 +288,7 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelConRole" style="display:none" >
-                    <apex:include pageName="STG_PanelContactRoles" />
+                    <apex:include pageName="STG_PanelContactRoles" id="idPanelConRole"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelOppCampaignMembers" style="display:none" >
@@ -287,6 +301,10 @@
 
                 <div class="panel noborder" id="idPanelUserRollup" style="display:none" >
                     <apex:include pageName="STG_PanelUserRollup" />
+                </div>
+
+                <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
+                    <apex:include pageName="STG_PanelCustomizableRollup" />
                 </div>
 
                 <!-- Recurring Donations -->
@@ -304,7 +322,7 @@
 
                 <!-- Bulk Data Processes -->
                 <div class="panel noborder" id="idPanelSchedule" style="display:none" >
-                    <apex:include pageName="STG_PanelSchedule" />
+                    <apex:include pageName="STG_PanelSchedule" id="idPanelSchedule"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelOppBatch" style="display:none" >

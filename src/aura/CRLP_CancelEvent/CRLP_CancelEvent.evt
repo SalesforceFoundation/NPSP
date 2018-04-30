@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Cancel event fired by detail components for Rollup and Filter Group, with listener in the container to cancel changes and display grid." >
+    <aura:attribute type="String" name="grid" description="Intended grid to display after event fires."/>
+</aura:event>

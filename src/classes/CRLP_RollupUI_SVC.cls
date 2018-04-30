@@ -1,0 +1,733 @@
+/*
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+*/
+/**
+* @author Salesforce.org
+* @date 2018
+* @group Rollups
+* @group-content ../../ApexDocContent/Rollups2.htm
+* @description Lightning Component Server Controller for the Rollups UI page CRLP_Setup.
+*/
+
+public with sharing class CRLP_RollupUI_SVC {
+
+    private static final String SUCCESS_RESPONSE = 'SUCCESS';
+
+    /*******************************************************************************************************
+    * @description a class to hold only the required information from the rollup__mdt records for the rollup UI.
+    */
+    public class RollupTableItem {
+        @AuraEnabled public String active;
+        @AuraEnabled public String activeIcon;
+        @AuraEnabled public String creditType;
+        @AuraEnabled public String description;
+        @AuraEnabled public String detailField;
+        @AuraEnabled public String detailObject;
+        @AuraEnabled public String displayName;
+        @AuraEnabled public String filterGroupName;
+        @AuraEnabled public String operation;
+        @AuraEnabled public String rollupName;
+        @AuraEnabled public String recordId;
+        @AuraEnabled public String recordName;
+        @AuraEnabled public String summaryField;
+        @AuraEnabled public String summaryObject;
+        @AuraEnabled public String summaryObjectApiName;
+
+    }
+
+    /*******************************************************************************************************
+    * @description a class to hold only the required information from the filter_group__mdt records for the filter group UI.
+    */
+    public class FilterGroupTableItem {
+        @AuraEnabled public String label;
+        @AuraEnabled public String description;
+        @AuraEnabled public Integer countFilterRules;
+        @AuraEnabled public Integer countRollups;
+        @AuraEnabled public String name;
+        @AuraEnabled public String recordId;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
+    * Retrieving labels in Apex instead of lightning components avoids namespace complications.
+    */
+    public class RollupGridModel {
+        @AuraEnabled public List<RollupTableItem> items;
+        @AuraEnabled public Map<String, String> labels;
+        @AuraEnabled public List<FilterGroupTableItem> filterGroups;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the RollupTableItems and the labels used on the page to minimize server trips.
+    * Retrieving labels in Apex instead of lightning components avoids namespace complications.
+    */
+    public class RollupDetailModel {
+        @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
+        @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, String> timeBoundOperations;
+        @AuraEnabled public Map<String, String> operations;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Creates a model to collect both the Filter Group and Filter Rules used on the page to minimize server trips.
+    * Filter rules need to be flattened for use within the lightning:datatable.
+    */
+    public class FilterGroupModel {
+        @AuraEnabled public CRLP_RollupCMT.FilterGroup filterGroup;
+        @AuraEnabled public List<CRLP_RollupCMT.FilterRule> filterRuleList;
+        @AuraEnabled public Map<String,String> operators;
+        @AuraEnabled public Map<String,List<Map<String,String>>> filterFieldsByDataType;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Response model returned by the getDeploymentResult() method
+    */
+    public class DeploymentResult {
+        @AuraEnabled public Boolean completed = false;
+        @AuraEnabled public RollupTableItem rollupItem;
+        @AuraEnabled public FilterGroupModel filterGroupItem;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves rollup definitions and creates the rollup model.
+    * @return rollup grid model
+    */
+    @AuraEnabled
+    public static String setupRollupGrid() {
+        RollupGridModel model = new RollupGridModel();
+
+        model.items = getRollupDefinitions();
+        model.labels = getRollupLabels();
+        model.filterGroups = getFilterGroupDefinitions();
+
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves rollup definitions and creates the rollup model. Used by the CRLP_Rollup component
+    * during the init() function to retrieve and set up the LEX page for view/edit
+    * @param targetObjectNames list of target objects used in rollups
+    * @param detailObjectNames list of detail objects used in rollups
+    * @return model with optional rollup and fields with data types
+    */
+    @AuraEnabled
+    public static String setupRollupDetail(String rollupId, List<String> targetObjectNames, List<String> detailObjectNames) {
+        RollupDetailModel model = new RollupDetailModel();
+        String summaryField = '';
+
+        if(!String.isEmpty(rollupId)){
+            Rollup__mdt rlp = CRLP_Rollup_SEL.getRollupById(Id.valueOf(rollupId));
+            model.rollup = new CRLP_RollupCMT.Rollup(rlp);
+            summaryField = model.rollup.summaryField;
+        }
+        model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
+        model.timeBoundOperations = getTimeBoundOperations();
+        model.operations = getRollupOperations();
+
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the rollup selector to fetch all rollup__mdt records. Parses so that only the relevant
+    * information is returned, and a custom RollupTableItem class is created with this information.
+    * @return a list of all rollup definitions
+    */
+    @AuraEnabled
+    public static List<RollupTableItem> getRollupDefinitions() {
+        List<RollupTableItem> mdtTableList = new List<RollupTableItem>();
+
+        List<Rollup__mdt> rollups = CRLP_Rollup_SEL.getRollupDefinitions();
+        for(Rollup__mdt rlp : rollups){
+            if(!rlp.Is_Deleted__c) {
+                mdtTableList.add(createRollupItem(rlp));
+            }
+        }
+
+        return mdtTableList;
+    }
+
+    /**
+     * @description Build a RollupTableItem wrapper for a given Rollup__mdt record
+     * @param rlpm Rollup__mdt
+     * @return RollupTableItem
+     */
+    private static RollupTableItem createRollupItem(Rollup__mdt rlp) {
+        RollupTableItem item = new RollupTableItem();
+
+        if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
+            item.creditType = Label.CRLP_HardCredit;
+        } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
+                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            item.creditType = Label.CRLP_SoftCredit;
+        } else {
+            item.creditType = Label.stgNotApplicable;
+        }
+        item.detailObject = rlp.Detail_Object__r.Label;
+        item.summaryObject = rlp.Summary_Object__r.Label;
+        item.summaryObjectApiName = rlp.Summary_Object__r.QualifiedApiName;
+        item.summaryField = rlp.Summary_Field__r.Label;
+        item.recordName = rlp.DeveloperName;
+        item.rollupName = rlp.MasterLabel;
+        item.detailField = rlp.Detail_Field__r.Label;
+        item.description = rlp.Description__c;
+        item.filterGroupName = rlp.Filter_Group__r.MasterLabel;
+        item.operation = rlp.Operation__c.replace('_', ' ');
+        if(rlp.Active__c){
+            item.activeIcon = 'utility:check';
+        } else {
+            item.activeIcon = 'utility:close';
+        }
+        item.recordId = rlp.Id;
+
+        if (item.summaryObjectApiName == Schema.SObjectType.General_Accounting_Unit__c.getName()) {
+            item.displayName = 'GAU' + ': ' + item.summaryField;
+        } else if (item.summaryObjectApiName == Schema.SObjectType.npe03__Recurring_Donation__c.getName()) {
+            item.displayName = 'RD' + ': ' + item.summaryField;
+        } else {
+            item.displayName = item.summaryObject + ': ' + item.summaryField;
+        }
+
+        return item;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Filter Rule selector to fetch all Filter_Group__mdt records. Parses so that only the relevant
+    * information is returned, and a custom FilterGroupTableItem class is created with this information.
+    * @return a list of all filter group definitions
+    */
+    @AuraEnabled
+    public static List<FilterGroupTableItem> getFilterGroupDefinitions() {
+
+        List<FilterGroupTableItem> mdtTableList = new List<FilterGroupTableItem>();
+        List<Filter_Group__mdt> mdtList = CMT_FilterRule_SEL.getFilterGroups();
+        Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
+
+        for(Integer i=0; i<mdtList.size(); i++) {
+            FilterGroupTableItem item = new FilterGroupTableItem();
+
+            item.label = mdtList[i].MasterLabel;
+            item.name = mdtList[i].DeveloperName;
+            item.description = mdtList[i].Description__c;
+            item.countFilterRules = mdtList[i].Filter_Rules__r.size();
+            item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
+            item.recordId = mdtList[i].Id;
+
+            mdtTableList.add(item);
+        }
+
+        return mdtTableList;
+
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Filter Rule metadata to fetch all operation values.
+    * @return a map of picklist options api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getFilterRuleOperations() {
+
+        Map<String,String> filterRuleOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Filter_Rule__mdt.Operator__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            filterRuleOperations.put(f.getValue(), f.getLabel());
+        }
+        return filterRuleOperations;
+    }
+
+    /*******************************************************************************************************
+    * @description Fetches a single FilterGroup__mdt record by Id and associated FilterRule__mdt records.
+    * @param id the filter group ID
+    * @return A serialized instance of the FilterGroupModel inner class
+    */
+    @AuraEnabled
+    public static String setupFilterGroupDetail(String filterGroupId, List<String> objectNames) {
+
+        Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
+        Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
+
+        for(String obj : objectNames){
+            List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
+            objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+        }
+
+        FilterGroupModel model = createFilterGroupModel(filterGroupId);
+        model.operators = getfilterRuleOperations();
+        model.filterFieldsByDataType = objNameToFieldTypeMap;
+
+        //serialize to avoid passing inner classes, which is technically unsupported
+        String modelString = JSON.serialize(model);
+        return modelString;
+    }
+
+    /**
+     * @description Build a FilterGroupModel wrapper for a given FilterGroup Id
+     * @param filterGroupId
+     * @return FilterGroupModel with just the FilterGroup and FilterRuleList properties populated
+     */
+    private static FilterGroupModel createFilterGroupModel(String filterGroupId) {
+        FilterGroupModel model = new FilterGroupModel();
+        model.filterRuleList = new List<CRLP_RollupCMT.FilterRule>();
+        if (!String.isEmpty(filterGroupId)) {
+            Filter_Group__mdt filterGroup = CMT_FilterRule_SEL.getFilterGroupsById().get(filterGroupId);
+            model.filterGroup = new CRLP_RollupCMT.FilterGroup(filterGroup);
+
+            Map<String,String> operatorMap = getfilterRuleOperations();
+            for(Filter_Rule__mdt fr: CMT_FilterRule_SEL.getFilterRulesByGroup().get(filterGroup.Id)) {
+                CRLP_RollupCMT.FilterRule ruleItem = new CRLP_RollupCMT.FilterRule(fr);
+                ruleItem.operationLabel = operatorMap.get(ruleItem.operationName);
+                model.filterRuleList.add(ruleItem);
+            }
+        }
+
+        return model;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Rollup operations to fetch all rollup operation values.
+    * @return a map of picklist options api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getRollupOperations() {
+
+        Map<String,String> rollupOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Rollup__mdt.Operation__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            rollupOperations.put(f.getValue(), f.getLabel());
+        }
+        return rollupOperations;
+    }
+
+    /*******************************************************************************************************
+    * @description Queries from the Rollup yearly operation types to fetch all yearly operation values.
+    * @return a map of picklist yearly operations api values to labels
+    */
+    @AuraEnabled
+    public static Map<String,String> getTimeBoundOperations() {
+
+        Map<String,String> timeBoundOperations = new Map<String,String>();
+
+        Schema.DescribeFieldResult field = Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe();
+
+        for (Schema.PicklistEntry f : field.getPicklistValues()) {
+            timeBoundOperations.put(f.getValue(), f.getLabel());
+        }
+        return timeBoundOperations;
+    }
+
+    /*******************************************************************************************************
+    @description Fetches all field labels, mapped to their data types, for a list of objects.
+    * @param summaryField a summary field already being used to include in the type list
+    * @param targetObjectNames list of target or summary objects to query
+    * @param detailObjectNames list of detail or objects to rollup to query
+    * @return a map of strings to string-string maps. Map<String,Map<String,String>>
+    */
+
+    @AuraEnabled
+    public static Map<String,List<Map<String,String>>> getFieldsByDataType(String summaryField, List<String> targetObjectNames, List<String> detailObjectNames) {
+
+        Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
+
+        for(String detailObj : detailObjectNames){
+            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(detailObj);
+            objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+        }
+        for(String targetObj : targetObjectNames){
+            List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj, summaryField);
+            objNameToFieldTypeMap.put(targetObj, summaryNameToFieldTypeObj);
+        }
+
+        return objNameToFieldTypeMap;
+    }
+
+
+    /*******************************************************************************************************
+    * @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
+    * If any additional labels are required, they should be added here.
+    * @return a list of all labels used in the rollups UI.
+    */
+    public static Map<String, String> getRollupLabels() {
+
+            Map<String, String> labels = new Map<String,String>
+            {
+                'action' => Label.stgLabelActionColumn,
+                'active' => Schema.Rollup__mdt.Active__c.getDescribe().getLabel(),
+                'add' => Label.stgAdd,
+                'advancedCustomizationHeader' => Label.CRLP_AdvancedCustomizationHeader,
+                'advancedCustomizationText' => Label.CRLP_AdvancedCustomizationText,
+                'amountField' => Schema.Rollup__mdt.Amount_Field__c.getDescribe().getLabel(),
+                'amountObject' => Schema.Rollup__mdt.Amount_Object__c.getDescribe().getLabel(),
+                'availableRollupTypes' => Label.CRLP_AvailableRollupType,
+                'cancel' => Label.stgBtnCancel,
+                'checkboxTrue' => Label.stgCheckboxTrue,
+                'checkboxFalse' => Label.stgCheckboxFalse,
+                'clone' => Label.stgBtnClone,
+                'constant' => Schema.Filter_Rule__mdt.Constant__c.getDescribe().getLabel(),
+                'countOf' => Label.stgCountOf,
+                'createIntroHelp' => Label.CRLP_CreateRollupIntroHelpText,
+                'createTargetObjectHelp' => Label.CRLP_CreateRollupTargetObjectHelpText,
+                'createTargetFieldHelp' => Label.CRLP_CreateRollupTargetFieldHelpText,
+                'createActiveHelp' => Label.CRLP_CreateRollupActiveHelpText,
+                'createDescriptionHelp' => Label.CRLP_CreateRollupDescriptionHelpText,
+                'createRollupTypeHelp' => Label.CRLP_CreateRollupTypeHelpText,
+                'createFilterGroupHelp' => Label.CRLP_CreateRollupFilterGroupHelpText,
+                'createOperationHelp' => Label.CRLP_CreateRollupOperationHelpText,
+                'createFiscalYearHelp' => Label.CRLP_CreateRollupFiscalYearHelpText,
+                'createTimeBoundHelp' => Label.CRLP_CreateRollupTimeBoundOperationHelpText,
+                'createYearsHelp' => Label.CRLP_CreateRollupYearsAgoHelpText,
+                'createDaysHelp' => Label.CRLP_CreateRollupDaysBackHelpText,
+                'createDetailFieldHelp' => Label.CRLP_CreateRollupDetailFieldHelpText,
+                'createDateFieldHelp' => Label.CRLP_CreateRollupDateFieldHelpText,
+                'createAmountFieldHelp' => Label.CRLP_CreateRollupAmountFieldHelpText,
+                'creditType' => Label.CRLP_CreditType,
+                'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
+                'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
+                'delete' => Label.alloDeleteRow,
+                'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
+                'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
+                'description' => Schema.Rollup__mdt.Description__c.getDescribe().getLabel(),
+                'edit' => Label.stgBtnEdit,
+                'error' => Label.PageMessagesError,
+                'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
+                'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
+                'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
+                'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
+                'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
+                'filterGroupNew' => Label.CMT_FilterNew,
+                'filterGroupNameLimitError' => Label.CMT_FilterGroupNameLimitError,
+                'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
+                'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
+                'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
+                'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
+                'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
+                'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersSaveTimeout' => String.format(System.Label.CRLP_SaveTimeout, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'hardCredit' => Label.CRLP_HardCredit,
+                'info' => Label.PageMessagesInfo,
+                'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
+                'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
+                'labelAccount' => Schema.SObjectType.Account.getLabel(),
+                'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
+                'labelContact' => Schema.SObjectType.Contact.getLabel(),
+                'labelGAU' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
+                'labelPayment' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
+                'labelOpportunity' => Schema.SObjectType.Opportunity.getLabel(),
+                'labelPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getLabel(),
+                'labelRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getLabel(),
+                'name' => Label.stgLabelName,
+                'namespacePrefix' => UTIL_Namespace.StrTokenNSPrefix(''),
+                'na' => Label.stgNotApplicable,
+                'next' => Label.labelListViewNext,
+                'noFields' => Label.stgLabelPaymentMapNoValidFields,
+                'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
+                'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
+                'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
+                'noRollupType' => Label.CRLP_NoRollupType,
+                'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
+                'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
+                'objectAccount' => Schema.SObjectType.Account.getName(),
+                'objectAllocation' => Schema.SObjectType.Allocation__c.getName(),
+                'objectContact' => Schema.SObjectType.Contact.getName(),
+                'objectGAU' => Schema.SObjectType.General_Accounting_Unit__c.getName(),
+                'objectPayment' => Schema.SObjectType.npe01__OppPayment__c.getName(),
+                'objectOpportunity' => Schema.SObjectType.Opportunity.getName(),
+                'objectPartialSoftCredit' => Schema.SObjectType.Partial_Soft_Credit__c.getName(),
+                'objectRD' => Schema.SObjectType.npe03__Recurring_Donation__c.getName(),
+                'ok' => Label.stgLabelOK,
+                'operation' => Schema.Rollup__mdt.Operation__c.getDescribe().getLabel(),
+                'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
+                'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
+                'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
+                'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
+                'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
+                'rollupLabelPlural' => Schema.SObjectType.Rollup__mdt.getLabelPlural(),
+                'rollupNew' => Label.CRLP_RollupNew,
+                'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
+                'rollupSummaryTitle' => Label.CRLP_RollupSummary,
+                'rollupType' => Label.CRLP_RollupType,
+                'rollupDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupSaveTimeout' => String.format(System.Label.CRLP_SaveTimeout, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'save' => Label.stgBtnSave,
+                'saveAndNew' => Label.lvlBtnSaveAndNew,
+                'selectOne' => Label.stgSelectOne,
+                'selectAll' => Label.conMergeSelectAll,
+                'softCredit' => Label.CRLP_SoftCredit,
+                'success' => Label.PageMessagesConfirm,
+                'summaryField' => Schema.Rollup__mdt.Summary_Field__c.getDescribe().getLabel(),
+                'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
+                'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
+                'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
+                'view' => Label.stgLabelView,
+                'warning' => Label.PageMessagesWarning
+            };
+
+        for (Integer i = 2; i < 21; i++) {
+            String key = 'picklistLabelYearsAgo' + i;
+            String value = String.format(Label.stgLabelYearPicklistYearsAgo, new List<String>{String.valueOf(i)});
+            labels.put(key, value);
+        }
+
+        return labels;
+    }
+
+    /*******************************************************************************************************
+     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
+     * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
+     * the insert (deployment) completes.
+     */
+    @AuraEnabled
+    public static String saveRollup(String rollupCMT) {
+        try {
+            // For new records, the RecordName property will be null by default. The process of deploying the
+            // CMT data will generate a unique RecordName to use for the new record.
+            CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
+
+            // Queue up the deployment
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
+
+            // Trigger the asynchronous deployment process
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+
+            // Return the unique record DeveloperName value of the Rollup__mdt record
+            return jobId + '-' + rollupCMTObj.recordName;
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
+
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description Handle the save (insert/update) of a Rollup__mdt record
+     * @param rollupCMT Stringified structure of a CRLP_RollupCMT.Rollup wrapper class
+     * @return {JobId}-{DeveloperName} - ASync Job Id - Developer name of the newly inserted or updated
+     * record; or an error message. The {DeveloperName} value can be used by the JS to retrieve the record after
+     * the insert (deployment) completes.
+     */
+    @AuraEnabled
+    public static String saveFilterGroupAndRules(String filterGroupCMT) {
+        try {
+            // For new records, the RecordName property will be null by default. The process of deploying the
+            // CMT data will generate a unique RecordName to use for the new record.
+            CRLP_RollupCMT.FilterGroup filterGroupCMTObj = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(filterGroupCMT, CRLP_RollupCMT.FilterGroup.class);
+
+            // Queue up the deployment
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup>{filterGroupCMTObj});
+
+            // Trigger the asynchronous deployment process
+            String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+
+            // Return the unique record DeveloperName value of the FilterGroup__mdt record
+            return jobId + '-' + filterGroupCMTObj.recordName;
+        } catch (Exception ex) {
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+            throw new AuraHandledException('ERROR: ' + ex.getMessage() + '\n' + ex.getStackTraceString());
+        }
+    }
+
+    /*******************************************************************************************************
+     * @description When a new Rollup record is inserted, the page will only have a unique DeveloperName value to match
+     * the record. However, to re-load the record and allow for editing we need to have the actual record Id.
+     * This method queries for the DeveloperName and returns the record Id (if there is a match) or null
+     * @param jobId CMT Deployment Job Id to check the status for
+     * @param recordName Rollup__mdt.DeveloperName to query for if the job has completed
+     * @param objectType 'Rollup' or 'Filter'
+     * @return DeploymentResult
+     */
+    @AuraEnabled
+    public static String getDeploymentStatus(String jobId, String recordName, String objectType) {
+        Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+        System.debug(crs);
+        if (crs.CMT_API_Status__c != null) {
+            Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
+            if (deploymentStatus.containsKey(jobId)) {
+                String result = deploymentStatus.get(jobId);
+                if (result == Metadata.DeployStatus.Succeeded.name()) {
+                    try {
+                        DeploymentResult response = new DeploymentResult();
+                        if (objectType == 'Rollup') {
+                            Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
+                            response.completed = true;
+                            response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                        } else if (objectType == 'Filter') {
+                            Id groupId = CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(recordName);
+                            response.completed = true;
+                            response.filterGroupItem = createFilterGroupModel(groupId);
+                        }
+                        return JSON.serialize(response);
+                    } catch (Exception ex) {
+                        // error retrieving the metadata record
+                        throw new AuraHandledException(ex.getMessage());
+                    }
+
+                } else {
+
+                    // If there is an error, parse the message to remove the metadata recordname leaving just the error message itself
+                    List<String> errors = result.split('\n');
+                    String errMsg = '';
+                    for (String er : errors) {
+                        if (er.contains('>')) {
+                            er = er.split('>')[1];
+                            errMsg += er + '\n';
+                        }
+                    }
+                    throw new AuraHandledException(!String.isEmpty(errMsg) ? errMsg : result);
+                }
+            }
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
+    * @description Finds picklist values or record types for the constant field.
+    * @param objectName the name of the object to look up
+    * @param selectedField the name of the selected summary field.
+    * @return List<Map<String, String>> a list of mapped name to label options.
+    */
+    @AuraEnabled
+    public static List<Map<String, String>> getFilterRuleConstantPicklistOptions(String objectName, String selectedField) {
+
+        List<Map<String, String>> optionsList = new List<Map<String, String>>();
+        List<SelectOption> picklistValues = new List<SelectOption>();
+
+        if (selectedField != 'RecordTypeId') {
+            picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
+        } else {
+            Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
+            picklistValues = UTIL_RecordTypes.getRecordTypesForSelectList(sObjectType);
+        }
+
+        for (SelectOption o: picklistValues) {
+            Map<String, String> labeledOption = new Map<String, String>();
+            labeledOption.put('value', (selectedField != 'RecordTypeId' ? o.getValue() : o.getLabel()));
+            labeledOption.put('label', o.getLabel());
+
+            optionsList.add(labeledOption);
+        }
+
+        return optionsList;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system, deleted and other non-value fields
+    * @param objectName the name of the object to look up
+    * @param excludedTypes set of types not included in the returned list
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    public static List<Map<String, String>> getFilterRuleFieldsExcludingTypes(String objectName, Set<String> excludedTypes) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+        Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'Fiscal', 'FiscalQuarter', 'FiscalYear', 'SyncedQuoteID'};
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            String type = dfr.getType().Name();
+            if(!dfr.name.toLowerCase().contains('__system') && !excludedTypes.contains(type) && !excludedFields.contains(dfr.name)) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', type);
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
+    }
+
+    /*******************************************************************************************************
+    * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
+    *              Includes an exception for a set summary field on the rollup detail.
+    * @param objectName the name of the object to look up
+    * @param selectedField the name of a summary field already in use
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    public static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+        Schema.SObjectType sobjType = UTIL_Describe.getSObjectType(objectName);
+        List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(sobjType);
+        Set<Schema.DescribeFieldResult> referencedFieldSet = new Set<Schema.DescribeFieldResult>(referencedFields);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
+            String type = dfr.getType().Name();
+            Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
+            Boolean isValidType = validTypeSet.contains(type);
+
+            //check that summary field isn't being used on another rollup
+            Boolean isRolledUp = referencedFieldSet.contains(dfr);
+
+            if ((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
+                    || selectedField.equals(dfr.name)) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', dfr.name);
+                fieldObject.put('label', dfr.label);
+                fieldObject.put('type', type);
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
+    }
+
+}

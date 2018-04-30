@@ -41,8 +41,11 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     ********************************************************************************************************/
     public void execute(SchedulableContext context) {
         try {
-            ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(RLLP_OppRollup_UTIL.BATCH_SIZE);
-            rollup.runRollups();
+            if (customizableRollupEngineEnabled == false) {
+                ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(CRLP_RollupBatch_SVC.getBatchSize(
+                        CRLP_RollupProcessingOptions.RollupType.GAU, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode));
+                rollup.runRollups();
+            }
         } catch(Exception e) {
             ERR_Handler.processError(e, ERR_Handler_API.Context.ALLO);
         }
@@ -105,6 +108,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
         string strExcludeOppRecTypesQuery = '';
         string strExcludeOppTypesQuery = '';
 
+        // Instantiate the Fiscal Year utility
+        CRLP_FiscalYears fiscalYrs = new CRLP_FiscalYears(alloSettings.Use_Fiscal_Year_for_Rollups__c);
+
         //build string of opp rec type names for query
         if (alloSettings.Excluded_Opp_RecTypes__c != null) {
             strExcludeOppRecTypesQuery = 'AND Opportunity__r.RecordTypeId NOT IN ' + convertToQueryListFormat(alloSettings.Excluded_Opp_Rectypes__c);
@@ -132,7 +138,7 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'MAX(Opportunity__r.CloseDate)' => UTIL_Namespace.StrTokenNSPrefix('Last_Allocation_Date__c')
         };
         
-        Integer currentYear = alloSettings.Use_Fiscal_Year_for_Rollups__c ? RLLP_OppRollup_UTIL.getCurrentFY() : System.today().year();
+        Integer currentYear = fiscalYrs.getYear(Date.Today());
 
         rs.subgroupExpression = strFiscalOrCalendarYear+'(Opportunity__r.CloseDate)';
         rs.subgroupValueToParentFieldnameMap = new map<string, map<object, string>> {
@@ -148,9 +154,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             }
         };
 
-        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             rs.additionalQueryFields = new set<string>{'CurrencyIsoCode'};
-
+        }
         mySpecs.add(rs);
 
         //last 365 days
@@ -162,8 +168,9 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
             'COUNT_DISTINCT(ID)' => UTIL_Namespace.StrTokenNSPrefix('Number_of_Allocations_Last_N_Days__c')
         };
 
-        if (ALLO_Multicurrency_TDTM.isMultiCurrency())
+        if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             rs2.additionalQueryFields = new set<string>{'CurrencyIsoCode'};
+        }
 
         mySpecs.add(rs2);
         
@@ -199,14 +206,15 @@ public without sharing class ALLO_Rollup_SCHED extends UTIL_AbstractRollup_BATCH
     public override void customFinalProcessing (map<id, sobject> objMap) {
         if (ALLO_Multicurrency_TDTM.isMultiCurrency()) {
             for (sObject obj : objMap.values()) {
-                obj.put('Total_Allocations__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations__c')));
-                obj.put('Total_Allocations_This_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_This_Year__c')));
-                obj.put('Total_Allocations_Last_Year__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Last_Year__c')));
-                obj.put('Total_Allocations_Two_Years_Ago__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Two_Years_Ago__c')));
-                obj.put('Smallest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Smallest_Allocation__c')));
-                obj.put('Largest_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Largest_Allocation__c')));
-                obj.put('Average_Allocation__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Average_Allocation__c')));
-                obj.put('Total_Allocations_Last_N_Days__c', ALLO_Multicurrency_TDTM.ConvertFromCorporate((string)obj.get('CurrencyIsoCode'),(decimal)obj.get('Total_Allocations_Last_N_Days__c')));
+                String allocCurrCode = (string)obj.get('CurrencyIsoCode');
+                obj.put('Total_Allocations__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations__c')));
+                obj.put('Total_Allocations_This_Year__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_This_Year__c')));
+                obj.put('Total_Allocations_Last_Year__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_Year__c')));
+                obj.put('Total_Allocations_Two_Years_Ago__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Two_Years_Ago__c')));
+                obj.put('Smallest_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Smallest_Allocation__c')));
+                obj.put('Largest_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Largest_Allocation__c')));
+                obj.put('Average_Allocation__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Average_Allocation__c')));
+                obj.put('Total_Allocations_Last_N_Days__c', UTIL_CurrencyConversion.convertFromCorporateUsingStandardRates(allocCurrCode,(decimal)obj.get('Total_Allocations_Last_N_Days__c')));
             }
         }
     }

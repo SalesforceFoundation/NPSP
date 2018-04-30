@@ -38,7 +38,7 @@ public without sharing class RLLP_OppRollup_UTIL {
 
     /*** Settings ***/
 
-    /** @description Set to true if fiscal year should be used. */    
+    /** @description Set to true if fiscal year should be used. */
     public static boolean useFiscalYear = false;
     /** @description Set of Opportunity record types to exclue from Account Rollups. */
     public static set<id> recordTypesToExcludeAccts = new set<id>();
@@ -54,8 +54,6 @@ public without sharing class RLLP_OppRollup_UTIL {
     public static set<string> softCreditRoles = new set<string>();
     /** @description Household Custom Settings. */
     public static npo02__Households_Settings__c hh_settings;
-    /** @description Batch size defaults to 200 if not set in Settings. */
-    public static integer BATCH_SIZE = 200;
     /** @description Set to true if record types are enabled for opportunities. */
     private static boolean recordTypesOnOpps;
     /** @description Set to true if soft credits are used. */
@@ -69,12 +67,10 @@ public without sharing class RLLP_OppRollup_UTIL {
     /** @description set when multicurrency check is called, holds the field string/sobject mapping. */
     public static Map<String, SObjectField> mcFieldValues = new Map<String, SObjectField>();
     /** @description Determines if multi-currency is enabled. */
-    public static boolean multiCurrency;
-    /** @description map of exchange rates. */
-    static map<string, decimal> exchangeRates = new map<string,decimal>();
-    /** @description Coproate Currency */
-    public static string currCorporate; 
-    
+    private static boolean multiCurrency;
+    /** @description This organization's default corporate currency. */
+    public static string currCorporate = UTIL_Currency.getInstance().getOrgDefaultCurrency();
+
     /*** User Rollups ***/
     /** @description map of object and rollup field. */
     public static map<string, string> objectRollUpFieldMap;
@@ -181,18 +177,28 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*********************************************************************************************************
     * @description Constructor runs setupRollupVars and setupUserRollupVars.
     */
-	public RLLP_OppRollup_UTIL(){
-	    // setup households settings
-	    setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
-	    // setup user rollups
-	    setupUserRollupVars();
-	}
+    public RLLP_OppRollup_UTIL(){
+        // setup households settings
+        setupRollupVars(UTIL_CustomSettingsFacade.getHouseholdsSettings());
+        // setup user rollups
+        setupUserRollupVars();
+    }
+
+    /*********************************************************************************************************
+    * @description Set to true if the new Customizable Rollups Engine is enabled (i.e., Do Not Run Legacy Rollups)
+    */
+    public static Boolean customizableRollupEngineEnabled {
+        get {
+            return CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
+        } private set;
+    }
+
     /*********************************************************************************************************
     * @description Configures and sets up static variables for OppRollups settings based on custom settings.
     * @param household_settings custom household settings.
     */
     public static void setupRollupVars(npo02__Households_Settings__c household_settings){
-        
+
         if (household_settings.npo02__Excluded_Contact_Opp_Rectypes__c != null) {
             recordTypesToExcludeCons = new Set<Id>((List<Id>)household_settings.npo02__Excluded_Contact_Opp_Rectypes__c.split(';'));
         }
@@ -211,7 +217,7 @@ public without sharing class RLLP_OppRollup_UTIL {
         if (household_settings.npo02__Soft_Credit_Roles__c != null){
             softCreditRoles = new set<string>(household_Settings.npo02__Soft_Credit_Roles__c.split(';'));
         }
-        
+
         if (household_settings.npo02__Rollup_N_Day_Value__c == null){
             household_settings.npo02__Rollup_N_Day_Value__c = 365;
         }
@@ -223,17 +229,19 @@ public without sharing class RLLP_OppRollup_UTIL {
             List<SObject> fySettings = new List<SObject>();
             fySettings = Database.query(fyQuery);
             integer hasCustomFYRecord = fySettings.size();
-                
+
             //if org has customFY records, disable FY settings
-            if (hasCustomFYRecord > 0 && !household_settings.npo02__Force_Fiscal_Year__c)
+            if (hasCustomFYRecord > 0 && !household_settings.npo02__Force_Fiscal_Year__c) {
                 useFiscalYear = false;
-            else
+            } else {
                 useFiscalYear = true;
-        }        
-        
-        if (household_settings.npo02__Batch_Size__c != null)
-            BATCH_SIZE = household_settings.npo02__Batch_Size__c.intValue();
-        
+            }
+        }
+
+        // If the new Customizable Rollup Engine is enabled, then all of the legacy NPSP
+        // rollups are disabled.
+        customizableRollupEngineEnabled = CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled;
+
         //set the static var
         hh_settings = household_settings;
     }
@@ -319,10 +327,12 @@ public without sharing class RLLP_OppRollup_UTIL {
     /*** Multicurrency Support Methods ***/
     
     /*********************************************************************************************************
-    * @description Determines if multi-currency is enabled for the org.
+    * @description Determines if multi-currency is enabled for the org, but also adds the currency iso code
+    * fields to the related
     * @return Boolean representing whether or not multi-currency is enabled.
     */
     public static boolean isMultiCurrency(){                    
+
         if (multiCurrency==null){
             //create currency field handles for later dynamic dml
             mcFieldValues.put('Opportunity', Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode'));
@@ -330,56 +340,18 @@ public without sharing class RLLP_OppRollup_UTIL {
             mcFieldValues.put('Contact', Schema.sObjectType.Contact.fields.getMap().get('CurrencyIsoCode'));
             mcFieldValues.put('npo02__Household__c', Schema.sObjectType.npo02__Household__c.fields.getMap().get('CurrencyIsoCode'));
 
-            String queryExchangeRates = 'select IsoCode,ConversionRate,IsCorporate from CurrencyType';
-            SObjectType soCurrencyType = Schema.getGlobalDescribe().get('CurrencyType'); 
-
             //are we in a multi-currency org?
-            if (mcFieldValues.get('Opportunity') != null && mcFieldValues.get('Account') != null && 
-                mcFieldValues.get('npo02__Household__c') != null && mcFieldValues.get('Contact') != null && soCurrencyType != null){
+            if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() &&
+                    mcFieldValues.get('Opportunity') != null && mcFieldValues.get('Account') != null &&
+                    mcFieldValues.get('npo02__Household__c') != null && mcFieldValues.get('Contact') != null) {
                 multiCurrency = true;
- 
-                map<string,SObjectField> ctFields = soCurrencyType.getDescribe().fields.getMap();
-                SObjectField ctIsoCode = ctFields.get('IsoCode');
-                SObjectField ctConversionRate = ctFields.get('ConversionRate');
-                SObjectField ctCorporate = ctFields.get('IsCorporate');
-
-                //iterate over all the currencies in the org (inc. inactive ones as they may have been used previously)
-                //this allows us to put them in a map and use the ISO code as key and also set the corporate
-                for(sObject ct: Database.query(queryExchangeRates)){
-                    exchangeRates.put((string)ct.get(ctIsoCode),(decimal)ct.get(ctConversionRate));
-                    if((boolean)ct.get(ctCorporate))currCorporate=(string)ct.get(ctIsoCode);
-                }
+            } else {
+                multiCurrency = false;
             }
-            else
-                multiCurrency = false; 
-        }        
+        }
         return multiCurrency;
     }
-    /*********************************************************************************************************
-    * @description Converts the amount from corporate currency to the currency specified by the ISO code.
-    * @param ISO The ISO code.
-    * @param amt The amount to convert.
-    * @return Decimal The converted amount.
-    */
-    public static decimal convertFromCorporate(String ISO,Decimal amt){
-        if(currCorporate == ISO || currCorporate == null) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP);
-    }
-    /*********************************************************************************************************
-    * @description Converts the amount from an ISO code to the currency of the specified ISO code.
-    * @param fromISO The ISO code to convert from.
-    * @param toISO The ISO code to convert to.
-    * @param amt The amount to convert.
-    * @return Decimal The converted amount.
-    */
-    public static decimal convertCurrency(String fromISO, String toISO, Decimal amt){
-        if(fromISO == toISO) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2,System.RoundingMode.UP);
-    }
+
     /*********************************************************************************************************
     * @description Retrieves the Opportunities CurrencyIsoCode related to the objects passed in
     * @param objectList The list of obects with rollup field sets to obtain the Id from.

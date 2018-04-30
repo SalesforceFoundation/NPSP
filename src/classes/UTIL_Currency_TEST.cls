@@ -63,6 +63,26 @@ public class UTIL_Currency_TEST {
     }
 
     /**
+     * @description Validate UTIL_Currency.getOrgDefaultCurrency() response
+     * value as UserInfo.getDefaultCurrency()
+     */
+    @isTest
+    private static void testGetDefaultOrgCurrencyMethod() {
+        UTIL_Currency actual = new UTIL_Currency();
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            String soql = 'SELECT IsoCode FROM CurrencyType WHERE IsCorporate = True LIMIT 1';
+            SObject currObj = database.query(soql);
+            String orgDefaultCurrency = (String)currObj.get('IsoCode');
+            System.assertEquals(
+                    orgDefaultCurrency,
+                    actual.getDefaultCurrency()
+            );
+        } else {
+            System.assert(String.isEmpty(actual.getOrgDefaultCurrency()));
+        }
+    }
+
+    /**
      * @description UTIL_Currency implements the Singleton pattern.  If the
      * class has already been instantiated, it should be returned by
      * getInstance().
@@ -132,7 +152,6 @@ public class UTIL_Currency_TEST {
      */
     @isTest
     private static void testGetCurrencySymbolQueriesForCodeIfMultiCurrency() {
-        Id recordId = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
         UTIL_Currency actual = new UTIL_Currency();
         UtilCurrencyMock mock = new UtilCurrencyMock();
         mock.isMultiCurrencyOrganizationReturn = true;
@@ -140,17 +159,8 @@ public class UTIL_Currency_TEST {
         UTIL_Currency.instance = mock;
 
         System.assertEquals(
-            'FOO',
-            actual.getCurrencySymbol(recordId)
-        );
-        System.assertEquals(
             '$',
             actual.getCurrencySymbol('USD')
-        );
-
-        System.assertEquals(
-            recordId,
-            mock.queryCurrencyIsoCodeRecordId
         );
     }
 
@@ -169,19 +179,7 @@ public class UTIL_Currency_TEST {
 
         System.assertEquals(
             '$',
-            actual.getCurrencySymbol(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID)
-        );
-    }
-
-    /**
-     * @description Calling getCurrencyIsoCodeQuery() should properly build a
-     * query that retrieves the CurrencyIsoCode of the given record.
-     */
-    @isTest
-    private static void testGetCurrencyIsoCodeQueryBuildsCorrectQuery() {
-        System.assertEquals(
-            'SELECT CurrencyIsoCode FROM Account WHERE Id = \'001000000000001AAA\' LIMIT 1',
-            UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID)
+            actual.getCurrencySymbol('USD')
         );
     }
 
@@ -192,14 +190,14 @@ public class UTIL_Currency_TEST {
      */
     public class UtilCurrencyMock implements UTIL_Currency.Interface_x {
         public Boolean isMultiCurrencyOrganizationReturn;
+        public Boolean isAdvancedCurrencyManagementEnabledReturn = false;
         public String getDefaultCurrencyReturn;
         public String getDefaultCurrencySymbolReturn;
-        public Id getCurrencySymbolRecordId;
         public String getCurrencySymbolReturn;
-        public Id getCurrencyIsoCodeQueryRecordId;
         public String getCurrencyIsoCodeQueryReturn;
-        public Id queryCurrencyIsoCodeRecordId;
         public String queryCurrencyIsoCodeReturn;
+        public String orgDefaultCurrencyReturn;
+
         public Boolean isMultiCurrencyOrganization() {
             return isMultiCurrencyOrganizationReturn;
         }
@@ -209,20 +207,14 @@ public class UTIL_Currency_TEST {
         public String getDefaultCurrencySymbol() {
             return getDefaultCurrencySymbolReturn;
         }
-        public String getCurrencySymbol(Id recordId) {
-            getCurrencySymbolRecordId = recordId;
-            return getCurrencySymbolReturn;
-        }
         public String getCurrencySymbol(String currCode) {
             return getCurrencySymbolReturn;
         }
-        public String getCurrencyIsoCodeQuery(Id recordId) {
-            getCurrencyIsoCodeQueryRecordId = recordId;
-            return getCurrencyIsoCodeQueryReturn;
+        public Boolean isAdvancedCurrencyManagementEnabled() {
+            return isAdvancedCurrencyManagementEnabledReturn;
         }
-        public String queryCurrencyIsoCode(Id recordId) {
-            queryCurrencyIsoCodeRecordId = recordId;
-            return queryCurrencyIsoCodeReturn;
+        public String getOrgDefaultCurrency() {
+            return orgDefaultCurrencyReturn;
         }
     }
 }

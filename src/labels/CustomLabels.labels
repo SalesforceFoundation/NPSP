@@ -588,6 +588,343 @@
         <value>omit</value>
     </labels>
     <labels>
+        <fullName>ClosedWonOpportunities</fullName>
+        <categories>Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ClosedWonOpportunities</shortDescription>
+        <value>Closed Won Opportunities</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupDeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
+        <value>You can't delete this filter group because there is at least one rollup using it. View the filter group detail page to see a list of associated rollups. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameLimitError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>New Filter Group</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDeleteWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
+        <value>There are rollups using the filter group that this rule is part of. If you delete this filter rule, it will affect those rollup calculations. Are you sure you want to delete?</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleDuplicateError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
+        <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleFieldsMissing</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
+        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>ConfirmDeleteAccount</fullName>
+        <categories>Error, Delete</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ConfirmDeleteAccount</shortDescription>
+        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_AvailableRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for table describing rollup types.</shortDescription>
+        <value>Available Rollup Types</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_AdvancedCustomizationHeader</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for the advanced customization section on a Rollup__mdt record.</shortDescription>
+        <value>Advanced Customization</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_AdvancedCustomizationText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
+        <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupIntroHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
+        <value>Select the Target Object to determine the available fields, then select the Target Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
+        </value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTargetObjectHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for target object.</shortDescription>
+        <value>The object determines which Target Fields are available for you to roll up donation data to. The available Target Objects are Account, Contact, General Accounting Unit, and Recurring Donation.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTargetFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for target field.</shortDescription>
+        <value>Custom field on the selected Target Object that you are rolling up donation data to. Note that a Target Field can only be associated with one rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupActiveHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for the active flag.</shortDescription>
+        <value>Indicates that the rollup is active. Inactive rollups won't be calculated along with active rollups.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for description.</shortDescription>
+        <value>It's important to enter a detailed description so that you (or other users) understand exactly what this rollup calculates. The description will show when you hover over the rollup in the list view.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for name.</shortDescription>
+        <value>TODO: REMOVE ME</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTypeHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for rollup type.</shortDescription>
+        <value>The combination of which object you're rolling up data from and whether the rollup is a hard credit or soft credit.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for filter group.</shortDescription>
+        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine which records don't get rolled up.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupOperationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for operation.</shortDescription>
+        <value>Determines how the donation data will roll up. Is it a sum, an average, or a best year total (to name just a few)? Available values are determined by the type of the Target Field.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupFiscalYearHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for fiscal year.</shortDescription>
+        <value>Calculates rollups based on fiscal year settings (instead of calendar year).</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupTimeBoundOperationHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for time bound operation.</shortDescription>
+        <value>The time period for this rollup. You can roll up data for all time, a certain number of days, or a specific year.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupYearsAgoHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for years ago picklist.</shortDescription>
+        <value>Choose the number of years ago that you want to roll up data for. Keep in mind that only the data for that calendar (or fiscal) year will roll up. So, if the current year is 2018 and you choose 2 years ago, the roll up will include data for 2016.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDaysBackHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for days back integer.</shortDescription>
+        <value>Choose the number of days back (from today) that you want to roll up data for.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDetailFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This field must be of the same Type as the Target Field.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for date field picklist.</shortDescription>
+        <value>The date field to use when calculating the rollup. This is the date that the Time Frame uses to figure out whether to include this record or not.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Tooltip help text for amount field picklist.</shortDescription>
+        <value>The amount field to use when calculating the rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_CreditType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Credit Type</shortDescription>
+        <value>Credit Type</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Delete Progress Message</shortDescription>
+        <value>Deleting the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteSuccess</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>{0} Successfully Deleted</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_HardCredit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Hard Credit</shortDescription>
+        <value>Hard Credit</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_NoRollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
+        <value>No Rollup Type</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_Return</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Breadcrumb text to return to the specified location.</shortDescription>
+        <value>Back to {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupsByFilterGroup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Shows rollups using a specific filter group.</shortDescription>
+        <value>Active Rollups Using this Filter Group</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupNew</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Create new rollup button</shortDescription>
+        <value>New Rollup</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupSummary</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Rollup Summary Page Title</shortDescription>
+        <value>Customizable Rollups</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RollupType</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Type of custom rollup</shortDescription>
+        <value>Rollup Type</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error Deploying Customizable Rollup data</shortDescription>
+        <value>Error saving the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Saving Progress Message</shortDescription>
+        <value>Saving the {0}</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveSuccess</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Saved</shortDescription>
+        <value>{0} Successfully Saved</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SaveTimeout</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Timeout error message</shortDescription>
+        <value>Saving the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_SoftCredit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Soft Credit</shortDescription>
+        <value>Soft Credit</value>
+    </labels>
+    <labels>
         <fullName>CascadeDeletionError</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -602,22 +939,6 @@
         <protected>true</protected>
         <shortDescription>Cascade Deletion Error Message In Lightning Experience</shortDescription>
         <value>You can&apos;&apos;t delete {0} because it&apos;&apos;s associated with these records: {1}. Delete or re-associate these records and then try again.</value>
-    </labels>
-    <labels>
-        <fullName>ClosedWonOpportunities</fullName>
-        <categories>Error</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ClosedWonOpportunities</shortDescription>
-        <value>Closed Won Opportunities</value>
-    </labels>
-    <labels>
-        <fullName>ConfirmDeleteAccount</fullName>
-        <categories>Error, Delete</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>ConfirmDeleteAccount</shortDescription>
-        <value>{0} is the only Contact in the {1} Account. Deleting this Contact would leave an empty Account. Would you like to delete {1}, including {0}, instead?</value>
     </labels>
     <labels>
         <fullName>DeleteAccount</fullName>
@@ -764,6 +1085,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>true</protected>
         <shortDescription>Error</shortDescription>
         <value>Error</value>
+    </labels>
+    <labels>
+        <fullName>PageMessagesInfo</fullName>
+        <categories>PageMessages</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Info</shortDescription>
+        <value>Info</value>
     </labels>
     <labels>
         <fullName>PageMessagesFatal</fullName>
@@ -4354,6 +4683,22 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Not Started</value>
     </labels>
     <labels>
+        <fullName>stgActive</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgActive</shortDescription>
+        <value>Active</value>
+    </labels>
+    <labels>
+        <fullName>stgAdd</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>To add to a list</shortDescription>
+        <value>Add</value>
+    </labels>
+    <labels>
         <fullName>stgAddrGeneralSettingsIntro</fullName>
         <categories>Settings, address</categories>
         <language>en_US</language>
@@ -4384,6 +4729,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>false</protected>
         <shortDescription>stgBtnClearErrorLog</shortDescription>
         <value>Clear Error Log</value>
+    </labels>
+    <labels>
+        <fullName>stgBtnClone</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgBtnClone</shortDescription>
+        <value>Clone</value>
     </labels>
     <labels>
         <fullName>stgBtnCreateAutoRel</fullName>
@@ -4554,12 +4907,99 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Save</value>
     </labels>
     <labels>
+        <fullName>stgCheckboxTrue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>For alternative text when a boolean is selected.</shortDescription>
+        <value>Selected</value>
+    </labels>
+    <labels>
+        <fullName>stgCheckboxFalse</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>For alternative text when a boolean is not selected.</shortDescription>
+        <value>Not Selected</value>
+    </labels>
+    <labels>
+        <fullName>stgCountOf</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgCountOf</shortDescription>
+        <value>Count of</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPHouseholdAccountError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPHouseholdAccountError</shortDescription>
+        <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRBody</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRBody</shortDescription>
+        <value>Customizable Rollups offer all the functionality of User Defined Rollups and so much more:&lt;br/&gt;
+            &lt;br/&gt;
+            ● Roll up Payments in addition to Opportunities&lt;br/&gt;
+            ● Use filters to easily exclude certain records or data&lt;br/&gt;
+            ● Roll up data for more than 2 years back&lt;br/&gt;
+            &lt;br/&gt;
+            Go to NPSP Settings | Donations | Customizable Rollups to enable Customizable Rollups and get started using them!
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRHeading</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRHeading</shortDescription>
+        <value>Why not try Customizable Rollups instead?</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPNonAdminError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPNonAdminError</shortDescription>
+        <value>Only System Administrators can enable or disable Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPGoToSetup</shortDescription>
+        <value>Go to Customizable Rollups Setup</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgDocumentation</shortDescription>
         <value>Documentation</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentInProgress</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentInProgress</shortDescription>
+        <value>Deployment in progress. You can leave this page. The page will reload when deployment is finished.</value>
+    </labels>
+    <labels>
+        <fullName>stgDeploymentTryAgain</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgDeploymentTryAgain</shortDescription>
+        <value>You can try again immediately.</value>
     </labels>
     <labels>
         <fullName>stgDontAutoScheduleHelpText</fullName>
@@ -4807,6 +5247,44 @@ Before starting this process, we recommend disabling the following when they aff
 
 &lt;br/&gt; 
 Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCustomizableRollupsEnable1</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
+        <value>
+            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 82 out-of-box NPSP rollups, into Customizable Rollups.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCustomizableRollupsEnable2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
+        <value>
+            &lt;br/&gt;&lt;br/&gt;Enabling Customizable Rollups makes some changes to your org that are important to review and understand before turning this feature on. Here are the high level changes.
+            &lt;br/&gt;&lt;br/&gt;
+            ● Existing Rollups are converted to new Customizable Rollups
+            &lt;br/&gt;● Existing Rollup settings (in NPSP Settings) are removed and saved as metadata
+            &lt;br/&gt;● New Rollup Settings appear in NPSP Settings under Donations
+            &lt;br/&gt;&lt;br/&gt;
+            For complete details, see &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Things-to-Consider-Before-Enabling-Cust-Rollups&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+            &lt;br/&gt;&lt;br/&gt;
+            Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgHelpCustomizableRollupsEnable3</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
+        <value>
+            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
+        </value>
     </labels>
     <labels>
         <fullName>stgHelpDefaultAllocationsEnabled</fullName>
@@ -5579,6 +6057,14 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <value>When this option is selected, Salesforce will ALWAYS roll up donor data to the Opportunity&apos;s Primary Contact. Note that only the Account on the Opportunity will receive hard credit. So, if the Account Name on the Opportunity is an Organization, that Organization and the Primary Contact will receive hard credit; the Contact&apos;s Household or 1:1 Account will NOT receive hard credit. If left unselected, and the Opportunity&apos;s Account is an Organization, only the Organization will receive credit for the Opportunity.</value>
     </labels>
     <labels>
+        <fullName>stgHelpRollupSkewLimit</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpRollupSkewLimit</shortDescription>
+        <value>The maximum number of related Opportunities on an Account or Contact allowed in the non-Skew Mode Rollup Batch Jobs. An Account or Contact with more than this number of related Opportunities will always be rolled up using Skew Mode.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpSalesforceSetup</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5707,6 +6193,14 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <value>The object on which the rollup information will appear.</value>
     </labels>
     <labels>
+        <fullName>stgHelpUseDatedConvRates</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgHelpUseDatedConvRates</shortDescription>
+        <value>When checked, Dated Exchange Rates are used for currency conversion. If unchecked, the standard exchange rate is used even if Advanced Currency Management is enabled.</value>
+    </labels>
+    <labels>
         <fullName>stgInstallScriptError</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -5786,6 +6280,30 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
         <value>Automatic Contact Roles</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchJobSizes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchJobSizes</shortDescription>
+        <value>Rollup Batch Job Sizes</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchJobRollupSkewSizes</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelBatchJobRollupSkewSizes</shortDescription>
+        <value>Rollup Batch Job Skew Mode Sizes</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelBatchProcessingOptions</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelBatchProcessingOptions</shortDescription>
+        <value>Batch Processing Options</value>
     </labels>
     <labels>
         <fullName>stgLabelBDESettings</fullName>
@@ -5948,6 +6466,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Membership Settings</value>
     </labels>
     <labels>
+        <fullName>stgLabelName</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Intended for the name of a metadata record and not a person.</shortDescription>
+        <value>Name</value>
+    </labels>
+    <labels>
         <fullName>stgLabelNewAutoRel</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6010,6 +6536,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelONS</shortDescription>
         <value>Opportunity Name Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelOK</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelOK</shortDescription>
+        <value>OK</value>
     </labels>
     <labels>
         <fullName>stgLabelOppBatchProgress</fullName>
@@ -6284,12 +6818,52 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Target Object</value>
     </labels>
     <labels>
+        <fullName>stgLabelView</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelView</shortDescription>
+        <value>View</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelYearPicklistLastYear</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for previous year</shortDescription>
+        <value>Last Year</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelYearPicklistThisYear</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for current year</shortDescription>
+        <value>This Year</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelYearPicklistYearsAgo</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for dynamic number of years ago</shortDescription>
+        <value>{0} Years Ago</value>
+    </labels>
+    <labels>
         <fullName>stgLinkDelete</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLinkDelete</shortDescription>
         <value>Del</value>
+    </labels>
+    <labels>
+        <fullName>stgNoObjectsFound</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>No records of an object found. Pass in the object's plural label.</shortDescription>
+        <value>No {0} found.</value>
     </labels>
     <labels>
         <fullName>stgNPSPGuideImportData</fullName>
@@ -6354,6 +6928,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgNavAllocations</shortDescription>
         <value>GAU Allocations</value>
+    </labels>
+    <labels>
+        <fullName>stgNavBatchProcessSettings</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNavBatchProcessSettings</shortDescription>
+        <value>Batch Process Settings</value>
     </labels>
     <labels>
         <fullName>stgNavBDE</fullName>
@@ -6556,6 +7138,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Rollup Donations Batch</value>
     </labels>
     <labels>
+        <fullName>stgNavRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgNavRollups</shortDescription>
+        <value>Rollups</value>
+    </labels>
+    <labels>
         <fullName>stgNavSchedule</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6588,6 +7178,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>User Defined Rollups</value>
     </labels>
     <labels>
+        <fullName>stgNotApplicable</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgNotApplicable</shortDescription>
+        <value>N/A</value>
+    </labels>
+    <labels>
         <fullName>stgOppNamingDescription</fullName>
         <categories>Settings, OppNaming</categories>
         <language>en_US</language>
@@ -6602,6 +7200,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgSelectOne</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgSelectOne</shortDescription>
+        <value>Select one</value>
     </labels>
     <labels>
         <fullName>stgTools</fullName>
