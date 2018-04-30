@@ -59,16 +59,15 @@ public with sharing class OPP_PrimaryContactRoleMerge {
             OpportunityOCRs opportunityOCRs = new OpportunityOCRs(opportunityRecord);
             OpportunityContactRole primaryContactOCR = opportunityOCRs.getPrimaryContactOCR();
 
-            if (primaryContactOCR == null && opportunityOCRs.containsPrimaryRole(settingsRole) == false) {
+            if (opportunityOCRs.containsPrimaryRole(settingsRole) == false) {
                 errors.add(createError(opportunityRecord));
                 continue;
             }
-            if (primaryContactOCR == null && opportunityOCRs.containsPrimaryRole(settingsRole)) {
+            if (primaryContactOCR == null) {
                 List<OpportunityContactRole> ocrsWithSettingsRole = opportunityOCRs.getPrimaryRolesEqual(settingsRole);
                 duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
-                continue;
             }
-            if (primaryContactOCR != null) {
+            else {
                 duplicatePrimaryOCRs.makePrimary(primaryContactOCR);
             }
         }
@@ -146,7 +145,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 if (ocr.Id != inputOCR.Id && ocr.ContactId == inputOCR.ContactId) {
                     ocrRecordsToDelete.put(ocr.Id, ocr);
                 }
-                // After a delete of one duplicate Primary OCR, Salesforce update all the OCR IsPrimary to false.
+                // After a deletion of one duplicate Primary OCR, Salesforce updates all the OCRs' IsPrimary field to false.
                 // So, we need to force the update of the input OCR even if the OCR is already a Primary OCR.
                 if (ocr.Id == inputOCR.Id ) {
                     ocr.IsPrimary = true;
