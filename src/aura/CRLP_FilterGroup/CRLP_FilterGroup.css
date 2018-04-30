@@ -1,14 +1,14 @@
-.THIS .slds-form-element__icon{
+.THIS .slds-form-element__icon {
     margin-left: .2rem;
 }
-.THIS .slds-input[readonly]{
+.THIS .slds-input[readonly] {
     padding-left: .5rem;
 }
 /*removes the extra required asterisk for tooltip workaround*/
 .THIS .slds-form-element__label > [title='required'] {
     display: none; visibility: hidden;
 }
-/*elongates rollup fields*/
-.THIS .filterGroupField > .slds-form-element__control{
+/*elongates filter group fields*/
+.THIS .filterGroupField > .slds-form-element__control {
     display: inline;
 }

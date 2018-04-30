@@ -110,6 +110,9 @@
 
         if (newFields.length === 0) {
             newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+        } else if (typeList.length > 1) {
+            //sort here as well if multiple types are converging into one list
+            newFields = this.sortFields(newFields);
         }
 
         return newFields;
@@ -145,8 +148,6 @@
             newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
             cmp.set("v.detailFields", newFields);
         }
-        //reset detail field to null to prompt user selection
-        cmp.set("v.activeRollup.detailField", null);
     },
 
     /**
@@ -192,7 +193,6 @@
         cmp.set("v.activeRollup.dateField", null);
 
         this.resetRollupTypes(cmp);
-
         this.onChangeSummaryField(cmp, '');
     },
 
@@ -306,6 +306,8 @@
                 renderMap["filterGroup"] = true;
                 cmp.set("v.renderMap", renderMap);
                 this.filterDetailFieldsBySummaryField(cmp, detailObject);
+                //reset detail field to prompt user selection
+                cmp.set("v.activeRollup.detailField", null);
             } else {
                 renderMap["filterGroup"] = false;
             }
@@ -581,10 +583,12 @@
 
         if (newFields === undefined || newFields.length === 0) {
             newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+        } else {
+            newFields = this.sortFields(newFields);
         }
 
         if (context === 'detail') {
-            cmp.set("v.detailFields", newFields);
+            this.filterDetailFieldsBySummaryField(cmp, object);
         } else if (context === 'summary') {
             newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
@@ -1070,6 +1074,23 @@
             'message': message
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description Sort provided fields by the field labels
+     * @param fields - list of fields to sort
+     */
+    sortFields: function(fields){
+        fields.sort(function (a, b) {
+            if (a.label < b.label) {
+                return -1;
+            }
+            if (a.label > b.label) {
+                return 1;
+            }
+            return 0;
+        });
+        return fields;
     },
 
     /**
