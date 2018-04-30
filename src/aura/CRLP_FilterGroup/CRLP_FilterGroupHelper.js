@@ -18,6 +18,7 @@
                 cmp.set("v.activeFilterGroupId", null);
                 cmp.set("v.activeFilterGroup.recordId", null);
                 cmp.set("v.activeFilterGroup.recordName", null);
+                cmp.set("v.activeFilterGroup.label", cmp.get("v.activeFilterGroup.label") + " (Clone)");
 
                 var filterRuleList = cmp.get("v.filterRuleList");
                 for (var i = 0; i < filterRuleList.length; i++) {

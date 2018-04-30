@@ -241,14 +241,12 @@
                                     <c:CRLP_Tooltip helpText="{!v.labels.createTimeBoundHelp}" fieldLabel="{!v.selectedTimeBoundOperationLabel}"/>
                                 </aura:if>
                                 <lightning:input aura:id="integerInput"
-                                                 type="{!v.isReadOnly ? 'text' : 'number'}"
+                                                 type="text"
                                                  label="{!v.selectedTimeBoundOperationLabel}"
                                                  value="{!v.activeRollup.intValue}"
                                                  readonly="{!v.isReadOnly}"
-                                                 min="0"
-                                                 step="1"
-                                                 messageWhenRangeUnderflow="{!v.labels.integerError}"
-                                                 messageWhenStepMismatch="{!v.labels.integerError}"
+                                                 pattern="^[0-9]*$"
+                                                 messageWhenPatternMismatch="{!v.labels.daysBackError}"
                                                  variant="{!v.isReadOnly ? '' : 'label-hidden'}"/>
                             </lightning:layoutItem>
                         </aura:if>

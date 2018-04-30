@@ -179,7 +179,7 @@ public with sharing class CRLP_RollupUI_SVC {
         return mdtTableList;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Build a RollupTableItem wrapper for a given Rollup__mdt record
      * @param rlpm Rollup__mdt
      * @return RollupTableItem
@@ -304,7 +304,7 @@ public with sharing class CRLP_RollupUI_SVC {
         return modelString;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Build a FilterGroupModel wrapper for a given FilterGroup Id
      * @param filterGroupId
      * @return FilterGroupModel with just the FilterGroup and FilterRuleList properties populated
@@ -394,6 +394,17 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public static Map<String, String> getRollupLabels() {
 
+        //dynamic get required for days back picklist value
+        String daysBackLabel;
+        List<PicklistEntry> timeBoundPicklistEntries = Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getPicklistValues();
+        Map<String, PicklistEntry> peMap = new Map<String,PicklistEntry>();
+        for (PicklistEntry p : timeBoundPicklistEntries) {
+            if (p.getValue().equals('Days_Back')) {
+                daysBackLabel = p.getLabel();
+                break;
+            }
+        }
+
             Map<String, String> labels = new Map<String,String>
             {
                 'action' => Label.stgLabelActionColumn,
@@ -428,6 +439,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
+                'daysBackError' => String.format(Label.bdiPositiveNumber, new List<String>{daysBackLabel}),
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
@@ -458,7 +470,6 @@ public with sharing class CRLP_RollupUI_SVC {
                 'hardCredit' => Label.CRLP_HardCredit,
                 'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
-                'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
                 'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
                 'labelContact' => Schema.SObjectType.Contact.getLabel(),

@@ -56,8 +56,7 @@
                     onclick="{!c.handleOnClick}"
                     onmouseover="{!c.handleMouseOver}"
                     onmouseout="{!c.handleMouseOut}"
-                    aria-describedby="divHelp"
-                    title="Help">
+                    aria-describedby="divHelp">
                 <lightning:icon class="slds-icon-text-default" size="xx-small"
                                 iconName="utility:info" alternativeText="Help"/>
             </button>
