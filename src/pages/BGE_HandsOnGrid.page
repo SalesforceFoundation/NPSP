@@ -563,11 +563,6 @@
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
 
-                /*hot.view.wt.update('onCellDblClick', function (row,cell) {
-
-                    console.log("double click");
-                });*/
-
                 function getColumnFromName(name){
 
                     var numberOfColumns = dynamicColumns.length;
