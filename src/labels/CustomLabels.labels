@@ -5271,7 +5271,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
             &lt;br/&gt;● Existing Rollup settings (in NPSP Settings) are removed and saved as metadata
             &lt;br/&gt;● New Rollup Settings appear in NPSP Settings under Donations
             &lt;br/&gt;&lt;br/&gt;
-            For complete details, see &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Things-to-Consider-Before-Enabling-Cust-Rollups&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+            For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
         </value>
