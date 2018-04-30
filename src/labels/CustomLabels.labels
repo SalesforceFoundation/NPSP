@@ -596,6 +596,14 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_DeleteConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message when a user wants to delete something.</shortDescription>
+        <value>Are you sure you want to delete this {0}?</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterGroupDeleteError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

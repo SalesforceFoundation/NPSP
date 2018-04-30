@@ -91,7 +91,10 @@
     /**
      * @description: cancels the pop up for filter rule and clears the active filter rule
      */
-    cancelFilterRule: function(cmp, event, helper){
+    cancelModal: function(cmp, event, helper){
+        if(cmp.get("v.mode",'delete')) {
+            cmp.set("v.mode",'view');
+        }
         helper.toggleFilterRuleModal(cmp);
         helper.resetActiveFilterRule(cmp);
         cmp.set("v.filterRuleMode", "");
@@ -112,6 +115,7 @@
         var action = event.getParam('action');
         var row = event.getParam('row');
         var rows = cmp.get("v.filterRuleList");
+        var labels = cmp.get("v.labels");
         row.index = rows.indexOf(row);
 
         //break the shared reference to avoid accidental data updates
@@ -130,6 +134,11 @@
             //cautions user about deleting filter rule
             cmp.set("v.filterRuleMode", 'delete');
             helper.toggleFilterRuleModal(cmp);
+            if(cmp.get("v.rollupItems").length == 0) {
+                cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteConfirm);
+            } else {
+                cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteWarning);
+            }
         }
     },
 
@@ -148,6 +157,7 @@
             //json shenanigans to avoid shared reference
             cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup));
             cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
+            cmp.set("v.deletedRuleList", []);
         }
 
     },
@@ -188,14 +198,16 @@
      * @description: saves a new filter group and associated filter rules
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
-        //placeholder for on cancel function in !view mode
-        //add check for description, name and a filter rule
+        if(cmp.get("v.mode") == 'delete') {
+            console.log('HITTING DELETE MODE IN SAVE FUNCTION');
+            cmp.set("v.activeFilterGroup.isDeleted", true);
+            helper.toggleFilterRuleModal(cmp);
+        }
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
         var filterRuleList = cmp.get("v.filterRuleList");
         var deletedRuleList = cmp.get("v.deletedRuleList");
         var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
         if (canSave) {
-            cmp.set("v.mode", 'view');
             helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
 
             //sends the message to the parent cmp RollupsContainer

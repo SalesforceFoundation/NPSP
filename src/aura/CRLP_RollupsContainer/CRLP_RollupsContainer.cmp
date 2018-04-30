@@ -225,7 +225,7 @@
     <!--BEGIN FILTER GROUPS GRID -->
     <aura:if isTrue="{!v.isFilterGroupsGrid}">
         <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
-            <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container" style="height: 300px;">
+            <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container">
                 <lightning:datatable data="{!v.filterGroupList}"
                                      columns="{!v.filterGroupColumns}"
                                      class="lightningTable"
@@ -266,23 +266,5 @@
         </div>
     </aura:if>
     <!--END FILTER GROUP DETAIL-->
-
-    <!--START MODAL-->
-    <div>
-        <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading" aria-modal="true"
-                 aria-describedby="modal-content" class="slds-modal">
-            <div class="slds-modal__container">
-                <header class="slds-modal__header slds-modal__header_empty"></header>
-                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
-                    <p>{!v.labels.filterGroupDeleteWarning}</p>
-                </div>
-                <footer class="slds-modal__footer">
-                    <button class="slds-button slds-button_brand"
-                            onclick="{!c.toggleFilterRuleModal}">{!v.labels.ok}</button>
-                </footer>
-            </div>
-        </section>
-        <div aura:id="backdrop" class="slds-backdrop"></div>
-    </div>
 
 </aura:component>

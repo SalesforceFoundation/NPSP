@@ -5,6 +5,7 @@
      */
     changeMode: function(cmp) {
         var mode = cmp.get("v.mode");
+        var labels = cmp.get("v.labels");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
             console.log("Mode is " + mode);
@@ -31,9 +32,18 @@
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "create") {
                 cmp.set("v.isReadOnly", false);
+                cmp.set("v.rollupItems",[]);
             } else if (mode === "delete") {
-                cmp.set("v.activeFilterGroup.isDeleted", true);
-                this.saveFilterGroupAndRules(cmp,cmp.get("v.activeFilterGroup"),null,null);
+                //verify no rollups use the filter group before deleting
+                var countRollups = cmp.get("v.rollupItems").length;
+
+                if (countRollups == 0) {
+                    this.toggleFilterRuleModal(cmp);
+                    cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteConfirm);
+                } else {
+                    this.toggleFilterRuleModal(cmp);
+                    cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteWarning);
+                }
             }
         }
     },
@@ -190,7 +200,7 @@
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + deployResult);
+                        console.log('deployResult=' + JSON.stringify(deployResult));
                         // if there is a record id response
                         if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
@@ -218,11 +228,13 @@
                                 cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
 
                                 // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
-                                if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
+                                if (cmp.get("v.cachedFilterGroup") === null) {
+                                    cmp.set("v.cachedFilterGroup", helper.restructureResponse(cmp.get("v.activeFilterGroup")));
+                                } else if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
                                     var activeFilterGroup = cmp.get("v.activeFilterGroup");
                                     var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
                                     for (var key in activeFilterGroup) {
-                                        if (activeFilterGroup.hasOwnProperty(key)) {
+                                        if (cachedFilterGroup.hasOwnProperty(key)) {
                                             cachedFilterGroup[key] = activeFilterGroup[key];
                                         }
                                     }
@@ -255,6 +267,8 @@
 
                                 // Send a message with the changed or new Rollup to the RollupContainer Component
                                 helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
+
+                                cmp.set("v.mode",'view');
                             }
 
                         } else {
