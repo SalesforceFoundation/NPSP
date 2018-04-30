@@ -45,7 +45,7 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     * OCRs with Role != NPSP Settings Role, when the batch runs, then an error log created, containing a link 
     * to the Opportunity.
     */
-    @isTest static void test_LogErrorIfNoOCRsRoleDefinedInNPSPSettings() {
+    @isTest static void test_LogErrorIf_OppHasNoPrimaryContact_And_NoOCRsRoleDefinedInNPSPSettings() {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
@@ -64,6 +64,88 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             CloseDate = Date.today(),
             AccountId = account.Id,
             Primary_Contact__c = null
+        );
+        insert opportunity;
+
+        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = NON_NPSP_ROLE
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = NON_NPSP_ROLE
+            )
+        };
+        insert primaryOCRs;
+
+        activateTriggers();
+
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
+            System.assert(
+                expectedOCR.ContactId == contact.Id && 
+                expectedOCR.Role == NON_NPSP_ROLE && 
+                expectedOCR.IsPrimary
+            );
+        }
+        
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Test.stopTest();
+
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
+        // Opportunity and the related Opportunity Contact Roles should not change.
+        System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
+            System.assert(
+                expectedOCR.ContactId == contact.Id && 
+                expectedOCR.Role == NON_NPSP_ROLE && 
+                expectedOCR.IsPrimary
+            );
+        }
+
+        List<Error__c> errors = [
+            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
+            FROM Error__c
+        ];
+        System.assertEquals(1, errors.size(), 'An Error Log should be created');
+        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
+        System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunity.Id, errors[0].Record_URL__c);
+    }
+
+    /*********************************************************************************************************
+    * @description Given an Opportunity with a Primary Contact AND the Opportunity has duplicate primary 
+    * OCRs with Role != NPSP Settings Role, when the batch runs, then an error log created, containing a link 
+    * to the Opportunity.
+    */
+    @isTest static void test_LogErrorIf_OppHasPrimaryContact_And_NoOCRsRoleDefinedInNPSPSettings() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
+        ));
+
+        deactivateTriggers();
+
+        Account account = new Account(Name = 'TEST_ACCOUNT');
+        insert account;
+
+        Contact contact = new Contact(LastName = 'TEST_CONTACT');
+        insert contact;
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'TEST_OPPORTUNITY',
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            CloseDate = Date.today(),
+            AccountId = account.Id,
+            Primary_Contact__c = contact.Id
         );
         insert opportunity;
 
@@ -217,10 +299,15 @@ private class OPP_PrimaryContactRoleMerge_TEST {
 
     /*********************************************************************************************************
     * @description Given an Opportunity with a Primary Contact AND the Opportunity has duplicate primary OCRs,
-    * AND the duplicate Primary OCRs Contact != Opportunity Primary Contact, when the Batch runs, then the primary
-    * OCR the Opportunity should have only 1 primary Contact with Contact = Opportunity Primary Contact.
+    * AND the duplicate Primary OCRs Contact != Opportunity Primary Contact, AND one of the primary OCR has
+    * NPSP Role, when the Batch runs, the Opportunity should have only 1 primary OCR with 
+    * Contact = Opportunity Primary Contact.
     */
     @isTest static void test_PrimaryContactToNonPrimaryOCR() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
+        ));
+
         deactivateTriggers();
 
         Account account = new Account(Name = 'TEST_ACCOUNT');
@@ -243,7 +330,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
                 ContactId = contact.Id,
-                IsPrimary = true
+                IsPrimary = true,
+                Role = NPSP_ROLE
             ),
             new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
@@ -286,10 +374,15 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     
     /*********************************************************************************************************
     * @description Given an Opportunity with a Primary Contact AND the Opportunity has duplicate primary OCRs,
-    * AND the duplicate Primary OCRs Contact = Opportunity Primary Contact, when the Batch runs, then the primary
-    * OCR the Opportunity should have only 1 primary Contact with Contact = Opportunity Primary Contact.
+    * AND the duplicate Primary OCRs Contact = Opportunity Primary Contact, AND one of the primary OCR has
+    * NPSP Role, when the Batch runs, the Opportunity should have only 1 primary OCR with 
+    * Contact = Opportunity Primary Contact.
     */
     @isTest static void test_PrimaryContactToPrimaryOCR() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
+        ));
+
         deactivateTriggers();
 
         Account account = new Account(Name = 'TEST_ACCOUNT');
@@ -312,7 +405,8 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
                 ContactId = contact.Id,
-                IsPrimary = true
+                IsPrimary = true,
+                Role = NPSP_ROLE
             ),
             new OpportunityContactRole(
                 OpportunityId = opportunity.Id,
