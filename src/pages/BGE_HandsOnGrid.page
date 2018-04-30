@@ -29,6 +29,7 @@
             .handsontable td.htInvalid {
                 background-color: transparent !important;
                 border: 2px solid red !important;
+                color: #ff0000 !important;
             }
 
             .pagination-section {
