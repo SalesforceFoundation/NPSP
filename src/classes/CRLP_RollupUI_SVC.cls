@@ -71,7 +71,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
         @AuraEnabled public String recordId;
-        @AuraEnabled public boolean isDeleted;
+        @AuraEnabled public Boolean isDeleted;
     }
 
     /*******************************************************************************************************
@@ -255,7 +255,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
             item.recordId = mdtList[i].Id;
-            item.isDeleted = mdtList[i].Is_Deleted__c;
+            item.isDeleted = false;
 
             mdtTableList.add(item);
         }

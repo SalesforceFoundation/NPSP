@@ -89,16 +89,17 @@
     },
 
     /**
-     * @description: cancels the pop up for filter rule and clears the active filter rule
+     * @description: closes modal and resets filter rules as needed
      */
     cancelModal: function(cmp, event, helper){
-        if(cmp.get("v.mode",'delete')) {
+        if (cmp.get("v.mode") === 'delete') {
             cmp.set("v.mode",'view');
+        } else {
+            helper.resetActiveFilterRule(cmp);
+            cmp.set("v.filterRuleMode", "");
+            cmp.set("v.filterRuleError", "");
         }
         helper.toggleFilterRuleModal(cmp);
-        helper.resetActiveFilterRule(cmp);
-        cmp.set("v.filterRuleMode", "");
-        cmp.set("v.filterRuleError", "")
     },
 
     /**
@@ -134,7 +135,7 @@
             //cautions user about deleting filter rule
             cmp.set("v.filterRuleMode", 'delete');
             helper.toggleFilterRuleModal(cmp);
-            if(cmp.get("v.rollupItems").length == 0) {
+            if(cmp.get("v.rollupItems").length === 0) {
                 cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteConfirm);
             } else {
                 cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteWarning);
@@ -157,6 +158,7 @@
             //json shenanigans to avoid shared reference
             cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup));
             cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
+            //clear any filter rules previously marked for delete
             cmp.set("v.deletedRuleList", []);
         }
 

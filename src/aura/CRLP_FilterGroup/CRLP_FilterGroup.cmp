@@ -52,7 +52,7 @@
     <aura:attribute name="rollupList" type="List" description="List of related rollups for the filter group" access="public"/>
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
-    <aura:attribute name="rollupItems" type="Object"/>
+    <aura:attribute name="rollupItems" type="List" default="[]"/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="Summary objects to use for filtering rollups" access="public"/>
     <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" default="text"/>

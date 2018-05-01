@@ -32,16 +32,14 @@
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "create") {
                 cmp.set("v.isReadOnly", false);
-                cmp.set("v.rollupItems",[]);
             } else if (mode === "delete") {
                 //verify no rollups use the filter group before deleting
                 var countRollups = cmp.get("v.rollupItems").length;
 
-                if (countRollups == 0) {
-                    this.toggleFilterRuleModal(cmp);
+                this.toggleFilterRuleModal(cmp);
+                if (countRollups === 0) {
                     cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteConfirm);
                 } else {
-                    this.toggleFilterRuleModal(cmp);
                     cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteWarning);
                 }
             }
@@ -567,9 +565,7 @@
             canSave = false;
         }
 
-        if (filterRuleList.length === 0) {
-            canSave = false;
-        } else if (!filterRuleList || filterRuleList.length === 0) {
+        if (!filterRuleList || filterRuleList.length === 0) {
             canSave = false;
             cmp.find("noFilterRulesMessage").set("v.severity", "error");
         }
