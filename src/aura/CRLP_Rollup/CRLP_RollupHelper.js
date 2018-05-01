@@ -301,7 +301,7 @@
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
         //during create, visibility of filter group is toggled
-        if(cmp.get("v.mode") === "create"){
+        if (cmp.get("v.mode") === "create") {
             if (rollupLabel) {
                 renderMap["filterGroup"] = true;
                 cmp.set("v.renderMap", renderMap);
@@ -311,7 +311,7 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.filterGroupRecordName", labels.noFilterGroupSelect);
+            cmp.set("v.activeRollup.filterGroupRecordName", "");
             this.onChangeFilterGroup(cmp, labels.noFilterGroupSelect);
         }
 
@@ -998,12 +998,11 @@
 
                             var mode = cmp.get("v.mode");
 
-                            if(mode === "delete") {
+                            if (mode === "delete") {
                                 // fire cancel event to nav back to rollup grid
                                 var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
                                 cancelEvent.setParams({grid: 'rollup'});
                                 cancelEvent.fire();
-                                console.log('firing cancel event');
 
                             } else {
 
@@ -1027,7 +1026,7 @@
 
                             }
 
-                            if(mode === "delete") {
+                            if (mode === "delete") {
                                 // Send a message with the deleted Rollup to the RollupContainer Component
                                 helper.sendMessage(cmp, 'rollupDeleted', deployResult.rollupItem);
                             } else {
@@ -1055,6 +1054,8 @@
                         helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
                         window.clearTimeout(poller);
                         helper.toggleSpinner(cmp, false);
+                        cmp.set("v.mode", "edit");
+                        helper.changeMode(cmp);
                     }
                 });
                 $A.enqueueAction(action);

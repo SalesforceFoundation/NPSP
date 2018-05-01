@@ -88,8 +88,9 @@
      * else resets mode to view to become display-only and resets rollup values
      */
     onCancel: function(cmp, event, helper) {
-        //todo: should we make this more sensitive to a clone from edit mode: will need to also factor in uniqueSummaryFieldCheck type check
-        if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
+        var cachedRollup = cmp.get("v.cachedRollup");
+        //check for cachedRollup to avoid JS errors getting a null .valueOf()
+        if (!cmp.get("v.activeRollupId") || !cachedRollup) {
             //set off cancel event for container
             var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
             cancelEvent.setParams({grid: 'rollup'});
@@ -97,7 +98,6 @@
             console.log('firing cancel event');
         } else {
             cmp.set("v.mode", "view");
-            var cachedRollup = cmp.get("v.cachedRollup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", helper.restructureResponse(cachedRollup.valueOf()));
             //reset all field visibility and values

@@ -601,7 +601,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for the active rollups tree</shortDescription>
-        <value>The list of rules included in this filter group. The filter rules set the criteria that determines what data to exclude, so that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so data must match ALL filter rules within a filter group.</value>
+        <value>The list of active rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterGroupDeleteError</fullName>
@@ -641,7 +641,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for the filter rules</shortDescription>
-        <value>The list of rules included in this filter group. The filter rules set the criteria that determines what data to exclude, so that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so data must match ALL filter rules within a filter group.</value>
+        <value>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn't match ALL filter rules within a filter group, it won't be included in the rollup.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterRulesValueHelpText</fullName>
