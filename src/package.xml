@@ -1124,6 +1124,7 @@
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoRollupType</members>
+        <members>CRLP_PleaseWait</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupsByFilterGroup</members>
         <members>CRLP_RollupNew</members>

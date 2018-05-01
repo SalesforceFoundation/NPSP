@@ -494,6 +494,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
                 'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
+                'pleaseWait' => Label.CRLP_PleaseWait,
                 'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
                 'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -603,7 +604,6 @@ public with sharing class CRLP_RollupUI_SVC {
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
         Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
@@ -614,7 +614,9 @@ public with sharing class CRLP_RollupUI_SVC {
                         if (objectType == 'Rollup') {
                             Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                             response.completed = true;
-                            response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                            if (mode != 'delete') {
+                                response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                            }
                         } else if (objectType == 'Filter') {
                             Id groupId = CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(recordName);
                             response.completed = true;
@@ -622,6 +624,7 @@ public with sharing class CRLP_RollupUI_SVC {
                                 response.filterGroupItem = createFilterGroupModel(groupId);
                             }
                         }
+                        System.debug('returning response!');
                         return JSON.serialize(response);
                     } catch (Exception ex) {
                         // error retrieving the metadata record

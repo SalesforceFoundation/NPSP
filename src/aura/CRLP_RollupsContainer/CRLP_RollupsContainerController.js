@@ -191,7 +191,7 @@
         } else if (channel === 'rollupDeleted') {
             var rollupsList = cmp.get("v.rollupList");
             for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].recordId === message.recordId) {
+                if (rollupsList[i].recordName === message) {
                     // if the Id matches, delete that record
                     rollupsList.splice(i, 1);
                     break;

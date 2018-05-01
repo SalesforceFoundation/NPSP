@@ -492,9 +492,9 @@
             }
         });
         if (cmp.get("v.mode") === 'delete') {
-            this.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteProgress"));
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.pleaseWait"));
         } else {
-            this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.pleaseWait"));
         }
         $A.enqueueAction(action);
     },

@@ -869,6 +869,14 @@
         <value>No Rollup Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_PleaseWait</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message to indicate in-progress operation for metadata deployments</shortDescription>
+        <value>Please wait a moment</value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
