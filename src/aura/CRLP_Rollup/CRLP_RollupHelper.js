@@ -678,24 +678,24 @@
         var templateList = [];
         if (summaryObject === labels.objectAccount) {
             templateList.push({
-                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit,
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')',
                     summaryObject: labels.objectAccount, name: labels.objectOpportunity
                 }
-                , { label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit
+                , { label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')'
                     , summaryObject: labels.objectAccount, name: labels.objectPartialSoftCredit
                 }
-                , { label: labels.labelPayment + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit
+                , { label: labels.labelPayment + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')'
                     , summaryObject: labels.objectAccount, name: labels.objectPayment
             });
         } else if (summaryObject === labels.objectContact) {
             templateList.push({
-                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit
+                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')'
                     , summaryObject: labels.objectContact, name: labels.objectOpportunity
                 }
-                , { label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit
+                , { label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.softCredit + ')'
                     , summaryObject: labels.objectContact, name: labels.objectPartialSoftCredit
                 }
-                , { label: labels.labelPayment + ' -> ' + labels.labelContact + ' ' + labels.hardCredit
+                , { label: labels.labelPayment + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')'
                     , summaryObject: labels.objectContact, name: labels.objectPayment
             });
         } else if (summaryObject === labels.objectGAU) {
@@ -858,49 +858,49 @@
             if (amountObject === labels.objectPartialSoftCredit) {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectAccount;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')';
                 cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
             } else {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectAccount;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')';
                 cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
             }
 
         } else if (detailObject === labels.objectPayment && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectPayment;
             rollupType.summaryObject = labels.objectAccount;
-            rollupType.label = labels.labelPayment + ' -> ' + labels.labelAccount + ' ' + labels.hardCredit;
+            rollupType.label = labels.labelPayment + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectPayment);
 
         } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectPartialSoftCredit;
             rollupType.summaryObject = labels.objectAccount;
-            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' ' + labels.softCredit;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
             if (amountObject === labels.objectPartialSoftCredit) {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectContact;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.softCredit + ')';
                 cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
             } else {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectContact;
-                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')';
                 cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
             }
         } else if (detailObject === labels.objectPartialSoftCredit && summaryObject === labels.objectContact) {
             rollupType.name = labels.objectPartialSoftCredit;
             rollupType.summaryObject = labels.objectContact;
-            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' ' + labels.softCredit;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.softCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
 
         } else if (detailObject === labels.objectPayment && summaryObject === labels.objectContact) {
             rollupType.name = labels.objectPayment;
             rollupType.summaryObject = labels.objectContact;
-            rollupType.label = labels.labelPayment + ' -> ' + labels.labelContact + ' ' + labels.hardCredit;
+            rollupType.label = labels.labelPayment + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectPayment);
 
         } else if (detailObject === labels.objectAllocation && summaryObject === labels.objectGAU) {

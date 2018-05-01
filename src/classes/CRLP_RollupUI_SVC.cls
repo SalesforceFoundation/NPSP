@@ -301,8 +301,14 @@ public with sharing class CRLP_RollupUI_SVC {
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
 
         for(String obj : objectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
-            objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+            if (obj == 'Partial_Soft_Credit__c') {
+                List<String> fieldsToReturn = new List<String>{'Role_Name__c','Amount__c'};
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn);
+                objNameToFieldTypeMap.put(obj, pscList);
+            } else {
+                List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
+                objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+            }
         }
 
         FilterGroupModel model = createFilterGroupModel(filterGroupId);
@@ -385,8 +391,14 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String detailObj : detailObjectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = getAllFieldsWithType(detailObj);
-            objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+            if (detailObj == 'Partial_Soft_Credit__c') {
+                List<String> fieldsToReturn = new List<String>{'Role_Name__c','Amount__c'};
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn);
+                objNameToFieldTypeMap.put(detailObj, pscList);
+            } else {
+                List<Map<String, String>> detailNameToFieldTypeObj = getAllFieldsWithType(detailObj);
+                objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+            }
         }
         for(String targetObj : targetObjectNames){
             List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj, summaryField);
@@ -407,9 +419,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
 
-        String pscLabel = Schema.SObjectType.Partial_Soft_Credit__c.getLabel();
-        String scLabel = Label.CRLP_SoftCredit;
-        String objectLabel = UTIL_Describe.getObjectLabel(objectName).replace(pscLabel,scLabel);
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName);
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             if(!dfr.name.toLowerCase().contains('__system')) {
@@ -423,6 +433,34 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return fieldObjectList;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system fields
+    * @param objectName the name of the object to look up
+    * @param fields list of field api names to get
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    private static List<Map<String, String>> getSpecificFieldsWithType(String objectName, List<String> fields) {
+
+        //get object label and clean "Partial Soft Credit" to "Soft Credit" in a translatable way
+        String pscLabel = Schema.SObjectType.Partial_Soft_Credit__c.getLabel();
+        String scLabel = Label.CRLP_SoftCredit;
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName).replace(pscLabel,scLabel);
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        for (String field : fields) {
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', objectName+' '+field);
+            fieldObject.put('label', objectLabel +': '+UTIL_Describe.getFieldLabel(objectName,field));
+            fieldObject.put('type', UTIL_Describe.getFieldType(objectName,field));
+
+            fieldObjectList.add(fieldObject);
+        }
+
+        return fieldObjectList;
+
     }
 
     /*******************************************************************************************************
