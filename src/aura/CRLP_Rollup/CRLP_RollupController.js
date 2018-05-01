@@ -95,6 +95,9 @@
             cancelEvent.setParams({grid: 'rollup'});
             cancelEvent.fire();
             console.log('firing cancel event');
+        } else if (cmp.get("v.mode") === 'delete') {
+            helper.toggleModal(cmp);
+            cmp.set("v.mode", "view");
         } else {
             cmp.set("v.mode", "view");
             var cachedRollup = cmp.get("v.cachedRollup");
@@ -110,8 +113,10 @@
      */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
-        var canSave = helper.validateFields(cmp);
-        if(canSave){
+        if (cmp.get("v.mode") === 'delete') {
+            helper.toggleModal(cmp);
+            helper.saveRollup(cmp, activeRollup);
+        } else if (helper.validateFields(cmp) === true) {
             helper.saveRollup(cmp, activeRollup);
             cmp.set("v.mode", 'view');
             helper.updateRollupName(cmp);
