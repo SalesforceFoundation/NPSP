@@ -70,6 +70,7 @@
                 border-right: 1px solid #cccccc !important;
             }
 
+
             .fixedHeader {
                 overflow: hidden;
                 position: fixed; /* Set the navbar to fixed position */
@@ -123,16 +124,17 @@
 
                 var data = JSON.parse('{!jsonString}');
 
+
+
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
 
                 wasEnterPressed = false;
                 wasUpArrowPressed = false;
-		        $scope.totalPages = '{!totalOfPages}';
+		            $scope.totalPages = '{!totalOfPages}';
 
-		        // Map to save cells with invalid format values
-
+		            // Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -144,8 +146,7 @@
                 // Flag to prevent a bug when deleting multiple records.
                 var deletingRecords = false;
 
-                // Flag for updating using sticky fields
-            //    stickyEdit = false;
+                
 
                 // Needed for afterCreateRow:as it fires before afterInit: & confuses all
                 var renderState = false;
@@ -155,7 +156,6 @@
                 document.getElementById("totalAmount").value = '{!totalDonationAmount}';
 
                 var dynamicColumns = [];
-
 
                 var requiredValidator = function (value, callback) {
 
@@ -248,11 +248,11 @@
 
                 }
                 $(document).ready(function() {
-                
+
                     $(window).scroll(function() {
                         $(".fixed-horizontal").css("left", $(window).scrollLeft() + "px");
                     });
-                    
+
                 });
 
                 var errorCol = new Object();
@@ -281,9 +281,6 @@
                     }
                     col.title = '<span>' + templateField.name.toUpperCase() + '</span>';
                     col.type = templateField.type;
-
-                    // Enable type checking. If for example the user places text in a numeric column, mark the cell as red
-                    col.allowInvalid = true;
 
                     // Center the content of the columns
                     col.className = "htCenter htMiddle slds-truncate";
@@ -318,9 +315,19 @@
                         col.type = 'text';
                     }
 
-                    if (templateField.type === "text") {
 
-                        col.className = "htLeft htMiddle";
+                    if (templateField.type === "dropdown") {
+
+                        // Check if by any change the list containing picklist values are null empty or undefined.
+                        if (templateField.pickListValuesList) {
+
+                             // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                             // In this case, the ENTER key is ignored and the editor field remains opened.
+                            col.allowInvalid = false;
+
+                            col.source = templateField.pickListValuesList;
+                        }
+
                     }
 
                     dynamicColumns.push(col);
@@ -367,20 +374,21 @@
                     colHeaders: true,
                     columnHeaderHeight: 30,
 
+
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
-                    contextMenu: ['remove_row', 'make_read_only', 'alignment'],
+                    contextMenu: ['remove_row'],
 
                     cells: function (row, col, prop) {
 
                         if (col == 0) {
+
                             return { type: { renderer: cellsRenderer } };
                         }
                         else if (col == colCount-1) {
 
                             return { type: { renderer: actionCellsRenderer } };
                         }
-
                     },
 
                     beforeRemoveRow: function(index, amount){
@@ -435,7 +443,7 @@
                                     hot.deselectCell();
 
                                     // Set the flag back on false so we can continue deleting records individualy.
-                                    deletingRecords = false;                                                                       
+                                    deletingRecords = false;
                                 }
                                 else {
 
@@ -654,6 +662,7 @@
 
                 function getColumnFromName(name) {
 
+
                     var numberOfColumns = dynamicColumns.length;
                     var i =   0;
 
@@ -696,11 +705,11 @@
 
                     var escaped = Handsontable.helper.stringify(htmlIcon);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).append(htmlTooltip);
                      }, 10);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).find( "span:last" ).remove();
                      }, 2000);
 
@@ -715,7 +724,7 @@
                     if (!onMass) {
                         row = row - 1;
                     }
-                    
+
                     if (!messages) {
                         messages = [];
                     }
@@ -761,7 +770,7 @@
                 function triggerSave(id, row, lastSelectedRow, self, callback) {
 
                     var dataAtLastSelectedRow = {};
- 
+
                     if (!dataAtLastSelectedRow[id]) {
 
                         dataAtLastSelectedRow[id] = {};
@@ -815,7 +824,7 @@
                 }
 
                 function triggerUpdateCell(newValue, prop, dataRowId, callback) {
-                    
+
                     var dataAtLastSelectedRow = {};
 
                     if (!dataAtLastSelectedRow[dataRowId]) {
@@ -823,7 +832,7 @@
                         dataAtLastSelectedRow[dataRowId] = {};
                     }
 
-                    //LOAD CELL DATA AND SEND TO UPDATE THE DATA IMPORT
+                    // LOAD CELL DATA AND SEND TO UPDATE THE DATA IMPORT
                     if (newValue) {
 
                         dataAtLastSelectedRow[dataRowId][prop] = newValue;
@@ -1147,7 +1156,8 @@
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
                     wasEnterPressed = false;
-		            wasUpArrowPressed = false;
+		                wasUpArrowPressed = false;
+
 
                     if (e.keyCode === 9 || e.keyCode === 39) {
                         // Tab or right arrow was pressed
@@ -1191,6 +1201,7 @@
 
                 // END DEFINING ANGULAR FUNCTIONS
             });
+
 
 	          function removeMessage(dataRowId) {
 
