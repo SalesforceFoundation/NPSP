@@ -52,7 +52,7 @@
     <aura:attribute name="rollupList" type="List" description="List of related rollups for the filter group" access="public"/>
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
-    <aura:attribute name="rollupItems" type="Object"/>
+    <aura:attribute name="rollupItems" type="List" default="[]"/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="Summary objects to use for filtering rollups" access="public"/>
     <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" default="text"/>
@@ -143,7 +143,7 @@
                         <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
                             <lightning:card iconName="utility:rules" title="{!v.labels.filterRuleLabelPlural}">
                                 <aura:set attribute="actions">
-                                    <aura:if isTrue="{!v.mode != 'view'}">
+                                    <aura:if isTrue="{!and((v.mode != 'view'),(v.mode != 'delete'))}">
                                         <lightning:button label="{!v.labels.add}" onclick="{!c.addFilterRule}" variant="brand"/>
                                     </aura:if>
                                 </aura:set>
@@ -166,7 +166,7 @@
                     <!--END FILTER GROUP DATATABLE-->
 
                     <!--START RELATED ROLLUP LIST-->
-                    <aura:if isTrue="{!v.mode=='view'}">
+                    <aura:if isTrue="{!or((v.mode == 'view'),(v.mode == 'delete'))}">
                         <lightning:layout multipleRows="true" verticalAlign="start">
                             <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
                                 <h3 class="slds-text-heading_label">{!v.labels.rollupsByFilterGroup}</h3>
@@ -186,7 +186,7 @@
     <div>
         <lightning:layout>
             <lightning:layoutItem size="12" largeDeviceSize="8">
-                <aura:if isTrue="{!v.mode!='view'}">
+                <aura:if isTrue="{!and((v.mode != 'view'),(v.mode != 'delete'))}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
@@ -208,10 +208,15 @@
                                       onclick="{!c.cancelFilterRule}" size="large" variant="bare-inverse"/>
                 <header class="slds-modal__header">
                     <h2 id="modal-heading" class="slds-text-heading_medium slds-hyphenate">
-                        {!if(v.filterRuleMode == 'create', v.labels.add, if(v.filterRuleMode == 'edit', v.labels.edit, v.labels.delete)) + ' ' + v.labels.filterRuleLabel}
+                        {!if(v.mode == 'delete', v.labels.delete +' '+ v.labels.filterGroupLabel, if(v.filterRuleMode == 'create', v.labels.add, if(v.filterRuleMode == 'edit', v.labels.edit, v.labels.delete)) + ' ' + v.labels.filterRuleLabel)}
                     </h2>
                 </header>
                 <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <aura:if isTrue="{!or((v.mode == 'delete'),(v.filterRuleMode == 'delete'))}">
+                        <lightning:layout>
+                            <ui:outputText aura:id="deleteModalMessage" value=""/>
+                        </lightning:layout>
+                    </aura:if>
                     <lightning:layout>
                         <aura:if isTrue="{! !empty(v.filterRuleError)}">
                             <div aura:id="filterRuleErrorDiv" class="slds-text-color_error slds-p-around_small">
@@ -220,7 +225,7 @@
                         </aura:if>
                     </lightning:layout>
                     <lightning:layout>
-                        <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
+                        <aura:if isTrue="{!and((v.filterRuleMode != 'delete'),(v.mode != 'delete'))}">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.object}"
                                                   value="{!v.activeFilterRule.objectName}"
@@ -248,7 +253,7 @@
                         </aura:if>
                     </lightning:layout>
                     <lightning:layout>
-                        <aura:if isTrue="{!v.filterRuleMode != 'delete'}">
+                        <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), (v.mode != 'delete'))}">
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.operator}"
                                                   value="{!v.activeFilterRule.operationName}"
@@ -289,9 +294,6 @@
                                     </lightning:select>
                                 </aura:if>
                             </lightning:layoutItem>
-                            <aura:set attribute="else">
-                                <p>{!v.labels.filterRuleDeleteWarning}</p>
-                            </aura:set>
                         </aura:if>
                     </lightning:layout>
                     <lightning:layout>
@@ -305,11 +307,35 @@
                     <!--END CONSTANT INPUT OPTIONS-->
 
                 </div>
+
+                <!-- BEGIN MODAL BUTTONS -->
                 <footer class="slds-modal__footer">
-                    <button class="slds-button slds-button_neutral"
-                            onclick="{!c.cancelFilterRule}">{!v.labels.cancel}</button>
-                    <button class="slds-button slds-button_brand"
-                            onclick="{!c.onQueueFilterRuleSave}">{!if(v.filterRuleMode == 'delete', v.labels.delete, v.labels.save)}</button>
+
+                    <!-- Blocking delete of a Filter Group that's actively used -->
+                    <aura:if isTrue="{!and((v.mode == 'delete'), (v.rollupItems.length != 0))}">
+                        <button class="slds-button slds-button_brand" onclick="{!c.cancelModal}">
+                            {!v.labels.ok}
+                        </button>
+                    </aura:if>
+
+                    <!-- Allowing delete of a Filter Group that's not used at all -->
+                    <aura:if isTrue="{!and((v.mode == 'delete'), (v.rollupItems.length == 0))}">
+                        <button class="slds-button slds-button_neutral"
+                                onclick="{!c.cancelModal}">{!v.labels.cancel}</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.onSaveFilterGroupAndRules}">
+                            {!v.labels.delete}
+                        </button>
+                    </aura:if>
+
+                    <!-- Allowing delete of a Filter Rule -->
+                    <aura:if isTrue="{!v.mode != 'delete'}">
+                        <button class="slds-button slds-button_neutral"
+                                onclick="{!c.cancelModal}">{!v.labels.cancel}</button>
+                        <button class="slds-button slds-button_brand" onclick="{!c.onQueueFilterRuleSave}">
+                            {!if(v.filterRuleMode == 'delete', v.labels.delete, v.labels.save)}
+                        </button>
+                    </aura:if>
+
                 </footer>
             </div>
         </section>
