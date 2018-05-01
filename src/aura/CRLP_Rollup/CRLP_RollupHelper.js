@@ -68,8 +68,8 @@
                 cmp.set("v.isReadOnly", false);
                 this.hideAllFields(cmp);
             } else if (mode === "delete") {
+                this.toggleModal(cmp);
                 var activeRollup = cmp.get("v.activeRollup");
-                this.saveRollup(cmp, activeRollup);
             }
         }
     },
@@ -838,6 +838,16 @@
         }
 
         cmp.set("v.integerList", integerList);
+    },
+
+    /**
+     * @description: toggles a modal popup and backdrop
+     */
+    toggleModal: function(cmp) {
+        var backdrop = cmp.find('backdrop');
+        $A.util.toggleClass(backdrop, 'slds-backdrop_open');
+        var modal = cmp.find('modaldialog');
+        $A.util.toggleClass(modal, 'slds-fade-in-open');
     },
 
     /**

@@ -494,6 +494,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
+                'rollupDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
