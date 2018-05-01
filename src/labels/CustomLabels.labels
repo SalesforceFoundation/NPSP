@@ -649,7 +649,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for the filter rule value field</shortDescription>
-        <value> The field values for this filter rule. What you can enter in this field is determined by the Operator you choose. If the Operator is In List or Not in List, and you don't see a picklist, enter values separated by semi-colons.</value>
+        <value>If the Operator is In List or Not in List and you don't see a picklist, enter values separated by semi-colons.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterNew</fullName>
