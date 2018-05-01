@@ -439,7 +439,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
-                'daysBackError' => String.format(Label.bdiPositiveNumber, new List<String>{daysBackLabel}),
+                'daysBackError' => Label.CRLP_DaysBack,
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),

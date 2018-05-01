@@ -316,6 +316,7 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                //clear array or reformat values into an array
                 var values = (value === "") ? [] : value.split(";");
                 cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
@@ -330,6 +331,7 @@
                     cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
+                    //clear array or reformat values into an array
                     var values = (value === "") ? [] : value.split(";");
                     cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');

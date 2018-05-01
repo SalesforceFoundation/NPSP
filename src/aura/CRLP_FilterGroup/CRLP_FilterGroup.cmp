@@ -55,7 +55,8 @@
     <aura:attribute name="rollupItems" type="Object"/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="Summary objects to use for filtering rollups" access="public"/>
-    <aura:attribute name="filterRuleFieldType" type="String" description="Determines type of field" default="text"/>
+    <aura:attribute name="filterRuleFieldType" type="String" default="text"
+                    description="Determines type of field. Supported options are boolean, text, date, datetime-local, number, picklist, and multipicklist."/>
 
     <!-- private attributes -->
     <aura:attribute name="deletedRuleList" type="List" description="Filter Rules that were deleted" access="private"/>

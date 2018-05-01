@@ -1122,6 +1122,7 @@
         <members>CRLP_CreateRollupDateFieldHelpText</members>
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
+        <members>CRLP_DaysBack</members>
         <members>CRLP_DeleteProgress</members>
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_HardCredit</members>

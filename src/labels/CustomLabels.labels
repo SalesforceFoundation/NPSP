@@ -853,6 +853,14 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DaysBack</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Days back error message for integers with any characters other than numbers.</shortDescription>
+        <value>You must enter a positive whole number.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_DeleteProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
