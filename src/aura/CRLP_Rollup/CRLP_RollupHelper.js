@@ -281,7 +281,7 @@
 
         //TIME BOUND OPERATION DEFAULT AND RENDERING
         if (!cmp.get("v.activeRollup.timeBoundOperationType")){
-            cmp.set(("v.activeRollup.timeBoundOperationType"), 'All_Time');
+            cmp.set("v.activeRollup.timeBoundOperationType", 'All_Time');
             var timeBoundLabel = this.retrieveFieldLabel('All_Time', cmp.get("v.timeBoundOperations"));
             cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
         }
@@ -298,8 +298,8 @@
         } else {
             if (cmp.get("v.mode") === 'create'){
                 renderMap["timeBoundOperation"] = false;
-                renderMap["integerDays"] = false;
-                renderMap["integerYears"] = false;
+                cmp.set("v.activeRollup.timeBoundOperationType", '');
+                this.onChangeTimeBoundOperationsOptions(cmp, true, '');
                 renderMap["rollupType"] = false;
                 this.renderAndResetFilterGroup(cmp, '');
             }
@@ -451,7 +451,6 @@
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
             //disable fiscal year, disable integer, and reset values
-            renderMap = this.renderFiscalYear(cmp, renderMap);
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = false;
             if (isOnChange) {
@@ -461,7 +460,6 @@
             }
         } else if (operation === 'Years_Ago') {
             //enable fiscal year and integerYears
-            renderMap = this.renderFiscalYear(cmp, renderMap);
             renderMap["integerDays"] = false;
             renderMap["integerYears"] = true;
             //set a default integer of 0
@@ -471,7 +469,6 @@
             }
         } else if (operation === 'Days_Back') {
             //disable fiscal year and enable integerDays
-            renderMap = this.renderFiscalYear(cmp, renderMap);
             renderMap["integerDays"] = true;
             renderMap["integerYears"] = false;
             //set a default integer of 0 and the default fiscal year
@@ -490,6 +487,7 @@
                 this.onChangeInteger(cmp, 0);
             }
         }
+        renderMap = this.renderFiscalYear(cmp, renderMap);
         //check to display or clear the dateField for Years_Ago or Days_Back
         var rollupLabel = cmp.get("v.selectedRollupType").label;
         renderMap = this.renderDateField(cmp, rollupLabel, renderMap);
