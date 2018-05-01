@@ -394,17 +394,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public static Map<String, String> getRollupLabels() {
 
-        //dynamic get required for days back picklist value
-        String daysBackLabel;
-        List<PicklistEntry> timeBoundPicklistEntries = Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getPicklistValues();
-        Map<String, PicklistEntry> peMap = new Map<String,PicklistEntry>();
-        for (PicklistEntry p : timeBoundPicklistEntries) {
-            if (p.getValue().equals('Days_Back')) {
-                daysBackLabel = p.getLabel();
-                break;
-            }
-        }
-
             Map<String, String> labels = new Map<String,String>
             {
                 'action' => Label.stgLabelActionColumn,

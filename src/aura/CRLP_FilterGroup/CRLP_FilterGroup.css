@@ -12,3 +12,9 @@
 .THIS .filterGroupField > .slds-form-element__control {
     display: inline;
 }
+.THIS .datatableContainer {
+    height: 175px;
+}
+.THIS .datatableContainer .slds-scrollable_y{
+    height: 100%;
+}

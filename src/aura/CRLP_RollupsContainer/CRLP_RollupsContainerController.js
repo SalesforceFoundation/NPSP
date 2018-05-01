@@ -33,7 +33,7 @@
                 cmp.set("v.summaryObjects", summaryObjects);
 
                 var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
-                    , {label: labels.labelPartialSoftCredit, name: labels.objectPartialSoftCredit}
+                    , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
                     , {label: labels.labelPayment, name: labels.objectPayment}
                     , {label: labels.labelAllocation, name: labels.objectAllocation}];
                 cmp.set("v.detailObjects", detailObjects);

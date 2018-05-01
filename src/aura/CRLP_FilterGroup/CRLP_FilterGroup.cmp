@@ -158,12 +158,14 @@
                                     </aura:if>
                                 </aura:set>
                                 <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                    <lightning:datatable data="{!v.filterRuleList}"
-                                                         columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
-                                                         keyField="id"
-                                                         hideCheckboxColumn="true"
-                                                         onrowaction="{!c.handleRowAction}"
-                                    />
+                                    <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer', '')}">
+                                        <lightning:datatable data="{!v.filterRuleList}"
+                                                             columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
+                                                             keyField="id"
+                                                             hideCheckboxColumn="true"
+                                                             onrowaction="{!c.handleRowAction}"
+                                        />
+                                    </div>
                                     <aura:set attribute="else">
                                         <ui:message aura:id="noFilterRulesMessage" severity="info" closable="false">
                                             {!v.labels.noFilterRules}
