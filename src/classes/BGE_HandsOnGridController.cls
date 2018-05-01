@@ -260,6 +260,7 @@ global class BGE_HandsOnGridController {
                 newDataImport.Id = rowId;
             }
 
+
             upsert newDataImport;
 
             response.addDataImportId(newDataImport.Id);
@@ -625,46 +626,6 @@ global class BGE_HandsOnGridController {
         return response;
     }
 
-
-    // Save all rows to the database.
-    public void continueToValidation(){
-
-        if (data != null && !data.isEmpty()) {
-
-            Database.UpsertResult[] lsr = Database.upsert(data, false);
-            Integer index = 0;
-
-            if (!lsr.isEmpty()) {
-
-                for (Database.UpsertResult sr : lsr) {
-
-                    try {
-
-                        if (sr.isSuccess()) {
-
-                            successRecords.add(data[index]);
-                        }
-                        else if (!sr.isSuccess()) {
-
-                            errorRecords.add(data[index]);
-                        }
-                    }
-                    catch(Exception ex) {
-
-                        system.debug('EXCEPTION MESSAGE:    ' + ex.getMessage());
-                    }
-
-                    index++;
-                }
-            }
-        }
-
-        data = errorRecords;
-
-        jsonString = JSON.serialize(data);
-
-        validated = true;
-    }
 
     /*
     * @description Run Dry Run process - and display errors if something goes wrong.

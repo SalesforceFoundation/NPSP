@@ -70,11 +70,11 @@
                 border-right: 1px solid #cccccc !important;
             }
 
-            .fixedHeader {
-                overflow: hidden;
-                position: fixed; /* Set the navbar to fixed position */
-                top: 0; /* Position the navbar at the top of the page */
-                width: 100%; /* Full width */
+            /* Edit mode */
+            .handsontableInput {
+                vertical-align: middle;
+                text-align: center;
+                line-height: 40px !important;
             }
 
             .htAutocompleteArrow {
@@ -115,6 +115,15 @@
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/BGEUtils.js')}"/>
 
         <script>
+            function commit() {
+
+                var pBatchId = getAllUrlParams().batchid;
+
+                window.location.href = '/apex/BDI_DataImport?pBatchId=' + getAllUrlParams().batchid;
+            }
+        </script>
+
+        <script>
 
             var myApp;
 
@@ -128,11 +137,20 @@
                 table = document.getElementById('my-hot-table');
 
                 wasEnterPressed = false;
+
+                // Flag that is set true if the user have just pressed the up arrow key.
                 wasUpArrowPressed = false;
-		        $scope.totalPages = '{!totalOfPages}';
 
-		        // Map to save cells with invalid format values
 
+                // Flag that is set true if the selected cell have just moved horizontally.
+                movedSideWays = false;
+
+                // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
+                wait = false;
+
+        		    $scope.totalPages = '{!totalOfPages}';
+
+		            // Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -144,9 +162,6 @@
                 // Flag to prevent a bug when deleting multiple records.
                 var deletingRecords = false;
 
-                // Flag for updating using sticky fields
-            //    stickyEdit = false;
-
                 // Needed for afterCreateRow:as it fires before afterInit: & confuses all
                 var renderState = false;
 
@@ -155,7 +170,6 @@
                 document.getElementById("totalAmount").value = '{!totalDonationAmount}';
 
                 var dynamicColumns = [];
-
 
                 var requiredValidator = function (value, callback) {
 
@@ -369,11 +383,12 @@
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
-                    contextMenu: ['remove_row', 'make_read_only', 'alignment'],
+                    contextMenu: ['remove_row'],
 
                     cells: function (row, col, prop) {
 
                         if (col == 0) {
+
                             return { type: { renderer: cellsRenderer } };
                         }
                         else if (col == colCount-1) {
@@ -435,7 +450,7 @@
                                     hot.deselectCell();
 
                                     // Set the flag back on false so we can continue deleting records individualy.
-                                    deletingRecords = false;                                                                       
+                                    deletingRecords = false;
                                 }
                                 else {
 
@@ -492,20 +507,12 @@
                             // Save all records
                             triggerSaveAll(changes);
                         }
-                    /*    else if (stickyEdit === true && deletingRecords === false) {
-
-                            stickyEdit = false;
-
-                            // Save all records
-                            triggerSaveAll(changes);
-                        }*/
                         else {
 
                             var row  = changes[0][0];
                             var prop = changes[0][1];
                             var oldValue = changes[0][2];
                             var newValue = changes[0][3];
-
                             var dataRowId = this.getDataAtRowProp(row, 'Id');
 
                             if (!changesToSave[dataRowId]) {
@@ -513,7 +520,9 @@
                                 changesToSave[dataRowId] = {};
                             }
 
-                                if(!wasEnterPressed) { //Enter keycode
+                            if(movedSideWays) {
+
+                                wait = true;
 
                                 triggerUpdateCell(newValue, prop, dataRowId, function(result) {
 
@@ -542,6 +551,10 @@
                             changesToSave[dataRowId][prop] = newValue;
                         }
 
+                            $scope.currentDataImport = this.getDataAtRow(row);
+                            changesToSave[dataRowId][prop] = newValue;
+                        }
+
                         var pBatchId = getAllUrlParams().batchid;
                         totalOfRecords = 0;
 
@@ -557,8 +570,6 @@
                             $scope.$apply();
                         });
 
-
-
                         Visualforce.remoting.Manager.invokeAction(
                         '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
                         pBatchId,
@@ -570,56 +581,73 @@
 
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
 
-                        var dataRowId = this.getDataAtRowProp(lastSelectedRow, 'Id');
-                        var dataAtRow = this.getDataAtRow(lastSelectedRow);
+                        var timeout = 0;
                         var self = this;
 
-                        if (lastSelectedRow !== null && lastSelectedRow !== row) {
+                        if (wait) {
 
-                            if (changesToSave[dataRowId]) {
-
-                                if (wasUpArrowPressed) {
-
-                                    row = row+2;
-                                    wasUpArrowPressed = false;
-                                }
-
-                                triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
-
-                                    if (!dataRowId) {
-
-                                        self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
-
-                                        dataRowId  = result.dataImportIds[0];
-                                    }
-
-                                    var messages = validateRequiredFields(row, result.messages, false);
-
-                                    if (messages && messages.length > 0) {
-
-                                        // Add tooltip message
-                                        var escaped = addTooltip(dataRowId, row, result, messages);
-                                        data[row-1]['Errors'] = escaped;
-                                    }
-                                    else {
-
-                                        data[row-1]['Errors'] = '';
-                                    }
-
-                                    var cellsToUpdate = [];
-
-                                    cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
-
-                                    self.setDataAtCell(cellsToUpdate);
-
-                                    changesToSave = {};
-                                });
-
-                                changesToSave = {};
-                            }
+                            timeout = 450;
                         }
 
-                        lastSelectedRow = row;
+
+                        setTimeout(function() {
+
+                            wait = false;
+
+                            var dataRowId = self.getDataAtRowProp(lastSelectedRow, 'Id');
+
+                            var dataAtRow = self.getDataAtRow(lastSelectedRow);
+
+
+                            if (lastSelectedRow !== null && lastSelectedRow !== row) {
+
+                                if (changesToSave[dataRowId]) {
+
+                                    if (wasUpArrowPressed) {
+
+                                        row = row+2;
+                                        wasUpArrowPressed = false;
+                                    }
+
+                                    triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
+
+                                        if (!dataRowId) {
+
+                                            self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
+
+                                            dataRowId  = result.dataImportIds[0];
+                                        }
+
+                                        var messages = validateRequiredFields(row, result.messages, false);
+
+                                        if (messages && messages.length > 0) {
+
+                                            // Add tooltip message
+                                            var escaped = addTooltip(dataRowId, row, result, messages);
+                                            data[row-1]['Errors'] = escaped;
+                                        }
+                                        else {
+
+                                            data[row-1]['Errors'] = '';
+                                        }
+
+                                        var cellsToUpdate = [];
+
+                                        cellsToUpdate = [[row-1, getColumnFromName('Name'), result.name],[row-1, getColumnFromName('FailureInformation__c'), result.failureInformation],[row-1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],[row-1, getColumnFromName('Account1Imported__c'), result.account1Imported],[row-1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus], [row-1, getColumnFromName('Account2Imported__c'), result.account2Imported],[row-1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus], [row-1, getColumnFromName('Contact1Imported__c'), result.contact1Imported], [row-1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus], [row-1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus], [row-1, getColumnFromName('Contact2Imported__c'), result.contact2Imported], [row-1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus], [row-1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported], [row-1, getColumnFromName('ImportedDate__c'), result.importedDate],[row-1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus], [row-1, getColumnFromName('DonationImported__c'), result.donationImported], [row-1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus], [row-1, getColumnFromName('PaymentImported__c'), result.paymentImported], [row-1, getColumnFromName('Status__c'), result.status] ];
+
+                                        self.setDataAtCell(cellsToUpdate);
+
+                                        changesToSave = {};
+                                    });
+
+                                    changesToSave = {};
+                                }
+                            }
+
+                            lastSelectedRow = row;
+
+                        },timeout);
+
                     },
 
                     afterOnCellMouseDown: function(event, coords){
@@ -644,6 +672,22 @@
 
                             hot.render();
                         }
+                    },
+                    beforeKeyDown: function (e) {
+
+                        // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
+                        if (e.keyCode === 13) {
+
+                            e.stopImmediatePropagation();
+
+                            var selection = hot.getSelected();
+                            var rowIndex = selection[0];
+                            var colIndex = selection[1];
+
+                            rowIndex++;
+
+                            hot.selectCell(rowIndex,colIndex);
+                        }
                     }
                 });
 
@@ -652,7 +696,7 @@
 
                 // BEGIN DEFINING ANGULAR FUNCTIONS
 
-                function getColumnFromName(name) {
+                function getColumnFromName(name){
 
                     var numberOfColumns = dynamicColumns.length;
                     var i =   0;
@@ -696,11 +740,11 @@
 
                     var escaped = Handsontable.helper.stringify(htmlIcon);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).append(htmlTooltip);
                      }, 10);
 
-                    setTimeout(function() { 
+                    setTimeout(function() {
                         $('#' + htmlTooltipId).find( "span:last" ).remove();
                      }, 2000);
 
@@ -715,7 +759,7 @@
                     if (!onMass) {
                         row = row - 1;
                     }
-                    
+
                     if (!messages) {
                         messages = [];
                     }
@@ -761,7 +805,7 @@
                 function triggerSave(id, row, lastSelectedRow, self, callback) {
 
                     var dataAtLastSelectedRow = {};
- 
+
                     if (!dataAtLastSelectedRow[id]) {
 
                         dataAtLastSelectedRow[id] = {};
@@ -812,10 +856,11 @@
                             document.getElementById("totalOfRecords").value = result;
                         });
                     }
+
                 }
 
                 function triggerUpdateCell(newValue, prop, dataRowId, callback) {
-                    
+
                     var dataAtLastSelectedRow = {};
 
                     if (!dataAtLastSelectedRow[dataRowId]) {
@@ -841,6 +886,7 @@
                             }
                         );
                     }
+
                 }
 
                 function triggerSaveAll(changes) {
@@ -852,37 +898,8 @@
                     for (var r = start; r <= end; r++) {
                         (function(r) {
 
-                            var arrayOfChanges = JSON.stringify(changes);
-                            var changesSplit = arrayOfChanges.split(',');
-
                             var row = gridData[r];
                             var dataRowId = row[getColumnFromName('Id')];
-
-                            var prop = changesSplit[1];
-                            var propSplit = prop.split('"');
-                            prop = propSplit[1];
-                            var oldValue = changesSplit[2];
-                            var newValue = changesSplit[3];
-                            var newValueSplit = newValue.split('"');
-                            newValue = newValueSplit[1];
-
-                            triggerUpdateCell(newValue, prop, dataRowId, function(result) {
-
-                                var cell = hot.getCellMeta(row, getColumnFromName(prop));
-
-                                if (!result.success) {
-
-                                    cell.valid = false;
-                                    cell.hasError = true;
-
-                                }
-                                else {
-                                    cell.valid = true;
-                                    cell.hasError = false;
-                                }
-                                var indexMap = r + prop;
-                                updatedCellsMap[indexMap] = cell;
-                            });
 
                             triggerSave(dataRowId, row, r, hot, function(result) {
 
@@ -900,6 +917,7 @@
                                     data[r]['Errors'] = escaped;
                                 }
                                 else {
+
                                     data[r]['Errors'] = '';
                                 }
 
@@ -985,7 +1003,7 @@
                     });
                 }
 
-                
+
                 function reloadCurrentPageOfTheGrid() {
 
                     var pBatchId = getAllUrlParams().batchid;
@@ -1147,45 +1165,46 @@
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
                     wasEnterPressed = false;
-		            wasUpArrowPressed = false;
+		                wasUpArrowPressed = false;
 
-                    if (e.keyCode === 9 || e.keyCode === 39) {
+                    if (e.keyCode  === 38) {
+
+                        // Arrow up was pressed.
+                        wasUpArrowPressed = true;
+                    }
+                    else if (e.keyCode === 9 || e.keyCode === 39) {
+
                         // Tab or right arrow was pressed
+                        movedSideWays = true;
+
                         var selection = hot.getSelected();
                         var rowIndex = selection[0];
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
-                        console.log('COLUMN INDEX BEGIN:    ' + colIndex);
+
                         if (colIndex === 0) {
 
                             colIndex = 1;
-                            console.log('COLUMN INDEX END:    ' + colIndex);
                         }
 
                         hot.selectCell(rowIndex,colIndex);
                     }
                     else if (e.keyCode ===  37) {
+
                         // Left arrow was pressed
+                        movedSideWays = true;
+
                         var selection = hot.getSelected();
                         var rowIndex = selection[0];
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
-                        console.log('COLUMN INDEX BEGIN:    ' + colIndex);
+
                         if (colIndex === 2) {
 
                             colIndex = 1;
-                            console.log('COLUMN INDEX END:    ' + colIndex);
                         }
 
                         hot.selectCell(rowIndex,colIndex);
-                    }
-                    else if (e.keyCode === 13 || e.keyCode === 40) {
-                        // Enter or arrow down was pressed.
-                        wasEnterPressed = true
-                    }
-                    else if (e.keyCode === 38) {
-
-                        wasUpArrowPressed = true;
                     }
                 });
 
@@ -1260,8 +1279,7 @@
 
                     <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <button class="slds-button slds-button_brand" title="Save and Process"> Save and Process </button>
-                            <button class="slds-button slds-button_brand" title="Save and Exit"> Save and Exit </button>
+                            <button class="slds-button slds-button_brand" title="Commit and Save" onClick="commit();">Commit</button>
                         </div>
                     </div>
 
@@ -1285,7 +1303,6 @@
                                 <p class="slds-text-heading_medium slds-align_absolute-center">&gt;</p>
                             </button>
                         </div>
-
                     </div>
 
                 	<div id="my-hot-table" class="handsontable" />
