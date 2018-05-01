@@ -551,6 +551,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'operator' => Schema.Filter_Rule__mdt.Operator__c.getDescribe().getLabel(),
                 'picklistLabelLastYear' => Label.stgLabelYearPicklistLastYear,
                 'picklistLabelThisYear' => Label.stgLabelYearPicklistThisYear,
+                'pleaseWait' => Label.CRLP_PleaseWait,
                 'returnNPSP' => String.format(Label.CRLP_Return, new List<String>{Label.lblNPSPSettings}),
                 'returnFilterGroup' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'rollupLabel' => Schema.SObjectType.Rollup__mdt.getLabel(),
@@ -559,6 +560,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupsByFilterGroup' => Label.CRLP_RollupsByFilterGroup,
                 'rollupSummaryTitle' => Label.CRLP_RollupSummary,
                 'rollupType' => Label.CRLP_RollupType,
+                'rollupDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
@@ -655,9 +657,8 @@ public with sharing class CRLP_RollupUI_SVC {
      * @return DeploymentResult
      */
     @AuraEnabled
-    public static String getDeploymentStatus(String jobId, String recordName, String objectType) {
+    public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
         Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        System.debug(crs);
         if (crs.CMT_API_Status__c != null) {
             Map<String, String> deploymentStatus = (Map<String, String>)JSON.deserialize(crs.CMT_API_Status__c, Map<String, String>.class);
             if (deploymentStatus.containsKey(jobId)) {
@@ -668,12 +669,17 @@ public with sharing class CRLP_RollupUI_SVC {
                         if (objectType == 'Rollup') {
                             Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                             response.completed = true;
-                            response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                            if (mode != 'delete') {
+                                response.rollupItem = createRollupItem(CRLP_Rollup_SEL.getRollupById(rollupId));
+                            }
                         } else if (objectType == 'Filter') {
                             Id groupId = CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(recordName);
                             response.completed = true;
-                            response.filterGroupItem = createFilterGroupModel(groupId);
+                            if (mode != 'delete') {
+                                response.filterGroupItem = createFilterGroupModel(groupId);
+                            }
                         }
+                        System.debug('returning response!');
                         return JSON.serialize(response);
                     } catch (Exception ex) {
                         // error retrieving the metadata record

@@ -448,7 +448,7 @@
                 this.toggleSpinner(cmp, false);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.pleaseWait"));
         $A.enqueueAction(action);
     },
 
