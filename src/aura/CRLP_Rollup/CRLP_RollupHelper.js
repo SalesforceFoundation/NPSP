@@ -69,7 +69,6 @@
                 this.hideAllFields(cmp);
             } else if (mode === "delete") {
                 this.toggleModal(cmp);
-                var activeRollup = cmp.get("v.activeRollup");
             }
         }
     },
@@ -757,9 +756,9 @@
             }
         });
         if (currentMode === 'delete') {
-            this.showToast(cmp, 'info', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteProgress"));
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.pleaseWait"));
         } else {
-            this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.rollupSaveProgress"));
+            this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.pleaseWait"));
         }
         $A.enqueueAction(action);
     },

@@ -113,16 +113,13 @@
      */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
-        if (cmp.get("v.mode") == 'delete') {
+        if (cmp.get("v.mode") === 'delete') {
             helper.toggleModal(cmp);
             helper.saveRollup(cmp, activeRollup);
-        } else {
-            var canSave = helper.validateFields(cmp);
-            if(canSave){
-                helper.saveRollup(cmp, activeRollup);
-                cmp.set("v.mode", 'view');
-                helper.updateRollupName(cmp);
-            }
+        } else if (helper.validateFields(cmp) === true) {
+            helper.saveRollup(cmp, activeRollup);
+            cmp.set("v.mode", 'view');
+            helper.updateRollupName(cmp);
         }
     },
 

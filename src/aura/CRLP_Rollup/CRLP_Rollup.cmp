@@ -358,7 +358,7 @@
     <div>
         <lightning:layout>
             <lightning:layoutItem size="12" largeDeviceSize="8">
-                <aura:if isTrue="{!v.mode!='view'}">
+                <aura:if isTrue="{!and((v.mode!='view'),(v.mode!='delete'))}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
