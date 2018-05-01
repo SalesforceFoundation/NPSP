@@ -49,6 +49,7 @@
                 if (state === "SUCCESS") {
 
                     var loadedTemplate = response.getReturnValue();
+                    var rowItemList = component.get("v.templateFields");
 
                     component.set("v.templateNameAttribute", loadedTemplate.Name);
                     component.set("v.templateDescriptionAttribute", loadedTemplate.Description__c);
@@ -70,7 +71,7 @@
                 "templateId": template.Id
             });
             action.setCallback(this, function (response) {
-                //store state of response
+                // store state of response
                 var state = response.getState();
 
                 if (state === "SUCCESS") {
@@ -122,8 +123,6 @@
         if (recordId) {
 
             template.Id = recordId;
-            //component.set("v.template.Name", component.get("v.templateNameAttribute"));
-            //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
         }
 
         template.Name = component.get("v.templateNameAttribute");
@@ -185,7 +184,6 @@
 
         // Get the list of the "value" attribute on all the selected options
         var selectedOptionsList = event.getParam("value");
-        //var selectedOptionsLabels = event.getParam("label");
         var rowItemList = component.get("v.templateFields");
         var index = rowItemList.length;
 
@@ -244,6 +242,7 @@
                     existsToAdd = true;
                 }
                 else {
+
                     existingIndexVar++;
                 }
             }

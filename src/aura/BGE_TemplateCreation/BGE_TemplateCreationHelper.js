@@ -4,7 +4,7 @@
 		var action;
 		var existsInvalidValues = component.get("v.errorInLastRow");
 
-		//To remove last row if has any error
+		// To remove last row if has any error
 		if (existsInvalidValues) {
 
 			batchTemplateFields.pop();
@@ -92,7 +92,6 @@
 					duration: 5
 				});
 
-				//toastEvent.fire();
 				existsInvalidValues = true;
 			}
 		}
@@ -116,10 +115,7 @@
 				'Name': '',
 				'Order__c': 0,
 				'Read_Only__c': false,
-				'Required__c': false,
-				'Sticky_Field__c': false,
-				'Sticky_Field_Value__c': '',
-				'Sticky_Field_Visibility__c': false
+				'Required__c': false
 			});
 
 			//Set the updated list to attribute (templateFields) again
