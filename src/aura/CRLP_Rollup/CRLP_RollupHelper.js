@@ -366,7 +366,7 @@
             cmp.set("v.activeRollup.detailObject",labels.objectAllocation);
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
-            amountFieldName = labels.objectPartialSoftCredit + labels.namespacePrefix + ' Amount__c';
+            amountFieldName = labels.objectPartialSoftCredit + labels.namespacePrefix + 'Amount__c';
             cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
         } else {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
