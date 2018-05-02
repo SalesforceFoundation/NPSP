@@ -82,7 +82,6 @@
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
     <!-- events we fire -->
-    <aura:registerEvent name="NavigateEvent" type="c:CRLP_NavigateEvent"/>
     <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
 
     <!--START FORM-->

@@ -536,7 +536,6 @@
         <members>CRLP_RollupApp</members>
         <members>CRLP_RollupsContainer</members>
         <members>CRLP_SelectField</members>
-        <members>CRLP_NavigateEvent</members>
         <members>CRLP_Tooltip</members>
         <members>HH_AddressChangedEvent</members>
         <members>HH_AddressMgr</members>

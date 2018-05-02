@@ -277,12 +277,17 @@
      */
     selectRollup: function(cmp, event, helper){
         //select rollup for navigation
+        var channel = 'navigateEvent';
         var rollupId = event.getParam('name');
         var filterGroupId = cmp.get("v.activeFilterGroupId");
-        if(rollupId !== 'title'){
-            var navEvent = $A.get("e.c:CRLP_NavigateEvent");
-            navEvent.setParams({id: rollupId, target: 'rollup', lastId: filterGroupId});
-            navEvent.fire();
+        if (rollupId !== 'title') {
+            var message = {id: rollupId, target: 'rollup', lastId: filterGroupId};
+            var sendMessage = $A.get('e.ltng:sendMessage');
+            sendMessage.setParams({
+                'channel': channel,
+                'message': message
+            });
+            sendMessage.fire();
         }
     }
 })

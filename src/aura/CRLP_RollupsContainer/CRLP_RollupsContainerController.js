@@ -202,7 +202,6 @@
 
         } else if (channel === 'filterGroupDeleted') {
             var filterGroupList = cmp.get("v.filterGroupList");
-            console.log(JSON.stringify(filterGroupList));
             for (var i = 0; i < filterGroupList.length; i++) {
                 if (filterGroupList[i].name === message) {
                     // if the Id matches, delete that record
@@ -213,31 +212,22 @@
             cmp.set("v.filterGroupList", filterGroupList);
             helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
 
+        } else if (channel === 'navigateEvent') {
+            //handles the selection of a specific rollup from the filter group view and then return to filter group
+            cmp.set("v.activeRecordId", message.id);
+            cmp.set("v.detailMode", 'view');
+            cmp.set("v.width", 8);
+
+            if (message.target === 'rollup') {
+                cmp.set("v.lastActiveRecordId", message.lastId);
+                cmp.set("v.isRollupDetail", true);
+                cmp.set("v.isFilterGroupDetail", false);
+            } else if (message.target === 'filterGroup'){
+                cmp.set("v.lastActiveRecordId", null);
+                cmp.set("v.isRollupDetail", false);
+                cmp.set("v.isFilterGroupDetail", true);
+            }
         }
-    },
-
-    /**
-     * @description: handles the selection of a specific rollup from the filter group view and then return to filter group
-     */
-    handleNavigateEvent: function(cmp, event, helper){
-        var id = event.getParam('id');
-        var lastId = event.getParam('lastId');
-        var target = event.getParam('target');
-
-        cmp.set("v.activeRecordId", id);
-        cmp.set("v.detailMode", 'view');
-        cmp.set("v.width", 8);
-
-        if(target === 'rollup'){
-            cmp.set("v.lastActiveRecordId", lastId);
-            cmp.set("v.isRollupDetail", true);
-            cmp.set("v.isFilterGroupDetail", false);
-        } else if (target === 'filterGroup'){
-            cmp.set("v.lastActiveRecordId", null);
-            cmp.set("v.isRollupDetail", false);
-            cmp.set("v.isFilterGroupDetail", true);
-        }
-
     },
 
     /**

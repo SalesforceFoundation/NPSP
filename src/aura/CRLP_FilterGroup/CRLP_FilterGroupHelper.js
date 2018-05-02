@@ -70,7 +70,7 @@
 
         //place rollups in the array of the matching summary object
         filteredRollupList.forEach(function (rollup) {
-            var item = {label: rollup.displayName, name: rollup.id}
+            var item = {label: rollup.displayName, name: rollup.recordId}
             for (i=0; i<rollupsBySummaryObj.length; i++){
                 if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
