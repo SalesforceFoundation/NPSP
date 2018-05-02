@@ -56,19 +56,15 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     public void run() {
         List<Error__c> errors = new List<Error__c>();
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OpportunityOCRs opportunityOCRs = new OpportunityOCRs(opportunityRecord);
-            OpportunityContactRole primaryContactOCR = opportunityOCRs.getPrimaryContactOCR();
+            OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
 
-            if (opportunityOCRs.containsPrimaryRole(settingsRole) == false) {
+            if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
                 errors.add(createError(opportunityRecord));
                 continue;
             }
-            if (primaryContactOCR == null) {
-                List<OpportunityContactRole> ocrsWithSettingsRole = opportunityOCRs.getPrimaryRolesEqual(settingsRole);
-                duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
-            }
             else {
-                duplicatePrimaryOCRs.makePrimary(primaryContactOCR);
+                List<OpportunityContactRole> ocrsWithSettingsRole = opportunityPrimaryOCRs.getRolesEqual(settingsRole);
+                duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
             }
         }
         insert errors;
@@ -135,7 +131,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
 
         /*******************************************************************************************************
         * @description Sets the OCR in paramater as Primary OCR.
-        * @param OpportunityContactRole. the OCR to set as primary.
+        * @param OpportunityContactRole. The OCR to set as primary.
         * @return void.
         ********************************************************************************************************/
         public void makePrimary(OpportunityContactRole inputOCR) {
@@ -147,7 +143,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 }
                 // After a deletion of one duplicate Primary OCR, Salesforce updates all the OCRs' IsPrimary field to false.
                 // So, we need to force the update of the input OCR even if the OCR is already a Primary OCR.
-                if (ocr.Id == inputOCR.Id ) {
+                if (ocr.Id == inputOCR.Id) {
                     ocr.IsPrimary = true;
                     ocrRecordsToUpdate.put(ocr.Id, ocr);
                 }
@@ -177,6 +173,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 SELECT Name, Primary_Contact__c, (
                     SELECT OpportunityId, ContactId, Role, IsPrimary
                     FROM OpportunityContactRoles
+                    WHERE IsPrimary = true
                 )
                 FROM Opportunity
                 WHERE Id IN :opportunityIds
@@ -188,14 +185,14 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     /*******************************************************************************************************
     * @description Class that wraps an Opportunity and its related duplicate Primary OCRs.
     ********************************************************************************************************/
-    class OpportunityOCRs {
+    class OpportunityPrimaryOCRs {
         private Opportunity record;
 
         /*********************************************************************************************************
-        * @description The Constructor of OpportunityOCRs.
+        * @description The Constructor of OpportunityPrimaryOCRs.
         * @param Opportunity. Opportunity with the related primary OCRs.
         */
-        public OpportunityOCRs(Opportunity currentOpportunity) {
+        public OpportunityPrimaryOCRs(Opportunity currentOpportunity) {
             record = currentOpportunity;
         }
 
@@ -204,8 +201,8 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         * @param String OCR Role.
         * @return Boolean.
         ********************************************************************************************************/
-        public Boolean containsPrimaryRole(String ocrRole) {
-            return getPrimaryRolesEqual(ocrRole).isEmpty() == false;
+        public Boolean containsRole(String ocrRole) {
+            return getRolesEqual(ocrRole).isEmpty() == false;
         }
 
         /*******************************************************************************************************
@@ -213,27 +210,14 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         * @param String OCR Role.
         * @return List<OpportunityContactRole>. The primary OCRs with Role equals to the Role in the parameter.
         ********************************************************************************************************/
-        public List<OpportunityContactRole> getPrimaryRolesEqual(String ocrRole) {
+        public List<OpportunityContactRole> getRolesEqual(String ocrRole) {
             List<OpportunityContactRole> result = new List<OpportunityContactRole>();
             for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.IsPrimary && ocrRole.equalsIgnoreCase(ocr.Role)) {
+                if (ocrRole.equalsIgnoreCase(ocr.Role)) {
                     result.add(ocr);
                 }
             }
             return result;
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the Opportunity Primary Contact OCR.
-        * @return OpportunityContactRole. The Opportunity Primary Contact OCR.
-        ********************************************************************************************************/
-        public OpportunityContactRole getPrimaryContactOCR() {
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.ContactId == record.Primary_Contact__c) {
-                    return ocr;
-                }
-            }
-            return null;
         }
     }
 }
