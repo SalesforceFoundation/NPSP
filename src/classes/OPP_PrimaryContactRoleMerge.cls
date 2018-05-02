@@ -41,12 +41,11 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     @TestVisible private static final String ERROR_SOBJECT = UTIL_Describe.getObjectLabel('Opportunity');
 
     private String settingsRole;
-    private DuplicatePrimaryOCRs duplicatePrimaryOCRs;
+    private List<AggregateResult> primaryOCRsAggregateResult;
 
     public OPP_PrimaryContactRoleMerge(List<Opportunity> opportunities) {
         settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
-        List<AggregateResult> primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(opportunities);
-        duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
+        primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(opportunities);
     }
 
     /*******************************************************************************************************
@@ -55,18 +54,20 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     ********************************************************************************************************/
     public void run() {
         List<Error__c> errors = new List<Error__c>();
+        DuplicatePrimaryOCRs duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
+
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
             OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
 
             if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
                 errors.add(createError(opportunityRecord));
-                continue;
             }
             else {
                 List<OpportunityContactRole> ocrsWithSettingsRole = opportunityPrimaryOCRs.getRolesEqual(settingsRole);
                 duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
             }
         }
+
         insert errors;
         duplicatePrimaryOCRs.processDML();
     }
@@ -180,7 +181,6 @@ public with sharing class OPP_PrimaryContactRoleMerge {
             ];
         }
     }
-
 
     /*******************************************************************************************************
     * @description Class that wraps an Opportunity and its related duplicate Primary OCRs.
