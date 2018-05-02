@@ -164,16 +164,15 @@
                 // Flag that is set true if the user have just pressed the up arrow key.
                 wasUpArrowPressed = false;
 
-
                 // Flag that is set true if the selected cell have just moved horizontally.
                 movedSideWays = false;
 
                 // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
                 wait = false;
 
-        		    $scope.totalPages = '{!totalOfPages}';
+        		$scope.totalPages = '{!totalOfPages}';
 
-		            // Map to save cells with invalid format values
+		        // Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -570,10 +569,6 @@
                                 });
 
                             }
-                            $scope.currentDataImport = this.getDataAtRow(row);
-                            changesToSave[dataRowId][prop] = newValue;
-                        }
-
                             $scope.currentDataImport = this.getDataAtRow(row);
                             changesToSave[dataRowId][prop] = newValue;
                         }
