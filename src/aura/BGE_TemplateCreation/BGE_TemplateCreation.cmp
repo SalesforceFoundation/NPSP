@@ -1,7 +1,6 @@
 <aura:component controller="BGE_AuraController" implements="lightning:actionOverride,force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader,force:hasRecordId" access="global">
 
     <ltng:require scripts="{!$Resource.BGEResources + '/js/jquery.min.js'}" afterScriptsLoaded="{!c.scriptLoaded}" />
-    <!-- <ltng:require styles="/resource/BGEResources/css/BGETemplateCreationStyle.css" /> -->
 
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
 
