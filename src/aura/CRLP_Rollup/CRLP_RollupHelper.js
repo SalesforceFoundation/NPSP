@@ -106,17 +106,7 @@
             if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
                     if(field !== undefined) {
-                        var datatype = null;
-                        //treating picklists as strings
-                        if (type === 'PICKLIST') {
-                            type = 'STRING';
-                        }
-                        if (field.type === 'PICKLIST') {
-                            datatype = 'STRING';
-                        } else {
-                            datatype = field.type;
-                        }
-                        if (datatype === type) {
+                        if (field.type === type) {
                             newFields.push(field);
                         }
                     }

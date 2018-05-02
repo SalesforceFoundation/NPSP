@@ -92,7 +92,6 @@ public with sharing class CRLP_RollupUI_SVC {
     public class RollupDetailModel {
         @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
         @AuraEnabled public Map<String, List<Map<String, String>>> fieldsByDataType;
-        @AuraEnabled public Map<String, String> fieldToObjectMap;
         @AuraEnabled public Map<String, String> timeBoundOperations;
         @AuraEnabled public Map<String, String> operations;
 
@@ -154,7 +153,6 @@ public with sharing class CRLP_RollupUI_SVC {
             summaryField = model.rollup.summaryField;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
-        model.fieldToObjectMap = getFieldToObjectMap(targetObjectNames, detailObjectNames);
         model.timeBoundOperations = getTimeBoundOperations();
         model.operations = getRollupOperations();
 
@@ -404,7 +402,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn);
                 objNameToFieldTypeMap.put(detailObj, pscList);
             } else {
-                List<Map<String, String>> detailNameToFieldTypeObj = getAllFieldsWithType(detailObj);
+                List<Map<String, String>> detailNameToFieldTypeObj = getDetailFieldsWithType(detailObj);
                 objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
             }
         }
@@ -417,11 +415,11 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Returns a map of field names to data types, excluding system fields
+    * @description Returns a map of field names to data types, excluding system fields; meant for detail objects
     * @param objectName the name of the object to look up
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    private static List<Map<String, String>> getAllFieldsWithType(String objectName) {
+    private static List<Map<String, String>> getDetailFieldsWithType(String objectName) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
@@ -434,7 +432,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', objectName+' '+dfr.name);
                 fieldObject.put('label', objectLabel+': '+dfr.label);
-                fieldObject.put('type', dfr.getType().Name());
+                String fieldType = getFieldType(objectName,dfr.name);
+                fieldObject.put('type', fieldType);
 
                 fieldObjectList.add(fieldObject);
             }
@@ -462,7 +461,8 @@ public with sharing class CRLP_RollupUI_SVC {
             Map<String, String> fieldObject = new Map<String, String>();
             fieldObject.put('name', objectName+' '+field);
             fieldObject.put('label', objectLabel +': '+UTIL_Describe.getFieldLabel(objectName,field));
-            fieldObject.put('type', UTIL_Describe.getFieldType(objectName,field));
+            String fieldType = getFieldType(objectName,field);
+            fieldObject.put('type', fieldType);
 
             fieldObjectList.add(fieldObject);
         }
@@ -472,30 +472,20 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    @description Fetches a map keyed by
-    * @param targetObjectNames list of target or summary objects to query
-    * @param detailObjectNames list of detail or objects to rollup to query
-    * @return a map of strings to string-string maps. Map<String,Map<String,String>>
-    */
-
-    @AuraEnabled
-    public static Map<String,String> getFieldToObjectMap (List<String> targetObjectNames, List<String> detailObjectNames) {
-
-        Map<String,String> fieldToObjectMap = new Map<String,String>();
-
-        List<String> allObjects = new List<String>();
-        allObjects.addAll(targetObjectNames);
-        allObjects.addAll(detailObjectNames);
-
-        for(String detailObj : allObjects){
-            String objectLabel = UTIL_Describe.getObjectLabel(detailObj);
-            Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(detailObj);
-            for (DescribeFieldResult dfr : allFields.values()) {
-                fieldToObjectMap.put(objectLabel+': '+dfr.label, detailObj);
-            }
+     @description get field type and fixes it for CRLP UI to map
+     *
+     * @param objectName api name of object
+     * @param field api name of field
+     *
+     * @return data type string
+     */
+    private static String getFieldType (String objectName, String field) {
+        String fieldType = UTIL_Describe.getFieldType(objectName,field);
+        // re-casting picklists and multipicklists as strings because strings and picklists are interchangeable for rollups
+        if(fieldType == 'PICKLIST' || fieldType == 'MULTIPICKLIST') {
+            fieldType = 'STRING';
         }
-
-        return fieldToObjectMap;
+        return fieldType;
     }
 
     /*******************************************************************************************************
@@ -846,7 +836,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
                 fieldObject.put('label', dfr.label);
-                fieldObject.put('type', type);
+                String fieldType = getFieldType(objectName, dfr.name);
+                fieldObject.put('type', fieldType);
 
                 fieldObjectList.add(fieldObject);
             }
