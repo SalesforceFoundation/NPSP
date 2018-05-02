@@ -272,7 +272,7 @@
                                                 auraId="rollupType"
                                                 fieldLabel="{!v.labels.rollupType}"
                                                 entityLabel="{!v.selectedRollupType.label}"
-                                                apiName="{!v.activeRollup.detailObject}"
+                                                apiName="{!v.activeRollup.rollupTypeObject}"
                                                 options="{!v.rollupTypes}"
                                                 isRequired="true"
                                                 mediumDeviceSize="6"
@@ -306,14 +306,19 @@
                         </aura:if>
 
                         <aura:if isTrue="{!v.renderMap.detailField}">
+
+                            <aura:iteration items="{!v.options}" var="option">
+                                {!option.name}<br/>
+                                {!option.label}<br/>
+                            </aura:iteration>
+
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
-                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.detailFieldLabel}"
+                                                entityLabel="{!v.activeRollup.detailFieldLabel}"
                                                 apiName="{!v.activeRollup.detailField}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 isRequired="true"
                                                 helpText="{!v.labels.createDetailFieldHelp}"
                             />
@@ -322,10 +327,9 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="dateField"
                                                 fieldLabel="{!v.labels.dateField}"
-                                                entityLabel="{!v.activeRollup.dateObjectLabel+': '+v.activeRollup.dateFieldLabel}"
+                                                entityLabel="{!v.activeRollup.dateFieldLabel}"
                                                 apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
-                                                objectLabel="{!v.activeRollup.dateObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
@@ -334,10 +338,9 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.amountFieldLabel}"
+                                                entityLabel="{!v.activeRollup.amountFieldLabel}"
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
@@ -356,7 +359,7 @@
     <div>
         <lightning:layout>
             <lightning:layoutItem size="12" largeDeviceSize="8">
-                <aura:if isTrue="{!v.mode!='view'}">
+                <aura:if isTrue="{!and((v.mode!='view'),(v.mode!='delete'))}">
                     <div class="slds-p-around_large">
                         <lightning:layout horizontalAlign="end">
                             <lightning:button label="{!v.labels.cancel}" variant="neutral" onclick="{!c.onCancel}"/>
@@ -369,6 +372,36 @@
         </lightning:layout>
     </div>
     <!--END BUTTONS-->
+
+    <!--START MODAL-->
+    <div>
+        <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading" aria-modal="true"
+                 aria-describedby="modal-content" class="slds-modal">
+            <div class="slds-modal__container">
+                <lightning:buttonIcon alternativeText="{!v.labels.cancel}" iconName="utility:close" class="slds-modal__close"
+                                      onclick="{!c.cancelFilterRule}" size="large" variant="bare-inverse"/>
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading" class="slds-text-heading_medium slds-hyphenate">
+                        {!v.labels.delete}&nbsp;{!v.labels.rollupLabel}
+                    </h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content">
+                    <lightning:layout>
+                        {!v.labels.rollupDeleteConfirm}
+                    </lightning:layout>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral"
+                            onclick="{!c.onCancel}">{!v.labels.cancel}</button>
+                    <button class="slds-button slds-button_brand"
+                            onclick="{!c.onSave}">{!v.labels.delete}</button>
+                </footer>
+            </div>
+        </section>
+        <div aura:id="backdrop" class="slds-backdrop"></div>
+    </div>
+    <!-- END MODAL -->
+
     <!-- end markup -->
 
 </aura:component>

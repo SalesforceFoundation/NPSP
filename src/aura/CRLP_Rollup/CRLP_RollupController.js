@@ -34,8 +34,19 @@
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
-                //note: the duplicate parsing is important to avoid a shared reference
+                var labels = cmp.get("v.labels");
                 if(activeRollupId){
+                    // detail, amount, and date fields need to be held on client side
+                    // with their object name to support multiple object selection
+
+                    model.rollup.detailField = model.rollup.detailObject + ' ' + model.rollup.detailField;
+                    model.rollup.detailFieldLabel = model.rollup.detailObjectLabel.replace(labels.labelPartialSoftCredit,labels.softCredit) + ': ' + model.rollup.detailFieldLabel;
+                    model.rollup.amountField = model.rollup.amountObject + ' ' + model.rollup.amountField;
+                    model.rollup.amountFieldLabel = helper.retrieveFieldLabel(model.rollup.amountObject, detailObjects).replace(labels.labelPartialSoftCredit,labels.softCredit) + ': ' + model.rollup.amountFieldLabel;
+                    model.rollup.dateField = model.rollup.dateObject +' '+ model.rollup.dateField;
+                    model.rollup.dateFieldLabel = helper.retrieveFieldLabel(model.rollup.dateObject, detailObjects)+ ': ' + model.rollup.dateFieldLabel;
+
+                    //note: the duplicate parsing is important to avoid a shared reference
                     cmp.set("v.activeRollup", helper.restructureResponse(model.rollup));
                     cmp.set("v.cachedRollup", helper.restructureResponse(model.rollup));
                 }
@@ -96,6 +107,9 @@
             cancelEvent.setParams({grid: 'rollup'});
             cancelEvent.fire();
             console.log('firing cancel event');
+        } else if (cmp.get("v.mode") === 'delete') {
+            helper.toggleModal(cmp);
+            cmp.set("v.mode", "view");
         } else {
             cmp.set("v.mode", "view");
             //json shenanigans to avoid shared reference
@@ -110,8 +124,10 @@
      */
     onSave: function(cmp, event, helper){
         var activeRollup = cmp.get("v.activeRollup");
-        var canSave = helper.validateFields(cmp);
-        if (canSave) {
+        if (cmp.get("v.mode") === 'delete') {
+            helper.toggleModal(cmp);
+            helper.saveRollup(cmp, activeRollup);
+        } else if (helper.validateFields(cmp)) {
             helper.saveRollup(cmp, activeRollup);
             cmp.set("v.mode", 'view');
             helper.updateRollupName(cmp);
@@ -140,17 +156,17 @@
                 helper.onChangeOperation(cmp, value);
             } else if(fieldName === 'timeBoundOperationType'){
                 helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
-            } else if(fieldName === 'integer'){
+            } else if (fieldName === 'integer'){
                 helper.onChangeInteger(cmp, value);
             } else if (fieldName === 'rollupType'){
                 helper.onChangeRollupType(cmp, value, label);
             } else if (fieldName === 'filterGroup'){
                 helper.onChangeFilterGroup(cmp, label);
-            } else if(fieldName === 'detailField'){
+            } else if (fieldName === 'detailField'){
                 helper.onChangeDetailField(cmp, value, label);
-            } else if(fieldName === 'amountField'){
+            } else if (fieldName === 'amountField'){
                 cmp.set("v.activeRollup.amountFieldLabel", label);
-            } else if(fieldName === 'dateField'){
+            } else if (fieldName === 'dateField'){
                 cmp.set("v.activeRollup.dateFieldLabel", label);
             }
         }

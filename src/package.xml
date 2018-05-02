@@ -1048,6 +1048,7 @@
         <members>Address_Not_Found</members>
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
+        <members>CMT_DeleteConfirm</members>
         <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
         <members>CMT_FilterGroupDescriptionHelpText</members>
@@ -1123,10 +1124,13 @@
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
         <members>CRLP_DaysBack</members>
+        <members>CRLP_DeleteError</members>
         <members>CRLP_DeleteProgress</members>
         <members>CRLP_DeleteSuccess</members>
+        <members>CRLP_DeleteTimeout</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoFilterGroupSelected</members>
+        <members>CRLP_PleaseWait</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupsByFilterGroup</members>
         <members>CRLP_RollupNew</members>

@@ -604,12 +604,20 @@
         <value>The list of active rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
     </labels>
     <labels>
+        <fullName>CMT_DeleteConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message when a user wants to delete something.</shortDescription>
+        <value>Are you sure you want to delete this {0}?</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterGroupDeleteError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
-        <value>You can't delete this filter group because there is at least one rollup using it. View the filter group detail page to see a list of associated rollups. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
+        <value>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterGroupDescriptionHelpText</fullName>
@@ -861,6 +869,14 @@
         <value>You must enter a positive whole number.</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>Error deleting the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_DeleteProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -877,6 +893,14 @@
         <value>{0} Successfully Deleted</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteTimeout</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Timeout error message</shortDescription>
+        <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -891,6 +915,14 @@
         <protected>true</protected>
         <shortDescription>Label when user doesn't select a filter group.</shortDescription>
         <value>No Filter Group (Include All Records)</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_PleaseWait</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message to indicate in-progress operation for metadata deployments</shortDescription>
+        <value>Please wait a moment</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>
