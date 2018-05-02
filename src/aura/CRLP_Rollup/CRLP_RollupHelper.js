@@ -355,19 +355,23 @@
 
         var amountFields = cmp.get("v.amountFields");
         var amountFieldName;
-        // Set the amount field based on the selected rollup type
+        // Set the amount field and assumed detail object based on the selected rollup type
         if (amountObjectName === labels.objectPayment) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
             amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectPayment);
         } else if (amountObjectName === labels.objectAllocation) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
             amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectAllocation);
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
             amountFieldName = labels.objectPartialSoftCredit + ' Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
         } else {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
             amountFieldName = labels.objectOpportunity + ' Amount';
+            cmp.set("v.activeRollup.detailObject",labels.objectOpportunity);
         }
 
         cmp.set("v.activeRollup.amountField", amountFieldName);
