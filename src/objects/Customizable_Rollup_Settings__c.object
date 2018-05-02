@@ -65,7 +65,7 @@
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>
         <inlineHelpText>Number of records per batch to process when recalculating soft credit donor rollups to the Account object.</inlineHelpText>
-        <label>Account Soft Credit Batch Size</label>
+        <label>Contact Soft Credit to Acct Batch Size</label>
         <precision>6</precision>
         <required>false</required>
         <scale>0</scale>
