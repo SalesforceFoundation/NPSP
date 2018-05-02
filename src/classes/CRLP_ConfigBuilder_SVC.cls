@@ -57,9 +57,11 @@ public class CRLP_ConfigBuilder_SVC {
         List<Metadata.CustomMetadata> rules = new List<Metadata.CustomMetadata>();
         for (CRLP_RollupCMT.FilterGroup fg : groupsAndRules) {
             groups.add(fg.getMetadataRecord());
-            for (CRLP_RollupCMT.FilterRule fr : fg.rules) {
-                fr.filterGroupRecordName = fg.recordName;
-                rules.add(fr.getMetadataRecord());
+            if (fg.rules != null && !fg.rules.isEmpty()) {
+                for (CRLP_RollupCMT.FilterRule fr : fg.rules) {
+                    fr.filterGroupRecordName = fg.recordName;
+                    rules.add(fr.getMetadataRecord());
+                }
             }
         }
 
