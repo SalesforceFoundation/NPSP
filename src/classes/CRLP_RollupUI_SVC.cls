@@ -71,6 +71,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public Integer countRollups;
         @AuraEnabled public String name;
         @AuraEnabled public String recordId;
+        @AuraEnabled public Boolean isDeleted;
     }
 
     /*******************************************************************************************************
@@ -264,6 +265,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
             item.recordId = mdtList[i].Id;
+            item.isDeleted = false;
 
             mdtTableList.add(item);
         }
@@ -538,6 +540,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'edit' => Label.stgBtnEdit,
                 'error' => Label.PageMessagesError,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
+                'filterGroupDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
@@ -545,10 +548,15 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filterGroupNew' => Label.CMT_FilterNew,
                 'filterGroupNameLimitError' => Label.CMT_FilterGroupNameLimitError,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
+                'filterRuleDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabel()}),
                 'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
                 'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
+                'filtersDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
@@ -601,6 +609,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),

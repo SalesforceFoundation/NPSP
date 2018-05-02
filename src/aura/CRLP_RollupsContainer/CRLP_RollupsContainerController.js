@@ -20,8 +20,6 @@
                 cmp.set("v.rollupList", sortedData);
                 cmp.set("v.cachedRollupList", sortedData);
                 cmp.set("v.filterGroupList", model.filterGroups);
-                cmp.set("v.fieldToObjectMap", model.fieldToObjectMap);
-                console.log(model.fieldToObjectMap);
 
                 var actions = [{label: labels.edit, name:'edit'}
                     , {label: labels.clone, name:'clone'}
@@ -201,6 +199,20 @@
             }
             cmp.set("v.rollupList", rollupsList);
             helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+
+        } else if (channel === 'filterGroupDeleted') {
+            var filterGroupList = cmp.get("v.filterGroupList");
+            console.log(JSON.stringify(filterGroupList));
+            for (var i = 0; i < filterGroupList.length; i++) {
+                if (filterGroupList[i].name === message) {
+                    // if the Id matches, delete that record
+                    filterGroupList.splice(i, 1);
+                    break;
+                }
+            }
+            cmp.set("v.filterGroupList", filterGroupList);
+            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+
         }
     },
 
@@ -236,30 +248,19 @@
         var row = event.getParam('row');
         var isRollupsGrid = cmp.get("v.isRollupsGrid");
 
-        if (action.name !== 'delete') {
-            cmp.set("v.detailMode", action.name);
-            cmp.set("v.activeRecordId", row.recordId);
-            //check which grid is displayed
-            if (isRollupsGrid) {
-                cmp.set("v.isRollupsGrid", false);
-                cmp.set("v.isRollupDetail", true);
-                cmp.set("v.width", 8);
-            } else {
-                cmp.set("v.isFilterGroupsGrid", false);
-                cmp.set("v.isFilterGroupDetail", true);
-                cmp.set("v.width", 8);
-            }
-        } else {
-            //verify no rollups use the filter group before deleting
-            if (!row.countRollups) {
-                var rows = cmp.get("v.filterGroupList");
-                var rowIndex = rows.indexOf(row);
-                rows.splice(rowIndex, 1);
-                cmp.set("v.filterGroupList", rows);
-            } else {
-                helper.toggleFilterRuleModal(cmp);
-            }
+        cmp.set("v.detailMode", action.name);
+        cmp.set("v.activeRecordId", row.recordId);
+        //check which grid is displayed
+        if(isRollupsGrid){
+            cmp.set("v.isRollupsGrid", false);
+            cmp.set("v.isRollupDetail", true);
+            cmp.set("v.width", 8);
+        } else{
+            cmp.set("v.isFilterGroupsGrid", false);
+            cmp.set("v.isFilterGroupDetail", true);
+            cmp.set("v.width", 8);
         }
+
     },
 
     /**
