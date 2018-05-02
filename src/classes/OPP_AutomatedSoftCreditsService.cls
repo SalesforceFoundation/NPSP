@@ -129,7 +129,6 @@ public class OPP_AutomatedSoftCreditsService {
                         ocr.OpportunityId = eachOpportunityId;
                         ocr.ContactId = eachRelationship.npe4__RelatedContact__c;
                         ocr.Role = eachRelationship.Related_Opportunity_Contact_Role__c;
-
                         relationshipOCRs.add(ocr);
                     }
                 }
@@ -219,7 +218,6 @@ public class OPP_AutomatedSoftCreditsService {
                         ocr.OpportunityId = eachOpportunityId;
                         ocr.ContactId = eachAffiliation.npe5__Contact__c;
                         ocr.Role = eachAffiliation.Related_Opportunity_Contact_Role__c;
-
                         affiliationOCRs.add(ocr);
                     }
                 }
@@ -273,8 +271,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @param role The role value that's being evaluated in the duplicate check.
     * @return Boolean The result of determining if the currentRelationship record is a duplicate.
     **********************************************************************************************************/
-    @testVisible
-    private static Boolean isDuplicateOCR(List<OpportunityContactRole> currentOCRs, Id relatedContact, String role) {
+    public static Boolean isDuplicateOCR(List<OpportunityContactRole> currentOCRs, Id relatedContact, String role) {
         Boolean isDuplicate = false;
 
         if (currentOCRs == null || currentOCRs.isEmpty()) {

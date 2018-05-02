@@ -578,19 +578,23 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        System.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        System.assertEquals(4, queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
-        System.assertEquals(primaryCon.id,queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
-        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
+        System.assertEquals(primaryCon.id, queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
+        System.assertEquals(true, queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
 
-        System.assertEquals(householdMembers[0].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(householdMembers[0].id, queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
         System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        System.assertEquals(householdMembers[1].id,queryOCR[2].ContactId, 'Third OCR is for household member contact.');
+        System.assertEquals(householdMembers[0].id, queryOCR[2].ContactId, 'Third OCR is for household member contact.');
         System.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
-        System.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
+        System.assertEquals('Household Member', queryOCR[2].Role, 'Household member OCR has the correct role.');
+
+        System.assertEquals(householdMembers[1].id, queryOCR[3].ContactId, 'Fourth OCR is for household member contact.');
+        System.assertEquals(false,queryOCR[3].isPrimary, 'Household member OCR is not marked primary.');
+        System.assertEquals('Household Member', queryOCR[3].Role, 'Household member OCR has the correct role.');
     }
 
 

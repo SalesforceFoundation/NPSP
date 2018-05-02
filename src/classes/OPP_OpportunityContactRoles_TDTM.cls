@@ -541,7 +541,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         if (fieldName.equals(FIELD_NAME_PRIMARY_CONTACT)) {
             if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(isIndividualAccount)) {
-                result = UTIL_CustomSettingsFacade.getContactsSettings().Default_Organizational_Contact_Role__c;
+                result = UTIL_CustomSettingsFacade.getContactsSettings().Contact_Role_for_Organizational_Opps__c;
             } else {
                 result = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
             }
