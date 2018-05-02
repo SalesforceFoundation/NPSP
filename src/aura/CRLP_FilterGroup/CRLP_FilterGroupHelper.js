@@ -19,6 +19,8 @@
                 cmp.set("v.activeFilterGroupId", null);
                 cmp.set("v.activeFilterGroup.recordId", null);
                 cmp.set("v.activeFilterGroup.recordName", null);
+                cmp.set("v.rollupItems", null);
+                cmp.set("v.activeFilterGroup.label", cmp.get("v.activeFilterGroup.label") + " (Clone)");
 
                 var filterRuleList = cmp.get("v.filterRuleList");
                 for (var i = 0; i < filterRuleList.length; i++) {
@@ -47,17 +49,18 @@
     },
 
     /**
-     * @description: filters the full rollup data to find which rollups use a particular filter group
+     * @description: filters the full rollup data to find which rollups use the selected filter group and display them in a tree
      * @param filterGroupLabel: label of the selected filter group
      * @param labels: labels for the rollups UI
      */
     filterRollupList: function(cmp, filterGroupLabel, labels) {
-        //filters row data based selected filter group
+        //filters rollups that use this filter group
         var rollupList = cmp.get("v.rollupList");
         var filteredRollupList = rollupList.filter(function(rollup) {
             return rollup.filterGroupName === filterGroupLabel;
         });
 
+        //create data structure for tree
         var summaryObjects = cmp.get("v.summaryObjects");
         var rollupsBySummaryObj = [];
         for (var i=0; i<summaryObjects.length; i++) {
@@ -65,7 +68,7 @@
             rollupsBySummaryObj.push(listItem);
         }
 
-        //filter rollup list by type
+        //place rollups in the array of the matching summary object
         filteredRollupList.forEach(function (rollup) {
             var item = {label: rollup.displayName, name: rollup.id}
             for (i=0; i<rollupsBySummaryObj.length; i++){
@@ -76,9 +79,9 @@
         });
 
         var itemList = [];
-        //only add object to list if there are rollups with matching summary objects
+        //only display summary object list item if there are rollups that use that summary object
         rollupsBySummaryObj.forEach(function(objList){
-           if (objList.list.length > 1) {
+           if (objList.list.length > 0) {
                var obj = {label: objList.label
                          , name: "title"
                          , expanded: false
@@ -356,6 +359,7 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                //clear array or reformat values into an array
                 var values = (value === "") ? [] : value.split(";");
                 cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
@@ -370,6 +374,7 @@
                     cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
+                    //clear array or reformat values into an array
                     var values = (value === "") ? [] : value.split(";");
                     cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');

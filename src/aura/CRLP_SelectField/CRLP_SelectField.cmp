@@ -53,11 +53,14 @@
     <aura:attribute name="helpText" type="String" default="Example text"
                     description="Help text to describe the field and its requirements"/>
 
+    <!-- events we handle -->
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
+
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
         <!--Field Label: {!v.fieldLabel}<br/>
         Entity Label: {!v.entityLabel}-->
         <aura:if isTrue="{!v.isReadOnly}">
-            <lightning:input aura:id="{!v.auraId + 'View'}"
+            <lightning:input aura:id="inputField"
                              label="{!v.fieldLabel}"
                              name="{!v.fieldLabel}"
                              value="{!v.entityLabel}"
@@ -65,7 +68,7 @@
             <aura:set attribute="else">
 
                 <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}" isRequired="{!v.isRequired}"/>
-                <lightning:select aura:id="{!v.auraId + 'Select'}" class="rollupField"
+                <lightning:select aura:id="selectField" class="rollupField"
                                   name="{!v.fieldLabel}"
                                   label="{!v.fieldLabel}"
                                   value="{!v.apiName}"
