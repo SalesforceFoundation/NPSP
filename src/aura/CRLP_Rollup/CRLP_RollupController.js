@@ -99,8 +99,9 @@
      * else resets mode to view to become display-only and resets rollup values
      */
     onCancel: function(cmp, event, helper) {
-        //todo: should we make this more sensitive to a clone from edit mode: will need to also factor in uniqueSummaryFieldCheck type check
-        if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeRollupId") === null){
+        var cachedRollup = cmp.get("v.cachedRollup");
+        //check for cachedRollup to avoid JS errors getting a null .valueOf()
+        if (!cmp.get("v.activeRollupId") || !cachedRollup) {
             //set off cancel event for container
             var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
             cancelEvent.setParams({grid: 'rollup'});
@@ -111,7 +112,6 @@
             cmp.set("v.mode", "view");
         } else {
             cmp.set("v.mode", "view");
-            var cachedRollup = cmp.get("v.cachedRollup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeRollup", helper.restructureResponse(cachedRollup.valueOf()));
             //reset all field visibility and values
@@ -127,7 +127,7 @@
         if (cmp.get("v.mode") === 'delete') {
             helper.toggleModal(cmp);
             helper.saveRollup(cmp, activeRollup);
-        } else if (helper.validateFields(cmp) === true) {
+        } else if (helper.validateFields(cmp)) {
             helper.saveRollup(cmp, activeRollup);
             cmp.set("v.mode", 'view');
             helper.updateRollupName(cmp);
@@ -147,15 +147,14 @@
             var label = message[2];
             console.log("field name is " + fieldName);
             console.log("value is " + value);
-            console.log("label is " + label);
 
             if(fieldName === 'summaryObject'){
                 helper.onChangeSummaryObject(cmp, value, label);
             } else if (fieldName === 'summaryField'){
-                helper.onChangeSummaryField(cmp, label);
+                helper.onChangeSummaryField(cmp, value, label);
             } else if (fieldName ==='operation'){
                 helper.onChangeOperation(cmp, value);
-            } else if (fieldName === 'timeBoundOperation'){
+            } else if(fieldName === 'timeBoundOperationType'){
                 helper.onChangeTimeBoundOperationsOptions(cmp, true, label);
             } else if (fieldName === 'integer'){
                 helper.onChangeInteger(cmp, value);
