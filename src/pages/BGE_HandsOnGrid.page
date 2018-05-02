@@ -84,20 +84,20 @@
 
             var myApp;
 
-            myApp = angular.module('myApp', ['ngHandsontable','ngSanitize'])
-            myApp.controller('MainCtrl', function($scope, $compile) {
+                myApp = angular.module('myApp', ['ngHandsontable','ngSanitize'])
+                myApp.controller('MainCtrl', function($scope, $compile) {
 
                 var data = JSON.parse('{!jsonString}');
                 var activeData = JSON.parse('{!jsonString}');
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
-            //    searchField = document.getElementById('handsonSearch');
+                //searchField = document.getElementById('handsonSearch');
                 wasEnterPressed = false;
                 wasUpArrowPressed = false;
-		$scope.totalPages = '{!totalOfPages}';
+                $scope.totalPages = '{!totalOfPages}';
 
-		//Map to save cells with invalid format values
+                //Map to save cells with invalid format values
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -193,9 +193,11 @@
                 actionCol.title = 'ACTIONS';
                 actionCol.type = 'text';
                 actionCol.data = 'Actions';
+                actionCol.colWidths = 80;
                 actionCol.className = "htCenter htMiddle";
 
                 dynamicColumns.push(errorCol);
+                dynamicColumns.push(actionCol);
 
                 for (var i=0; i < columnsData.length; i++) {
 
@@ -243,8 +245,6 @@
                     dynamicColumns.push(col);
                 }
 
-                dynamicColumns.push(actionCol);
-
                 var tableWidth = window.innerWidth * 93 / 100;
                 var tableHeight = window.innerHeight * 75 /100;
                 var colCount = dynamicColumns.length;
@@ -275,9 +275,11 @@
                     maxRows: 50,
                     manualColumnResize: [50],
                     colWidths: 150,
+                    // colWidths: [54, 60, 150],
                     rowHeights: 40,
                     colHeaders: true,
                     columnHeaderHeight: 40,
+                    fixedColumnsLeft: 2,
 
                     //padding: 6px 6px !important;
                     columns: dynamicColumns,
@@ -288,7 +290,7 @@
                         if (col == 0) {
                             return { type: { renderer: cellsRenderer } };
                         }
-                        else if (col == colCount-1) {
+                        else if (col == 1) {
 
                             return { type: { renderer: actionCellsRenderer } };
                         }
