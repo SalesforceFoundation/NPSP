@@ -91,7 +91,7 @@
         <!--START SPINNER-->
         <div class="spinnerDiv">
             <!--Hide the spinner by default-->
-            <lightning:spinner aura:id="waitingSpinner" />
+            <lightning:spinner aura:id="waitingSpinner" alternativeText="Loading data"/>
         </div>
         <!--END SPINNER-->
 
