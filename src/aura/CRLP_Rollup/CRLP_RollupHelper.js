@@ -793,6 +793,8 @@
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
             if(detailList[1] === 'null') {
+                // check for null string because we had to concatenate potentially null values
+                // and server requires actual null, not string of null
                 rollupCMT.detailField = null;
             } else {
                 rollupCMT.detailField = detailList[1];
