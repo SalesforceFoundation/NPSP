@@ -303,8 +303,11 @@ public with sharing class CRLP_RollupUI_SVC {
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
 
         for(String obj : objectNames){
-            if (obj == 'Partial_Soft_Credit__c') {
-                List<String> fieldsToReturn = new List<String>{'Role_Name__c','Amount__c'};
+            if (obj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                List<String> fieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn);
                 objNameToFieldTypeMap.put(obj, pscList);
             } else {
@@ -393,8 +396,11 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String detailObj : detailObjectNames){
-            if (detailObj == 'Partial_Soft_Credit__c') {
-                List<String> fieldsToReturn = new List<String>{'Role_Name__c','Amount__c'};
+            if (detailObj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                List<String> fieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
                 List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn);
                 objNameToFieldTypeMap.put(detailObj, pscList);
             } else {
