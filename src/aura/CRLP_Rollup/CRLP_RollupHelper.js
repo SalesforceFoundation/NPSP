@@ -792,7 +792,11 @@
         if (cmp.get("v.activeRollup.detailField")) {
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
-            rollupCMT.detailField = detailList[1];
+            if(detailList[1] === 'null') {
+                rollupCMT.detailField = null;
+            } else {
+                rollupCMT.detailField = detailList[1];
+            }
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
