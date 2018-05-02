@@ -36,6 +36,9 @@
         <members>ADDR_Validator_REST</members>
         <members>ADDR_Validator_TDTM</members>
         <members>ADDR_Validator_TEST</members>
+        <members>ADV_Adapter</members>
+        <members>ADV_Adapter_TEST</members>
+        <members>ADV_PackageInfo_SVC</members>
         <members>AFFL_Affiliations_TDTM</members>
         <members>AFFL_Affiliations_TEST</members>
         <members>ALLO_Allocations_TDTM</members>
@@ -178,6 +181,9 @@
         <members>OPP_OpportunityNamingBTN_CTRL</members>
         <members>OPP_OpportunityNaming_BATCH</members>
         <members>OPP_OpportunityNaming_TEST</members>
+        <members>OPP_PrimaryContactRoleMerge</members>
+        <members>OPP_PrimaryContactRoleMerge_BATCH</members>
+        <members>OPP_PrimaryContactRoleMerge_TEST</members>
         <members>OPP_PrimaryContact_BATCH</members>
         <members>OPP_PrimaryContact_TEST</members>
         <members>OPP_SendAcknowledgmentBTN_CTRL</members>
@@ -266,6 +272,7 @@
         <members>STG_PanelOpps_CTRL</members>
         <members>STG_PanelOpps_TEST</members>
         <members>STG_PanelPaymentMapping_CTRL</members>
+        <members>STG_PanelPrimaryContactRoleMerge_CTRL</members>
         <members>STG_PanelRDBatch_CTRL</members>
         <members>STG_PanelRDCustomFieldMapping_CTRL</members>
         <members>STG_PanelRDCustomInstallment_CTRL</members>
@@ -411,6 +418,7 @@
         <members>STG_PanelOppRollups</members>
         <members>STG_PanelOpps</members>
         <members>STG_PanelPaymentMapping</members>
+        <members>STG_PanelPrimaryContactRoleMerge</members>
         <members>STG_PanelRD</members>
         <members>STG_PanelRDBatch</members>
         <members>STG_PanelRDCustomFieldMapping</members>
@@ -984,6 +992,7 @@
         <members>HiddenForSecurity</members>
         <members>InactiveScheduledJobsOwnerErrMsg</members>
         <members>NameRequired</members>
+        <members>OCRRemovePrimaryDuplicateBatchErrorText</members>
         <members>OrganizationalOpportunities</members>
         <members>PageMessagesConfirm</members>
         <members>PageMessagesError</members>
@@ -1026,6 +1035,7 @@
         <members>SmartyStreets_Help_Text</members>
         <members>Zip_Not_Found</members>
         <members>Zipcode_Verification_Limit</members>
+        <members>adapterException</members>
         <members>addrCiceroMissingAPIKey</members>
         <members>addrCopyConAddBtnHHObjOnly</members>
         <members>addrGeneralSettings</members>
@@ -1155,6 +1165,8 @@
         <members>exceptionRequiredField</members>
         <members>exceptionValidationRule</members>
         <members>flsError</members>
+        <members>giftProcessingAccountException</members>
+        <members>giftProcessingConfigException</members>
         <members>healthButtonRun</members>
         <members>healthDetailsAccOne2OneNoContacts</members>
         <members>healthDetailsAccountDefaultRTInvalid</members>
@@ -1539,6 +1551,7 @@
         <members>stgHelpPaymentsEnabled</members>
         <members>stgHelpPowerOfUsHub</members>
         <members>stgHelpPrimaryContactBatch</members>
+        <members>stgHelpPrimaryContactRoleMergeBatch</members>
         <members>stgHelpRDAddCampaign</members>
         <members>stgHelpRDBatch</members>
         <members>stgHelpRDBatchSize</members>
@@ -1647,6 +1660,7 @@
         <members>stgLabelOtherOpportunigyNamingFormat</members>
         <members>stgLabelPaymentMapNoValidFields</members>
         <members>stgLabelPaymentSettings</members>
+        <members>stgLabelPrimaryContactRoleMergeBatch</members>
         <members>stgLabelRDFieldMap</members>
         <members>stgLabelRDNewPeriod</members>
         <members>stgLabelRDPeriod</members>
