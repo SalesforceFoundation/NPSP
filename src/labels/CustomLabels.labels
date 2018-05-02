@@ -609,7 +609,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
-        <value>You can't delete this filter group because there is at least one rollup using it. View the filter group detail page to see a list of associated rollups. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
+        <value>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterGroupNameLimitError</fullName>
