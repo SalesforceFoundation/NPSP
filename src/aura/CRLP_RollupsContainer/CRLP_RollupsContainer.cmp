@@ -252,7 +252,7 @@
         <div class="slds-p-bottom_large">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
                            mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
-                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
+                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}" />
         </div>
     </aura:if>
     <!--END ROLLUP DETAIL-->

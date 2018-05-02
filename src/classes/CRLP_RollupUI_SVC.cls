@@ -91,7 +91,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class RollupDetailModel {
         @AuraEnabled public CRLP_RollupCMT.Rollup rollup;
-        @AuraEnabled public Map<String,List<Map<String,String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, List<Map<String, String>>> fieldsByDataType;
+        @AuraEnabled public Map<String, String> fieldToObjectMap;
         @AuraEnabled public Map<String, String> timeBoundOperations;
         @AuraEnabled public Map<String, String> operations;
 
@@ -153,6 +154,7 @@ public with sharing class CRLP_RollupUI_SVC {
             summaryField = model.rollup.summaryField;
         }
         model.fieldsByDataType = getFieldsByDataType(summaryField, targetObjectNames, detailObjectNames);
+        model.fieldToObjectMap = getFieldToObjectMap(targetObjectNames, detailObjectNames);
         model.timeBoundOperations = getTimeBoundOperations();
         model.operations = getRollupOperations();
 
@@ -190,7 +192,11 @@ public with sharing class CRLP_RollupUI_SVC {
 
         if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-            item.creditType = Label.CRLP_HardCredit;
+            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                item.creditType = Label.CRLP_SoftCredit;
+            } else {
+                item.creditType = Label.CRLP_HardCredit;
+            }
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
             item.creditType = Label.CRLP_HardCredit;
@@ -199,7 +205,11 @@ public with sharing class CRLP_RollupUI_SVC {
             item.creditType = Label.CRLP_SoftCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-            item.creditType = Label.CRLP_HardCredit;
+            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                item.creditType = Label.CRLP_SoftCredit;
+            } else {
+                item.creditType = Label.CRLP_HardCredit;
+            }
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
                 && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
             item.creditType = Label.CRLP_SoftCredit;
@@ -293,8 +303,17 @@ public with sharing class CRLP_RollupUI_SVC {
         Set<String> excludedTypes = new Set<String>{'TIME', 'TEXTAREA'};
 
         for(String obj : objectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
-            objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+            if (obj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                List<String> fieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn);
+                objNameToFieldTypeMap.put(obj, pscList);
+            } else {
+                List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
+                objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
+            }
         }
 
         FilterGroupModel model = createFilterGroupModel(filterGroupId);
@@ -377,8 +396,17 @@ public with sharing class CRLP_RollupUI_SVC {
         Map<String,List<Map<String,String>>> objNameToFieldTypeMap = new Map<String,List<Map<String,String>>>();
 
         for(String detailObj : detailObjectNames){
-            List<Map<String, String>> detailNameToFieldTypeObj = UTIL_Describe.getAllFieldsWithType(detailObj);
-            objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+            if (detailObj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                List<String> fieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn);
+                objNameToFieldTypeMap.put(detailObj, pscList);
+            } else {
+                List<Map<String, String>> detailNameToFieldTypeObj = getAllFieldsWithType(detailObj);
+                objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
+            }
         }
         for(String targetObj : targetObjectNames){
             List<Map<String, String>> summaryNameToFieldTypeObj = getTargetFieldsWithType(targetObj, summaryField);
@@ -388,6 +416,87 @@ public with sharing class CRLP_RollupUI_SVC {
         return objNameToFieldTypeMap;
     }
 
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system fields
+    * @param objectName the name of the object to look up
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    private static List<Map<String, String>> getAllFieldsWithType(String objectName) {
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName);
+
+        for (Schema.DescribeFieldResult dfr : objectFields.values()) {
+            if(!dfr.name.toLowerCase().contains('__system')) {
+                Map<String, String> fieldObject = new Map<String, String>();
+                fieldObject.put('name', objectName+' '+dfr.name);
+                fieldObject.put('label', objectLabel+': '+dfr.label);
+                fieldObject.put('type', dfr.getType().Name());
+
+                fieldObjectList.add(fieldObject);
+            }
+        }
+
+        return fieldObjectList;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns a map of field names to data types, excluding system fields
+    * @param objectName the name of the object to look up
+    * @param fields list of field api names to get
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    private static List<Map<String, String>> getSpecificFieldsWithType(String objectName, List<String> fields) {
+
+        //get object label and clean "Partial Soft Credit" to "Soft Credit" in a translatable way
+        String pscLabel = Schema.SObjectType.Partial_Soft_Credit__c.getLabel();
+        String scLabel = Label.CRLP_SoftCredit;
+        String objectLabel = UTIL_Describe.getObjectLabel(objectName).replace(pscLabel,scLabel);
+
+        List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
+
+        for (String field : fields) {
+            Map<String, String> fieldObject = new Map<String, String>();
+            fieldObject.put('name', objectName+' '+field);
+            fieldObject.put('label', objectLabel +': '+UTIL_Describe.getFieldLabel(objectName,field));
+            fieldObject.put('type', UTIL_Describe.getFieldType(objectName,field));
+
+            fieldObjectList.add(fieldObject);
+        }
+
+        return fieldObjectList;
+
+    }
+
+    /*******************************************************************************************************
+    @description Fetches a map keyed by
+    * @param targetObjectNames list of target or summary objects to query
+    * @param detailObjectNames list of detail or objects to rollup to query
+    * @return a map of strings to string-string maps. Map<String,Map<String,String>>
+    */
+
+    @AuraEnabled
+    public static Map<String,String> getFieldToObjectMap (List<String> targetObjectNames, List<String> detailObjectNames) {
+
+        Map<String,String> fieldToObjectMap = new Map<String,String>();
+
+        List<String> allObjects = new List<String>();
+        allObjects.addAll(targetObjectNames);
+        allObjects.addAll(detailObjectNames);
+
+        for(String detailObj : allObjects){
+            String objectLabel = UTIL_Describe.getObjectLabel(detailObj);
+            Map<String, Schema.DescribeFieldResult> allFields = UTIL_Describe.getAllFieldsDescribe(detailObj);
+            for (DescribeFieldResult dfr : allFields.values()) {
+                fieldToObjectMap.put(objectLabel+': '+dfr.label, detailObj);
+            }
+        }
+
+        return fieldToObjectMap;
+    }
 
     /*******************************************************************************************************
     * @description Fetches a list of labels for the rollups UI to avoid namespace issues within lightning components.
@@ -714,7 +823,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param selectedField the name of a summary field already in use
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    public static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
+    private static List<Map<String, String>> getTargetFieldsWithType(String objectName, String selectedField) {
 
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 

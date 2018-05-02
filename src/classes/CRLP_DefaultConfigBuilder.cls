@@ -392,7 +392,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.First_Soft_Credit_Date__c' =>
                     new List<String>{ 'Contact: First Soft Credit Date', 'Date of the first gift where the Contact is designed for Soft Credit' },
             'Contact.Last_Soft_Credit_Date__c' =>
-                    new List<String>{ 'Contact: Last Soft Credit Date', 'Date of the lasat gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Last Soft Credit Date', 'Date of the last gift where the Contact is designed for Soft Credit' },
             'Contact.First_Soft_Credit_Amount__c' =>
                     new List<String>{ 'Contact: First Soft Credit Amount', 'Amount of the first gift where the Contact is designed for Soft Credit' },
             'Contact.Largest_Soft_Credit_Amount__c' =>

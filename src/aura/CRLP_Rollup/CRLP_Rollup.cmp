@@ -274,7 +274,7 @@
                                                 auraId="rollupType"
                                                 fieldLabel="{!v.labels.rollupType}"
                                                 entityLabel="{!v.selectedRollupType.label}"
-                                                apiName="{!v.activeRollup.detailObject}"
+                                                apiName="{!v.activeRollup.rollupTypeObject}"
                                                 options="{!v.rollupTypes}"
                                                 isRequired="true"
                                                 mediumDeviceSize="6"
@@ -308,14 +308,19 @@
                         </aura:if>
 
                         <aura:if isTrue="{!v.renderMap.detailField}">
+
+                            <aura:iteration items="{!v.options}" var="option">
+                                {!option.name}<br/>
+                                {!option.label}<br/>
+                            </aura:iteration>
+
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
-                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.detailFieldLabel}"
+                                                entityLabel="{!v.activeRollup.detailFieldLabel}"
                                                 apiName="{!v.activeRollup.detailField}"
                                                 options="{!v.detailFields}"
                                                 mediumDeviceSize="3"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 isRequired="true"
                                                 helpText="{!v.labels.createDetailFieldHelp}"
                             />
@@ -324,10 +329,9 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="dateField"
                                                 fieldLabel="{!v.labels.dateField}"
-                                                entityLabel="{!v.activeRollup.dateObjectLabel+': '+v.activeRollup.dateFieldLabel}"
+                                                entityLabel="{!v.activeRollup.dateFieldLabel}"
                                                 apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
-                                                objectLabel="{!v.activeRollup.dateObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
@@ -336,10 +340,9 @@
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="amountField"
                                                 fieldLabel="{!v.labels.amountField}"
-                                                entityLabel="{!v.activeRollup.detailObjectLabel+': '+v.activeRollup.amountFieldLabel}"
+                                                entityLabel="{!v.activeRollup.amountFieldLabel}"
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                objectLabel="{!v.activeRollup.detailObjectLabel + ': '}"
                                                 mediumDeviceSize="3"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
