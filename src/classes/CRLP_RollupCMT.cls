@@ -187,7 +187,7 @@ public class CRLP_RollupCMT {
                 if (prefix.countMatches('_') > 1) {
                     prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
                 }
-                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
+                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + this.objectName + '.' + this.fieldName +
                         ' ' + this.operationName, false).left(40);
             }
             if (this.recordName == null) {

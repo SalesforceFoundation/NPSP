@@ -44,8 +44,8 @@ public without sharing class CMT_FilterRule_SEL {
     private static List<Filter_Group__mdt> cachedFilterGroups {
         get {
             if (cachedFilterGroups == null) {
-                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Description__c,
-                            (SELECT Id, Is_Deleted__c FROM Filter_Rules__r)
+                cachedFilterGroups = [SELECT Id, MasterLabel, DeveloperName, Description__c, Is_Deleted__c,
+                            (SELECT Id, Is_Deleted__c FROM Filter_Rules__r WHERE Is_Deleted__c = false)
                         FROM Filter_Group__mdt
                         WHERE Is_Deleted__c = false
                         ORDER BY MasterLabel];
