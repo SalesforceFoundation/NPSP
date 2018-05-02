@@ -45,7 +45,7 @@
 
     /**
      *  @description: merges and saves the updated row item into the existing list of rows
-     *  @param list - list of items to merge into
+     *  @param list - list of items to merge into (this is the cached list for rollups)
      *  @param item - item to be merged into the list
      *  @param context - context running the merge
      */
@@ -69,9 +69,11 @@
 
         //save the updated, sorted list and clear any list filtering
         if (context === 'rollup') {
-            var sortedData = this.sortData(cmp, 'displayName', 'asc', list);
-            cmp.set("v.filteredSummaryObject", "All");
+            var rollupList = JSON.parse(JSON.stringify(list));
+            var sortedData = this.sortData(cmp, 'displayName', 'asc', rollupList);
             cmp.set("v.rollupList", sortedData);
+            cmp.set("v.cachedRollupList", sortedData);
+            cmp.set("v.filteredSummaryObject", "All");
         } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }

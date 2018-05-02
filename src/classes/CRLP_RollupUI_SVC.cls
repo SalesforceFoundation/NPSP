@@ -180,7 +180,7 @@ public with sharing class CRLP_RollupUI_SVC {
         return mdtTableList;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Build a RollupTableItem wrapper for a given Rollup__mdt record
      * @param rlpm Rollup__mdt
      * @return RollupTableItem
@@ -222,7 +222,7 @@ public with sharing class CRLP_RollupUI_SVC {
         item.rollupName = rlp.MasterLabel;
         item.detailField = rlp.Detail_Field__r.Label;
         item.description = rlp.Description__c;
-        item.filterGroupName = rlp.Filter_Group__r.MasterLabel;
+        item.filterGroupName = rlp.Filter_Group__c == null ? System.Label.CRLP_NoFilterGroupSelected : rlp.Filter_Group__r.MasterLabel;
         item.operation = rlp.Operation__c.replace('_', ' ');
         if(rlp.Active__c){
             item.activeIcon = 'utility:check';
@@ -323,7 +323,7 @@ public with sharing class CRLP_RollupUI_SVC {
         return modelString;
     }
 
-    /**
+    /*******************************************************************************************************
      * @description Build a FilterGroupModel wrapper for a given FilterGroup Id
      * @param filterGroupId
      * @return FilterGroupModel with just the FilterGroup and FilterRuleList properties populated
@@ -529,6 +529,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'creditType' => Label.CRLP_CreditType,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
+                'daysBackError' => Label.CRLP_DaysBack,
                 'delete' => Label.alloDeleteRow,
                 'detailField' => Schema.Rollup__mdt.Detail_Field__c.getDescribe().getLabel(),
                 'detailObject' => Schema.Rollup__mdt.Detail_Object__c.getDescribe().getLabel(),
@@ -536,19 +537,24 @@ public with sharing class CRLP_RollupUI_SVC {
                 'edit' => Label.stgBtnEdit,
                 'error' => Label.PageMessagesError,
                 'field' => Schema.Filter_Rule__mdt.Field__c.getDescribe().getLabel(),
+                'filterGroupActiveRollupsHelp' => Label.CMT_FilterGroupActiveRollupsHelpText,
                 'filterGroupDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filterGroupDeleteWarning' => Label.CMT_FilterGroupDeleteError,
                 'filterGroupDescription' => Schema.Filter_Group__mdt.Description__c.getDescribe().getLabel(),
+                'filterGroupDescriptionHelp' => Label.CMT_FilterGroupDescriptionHelpText,
                 'filterGroupLabel' => Schema.SObjectType.Filter_Group__mdt.getLabel(),
                 'filterGroupLabelPlural' => Schema.SObjectType.Filter_Group__mdt.getLabelPlural(),
                 'filterGroupNew' => Label.CMT_FilterNew,
+                'filterGroupNameHelp' => Label.CMT_FilterGroupNameHelpText,
                 'filterGroupNameLimitError' => Label.CMT_FilterGroupNameLimitError,
                 'filterRuleDeleteWarning' => Label.CMT_FilterRuleDeleteWarning,
                 'filterRuleDeleteConfirm' => String.format(Label.CMT_DeleteConfirm, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabel()}),
                 'filterRuleDuplicate' => Label.CMT_FilterRuleDuplicateError,
                 'filterRuleFieldMissing' => Label.CMT_FilterRuleFieldsMissing,
+                'filterRuleHelpText' => Label.CMT_FilterRulesHelpText,
                 'filterRuleLabel' => Schema.SObjectType.Filter_Rule__mdt.getLabel(),
                 'filterRuleLabelPlural' => Schema.SObjectType.Filter_Rule__mdt.getLabelPlural(),
+                'filterRuleValueHelp' => Label.CMT_FilterRulesValueHelpText,
                 'filtersDeleteProgress' => String.format(System.Label.CRLP_DeleteProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
@@ -560,7 +566,6 @@ public with sharing class CRLP_RollupUI_SVC {
                 'hardCredit' => Label.CRLP_HardCredit,
                 'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
-                'integerError' => String.format(Label.bdiPositiveNumber, new List<String>{Schema.Rollup__mdt.Integer__c.getDescribe().getLabel()}),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
                 'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
                 'labelContact' => Schema.SObjectType.Contact.getLabel(),
@@ -576,8 +581,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noFields' => Label.stgLabelPaymentMapNoValidFields,
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
+                'noFilterGroupSelect' => Label.CRLP_NoFilterGroupSelected,
                 'noFilterRules' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Rule__mdt.getLabelPlural()}),
-                'noRollupType' => Label.CRLP_NoRollupType,
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'objectAccount' => Schema.SObjectType.Account.getName(),
@@ -723,7 +728,6 @@ public with sharing class CRLP_RollupUI_SVC {
                                 response.filterGroupItem = createFilterGroupModel(groupId);
                             }
                         }
-                        System.debug('returning response!');
                         return JSON.serialize(response);
                     } catch (Exception ex) {
                         // error retrieving the metadata record

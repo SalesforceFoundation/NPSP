@@ -1049,12 +1049,17 @@
         <members>Address_StateCountry_Invalid_Error</members>
         <members>Address_Verification_Limit</members>
         <members>CMT_DeleteConfirm</members>
+        <members>CMT_FilterGroupActiveRollupsHelpText</members>
         <members>CMT_FilterGroupDeleteError</members>
+        <members>CMT_FilterGroupDescriptionHelpText</members>
+        <members>CMT_FilterGroupNameHelpText</members>
         <members>CMT_FilterGroupNameLimitError</members>
         <members>CMT_FilterNew</members>
         <members>CMT_FilterRuleDeleteWarning</members>
         <members>CMT_FilterRuleDuplicateError</members>
         <members>CMT_FilterRuleFieldsMissing</members>
+        <members>CMT_FilterRulesHelpText</members>
+        <members>CMT_FilterRulesValueHelpText</members>
         <members>CONV_Accept_Risk</members>
         <members>CONV_Account_Field</members>
         <members>CONV_Account_Field_For_Old_HH_ID</members>
@@ -1118,12 +1123,13 @@
         <members>CRLP_CreateRollupDateFieldHelpText</members>
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreditType</members>
+        <members>CRLP_DaysBack</members>
         <members>CRLP_DeleteError</members>
         <members>CRLP_DeleteProgress</members>
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_HardCredit</members>
-        <members>CRLP_NoRollupType</members>
+        <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupsByFilterGroup</members>

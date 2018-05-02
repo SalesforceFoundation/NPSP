@@ -13,6 +13,9 @@
     text-decoration: underline;
     background-color: transparent;
 }
-.THIS.datatable_container .slds-scrollable_y {
+.THIS .datatableContainer {
+    height: 175px;
+}
+.THIS.datatableContainer .slds-scrollable_y {
     height: 100%;
 }

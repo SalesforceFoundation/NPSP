@@ -249,7 +249,7 @@
 
     <!--BEGIN ROLLUP DETAIL-->
     <aura:if isTrue="{!v.isRollupDetail}">
-        <div class="slds-p-bottom_large">
+        <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
             <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
                            mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
                            summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}" />
@@ -259,7 +259,7 @@
 
     <!--BEGIN FILTER GROUP DETAIL-->
     <aura:if isTrue="{!v.isFilterGroupDetail}">
-        <div class="slds-p-bottom_large">
+        <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
             <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}" activeFilterGroupId="{#v.activeRecordId}"
                                 mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
                                 summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>

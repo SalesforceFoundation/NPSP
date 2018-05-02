@@ -596,6 +596,14 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupActiveRollupsHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the active rollups tree</shortDescription>
+        <value>The list of active rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
+    </labels>
+    <labels>
         <fullName>CMT_DeleteConfirm</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -612,12 +620,44 @@
         <value>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group description</shortDescription>
+        <value>It's important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group name</shortDescription>
+        <value>A unique name for this filter group.</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterGroupNameLimitError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>New filter group button</shortDescription>
         <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rules</shortDescription>
+        <value>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn't match ALL filter rules within a filter group, it won't be included in the rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesValueHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rule value field</shortDescription>
+        <value>If the Operator is In List or Not in List and you don't see a picklist, enter values separated by semi-colons.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterNew</fullName>
@@ -821,6 +861,14 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DaysBack</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Days back error message for integers with any characters other than numbers.</shortDescription>
+        <value>You must enter a positive whole number.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_DeleteError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -861,12 +909,12 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
-        <fullName>CRLP_NoRollupType</fullName>
+        <fullName>CRLP_NoFilterGroupSelected</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
-        <value>No Rollup Type</value>
+        <shortDescription>Label when user doesn't select a filter group.</shortDescription>
+        <value>No Filter Group (Include All Records)</value>
     </labels>
     <labels>
         <fullName>CRLP_PleaseWait</fullName>
