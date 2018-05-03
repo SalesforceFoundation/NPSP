@@ -147,6 +147,45 @@ public class CRLP_RollupUI_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Tests saveFilterGroupAndRules()
+    */
+    public static testMethod void testSaveFilterGroupAndRules() {
+
+        CRLP_RollupCMT.FilterGroup filterGroup = new CRLP_RollupCMT.FilterGroup('test');
+
+        List<CRLP_RollupCMT.FilterRule> rules = new List<CRLP_RollupCMT.FilterRule>();
+        CRLP_RollupCMT.FilterRule rule = new CRLP_RollupCMT.FilterRule('testRule', 'test');
+        rule.objectLabel = 'Opportunity';
+        rule.objectName = 'Opportunity';
+        rule.fieldLabel = 'Amount';
+        rule.fieldName = 'Amount';
+        rule.operationLabel = 'Equals';
+        rule.operationName = 'Equals';
+        rule.value = '1';
+        rules.add(rule);
+
+        filterGroup.rules = rules;
+
+        String filterGroupString = JSON.serialize(filterGroup);
+
+        CRLP_RollupUI_SVC.saveFilterGroupAndRules(filterGroupString);
+
+        // nothing to assert since CMDTs can't be inserted/updated in unit tests
+
+    }
+
+    /*********************************************************************************************************
+    * @description Tests getFilterRuleConstantPicklistOptions()
+    */
+    public static testMethod void testGetFilterRuleConstantPicklistOptions() {
+        String objectName = 'Opportunity';
+        String fieldName = 'StageName';
+        List<Map<String,String>> options = CRLP_RollupUI_SVC.getFilterRuleConstantPicklistOptions(objectName, fieldName);
+        List<PicklistEntry> picklistValues = Schema.getGlobalDescribe().get('Opportunity').getDescribe().fields.getMap().get('StageName').getDescribe().getPicklistValues();
+        System.assertEquals(picklistValues.size(), options.size());
+    }
+
+    /*********************************************************************************************************
     * @description Tests getDeploymentStatus()
     */
     public static testMethod void testGetDeploymentStatus_Rollup() {
@@ -167,6 +206,13 @@ public class CRLP_RollupUI_TEST {
             System.assertNotEquals(null, e.getMessage());
         }
 
+        try {
+            // we know this will fail because the filterName is not found
+            CRLP_RollupUI_SVC.getDeploymentStatus('jobId', 'rollupName', 'Filter', 'edit');
+        } catch (Exception e) {
+            System.assertNotEquals(null, e.getMessage());
+        }
+
         // Test a success
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
                 Customizable_Rollups_Enabled__c = true,
@@ -177,6 +223,12 @@ public class CRLP_RollupUI_TEST {
         String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup', 'edit');
         System.debug(resultString);
         CRLP_RollupUI_SVC.DeploymentResult response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
+
+        System.assertNotEquals(null, response);
+
+        resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Filter', 'edit');
+        System.debug(resultString);
+        response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
         System.assertNotEquals(null, response);
 

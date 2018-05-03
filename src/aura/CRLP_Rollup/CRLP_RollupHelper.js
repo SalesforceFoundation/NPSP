@@ -105,8 +105,7 @@
             if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
                     if(field !== undefined) {
-                        var datatype = field.type;
-                        if (datatype === type) {
+                        if (field.type === type) {
                             newFields.push(field);
                         }
                     }
@@ -355,19 +354,23 @@
 
         var amountFields = cmp.get("v.amountFields");
         var amountFieldName;
-        // Set the amount field based on the selected rollup type
+        // Set the amount field and assumed detail object based on the selected rollup type
         if (amountObjectName === labels.objectPayment) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
             amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectPayment);
         } else if (amountObjectName === labels.objectAllocation) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
             amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectAllocation);
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
-            amountFieldName = labels.objectPartialSoftCredit + ' Amount__c';
+            amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
         } else {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
             amountFieldName = labels.objectOpportunity + ' Amount';
+            cmp.set("v.activeRollup.detailObject",labels.objectOpportunity);
         }
 
         cmp.set("v.activeRollup.amountField", amountFieldName);
@@ -790,7 +793,13 @@
         if (cmp.get("v.activeRollup.detailField")) {
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
-            rollupCMT.detailField = detailList[1];
+            if(detailList[1] === 'null') {
+                // check for null string because we had to concatenate potentially null values
+                // and server requires actual null, not string of null
+                rollupCMT.detailField = null;
+            } else {
+                rollupCMT.detailField = detailList[1];
+            }
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
