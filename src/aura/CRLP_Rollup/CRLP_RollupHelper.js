@@ -105,8 +105,7 @@
             if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
                     if(field !== undefined) {
-                        var datatype = field.type;
-                        if (datatype === type) {
+                        if (field.type === type) {
                             newFields.push(field);
                         }
                     }
@@ -794,7 +793,13 @@
         if (cmp.get("v.activeRollup.detailField")) {
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
-            rollupCMT.detailField = detailList[1];
+            if(detailList[1] === 'null') {
+                // check for null string because we had to concatenate potentially null values
+                // and server requires actual null, not string of null
+                rollupCMT.detailField = null;
+            } else {
+                rollupCMT.detailField = detailList[1];
+            }
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
