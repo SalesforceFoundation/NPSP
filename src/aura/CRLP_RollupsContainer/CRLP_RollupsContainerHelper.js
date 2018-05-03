@@ -44,6 +44,43 @@
     },
 
     /**
+     * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
+     */
+    handleCancelDetailEvent: function(cmp, grid){
+        //reset lastActiveRecordId in case user navigates from one detail component to another
+        cmp.set("v.lastActiveRecordId", null);
+
+        if (grid === 'rollup') {
+            this.displayRollupsGrid(cmp);
+            cmp.set("v.width", 12);
+        } else if (grid === 'filterGroup') {
+            this.displayFilterGroupsGrid(cmp);
+            cmp.set("v.width", 12);
+        }
+    },
+
+    /**
+     * @description: handles the selection of a specific rollup from the filter group view and then return to filter group
+     * @event: event passed in from
+     */
+    handleNavigateEvent: function(cmp, message) {
+        //handles the selection of a specific rollup from the filter group view and then return to filter group
+        cmp.set("v.activeRecordId", message.id);
+        cmp.set("v.detailMode", 'view');
+        cmp.set("v.width", 8);
+
+        if (message.target === 'rollup') {
+            cmp.set("v.lastActiveRecordId", message.lastId);
+            cmp.set("v.isRollupDetail", true);
+            cmp.set("v.isFilterGroupDetail", false);
+        } else if (message.target === 'filterGroup'){
+            cmp.set("v.lastActiveRecordId", null);
+            cmp.set("v.isRollupDetail", false);
+            cmp.set("v.isFilterGroupDetail", true);
+        }
+    },
+
+    /**
      *  @description: merges and saves the updated row item into the existing list of rows
      *  @param list - list of items to merge into (this is the cached list for rollups)
      *  @param item - item to be merged into the list

@@ -127,7 +127,7 @@ public with sharing class CRLP_RollupUI_SVC {
         RollupGridModel model = new RollupGridModel();
 
         model.items = getRollupDefinitions();
-        model.labels = getRollupLabels();
+        model.labels = getAppLabels();
         model.filterGroups = getFilterGroupDefinitions();
 
         //serialize to avoid passing inner classes, which is technically unsupported
@@ -493,7 +493,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * If any additional labels are required, they should be added here.
     * @return a list of all labels used in the rollups UI.
     */
-    public static Map<String, String> getRollupLabels() {
+    public static Map<String, String> getAppLabels() {
 
             Map<String, String> labels = new Map<String,String>
             {
