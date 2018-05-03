@@ -291,7 +291,7 @@
                     var templateField = columnsData[i];
 
                     col.data = templateField.apiName;
-                    
+
                     if (templateField.required) {
 
                         col.required = true;
