@@ -81,9 +81,6 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
 
-    <!-- events we fire -->
-    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
-
     <!--START FORM-->
     <div aria-labelledby="filterGroupDetail">
 
@@ -157,7 +154,7 @@
                                     </aura:if>
                                 </aura:set>
                                 <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                    <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer', '')}">
+                                    <div class="{!and(if(lessthan(v.filterRuleList.length, 3), or(equals(v.mode, 'edit'), equals(v.mode, 'clone'))), 'datatableContainer', '')}">
                                         <lightning:datatable data="{!v.filterRuleList}"
                                                              columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
                                                              keyField="id"

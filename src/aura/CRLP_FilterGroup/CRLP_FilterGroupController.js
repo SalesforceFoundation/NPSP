@@ -93,7 +93,7 @@
      */
     cancelModal: function(cmp, event, helper){
         if (cmp.get("v.mode") === 'delete') {
-            cmp.set("v.mode",'view');
+            cmp.set("v.mode", 'view');
         } else {
             helper.resetActiveFilterRule(cmp);
             cmp.set("v.filterRuleMode", "");
@@ -149,9 +149,7 @@
     onCancel: function(cmp, event, helper){
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeFilterGroupId") === null){
             //set off cancel event for container
-            var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-            cancelEvent.setParams({grid: 'filterGroup'});
-            cancelEvent.fire();
+            helper.sendMessage(cmp, 'cancelEvent', {grid: 'filterGroup'});
         } else {
             cmp.set("v.mode", "view");
             var cachedFilterGroup = cmp.get("v.cachedFilterGroup");

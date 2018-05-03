@@ -84,9 +84,6 @@
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.onSelectValueChange}"/>
 
-    <!-- events we fire -->
-    <aura:registerEvent name="CancelEvent" type="c:CRLP_CancelEvent"/>
-
     <!-- markup -->
 
     <!--START FORM-->

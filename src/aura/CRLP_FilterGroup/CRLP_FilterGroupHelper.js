@@ -210,13 +210,10 @@
                             if(mode === 'delete') {
 
                                 helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
-
                                 helper.sendMessage(cmp, 'filterGroupDeleted', recordName);
 
                                 //punt back to filterGroup grid
-                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-                                cancelEvent.setParams({grid: 'filterGroup'});
-                                cancelEvent.fire();
+                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'filterGroup'});
 
                             } else {
 

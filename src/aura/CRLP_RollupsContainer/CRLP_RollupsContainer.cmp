@@ -67,7 +67,6 @@
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
-    <aura:handler event="c:CRLP_CancelEvent" action="{!c.handleCancelEvent}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
     <!-- markup -->
@@ -91,9 +90,9 @@
         <lightning:breadcrumbs>
             <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="/apex/STG_SettingsManager"/>
             <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
-                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleCancelEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
+                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleCancelBreadcrumbEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
                 <aura:if isTrue="{!v.isFilterGroupDetail}">
-                    <lightning:breadcrumb label="{!v.labels.filterGroupLabelPlural}" onclick="{!c.handleCancelEvent}" name="{!v.labels.filterGroupLabelPlural}" title="{!v.labels.filterGroupLabelPlural}"/>
+                    <lightning:breadcrumb label="{!v.labels.filterGroupLabelPlural}" onclick="{!c.handleCancelBreadcrumbEvent}" name="{!v.labels.filterGroupLabelPlural}" title="{!v.labels.filterGroupLabelPlural}"/>
                 </aura:if>
             </aura:if>
             <aura:if isTrue="{!and(v.isRollupDetail, v.lastActiveRecordId != null)}">

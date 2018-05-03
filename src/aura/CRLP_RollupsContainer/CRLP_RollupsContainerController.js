@@ -144,18 +144,15 @@
     /**
      * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
      */
-    handleCancelEvent: function(cmp, event, helper){
+    handleCancelBreadcrumbEvent: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
-        var gridTarget = event.getParam('grid');
         cmp.set("v.lastActiveRecordId", null);
 
-        //if cancel comes from the breadcrumbs in parent, check for name to toggle grid selection
-        if(gridTarget === 'rollup' || breadcrumbName === labels.rollupSummaryTitle){
+        if (breadcrumbName === labels.rollupSummaryTitle) {
             helper.displayRollupsGrid(cmp);
             cmp.set("v.width", 12);
-        }
-        else if (gridTarget === 'filterGroup' || breadcrumbName === labels.filterGroupLabelPlural) {
+        } else if (breadcrumbName === labels.filterGroupLabelPlural) {
             helper.displayFilterGroupsGrid(cmp);
             cmp.set("v.width", 12);
         }
@@ -171,7 +168,9 @@
         console.log("handleMessage: " + channel);
 
         //message is the masterLabel
-        if(channel === 'nameChange'){
+        if (channel === 'cancelEvent') {
+            helper.handleCancelDetailEvent(cmp, message.grid);
+        } else if (channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.label = message;
@@ -213,20 +212,7 @@
             helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
 
         } else if (channel === 'navigateEvent') {
-            //handles the selection of a specific rollup from the filter group view and then return to filter group
-            cmp.set("v.activeRecordId", message.id);
-            cmp.set("v.detailMode", 'view');
-            cmp.set("v.width", 8);
-
-            if (message.target === 'rollup') {
-                cmp.set("v.lastActiveRecordId", message.lastId);
-                cmp.set("v.isRollupDetail", true);
-                cmp.set("v.isFilterGroupDetail", false);
-            } else if (message.target === 'filterGroup'){
-                cmp.set("v.lastActiveRecordId", null);
-                cmp.set("v.isRollupDetail", false);
-                cmp.set("v.isFilterGroupDetail", true);
-            }
+            helper.handleNavigateEvent(cmp, message);
         }
     },
 

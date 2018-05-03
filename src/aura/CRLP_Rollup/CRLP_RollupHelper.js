@@ -1103,9 +1103,7 @@
 
                             if(mode === "delete") {
                                 // fire cancel event to nav back to rollup grid
-                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-                                cancelEvent.setParams({grid: 'rollup'});
-                                cancelEvent.fire();
+                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'rollup'});
 
                             } else {
 

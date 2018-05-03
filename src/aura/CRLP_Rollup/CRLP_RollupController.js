@@ -103,10 +103,7 @@
         //check for cachedRollup to avoid JS errors getting a null .valueOf()
         if (!cmp.get("v.activeRollupId") || !cachedRollup) {
             //set off cancel event for container
-            var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-            cancelEvent.setParams({grid: 'rollup'});
-            cancelEvent.fire();
-            console.log('firing cancel event');
+            helper.sendMessage(cmp, 'cancelEvent', {grid: 'rollup'});
         } else if (cmp.get("v.mode") === 'delete') {
             helper.toggleModal(cmp);
             cmp.set("v.mode", "view");
