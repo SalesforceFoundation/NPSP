@@ -46,7 +46,7 @@
     /**
      * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
      */
-    handleCancelDetailEvent: function(cmp, message){
+    handleCancelDetailEvent: function(cmp, grid){
         //reset lastActiveRecordId in case user navigates from one detail component to another
         cmp.set("v.lastActiveRecordId", null);
 

@@ -303,12 +303,6 @@
                         </aura:if>
 
                         <aura:if isTrue="{!v.renderMap.detailField}">
-
-                            <aura:iteration items="{!v.options}" var="option">
-                                {!option.name}<br/>
-                                {!option.label}<br/>
-                            </aura:iteration>
-
                             <c:CRLP_SelectField isReadOnly="{!v.isReadOnly}"
                                                 auraId="detailField"
                                                 fieldLabel="{!v.labels.detailField}"
@@ -328,6 +322,7 @@
                                                 apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
                                                 mediumDeviceSize="3"
+                                                hasNullOption="false"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
                         </aura:if>

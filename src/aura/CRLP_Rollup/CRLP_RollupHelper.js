@@ -523,8 +523,8 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.filterGroup", cmp.get("v.labels.na"));
-            this.onChangeFilterGroup(cmp, cmp.get("v.labels.na"));
+            cmp.set("v.activeRollup.filterGroup", '');
+            this.onChangeFilterGroup(cmp, cmp.get("v.labels.noFilterGroupSelect"));
             cmp.set("v.renderMap", renderMap);
         }
     },
@@ -1249,7 +1249,7 @@
         }
 
         //description set separately since we have direct access to this cmp
-        if(!activeRollup.description){
+        if (!activeRollup.description) {
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
