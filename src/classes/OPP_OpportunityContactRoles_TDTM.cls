@@ -654,26 +654,26 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     **********************************************************************************************************/
     @testVisible
     private static Map<Id, List<Id>> populatePrimaryContactToOpportunities(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
-        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, List<Id>> primaryContactToOpportunities = new Map<Id, List<Id>>();
 
         if (currentOpportunities.isEmpty()) {
-            return primaryContactToOpportunity;
+            return primaryContactToOpportunities;
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.Primary_Contact__c != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
                 && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
-                if (primaryContactToOpportunity.containsKey(eachOppty.Primary_Contact__c)) {
-                    List<Id> opportunities = primaryContactToOpportunity.get(eachOppty.Primary_Contact__c);
+                if (primaryContactToOpportunities.containsKey(eachOppty.Primary_Contact__c)) {
+                    List<Id> opportunities = primaryContactToOpportunities.get(eachOppty.Primary_Contact__c);
                     opportunities.add(eachOppty.Id);
                 } else {
-                    primaryContactToOpportunity.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
+                    primaryContactToOpportunities.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
                 }
             }
         }
 
-        return primaryContactToOpportunity;
+        return primaryContactToOpportunities;
     }
 
 
@@ -685,25 +685,25 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     **********************************************************************************************************/
     @testVisible
     private static Map<Id, List<Id>> populateAccountToOpportunities(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
-        Map<Id, List<Id>> accountToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, List<Id>> accountToOpportunities = new Map<Id, List<Id>>();
 
         if (currentOpportunities.isEmpty()) {
-            return accountToOpportunity;
+            return accountToOpportunities;
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.AccountId != null
                 && OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
-                if (accountToOpportunity.containsKey(eachOppty.AccountId)) {
-                    List<Id> opportunities = accountToOpportunity.get(eachOppty.AccountId);
+                if (accountToOpportunities.containsKey(eachOppty.AccountId)) {
+                    List<Id> opportunities = accountToOpportunities.get(eachOppty.AccountId);
                     opportunities.add(eachOppty.Id);
                 } else {
-                    accountToOpportunity.put(eachOppty.AccountId, new List<Id>{ eachOppty.Id });
+                    accountToOpportunities.put(eachOppty.AccountId, new List<Id>{ eachOppty.Id });
                 }
             }
         }
 
-        return accountToOpportunity;
+        return accountToOpportunities;
     }
 
 

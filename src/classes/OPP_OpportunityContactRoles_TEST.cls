@@ -693,7 +693,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return void
     *********************************************************************************************************/
     static testMethod void testPopulatePrimaryContactToOpportunities() {
-        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, List<Id>> primaryContactToOpportunities = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -708,12 +708,12 @@ private class OPP_OpportunityContactRoles_TEST {
 
         accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
 
-        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
+        primaryContactToOpportunities = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
-        System.assertEquals(5, primaryContactToOpportunity.size());
-        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id)[0]);
-        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id)[0]);
+        System.assertEquals(5, primaryContactToOpportunities.size());
+        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunities.get(testContacts[0].Id)[0]);
+        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunities.get(testContacts[3].Id)[0]);
     }
 
 
@@ -724,7 +724,7 @@ private class OPP_OpportunityContactRoles_TEST {
     * @return void
     *********************************************************************************************************/
     static testMethod void testPopulateAccountToOpportunities() {
-        Map<Id, List<Id>> accountToOpportunity = new Map<Id, List<Id>>();
+        Map<Id, List<Id>> accountToOpportunities = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
         List<Account> testAccounts = new List<Account>();
 
@@ -745,12 +745,12 @@ private class OPP_OpportunityContactRoles_TEST {
         }
         update testAccounts;
 
-        accountToOpportunity = OPP_OpportunityContactRoles_TDTM.populateAccountToOpportunities(testOpptys, accountDetails);
+        accountToOpportunities = OPP_OpportunityContactRoles_TDTM.populateAccountToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
-        System.assertEquals(5, accountToOpportunity.size());
-        System.assertEquals(testOpptys[0].Id, accountToOpportunity.get(testContacts[0].AccountId)[0]);
-        System.assertEquals(testOpptys[3].Id, accountToOpportunity.get(testContacts[3].AccountId)[0]);
+        System.assertEquals(5, accountToOpportunities.size());
+        System.assertEquals(testOpptys[0].Id, accountToOpportunities.get(testContacts[0].AccountId)[0]);
+        System.assertEquals(testOpptys[3].Id, accountToOpportunities.get(testContacts[3].AccountId)[0]);
     }
 
 }
