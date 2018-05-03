@@ -99,10 +99,7 @@ global class BGE_HandsOnGridController {
                                  Name,
                                  Order__c,
                                  Read_Only__c,
-                                 Required__c,
-                                 Sticky_Field__c,
-                                 Sticky_Field_Value__c,
-                                 Sticky_Field_Visibility__c
+                                 Required__c
                             FROM Batch_Template_Field__c
                             WHERE Batch_Template__c =: templateId
                             ORDER BY Order__c ASC

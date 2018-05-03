@@ -17,9 +17,6 @@ public with sharing class BGE_DynamicalColumnWrapper {
 	public String name { get; set; }
 	public String type { get; set; }
 	public String isDecimal { get; set; }
-	public Boolean stickyField { get; set; }
-	public String  stickyFieldValue { get; set; }
-	public Boolean stickyFieldVisibility { get; set; }
 	public Boolean required { get; set; }
 	public Boolean allowInvalid { get; set; }
 	public List<String> pickListValuesList {get; set;}
@@ -69,9 +66,6 @@ public with sharing class BGE_DynamicalColumnWrapper {
 				nameAux = field.getLabel();
 			}
 
-
-
-
 			apiName = templateField.Name;
 
 			name = nameAux;
@@ -84,12 +78,12 @@ public with sharing class BGE_DynamicalColumnWrapper {
 
 			mapFieldTypes();
 
-			if (type == 'dropdown') {
+			if (type === 'dropdown') {
 
 				getPickListValuesIntoList(dataImportFieldMap);
 			}
 
-			if (apiName == 'Donation_Record_Type_Name__c') {
+			if (apiName === 'Donation_Record_Type_Name__c') {
 
 				type = 'dropdown';
 				pickListValuesList.addAll(getDonationRecordtypes());

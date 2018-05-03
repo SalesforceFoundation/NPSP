@@ -283,7 +283,7 @@
                 actionCol.className = "htCenter htMiddle";
 
                 dynamicColumns.push(errorCol);
-                dynamicColumns.push(actionCol);
+            //    dynamicColumns.push(actionCol);
 
                 for (var i=0; i < columnsData.length; i++) {
 
