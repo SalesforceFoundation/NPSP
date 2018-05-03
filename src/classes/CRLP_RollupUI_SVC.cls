@@ -460,8 +460,8 @@ public with sharing class CRLP_RollupUI_SVC {
         for (String field : fields) {
             Map<String, String> fieldObject = new Map<String, String>();
             //this method is reused for rollups, where obj concatenation is needed, and filter groups, where it is not
-            fieldObject.put('name', concatenate ? objectName+' ' : '' + field);
-            fieldObject.put('label', concatenate ? objectLabel +': ' : '' + UTIL_Describe.getFieldLabel(objectName,field));
+            fieldObject.put('name', (concatenate ? objectName+' ' : '') + field);
+            fieldObject.put('label', (concatenate ? objectLabel +': ' : '') + UTIL_Describe.getFieldLabel(objectName,field));
             String fieldType = getFieldType(objectName,field);
             fieldObject.put('type', fieldType);
 
