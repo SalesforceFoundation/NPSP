@@ -283,7 +283,7 @@
                 actionCol.className = "htCenter htMiddle";
 
                 dynamicColumns.push(errorCol);
-            //    dynamicColumns.push(actionCol);
+                dynamicColumns.push(actionCol);
 
                 for (var i=0; i < columnsData.length; i++) {
 
@@ -340,6 +340,20 @@
 
                         col.className = "htLeft htMiddle";
                     }
+
+                    if (templateField.type === "dropdown") {
+
+                        // Check if by any change the list containing picklist values are null empty or undefined.
+                        if (templateField.pickListValuesList) {
+
+                             // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                             // In this case, the ENTER key is ignored and the editor field remains opened.
+                            col.allowInvalid = false;
+
+                            col.source = templateField.pickListValuesList;
+                        }
+                    }
+
 
                     if (templateField.apiName !== "Id") {
 

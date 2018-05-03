@@ -78,12 +78,12 @@ public with sharing class BGE_DynamicalColumnWrapper {
 
 			mapFieldTypes();
 
-			if (type === 'dropdown') {
+			if (type == 'dropdown') {
 
 				getPickListValuesIntoList(dataImportFieldMap);
 			}
 
-			if (apiName === 'Donation_Record_Type_Name__c') {
+			if (apiName == 'Donation_Record_Type_Name__c') {
 
 				type = 'dropdown';
 				pickListValuesList.addAll(getDonationRecordtypes());
