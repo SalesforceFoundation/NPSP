@@ -110,28 +110,6 @@
                 text-align: center;
             }
 
-            .htDatepickerHolder{
-
-                width: 470px;
-            }
-
-            .pika-lendar {
-
-                float: left;
-                width: 400px;
-                margin: 32px;
-            }
-
-            .pika-button{
-
-                text-align: left;
-            }
-
-            .pika-prev, .pika-next {
-
-                margin-right: 85px !important;
-            }
-
         </style>
 
         <!-- Custom Javascript -->
@@ -170,10 +148,9 @@
                 // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
                 wait = false;
 
-        		    $scope.totalPages = '{!totalOfPages}';
+        		$scope.totalPages = '{!totalOfPages}';
 
 		        // Map to save cells with invalid format values
-
                 updatedCellsMap = {};
 
                 var changesToSave = {};
@@ -232,7 +209,6 @@
                 if(window.attachEvent) {
 
                     window.attachEvent('onresize', function() {
-                        alert('attachEvent - resize');
 
                         hot.updateSettings({
                             width: calculateWindowWidth(),
@@ -244,7 +220,6 @@
                 else if(window.addEventListener) {
 
                     window.addEventListener('resize', function() {
-                        console.log('addEventListener - resize');
 
                         hot.updateSettings({
                             width: calculateWindowWidth(),
@@ -275,6 +250,7 @@
                     var isDisabled = 'disabled=\"false\"';
 
                     if (dataRowId) {
+
                         isDisabled = '';
                     }
 
@@ -315,9 +291,12 @@
                     var templateField = columnsData[i];
 
                     col.data = templateField.apiName;
+
                     if (templateField.required) {
+
                         col.required = true;
                     }
+
                     col.title = '<span>' + templateField.name.toUpperCase() + '</span>';
                     col.type = templateField.type;
 
@@ -362,7 +341,19 @@
                         col.className = "htLeft htMiddle";
                     }
 
-                    dynamicColumns.push(col);
+                    if (templateField.type === "dropdown") {
+
+                        // Check if by any change the list containing picklist values are null empty or undefined.
+                        if (templateField.pickListValuesList) {
+
+                             // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                             // In this case, the ENTER key is ignored and the editor field remains opened.
+                            col.allowInvalid = false;
+
+                            col.source = templateField.pickListValuesList;
+                        }
+                    }
+
 
                     if (templateField.apiName !== "Id") {
 
@@ -401,14 +392,10 @@
                     maxRows: 50,
                     manualColumnResize: [50],
                     colWidths: 150,
-                    // colWidths: [54, 60, 150],
                     rowHeights: 30,
                     colHeaders: true,
                     columnHeaderHeight: 40,
                     fixedColumnsLeft: 2,
-
-
-                    //padding: 6px 6px !important;
                     columns: dynamicColumns,
                     contextMenu: ['remove_row'],
 
@@ -1188,7 +1175,7 @@
                 Handsontable.Dom.addEvent(document.body, 'keydown', function(e) {
 
                     wasEnterPressed = false;
-		                wasUpArrowPressed = false;
+		            wasUpArrowPressed = false;
 
                     if (e.keyCode  === 38) {
 
