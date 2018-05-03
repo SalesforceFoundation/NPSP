@@ -164,7 +164,8 @@ public class CRLP_RollupCMT {
             this.recordId = filterRule.Id;
 
             try {
-                this.objectLabel = filterRule.Object__r.MasterLabel;
+                // obfuscating "Partial Soft Credit" object; relabeling to simply "Soft Credit"
+                this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = filterRule.Field__r.MasterLabel;
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
                 this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
@@ -187,8 +188,8 @@ public class CRLP_RollupCMT {
                 if (prefix.countMatches('_') > 1) {
                     prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
                 }
-                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + this.objectName + '.' + this.fieldName +
-                        ' ' + this.operationName, false).left(40);
+                this.label = abbreviateForSpace(prefix.left(12).removeEnd('_') + ' ' + this.objectName + '.' + this.fieldName +
+                        ' ' + this.operationName + ' ' + this.value, false).left(40);
             }
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -437,10 +438,16 @@ public class CRLP_RollupCMT {
      */
     private static String abbreviateForSpace(String txt, Boolean forDeveloperName) {
 
+        System.debug('++++++IN abbreviateForSpace');
+        System.debug('++++++text: '+txt);
+        System.debug('++++++fordevname: '+forDeveloperName);
+
         // TODO Talk to Beth about LowerCase().
         txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
+                replace('Opportunity', 'Opp').
                 replace('Partial Soft Credit', 'PSC').
+                replace('Partial_Soft_Credit', 'PSC').
                 replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
                 replace(' of ', '');
 
@@ -449,7 +456,10 @@ public class CRLP_RollupCMT {
                     replace('Account', 'Acct').
                     replace('Contact', 'Con').
                     replace('Payment', 'Pmt').
+                    replace('Allocation', 'Allo').
                     replace('Allocations', 'Allo').
+                    replace('Partial Soft Credit', 'PSC').
+                    replace('Partial_Soft_Credit', 'PSC').
                     replace('Soft_Credit', 'sftCr').replace('Hard_Credit', 'hrdCr').
                     replace('#', 'num').replace('year', 'yr').
                     replace('Number', 'Num').replace('Count', 'cnt');

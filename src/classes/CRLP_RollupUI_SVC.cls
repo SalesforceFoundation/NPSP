@@ -214,7 +214,7 @@ public with sharing class CRLP_RollupUI_SVC {
         } else {
             item.creditType = Label.stgNotApplicable;
         }
-        item.detailObject = rlp.Detail_Object__r.Label;
+        item.detailObject = rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? Schema.SObjectType.Opportunity.getLabel() : rlp.Detail_Object__r.Label;
         item.summaryObject = rlp.Summary_Object__r.Label;
         item.summaryObjectApiName = rlp.Summary_Object__r.QualifiedApiName;
         item.summaryField = rlp.Summary_Field__r.Label;
@@ -306,7 +306,7 @@ public with sharing class CRLP_RollupUI_SVC {
                         UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
                         UTIL_Namespace.StrAllNSPrefix('Amount__c')
                 };
-                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn);
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
@@ -399,7 +399,7 @@ public with sharing class CRLP_RollupUI_SVC {
                         UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
                         UTIL_Namespace.StrAllNSPrefix('Amount__c')
                 };
-                List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn);
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn, true);
                 objNameToFieldTypeMap.put(detailObj, pscList);
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getDetailFieldsWithType(detailObj);
@@ -448,7 +448,7 @@ public with sharing class CRLP_RollupUI_SVC {
     * @param fields list of field api names to get
     * @return List<Map<String, String>> an object with field api names, labels and data type.
     */
-    private static List<Map<String, String>> getSpecificFieldsWithType(String objectName, List<String> fields) {
+    private static List<Map<String, String>> getSpecificFieldsWithType(String objectName, List<String> fields, Boolean concatenate) {
 
         //get object label and clean "Partial Soft Credit" to "Soft Credit" in a translatable way
         String pscLabel = Schema.SObjectType.Partial_Soft_Credit__c.getLabel();
@@ -459,8 +459,9 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for (String field : fields) {
             Map<String, String> fieldObject = new Map<String, String>();
-            fieldObject.put('name', objectName+' '+field);
-            fieldObject.put('label', objectLabel +': '+UTIL_Describe.getFieldLabel(objectName,field));
+            //this method is reused for rollups, where obj concatenation is needed, and filter groups, where it is not
+            fieldObject.put('name', concatenate ? objectName+' ' : '' + field);
+            fieldObject.put('label', concatenate ? objectLabel +': ' : '' + UTIL_Describe.getFieldLabel(objectName,field));
             String fieldType = getFieldType(objectName,field);
             fieldObject.put('type', fieldType);
 
