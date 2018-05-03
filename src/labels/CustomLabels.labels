@@ -5106,8 +5106,8 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Help text for Default Organizational Opportunity Contact Role</shortDescription>
-        <value>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is an Organization Account.</value>
+        <shortDescription>Help text for Contact Role for Organizational Opps</shortDescription>
+        <value>The default Contact Role automatically assigned to the Opportunity's Primary Contact when the Opportunity's Account is an Organization Account..</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRRoleForHH</fullName>

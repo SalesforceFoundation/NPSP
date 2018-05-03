@@ -227,7 +227,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
 
         // Retrieve the Primary Contacts for the Opportunities
-        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunities(listOpps, oppAccountDetails);
+
+        // Retrieve the Account Ids for the Organizational Opportunities
+        Map<Id, List<Id>> accountsToOpportunities = populateAccountToOpportunities(listOpps, oppAccountDetails);
 
         //Get existing primary contact roles for the trigger opps. 
         for (OpportunityContactRole ocr : [SELECT OpportunityId, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE IsPrimary = true and OpportunityId IN :listOpps]) {
@@ -289,10 +292,18 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             insert listPrimaryOCRForInsert;
         }
 
+        // Create Relationship Soft Credits accordingly
         if (!primaryContactsToOpportunities.isEmpty()) {
             List<sObject> relationshipOCRs
                 = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
             dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
+        }
+
+        // Create Affiliation Soft Credits accordingly
+        if (!accountsToOpportunities.isEmpty()) {
+            List<sObject> affiliationOCRs
+                = OPP_AutomatedSoftCreditsService.createAffiliationOCRs(accountsToOpportunities);
+            dmlWrapper.objectsToInsert.addAll(affiliationOCRs);
         }
     }
 
@@ -336,7 +347,10 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         Map<Id, Account> oppAccountDetails = populateAccountDetails(listOpps);
 
         // Retrieve the Primary Contacts for the Opportunities
-        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunity(listOpps, oppAccountDetails);
+        Map<Id, List<Id>> primaryContactsToOpportunities = populatePrimaryContactToOpportunities(listOpps, oppAccountDetails);
+
+        // Retrieve the Account Ids for the Organizational Opportunities
+        Map<Id, List<Id>> accountsToOpportunities = populateAccountToOpportunities(listOpps, oppAccountDetails);
 
         //find changed opportunities and instantiate a map entry to hold OCRs
         for (integer i=0; i<listOpps.size(); i++) {
@@ -382,6 +396,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 List<sObject> relationshipOCRs
                     = OPP_AutomatedSoftCreditsService.createRelationshipOCRs(primaryContactsToOpportunities);
                 dmlWrapper.objectsToInsert.addAll(relationshipOCRs);
+            }
+
+            // Create Affiliation Soft Credits accordingly
+            if (!accountsToOpportunities.isEmpty()) {
+                List<sObject> affiliationOCRs
+                    = OPP_AutomatedSoftCreditsService.createAffiliationOCRs(accountsToOpportunities);
+                dmlWrapper.objectsToInsert.addAll(affiliationOCRs);
             }
         }
     }
@@ -520,7 +541,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
         if (fieldName.equals(FIELD_NAME_PRIMARY_CONTACT)) {
             if (OPP_AutomatedSoftCreditsService.isOrganizationalAccount(isIndividualAccount)) {
-                result = UTIL_CustomSettingsFacade.getContactsSettings().Default_Organizational_Contact_Role__c;
+                result = UTIL_CustomSettingsFacade.getContactsSettings().Contact_Role_for_Organizational_Opps__c;
             } else {
                 result = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
             }
@@ -602,7 +623,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
     * @return Map<Id, Account> containing the AccountId to Account.
     **********************************************************************************************************/
-    public static  Map<Id, Account> populateAccountDetails (List<Opportunity> currentOpportunities) {
+    @testVisible
+    private static Map<Id, Account> populateAccountDetails (List<Opportunity> currentOpportunities) {
         Map<Id, Account> accountDetails = null;
         List<Id> accountIds = new List<Id>();
 
@@ -625,32 +647,63 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
 
     /*********************************************************************************************************
-    * @description Populates a Map of Primary Contact to Opportunity Id.
+    * @description Populates a Map of Primary Contact to Opportunity Ids.
     * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
     * @param oppAccountDetails A Map containing the Opportunities' related Accounts.
     * @return Map<Id, List<Id>> contains associated Primary Contacts and Opportunity Ids.
     **********************************************************************************************************/
-    public static  Map<Id, List<Id>> populatePrimaryContactToOpportunity(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
-        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+    @testVisible
+    private static Map<Id, List<Id>> populatePrimaryContactToOpportunities(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
+        Map<Id, List<Id>> primaryContactToOpportunities = new Map<Id, List<Id>>();
 
         if (currentOpportunities.isEmpty()) {
-            return primaryContactToOpportunity;
+            return primaryContactToOpportunities;
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
             if (eachOppty.Primary_Contact__c != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
-                && oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c) {
-                if (primaryContactToOpportunity.containsKey(eachOppty.Primary_Contact__c)) {
-                    List<Id> opportunities = primaryContactToOpportunity.get(eachOppty.Primary_Contact__c);
+                && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
+                if (primaryContactToOpportunities.containsKey(eachOppty.Primary_Contact__c)) {
+                    List<Id> opportunities = primaryContactToOpportunities.get(eachOppty.Primary_Contact__c);
                     opportunities.add(eachOppty.Id);
                 } else {
-                    primaryContactToOpportunity.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
+                    primaryContactToOpportunities.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
                 }
             }
         }
 
-        return primaryContactToOpportunity;
+        return primaryContactToOpportunities;
+    }
+
+
+    /*********************************************************************************************************
+    * @description Populates a Map of Account Id to Opportunity Ids.
+    * @param currentOpportunities The Opportunities in the 'new' trigger context variable.
+    * @param oppAccountDetails A Map containing the Opportunities' related Accounts.
+    * @return Map<Id, Id> contains associated Primary Contacts and Opportunity Ids.
+    **********************************************************************************************************/
+    @testVisible
+    private static Map<Id, List<Id>> populateAccountToOpportunities(List<Opportunity> currentOpportunities, Map<Id, Account> oppAccountDetails) {
+        Map<Id, List<Id>> accountToOpportunities = new Map<Id, List<Id>>();
+
+        if (currentOpportunities.isEmpty()) {
+            return accountToOpportunities;
+        }
+
+        for (Opportunity eachOppty : currentOpportunities) {
+            if (eachOppty.AccountId != null
+                && OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
+                if (accountToOpportunities.containsKey(eachOppty.AccountId)) {
+                    List<Id> opportunities = accountToOpportunities.get(eachOppty.AccountId);
+                    opportunities.add(eachOppty.Id);
+                } else {
+                    accountToOpportunities.put(eachOppty.AccountId, new List<Id>{ eachOppty.Id });
+                }
+            }
+        }
+
+        return accountToOpportunities;
     }
 
 

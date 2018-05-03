@@ -486,7 +486,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         cs.npe01__Enable_Opportunity_Contact_Role_Trigger__c = false;
         cs.npe01__Payments_Enabled__c  = true;
         cs.npe01__Opportunity_Contact_Role_Default_role__c = DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR;
-        cs.Default_Organizational_Contact_Role__c = DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+        cs.Contact_Role_for_Organizational_Opps__c = DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
         cs.npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR;
         cs.Opp_RecTypes_Excluded_for_Payments__c = null;
         cs.Opp_Types_Excluded_for_Payments__c = null;
@@ -650,7 +650,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         contactsSettings.npe01__Account_Processor__c = mySettings.npe01__Account_Processor__c;
         contactsSettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c = mySettings.npe01__Enable_Opportunity_Contact_Role_Trigger__c;
         contactsSettings.npe01__Opportunity_Contact_Role_Default_role__c = mySettings.npe01__Opportunity_Contact_Role_Default_role__c;
-        contactsSettings.Default_Organizational_Contact_Role__c = mySettings.Default_Organizational_Contact_Role__c;
+        contactsSettings.Contact_Role_for_Organizational_Opps__c = mySettings.Contact_Role_for_Organizational_Opps__c;
         contactsSettings.npe01__Disable_Account_Model_Trigger__c = mySettings.npe01__Disable_Account_Model_Trigger__c;
         contactsSettings.npe01__Payments_Enabled__c = mySettings.npe01__Payments_Enabled__c;
         contactsSettings.Opp_RecTypes_Excluded_for_Payments__c = mySettings.Opp_RecTypes_Excluded_for_Payments__c;

@@ -45,6 +45,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR = 'Solicitor';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
+    private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_MATCHING_GIFT= 'Matching Gift';
 
 
     /*********************************************************************************************************
@@ -53,15 +54,24 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     * @return void
     **********************************************************************************************************/
     @testSetup static void createAutomatedSoftCreditsData() {
-        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        Account acct1 = new Account(Name = 'Organization Account1');
+        Account acct2 = new Account(Name = 'Organization Account2');
+        insert new List<Account>{ acct1, acct2 };
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(7);
         testContacts[0].FirstName = 'Primary0';
         testContacts[1].FirstName = 'Primary1';
         testContacts[2].FirstName = 'Related2';
         testContacts[3].FirstName = 'Related3';
         testContacts[4].FirstName = 'Related4';
+        testContacts[5].FirstName = 'Affiliation5';
+        testContacts[5].AccountId = acct1.Id;
+        testContacts[6].FirstName = 'Affiliation6';
+        testContacts[6].AccountId = acct2.Id;
         insert testContacts;
         testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
 
+        // Create Relationships
         npe4__Relationship__c testCon0ToTestCon1
                 = new npe4__Relationship__c(npe4__Contact__c = testContacts[0].Id,
                                             npe4__RelatedContact__c = testContacts[1].Id,
@@ -101,6 +111,40 @@ private class OPP_AutomatedSoftCreditsService_TEST {
             = new List<npe4__Relationship__c>{ testCon0ToTestCon1, testCon0ToTestCon2, testCon0ToTestCon3, testCon1ToTestCon3, testCon1ToTestCon4 };
         insert testRelationships;
 
+        // Create Affiliations
+        npe5__Affiliation__c testCon5AccountToTestCon2
+            = new npe5__Affiliation__c(npe5__Organization__c = testContacts[5].AccountId,
+                                       npe5__Contact__c = testContacts[2].Id,
+                                       npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
+                                       npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT);
+
+        npe5__Affiliation__c testCon5AccountToTestCon4
+            = new npe5__Affiliation__c(npe5__Organization__c = testContacts[5].AccountId,
+                                       npe5__Contact__c = testContacts[4].Id,
+                                       npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
+                                       npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_MATCHING_GIFT);
+
+        npe5__Affiliation__c testCon6AccountToTestCon3
+            = new npe5__Affiliation__c(npe5__Organization__c = testContacts[6].AccountId,
+                                       npe5__Contact__c = testContacts[3].Id,
+                                       npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
+                                       npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE);
+
+        npe5__Affiliation__c testCon6AccountToTestCon2
+            = new npe5__Affiliation__c(npe5__Organization__c = testContacts[6].AccountId,
+                                       npe5__Contact__c = testContacts[2].Id,
+                                       npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
+                                       npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                       Related_Opportunity_Contact_Role__c = null);
+
+        List<npe5__Affiliation__c> testAccountAffiliations
+            = new List<npe5__Affiliation__c>{ testCon5AccountToTestCon2, testCon5AccountToTestCon4, testCon6AccountToTestCon3, testCon6AccountToTestCon2 };
+        insert testAccountAffiliations;
+
+        // Create Opportunities
         List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
                                                                                             System.today(), 100, null, null);
         insert testOpptys;
@@ -212,7 +256,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testBuildRelationshipOCRs() {
         List<OpportunityContactRole> creatededOCRs = new List<OpportunityContactRole>();
 
-        Map<Id, List<Id>> primaryContactIdToOpportunityId = new Map<Id, List<Id>>();
+        Map<Id, List<Id>> primaryContactIdToOpportunityIds = new Map<Id, List<Id>>();
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
 
         Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
@@ -220,10 +264,10 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         List<Opportunity> opptys = [SELECT Id, Primary_Contact__c FROM Opportunity];
         for (Opportunity eachOppty : opptys) {
-            primaryContactIdToOpportunityId.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
+            primaryContactIdToOpportunityIds.put(eachOppty.Primary_Contact__c, new List<Id>{ eachOppty.Id });
         }
 
-        relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(primaryContactIdToOpportunityId.keySet());
+        relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(primaryContactIdToOpportunityIds.keySet());
         System.assertEquals(2, relationshipRecords.size());
         System.assertEquals(2, relationshipRecords.get(testCon0.Id).size());
         System.assertEquals(1, relationshipRecords.get(testCon1.Id).size());
@@ -231,9 +275,9 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         Test.startTest();
 
         List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole];
-        System.assertEquals(8, retrievedOCRs.size()); // Five OCRs for the Opportunities' Primary Contacts and three OCRs for the Relationships
+        System.assertEquals(13, retrievedOCRs.size()); // Five OCRs for the Opportunities' Primary Contacts and three OCRs for the Relationships
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityId, relationshipRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords);
         System.assertEquals(0, creatededOCRs.size()); // Confirm no duplicate OCRs were created
 
         // Update Relationship records
@@ -242,7 +286,113 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         testCon0Relationships[1].Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
         update testCon0Relationships;
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityId, relationshipRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords);
+
+        Test.stopTest();
+
+        System.assertEquals(2, creatededOCRs.size()); // Confirm new OCR records were created
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests that Opportunity Contact Role records are created for the Opportunity's Account's
+    *               Related Contacts.
+    * verify:
+    *   Opportunity Contact Role records created for Related Contacts.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testCreateAffiliationOCRs() {
+        Test.startTest();
+
+        Contact testCon = [SELECT Id, AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
+        Account testAcount = [SELECT Id, npe01__SYSTEMIsIndividual__c FROM Account WHERE Id = :testCon.AccountId][0];
+        System.assertEquals(false, testAcount.npe01__SYSTEMIsIndividual__c);
+        List<OpportunityContactRole> retrievedOCR
+            = [SELECT Id, ContactId, OpportunityId, Role
+                FROM OpportunityContactRole
+                WHERE ContactId = :testCon.Id
+                AND Role = :RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT];
+
+        System.assertEquals(1, retrievedOCR.size());
+
+        List<Opportunity> retrievedOppty
+            = [SELECT Id, AccountId
+                FROM Opportunity
+                WHERE Id = :retrievedOCR[0].OpportunityId];
+
+        Test.stopTest();
+
+        System.assertEquals(testCon.Id, retrievedOCR[0].ContactId);
+        System.assertEquals(testAcount.Id, retrievedOppty[0].AccountId);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests the retrieval of Affiliation records for the Opportunity's Account.
+    * verify:
+    *   Affiliation records were retrieved.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRetrieveAffiliations() {
+        Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
+
+        Contact testCon0 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
+        Contact testCon1 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation6'][0];
+        Set<Id> testConsAccounts = new Set<Id>{ testCon0.AccountId, testCon1.AccountId };
+
+        Test.startTest();
+
+        affiliationRecords = OPP_AutomatedSoftCreditsService.retrieveAffiliations(testConsAccounts);
+
+        Test.stopTest();
+
+        System.assertEquals(2, affiliationRecords.size());
+        System.assertEquals(2, affiliationRecords.get(testCon0.AccountId).size());
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests the Opportunity Contact Role records were created with the expected values.
+    * verify:
+    *   Opportunity Contact Role records created with expected values.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testBuildAffiliationOCRs() {
+        List<OpportunityContactRole> creatededOCRs = new List<OpportunityContactRole>();
+
+        Map<Id, List<Id>> accountIdToOpportunityIds = new Map<Id, List<Id>>();
+        Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
+
+        Contact testCon0 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
+        Contact testCon1 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation6'][0];
+        List<Id> testAccoutIds = new List<Id>{ testCon0.AccountId, testCon1.AccountId };
+
+        List<Opportunity> opptys = [SELECT Id, AccountId FROM Opportunity WHERE AccountId IN :testAccoutIds];
+        for (Opportunity eachOppty : opptys) {
+            accountIdToOpportunityIds.put(eachOppty.AccountId, new List<Id>{ eachOppty.Id });
+        }
+        System.assertEquals(2, accountIdToOpportunityIds.size());
+
+        affiliationRecords = OPP_AutomatedSoftCreditsService.retrieveAffiliations(accountIdToOpportunityIds.keySet());
+        System.assertEquals(2, affiliationRecords.size());
+        System.assertEquals(2, affiliationRecords.get(testCon0.AccountId).size());
+        System.assertEquals(1, affiliationRecords.get(testCon1.AccountId).size());
+
+        Test.startTest();
+
+        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole];
+        System.assertEquals(13, retrievedOCRs.size()); // Seven OCRs for the Opportunities and six OCRs for Relationship and Affiliations
+
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords);
+        System.assertEquals(0, creatededOCRs.size()); // Confirm no duplicate OCRs were created
+
+        // Update Affiliation records
+        List<npe5__Affiliation__c> testCon0Affiliations = affiliationRecords.get(testCon0.AccountId);
+        testCon0Affiliations[0].Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
+        testCon0Affiliations[1].Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
+        update testCon0Affiliations;
+
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords);
 
         Test.stopTest();
 

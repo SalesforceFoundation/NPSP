@@ -578,19 +578,23 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        System.assertEquals(3,queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        System.assertEquals(4, queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
-        System.assertEquals(primaryCon.id,queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
-        System.assertEquals(true,queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
+        System.assertEquals(primaryCon.id, queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
+        System.assertEquals(true, queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
 
-        System.assertEquals(householdMembers[0].id,queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(householdMembers[0].id, queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
         System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        System.assertEquals(householdMembers[1].id,queryOCR[2].ContactId, 'Third OCR is for household member contact.');
+        System.assertEquals(householdMembers[0].id, queryOCR[2].ContactId, 'Third OCR is for household member contact.');
         System.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
-        System.assertEquals('Household Member',queryOCR[2].Role, 'Household member OCR has the correct role.');
+        System.assertEquals('Household Member', queryOCR[2].Role, 'Household member OCR has the correct role.');
+
+        System.assertEquals(householdMembers[1].id, queryOCR[3].ContactId, 'Fourth OCR is for household member contact.');
+        System.assertEquals(false,queryOCR[3].isPrimary, 'Household member OCR is not marked primary.');
+        System.assertEquals('Household Member', queryOCR[3].Role, 'Household member OCR has the correct role.');
     }
 
 
@@ -688,8 +692,8 @@ private class OPP_OpportunityContactRoles_TEST {
     *   The updated Opportunity's Primary Contact details are retrieved.
     * @return void
     *********************************************************************************************************/
-    static testMethod void testPopulatePrimaryContactToOpportunity() {
-        Map<Id, List<Id>> primaryContactToOpportunity = new Map<Id, List<Id>>();
+    static testMethod void testPopulatePrimaryContactToOpportunities() {
+        Map<Id, List<Id>> primaryContactToOpportunities = new Map<Id, List<Id>>();
         Map<Id, Account> accountDetails = new Map<Id, Account>();
 
         List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -704,13 +708,49 @@ private class OPP_OpportunityContactRoles_TEST {
 
         accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
 
-        primaryContactToOpportunity = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunity(testOpptys, accountDetails);
+        primaryContactToOpportunities = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
-        System.assertEquals(5, primaryContactToOpportunity.size());
-        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunity.get(testContacts[0].Id)[0]);
-        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunity.get(testContacts[3].Id)[0]);
+        System.assertEquals(5, primaryContactToOpportunities.size());
+        System.assertEquals(testOpptys[0].Id, primaryContactToOpportunities.get(testContacts[0].Id)[0]);
+        System.assertEquals(testOpptys[3].Id, primaryContactToOpportunities.get(testContacts[3].Id)[0]);
     }
 
+
+    /*********************************************************************************************************
+    * @description Tests populating a Map of the Opportunity's associated Account Id to  Opportunity Ids.
+    * verify:
+    *   The Map was populated accordingly.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulateAccountToOpportunities() {
+        Map<Id, List<Id>> accountToOpportunities = new Map<Id, List<Id>>();
+        Map<Id, Account> accountDetails = new Map<Id, Account>();
+        List<Account> testAccounts = new List<Account>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        Test.startTest();
+        insert testOpptys;
+
+        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        for (Account eachAccount : accountDetails.values()) {
+            eachAccount.npe01__SYSTEMIsIndividual__c = false;
+            testAccounts.add(eachAccount);
+        }
+        update testAccounts;
+
+        accountToOpportunities = OPP_OpportunityContactRoles_TDTM.populateAccountToOpportunities(testOpptys, accountDetails);
+        Test.stopTest();
+
+        System.assertEquals(5, accountToOpportunities.size());
+        System.assertEquals(testOpptys[0].Id, accountToOpportunities.get(testContacts[0].AccountId)[0]);
+        System.assertEquals(testOpptys[3].Id, accountToOpportunities.get(testContacts[3].AccountId)[0]);
+    }
 
 }
