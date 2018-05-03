@@ -35,11 +35,11 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Default_Organizational_Contact_Role__c</fullName>
-        <description>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is an Organization Account.</description>
+        <fullName>Contact_Role_for_Organizational_Opps__c</fullName>
+        <description>The default Contact Role automatically assigned to the Opportunity's Primary Contact when the Opportunity's Account is an Organization Account.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is an Organization Account.</inlineHelpText>
-        <label>Default Organizational Contact Role</label>
+        <inlineHelpText>The default Contact Role automatically assigned to the Opportunity's Primary Contact when the Opportunity's Account is an Organization Account.</inlineHelpText>
+        <label>Contact Role for Organizational Opps</label>
         <length>255</length>
         <required>false</required>
         <trackTrending>false</trackTrending>

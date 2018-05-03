@@ -95,8 +95,8 @@ public with sharing class STG_PanelContactRoles_CTRL extends STG_Panel {
         }
 
         // Add error for blank Default Oranizational Contact Role value
-        if (String.isBlank(STG_Panel.stgService.stgCon.Default_Organizational_Contact_Role__c)) {
-            String defaultOrganizationalRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'Default_Organizational_Contact_Role__c');
+        if (String.isBlank(STG_Panel.stgService.stgCon.Contact_Role_for_Organizational_Opps__c)) {
+            String defaultOrganizationalRoleLabel = UTIL_Describe.getFieldLabel('npe01__Contacts_And_Orgs_Settings__c', 'Contact_Role_for_Organizational_Opps__c');
             ApexPages.addMessage(new ApexPages.message(ApexPages.Severity.ERROR, defaultOrganizationalRoleLabel + ' ' + Label.isARequiredField));
             isValid = false;
         }

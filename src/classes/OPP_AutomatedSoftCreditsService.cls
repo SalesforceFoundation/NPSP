@@ -53,7 +53,7 @@ public class OPP_AutomatedSoftCreditsService {
 
     /*********************************************************************************************************
     * @description Calls the methods that handle creating Opportunity Contact Roles for Relationship records.
-    * @param primaryContactIdToOpportunityId Map of Primary Contact to List of Opportunities.
+    * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
     * @return List<OpportunityContactRole> The newly created Opportunity Contact Role records.
     **********************************************************************************************************/
     public static List<OpportunityContactRole>  createRelationshipOCRs(Map<Id, List<Id>> primaryContactIdToOpportunityIds) {
@@ -72,7 +72,8 @@ public class OPP_AutomatedSoftCreditsService {
     * @param primaryContactIds The Opportunities' Primary Contacts.
     * @return Map<Id, List<npe4__Relationship__c>> Map of the Primary Contact to its Relationship records.
     **********************************************************************************************************/
-    public static Map<Id, List<npe4__Relationship__c>> retrieveRelationships(Set<Id> primaryContactIds) {
+    @testVisible
+    private static Map<Id, List<npe4__Relationship__c>> retrieveRelationships(Set<Id> primaryContactIds) {
         Map<Id, List<npe4__Relationship__c>> primaryContactToRelationships = new Map<Id, List<npe4__Relationship__c>>();
 
         if (primaryContactIds.isEmpty()) {
@@ -103,12 +104,13 @@ public class OPP_AutomatedSoftCreditsService {
 
     /*********************************************************************************************************
     * @description Builds Opportunity Contact Role records for the Primary Contact's Relationships.
-    * @param primaryContactIdToOpportunity Map of Primary Contact to List of Opportunities.
+    * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
     * @param primaryContactToRelatedContacts Map of Primary Contact to Relationship records.
     * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
     **********************************************************************************************************/
-    public static List<OpportunityContactRole> buildRelationshipOCRs(Map<Id, List<Id>> primaryContactIdToOpportunityIds,
-                                                                     Map<Id, List<npe4__Relationship__c>> primaryContactToRelatedContacts) {
+    @testVisible
+    private static List<OpportunityContactRole> buildRelationshipOCRs(Map<Id, List<Id>> primaryContactIdToOpportunityIds,
+                                                                      Map<Id, List<npe4__Relationship__c>> primaryContactToRelatedContacts) {
         List<OpportunityContactRole> relationshipOCRs = new List<OpportunityContactRole>();
 
         if (primaryContactIdToOpportunityIds.isEmpty()) {
@@ -127,7 +129,6 @@ public class OPP_AutomatedSoftCreditsService {
                         ocr.OpportunityId = eachOpportunityId;
                         ocr.ContactId = eachRelationship.npe4__RelatedContact__c;
                         ocr.Role = eachRelationship.Related_Opportunity_Contact_Role__c;
-
                         relationshipOCRs.add(ocr);
                     }
                 }
@@ -139,11 +140,101 @@ public class OPP_AutomatedSoftCreditsService {
 
 
     /*********************************************************************************************************
+    * @description Calls the methods that handle creating Opportunity Contact Roles for Affiliation records.
+    * @param accountIdToOpportunityIds Map of Account Id to List of Opportunities.
+    * @return List<OpportunityContactRole> The newly created Opportunity Contact Role records.
+    **********************************************************************************************************/
+    public static List<OpportunityContactRole> createAffiliationOCRs(Map<Id, List<Id>> accountIdToOpportunityIds) {
+        // Retrieve Affiliations for Account
+        Map<Id, List<npe5__Affiliation__c>> accountToRelatedContacts = retrieveAffiliations(accountIdToOpportunityIds.keySet());
+
+        // Create Opportunity Contact Roles (OCR) records for the Related Contacts
+        List<OpportunityContactRole> affiliationOCRs = buildAffiliationOCRs(accountIdToOpportunityIds, accountToRelatedContacts);
+
+        return affiliationOCRs;
+    }
+
+
+    /*********************************************************************************************************
+    * @description Retrieves the Affiliation records for the Opportunity's associated Account.
+    * @param accountIds The Opportunities' Account Ids.
+    * @return Map<Id, List<npe5__Affiliation__c>> Map of the Account to its Affiliation records.
+    **********************************************************************************************************/
+    @testVisible
+    private static Map<Id, List<npe5__Affiliation__c>> retrieveAffiliations(Set<Id> accountIds) {
+        Map<Id, List<npe5__Affiliation__c>> accountToAffiliations = new Map<Id, List<npe5__Affiliation__c>>();
+
+        if (accountIds.isEmpty()) {
+            return accountToAffiliations;
+        }
+
+        List<npe5__Affiliation__c> allAffiliations
+            = new List<npe5__Affiliation__c>([SELECT Id, Name, npe5__Organization__c, npe5__Contact__c, Related_Opportunity_Contact_Role__c
+                                                FROM npe5__Affiliation__c
+                                                WHERE npe5__Organization__c IN :accountIds]);
+
+        // Process the records that have a value in the Related_Opportunity_Contact_Role__c field
+        for (npe5__Affiliation__c eachAffiliation : allAffiliations) {
+            if (eachAffiliation.Related_Opportunity_Contact_Role__c != null
+                && !eachAffiliation.Related_Opportunity_Contact_Role__c.containsIgnoreCase(RELATED_OPPORTUNITY_CONTACT_ROLE_NONE)) {
+                if (accountToAffiliations.containsKey(eachAffiliation.npe5__Organization__c)) {
+                    List<npe5__Affiliation__c> affiliations = accountToAffiliations.get(eachAffiliation.npe5__Organization__c);
+                    affiliations.add(eachAffiliation);
+                } else {
+                    accountToAffiliations.put(eachAffiliation.npe5__Organization__c, new List<npe5__Affiliation__c>{ eachAffiliation });
+                }
+            }
+        }
+
+        return accountToAffiliations;
+    }
+
+
+    /*********************************************************************************************************
+    * @description Builds Opportunity Contact Role records for the Account's Affiliations.
+    * @param accountIdToOpportunityIds Map of Account to List of Opportunities.
+    * @param accountToRelatedContacts Map of Account to Affiliation records.
+    * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
+    **********************************************************************************************************/
+    @testVisible
+    private static List<OpportunityContactRole> buildAffiliationOCRs(Map<Id, List<Id>> accountIdToOpportunityIds,
+                                                                     Map<Id, List<npe5__Affiliation__c>> accountToRelatedContacts) {
+
+        List<OpportunityContactRole> affiliationOCRs = new List<OpportunityContactRole>();
+
+        if (accountIdToOpportunityIds.isEmpty()) {
+            return affiliationOCRs;
+        }
+
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = retrieveOpportunityContactRoles(accountIdToOpportunityIds.values());
+
+        for (Id accountKey : accountToRelatedContacts.keySet()) {
+            List<Id> opportunityIds = accountIdToOpportunityIds.get(accountKey);
+            for (npe5__Affiliation__c eachAffiliation : accountToRelatedContacts.get(accountKey)) {
+                for (Id eachOpportunityId : opportunityIds) {
+                    if (!isDuplicateOCR(opportunityIdToOCR.get(eachOpportunityId),
+                                        eachAffiliation.npe5__Contact__c, eachAffiliation.Related_Opportunity_Contact_Role__c)) {
+                        OpportunityContactRole ocr = new OpportunityContactRole();
+                        ocr.OpportunityId = eachOpportunityId;
+                        ocr.ContactId = eachAffiliation.npe5__Contact__c;
+                        ocr.Role = eachAffiliation.Related_Opportunity_Contact_Role__c;
+                        affiliationOCRs.add(ocr);
+                    }
+                }
+            }
+        }
+
+        return affiliationOCRs;
+    }
+
+
+    /*********************************************************************************************************
     * @description Retrieves the Opportunity Contact Role records related to the Opportunities.
     * @param opportunityIds List of Lists of Opportunity Ids.
     * @return Map<Id, List<OpportunityContactRole>> Map of the Opportunity to Opportunity Contact Roles.
     **********************************************************************************************************/
-    public static Map<Id, List<OpportunityContactRole>> retrieveOpportunityContactRoles(List<List<Id>> opportunityIds) {
+    @testVisible
+    private static Map<Id, List<OpportunityContactRole>> retrieveOpportunityContactRoles(List<List<Id>> opportunityIds) {
         Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = new Map<Id, List<OpportunityContactRole>>();
         List<Id> allOpportunityIds = new List<Id>();
 
@@ -181,21 +272,21 @@ public class OPP_AutomatedSoftCreditsService {
     * @return Boolean The result of determining if the currentRelationship record is a duplicate.
     **********************************************************************************************************/
     public static Boolean isDuplicateOCR(List<OpportunityContactRole> currentOCRs, Id relatedContact, String role) {
-        Boolean isDuplicateRelationship = false;
+        Boolean isDuplicate = false;
 
-        if (currentOCRs.isEmpty()) {
-            return isDuplicateRelationship;
+        if (currentOCRs == null || currentOCRs.isEmpty()) {
+            return isDuplicate;
         }
 
         for (OpportunityContactRole eachOCR : currentOCRs) {
             if (eachOCR.ContactId ==  relatedContact
                 && eachOCR.Role == role) {
-                isDuplicateRelationship = true;
+                isDuplicate = true;
                 break;
             }
         }
 
-        return isDuplicateRelationship;
+        return isDuplicate;
     }
 
 
