@@ -70,7 +70,7 @@
 
         //place rollups in the array of the matching summary object
         filteredRollupList.forEach(function (rollup) {
-            var item = {label: rollup.displayName, name: rollup.id}
+            var item = {label: rollup.displayName, name: rollup.recordId}
             for (i=0; i<rollupsBySummaryObj.length; i++){
                 if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
@@ -210,13 +210,10 @@
                             if(mode === 'delete') {
 
                                 helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
-
                                 helper.sendMessage(cmp, 'filterGroupDeleted', recordName);
 
                                 //punt back to filterGroup grid
-                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-                                cancelEvent.setParams({grid: 'filterGroup'});
-                                cancelEvent.fire();
+                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'filterGroup'});
 
                             } else {
 

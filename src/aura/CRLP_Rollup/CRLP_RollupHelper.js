@@ -523,8 +523,8 @@
             } else {
                 renderMap["filterGroup"] = false;
             }
-            cmp.set("v.activeRollup.filterGroup", cmp.get("v.labels.na"));
-            this.onChangeFilterGroup(cmp, cmp.get("v.labels.na"));
+            cmp.set("v.activeRollup.filterGroup", '');
+            this.onChangeFilterGroup(cmp, cmp.get("v.labels.noFilterGroupSelect"));
             cmp.set("v.renderMap", renderMap);
         }
     },
@@ -1112,9 +1112,7 @@
 
                             if(mode === "delete") {
                                 // fire cancel event to nav back to rollup grid
-                                var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-                                cancelEvent.setParams({grid: 'rollup'});
-                                cancelEvent.fire();
+                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'rollup'});
 
                             } else {
 
@@ -1251,7 +1249,7 @@
         }
 
         //description set separately since we have direct access to this cmp
-        if(!activeRollup.description){
+        if (!activeRollup.description) {
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
