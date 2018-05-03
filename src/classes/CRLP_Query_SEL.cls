@@ -297,13 +297,19 @@
         }
 
         // Get a list of the applied FilterGroupId's
+        Boolean hasRollupWithNoFilter = false;
         Set<Id> filterGroupIds = new Set<Id>();
         for (Rollup__mdt r : rollups) {
+            if (r.Filter_Group__c == null) {
+                hasRollupWithNoFilter = true;
+                break;
+            }
             filterGroupIds.add(r.Filter_Group__c);
         }
 
-        // If there are not rollups or no filter groups, just exit out
-        if (filterGroupIds.size() == 0) {
+        // If there are no rollups, no filter groups, or at least one rollup that is not using a filter group
+        // just exit out because there is no common filter that can be built for this set.
+        if (hasRollupWithNoFilter || filterGroupIds.size() == 0) {
             return '';
         }
 
