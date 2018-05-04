@@ -82,12 +82,15 @@
                 myApp = angular.module('myApp', ['ngHandsontable','ngSanitize'])
                 myApp.controller('MainCtrl', function($scope, $compile) {
 
+                // List containing the data imports
                 var data = JSON.parse('{!jsonString}');
 
+                // List containing the definition for the columns except tooltip and action columns.
                 var columnsData = JSON.parse('{!jsonColumnsString}');
 
                 table = document.getElementById('my-hot-table');
 
+                // Flag that is set true if the user have just pressed the enter key.
                 wasEnterPressed = false;
 
                 // Flag that is set true if the user have just pressed the up arrow key.
@@ -99,16 +102,17 @@
                 // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
                 wait = false;
 
+                // Initialize the total number of pages.
         		$scope.totalPages = '{!totalOfPages}';
 
                 //Map to save cells with invalid format values
-
                 updatedCellsMap = {};
 
                 var changesToSave = {};
                 var lastSelectedRow = null;
                 var arrayForChanged = [];
 
+                // Initialize the total of records when loading the page.
                 totalOfRecords = '{!totalOfRecords}';
 
                 // Flag to prevent a bug when deleting multiple records.
@@ -117,12 +121,15 @@
                 // Needed for afterCreateRow:as it fires before afterInit: & confuses all
                 var renderState = false;
 
+                // Fill the total of records output field.
                 document.getElementById("totalOfRecords").value = totalOfRecords;
 
+                // Fill the total amount output field with the sum of all Donation Amounts.
                 document.getElementById("totalAmount").value = '{!totalDonationAmount}';
 
                 var dynamicColumns = [];
 
+                // Code for validating when a cell is required.
                 var requiredValidator = function (value, callback) {
 
                     if (!value || String(value).length === 0) {
@@ -157,7 +164,7 @@
                     }
                 }
 
-
+                // Code to resize the grid when the screen is resized.
                 if(window.attachEvent) {
 
                     window.attachEvent('onresize', function() {
@@ -192,7 +199,7 @@
                 }
 
 
-                //To display action column icons
+                // To display action column icons
                 function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
                     Handsontable.TextCell.renderer.apply(this, arguments);
@@ -220,6 +227,7 @@
 
                 });
 
+                // Set tooltip column.
                 var errorCol = new Object();
                 errorCol.title = ' ';
                 errorCol.type = 'text';
@@ -227,6 +235,7 @@
                 errorCol.className = "htCenter htMiddle tooltip-column";
                 errorCol.wordWrap = false;
 
+                // Set action column.
                 var actionCol = new Object();
                 actionCol.title = 'ACTIONS';
                 actionCol.type = 'text';
@@ -264,6 +273,8 @@
                     if (templateField.apiName == "Id") {
 
                         col.readOnly = true;
+
+                        // Set this column with a very little width so it is hidden.
                         col.colWidths = 0.1;
 
                         dynamicColumns.splice(2, 0, col);
@@ -306,7 +317,7 @@
                         }
                     }
 
-
+                    // Record Id column is always in a static position before the columns loaded from the template.
                     if (templateField.apiName !== "Id") {
 
                         dynamicColumns.push(col);
@@ -1148,6 +1159,7 @@
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
 
+                        // We have to bypass the hidden Record Id column.
                         if (colIndex === 1) {
 
                             colIndex = 2;
@@ -1165,6 +1177,7 @@
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
 
+                        // We have to bypass the hidden Record Id column.
                         if (colIndex === 3) {
 
                             colIndex = 2;
