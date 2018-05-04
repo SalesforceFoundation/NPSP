@@ -292,7 +292,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         groupPaymentsPaid.rules.add(rulePaid);
 
         // ==============================================================================================================
-        // Default "Payments: Paid" filter group
+        // Default "Payments: Written Off" filter group
         // ==============================================================================================================
         CRLP_RollupCMT.FilterGroup groupPaymentsWrittenOff = new CRLP_RollupCMT.FilterGroup('Payments: Written Off');
         groupPaymentsWrittenOff.recordName = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsWrittenOff;
@@ -304,7 +304,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleWrittenOff.fieldName = 'npe01__Written_Off__c';
         ruleWrittenOff.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
         ruleWrittenOff.value = 'true';
-        groupPaymentsPaid.rules.add(ruleWrittenOff);
+        groupPaymentsWrittenOff.rules.add(ruleWrittenOff);
 
         // ==============================================================================================================
         // Create a list of the default Groups+Rules to use for deployment
