@@ -46,7 +46,7 @@ private class BGE_AuraController_TEST {
 
         DataImportBatch__c newBatch = new DataImportBatch__c();
 
-        newBatch.Name = 'Test Batch';
+        newBatch.Name = '';
 
         BGE_AuraController.saveBatch(newBatch);
 

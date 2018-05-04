@@ -31,6 +31,7 @@
 
             component.set('v.toCreate', false);
             component.set('v.toEdit', true);
+            component.find("saveButton").set("v.disabled", false);
 
             template.Id = recordId;
 
@@ -44,51 +45,19 @@
 
                 // store state of response
                 var state = response.getState();
-                
+
                 if (state === "SUCCESS") {
 
                     var loadedTemplate = response.getReturnValue();
+                    var rowItemList = component.get("v.templateFields");
 
-                //    template.Name = loadedTemplate.Name;
-                //    template.Description__c = loadedTemplate.Description__c;
-                                        
                     component.set("v.templateNameAttribute", loadedTemplate.Name);
                     component.set("v.templateDescriptionAttribute", loadedTemplate.Description__c);
-
-                //    component.find("templateName").set("v.value",component.get("v.templateNameAttribute"));
-                //    component.find("templateDescription").set("v.value",component.get("v.templateDescriptionAttribute"));
                 }
                 else {
 
                     console.log('Failed with state: ' + state);
                 }
-
-
-                /*
-                // store state of response
-                var state = response.getState();
-
-                if (state === "SUCCESS") {
-
-                    var loadedTemplate = response.getReturnValue();
-
-                    template.Name = loadedTemplate.Name;
-                    template.Description__c = loadedTemplate.Description__c;
-
-                    var name = '';
-                    var description = '';
-
-                    name = template.Name ? "'" + template.Name + "'" : '';
-                    description = template.Description__c ? "'" + template.Description__c + "'" : '';
-
-                    component.find("templateName").set("v.value",name);
-                    component.find("templateDescription").set("v.value",description);
-                }
-                else {
-
-                    console.log('Failed with state: ' + state);
-                }
-                */
 
             });
             $A.enqueueAction(loadTemplateName);
@@ -102,7 +71,7 @@
                 "templateId": template.Id
             });
             action.setCallback(this, function (response) {
-                //store state of response
+                // store state of response
                 var state = response.getState();
 
                 if (state === "SUCCESS") {
@@ -154,8 +123,6 @@
         if (recordId) {
 
             template.Id = recordId;
-            //component.set("v.template.Name", component.get("v.templateNameAttribute"));
-            //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
         }
 
         template.Name = component.get("v.templateNameAttribute");
@@ -163,8 +130,25 @@
 
         var batchTemplateFields = component.get('v.templateFields');
         var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
+        
+	    helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
 
-        helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
+		var url = window.location.href;
+    	var value = url.substr(0,url.lastIndexOf('/') + 1);
+
+	    window.history.back();
+
+    	return false;
+    },
+
+    return: function() {
+
+        var url = window.location.href;
+    	var value = url.substr(0,url.lastIndexOf('/') + 1);
+
+	    window.history.back();
+
+    	return false;
     },
 
     nextToInitial: function (component, event, helper) {
@@ -200,7 +184,6 @@
 
         // Get the list of the "value" attribute on all the selected options
         var selectedOptionsList = event.getParam("value");
-        //var selectedOptionsLabels = event.getParam("label");
         var rowItemList = component.get("v.templateFields");
         var index = rowItemList.length;
 
@@ -217,10 +200,13 @@
             while (!existsToDelete && selectedIndexVar < selectedOptionsList.length) {
 
                 var selectedTemplateField = selectedOptionsList[selectedIndexVar];
+
                 if (existingTemplateField.Name === selectedTemplateField) {
+
                     existsToDelete = true;
                 }
                 else {
+
                     selectedIndexVar++;
                 }
             }
@@ -228,9 +214,8 @@
 
                 var index = rowItemList.indexOf(existingTemplateField);
 
-                console.log('DELETE ' + rowItemList[index]);
-
                 if (index > -1) {
+
                     rowItemList.splice(index, 1);
                 }
             }
@@ -257,6 +242,7 @@
                     existsToAdd = true;
                 }
                 else {
+
                     existingIndexVar++;
                 }
             }
@@ -269,16 +255,24 @@
                     'Name': selectedOptionsList[selectedIndexVar],
                     'Order__c': selectedIndexVar + 1,
                     'Read_Only__c': false,
-                    'Required__c': false,
-                    'Sticky_Field__c': false,
-                    'Sticky_Field_Value__c': '',
-                    'Sticky_Field_Visibility__c': false
+                    'Required__c': false
                 });
             }
         }
-
+		
+       
+        
         /************CODE TO ADD NEW TEMPLATE FIELD ITEMS***********************/
         component.set("v.templateFields", rowItemList);
+        
+        if (rowItemList.length > 0) {
+
+            component.find("saveButton").set("v.disabled", false);
+        }
+        else {
+
+            component.find("saveButton").set("v.disabled", true);
+        }
     },
 
     scriptLoaded: function (component, event, helper) {
@@ -298,7 +292,6 @@
 
             if (templateField['Name'] === templateFieldSelected.Name) {
 
-                console.log('HERE RADIO');
                 templateField = templateFieldSelected;
                 var requiredOptions = component.get('v.requiredOptions');
 

@@ -87,7 +87,6 @@
         <members>BGE_BatchController</members>
         <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
-        <members>BGE_HandsOnGridControllerForTest</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
