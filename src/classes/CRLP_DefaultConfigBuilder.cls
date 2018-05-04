@@ -82,6 +82,12 @@ public class CRLP_DefaultConfigBuilder {
     /** @description The RecordName for the default filter group of Closed Won Donations without RT Exclusions(Unique to Recurring Donations Rollups) */
     public static final String FilterGroup_ClosedWonOpps_NoRTExclusions = RecordNamePrefix + 'ClosedWon_Opps_No_RT_Exclusions';
 
+    /** @description The RecordName for the default filter group of Paid Payments. Not used in default config, but provided as a courtesy.  */
+    public static final String FilterGroup_PaymentsPaid = RecordNamePrefix + 'Paid_Payments';
+
+    /** @description The RecordName for the default filter group of Written Off Payments. Not used in default config, but provided as a courtesy.  */
+    public static final String FilterGroup_PaymentsWrittenOff = RecordNamePrefix + 'WrittenOff_Payments';
+
 
     // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
     private static final String allocAmountFld = 'Allocation__c.Amount__c';
