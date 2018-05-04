@@ -154,7 +154,7 @@
                                     </aura:if>
                                 </aura:set>
                                 <aura:if isTrue="{! !empty(v.filterRuleList)}">
-                                    <div class="{!and(if(lessthan(v.filterRuleList.length, 3), or(equals(v.mode, 'edit'), equals(v.mode, 'clone'))), 'datatableContainer', '')}">
+                                    <div class="{!and(if(lessthan(v.filterRuleList.length, 3), !v.isReadOnly), 'datatableContainer', '')}">
                                         <lightning:datatable data="{!v.filterRuleList}"
                                                              columns="{!if(v.mode == 'view', v.filterRuleColumns, v.filterRuleActionColumns)}"
                                                              keyField="id"

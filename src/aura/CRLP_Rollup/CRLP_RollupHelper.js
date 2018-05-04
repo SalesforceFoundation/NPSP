@@ -1110,9 +1110,9 @@
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
-                            if(mode === "delete") {
-                                // fire cancel event to nav back to rollup grid
-                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'rollup'});
+                            if (mode === "delete") {
+                                // Send a message with the deleted Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupDeleted', recordName);
 
                             } else {
 
@@ -1122,13 +1122,8 @@
                                 cmp.set("v.activeRollupId", deployResult.rollupItem.recordId);
                                 cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
                                 cmp.set("v.cachedRollup", helper.restructureResponse(cmp.get("v.activeRollup")));
-                            }
 
-                            if (mode === "delete") {
-                                // Send a message with the deleted Rollup to the RollupContainer Component
-                                helper.sendMessage(cmp, 'rollupDeleted', recordName);
-                            } else {
-                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                               // Send a message with the changed or new Rollup to the RollupContainer Component
                                 helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
                             }
 

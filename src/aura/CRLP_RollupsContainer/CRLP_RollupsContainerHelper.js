@@ -104,16 +104,22 @@
             list.push(item);
         }
 
-        //save the updated, sorted list and clear any list filtering
         if (context === 'rollup') {
-            var rollupList = JSON.parse(JSON.stringify(list));
-            var sortedData = this.sortData(cmp, 'displayName', 'asc', rollupList);
-            cmp.set("v.rollupList", sortedData);
-            cmp.set("v.cachedRollupList", sortedData);
-            cmp.set("v.filteredSummaryObject", "All");
+            this.resetRollupDataGrid(cmp, list);
         } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
+    },
+
+    /**
+     * @description: set an updated, sorted, unfiltered rollup list
+     */
+    resetRollupDataGrid: function(cmp, list) {
+        var rollupList = JSON.parse(JSON.stringify(list));
+        var sortedData = this.sortData(cmp, 'displayName', 'asc', rollupList);
+        cmp.set("v.rollupList", sortedData);
+        cmp.set("v.cachedRollupList", sortedData);
+        cmp.set("v.filteredSummaryObject", "All");
     },
 
     /**

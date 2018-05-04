@@ -188,6 +188,8 @@
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupDeleted') {
+            //return to main grid from rollup detail
+            helper.handleCancelDetailEvent(cmp, 'rollup');
             var rollupsList = cmp.get("v.rollupList");
             for (var i = 0; i < rollupsList.length; i++) {
                 if (rollupsList[i].recordName === message) {
@@ -196,7 +198,7 @@
                     break;
                 }
             }
-            cmp.set("v.rollupList", rollupsList);
+            helper.resetRollupDataGrid(cmp, rollupsList);
             helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
 
         } else if (channel === 'filterGroupDeleted') {
