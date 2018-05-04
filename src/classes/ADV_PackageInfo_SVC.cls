@@ -61,42 +61,68 @@ public with sharing class ADV_PackageInfo_SVC {
             return;
         }
 
-        //Check if Advancement is installed and Licensed
-        Boolean isUserLicensed = false;
+        npe01__Contacts_And_Orgs_Settings__c orgSetting = UTIL_CustomSettingsFacade.getOrgContactsSettings();
 
+        //Determine if the current Adv code is inside a package
+        Boolean isManaged = false;
+
+        if (String.isBlank(orgSetting.Advancement_Namespace__c)) {
+            orgSetting.Advancement_Namespace__c = String.valueOf(npe01__Contacts_And_Orgs_Settings__c.Advancement_Namespace__c.getDescribe().getDefaultValueFormula()).remove('\"');
+        }
+
+        //Check if Advancement is installed
         try {
-            //If the Advancement is not installed, then it will throw TypeException. Otherwise, it will return True/False
-            isUserLicensed = UserInfo.isCurrentUserLicensed('adv1');
+            Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{orgSetting.Advancement_Namespace__c + '__Advancement_Setting__mdt'});
+            isManaged = true;
         } catch (Exception e) {
-            // Advancement not installed. Just Return
-            setupCalled = true;
-            return;
+            try {
+                Schema.DescribeSObjectResult[] descResult = Schema.describeSObjects(new String[]{'Advancement_Setting__mdt'});
+            } catch (Exception ex) {
+                setupCalled = true;
+                return;
+            }
         }
 
         //If Adv is installed, we need to throw exception if Adv is not configured correctly
         Boolean hasConfigError = true;
 
-        if(isUserLicensed) {
-            List<SObject> advSettings = Database.query('select adv1__Use_Advancement__c, adv1__API_NPSP_Class__c from adv1__Advancement_Setting__mdt');
-            if(advSettings != null && advSettings.size() > 0) {
-                useAdv = (Boolean)advSettings[0].get('adv1__Use_Advancement__c');
-                if(useAdv) {
-                    String apiNPSPClass = (String)advSettings[0].get('adv1__API_NPSP_Class__c');
-                    if(String.isNotBlank(apiNPSPClass)) {
-                        Type classType = Type.forName(apiNPSPClass);
-                        if (classType != null) {
-                            Object classInstance = classType.newInstance();
-                            if (classInstance instanceof ADV_Adapter) {
-                                apiNPSP = (ADV_Adapter) classInstance;
-                                hasConfigError = false;
-                            }
+        String advSettingQuery = 'select Use_Advancement__c, API_NPSP_Class__c from Advancement_Setting__mdt';
+        String useAdvStr = 'Use_Advancement__c';
+        String apiNpspClassStr = 'API_NPSP_Class__c';
+
+        if (isManaged == true) {
+            advSettingQuery = 'select ' + orgSetting.Advancement_Namespace__c + '__' + 'Use_Advancement__c, ' +
+                    orgSetting.Advancement_Namespace__c + '__' + 'API_NPSP_Class__c from ' +
+                    orgSetting.Advancement_Namespace__c + '__' + 'Advancement_Setting__mdt';
+            useAdvStr = orgSetting.Advancement_Namespace__c + '__' + 'Use_Advancement__c';
+            apiNpspClassStr = orgSetting.Advancement_Namespace__c + '__' + 'API_NPSP_Class__c';
+
+        }
+
+
+        List<SObject> advSettings = Database.query(advSettingQuery);
+        if (advSettings != null && advSettings.size() > 0) {
+            useAdv = (Boolean)advSettings[0].get(useAdvStr);
+            if (useAdv) {
+                String apiNPSPClass = (String)advSettings[0].get(apiNpspClassStr);
+                if (String.isNotBlank(apiNPSPClass)) {
+                    if (isManaged == true) {
+                        apiNPSPClass = orgSetting.Advancement_Namespace__c + '.' + apiNPSPClass;
+                    }
+                    Type classType = Type.forName(apiNPSPClass);
+                    if (classType != null) {
+                        Object classInstance = classType.newInstance();
+                        if (classInstance instanceof ADV_Adapter) {
+                            apiNPSP = (ADV_Adapter) classInstance;
+                            hasConfigError = false;
                         }
                     }
-                } else {
-                    hasConfigError = false;
                 }
+            } else {
+                hasConfigError = false;
             }
         }
+
 
         setupCalled = true;
 

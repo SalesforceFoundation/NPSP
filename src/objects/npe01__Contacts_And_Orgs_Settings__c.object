@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
+        <fullName>Advancement_Namespace__c</fullName>
+        <defaultValue>&quot;adv1&quot;</defaultValue>
+        <description>The namespace of the Gift Processing package.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>The namespace of the Gift Processing package.</inlineHelpText>
+        <label>Advancement Namespace</label>
+        <length>10</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
         <fullName>Automatic_Campaign_Member_Management__c</fullName>
         <defaultValue>false</defaultValue>
         <description>Automatically creates a Campaign Member when you create an Opportunity that has a Primary Contact and a Primary Campaign source associated with it, or update that Opportunity with a Closed/Won stage.</description>
