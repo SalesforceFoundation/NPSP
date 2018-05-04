@@ -901,6 +901,22 @@
         <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
     </labels>
     <labels>
+        <fullName>CRLP_DisabledTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for CRLP Disabled Toast</shortDescription>
+        <value>These aren't the rollups you're looking for.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DisabledMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for CRLP Disabled Toast</shortDescription>
+        <value>You don't have Customizable Rollups enabled. Return to NPSP Settings.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

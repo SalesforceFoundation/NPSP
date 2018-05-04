@@ -19,12 +19,9 @@
 
                 //notify user that CRLP is disabled or proceed with setting data
                 if (!model.isCRLPEnabled) {
-
-                    //todo: add extra functionality or a better label if CRLP is disabled
-                    helper.showToast(cmp, "error", labels.error, labels.crlpNotEnabled);
+                    helper.showToast(cmp, "warning", labels.crlpNotEnabledTitle, labels.crlpNotEnabledMessage);
 
                 } else {
-
                     var sortedData = helper.sortData(cmp, 'displayName', 'asc', model.items);
                     cmp.set("v.rollupList", sortedData);
                     cmp.set("v.cachedRollupList", sortedData);
@@ -143,6 +140,7 @@
                     console.log("Unknown error");
                 }
             }
+            helper.toggleSpinner(cmp, false);
         });
 
         $A.enqueueAction(action);
@@ -235,10 +233,18 @@
         var channel = event.getParam("channel");
 
         console.log("handleMessage: " + channel);
+        console.log(JSON.stringify(message));
 
-        //message is the masterLabel
+        //ordered by frequency
         if (channel === 'cancelEvent') {
             helper.handleCancelDetailEvent(cmp, message.grid);
+
+        } else if (channel === 'toggleSpinner') {
+            helper.toggleSpinner(cmp, message.showSpinner);
+
+        } else if (channel === 'showToast') {
+            helper.showToast(cmp, message.type, message.title, message.message);
+
         } else if (channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
@@ -250,37 +256,16 @@
 
         } else if (channel === 'filterRecordChange') {
             helper.mergeRowItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
-
             //update record name for the detail page
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message.MasterLabel;
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupDeleted') {
-            //return to main grid from rollup detail
-            helper.handleCancelDetailEvent(cmp, 'rollup');
-            var rollupsList = cmp.get("v.rollupList");
-            for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].recordName === message) {
-                    // if the Id matches, delete that record
-                    rollupsList.splice(i, 1);
-                    break;
-                }
-            }
-            helper.resetRollupDataGrid(cmp, rollupsList);
-            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+            helper.deleteRollup(cmp, message);
 
         } else if (channel === 'filterGroupDeleted') {
-            var filterGroupList = cmp.get("v.filterGroupList");
-            for (var i = 0; i < filterGroupList.length; i++) {
-                if (filterGroupList[i].name === message) {
-                    // if the Id matches, delete that record
-                    filterGroupList.splice(i, 1);
-                    break;
-                }
-            }
-            cmp.set("v.filterGroupList", filterGroupList);
-            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+            helper.deleteFilterGroup(cmp, message);
 
         } else if (channel === 'navigateEvent') {
             helper.handleNavigateEvent(cmp, message);
@@ -298,11 +283,11 @@
         cmp.set("v.detailMode", action.name);
         cmp.set("v.activeRecordId", row.recordId);
         //check which grid is displayed
-        if(isRollupsGrid){
+        if (isRollupsGrid) {
             cmp.set("v.isRollupsGrid", false);
             cmp.set("v.isRollupDetail", true);
             cmp.set("v.width", 8);
-        } else{
+        } else {
             cmp.set("v.isFilterGroupsGrid", false);
             cmp.set("v.isFilterGroupDetail", true);
             cmp.set("v.width", 8);

@@ -1190,30 +1190,22 @@
     },
 
     /**
-     * @description Show a message on the screen
+     * @description Show a message on the screenin the parent cmp
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
      */
-    showToast : function(cmp, type, title, message) {
-        cmp.set("v.toastStatus", type);
-        var altText = cmp.get("v.labels." + type);
-        var text = {message: message, title: title, alternativeText: altText};
-        cmp.set("v.notificationText", text);
-        cmp.set("v.notificationClasses", "");
+    showToast: function(cmp, type, title, message) {
+        var channel = 'showToast';
+        var message = {type: type, title: title, message: message};
+        this.sendMessage(cmp, channel, message);
     },
 
     /**
-     * @description Show or Hide the page spinner
-     * @param showSpinner - true to show; false to hide
+     * @description Show or Hide the page spinner in the parent cmp
      */
-    toggleSpinner : function(cmp, showSpinner) {
-        var spinner = cmp.find("waitingSpinner");
-        if (showSpinner === true) {
-            $A.util.removeClass(spinner, "slds-hide");
-        } else {
-            $A.util.addClass(spinner, "slds-hide");
-        }
+    toggleSpinner: function(cmp, showSpinner) {
+        this.sendMessage(cmp, 'toggleSpinner', {showSpinner: showSpinner});
     },
 
     /**
