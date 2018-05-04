@@ -70,59 +70,10 @@
                 border-right: 1px solid #cccccc !important;
             }
 
-            /* Edit mode */
-            .handsontableInput {
-                vertical-align: middle;
-                text-align: center;
-                line-height: 40px !important;
-            }
-
-
-            .htDatepickerHolder{
-
-                width: 470px;
-            }
-
-            .pika-lendar {
-
-                float: left;
-                width: 400px;
-                margin: 32px;
-            }
-
-            .pika-button{
-
-                text-align: left;
-            }
-
-            .pika-prev, .pika-next {
-
-                margin-right: 85px !important;
-            }
-
-            .htAutocompleteArrow {
-
-                float: right;
-                font-size: 10px;
-                color: rgb(150, 150, 150) !important;
-                cursor: default;
-                width: 16px;
-                text-align: center;
-            }
-
         </style>
 
         <!-- Custom Javascript -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/BGEUtils.js')}"/>
-
-        <script>
-            function commit() {
-
-                var pBatchId = getAllUrlParams().batchid;
-
-                window.location.href = '/apex/BDI_DataImport?pBatchId=' + getAllUrlParams().batchid;
-            }
-        </script>
 
         <script>
 
@@ -142,7 +93,13 @@
                 // Flag that is set true if the user have just pressed the up arrow key.
                 wasUpArrowPressed = false;
 
-                $scope.totalPages = '{!totalOfPages}';
+                // Flag that is set true if the selected cell have just moved horizontally.
+                movedSideWays = false;
+
+                // Flag needed to fix a bug, if true saving when the user changes row is delayed for a second.
+                wait = false;
+
+        		$scope.totalPages = '{!totalOfPages}';
 
                 //Map to save cells with invalid format values
 
@@ -249,18 +206,18 @@
                         isDisabled = '';
                     }
 
-                    var actionsMenu = '<div id="'+ row + 'menu" class="slds-m-top_x-large slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Check Erros</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Attempt Matching</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Remove Row</button></div></div></div></div>';
+                    var actionsMenu = '<div id="'+ row + 'menu" class="slds-m-top_x-large slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Remove Row</button></div></div></div></div>';
                     var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
                     td.innerHTML = actionIcon;
                     return td;
 
                 }
                 $(document).ready(function() {
-                
+
                     $(window).scroll(function() {
                         $(".fixed-horizontal").css("left", $(window).scrollLeft() + "px");
                     });
-                    
+
                 });
 
                 var errorCol = new Object();
@@ -309,7 +266,7 @@
                         col.readOnly = true;
                         col.colWidths = 0.1;
 
-                        dynamicColumns.splice(1, 0, col);
+                        dynamicColumns.splice(2, 0, col);
                     }
 
                     if (templateField.type === "date") {
@@ -877,7 +834,7 @@
                         dataAtLastSelectedRow[dataRowId] = {};
                     }
 
-                    //LOAD CELL DATA AND SEND TO UPDATE THE DATA IMPORT
+                    // LOAD CELL DATA AND SEND TO UPDATE THE DATA IMPORT
                     if (newValue) {
 
                         dataAtLastSelectedRow[dataRowId][prop] = newValue;
@@ -1191,9 +1148,9 @@
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
 
-                        if (colIndex === 0) {
+                        if (colIndex === 1) {
 
-                            colIndex = 1;
+                            colIndex = 2;
                         }
 
                         hot.selectCell(rowIndex,colIndex);
@@ -1208,9 +1165,9 @@
                         var colIndex = selection[1];
                         var numerOfColumns = hot.countCols();
 
-                        if (colIndex === 2) {
+                        if (colIndex === 3) {
 
-                            colIndex = 1;
+                            colIndex = 2;
                         }
 
                         hot.selectCell(rowIndex,colIndex);
