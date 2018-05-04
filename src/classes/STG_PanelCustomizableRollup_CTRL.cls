@@ -89,24 +89,18 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public virtual override PageReference saveSettings() {
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
         Savepoint sp = Database.setSavepoint();
         isEditMode = false;
         try {
             if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
-                String oldStatus = STG_Panel.stgService.stgCRLP.CMT_API_Status__c;
-                // Only start polling if it's their first time or the last deployment wasn't a success
-                if(String.isEmpty(oldStatus) || !oldStatus.contains('Succeeded')) {
-                    isPolling = true;
-                }
-                // This method includes committing Customizable_Rollups_Enabled__c as true if the deployment succeeds
+                isPolling = true;
                 jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
                 if (Test.isRunningTest()) {
                     jobId = '123';
                 }
             } else {
                 // The deployment method takes care of setting the Enabled flag to true if it succeeds.
-                // In here, we only set it to false.
+                // In here, we only set it to false in the case on disabling CRLPs.
                 stgService.saveAll();
             }
             UTIL_MasterSchedulableHelper.setScheduledJobs();
@@ -115,6 +109,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             isPolling = false;
+            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
         return null;
