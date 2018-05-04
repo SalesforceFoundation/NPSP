@@ -29,3 +29,6 @@ Referenced Packages
 *.sublime-project
 *.sublime-workspace
 /config/
+.sfdx
+.vscode
+.vim-force.com
