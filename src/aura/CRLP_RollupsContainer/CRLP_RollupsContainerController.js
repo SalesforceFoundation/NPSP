@@ -19,7 +19,7 @@
 
                 //notify user that CRLP is disabled or proceed with setting data
                 if (!model.isCRLPEnabled) {
-                    helper.showToast(cmp, "warning", labels.crlpNotEnabledTitle, labels.crlpNotEnabledMessage);
+                    cmp.set("v.isCRLPEnabled", false);
 
                 } else {
                     var sortedData = helper.sortData(cmp, 'displayName', 'asc', model.items);
@@ -211,7 +211,7 @@
     /**
      * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
      */
-    handleCancelBreadcrumbEvent: function(cmp, event, helper){
+    handleBreadcrumbEvent: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
         cmp.set("v.lastActiveRecordId", null);
