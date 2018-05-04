@@ -41,12 +41,11 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     @TestVisible private static final String ERROR_SOBJECT = UTIL_Describe.getObjectLabel('Opportunity');
 
     private String settingsRole;
-    private DuplicatePrimaryOCRs duplicatePrimaryOCRs;
+    private List<AggregateResult> primaryOCRsAggregateResult;
 
     public OPP_PrimaryContactRoleMerge(List<Opportunity> opportunities) {
         settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
-        List<AggregateResult> primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(opportunities);
-        duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
+        primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(opportunities);
     }
 
     /*******************************************************************************************************
@@ -55,23 +54,20 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     ********************************************************************************************************/
     public void run() {
         List<Error__c> errors = new List<Error__c>();
-        for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
-            OpportunityOCRs opportunityOCRs = new OpportunityOCRs(opportunityRecord);
-            OpportunityContactRole primaryContactOCR = opportunityOCRs.getPrimaryContactOCR();
+        DuplicatePrimaryOCRs duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
 
-            if (primaryContactOCR == null && opportunityOCRs.containsPrimaryRole(settingsRole) == false) {
+        for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
+            OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
+
+            if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
                 errors.add(createError(opportunityRecord));
-                continue;
             }
-            if (primaryContactOCR == null && opportunityOCRs.containsPrimaryRole(settingsRole)) {
-                List<OpportunityContactRole> ocrsWithSettingsRole = opportunityOCRs.getPrimaryRolesEqual(settingsRole);
+            else {
+                List<OpportunityContactRole> ocrsWithSettingsRole = opportunityPrimaryOCRs.getRolesEqual(settingsRole);
                 duplicatePrimaryOCRs.makePrimary(ocrsWithSettingsRole[0]);
-                continue;
-            }
-            if (primaryContactOCR != null) {
-                duplicatePrimaryOCRs.makePrimary(primaryContactOCR);
             }
         }
+
         insert errors;
         duplicatePrimaryOCRs.processDML();
     }
@@ -136,7 +132,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
 
         /*******************************************************************************************************
         * @description Sets the OCR in paramater as Primary OCR.
-        * @param OpportunityContactRole. the OCR to set as primary.
+        * @param OpportunityContactRole. The OCR to set as primary.
         * @return void.
         ********************************************************************************************************/
         public void makePrimary(OpportunityContactRole inputOCR) {
@@ -146,9 +142,9 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 if (ocr.Id != inputOCR.Id && ocr.ContactId == inputOCR.ContactId) {
                     ocrRecordsToDelete.put(ocr.Id, ocr);
                 }
-                // After a delete of one duplicate Primary OCR, Salesforce update all the OCR IsPrimary to false.
+                // After a deletion of one duplicate Primary OCR, Salesforce updates all the OCRs' IsPrimary field to false.
                 // So, we need to force the update of the input OCR even if the OCR is already a Primary OCR.
-                if (ocr.Id == inputOCR.Id ) {
+                if (ocr.Id == inputOCR.Id) {
                     ocr.IsPrimary = true;
                     ocrRecordsToUpdate.put(ocr.Id, ocr);
                 }
@@ -178,6 +174,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 SELECT Name, Primary_Contact__c, (
                     SELECT OpportunityId, ContactId, Role, IsPrimary
                     FROM OpportunityContactRoles
+                    WHERE IsPrimary = true
                 )
                 FROM Opportunity
                 WHERE Id IN :opportunityIds
@@ -185,18 +182,17 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         }
     }
 
-
     /*******************************************************************************************************
     * @description Class that wraps an Opportunity and its related duplicate Primary OCRs.
     ********************************************************************************************************/
-    class OpportunityOCRs {
+    class OpportunityPrimaryOCRs {
         private Opportunity record;
 
         /*********************************************************************************************************
-        * @description The Constructor of OpportunityOCRs.
+        * @description The Constructor of OpportunityPrimaryOCRs.
         * @param Opportunity. Opportunity with the related primary OCRs.
         */
-        public OpportunityOCRs(Opportunity currentOpportunity) {
+        public OpportunityPrimaryOCRs(Opportunity currentOpportunity) {
             record = currentOpportunity;
         }
 
@@ -205,8 +201,8 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         * @param String OCR Role.
         * @return Boolean.
         ********************************************************************************************************/
-        public Boolean containsPrimaryRole(String ocrRole) {
-            return getPrimaryRolesEqual(ocrRole).isEmpty() == false;
+        public Boolean containsRole(String ocrRole) {
+            return getRolesEqual(ocrRole).isEmpty() == false;
         }
 
         /*******************************************************************************************************
@@ -214,27 +210,14 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         * @param String OCR Role.
         * @return List<OpportunityContactRole>. The primary OCRs with Role equals to the Role in the parameter.
         ********************************************************************************************************/
-        public List<OpportunityContactRole> getPrimaryRolesEqual(String ocrRole) {
+        public List<OpportunityContactRole> getRolesEqual(String ocrRole) {
             List<OpportunityContactRole> result = new List<OpportunityContactRole>();
             for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.IsPrimary && ocrRole.equalsIgnoreCase(ocr.Role)) {
+                if (ocrRole.equalsIgnoreCase(ocr.Role)) {
                     result.add(ocr);
                 }
             }
             return result;
-        }
-
-        /*******************************************************************************************************
-        * @description Gets the Opportunity Primary Contact OCR.
-        * @return OpportunityContactRole. The Opportunity Primary Contact OCR.
-        ********************************************************************************************************/
-        public OpportunityContactRole getPrimaryContactOCR() {
-            for (OpportunityContactRole ocr : record.OpportunityContactRoles) {
-                if (ocr.ContactId == record.Primary_Contact__c) {
-                    return ocr;
-                }
-            }
-            return null;
         }
     }
 }
