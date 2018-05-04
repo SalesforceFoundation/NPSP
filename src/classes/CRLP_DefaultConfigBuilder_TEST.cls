@@ -100,7 +100,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
             }
         }
 
-        System.assertEquals(5, fgCount, 'There should be 5 filter groups');
+        System.assertEquals(7, fgCount, 'There should be 7 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 
@@ -146,7 +146,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
         }
 
 
-        System.assertEquals(6, fgCount, 'There should be 6 filter groups');
+        System.assertEquals(8, fgCount, 'There should be 8 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 }
