@@ -298,7 +298,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         groupPaymentsWrittenOff.recordName = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsWrittenOff;
         groupPaymentsWrittenOff.description = 'All written off Payments.';
 
-        CRLP_RollupCMT.FilterRule ruleWrittenOff = new CRLP_RollupCMT.FilterRule(groupPaymentsPaid.recordName, 'Payments: Written Off Only');
+        CRLP_RollupCMT.FilterRule ruleWrittenOff = new CRLP_RollupCMT.FilterRule(groupPaymentsWrittenOff.recordName, 'Payments: Written Off Only');
         ruleWrittenOff.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleWrittenOff.recordName;
         ruleWrittenOff.objectName = 'npe01__OppPayment__c';
         ruleWrittenOff.fieldName = 'npe01__Written_Off__c';
