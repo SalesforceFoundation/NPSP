@@ -149,11 +149,14 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
      */
     public SObject getPopulatedSObject() {
         this.record = CRLP_Rollup_SVC.createEmptyResultObject(this.objectId, this.rollups);
+        Boolean debugMode = CRLP_Debug_UTIL.debuggingLevel == CRLP_Debug_UTIL.LEVEL_MAX;
         for (CRLP_Rollup rollup : this.rollups) {
             Map<String,Object> results = rollup.getFinalValues();
             CRLP_Debug_UTIL.setCurrentRollupState(this.objectId + ': ' + CRLP_Debug_UTIL.getRollupCurrentValues(rollup));
             for (String fld : results.keySet()) {
-                //CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
+                if (debugMode) {
+                    CRLP_Debug_UTIL.setCurrentRollupState('   ' + fld + ' = ' + results.get(fld));
+                }
                 this.record.put(fld, results.get(fld));
             }
         }

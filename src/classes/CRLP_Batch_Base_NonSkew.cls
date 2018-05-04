@@ -277,7 +277,20 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    public void finish(Database.BatchableContext bc) { }
+    public void finish(Database.BatchableContext bc) {
+        // In debug mode, write a summary of the job to the error log
+        if (CRLP_Debug_UTIL.isDebuggingEnabled) {
+            Error__c logEntry = new Error__c(
+                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
+                    Error_Type__c = 'DEBUG LOG',
+                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
+                            'Total DML Operations: ' + this.totalCommits + '\n' +
+                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
+                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+            );
+            insert logEntry;
+        }
+    }
 
     /**
      * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.

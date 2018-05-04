@@ -390,6 +390,22 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
         }
 
+        // In debug mode, write a summary of the job to the error log
+        if (CRLP_Debug_UTIL.isDebuggingEnabled) {
+            Error__c logEntry = new Error__c(
+                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
+                    Error_Type__c = 'DEBUG LOG',
+                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
+                            'Total DML Operations: ' + this.totalCommits + '\n' +
+                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
+                            'Parent Ids Commited in Finish: ' + (this.parentIdsNotCommittedWithBatch !=  null ?
+                                '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' +
+                                        JSON.serializePretty(this.parentIdsNotCommittedWithBatch) : 'none') + '\n' +
+                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+            );
+            insert logEntry;
+        }
+
     }
 
     /**
