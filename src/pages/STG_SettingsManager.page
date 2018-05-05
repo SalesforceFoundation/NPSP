@@ -282,7 +282,7 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelAllocations" style="display:none" >
-                    <apex:include pageName="STG_PanelAllocations" />
+                    <apex:include pageName="STG_PanelAllocations" id="idPanelAllocations"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelOppRollup" style="display:none" >

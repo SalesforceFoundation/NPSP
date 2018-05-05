@@ -97,7 +97,7 @@
                 </div>
 
                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
+                    <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
                     <apex:commandButton id="cancelCRLPs" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
                     <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>
