@@ -27,8 +27,8 @@
 
             .handsontable td.htInvalid {
                 background-color: transparent !important;
-                border: 2px solid red !important;
-                color: #ff0000 !important;
+                border: 2px solid #c23934 !important;
+                color: #c23934 !important;
             }
 
             .pagination-section {
@@ -63,6 +63,12 @@
                 border: none !important;
                 border-right: 1px solid #cccccc !important;
                 background: white !important;
+            }
+
+            .tooltip-error {
+                position: absolute !important;
+                margin-left: 25px;
+                margin-top: -60px;
             }
 
             .handsontable th:first-child {
@@ -204,23 +210,29 @@
 
                 function cellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-                    Handsontable.TextCell.renderer.apply(this, arguments);
+                    try {
 
-                    if (col == 0) {
+                        Handsontable.TextCell.renderer.apply(this, arguments);
 
-                        var dataRowId = instance.getDataAtRowProp(row, 'Id');
-                        td.id = dataRowId;
+                        if (col == 0) {
 
-                        if (dataRowId) {
+                            var dataRowId = instance.getDataAtRowProp(row, 'Id');
+                            td.id = dataRowId;
 
-                            $('#' + dataRowId).css( "border-top", "none");
-                            $('#' + dataRowId).css( "border-bottom", "none");
-                            $('#' + dataRowId).attr( "readonly", "readonly");
+                            if (dataRowId) {
+
+                                $('#' + dataRowId).css( "border-top", "none");
+                                $('#' + dataRowId).css( "border-bottom", "none");
+                                $('#' + dataRowId).attr( "readonly", "readonly");
+                            }
+
+                            var escaped = Handsontable.helper.stringify(value);
+                            td.innerHTML = escaped;
+                            return td;
                         }
-
-                        var escaped = Handsontable.helper.stringify(value);
-                        td.innerHTML = escaped;
-                        return td;
+                    }
+                    catch(ex) {
+                        console.warn('Catching text exception');
                     }
                 }
 
@@ -268,23 +280,49 @@
 
                     var isDisabled = 'disabled=\"false\"';
 
-                    if (dataRowId) {
+                    var actionsMenu = '';
 
-                        isDisabled = '';
+                    if (dataRowId) {
+                        actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral remove-my-row" style="border: none;">Remove row</button></div></div></div></div>';
                     }
 
-                    var actionsMenu = '<div id="'+ row + 'menu" class="slds-m-top_x-large slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Check Erros</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Attempt Matching</button></div><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button ' + isDisabled + ' class="slds-button slds-button_neutral" style="border: none;">Remove Row</button></div></div></div></div>';
-                    var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
+                    // var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
+                    // var actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral" style="border: none;">Remove row</button></div></div></div></div>';
+                    var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
+
                     td.innerHTML = actionIcon;
                     return td;
-
                 }
                 $(document).ready(function() {
-                
+
+                    $('.action-items').click(function() {
+                        console.log('asasd');
+                        that = this;
+                        var options = $(that).closest('.action-global').find('.action-options');
+
+                        if ($(options).hasClass('slds-hide')) {
+                            $('.options').removeClass("slds-hide");
+                        }
+                        else {
+                            $('.options').addClass("slds-hide");
+                        }
+                    });
+
+                    $('.remove-my-row').click(function() {
+                        var selectedRow = hot.getSelected()[0];
+                        hot.alter('remove_row', selectedRow);
+                    })
+
                     $(window).scroll(function() {
                         $(".fixed-horizontal").css("left", $(window).scrollLeft() + "px");
                     });
-                    
+
+                    $(window).click(function() {
+
+
+
+                    })
+
                 });
 
                 var errorCol = new Object();
@@ -292,7 +330,8 @@
                 errorCol.type = 'text';
                 errorCol.data = 'Errors';
                 errorCol.className = "htCenter htMiddle tooltip-column";
-                errorCol.wordWrap = false;
+                errorCol.wordWrap = true;
+                errorCol.disableVisualSelection = true;
 
                 var actionCol = new Object();
                 actionCol.title = 'ACTIONS';
@@ -303,6 +342,8 @@
 
                 dynamicColumns.push(errorCol);
                 dynamicColumns.push(actionCol);
+
+                var recordIdCol = undefined;
 
                 for (var i=0; i < columnsData.length; i++) {
 
@@ -331,9 +372,11 @@
                     if (templateField.apiName == "Id") {
 
                         col.readOnly = true;
-                        col.colWidths = 0.1;
-
-                        dynamicColumns.splice(1, 0, col);
+                        col.hidden = true;
+                        col.className = "htCenter htMiddle slds-truncate slds-hide";
+                        col.disableVisualSelection = true;
+                        recordIdCol = col;
+                        // dynamicColumns.splice(3, 3, col);
                     }
 
                     if (templateField.type === "date") {
@@ -360,18 +403,18 @@
                         col.className = "htLeft htMiddle";
                     }
 
-                    if (templateField.type === "dropdown") {
+                    // if (templateField.type === "dropdown") {
 
-                        // Check if by any change the list containing picklist values are null empty or undefined.
-                        if (templateField.pickListValuesList) {
+                    //     // Check if by any change the list containing picklist values are null empty or undefined.
+                    //     if (templateField.pickListValuesList) {
 
-                             // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                             // In this case, the ENTER key is ignored and the editor field remains opened.
-                            col.allowInvalid = false;
+                    //          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                    //          // In this case, the ENTER key is ignored and the editor field remains opened.
+                    //         col.allowInvalid = false;
 
-                            col.source = templateField.pickListValuesList;
-                        }
-                    }
+                    //         col.source = templateField.pickListValuesList;
+                    //     }
+                    // }
 
 
                     if (templateField.apiName !== "Id") {
@@ -381,6 +424,8 @@
 
                 }
 
+                // Add Id column to the end
+                dynamicColumns.push(recordIdCol);
 
                 var tableWidth = window.innerWidth * 91 / 100;
                 var tableHeight = window.innerHeight * 70 /100;
@@ -413,11 +458,14 @@
                     maxRows: 50,
                     manualColumnResize: [50],
                     colWidths: 150,
-
                     rowHeights: 30,
                     colHeaders: true,
                     columnHeaderHeight: 40,
                     fixedColumnsLeft: 2,
+
+                    hiddenColumns: {
+                        indicators: false
+                    },
 
                     columns: dynamicColumns,
                     contextMenu: ['remove_row'],
@@ -612,6 +660,13 @@
                         });
                     },
 
+                    afterSelection: function(r) {
+
+                        if (lastSelectedRow === null) {
+                            lastSelectedRow = r;
+                        }
+                    },
+
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
 
                         var timeout = 0;
@@ -630,7 +685,6 @@
                             var dataRowId = self.getDataAtRowProp(lastSelectedRow, 'Id');
 
                             var dataAtRow = self.getDataAtRow(lastSelectedRow);
-
 
                             if (lastSelectedRow !== null && lastSelectedRow !== row) {
 
@@ -651,17 +705,20 @@
                                             dataRowId  = result.dataImportIds[0];
                                         }
 
+                                        console.error(result.messages);
+
                                         var messages = validateRequiredFields(row, result.messages, false);
 
                                         if (messages && messages.length > 0) {
 
                                             // Add tooltip message
                                             var escaped = addTooltip(dataRowId, row, result, messages);
-                                            data[row-1]['Errors'] = escaped;
+                                            console.log('es aca');
+                                            data[lastSelectedRow]['Errors'] = escaped;
                                         }
                                         else {
 
-                                            data[row-1]['Errors'] = '';
+                                            data[lastSelectedRow]['Errors'] = '';
                                         }
 
                                         var cellsToUpdate = [];
@@ -671,13 +728,14 @@
                                         self.setDataAtCell(cellsToUpdate);
 
                                         changesToSave = {};
+
+                                        // Inside a callback
+                                        lastSelectedRow = row;
                                     });
 
                                     changesToSave = {};
                                 }
                             }
-
-                            lastSelectedRow = row;
 
                         },timeout);
 
@@ -749,9 +807,8 @@
                 }
 
 
-                function addTooltip (dataRowId, row, result, messages) {
+                function addTooltip(dataRowId, row, result, messages) {
 
-                    var messageStyle = 'slds-theme_error';
                     var iconStyle = 'warning';
                     var styleSuccess = '';
                     var styleTop = -5 -  messages.length;
@@ -760,26 +817,14 @@
                     var htmlTooltipIdParam = '\'#selector' + dataRowId + '\'';
                     var newRowClass = '';
 
-
                     if (!dataRowId) {
-
                         htmlTooltipId = row + 'selectorNew';
                         htmlTooltipIdParam = '\'#' + row + 'selectorNew\'';
                     }
 
-                    var htmlIcon = '<div id='+ htmlTooltipId + ' onmouseout="removeMessage(' + htmlTooltipIdParam + ');" onmouseover="addMessage(' + htmlTooltipIdParam + ', \'' + messages + '\', \'' + styleTop +  '\');" ><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
-
-                    var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
+                    var htmlIcon = '<div id='+ htmlTooltipId + ' onmouseleave="removeMessage(' + htmlTooltipIdParam + ');" onmousemove="addMessage(' + htmlTooltipIdParam + ', \'' + messages + '\', \'' + styleTop +  '\');" ><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
 
                     var escaped = Handsontable.helper.stringify(htmlIcon);
-
-                    setTimeout(function() {
-                        $('#' + htmlTooltipId).append(htmlTooltip);
-                     }, 10);
-
-                    setTimeout(function() {
-                        $('#' + htmlTooltipId).find( "span:last" ).remove();
-                     }, 2000);
 
                     return escaped;
                 }
@@ -797,7 +842,7 @@
                         messages = [];
                     }
                     else if (messages.length > 0 ) {
-                        messages.push('\<br\>');
+                        // messages.push('\<br\>');
                     }
 
                     cellsMeta.forEach(function(cell) {
@@ -806,10 +851,13 @@
 
                         if (cell && cell.row == row) {
 
+                            // FIRST OF ALL - INIT Validation values
+                            cell.valid = true;
+
                             if(cell.required && !value) {
 
                                 cell.valid = false;
-                                messages.push(cell.data + ' field is required \<br\>');
+                                messages.push(cell.data + ' field is required');
                             }
                             else if (cell.hasError) {
                                 cell.valid = false;
@@ -1246,21 +1294,28 @@
 
 	          function removeMessage(dataRowId) {
 
-                setTimeout(function() {
-                    $(dataRowId).find( "span:last" ).remove();
-                }, 10);
+                $(".tooltip-error" ).remove();
             }
 
             function addMessage(dataRowId, messages, styleTop) {
 
-                var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
+                $('.tooltip-error').remove();
 
-                setTimeout(function() {
-                    $(dataRowId).append(htmlTooltip);
-                }, 10);
+                var htmlTooltip = '<section class="slds-popover slds-nubbin_left slds-theme_error tooltip-error" role="dialog" aria-label="Error Tooltip">';
+                htmlTooltip += '<div class="slds-popover__body">';
+                htmlTooltip += '<p>' + messages + '</p>';
+                htmlTooltip += '</div></section>';
+
+                // var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
+
+                $(dataRowId).append(htmlTooltip);
             }
 
-            function displayActionMenu(row){
+            function displayActionMenu(row) {
+
+
+
+
 
                 if ($('#' + row + 'menu').hasClass('slds-hide')) {
 

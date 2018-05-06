@@ -212,7 +212,7 @@ global class BGE_HandsOnGridController {
             }
             else {
 
-                error = 'Incorrect value on cell, please recheck. ' + jsonEx.getMessage();
+                error = jsonEx.getMessage();
 
                 response.addError(error);
             }
@@ -354,7 +354,7 @@ global class BGE_HandsOnGridController {
             }
             else {
 
-                error = 'Incorrect value on cell, please recheck. ' + jsonEx.getMessage();
+                error = jsonEx.getMessage();
 
                 response.addError(error);
             }
