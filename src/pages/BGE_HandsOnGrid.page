@@ -110,6 +110,28 @@
                 text-align: center;
             }
 
+            .htDatepickerHolder{
+
+                width: 470px;
+            }
+
+            .pika-lendar {
+
+                float: left;
+                width: 400px;
+                margin: 32px;
+            }
+
+            .pika-button{
+
+                text-align: left;
+            }
+
+            .pika-prev, .pika-next {
+
+                margin-right: 85px !important;
+            }
+
         </style>
 
         <!-- Custom Javascript -->
