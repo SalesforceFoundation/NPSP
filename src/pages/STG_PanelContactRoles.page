@@ -52,6 +52,18 @@
                     </apex:outputPanel>
                 </div>
             </div>
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="slMDR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" html-aria-describedby="{!$Component.slMDRHelp}" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputPanel id="slMDRHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpMatchedDonorRole}" />
+                    </apex:outputPanel>
+                </div>
+            </div>
         </div>
         <div class="slds-section-title--divider" >{!$Label.stgLabelSoftCredit}</div>
         <div class="slds-form--horizontal slds-m-around--large">
@@ -71,18 +83,6 @@
                     <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Soft_Credit_Roles__c" listSO="{!listSOOppContactRoles}" inEditMode="{!isEditMode}" />
                     <apex:outputPanel layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpSoftCreditRoles}" />
-                    </apex:outputPanel>
-                </div>
-            </div>
-            <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.Matched_Donor_Role__c.Label}" for="slMDR" styleClass="slds-form-element__label" />
-                <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgHH.Matched_Donor_Role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:selectList value="{!stgService.stgHH.Matched_Donor_Role__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slMDR" html-aria-describedby="{!$Component.slMDRHelp}" styleClass="slds-select" >
-                        <apex:selectOptions value="{!listSOContactRoles}"/>
-                    </apex:selectList>
-                    <apex:outputPanel id="slMDRHelp" layout="block">
-                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpMatchedDonorRole}" />
                     </apex:outputPanel>
                 </div>
             </div>
