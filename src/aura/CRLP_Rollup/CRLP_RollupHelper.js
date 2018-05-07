@@ -1110,9 +1110,9 @@
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
-                            if(mode === "delete") {
-                                // fire cancel event to nav back to rollup grid
-                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'rollup'});
+                            if (mode === "delete") {
+                                // Send a message with the deleted Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'rollupDeleted', recordName);
 
                             } else {
 
@@ -1122,13 +1122,8 @@
                                 cmp.set("v.activeRollupId", deployResult.rollupItem.recordId);
                                 cmp.set("v.activeRollup.id", deployResult.rollupItem.recordId);
                                 cmp.set("v.cachedRollup", helper.restructureResponse(cmp.get("v.activeRollup")));
-                            }
 
-                            if (mode === "delete") {
-                                // Send a message with the deleted Rollup to the RollupContainer Component
-                                helper.sendMessage(cmp, 'rollupDeleted', recordName);
-                            } else {
-                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                               // Send a message with the changed or new Rollup to the RollupContainer Component
                                 helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
                             }
 
@@ -1195,30 +1190,22 @@
     },
 
     /**
-     * @description Show a message on the screen
+     * @description Show a message on the screenin the parent cmp
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
      */
-    showToast : function(cmp, type, title, message) {
-        cmp.set("v.toastStatus", type);
-        var altText = cmp.get("v.labels." + type);
-        var text = {message: message, title: title, alternativeText: altText};
-        cmp.set("v.notificationText", text);
-        cmp.set("v.notificationClasses", "");
+    showToast: function(cmp, type, title, message) {
+        var channel = 'showToast';
+        var message = {type: type, title: title, message: message};
+        this.sendMessage(cmp, channel, message);
     },
 
     /**
-     * @description Show or Hide the page spinner
-     * @param showSpinner - true to show; false to hide
+     * @description Show or Hide the page spinner in the parent cmp
      */
-    toggleSpinner : function(cmp, showSpinner) {
-        var spinner = cmp.find("waitingSpinner");
-        if (showSpinner === true) {
-            $A.util.removeClass(spinner, "slds-hide");
-        } else {
-            $A.util.addClass(spinner, "slds-hide");
-        }
+    toggleSpinner: function(cmp, showSpinner) {
+        this.sendMessage(cmp, 'toggleSpinner', {showSpinner: showSpinner});
     },
 
     /**
