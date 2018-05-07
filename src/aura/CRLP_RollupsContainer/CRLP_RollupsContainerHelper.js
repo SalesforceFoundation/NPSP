@@ -27,7 +27,7 @@
             }
         }
         cmp.set("v.filterGroupList", filterGroupList);
-        helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+        this.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
 
     },
     /**
