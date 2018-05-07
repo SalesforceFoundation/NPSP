@@ -82,6 +82,23 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
+    * @description the existing value of the CRLP enablement setting, cached upon entering edit mode
+    */
+    private Boolean cachedSetting;
+
+    /*******************************************************************************************************
+    * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
+    * @return null
+    */
+    public virtual override PageReference editSettings() {
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        // cache the status of CRLP settings upon entering edit mode so we can check for no change
+        cachedSetting = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
+        isEditMode = true;
+        return null;
+    }
+
+    /*******************************************************************************************************
     * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
     * and reschedule Scheduled Jobs
     * @return void
@@ -89,28 +106,40 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public virtual override PageReference saveSettings() {
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-        Savepoint sp = Database.setSavepoint();
         isEditMode = false;
-        try {
-            if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
-                isPolling = true;
-                jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-                if (Test.isRunningTest()) {
-                    jobId = '123';
+
+        Boolean settingHasChanged = (cachedSetting != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
+
+        if (settingHasChanged) {
+            // we only proceed with deployment/save if they changed the checkbox.
+
+            // if they hit edit and then they immediately hit save,
+            // we do NOT want to reset their CRLP customizations (if both were true)
+            // or run extraneous code (if both were false) so in that case we do nothing.
+            // they have essentially hit cancel.
+
+            Savepoint sp = Database.setSavepoint();
+            try {
+                if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
+                    isPolling = true;
+                    jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                    if (Test.isRunningTest()) {
+                        jobId = '123';
+                    }
+                } else {
+                    // The deployment method takes care of setting the Enabled flag to true if it succeeds.
+                    // In here, we only set it to false in the case on disabling CRLPs.
+                    stgService.saveAll();
                 }
-            } else {
-                // The deployment method takes care of setting the Enabled flag to true if it succeeds.
-                // In here, we only set it to false in the case on disabling CRLPs.
-                stgService.saveAll();
+                UTIL_MasterSchedulableHelper.setScheduledJobs();
+            } catch (Exception e) {
+                Database.rollback(sp);
+                ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+                isPolling = false;
+                Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+                crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
             }
-            UTIL_MasterSchedulableHelper.setScheduledJobs();
-        } catch (Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            isPolling = false;
-            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-            crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
         return null;
     }
