@@ -316,10 +316,11 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             }
 
             // Handle dml on the records to be updated
-            if (updatedRecords != null) {
+            if (updatedRecords != null && !updatedRecords.isEmpty()) {
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
                 this.totalRecordsModified += updatedRecords.size();
                 this.totalCommits++;
+
                 // If the record was committed and the Id is in the parentIdsNotCommittedWithBatch collection
                 // that tracks the last batch iteration by Id, remove it from that collection now that it's committed.
                 for (SObject s : updatedRecords) {

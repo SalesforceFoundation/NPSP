@@ -264,10 +264,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 // Call the method to do the actual rollups. This returns only records that require updating
                 List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
-
-                this.totalRecordsModified += updatedRecords.size();
-                this.totalCommits++;
+                // Handle dml on the records to be updated
+                if (updatedRecords != null && !updatedRecords.isEmpty()) {
+                    CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
+                    this.totalRecordsModified += updatedRecords.size();
+                    this.totalCommits++;
+                }
             }
 
         } catch (Exception ex) {
