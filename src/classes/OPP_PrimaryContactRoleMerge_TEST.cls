@@ -49,78 +49,12 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
 
-        deactivateTriggers();
-
         Account account = new Account(
             Name = 'TEST_ACCOUNT',
             npe01__SYSTEMIsIndividual__c = true
         );
-        insert account;
 
-        Contact contact = new Contact(LastName = 'TEST_CONTACT');
-        insert contact;
-
-        Opportunity opportunity = new Opportunity(
-            Name = 'TEST_OPPORTUNITY',
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
-            CloseDate = Date.today(),
-            AccountId = account.Id
-        );
-        insert opportunity;
-
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            )
-        };
-        insert primaryOCRs;
-
-        activateTriggers();
-
-        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
-            System.assert(
-                expectedOCR.ContactId == contact.Id && 
-                expectedOCR.Role == NON_NPSP_ROLE && 
-                expectedOCR.IsPrimary
-            );
-        }
-        
-        Test.startTest();
-        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
-        Test.stopTest();
-
-        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
-        // Opportunity and the related Opportunity Contact Roles should not change.
-        System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
-            System.assert(
-                expectedOCR.ContactId == contact.Id && 
-                expectedOCR.Role == NON_NPSP_ROLE && 
-                expectedOCR.IsPrimary
-            );
-        }
-
-        List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
-            FROM Error__c
-        ];
-        System.assertEquals(1, errors.size(), 'An Error Log should be created');
-        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
-        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
-        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
-        System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunity.Id, errors[0].Record_URL__c);
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
     }
 
     /*********************************************************************************************************
@@ -132,78 +66,12 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
         ));
 
-        deactivateTriggers();
-
         Account account = new Account(
             Name = 'TEST_ACCOUNT',
             npe01__SYSTEMIsIndividual__c = false
         );
-        insert account;
 
-        Contact contact = new Contact(LastName = 'TEST_CONTACT');
-        insert contact;
-
-        Opportunity opportunity = new Opportunity(
-            Name = 'TEST_OPPORTUNITY',
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
-            CloseDate = Date.today(),
-            AccountId = account.Id
-        );
-        insert opportunity;
-
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            )
-        };
-        insert primaryOCRs;
-
-        activateTriggers();
-
-        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
-            System.assert(
-                expectedOCR.ContactId == contact.Id && 
-                expectedOCR.Role == NON_NPSP_ROLE && 
-                expectedOCR.IsPrimary
-            );
-        }
-        
-        Test.startTest();
-        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
-        Test.stopTest();
-
-        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
-        // Opportunity and the related Opportunity Contact Roles should not change.
-        System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
-        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
-            System.assert(
-                expectedOCR.ContactId == contact.Id && 
-                expectedOCR.Role == NON_NPSP_ROLE && 
-                expectedOCR.IsPrimary
-            );
-        }
-
-        List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
-            FROM Error__c
-        ];
-        System.assertEquals(1, errors.size(), 'An Error Log should be created');
-        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
-        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
-        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
-        System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunity.Id, errors[0].Record_URL__c);
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
     }
 
     /*********************************************************************************************************
@@ -217,89 +85,12 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
 
-        deactivateTriggers();
-
         Account account = new Account(
             Name = 'TEST_ACCOUNT',
             npe01__SYSTEMIsIndividual__c = true
         );
-        insert account;
 
-        Contact contact = new Contact(LastName = 'TEST_CONTACT');
-        insert contact;
-
-        Opportunity opportunity = new Opportunity(
-            Name = 'TEST_OPPORTUNITY',
-            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
-            CloseDate = Date.today(),
-            AccountId = account.Id,
-            Primary_Contact__c = null
-        );
-        insert opportunity;
-
-        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = NON_NPSP_ROLE
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = ''
-            ),
-            new OpportunityContactRole(
-                OpportunityId = opportunity.Id,
-                ContactId = contact.Id,
-                IsPrimary = true,
-                Role = ''
-            )
-        };
-        insert primaryOCRs;
-        activateTriggers();
-
-        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
-        System.assertEquals(6, createdOpportunity.OpportunityContactRoles.size());
-        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
-            System.assertEquals(contact.Id, expectedOCR.ContactId);
-            System.assertEquals(true, expectedOCR.IsPrimary);
-        }
-
-        Test.startTest();
-        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
-        Test.stopTest();
-
-        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
-        // Opportunity should have only 1 primary OCR with role = NPSP Setting Role.
-        System.assertEquals(1, expectedOpportunity.OpportunityContactRoles.size());
-        System.assert(contact.Id == expectedOpportunity.OpportunityContactRoles[0].ContactId);
-        System.assert(NPSP_ROLE == expectedOpportunity.OpportunityContactRoles[0].Role);
-
-        List<Error__c> errors = [
-            SELECT Object_Type__c, Full_Message__c 
-            FROM Error__c
-        ];
-        System.assertEquals(0, errors.size(), 'No Error Log should be created.');
+        executeTest_DeleteBlankAndNonNPSPRole(account);        
     }
 
     /*********************************************************************************************************
@@ -313,12 +104,96 @@ private class OPP_PrimaryContactRoleMerge_TEST {
             Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
         ));
 
-        deactivateTriggers();
-
         Account account = new Account(
             Name = 'TEST_ACCOUNT',
             npe01__SYSTEMIsIndividual__c = false
         );
+
+        executeTest_DeleteBlankAndNonNPSPRole(account); 
+    }
+
+    /*******************************************************************************************************
+    * @description Executes the Log Error test scenario.
+    * @return void.
+    ********************************************************************************************************/
+    private static void executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(Account account) {
+        deactivateTriggers();
+        
+        insert account;
+
+        Contact contact = new Contact(LastName = 'TEST_CONTACT');
+        insert contact;
+
+        Opportunity opportunity = new Opportunity(
+            Name = 'TEST_OPPORTUNITY',
+            StageName = UTIL_UnitTestData_TEST.getOpenStage(),
+            CloseDate = Date.today(),
+            AccountId = account.Id
+        );
+        insert opportunity;
+
+        List<OpportunityContactRole> primaryOCRs = new List<OpportunityContactRole>{
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = NON_NPSP_ROLE
+            ),
+            new OpportunityContactRole(
+                OpportunityId = opportunity.Id,
+                ContactId = contact.Id,
+                IsPrimary = true,
+                Role = NON_NPSP_ROLE
+            )
+        };
+        insert primaryOCRs;
+
+        activateTriggers();
+
+        Opportunity createdOpportunity = loadOpportunityWithOCRs(opportunity.Id);
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : createdOpportunity.OpportunityContactRoles) {
+            System.assert(
+                expectedOCR.ContactId == contact.Id && 
+                expectedOCR.Role == NON_NPSP_ROLE && 
+                expectedOCR.IsPrimary
+            );
+        }
+        
+        Test.startTest();
+        Database.executeBatch(new OPP_PrimaryContactRoleMerge_BATCH());
+        Test.stopTest();
+
+        Opportunity expectedOpportunity = loadOpportunityWithPrimaryOCRs(createdOpportunity.Id);
+        // Opportunity and the related Opportunity Contact Roles should not change.
+        System.assertEquals(2, expectedOpportunity.OpportunityContactRoles.size());
+        System.assertEquals(2, createdOpportunity.OpportunityContactRoles.size());
+        for (OpportunityContactRole expectedOCR : expectedOpportunity.OpportunityContactRoles) {
+            System.assert(
+                expectedOCR.ContactId == contact.Id && 
+                expectedOCR.Role == NON_NPSP_ROLE && 
+                expectedOCR.IsPrimary
+            );
+        }
+
+        List<Error__c> errors = [
+            SELECT Object_Type__c, Full_Message__c, Record_URL__c, Context_Type__c
+            FROM Error__c
+        ];
+        System.assertEquals(1, errors.size(), 'An Error Log should be created');
+        System.assertEquals(String.format(OPP_PrimaryContactRoleMerge.ERROR_MESSAGE, new List<String>{opportunity.Name}), errors[0].Full_Message__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_CONTEXT, errors[0].Context_Type__c);
+        System.assertEquals(OPP_PrimaryContactRoleMerge.ERROR_SOBJECT, errors[0].Object_Type__c);
+        System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunity.Id, errors[0].Record_URL__c);
+    }
+
+    /*******************************************************************************************************
+    * @description Executes the Remove Duplicates (delete blank and non NPSP Roles) test scenario.
+    * @return void.
+    ********************************************************************************************************/
+    private static void executeTest_DeleteBlankAndNonNPSPRole(Account account) {
+        deactivateTriggers();
+
         insert account;
 
         Contact contact = new Contact(LastName = 'TEST_CONTACT');
