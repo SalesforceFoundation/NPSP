@@ -6375,7 +6375,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
-        <value>Automatic Contact Roles</value>
+        <value>Default Contact Roles</value>
     </labels>
     <labels>
         <fullName>stgLabelBatchJobSizes</fullName>
