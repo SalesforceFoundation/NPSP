@@ -3,6 +3,7 @@
      * @description: setup for the filter group component which sets the active filter group and datatable
      */
     doInit: function (cmp, event, helper) {
+        helper.toggleSpinner(cmp, true);
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
         var objectList = cmp.get("v.detailObjects");
@@ -100,13 +101,6 @@
             cmp.set("v.filterRuleError", "");
         }
         helper.toggleFilterRuleModal(cmp);
-    },
-
-    /**
-     * @description: closes the toast notification window
-     */
-    closeNotificationWindow : function(cmp, event, helper) {
-        cmp.set("v.notificationClasses", "slds-hide");
     },
 
     /**

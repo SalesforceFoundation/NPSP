@@ -6,6 +6,7 @@
      */
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
+        helper.toggleSpinner(cmp, true);
          /*
          * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
@@ -22,7 +23,7 @@
         });
 
         var activeRollupId = cmp.get("v.activeRollupId");
-        if(activeRollupId === null){
+        if (activeRollupId === null) {
             activeRollupId = '';
         }
         var action = cmp.get("c.setupRollupDetail");
@@ -167,13 +168,6 @@
                 cmp.set("v.activeRollup.dateFieldLabel", label);
             }
         }
-    },
-
-    /**
-     * @description: closes the toast notification window
-     */
-    closeNotificationWindow : function(cmp, event, helper) {
-        cmp.set("v.notificationClasses", "slds-hide");
     }
 
 })

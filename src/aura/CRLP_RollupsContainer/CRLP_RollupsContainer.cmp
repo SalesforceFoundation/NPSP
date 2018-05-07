@@ -55,6 +55,7 @@
     <aura:attribute name="isFilterGroupsGrid" type="Boolean" access="private" description="Determines if Filter Groups Grid is shown."/>
     <aura:attribute name="isRollupDetail" type="Boolean" access="private" description="Determines if Rollups Detail is shown."/>
     <aura:attribute name="isFilterGroupDetail" type="Boolean" access="private" description="Determines if Filter Group Detail is shown."/>
+    <aura:attribute name="isCRLPEnabled" type="Boolean" access="private" description="Determines if CRLP is enabled." default="true"/>
     <aura:attribute name="lastActiveRecordId" type="Id" description="ID of the previous record to save for return."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container width."/>
     <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
@@ -62,207 +63,258 @@
     <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
                     access="private" default="slds-hide"/>
     <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
-    <aura:attribute name="toastStatus" type="String" description="Controls the color and icon of the toast. Options are info, success, error, or warning."
-                    access="private" default="success"/>
+    <aura:attribute name="toastStatus" type="String" access="private" default="success"
+                    description="Controls the color and icon of the toast. Options are info, success, error or warning."/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
-    <!-- markup -->
-    <!--START TOAST-->
-    <div class="slds-notify_container slds-float_left">
-        <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}" role="alert">
-            <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse" size="small" alternativeText="{!v.notificationText.alternativeText}"/>
-            <div class="slds-notify__content">
-                <h2 class="slds-text-heading_small">{!v.notificationText.title}</h2>
-                <p>{!v.notificationText.message}</p>
+    <!-- START MARKUP -->
+    <div class="rollupsDiv">
+
+        <!--START SPINNER-->
+        <div class="spinnerDiv">
+            <!--Hide the spinner by default-->
+            <lightning:spinner aura:id="waitingSpinner" alternativeText="Loading data"/>
+        </div>
+        <!--END SPINNER-->
+
+        <!--START TOAST-->
+        <div class="slds-notify_container slds-float_left">
+            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}"
+                 role="alert">
+                <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse"
+                                size="small" alternativeText="{!v.notificationText.alternativeText}"/>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small">{!v.notificationText.title}</h2>
+                    <p>{!v.notificationText.message}</p>
+                </div>
+                <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" class="slds-notify__close"
+                                      size="large"
+                                      onclick="{!c.closeNotificationWindow}" alternativeText="{!v.labels.ok}"
+                                      title="{!v.labels.close}"/>
             </div>
-            <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" class="slds-notify__close" size="large"
-                                  onclick="{!c.closeNotificationWindow}" alternativeText="{!v.labels.ok}"
-                                  title="{!v.labels.close}"/>
         </div>
-    </div>
-    <!--END TOAST-->
+        <!--END TOAST-->
 
-    <!--BEGIN BREADCRUMB-->
-    <div class="slds-p-horizontal_large slds-p-top_large">
-        <lightning:breadcrumbs>
-            <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="/apex/STG_SettingsManager"/>
-            <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
-                <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}" onclick="{!c.handleCancelBreadcrumbEvent}" name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
-                <aura:if isTrue="{!v.isFilterGroupDetail}">
-                    <lightning:breadcrumb label="{!v.labels.filterGroupLabelPlural}" onclick="{!c.handleCancelBreadcrumbEvent}" name="{!v.labels.filterGroupLabelPlural}" title="{!v.labels.filterGroupLabelPlural}"/>
-                </aura:if>
-            </aura:if>
-            <aura:if isTrue="{!and(v.isRollupDetail, v.lastActiveRecordId != null)}">
-                <lightning:breadcrumb label="{!v.labels.returnFilterGroup}" onclick="{!c.returnToFilterGroup}" name="{!v.labels.returnFilterGroup}" title="{!v.labels.returnFilterGroup}"/>
-            </aura:if>
-        </lightning:breadcrumbs>
-
-    </div>
-    <!--END BREADCRUMB-->
-
-    <!--BEGIN HEADER-->
-    <div class="slds-p-around_large">
-        <!--BEGIN TITLE-->
-        <lightning:layout>
-            <lightning:layoutItem largeDeviceSize="{!v.width}" size="12">
-                <lightning:layout horizontalAlign="spread">
-                    <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="6" size="12">
-                        <aura:if isTrue="{!v.isRollupsGrid}">
-                            <h1 class="slds-page-header__title" title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
-                        </aura:if>
-                        <aura:if isTrue="{!v.isFilterGroupsGrid}">
-                            <h1 class="slds-page-header__title" title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
-                        </aura:if>
-                        <aura:if isTrue="{!v.isRollupDetail}">
-                            <div class="slds-media">
-                                <div class="slds-media__figure">
-                                    <lightning:icon iconName="standard:merge" size="medium"
-                                                    alternativeText="Merge Icon"/>
-                                </div>
-                                <div class="slds-media__body">
-                                    <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
-                                    <h1 class="slds-page-header__title" title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
-                                </div>
-                            </div>
-                        </aura:if>
+        <!--BEGIN BREADCRUMB-->
+        <div class="slds-p-horizontal_large slds-p-top_large">
+            <lightning:breadcrumbs>
+                <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="/apex/STG_SettingsManager"/>
+                <aura:if isTrue="{!v.isCRLPEnabled}">
+                    <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
+                        <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}"
+                                              onclick="{!c.handleBreadcrumbEvent}"
+                                              name="{!v.labels.rollupSummaryTitle}" title="{!v.labels.rollupSummaryTitle}"/>
                         <aura:if isTrue="{!v.isFilterGroupDetail}">
-                            <div class="slds-media">
-                                <div class="slds-media__figure">
-                                    <lightning:icon iconName="action:filter" size="small"
-                                                    alternativeText="Filter Group Icon"/>
-                                </div>
-                                <div class="slds-media__body">
-                                    <p class="slds-text-heading_label ">{!v.labels.filterGroupLabel}</p>
-                                    <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
-                                        <h1 class="slds-page-header__title"
-                                            title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
-                                        <!--Else show mode header-->
-                                        <aura:set attribute="else">
-                                            <h1 class="slds-page-header__title"
-                                                title="{!v.labels.filterGroupNew}">{!v.labels.filterGroupNew}</h1>
-                                        </aura:set>
-                                    </aura:if>
-                                </div>
-                            </div>
+                            <lightning:breadcrumb label="{!v.labels.filterGroupLabelPlural}"
+                                                  onclick="{!c.handleBreadcrumbEvent}"
+                                                  name="{!v.labels.filterGroupLabelPlural}"
+                                                  title="{!v.labels.filterGroupLabelPlural}"/>
                         </aura:if>
-                    </lightning:layoutItem>
-                    <!--END TITLE-->
-                    <!--BEGIN BUTTONS-->
-                    <lightning:layoutItem smallDeviceSize="4" mediumDeviceSize="4" size="12" flexibility="auto">
-                        <lightning:buttonGroup class="slds-float_right">
-                            <aura:if isTrue="{!v.isRollupsGrid}">
-                                <lightning:button label="{!v.labels.rollupNew}" onclick="{!c.displayNewRollupForm}"/>
-                                <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}" onclick="{!c.displayFilterGroupsGrid}"/>
-                            </aura:if>
-                            <aura:if isTrue="{!v.isFilterGroupsGrid}">
-                                <lightning:button label="{!v.labels.filterGroupNew}" onclick="{!c.displayNewFilterGroupForm}"/>
-                                <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}" onclick="{!c.displayRollupsGrid}"/>
-                            </aura:if>
-                            <aura:if isTrue="{!and(v.isRollupDetail, v.detailMode == 'view')}">
-                                <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
-                                <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
-                                <lightning:button label="{!v.labels.delete}" name="delete" onclick="{!c.setMode}"/>
-                            </aura:if>
-                            <aura:if isTrue="{!and(v.isFilterGroupDetail, v.detailMode == 'view')}">
-                                <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
-                                <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
-                                <lightning:button label="{!v.labels.delete}" name="delete" onclick="{!c.setMode}"/>
-                            </aura:if>
-                        </lightning:buttonGroup>
-                    </lightning:layoutItem>
-                    <!--END BUTTONS-->
-                </lightning:layout>
-                <!--BEGIN FILTER-->
-                <lightning:layout>
-                    <aura:if isTrue="{!v.isRollupsGrid}">
-                        <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
-                            <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject" label="Select Rollup Type"
-                                              variant="label-hidden" onchange="{!c.filterBySummaryObject}" value="{!v.filteredSummaryObject}">
-                                <option value="All" text="{!v.labels.selectAll}"/>
-                                <aura:iteration items="{!v.summaryObjects}" var="obj">
-                                    <option value="{!obj.name}" text="{!obj.label}"/>
-                                </aura:iteration>
-                            </lightning:select>
-                        </lightning:layoutItem>
                     </aura:if>
-                </lightning:layout>
-                <!--END FILTER-->
-            </lightning:layoutItem>
-        </lightning:layout>
-    </div>
-    <!--END HEADER-->
+                    <aura:if isTrue="{!and(v.isRollupDetail, v.lastActiveRecordId != null)}">
+                        <lightning:breadcrumb label="{!v.labels.returnFilterGroup}" onclick="{!c.returnToFilterGroup}"
+                                              name="{!v.labels.returnFilterGroup}" title="{!v.labels.returnFilterGroup}"/>
+                    </aura:if>
+                </aura:if>
+            </lightning:breadcrumbs>
 
-    <!--BEGIN ROLLUPS GRID-->
-    <aura:if isTrue="{!v.isRollupsGrid}">
-        <div class="slds-p-horizontal_large slds-p-bottom_large">
-            <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
-                <lightning:datatable data="{!v.rollupList}"
-                                     columns="{!v.rollupColumns}"
-                                     class="lightningTable"
-                                     keyField="rollupName"
-                                     onsort="{!c.sortByColumns}"
-                                     hideCheckboxColumn="true"
-                                     onrowaction="{!c.handleRowAction}"
-                                     sortedBy="{!v.sortedBy}"
-                                     sortedDirection="{!v.sortedDirection}"
-                                     defaultSortDirection="asc"/>
-                <aura:set attribute="else">
-                    <ui:message severity="info" closable="false">
-                        {!v.labels.noRollups}
-                    </ui:message>
-                </aura:set>
-            </aura:if>
         </div>
+        <!--END BREADCRUMB-->
 
-    </aura:if>
-    <!--END ROLLUPS GRID-->
-
-    <!--BEGIN FILTER GROUPS GRID -->
-    <aura:if isTrue="{!v.isFilterGroupsGrid}">
-        <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
-            <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container">
-                <lightning:datatable data="{!v.filterGroupList}"
-                                     columns="{!v.filterGroupColumns}"
-                                     class="lightningTable"
-                                     keyField="filterGroupName"
-                                     onsort="{!c.sortByColumns}"
-                                     hideCheckboxColumn="true"
-                                     onrowaction="{!c.handleRowAction}"
-                                     sortedBy="{!v.sortedBy}"
-                                     sortedDirection="{!v.sortedDirection}"
-                                     defaultSortDirection="asc"
-                />
-                <aura:set attribute="else">
-                    <ui:message severity="info" closable="false">
-                        {!v.labels.noFilterGroups}
-                    </ui:message>
-                </aura:set>
+        <!-- START CRLP DISABLED MESSAGE -->
+        <aura:if isTrue="{! !v.isCRLPEnabled}">
+            <div class="slds-p-around_medium">
+                <div class="slds-notify slds-notify_toast slds-theme_warning">
+                    <lightning:icon iconName="utility:block_visitor" class="slds-p-right_small" variant="inverse"
+                                    size="small" alternativeText="{!v.notificationText.alternativeText}"/>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">{!v.labels.crlpNotEnabledTitle}</h2>
+                        <p>{!v.labels.crlpNotEnabledMessage}</p>
+                    </div>
+                </div>
             </div>
         </aura:if>
-    </aura:if>
-    <!--END FILTER GROUPS GRID-->
+        <!-- START CRLP DISABLED MESSAGE -->
 
-    <!--BEGIN ROLLUP DETAIL-->
-    <aura:if isTrue="{!v.isRollupDetail}">
-        <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}" activeRollupId="{#v.activeRecordId}"
-                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
-                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}" />
+        <!--BEGIN HEADER-->
+        <div class="slds-p-around_large">
+            <!--BEGIN TITLE-->
+            <lightning:layout>
+                <lightning:layoutItem largeDeviceSize="{!v.width}" size="12">
+                    <lightning:layout horizontalAlign="spread">
+                        <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="6" size="12">
+                            <aura:if isTrue="{!v.isRollupsGrid}">
+                                <h1 class="slds-page-header__title"
+                                    title="{!v.labels.rollupSummaryTitle}">{!v.labels.rollupSummaryTitle}</h1>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isFilterGroupsGrid}">
+                                <h1 class="slds-page-header__title"
+                                    title="{!v.labels.filterGroupLabelPlural}">{!v.labels.filterGroupLabelPlural}</h1>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isRollupDetail}">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <lightning:icon iconName="standard:merge" size="medium"
+                                                        alternativeText="Merge Icon"/>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <p class="slds-text-heading_label">{!v.labels.rollupLabel}</p>
+                                        <h1 class="slds-page-header__title"
+                                            title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
+                                    </div>
+                                </div>
+                            </aura:if>
+                            <aura:if isTrue="{!v.isFilterGroupDetail}">
+                                <div class="slds-media">
+                                    <div class="slds-media__figure">
+                                        <lightning:icon iconName="action:filter" size="small"
+                                                        alternativeText="Filter Group Icon"/>
+                                    </div>
+                                    <div class="slds-media__body">
+                                        <p class="slds-text-heading_label ">{!v.labels.filterGroupLabel}</p>
+                                        <aura:if
+                                                isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
+                                            <h1 class="slds-page-header__title"
+                                                title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
+                                            <!--Else show mode header-->
+                                            <aura:set attribute="else">
+                                                <h1 class="slds-page-header__title"
+                                                    title="{!v.labels.filterGroupNew}">{!v.labels.filterGroupNew}</h1>
+                                            </aura:set>
+                                        </aura:if>
+                                    </div>
+                                </div>
+                            </aura:if>
+                        </lightning:layoutItem>
+                        <!--END TITLE-->
+                        <!--BEGIN BUTTONS-->
+                        <lightning:layoutItem smallDeviceSize="4" mediumDeviceSize="4" size="12" flexibility="auto">
+                            <lightning:buttonGroup class="slds-float_right">
+                                <aura:if isTrue="{!v.isRollupsGrid}">
+                                    <lightning:button label="{!v.labels.rollupNew}"
+                                                      onclick="{!c.displayNewRollupForm}"/>
+                                    <lightning:button label="{!v.labels.view+' '+v.labels.filterGroupLabelPlural}"
+                                                      onclick="{!c.displayFilterGroupsGrid}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!v.isFilterGroupsGrid}">
+                                    <lightning:button label="{!v.labels.filterGroupNew}"
+                                                      onclick="{!c.displayNewFilterGroupForm}"/>
+                                    <lightning:button label="{!v.labels.view+' '+v.labels.rollupSummaryTitle}"
+                                                      onclick="{!c.displayRollupsGrid}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.isRollupDetail, v.detailMode == 'view')}">
+                                    <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
+                                    <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
+                                    <lightning:button label="{!v.labels.delete}" name="delete" onclick="{!c.setMode}"/>
+                                </aura:if>
+                                <aura:if isTrue="{!and(v.isFilterGroupDetail, v.detailMode == 'view')}">
+                                    <lightning:button label="{!v.labels.edit}" name="edit" onclick="{!c.setMode}"/>
+                                    <lightning:button label="{!v.labels.clone}" name="clone" onclick="{!c.setMode}"/>
+                                    <lightning:button label="{!v.labels.delete}" name="delete" onclick="{!c.setMode}"/>
+                                </aura:if>
+                            </lightning:buttonGroup>
+                        </lightning:layoutItem>
+                        <!--END BUTTONS-->
+                    </lightning:layout>
+                    <!--BEGIN FILTER-->
+                    <lightning:layout>
+                        <aura:if isTrue="{!v.isRollupsGrid}">
+                            <lightning:layoutItem smallDeviceSize="6" mediumDeviceSize="3" size="12">
+                                <lightning:select aura:id="selectSummaryObject" name="selectSummaryObject"
+                                                  label="Select Rollup Type"
+                                                  variant="label-hidden" onchange="{!c.filterBySummaryObject}"
+                                                  value="{!v.filteredSummaryObject}">
+                                    <option value="All" text="{!v.labels.selectAll}"/>
+                                    <aura:iteration items="{!v.summaryObjects}" var="obj">
+                                        <option value="{!obj.name}" text="{!obj.label}"/>
+                                    </aura:iteration>
+                                </lightning:select>
+                            </lightning:layoutItem>
+                        </aura:if>
+                    </lightning:layout>
+                    <!--END FILTER-->
+                </lightning:layoutItem>
+            </lightning:layout>
         </div>
-    </aura:if>
-    <!--END ROLLUP DETAIL-->
+        <!--END HEADER-->
 
-    <!--BEGIN FILTER GROUP DETAIL-->
-    <aura:if isTrue="{!v.isFilterGroupDetail}">
-        <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-            <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}" activeFilterGroupId="{#v.activeRecordId}"
-                                mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
-                                summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
-        </div>
-    </aura:if>
-    <!--END FILTER GROUP DETAIL-->
+        <!--BEGIN ROLLUPS GRID-->
+        <aura:if isTrue="{!v.isRollupsGrid}">
+            <div class="slds-p-horizontal_large slds-p-bottom_large">
+                <aura:if isTrue="{!and(v.isRollupsGrid, v.rollupList.length > 0)}">
+                    <lightning:datatable data="{!v.rollupList}"
+                                         columns="{!v.rollupColumns}"
+                                         class="lightningTable"
+                                         keyField="rollupName"
+                                         onsort="{!c.sortByColumns}"
+                                         hideCheckboxColumn="true"
+                                         onrowaction="{!c.handleRowAction}"
+                                         sortedBy="{!v.sortedBy}"
+                                         sortedDirection="{!v.sortedDirection}"
+                                         defaultSortDirection="asc"/>
+                    <aura:set attribute="else">
+                        <ui:message severity="info" closable="false">
+                            {!v.labels.noRollups}
+                        </ui:message>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+        </aura:if>
+        <!--END ROLLUPS GRID-->
+
+        <!--BEGIN FILTER GROUPS GRID -->
+        <aura:if isTrue="{!v.isFilterGroupsGrid}">
+            <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
+                <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container">
+                    <lightning:datatable data="{!v.filterGroupList}"
+                                         columns="{!v.filterGroupColumns}"
+                                         class="lightningTable"
+                                         keyField="filterGroupName"
+                                         onsort="{!c.sortByColumns}"
+                                         hideCheckboxColumn="true"
+                                         onrowaction="{!c.handleRowAction}"
+                                         sortedBy="{!v.sortedBy}"
+                                         sortedDirection="{!v.sortedDirection}"
+                                         defaultSortDirection="asc"
+                    />
+                    <aura:set attribute="else">
+                        <ui:message severity="info" closable="false">
+                            {!v.labels.noFilterGroups}
+                        </ui:message>
+                    </aura:set>
+                </div>
+            </aura:if>
+        </aura:if>
+        <!--END FILTER GROUPS GRID-->
+
+        <!--BEGIN ROLLUP DETAIL-->
+        <aura:if isTrue="{!v.isRollupDetail}">
+            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
+                <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}"
+                               activeRollupId="{#v.activeRecordId}"
+                               mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
+                               summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
+            </div>
+        </aura:if>
+        <!--END ROLLUP DETAIL-->
+
+        <!--BEGIN FILTER GROUP DETAIL-->
+        <aura:if isTrue="{!v.isFilterGroupDetail}">
+            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
+                <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}"
+                                    activeFilterGroupId="{#v.activeRecordId}"
+                                    mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
+                                    summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
+            </div>
+        </aura:if>
+        <!--END FILTER GROUP DETAIL-->
+
+    </div>
+
+    <!-- END MARKUP -->
 
 </aura:component>
