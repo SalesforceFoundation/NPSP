@@ -16,52 +16,118 @@
 
                 var labels = model.labels;
                 cmp.set("v.labels", labels);
-                var sortedData = helper.sortData(cmp, 'displayName', 'asc', model.items);
-                cmp.set("v.rollupList", sortedData);
-                cmp.set("v.cachedRollupList", sortedData);
-                cmp.set("v.filterGroupList", model.filterGroups);
 
-                var actions = [{label: labels.edit, name:'edit'}
-                    , {label: labels.clone, name:'clone'}
-                ];
+                //notify user that CRLP is disabled or proceed with setting data
+                if (!model.isCRLPEnabled) {
+                    cmp.set("v.isCRLPEnabled", false);
 
-                //these are the current lists of summary + detail objects in the app
-                var summaryObjects = [{label: labels.labelAccount, name: labels.objectAccount}
-                    , {label: labels.labelContact, name: labels.objectContact}
-                    , {label: labels.labelGAU, name: labels.objectGAU}
-                    , {label: labels.labelRD, name: labels.objectRD}];
-                cmp.set("v.summaryObjects", summaryObjects);
+                } else {
+                    var sortedData = helper.sortData(cmp, 'displayName', 'asc', model.items);
+                    cmp.set("v.rollupList", sortedData);
+                    cmp.set("v.cachedRollupList", sortedData);
+                    cmp.set("v.filterGroupList", model.filterGroups);
 
-                var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
-                    , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
-                    , {label: labels.labelPayment, name: labels.objectPayment}
-                    , {label: labels.labelAllocation, name: labels.objectAllocation}];
-                cmp.set("v.detailObjects", detailObjects);
+                    var actions = [{label: labels.edit, name: 'edit'}
+                        , {label: labels.clone, name: 'clone'}
+                    ];
 
-                var rollupColumns = [{label: labels.name, fieldName: 'displayName', type: 'button', sortable: 'true', initialWidth: 300
-                                , typeAttributes: {label: {fieldName: 'displayName'}, name: 'view', variant: 'bare', title: {fieldName: 'description'}}}
-                            , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
-                            , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
-                            , {label: labels.creditType, fieldName: 'creditType', type: 'string', sortable: 'true', initialWidth: 150}
-                            , {label: labels.operation, fieldName: 'operation', type: 'string', sortable: 'true', initialWidth: 130}
-                            , {label: labels.filterGroupLabel, fieldName: 'filterGroupName', type: 'string', sortable: 'true'}
-                            , {label: labels.active, fieldName: 'active', type: 'string', sortable: 'true', initialWidth: 100
-                                , cellAttributes: {iconName: {fieldName: 'activeIcon'}}}
-                            , {type: 'action', typeAttributes: { rowActions: actions }}
-                            ];
-                cmp.set("v.rollupColumns", rollupColumns);
+                    //these are the current lists of summary + detail objects in the app
+                    var summaryObjects = [{label: labels.labelAccount, name: labels.objectAccount}
+                        , {label: labels.labelContact, name: labels.objectContact}
+                        , {label: labels.labelGAU, name: labels.objectGAU}
+                        , {label: labels.labelRD, name: labels.objectRD}];
+                    cmp.set("v.summaryObjects", summaryObjects);
 
-                var filterGroupColumns = [{label: labels.name, fieldName: 'label', type: 'button', sortable: 'true', typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}}
-                    , {label: labels.filterGroupDescription, fieldName: 'description', type: 'string', sortable: 'true'}
-                    , {label: labels.countOf+ ' ' + labels.filterRuleLabelPlural, fieldName: 'countFilterRules', type: 'number', sortable: 'true', initialWidth: 200}
-                    , {label: labels.countOf+ ' ' + labels.rollupLabelPlural, fieldName: 'countRollups', type: 'number', sortable: 'true', initialWidth: 200}
-                    , {type: 'action', typeAttributes: { rowActions: actions }}
-                ];
+                    var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+                        , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
+                        , {label: labels.labelPayment, name: labels.objectPayment}
+                        , {label: labels.labelAllocation, name: labels.objectAllocation}];
+                    cmp.set("v.detailObjects", detailObjects);
 
-                cmp.set("v.filterGroupColumns", filterGroupColumns);
+                    var rollupColumns = [{
+                        label: labels.name,
+                        fieldName: 'displayName',
+                        type: 'button',
+                        sortable: 'true',
+                        initialWidth: 300
+                        ,
+                        typeAttributes: {
+                            label: {fieldName: 'displayName'},
+                            name: 'view',
+                            variant: 'bare',
+                            title: {fieldName: 'description'}
+                        }
+                    }
+                        , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
+                        , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
+                        , {
+                            label: labels.creditType,
+                            fieldName: 'creditType',
+                            type: 'string',
+                            sortable: 'true',
+                            initialWidth: 150
+                        }
+                        , {
+                            label: labels.operation,
+                            fieldName: 'operation',
+                            type: 'string',
+                            sortable: 'true',
+                            initialWidth: 130
+                        }
+                        , {
+                            label: labels.filterGroupLabel,
+                            fieldName: 'filterGroupName',
+                            type: 'string',
+                            sortable: 'true'
+                        }
+                        , {
+                            label: labels.active,
+                            fieldName: 'active',
+                            type: 'string',
+                            sortable: 'true',
+                            initialWidth: 100
+                            ,
+                            cellAttributes: {iconName: {fieldName: 'activeIcon'}}
+                        }
+                        , {type: 'action', typeAttributes: {rowActions: actions}}
+                    ];
+                    cmp.set("v.rollupColumns", rollupColumns);
 
-                cmp.set("v.isRollupsGrid",true);
-                cmp.set("v.isFilterGroupsGrid",false);
+                    var filterGroupColumns = [{
+                        label: labels.name,
+                        fieldName: 'label',
+                        type: 'button',
+                        sortable: 'true',
+                        typeAttributes: {label: {fieldName: 'label'}, name: 'view', variant: 'bare'}
+                    }
+                        , {
+                            label: labels.filterGroupDescription,
+                            fieldName: 'description',
+                            type: 'string',
+                            sortable: 'true'
+                        }
+                        , {
+                            label: labels.countOf + ' ' + labels.filterRuleLabelPlural,
+                            fieldName: 'countFilterRules',
+                            type: 'number',
+                            sortable: 'true',
+                            initialWidth: 200
+                        }
+                        , {
+                            label: labels.countOf + ' ' + labels.rollupLabelPlural,
+                            fieldName: 'countRollups',
+                            type: 'number',
+                            sortable: 'true',
+                            initialWidth: 200
+                        }
+                        , {type: 'action', typeAttributes: {rowActions: actions}}
+                    ];
+
+                    cmp.set("v.filterGroupColumns", filterGroupColumns);
+
+                    cmp.set("v.isRollupsGrid", true);
+                    cmp.set("v.isFilterGroupsGrid", false);
+                }
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
@@ -74,6 +140,7 @@
                     console.log("Unknown error");
                 }
             }
+            helper.toggleSpinner(cmp, false);
         });
 
         $A.enqueueAction(action);
@@ -144,7 +211,7 @@
     /**
      * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
      */
-    handleCancelBreadcrumbEvent: function(cmp, event, helper){
+    handleBreadcrumbEvent: function(cmp, event, helper){
         var labels = cmp.get("v.labels");
         var breadcrumbName = event.getSource().get('v.name');
         cmp.set("v.lastActiveRecordId", null);
@@ -166,10 +233,18 @@
         var channel = event.getParam("channel");
 
         console.log("handleMessage: " + channel);
+        console.log(JSON.stringify(message));
 
-        //message is the masterLabel
+        //ordered by frequency
         if (channel === 'cancelEvent') {
             helper.handleCancelDetailEvent(cmp, message.grid);
+
+        } else if (channel === 'toggleSpinner') {
+            helper.toggleSpinner(cmp, message.showSpinner);
+
+        } else if (channel === 'showToast') {
+            helper.showToast(cmp, message.type, message.title, message.message);
+
         } else if (channel === 'nameChange'){
             //note: full javascript object must be used here: cmp.set("v.activeRecord.MasterLabel", message) won't work
             var activeRecord = cmp.get("v.activeRecord");
@@ -181,35 +256,16 @@
 
         } else if (channel === 'filterRecordChange') {
             helper.mergeRowItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
-
             //update record name for the detail page
             var activeRecord = cmp.get("v.activeRecord");
             activeRecord.MasterLabel = message.MasterLabel;
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupDeleted') {
-            var rollupsList = cmp.get("v.rollupList");
-            for (var i = 0; i < rollupsList.length; i++) {
-                if (rollupsList[i].recordName === message) {
-                    // if the Id matches, delete that record
-                    rollupsList.splice(i, 1);
-                    break;
-                }
-            }
-            cmp.set("v.rollupList", rollupsList);
-            helper.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+            helper.deleteRollup(cmp, message);
 
         } else if (channel === 'filterGroupDeleted') {
-            var filterGroupList = cmp.get("v.filterGroupList");
-            for (var i = 0; i < filterGroupList.length; i++) {
-                if (filterGroupList[i].name === message) {
-                    // if the Id matches, delete that record
-                    filterGroupList.splice(i, 1);
-                    break;
-                }
-            }
-            cmp.set("v.filterGroupList", filterGroupList);
-            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+            helper.deleteFilterGroup(cmp, message);
 
         } else if (channel === 'navigateEvent') {
             helper.handleNavigateEvent(cmp, message);
@@ -227,11 +283,11 @@
         cmp.set("v.detailMode", action.name);
         cmp.set("v.activeRecordId", row.recordId);
         //check which grid is displayed
-        if(isRollupsGrid){
+        if (isRollupsGrid) {
             cmp.set("v.isRollupsGrid", false);
             cmp.set("v.isRollupDetail", true);
             cmp.set("v.width", 8);
-        } else{
+        } else {
             cmp.set("v.isFilterGroupsGrid", false);
             cmp.set("v.isFilterGroupDetail", true);
             cmp.set("v.width", 8);

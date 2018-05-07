@@ -82,6 +82,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public List<RollupTableItem> items;
         @AuraEnabled public Map<String, String> labels;
         @AuraEnabled public List<FilterGroupTableItem> filterGroups;
+        @AuraEnabled public Boolean isCRLPEnabled;
 
     }
 
@@ -126,8 +127,15 @@ public with sharing class CRLP_RollupUI_SVC {
     public static String setupRollupGrid() {
         RollupGridModel model = new RollupGridModel();
 
-        model.items = getRollupDefinitions();
         model.labels = getAppLabels();
+        model.isCRLPEnabled = Customizable_Rollup_Settings__c.getOrgDefaults().Customizable_Rollups_Enabled__c;
+
+        //return early with just labels and CRLP enabled flag if CRLP is disabled
+        if (!model.isCRLPEnabled) {
+            return JSON.serialize(model);
+        }
+
+        model.items = getRollupDefinitions();
         model.filterGroups = getFilterGroupDefinitions();
 
         //serialize to avoid passing inner classes, which is technically unsupported
@@ -528,6 +536,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'createDateFieldHelp' => Label.CRLP_CreateRollupDateFieldHelpText,
                 'createAmountFieldHelp' => Label.CRLP_CreateRollupAmountFieldHelpText,
                 'creditType' => Label.CRLP_CreditType,
+                'crlpNotEnabledTitle' => Label.CRLP_DisabledTitle,
+                'crlpNotEnabledMessage' => Label.CRLP_DisabledMessage,
                 'dateField' => Schema.Rollup__mdt.Date_Field__c.getDescribe().getLabel(),
                 'dateObject' => Schema.Rollup__mdt.Date_Object__c.getDescribe().getLabel(),
                 'daysBackError' => Label.CRLP_DaysBack,

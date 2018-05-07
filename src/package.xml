@@ -1127,6 +1127,8 @@
         <members>CRLP_DeleteProgress</members>
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
+        <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DisabledMessage</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
