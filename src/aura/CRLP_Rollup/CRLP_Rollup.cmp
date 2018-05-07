@@ -73,43 +73,16 @@
     <aura:attribute name="dateFields" type="List" description="Dependent list of date fields" access="private"/>
     <aura:attribute name="isIncomplete" type="Boolean" description="Controls whether Save button is disabled"
                     access="private" default="false"/>
-    <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
-                    access="private" default="slds-hide"/>
-    <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
-    <aura:attribute name="toastStatus" type="String" description="Controls the color and icon of the toast. Options are info, success, error, or warning."
-                    access="private" default="success"/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
     <aura:handler name="change" value="{!v.mode}" action="{!c.onChangeMode}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.onSelectValueChange}"/>
 
-    <!-- markup -->
+    <!-- START MARKUP -->
 
     <!--START FORM-->
     <div aria-labelledby="rollupdetail">
-
-        <!--START SPINNER -->
-        <div class="spinnerDiv">
-            <!--Hide the spinner by default-->
-            <lightning:spinner aura:id="waitingSpinner" alternativeText="Loading data"/>
-        </div>
-        <!--END SPINNER-->
-
-        <!--START TOAST-->
-        <div class="slds-notify_container slds-float_left">
-            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}" role="alert">
-                <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse" size="small" alternativeText="{!v.notificationText.alternativeText}"/>
-                <div class="slds-notify__content">
-                    <h2 class="slds-text-heading_small">{!v.notificationText.title}</h2>
-                    <p>{!v.notificationText.message}</p>
-                </div>
-                <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" class="slds-notify__close" size="large"
-                                      onclick="{!c.closeNotificationWindow}" alternativeText="{!v.labels.ok}"
-                                      title="{!v.labels.close}"/>
-            </div>
-        </div>
-        <!--END TOAST-->
 
         <form>
             <lightning:layout>
@@ -394,6 +367,6 @@
     </div>
     <!-- END MODAL -->
 
-    <!-- end markup -->
+    <!-- END MARKUP -->
 
 </aura:component>
