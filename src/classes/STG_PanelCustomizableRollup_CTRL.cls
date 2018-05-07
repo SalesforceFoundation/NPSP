@@ -84,7 +84,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     /*******************************************************************************************************
     * @description the existing value of the CRLP enablement setting, cached upon entering edit mode
     */
-    private Boolean cachedSetting;
+    private Boolean isCRLPenabledPrevious;
 
     /*******************************************************************************************************
     * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
@@ -93,7 +93,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public virtual override PageReference editSettings() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         // cache the status of CRLP settings upon entering edit mode so we can check for no change
-        cachedSetting = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
+        isCRLPenabledPrevious = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
         isEditMode = true;
         return null;
     }
@@ -108,14 +108,14 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = false;
 
-        Boolean settingHasChanged = (cachedSetting != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
+        Boolean settingHasChanged = (isCRLPenabledPrevious != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
 
         if (settingHasChanged) {
             // we only proceed with deployment/save if they changed the checkbox.
 
-            // if they hit edit and then they immediately hit save,
-            // we do NOT want to reset their CRLP customizations (if both were true)
-            // or run extraneous code (if both were false) so in that case we do nothing.
+            // if they hit edit and then they hit save without changing the setting checkbox,
+            // we do NOT want to reset their CRLP customizations (if the box was/is true)
+            // or run extraneous code (if the box was/is false) so in that case we do nothing.
             // they have essentially hit cancel.
 
             Savepoint sp = Database.setSavepoint();
@@ -130,8 +130,9 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                     // The deployment method takes care of setting the Enabled flag to true if it succeeds.
                     // In here, we only set it to false in the case on disabling CRLPs.
                     stgService.saveAll();
+                    // reset to legacy jobs
+                    UTIL_MasterSchedulableHelper.setScheduledJobs();
                 }
-                UTIL_MasterSchedulableHelper.setScheduledJobs();
             } catch (Exception e) {
                 Database.rollback(sp);
                 ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
@@ -165,6 +166,8 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
             isPolling = false;
             if (newStatus.contains('Succeeded')) {
+                // reset to CRLP jobs
+                UTIL_MasterSchedulableHelper.setScheduledJobs();
                 return null;
             } else {
                 crlpSettings.Customizable_Rollups_Enabled__c = false;
