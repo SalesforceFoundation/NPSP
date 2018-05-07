@@ -40,11 +40,9 @@ public with sharing class OPP_PrimaryContactRoleMerge {
     @TestVisible private static final String ERROR_CONTEXT = 'Remove Duplicate Primary OCRs';
     @TestVisible private static final String ERROR_SOBJECT = UTIL_Describe.getObjectLabel('Opportunity');
 
-    private String settingsRole;
     private List<AggregateResult> primaryOCRsAggregateResult;
 
     public OPP_PrimaryContactRoleMerge(List<Opportunity> opportunities) {
-        settingsRole = UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c;
         primaryOCRsAggregateResult = getPrimaryOCRsAggregateResult(opportunities);
     }
 
@@ -57,6 +55,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
         DuplicatePrimaryOCRs duplicatePrimaryOCRs = new DuplicatePrimaryOCRs(primaryOCRsAggregateResult);
 
         for (Opportunity opportunityRecord : duplicatePrimaryOCRs.getOpportunities()) {
+            String settingsRole = getSettingsRole(opportunityRecord.Account);
             OpportunityPrimaryOCRs opportunityPrimaryOCRs = new OpportunityPrimaryOCRs(opportunityRecord);
 
             if (opportunityPrimaryOCRs.containsRole(settingsRole) == false) {
@@ -86,6 +85,17 @@ public with sharing class OPP_PrimaryContactRoleMerge {
             GROUP BY OpportunityId 
             HAVING COUNT(Id) > 1
         ];
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the NPSP Settings Role based on the Account type.
+    * @param Account. The Opportunity Account.
+    * @return String. The NPSP Settings Role based on the Account Type.
+    ********************************************************************************************************/
+    private String getSettingsRole(Account inputAccount) {
+        return inputAccount.npe01__SYSTEMIsIndividual__c ? 
+                UTIL_CustomSettingsFacade.getContactsSettings().npe01__Opportunity_Contact_Role_Default_role__c :
+                UTIL_CustomSettingsFacade.getContactsSettings().Contact_Role_for_Organizational_Opps__c;
     }
 
     /*******************************************************************************************************
@@ -171,7 +181,7 @@ public with sharing class OPP_PrimaryContactRoleMerge {
                 opportunityIds.add((Id) aggregateResult.get('OpportunityId'));
             }
             return [
-                SELECT Name, Primary_Contact__c, (
+                SELECT Name, Primary_Contact__c, Account.npe01__SYSTEMIsIndividual__c, (
                     SELECT OpportunityId, ContactId, Role, IsPrimary
                     FROM OpportunityContactRoles
                     WHERE IsPrimary = true
