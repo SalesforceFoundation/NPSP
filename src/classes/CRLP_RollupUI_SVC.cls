@@ -69,7 +69,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String description;
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
-        @AuraEnabled public String recordName;
+        @AuraEnabled public String name;
         @AuraEnabled public String recordId;
         @AuraEnabled public Boolean isDeleted;
     }
@@ -266,7 +266,7 @@ public with sharing class CRLP_RollupUI_SVC {
             FilterGroupTableItem item = new FilterGroupTableItem();
 
             item.label = mdtList[i].MasterLabel;
-            item.recordName = mdtList[i].DeveloperName;
+            item.name = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);
@@ -590,6 +590,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 'na' => Label.stgNotApplicable,
                 'next' => Label.labelListViewNext,
                 'noFields' => Label.stgLabelPaymentMapNoValidFields,
+                'noDetailFieldsMessage' => Label.CRLP_NoAvailableDetailFieldsMessage,
+                'noTargetFieldsMessage' => Label.CRLP_NoAvailableTargetFieldsMessage,
                 'noObjects' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel().toLowerCase()}),
                 'noFilterGroups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabelPlural()}),
                 'noFilterGroupSelect' => Label.CRLP_NoFilterGroupSelected,

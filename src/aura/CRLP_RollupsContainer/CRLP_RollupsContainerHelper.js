@@ -7,7 +7,7 @@
     */
     deleteGridItem: function (cmp, list, recordName, grid) {
         for (var i = 0; i < list.length; i++) {
-            if (list[i].recordName === recordName) {
+            if (list[i].recordName === recordName || list[i].name === recordName) {
                 // if the Id matches, delete that record
                 list.splice(i, 1);
                 break;

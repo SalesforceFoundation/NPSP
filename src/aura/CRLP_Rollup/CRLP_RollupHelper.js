@@ -1251,14 +1251,14 @@
     },
 
     /** 
-    * @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't selected
+    * @description: disables save button if a detail field is required for a single result operation and detail field or rollup type isn't visible
     * @param detailField: selected detail field API name
     */
     verifyRollupSaveActive: function(cmp, detailField) {
         var renderMap = cmp.get("v.renderMap");
         var selectedRollup = cmp.get("v.selectedRollupType");
 
-        if (selectedRollup.label) {
+        if (renderMap["rollupType"]) {
             if (!renderMap["detailField"]) {
                 //if detail field isn't required, save button enables
                 cmp.set("v.isIncomplete", false);
