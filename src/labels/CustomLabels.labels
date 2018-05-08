@@ -786,7 +786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine which records don't get rolled up.</value>
+        <value>The field shows which filter group to apply to this rollup. A filter group is a collection of filter rules that determine which records get rolled up.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupOperationHelpText</fullName>
@@ -898,7 +898,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Timeout error message</shortDescription>
-        <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
+        <value>Deleting the {0} has timed out. Please try again.</value>
     </labels>
     <labels>
         <fullName>CRLP_DisabledTitle</fullName>
