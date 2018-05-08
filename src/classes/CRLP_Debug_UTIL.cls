@@ -31,7 +31,10 @@
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Debug Logger
-* @description TEMPORARY USE ONLY
+* @description Simple debugging utilty for Customizable Rollups. The CRLP_Debug_UTIL.setCurrentRollupState() method
+* is called periodically throughout the code to store data in a static list<> var. The getCurrentRollupState() method
+* returns a concatenated version of that list as a single string. Note that calling setCurrentRollupState() in nested
+* for loops (which is effectively what happens in rollups) will have an impact on performance when debugging is enabled.
 */
 public class CRLP_Debug_UTIL {
 
