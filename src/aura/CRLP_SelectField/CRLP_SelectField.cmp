@@ -57,8 +57,6 @@
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
 
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
-        <!--Field Label: {!v.fieldLabel}<br/>
-        Entity Label: {!v.entityLabel}-->
         <aura:if isTrue="{!v.isReadOnly}">
             <lightning:input aura:id="inputField"
                              label="{!v.fieldLabel}"
