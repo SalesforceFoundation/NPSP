@@ -1242,8 +1242,9 @@
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
-        if (!activeRollup.intValue && renderMap["integerDays"]) {
-            cmp.find("integerInput").showHelpMessageIfInvalid();
+        var integerInput = cmp.find("integerInput");
+        if (renderMap["integerDays"] && !integerInput.get("v.validity").valid) {
+            integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }
 
