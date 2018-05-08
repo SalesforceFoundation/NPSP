@@ -3,9 +3,9 @@
     <fields>
         <fullName>Advancement_Namespace__c</fullName>
         <defaultValue>&quot;adv1&quot;</defaultValue>
-        <description>The namespace of the Gift Processing package.</description>
+        <description>For system use only: Namespace for cross package functionality.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The namespace of the Gift Processing package.</inlineHelpText>
+        <inlineHelpText>For system use only: Namespace for cross package functionality.</inlineHelpText>
         <label>Advancement Namespace</label>
         <length>10</length>
         <required>false</required>
