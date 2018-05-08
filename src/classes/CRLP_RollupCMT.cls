@@ -166,7 +166,7 @@ public class CRLP_RollupCMT {
             try {
                 // obfuscating "Partial Soft Credit" object; relabeling to simply "Soft Credit"
                 this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
-                this.fieldLabel = filterRule.Field__r.MasterLabel;
+                this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
                 this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
                 this.isDeleted = filterRule.Is_Deleted__c;
@@ -302,7 +302,7 @@ public class CRLP_RollupCMT {
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
-                this.detailFieldLabel = rlp.Detail_Field__r.Label;
+                this.detailFieldLabel = UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
                 this.amountObjectLabel = rlp.Amount_Object__r.Label;
                 this.amountFieldLabel = rlp.Amount_Field__r.Label;
                 this.dateObjectLabel = rlp.Date_Object__r.Label;

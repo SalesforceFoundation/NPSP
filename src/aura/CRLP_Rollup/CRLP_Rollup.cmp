@@ -208,16 +208,17 @@
                             <lightning:layoutItem padding="around-medium" smallDeviceSize="6" mediumDeviceSize="3"
                                                   size="12">
                                 <aura:if isTrue="{!not(v.isReadOnly)}">
-                                    <c:CRLP_Tooltip helpText="{!v.labels.createTimeBoundHelp}" fieldLabel="{!v.selectedTimeBoundOperationLabel}"/>
+                                    <c:CRLP_Tooltip helpText="{!v.labels.createDaysHelp}" fieldLabel="{!v.selectedTimeBoundOperationLabel}" isRequired="true"/>
                                 </aura:if>
                                 <lightning:input aura:id="integerInput"
                                                  type="text"
                                                  label="{!v.selectedTimeBoundOperationLabel}"
                                                  value="{!v.activeRollup.intValue}"
                                                  readonly="{!v.isReadOnly}"
-                                                 pattern="^[0-9]*$"
+                                                 pattern="^\d{1,4}|10000$"
                                                  messageWhenPatternMismatch="{!v.labels.daysBackError}"
-                                                 variant="{!v.isReadOnly ? '' : 'label-hidden'}"/>
+                                                 variant="{!v.isReadOnly ? '' : 'label-hidden'}"
+                                                 required="true"/>
                             </lightning:layoutItem>
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.integerYears}">
