@@ -274,8 +274,6 @@
                 //To display action column icons
                 function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-                    // Handsontable.TextCell.renderer.apply(this, arguments);
-
                     var dataRowId = instance.getDataAtRowProp(row, 'Id');
 
                     var isDisabled = 'disabled=\"false\"';
@@ -293,19 +291,28 @@
                     td.innerHTML = actionIcon;
                     return td;
                 }
+
+                function bgeActionRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+                    var escaped = '<button>click me</button>';
+                    td.innerHTML = escaped;
+
+                    return td;
+                }
+
                 $(document).ready(function() {
 
                     $('.action-items').click(function() {
                         console.log('asasd');
-                        // that = this;
-                        // var options = $(that).closest('.action-global').find('.action-options');
+                        that = this;
+                        var options = $(that).closest('.action-global').find('.action-options');
 
-                        // if ($(options).hasClass('slds-hide')) {
-                        //     $('.options').removeClass("slds-hide");
-                        // }
-                        // else {
-                        //     $('.options').addClass("slds-hide");
-                        // }
+                        if ($(options).hasClass('slds-hide')) {
+                            $(options).removeClass("slds-hide");
+                        }
+                        else {
+                            $(options).addClass("slds-hide");
+                        }
                     });
 
                     $('.remove-my-row').click(function() {
@@ -335,10 +342,10 @@
 
                 var actionCol = new Object();
                 actionCol.title = 'ACTIONS';
-                actionCol.type = 'text';
                 actionCol.data = 'Actions';
                 actionCol.colWidths = 80;
                 actionCol.className = "htCenter htMiddle";
+                actionCol.disableVisualSelection = true;
 
                 dynamicColumns.push(errorCol);
                 dynamicColumns.push(actionCol);
@@ -404,6 +411,8 @@
                     }
 
                     if (templateField.type === "dropdown") {
+
+                        console.warn(templateField);
 
                         // Check if by any change the list containing picklist values are null empty or undefined.
                         if (templateField.pickListValuesList) {
@@ -478,104 +487,105 @@
                         else if (col == 1) {
 
                             return { type: { renderer: actionCellsRenderer } };
+                            // return { type: { renderer: bgeActionRenderer } };
                         }
 
                     },
 
-                    // beforeRemoveRow: function(index, amount){
+                    beforeRemoveRow: function(index, amount){
 
-                    //     if (!deletingRecords) {
+                        if (!deletingRecords) {
 
-                    //         var selection = hot.getSelected();
+                            var selection = hot.getSelected();
 
-                    //         if(selection != undefined) {
+                            if(selection != undefined) {
 
-                    //             var r = confirm("Delete record?");
+                                var r = confirm("Delete record?");
 
-                    //             if (r == true) {
+                                if (r == true) {
 
-                    //                 // Set the flag on true so the "before remove" event does not fire the individual remove function hence showing an exception error.
-                    //                 deletingRecords = true;
+                                    // Set the flag on true so the "before remove" event does not fire the individual remove function hence showing an exception error.
+                                    deletingRecords = true;
 
-                    //                 var start = selection[0];
-                    //                 var end = selection[2];
-                    //                 var gridData = hot.getData();
-                    //                 var batchIds = [];
+                                    var start = selection[0];
+                                    var end = selection[2];
+                                    var gridData = hot.getData();
+                                    var batchIds = [];
 
-                    //                 if (start <= end) {
+                                    if (start <= end) {
 
-                    //                     for (var r = start; r <= end; r++){
+                                        for (var r = start; r <= end; r++){
 
-                    //                         var row = gridData[r];
-                    //                         var dataRowId = row[getColumnFromName('Id')];
-                    //                         batchIds.push(dataRowId);
-                    //                     }
-                    //                 }
-                    //                 else {
+                                            var row = gridData[r];
+                                            var dataRowId = row[getColumnFromName('Id')];
+                                            batchIds.push(dataRowId);
+                                        }
+                                    }
+                                    else {
 
-                    //                     for (i = -start; i <= -end; i++){
+                                        for (i = -start; i <= -end; i++){
 
-                    //                         var row = gridData[-i];
-                    //                         var dataRowId = row[getColumnFromName('Id')];
-                    //                         batchIds.push(dataRowId);
-                    //                     }
-                    //                 }
+                                            var row = gridData[-i];
+                                            var dataRowId = row[getColumnFromName('Id')];
+                                            batchIds.push(dataRowId);
+                                        }
+                                    }
 
-                    //                 Visualforce.remoting.Manager.invokeAction(
-                    //                     '{!$RemoteAction.BGE_HandsOnGridController.deleteAll}',
-                    //                     batchIds,
-                    //                     function (result, event) {
+                                    Visualforce.remoting.Manager.invokeAction(
+                                        '{!$RemoteAction.BGE_HandsOnGridController.deleteAll}',
+                                        batchIds,
+                                        function (result, event) {
 
-                    //                         $scope.$apply();
-                    //                     }
-                    //                 );
+                                            $scope.$apply();
+                                        }
+                                    );
 
-                    //                 hot.alter('remove_row');
-                    //                 hot.deselectCell();
+                                    hot.alter('remove_row');
+                                    hot.deselectCell();
 
-                    //                 // Set the flag back on false so we can continue deleting records individualy.
-                    //                 deletingRecords = false;
-                    //             }
-                    //             else {
+                                    // Set the flag back on false so we can continue deleting records individualy.
+                                    deletingRecords = false;
+                                }
+                                else {
 
-                    //                 return false;
-                    //             }
-                    //         }
-                    //         else {
+                                    return false;
+                                }
+                            }
+                            else {
 
-                    //             alert("please select cell first");
-                    //         }
-                    //     }
-                    // },
+                                alert("please select cell first");
+                            }
+                        }
+                    },
 
 
-                    // afterRemoveRow: function(index, amount){
+                    afterRemoveRow: function(index, amount){
 
-                    //     var pBatchId = getAllUrlParams().batchid;
-                    //     totalOfRecords = 0;
+                        var pBatchId = getAllUrlParams().batchid;
+                        totalOfRecords = 0;
 
-                    //     Visualforce.remoting.Manager.invokeAction(
-                    //     '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
-                    //     pBatchId,
-                    //     function (result) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
+                        pBatchId,
+                        function (result) {
 
-                    //         document.getElementById("totalOfRecords").value = result;
-                    //         totalOfRecords = parseInt(result);
+                            document.getElementById("totalOfRecords").value = result;
+                            totalOfRecords = parseInt(result);
 
-                    //         $scope.totalPages = calculateTotalPages(totalOfRecords);
-                    //         $scope.$apply();
-                    //     });
+                            $scope.totalPages = calculateTotalPages(totalOfRecords);
+                            $scope.$apply();
+                        });
 
-                    //     Visualforce.remoting.Manager.invokeAction(
-                    //     '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
-                    //     pBatchId,
-                    //     function (result) {
+                        Visualforce.remoting.Manager.invokeAction(
+                        '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
+                        pBatchId,
+                        function (result) {
 
-                    //         document.getElementById("totalAmount").value = result;
-                    //     });
+                            document.getElementById("totalAmount").value = result;
+                        });
 
-                    //     reloadCurrentPageOfTheGrid();
-                    // },
+                        reloadCurrentPageOfTheGrid();
+                    },
 
 
                     afterChange: function (changes, source) {
@@ -1018,7 +1028,6 @@
 
                 document.getElementById("currentPageNumber").value = pageNumber;
 
-
                 function gotoTheNextPageOfTheGrid() {
 
                     $('.nextButton').on('click', function () {
@@ -1049,7 +1058,6 @@
 
                     });
                 }
-
 
                 function gotoThePreviousPageOfTheGrid() {
 
@@ -1097,7 +1105,6 @@
                     });
                 }
 
-
                 function calculateTotalPages(pTotalOfRecords) {
 
                     var result = 0;
@@ -1114,8 +1121,6 @@
 
                     return parseInt(result);
                 }
-
-
 
                 function triggerDryRunProcess() {
 
