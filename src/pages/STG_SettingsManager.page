@@ -59,12 +59,14 @@
         node = document.getElementById(idPanelCurrent + 'Nav');
         if (node != null) node.classList.add('slds-is-selected');
 
-        var headerNode = node.parentElement.previousElementSibling;
-        headerNode.classList.remove('collapsed');
-        siblings = node.parentNode.childNodes;
-        for (var i = 0, ii = siblings.length; i < ii; i++) {
-            if(siblings[i].nodeName !== '#text') {
-                siblings[i].style.display = 'block';
+        if (node != null) {
+            var headerNode = node.parentElement.previousElementSibling;
+            headerNode.classList.remove('collapsed');
+            siblings = node.parentNode.childNodes;
+            for (var i = 0, ii = siblings.length; i < ii; i++) {
+                if(siblings[i].nodeName !== '#text') {
+                    siblings[i].style.display = 'block';
+                }
             }
         }
 
@@ -280,7 +282,7 @@
                 </div>
 
                 <div class="panel noborder" id="idPanelAllocations" style="display:none" >
-                    <apex:include pageName="STG_PanelAllocations" />
+                    <apex:include pageName="STG_PanelAllocations" id="idPanelAllocations"/>
                 </div>
 
                 <div class="panel noborder" id="idPanelOppRollup" style="display:none" >
