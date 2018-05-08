@@ -141,12 +141,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                 crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
             }
             UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
-        } catch (Exception e) {
-            Database.rollback(sp);
-            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-            isPolling = false;
-            crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
         return null;
     }
