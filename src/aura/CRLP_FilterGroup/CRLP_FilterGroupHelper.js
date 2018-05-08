@@ -132,6 +132,27 @@
     },
 
     /**
+     * @description handles errors from both
+     * save function (queueing up deployment)
+     * and pollForDeploymentStatus (actual deployment)
+     * @param errors - list of errors from response
+     */
+    handleErrors: function(cmp, errors) {
+        var helper = this;
+        var msg = "Unknown error";
+        if (errors && errors[0] && errors[0].message) {
+            msg = errors[0].message;
+        }
+        if (cmp.get("v.mode") === 'delete') {
+            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
+        } else {
+            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+            cmp.set("v.mode", 'edit');
+            helper.onChangeMode(cmp, event, helper);
+        }
+    },
+
+    /**
      * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
@@ -241,6 +262,8 @@
 
                                 cmp.set("v.filterRuleList", filterRuleList);
                                 cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                                cmp.set("v.deletedRuleList", []);
+                                
                                 var rollupItems = cmp.get("v.rollupItems");
 
                                 // need to send back an object with the following properties
@@ -281,20 +304,12 @@
 
                             }
                         }
-                    } else {
+                    } else if (state === "ERROR") {
                         // If an error is returned, parse the message, display and remove the spinner
                         var errors = response.getError();
-                        var msg = "Unknown error";
-                        if (errors && errors[0] && errors[0].message) {
-                            msg = errors[0].message;
-                        }
-                        if (mode === 'delete') {
-                            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
-                        } else {
-                            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
-                        }
-                        window.clearTimeout(poller);
                         helper.toggleSpinner(cmp, false);
+                        helper.handleErrors(cmp, errors);
+                        window.clearTimeout(poller);
                     }
                 });
                 $A.enqueueAction(action);
@@ -477,15 +492,11 @@
                 console.log('Returned RecordName = ' + recordName);
 
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
-            } else if (state === "ERROR") {
 
+            } else if (state === "ERROR") {
                 var errors = response.getError();
-                var msg = "Unknown error";
-                if (errors && errors[0] && errors[0].message) {
-                    msg = errors[0].message;
-                }
-                this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
                 this.toggleSpinner(cmp, false);
+                this.handleErrors(cmp, errors);
             }
         });
         if (cmp.get("v.mode") === 'delete') {
