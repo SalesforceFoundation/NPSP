@@ -184,11 +184,8 @@ public class CRLP_RollupCMT {
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
             if (this.label == null) {
-                String prefix = this.filterGroupRecordName;
-                if (prefix.countMatches('_') > 1) {
-                    prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
-                }
-                this.label = abbreviateForSpace(prefix.left(12).removeEnd('_') + ' ' + this.objectName + '.' + this.fieldName +
+                String prefix = abbreviateForSpace(this.filterGroupRecordName, true).replace('NPSP','').replace('_', '');
+                this.label = abbreviateForSpace(prefix.left(8) + ' ' + this.objectName + '.' + this.fieldName +
                         ' ' + this.operationName + ' ' + this.value, false).left(40);
             }
             if (this.recordName == null) {
@@ -384,19 +381,20 @@ public class CRLP_RollupCMT {
         // Shorten specific words
         String recordName = abbreviateForSpace(label, false);
 
-        // replace all special characters and double underscores
-        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_'), true);
+        // replace all special characters and underscores
+        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_', ''), true);
 
-        //remove leading and trailing underscores
-        recordName = recordName.removeStart('_').removeEnd('_');
+        System.debug(recordName);
 
         if (makeUnique == true) {
             // Create a GUID format unique string
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
-            recordName += '_' + h.substring(4);
+            // force everything to have a 8-char random string at the end
+            recordName = recordName.left(32) + h.left(8);
+        } else {
+            recordName = recordName.left(40);
         }
-        recordName = recordName.left(39).removeEnd('_');
         return recordName;
     }
 
@@ -444,6 +442,7 @@ public class CRLP_RollupCMT {
                 replace('Opportunity', 'Opp').
                 replace('Partial Soft Credit', 'PSC').
                 replace('Partial_Soft_Credit', 'PSC').
+                replace('ClosedWon', 'Won').
                 replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
                 replace(' of ', '');
 
@@ -456,9 +455,13 @@ public class CRLP_RollupCMT {
                     replace('Allocations', 'Allo').
                     replace('Partial Soft Credit', 'PSC').
                     replace('Partial_Soft_Credit', 'PSC').
-                    replace('Soft_Credit', 'sftCr').replace('Hard_Credit', 'hrdCr').
-                    replace('#', 'num').replace('year', 'yr').
-                    replace('Number', 'Num').replace('Count', 'cnt');
+                    replace('Soft_Credit', 'sftCr').
+                    replace('Hard_Credit', 'hrdCr').
+                    replace('#', 'num').
+                    replace('year', 'yr').
+                    replace('Number', 'Num').
+                    replace('Count', 'cnt').
+                    replace('Equals', 'Eq');
         }
         return txt;
     }
