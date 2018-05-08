@@ -866,7 +866,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Days back error message for integers with any characters other than numbers.</shortDescription>
-        <value>You must enter a positive whole number.</value>
+        <value>You must enter a positive whole number that is less than 10000.</value>
     </labels>
     <labels>
         <fullName>CRLP_DeleteError</fullName>
