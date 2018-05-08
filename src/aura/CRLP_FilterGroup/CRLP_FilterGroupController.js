@@ -178,6 +178,7 @@
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operationName", "");
+        cmp.set("v.activeFilterRule.value", "");
     },
 
     /**
