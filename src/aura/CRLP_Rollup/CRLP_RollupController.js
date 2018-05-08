@@ -36,7 +36,7 @@
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
                 var labels = cmp.get("v.labels");
-                if(activeRollupId){
+                if (activeRollupId) {
                     // detail, amount, and date fields need to be held on client side
                     // with their object name to support multiple object selection
 

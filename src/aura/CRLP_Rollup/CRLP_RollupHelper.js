@@ -160,9 +160,8 @@
             cmp.set("v.detailFields", newFields);
         }
 
-        //todo: is this necessary? pulled in my commit
         var currentMode = cmp.get("v.mode");
-        if (currentMode !== 'view') {
+        if (currentMode === 'create') {
             //reset detail field to null to prompt user selection
             cmp.set("v.activeRollup.detailField", null);
         }
@@ -843,12 +842,15 @@
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
+                this.toggleSpinner(cmp, false);
+
                 if (currentMode === 'delete') {
                     this.showToast(cmp, 'error', cmp.get("v.labels.rollupDeleteFail"), msg);
                 } else {
                     this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
+                    cmp.set("v.mode", "edit");
+                    helper.changeMode(cmp);
                 }
-                this.toggleSpinner(cmp, false);
             }
         });
         if (currentMode === 'delete') {
@@ -1235,9 +1237,14 @@
             this.sendMessage(cmp, 'validateCmp');
         }
 
-        //description set separately since we have direct access to this cmp
+        //description and intValue set separately since we have direct access to these
         if (!activeRollup.description) {
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
+            canSave = false;
+        }
+        var integerInput = cmp.find("integerInput");
+        if (renderMap["integerDays"] && !integerInput.get("v.validity").valid) {
+            integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }
 
