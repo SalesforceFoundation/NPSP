@@ -69,7 +69,7 @@ public with sharing class CRLP_RollupUI_SVC {
         @AuraEnabled public String description;
         @AuraEnabled public Integer countFilterRules;
         @AuraEnabled public Integer countRollups;
-        @AuraEnabled public String name;
+        @AuraEnabled public String recordName;
         @AuraEnabled public String recordId;
         @AuraEnabled public Boolean isDeleted;
     }
@@ -266,7 +266,7 @@ public with sharing class CRLP_RollupUI_SVC {
             FilterGroupTableItem item = new FilterGroupTableItem();
 
             item.label = mdtList[i].MasterLabel;
-            item.name = mdtList[i].DeveloperName;
+            item.recordName = mdtList[i].DeveloperName;
             item.description = mdtList[i].Description__c;
             item.countFilterRules = mdtList[i].Filter_Rules__r.size();
             item.countRollups = (rollupsByFilterGroup.containsKey(mdtList[i].Id) ? rollupsByFilterGroup.get(mdtList[i].Id).size() : 0);

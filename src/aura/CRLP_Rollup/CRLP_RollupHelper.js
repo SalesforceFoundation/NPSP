@@ -241,7 +241,7 @@
         var stringList = detailObjectAndField.split(' ');
         var objectName = stringList[0];
         var fieldName = stringList[1];
-        console.log('in helper on change detail');
+
         var objectLabel = this.retrieveFieldLabel(objectName, cmp.get("v.detailObjects"));
         cmp.set("v.activeRollup.detailFieldLabel", fieldLabel);
         cmp.set("v.activeRollup.detailObject", objectName);
@@ -849,7 +849,7 @@
                 } else {
                     this.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), msg);
                     cmp.set("v.mode", "edit");
-                    helper.changeMode(cmp);
+                    this.changeMode(cmp);
                 }
             }
         });
@@ -1242,11 +1242,11 @@
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
-        if (!activeRollup.intValue && renderMap["integerDays"]) {
-            cmp.find("integerInput").showHelpMessageIfInvalid();
+        var integerInput = cmp.find("integerInput");
+        if (renderMap["integerDays"] && !integerInput.get("v.validity").valid) {
+            integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }
-
         return canSave;
     },
 

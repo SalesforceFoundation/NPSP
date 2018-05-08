@@ -86,7 +86,7 @@
                 <lightning:layoutItem size="12">
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="horizontal-large" smallDeviceSize="6" size="12">
+                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="4" size="12">
                             <aura:if isTrue="{! !v.isReadOnly}">
                                 <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="{!v.isReadOnly}"/>
                             </aura:if>
@@ -103,7 +103,7 @@
                     </lightning:layout>
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="around-large" mediumDeviceSize="8" size="12">
+                        <lightning:layoutItem padding="around-large" largeDeviceSize="8" size="12">
                             <aura:if isTrue="{! !v.isReadOnly}">
                                 <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="{!v.isReadOnly}"/>
                             </aura:if>
@@ -120,7 +120,7 @@
                     <!--START FILTER GROUP DATATABLE-->
 
                     <lightning:layout multipleRows="true" verticalAlign="start">
-                        <lightning:layoutItem padding="horizontal-large" mediumDeviceSize="8" size="12">
+                        <lightning:layoutItem padding="horizontal-large" largeDeviceSize="8" size="12">
                             <lightning:card iconName="utility:rules" title="{!v.labels.filterRuleLabelPlural}">
                                 <aura:set attribute="actions">
                                     <aura:if isTrue="{!and((v.mode != 'view'),(v.mode != 'delete'))}">
@@ -151,7 +151,7 @@
                     <!--START RELATED ROLLUP LIST-->
                     <aura:if isTrue="{!or((v.mode == 'view'),(v.mode == 'delete'))}">
                         <lightning:layout multipleRows="true" verticalAlign="start">
-                            <lightning:layoutItem padding="around-large" mediumDeviceSize="12" size="12">
+                            <lightning:layoutItem padding="around-large" mediumDeviceSize="8" size="12">
                                 <c:CRLP_Tooltip helpText="{!v.labels.filterGroupActiveRollupsHelp}" fieldLabel="{!v.labels.rollupsByFilterGroup}"
                                                 textType="header" isRequired="false"/>
                                 <lightning:tree items="{!v.rollupItems}" onselect="{!c.selectRollup}"/>
