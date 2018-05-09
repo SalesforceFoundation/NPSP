@@ -375,6 +375,12 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
             }
 
+            // If UseFiscalYear is checked, change any occurances of "Calendar Year" in the rollup description
+            // to "Fiscal Year"
+            if (rollup.useFiscalYear == true) {
+                rollup.description = rollup.description.replace('Calendar', 'Fiscal').replace('calendar', 'fiscal');
+            }
+
             if (!String.isEmpty(rollupDetails[6])) {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
