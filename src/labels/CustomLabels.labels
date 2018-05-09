@@ -5074,6 +5074,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Go to Customizable Rollups Setup</value>
     </labels>
     <labels>
+        <fullName>stgCRLPReset</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to reset CRLPs to default configuration.</shortDescription>
+        <value>Reset to Default Rollups</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

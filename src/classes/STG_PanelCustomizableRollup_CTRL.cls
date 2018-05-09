@@ -99,6 +99,28 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     }
 
     /*******************************************************************************************************
+    * @description Action Method to simply redeploy/reset all CMDTs, only offered when CRLPs are enabled
+    * @return void
+    */
+    public PageReference resetRollupsToDefaultConfig() {
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        try {
+            isPolling = true;
+            jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+            if (Test.isRunningTest()) {
+                jobId = '123';
+            }
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            isPolling = false;
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
     * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
     * and reschedule Scheduled Jobs
     * @return void
@@ -121,11 +143,20 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
             Savepoint sp = Database.setSavepoint();
             try {
                 if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
-                    isPolling = true;
-                    jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-                    if (Test.isRunningTest()) {
-                        jobId = '123';
+                    // check for existing Rollup__mdts
+                    List<Rollup__mdt> existingRollups = CRLP_Rollup_SEL.cachedRollups;
+                    if (existingRollups.size() == 0) {
+                        // only do the deployment here if they've never deployed before
+                        isPolling = true;
+                        jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                        if (Test.isRunningTest()) {
+                            jobId = '123';
+                        }
+                    } else {
+                        // there are existing rollups. just save the setting, don't deploy.
+                        stgService.saveAll();
                     }
+
                 } else {
                     // The deployment method takes care of setting the Enabled flag to true if it succeeds.
                     // In here, we only set it to false in the case on disabling CRLPs.
