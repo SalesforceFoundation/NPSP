@@ -299,7 +299,7 @@ public class CRLP_RollupCMT {
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
-                this.detailFieldLabel = rlp.Detail_Field__r.QualifiedApiName == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
+                this.detailFieldLabel = rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
                 this.amountObjectLabel = rlp.Amount_Object__r.Label;
                 this.amountFieldLabel = rlp.Amount_Field__r.Label;
                 this.dateObjectLabel = rlp.Date_Object__r.Label;
