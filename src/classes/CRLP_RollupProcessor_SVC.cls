@@ -116,7 +116,9 @@ public class CRLP_RollupProcessor_SVC {
                 recordsToUpdate.put(parentId, updatedRecord);
             }
 
-            CRLP_Debug_UTIL.clearCurrentRollupState();
+            if (listSizeSum > 1) {
+                CRLP_Debug_UTIL.clearCurrentRollupState();
+            }
             previousParentIdProcessed = parentId;
         }
 
