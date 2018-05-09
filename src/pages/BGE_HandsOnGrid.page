@@ -154,7 +154,9 @@
 
         <script>
 
-            var myApp;
+                var rowErrors = [];
+
+                var myApp;
 
                 myApp = angular.module('myApp', ['ngHandsontable','ngSanitize'])
                 myApp.controller('MainCtrl', function($scope, $compile) {
@@ -210,32 +212,110 @@
 
                 function cellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-                    try {
+                    var dataRowId = row[getColumnFromName('Id')];
 
-                        Handsontable.TextCell.renderer.apply(this, arguments);
+                    var iconContainer = document.createElement('div');
 
-                        if (col == 0) {
+                    Handsontable.dom.addEvent(iconContainer, 'mousedown', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+                    });
 
-                            var dataRowId = instance.getDataAtRowProp(row, 'Id');
-                            td.id = dataRowId;
+                    Handsontable.dom.addEvent(iconContainer, 'mouseleave', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+                    });
+                    Handsontable.dom.addEvent(iconContainer, 'mousemove', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+                    });
 
-                            if (dataRowId) {
+                    var iconObject = document.createElement('div');
+                    iconObject.className = 'slds-form-element';
 
-                                $('#' + dataRowId).css( "border-top", "none");
-                                $('#' + dataRowId).css( "border-bottom", "none");
-                                $('#' + dataRowId).attr( "readonly", "readonly");
-                            }
 
-                            var escaped = Handsontable.helper.stringify(value);
-                            td.innerHTML = escaped;
-                            return td;
-                        }
-                    }
-                    catch(ex) {
-                        console.warn('Catching text exception');
-                    }
+                    var buttonContainer = document.createElement('div');
+                    buttonContainer.className = 'slds-form-element__icon slds-align-middle';
+
+                    var buttonObject = document.createElement('button');
+                    buttonObject.className = 'slds-button slds-button_icon slds-button slds-button_icon';
+
+                    var svgElement = document.createElement("svg");
+                    svgElement.className = 'slds-icon slds-icon-text-error slds-icon_small';
+
+                    var useElement2 = '<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#warning/>';
+                    svgElement.innerHTML = useElement2;
+
+                    var useElement = document.createElement("use");
+                    useElement.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+                    useElement.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#warning');
+
+                    var svgElementBox = document.createElement("svg");
+                    svgElementBox.setAttribute('viewBox', '0 0 24 24');
+                    svgElementBox.setAttribute('id', 'warning');
+                    svgElementBox.setAttribute('width', '100%');
+                    svgElementBox.setAttribute('heigth', '100%');
+                    var pathElement = document.createElement("path");
+                    pathElement.setAttribute('d', 'M23.7 19.6L13.2 2.5c-.6-.9-1.8-.9-2.4 0L.3 19.6c-.7 1.1 0 2.6 1.1 2.6h21.2c1.1 0 1.8-1.5 1.1-2.6zM12 18.5c-.8 0-1.4-.6-1.4-1.4s.6-1.4 1.4-1.4 1.4.6 1.4 1.4-.6 1.4-1.4 1.4zm1.4-4.2c0 .3-.2.5-.5.5h-1.8c-.3 0-.5-.2-.5-.5v-6c0-.3.2-.5.5-.5h1.8c.3 0 .5.2.5.5v6z');
+
+                    svgElementBox.appendChild(pathElement);
+                    useElement.appendChild(svgElementBox);
+                    // svgElement.appendChild(useElement);
+                    buttonObject.appendChild(svgElement);
+                    buttonContainer.appendChild(buttonObject);
+                    iconObject.appendChild(buttonContainer);
+                    iconContainer.appendChild(iconObject);
+
+                    td.style.borderBottom = 'none';
+                    td.style.borderTop = 'none';
+                    td.style.borderLeft = 'none';
+                    td.style.background = 'white !important';
+                    td.id = row + col + Date.now();
+
+
+                    // var iconStyle = 'warning';
+                    // var styleSuccess = '';
+                    // var styleTop = -5;
+
+                    // var htmlTooltipId = 'selector' + dataRowId;
+                    // var htmlTooltipIdParam = '\'#selector' + dataRowId + '\'';
+                    // var newRowClass = '';
+
+                    // if (!dataRowId) {
+                    //     htmlTooltipId = row + 'selectorNew';
+                    //     htmlTooltipIdParam = '\'#' + row + 'selectorNew\'';
+                    // }
+
+                    // var htmlIcon = '<div id='+ htmlTooltipId + ' onmouseleave="removeMessage(' + htmlTooltipIdParam + ');" onmousemove="addMessage(' + htmlTooltipIdParam + ', \'' + 'sdas' + '\', \'' + styleTop +  '\');" ><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
+
+                    // iconContainer.innerHTML = htmlIcon;
+                    Handsontable.dom.empty(td);
+                    td.appendChild(iconContainer);
+
+                    return td;
+
+                    // try {
+
+                    //     Handsontable.TextCell.renderer.apply(this, arguments);
+
+                    //     if (col == 0) {
+
+                    //         var dataRowId = instance.getDataAtRowProp(row, 'Id');
+                    //         td.id = dataRowId;
+
+                    //         if (dataRowId) {
+
+                    //             $('#' + dataRowId).css( "border-top", "none");
+                    //             $('#' + dataRowId).css( "border-bottom", "none");
+                    //             $('#' + dataRowId).attr( "readonly", "readonly");
+                    //         }
+
+                    //         var escaped = Handsontable.helper.stringify(value);
+                    //         td.innerHTML = escaped;
+                    //         return td;
+                    //     }
+                    // }
+                    // catch(ex) {
+                    //     console.warn('Catching text exception');
+                    // }
                 }
-
 
                 if(window.attachEvent) {
 
@@ -289,14 +369,6 @@
                     var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
 
                     td.innerHTML = actionIcon;
-                    return td;
-                }
-
-                function bgeActionRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-                    var escaped = '<button>click me</button>';
-                    td.innerHTML = escaped;
-
                     return td;
                 }
 
