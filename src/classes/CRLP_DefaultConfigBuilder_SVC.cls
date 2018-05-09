@@ -334,6 +334,9 @@ public class CRLP_DefaultConfigBuilder_SVC {
     private static List<CRLP_RollupCMT.Rollup> buildDefaultRollups() {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
 
+        String gauObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
+        String rdObjectName = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
+
         // rollupDetailsBySummaryField list data:
         // 0 = DetailObject.Field
         // 1 = FilterGroupRecordName,
@@ -353,15 +356,25 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rollup.filterGroupRecordName = rollupDetails[1];
             rollup.summaryObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(summaryObjectField)[0]);
             rollup.summaryField = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(summaryObjectField)[1]);
-            rollup.detailObject  = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[0])[0]);
-            rollup.detailField  = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[0])[1]);
-            rollup.amountObject  = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[2])[0]);
-            rollup.amountField  = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[2])[1]);
+            rollup.detailObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[0])[0]);
+            rollup.detailField = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[0])[1]);
+            rollup.amountObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[2])[0]);
+            rollup.amountField = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[2])[1]);
             rollup.dateObject = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[3])[0]);
             rollup.dateField = applyNameSpaceToObjectField(CRLP_RollupCMT.parseObjectField(rollupDetails[3])[1]);
             rollup.operation = rollupDetails[4];
             rollup.timeBoundOperationType = rollupDetails[5];
-            rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+
+            // Set the UseFiscalYear based on the type of rollup being done
+            if (rollup.summaryObject == gauObjectName) {
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacyAllocSettings.Use_Fiscal_Year_for_Rollups__c;
+            } else if (rollup.summaryObject == rdObjectName) {
+                // Out of the box Recurring Donation rollups do not use FiscalYear (primariliy not needed anyway)
+                rollup.useFiscalYear = false;
+            } else {
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+            }
+
             if (!String.isEmpty(rollupDetails[6])) {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
