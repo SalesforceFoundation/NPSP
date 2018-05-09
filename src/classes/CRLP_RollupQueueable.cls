@@ -153,6 +153,19 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
             // DML and capture any returned DML errors into a Map by Summary Record Id
             CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);
+
+            // In debug mode, write a summary of the job to the error log
+            if (CRLP_Debug_UTIL.isDebuggingEnabled) {
+                Error__c logEntry = new Error__c(
+                        Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + options.rollupJobType.name() + ' ' + options.mode.name(),
+                        Error_Type__c = 'DEBUG LOG',
+                        Full_Message__c = ('CRLP_RollupQueueable\n' +
+                                'detailRecords Count: ' + detailRecords.size() + '\n' +
+                                'updatedRecords Count: ' + (updatedRecords != null ? updatedRecords.size() : 0) + '\n' +
+                                'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+                );
+                insert logEntry;
+            }
         }
     }
 }
