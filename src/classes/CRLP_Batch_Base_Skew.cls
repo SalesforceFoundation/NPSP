@@ -129,8 +129,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         parentRelationshipPrefix = Opportunity.fields.Primary_Contact__c.getDescribe().getName().replace('__c', '__r') + '.';
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         parentRelationshipPrefix = 'Contact.';
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
-                            this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                         parentRelationshipPrefix = 'Contact.Account.';
                     }
 
@@ -165,8 +164,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                             this.statefulCacheOfRollupsToBeProcessed);
                 } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
-                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
-                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
                 }
                 if (!String.isEmpty(addlFilter)) {
@@ -217,8 +215,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // parentKeyField needed for the rollup logic.
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 parentKeyField = 'ContactId';
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 parentKeyField = 'Contact.AccountId';
             }
 
