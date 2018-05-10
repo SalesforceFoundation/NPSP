@@ -78,9 +78,9 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
             Partial_Soft_Credit__c psc = pscs[n];
             Opportunity opp = psc.Opportunity__r;
 
-            // Account Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
-            // the same parent Account more than one time.
-            if (summaryObjectType == Account.SObjectType && this.processedOppIds.contains(opp.Id)) {
+            // Account and Contact Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
+            // the same parent Account or Contact more than one time.
+            if ((summaryObjectType == Account.SObjectType || summaryObjectType == Contact.SObjectType) && this.processedOppIds.contains(opp.Id)) {
                 continue;
             }
 
