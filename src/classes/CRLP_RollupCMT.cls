@@ -177,7 +177,7 @@ public class CRLP_RollupCMT {
             String valueLabel;
             List<String> rtLabels = new List<String>();
             if (fieldName == 'RecordTypeId') {
-                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType=:objectName];
+                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType = :objectName AND IsActive = true];
                 // TODO: refactor to use this after summer18:
                 // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
                 Map<String, String> rtDeveloperNameToName = new Map<String,String>();
