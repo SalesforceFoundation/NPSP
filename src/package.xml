@@ -2255,7 +2255,9 @@
         <name>FeatureParameterDate</name>
     </types>
     <types>
+        <members>Data_MaxAffilationsToAccount</members>
         <members>Data_MaxNumRelatedOpps</members>
+        <members>Data_MaxRelationshipsToContact</members>
         <name>FeatureParameterInteger</name>
     </types>
     <types>

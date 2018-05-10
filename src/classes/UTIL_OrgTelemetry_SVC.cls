@@ -74,9 +74,20 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         if (oldestDate != null) {
             System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', oldestDate);
         }
+
         Integer relatedOpps = getMaxNumRelatedOpps();
         if (relatedOpps != null) {
             System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps', relatedOpps);
+        }
+
+        Integer maxAffiliations = getMaxAffiliationToAccount();
+        if (relatedOpps != null) {
+            System.FeatureManagement.setPackageIntegerValue('Data_MaxAffilationsToAccount', maxAffiliations);
+        }
+
+        Integer maxRelationships = getMaxRelationships();
+        if (maxRelationships != null) {
+            System.FeatureManagement.setPackageIntegerValue('Data_MaxRelationshipsToContact', maxRelationships);
         }
     }
 
@@ -131,4 +142,35 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         } catch (Exception ex) {}
         return null;
     }
+
+    /**
+     * @description Returns the max number of affiliations attached to any one specific Account
+     */
+    private static Integer getMaxAffiliationToAccount() {
+        try {
+            List<AggregateResult> ag = [SELECT Count(Id) MaxPerOrg FROM npe5__Affiliation__c
+                GROUP BY npe5__Organization__c
+                ORDER BY Count(Id) LIMIT 1];
+            if (ag != null && ag.size() == 1) {
+                return (Integer) ag[0].get('MaxPerOrg');
+            }
+        } catch (Exception ex) {}
+        return null;
+    }
+
+    /**
+     * @description Returns the max number of relationships attached to any one specific Contact
+     */
+    private static Integer getMaxRelationships() {
+        try {
+            List<AggregateResult> ag = [SELECT Count(Id) MaxRel FROM npe4__Relationship__c
+                GROUP BY npe4__Contact__c
+                ORDER BY Count(Id) LIMIT 1];
+            if (ag != null && ag.size() == 1) {
+                return (Integer) ag[0].get('MaxRel');
+            }
+        } catch (Exception ex) {}
+        return null;
+    }
+
 }
