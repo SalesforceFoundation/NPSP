@@ -859,6 +859,13 @@ public with sharing class CRLP_RollupUI_SVC {
                 fieldObjectList.add(fieldObject);
             }
         }
+        /*FOR TESTING*/
+        Map<String, String> fieldObject = new Map<String, String>();
+        fieldObject.put('name', 'Testing_field');
+        fieldObject.put('label', 'testing field');
+        fieldObject.put('type', 'NOMATCHTYPE');
+
+        fieldObjectList.add(fieldObject);
 
         return fieldObjectList;
     }

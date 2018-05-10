@@ -85,8 +85,6 @@
         this.setIntegerYearList(cmp);
         this.onChangeTimeBoundOperationsOptions(cmp, false);
         this.onChangeInteger(cmp, cmp.get("v.activeRollup.intValue"));
-        var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
-        this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
         this.updateRollupName(cmp);
     },
 
@@ -101,21 +99,21 @@
         console.log("filter fields by type function");
         var newFields = [];
 
-        typeList.forEach(function (type) {
-            if (!(type === undefined || type === null)) {
-                allFields.forEach(function (field) {
-                    if(field !== undefined) {
-                        if (field.type === type) {
-                            newFields.push(field);
+        if (typeList && allFields) {
+            typeList.forEach(function (type) {
+                if (!(type === undefined || type === null)) {
+                    allFields.forEach(function (field) {
+                        if (field !== undefined) {
+                            if (field.type === type) {
+                                newFields.push(field);
+                            }
                         }
-                    }
-                });
-            }
-        });
+                    });
+                }
+            });
+        }
 
-        if (newFields.length === 0) {
-            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
-        } else if (typeList.length > 1) {
+        if (typeList.length > 1) {
             //sort here as well if multiple types are converging into one list
             newFields = this.sortFields(newFields);
         }
@@ -134,7 +132,7 @@
 
         //need to get all detail fields, or we filter on a subset of all options
         var allFields = [];
-        for (var i = 0; i<potentialDetailObjects.length; i++) {
+        for (var i = 0; i < potentialDetailObjects.length; i++) {
             var objectFields = cmp.get("v.objectDetails")[potentialDetailObjects[i]];
             allFields = allFields.concat(objectFields);
         }
@@ -153,12 +151,7 @@
             newFields = this.filterFieldsByType(cmp, [type], allFields);
         }
 
-        if (newFields.length > 0) {
-            cmp.set("v.detailFields", newFields);
-        } else {
-            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
-            cmp.set("v.detailFields", newFields);
-        }
+        cmp.set("v.detailFields", newFields);
 
         var currentMode = cmp.get("v.mode");
         if (currentMode === 'create') {
@@ -240,13 +233,12 @@
     onChangeDetailField: function (cmp, detailObjectAndField, fieldLabel) {
         var stringList = detailObjectAndField.split(' ');
         var objectName = stringList[0];
-        var fieldName = stringList[1];
 
         var objectLabel = this.retrieveFieldLabel(objectName, cmp.get("v.detailObjects"));
         cmp.set("v.activeRollup.detailFieldLabel", fieldLabel);
         cmp.set("v.activeRollup.detailObject", objectName);
         cmp.set("v.activeRollup.detailObjectLabel", objectLabel);
-        this.verifyRollupSaveActive(cmp, fieldName);
+        this.verifyRollupSaveActive(cmp, detailObjectAndField);
     },
 
     /**
@@ -582,6 +574,7 @@
 
     /**
      * @description: conditionally render detail field based on the selected operation, specifically Single Result Operations
+     * Note: this should only be called after filterDetailFieldsBySummaryField so detailFields is correctly filtered
      * @param operation: operation API name
      * @param renderMap: current map of fields to render
      * @return: updated render map
@@ -595,6 +588,14 @@
         ) {
             //enable detail field
             renderMap["detailField"] = true;
+
+            //show warning if no fields available and detail field displayed
+            var detailFields = cmp.get("v.detailFields");
+            if (detailFields.length === 0) {
+                var labels = cmp.get("v.labels");
+                cmp.set("v.isIncomplete", true);
+                this.showToast(cmp, 'warning', labels.noFields, labels.noDetailFieldsMessage);
+            }
         } else {
             //disable detail field
             renderMap["detailField"] = false;
@@ -643,7 +644,7 @@
         var newFields = cmp.get("v.objectDetails")[object];
 
         if (newFields === undefined || newFields.length === 0) {
-            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+            cmp.set("v.isIncomplete", true);
         } else {
             newFields = this.sortFields(newFields);
         }
@@ -670,8 +671,10 @@
 
         this.resetFields(cmp, activeRollup.summaryObject, 'summary');
         this.resetFields(cmp, activeRollup.amountObject, 'amount');
-        this.resetFields(cmp, activeRollup.detailObject, 'detail');
         this.resetFields(cmp, activeRollup.dateObject, 'date');
+
+        var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
+        this.resetFields(cmp, potentialDetailObjects, 'detail');
 
         this.resetRollupTypes(cmp);
         this.setRollupType(cmp);
@@ -987,8 +990,11 @@
             }
         }
 
+        //show warning if no fields available
         if (newFields === undefined || newFields.length === 0) {
-            newFields = [{name: '', label: cmp.get("v.labels.noFields")}];
+            var labels = cmp.get("v.labels");
+            cmp.set("v.isIncomplete", true);
+            this.showToast(cmp, 'warning', labels.noFields, labels.noTargetFieldsMessage);
         }
 
         return newFields
@@ -1232,6 +1238,13 @@
             return validSoFar && Boolean(activeRollup[field]);
         }, true);
 
+        //check for rollup type specifically since different name conventions are used
+        if (renderMap["rollupType"]) {
+            if (!activeRollup.rollupTypeObject) {
+                canSave = false;
+            }
+        }
+
         //show help message in each child component SelectField
         if (!canSave) {
             this.sendMessage(cmp, 'validateCmp');
@@ -1255,21 +1268,26 @@
     * @param detailField: selected detail field API name
     */
     verifyRollupSaveActive: function(cmp, detailField) {
-        var renderMap = cmp.get("v.renderMap");
-        var selectedRollup = cmp.get("v.selectedRollupType");
+        if (cmp.get("v.mode") !== 'view') {
+            var renderMap = cmp.get("v.renderMap");
+            var selectedRollup = cmp.get("v.selectedRollupType");
 
-        if (renderMap["rollupType"]) {
-            if (!renderMap["detailField"]) {
-                //if detail field isn't required, save button enables
-                cmp.set("v.isIncomplete", false);
-            } else if (detailField) {
-                //if detail field is required, save button enables only if detail field is selected
-                cmp.set("v.isIncomplete", false);
+            if (renderMap["rollupType"]) {
+                if (!renderMap["detailField"]) {
+                    //if detail field isn't required, save button enables
+                    cmp.set("v.isIncomplete", false);
+                } else {
+                    //extra splitting is due to the detailFieldAndObject notation used for detailField
+                    if (detailField && detailField.split(' ')[1] !== 'null') {
+                        //if detail field is required, save button enables only if detail field is selected
+                        cmp.set("v.isIncomplete", false);
+                    } else {
+                        cmp.set("v.isIncomplete", true);
+                    }
+                }
             } else {
                 cmp.set("v.isIncomplete", true);
             }
-        } else {
-            cmp.set("v.isIncomplete", true);
         }
     }
 })
