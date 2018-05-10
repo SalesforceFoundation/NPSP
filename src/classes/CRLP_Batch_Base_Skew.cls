@@ -307,7 +307,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
                 if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
                         this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                    this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
+                    this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByParentId().get(lastParentIdProcessed));
                 }
             }
 

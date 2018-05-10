@@ -154,7 +154,7 @@ public class CRLP_RollupProcessingOptions {
          * @description Returns the updated Map of processed Opportunity Id's by the parent Account Id.
          * Used to expose this value to the LDV Batch Job to retrieve the current setting.
          */
-        public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByAccountId() {
+        public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByParentId() {
             return this.mapOfProcessedOppIdsByParentId;
         }
 
