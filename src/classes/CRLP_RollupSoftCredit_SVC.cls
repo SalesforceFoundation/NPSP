@@ -80,7 +80,7 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
 
             // Account and Contact Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
             // the same parent Account or Contact more than one time.
-            if ((summaryObjectType == Account.SObjectType || summaryObjectType == Contact.SObjectType) && this.processedOppIds.contains(opp.Id)) {
+            if (this.processedOppIds.contains(opp.Id)) {
                 continue;
             }
 
