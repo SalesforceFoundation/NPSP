@@ -390,7 +390,12 @@ public class CRLP_DefaultConfigBuilder_SVC {
             if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Enable_Soft_Credit_Rollups__c == false &&
                     rollupDetails[2] == CRLP_DefaultConfigBuilder.pscAmountFld) {
                 rollup.isActive = false;
+            } else {
+                rollup.isActive = true;
             }
+
+            // set isDeleted explicitly so upon reset everything is undeleted
+            rollup.isDeleted = false;
 
             rollups.add(rollup);
         }
@@ -431,6 +436,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rollup.dateField = 'CloseDate';
             rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
             rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+            rollup.isActive = true;
+            rollup.isDeleted = false;
             rollups.add(rollup);
         }
         return rollups;
