@@ -194,7 +194,6 @@
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
         if(cmp.get("v.mode") == 'delete') {
-            console.log('HITTING DELETE MODE IN SAVE FUNCTION');
             cmp.set("v.activeFilterGroup.isDeleted", true);
             helper.toggleFilterRuleModal(cmp);
         }

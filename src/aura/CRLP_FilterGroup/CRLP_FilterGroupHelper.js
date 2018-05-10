@@ -332,7 +332,6 @@
         
         var fieldName = cmp.get("v.activeFilterRule.fieldName");
         if (fieldName === 'RecordTypeId') {
-            debugger;
             var labelList = [];
             var value = cmp.get("v.activeFilterRule.value");
             var filterRuleConstantPicklist = cmp.get("v.filterRuleConstantPicklist");
