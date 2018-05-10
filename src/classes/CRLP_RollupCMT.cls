@@ -168,9 +168,39 @@ public class CRLP_RollupCMT {
                 this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
-                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
+        }
+        
+        private String getValueLabel (String value, String objectName, String fieldName) {
+            System.debug(value);
+            String valueLabel;
+            List<String> rtLabels = new List<String>();
+            if (fieldName == 'RecordTypeId') {
+                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType=:objectName];
+                System.debug(rts);
+                // TODO: refactor to use this after summer18:
+                // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
+                Map<String, String> rtDeveloperNameToName = new Map<String,String>();
+                for (RecordType rt : rts) {
+                    rtDeveloperNameToName.put(rt.DeveloperName, rt.Name);
+                }
+                System.debug(rtDeveloperNameToName);  
+                System.debug(value.split('; '));
+                for (String val : value.split(';')) {
+                    //val is the RT dev name
+                    rtLabels.add(rtDeveloperNameToName.get(val));
+                }
+                System.debug(rtLabels);
+                valueLabel = String.join(rtLabels,';');
+                System.debug(valueLabel);
+            } else {
+                valueLabel = value;
+            }
+            valueLabel = (valueLabel != null ? valueLabel.replace(';', ';\n') : null);
+            System.debug(valueLabel);
+            return valueLabel;
         }
 
         /**
