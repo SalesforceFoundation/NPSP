@@ -291,13 +291,20 @@ private class CRLP_RollupSoftCredit_TEST {
         OpportunityContactRole orgOCR = [SELECT Id, OpportunityId, ContactId, Role FROM OpportunityContactRole
                     WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
         orgOCR.Role = label.npo02.Household_Member_Contact_Role;
-        OpportunityContactRole duplicateSoftCreditOCR = orgOCR.clone();
+        update orgOCR;
 
-        upsert new List<OpportunityContactRole>{orgOCR, duplicateSoftCreditOCR};
+        //Create duplicate Non Primary OCRs to test the Rollup for duplicate OCRs.
+        List<OpportunityContactRole> duplicateNonPrimaryOCRs = [
+            SELECT OpportunityId, ContactId, Role, IsPrimary 
+            FROM OpportunityContactRole 
+            WHERE IsPrimary = false 
+            AND Opportunity.IsWon = true
+        ].deepClone();
+        insert duplicateNonPrimaryOCRs;
 
         Test.startTest();
 
-        system.assertEquals((cnt * 3) + 2, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
+        system.assertEquals((cnt * 3) + duplicateNonPrimaryOCRs.size() + 1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
                 'There should be 301 OCR records on closed won opps');
 
         List<Id> contactIds = new List<Id>{ c1.Id, c2.Id, c3.Id, c4.Id };
