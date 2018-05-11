@@ -168,9 +168,32 @@ public class CRLP_RollupCMT {
                 this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
-                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
+        }
+        
+        private String getValueLabel (String value, String objectName, String fieldName) {
+            String valueLabel;
+            List<String> rtLabels = new List<String>();
+            if (fieldName == 'RecordTypeId') {
+                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType = :objectName AND IsActive = true];
+                // TODO: refactor to use this after summer18:
+                // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
+                Map<String, String> rtDeveloperNameToName = new Map<String,String>();
+                for (RecordType rt : rts) {
+                    rtDeveloperNameToName.put(rt.DeveloperName, rt.Name);
+                }
+                for (String val : value.split(';')) {
+                    //val is the RT dev name
+                    rtLabels.add(rtDeveloperNameToName.get(val));
+                }
+                valueLabel = String.join(rtLabels,';');
+            } else {
+                valueLabel = value;
+            }
+            valueLabel = (valueLabel != null ? valueLabel.replace(';', ';\n') : null);
+            return valueLabel;
         }
 
         /**
@@ -384,8 +407,6 @@ public class CRLP_RollupCMT {
 
         // replace all special characters and underscores
         recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_', ''), true);
-
-        System.debug(recordName);
 
         if (makeUnique == true) {
             // Create a GUID format unique string
