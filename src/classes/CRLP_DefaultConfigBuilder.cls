@@ -85,8 +85,14 @@ public class CRLP_DefaultConfigBuilder {
     /** @description The RecordName for the default filter group of Paid Payments. Not used in default config, but provided as a courtesy.  */
     public static final String FilterGroup_PaymentsPaid = RecordNamePrefix + 'Paid_Payments';
 
+    /** @description The RecordName for the default filter group of Paid Payments for Contacts. Not used in default config, but provided as a courtesy.  */
+    public static final String FilterGroup_PaymentsPaid_Contacts = RecordNamePrefix + 'Paid_Payments_Contacts';
+
     /** @description The RecordName for the default filter group of Written Off Payments. Not used in default config, but provided as a courtesy.  */
     public static final String FilterGroup_PaymentsWrittenOff = RecordNamePrefix + 'WrittenOff_Payments';
+
+    /** @description The RecordName for the default filter group of Written Off Payments. Not used in default config, but provided as a courtesy.  */
+    public static final String FilterGroup_PaymentsWrittenOff_Contacts = RecordNamePrefix + 'WrittenOff_Payments_Contacts';
 
 
     // Commonly used Fields in the rollup definitions to help with duplicate content and readability.
