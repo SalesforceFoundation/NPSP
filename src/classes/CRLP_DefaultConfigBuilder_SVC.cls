@@ -84,7 +84,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
 
         Boolean acctRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c != null);
         Boolean conRTExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c != null);
-
+        Boolean acctOppTypeExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c != null);
+        Boolean conOppTypeExclusionsExist = (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c != null);
         // ==============================================================================================================
         // Default "Donations: Close/Won Stage" filter group -- All Hard Credit, Soft Credit, and GAU Rollups
         // ==============================================================================================================
@@ -114,7 +115,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groupClosedWonDonations.rules.add(ruleRecordType);
         }
 
-        if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c != null) {
+        if (acctOppTypeExclusionsExist) {
             CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonations.recordName, acctOpp +': Excluded Opp.Type');
             ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
             ruleOppType.objectName = 'Opportunity';
@@ -164,7 +165,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 groupClosedWonDonationsContacts.rules.add(ruleRecordType);
             }
 
-            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c != null) {
+            if (conOppTypeExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleOppType = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContacts.recordName, contOpp +': Excluded Opp.Type');
                 ruleOppType.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppType.recordName;
                 ruleOppType.objectName = 'Opportunity';
@@ -304,6 +305,16 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groupPaymentsPaid.rules.add(ruleRecordTypePaid);
         }
 
+        if (acctOppTypeExclusionsExist) {
+            CRLP_RollupCMT.FilterRule ruleOppTypePaid = new CRLP_RollupCMT.FilterRule(groupPaymentsPaid.recordName, acctPmt +': Excl Opp.Type (Paid)');
+            ruleOppTypePaid.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppTypePaid.recordName;
+            ruleOppTypePaid.objectName = 'Opportunity';
+            ruleOppTypePaid.fieldName = 'Type';
+            ruleOppTypePaid.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleOppTypePaid.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
+            groupPaymentsPaid.rules.add(ruleOppTypePaid);
+        }
+
         // If there is a need to create another Filter Group for Contacts that is different than Accounts ...
         CRLP_RollupCMT.FilterGroup groupPaymentsPaidContacts;
         if (CRLP_DefaultConfigBuilder.isDifferentContactFilterGroupNeeded) {
@@ -323,7 +334,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rulePaidCon.value = 'true';
             groupPaymentsPaidContacts.rules.add(rulePaidCon);
 
-            if (acctRTExclusionsExist) {
+            if (conRTExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleRecordTypePaidCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaid.recordName, contPmt + ': Excl RT (Paid)');
                 ruleRecordTypePaidCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypePaidCon.recordName;
                 ruleRecordTypePaidCon.objectName = 'Opportunity';
@@ -332,6 +343,17 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypePaidCon.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
                 groupPaymentsPaidContacts.rules.add(ruleRecordTypePaidCon);
             }
+
+            if (conOppTypeExclusionsExist) {
+                CRLP_RollupCMT.FilterRule ruleOppTypePaidCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaidContacts.recordName, contPmt +': Excl Opp.Type (Paid)');
+                ruleOppTypePaidCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppTypePaidCon.recordName;
+                ruleOppTypePaidCon.objectName = 'Opportunity';
+                ruleOppTypePaidCon.fieldName = 'Type';
+                ruleOppTypePaidCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleOppTypePaidCon.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
+                groupPaymentsPaidContacts.rules.add(ruleOppTypePaidCon);
+            }
+
         }
 
         // ==============================================================================================================
@@ -357,6 +379,16 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeWrittenOff.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordTypeWrittenOff.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
             groupPaymentsWrittenOff.rules.add(ruleRecordTypeWrittenOff);
+        }
+
+        if (acctOppTypeExclusionsExist) {
+            CRLP_RollupCMT.FilterRule ruleOppTypeWrittenOff = new CRLP_RollupCMT.FilterRule(groupPaymentsWrittenOff.recordName, acctPmt +': Excl Opp.Type (Written Off)');
+            ruleOppTypeWrittenOff.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppTypeWrittenOff.recordName;
+            ruleOppTypeWrittenOff.objectName = 'Opportunity';
+            ruleOppTypeWrittenOff.fieldName = 'Type';
+            ruleOppTypeWrittenOff.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+            ruleOppTypeWrittenOff.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
+            groupPaymentsWrittenOff.rules.add(ruleOppTypeWrittenOff);
         }
 
         // If there is a need to create another Filter Group for Contacts that is different than Accounts ...
@@ -387,6 +419,17 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeWrittenOffCon.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
                 groupPaymentsWrittenOffContacts.rules.add(ruleRecordTypeWrittenOffCon);
             }
+
+            if (conOppTypeExclusionsExist) {
+                CRLP_RollupCMT.FilterRule ruleOppTypeWrittenOffCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaidContacts.recordName, contPmt +': Excl Opp.Type (Paid)');
+                ruleOppTypeWrittenOffCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppTypeWrittenOffCon.recordName;
+                ruleOppTypeWrittenOffCon.objectName = 'Opportunity';
+                ruleOppTypeWrittenOffCon.fieldName = 'Type';
+                ruleOppTypeWrittenOffCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
+                ruleOppTypeWrittenOffCon.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
+                groupPaymentsWrittenOffContacts.rules.add(ruleOppTypeWrittenOffCon);
+            }
+
         }
 
         // ==============================================================================================================
