@@ -103,22 +103,6 @@ private class CMT_FilterRule_TEST {
         System.AssertEquals(CMT_FilterRule.FilterOperation.EQUALS, CMT_FilterRuleUI_SVC.getFilterOperationFromString('Equals'));
         System.AssertEquals(CMT_FilterRuleUI_SVC.getFilterOperations().get(CMT_FilterRule.FilterOperation.EQUALS), 'Equals');
 
-        // Validate the available filter operations based on specific field types
-        System.AssertEquals(6, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'CloseDate').size(),
-                'There should be six valid operations for a Date field');
-        System.AssertEquals(6, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'Amount').size(),
-                'There should be six valid operations for a Numeric field');
-        System.AssertEquals(4, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'AccountId').size(),
-                'There should be four valid operations for an Id field');
-        System.AssertEquals(2, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'IsWon').size(),
-                'There should be two valid operations for a Boolean field');
-        System.AssertEquals(5, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'Description').size(),
-                'There should be five valid operations for a Textarea field');
-        System.AssertEquals(7, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'NextStep').size(),
-                'There should be seven valid operations for a Text field');
-        System.AssertEquals(7, CMT_FilterRuleUI_SVC.getAvailableOperations('Opportunity', 'StageName').size(),
-                'There should be seven valid operations for a picklist field');
-
         // Validate that fields are returned for the given SObject
         System.AssertNotEquals(0, CMT_FilterRuleUI_SVC.getAvailableFields(Opportunity.SObjectType).size());
         System.AssertEquals(10, CMT_FilterRuleUI_SVC.getAvailableFields(OpportunityContactRole.SObjectType).size(),
@@ -167,66 +151,5 @@ private class CMT_FilterRule_TEST {
                 'A Date comparison for LAST_YEAR should return true');
         System.AssertEquals(true, CMT_FilterRuleEvaluation_SVC.compareDateTypeWithConstant(SoapType.DATETIME, DateTime.Now().addYears(-2), 'TWO_YEARS_AGO', CMT_FilterRule.FilterOperation.EQUALS),
                 'A DateTime comparison for TWO_YEARS_AGO should return true');
-    }
-
-    /**
-     * @description Validate the method that validates Filter Field+Operation+Value combinations that may be entered
-     * by the User in the Rollups UI
-     */
-    static testMethod void test_ValidateFilterOperations() {
-
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.EQUALS, null),
-            'A null value should be valid for a Date field Equals operation');
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.GREATER, null),
-            'A null value should be invalid for a Date field Greater operation');
-
-        String strValue = 'String Value';
-        String dtValue = DateTime.now().format('YYYY-MM-dd');
-        String dttmValue = DateTime.now().format('YYYY-MM-dd hh:mm:ss');
-        String boolValue = 'true';
-        String numValue = '100.23';
-        String badValue = 'XYX';
-        String validId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
-
-        // Date field tests
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.EQUALS, badValue),
-            'A bad string value should be invalid for a Date field Equals operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.LESS, dtValue),
-            'A date string value should be valid for a Date field Less operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.LESS, 'TODAY'),
-            'A date constant value should be valid for a Date field Less operation');
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CloseDate, CMT_FilterRule.FilterOperation.GREATER, null),
-                'A null constant value should be invalid for a Date field Greaeter operation');
-
-        // DateTime field tests
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.EQUALS, badValue),
-                'A bad string value should be invalid for a DateTime field Equals operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, dtValue),
-                'A date string value should be valid for a DateTime field Less operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, dttmValue),
-                'A datetime string value should be valid for a DateTime field Less operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.CreatedDate, CMT_FilterRule.FilterOperation.LESS, 'TODAY'),
-                'A date constant value should be valid for a DateTime field Less operation');
-
-        // Boolean field tests
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.IsWon, CMT_FilterRule.FilterOperation.EQUALS, badValue),
-                'A bad string value should be invalid for a Boolean field Equals operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.IsWon, CMT_FilterRule.FilterOperation.EQUALS, boolValue),
-                'A boolean string value should be valid for a Boolean field Equals operation');
-
-        // Number field tests
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.Amount, CMT_FilterRule.FilterOperation.EQUALS, badValue),
-                'A bad string value should be invalid for a Number field Equals operation');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.Amount, CMT_FilterRule.FilterOperation.LESS, numValue),
-                'A number string value should be valid for a Number field Less operation');
-
-        // Id field tests
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, badValue),
-                'A bad string value should be invalid for an Id field Equals operation');
-        System.AssertEquals(false, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId + ';' + badValue),
-                'An Id string value should be invalid for a Id field Equals operation with one bad Id');
-        System.AssertEquals(true, CMT_FilterRuleUI_SVC.validateFilterValue(Opportunity.AccountId, CMT_FilterRule.FilterOperation.EQUALS, validId + ';' + validId),
-                'An Id string value should be valid for a Id field Equals operation with two Ids');
-
     }
 }
