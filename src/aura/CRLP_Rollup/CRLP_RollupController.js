@@ -58,10 +58,9 @@
                     return a.name > b.name;
                 });
                 cmp.set("v.timeBoundOperations", tOps);
-
                 cmp.set("v.operations", model.operations);
                 cmp.set("v.objectDetails", model.fieldsByDataType);
-                console.log('before change mode');
+
                 //change mode needs to be fired here because the sibling change of mode isn't being registered
                 helper.changeMode(cmp);
                 helper.setObjectAndFieldDependencies(cmp);

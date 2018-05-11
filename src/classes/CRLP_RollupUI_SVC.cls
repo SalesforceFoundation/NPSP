@@ -440,7 +440,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', objectName+' '+dfr.name);
                 fieldObject.put('label', objectLabel+': '+dfr.label);
-                String fieldType = getFieldType(objectName,dfr.name);
+                String fieldType = getFieldType(objectName, dfr.name);
                 fieldObject.put('type', fieldType);
 
                 fieldObjectList.add(fieldObject);
@@ -469,8 +469,8 @@ public with sharing class CRLP_RollupUI_SVC {
             Map<String, String> fieldObject = new Map<String, String>();
             //this method is reused for rollups, where obj concatenation is needed, and filter groups, where it is not
             fieldObject.put('name', (concatenate ? objectName+' ' : '') + field);
-            fieldObject.put('label', (concatenate ? objectLabel +': ' : '') + UTIL_Describe.getFieldLabel(objectName,field));
-            String fieldType = getFieldType(objectName,field);
+            fieldObject.put('label', (concatenate ? objectLabel +': ' : '') + UTIL_Describe.getFieldLabel(objectName, field.toLowerCase()));
+            String fieldType = getFieldType(objectName, field);
             fieldObject.put('type', fieldType);
 
             fieldObjectList.add(fieldObject);
@@ -489,7 +489,7 @@ public with sharing class CRLP_RollupUI_SVC {
      * @return data type string
      */
     private static String getFieldType (String objectName, String field) {
-        String fieldType = UTIL_Describe.getFieldType(objectName,field);
+        String fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
         // re-casting picklists and multipicklists as strings because strings and picklists are interchangeable for rollups
         if(fieldType == 'PICKLIST' || fieldType == 'MULTIPICKLIST') {
             fieldType = 'STRING';
