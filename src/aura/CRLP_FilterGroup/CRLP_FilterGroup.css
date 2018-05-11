@@ -22,3 +22,6 @@
 .THIS .slds-has-error {
     max-height: 60px;
 }
+.THIS .nameField {
+    height: 60px;
+}
