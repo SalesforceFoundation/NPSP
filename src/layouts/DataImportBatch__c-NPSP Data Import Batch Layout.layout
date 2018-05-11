@@ -2,6 +2,7 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>Process_Batch</customButtons>
     <customButtons>Batch_Gift_Entry</customButtons>
+    <customButtons>Edit_Processing_Settings</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -160,6 +161,11 @@
             <actionName>Batch_Gift_Entry</actionName>
             <actionType>CustomButton</actionType>
             <sortOrder>3</sortOrder>
+        </platformActionListItems>
+        <platformActionListItems>
+            <actionName>Edit_Processing_Settings</actionName>
+            <actionType>CustomButton</actionType>
+            <sortOrder>4</sortOrder>
         </platformActionListItems>
     </platformActionList>
     <relatedLists>
