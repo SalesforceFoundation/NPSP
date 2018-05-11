@@ -421,7 +421,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             }
 
             if (conOppTypeExclusionsExist) {
-                CRLP_RollupCMT.FilterRule ruleOppTypeWrittenOffCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaidContacts.recordName, contPmt +': Excl Opp.Type (Paid)');
+                CRLP_RollupCMT.FilterRule ruleOppTypeWrittenOffCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaidContacts.recordName, contPmt +': Excl Opp.Type (Written Off)');
                 ruleOppTypeWrittenOffCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleOppTypeWrittenOffCon.recordName;
                 ruleOppTypeWrittenOffCon.objectName = 'Opportunity';
                 ruleOppTypeWrittenOffCon.fieldName = 'Type';
