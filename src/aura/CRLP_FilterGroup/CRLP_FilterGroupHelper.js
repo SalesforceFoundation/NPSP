@@ -329,8 +329,19 @@
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
-
-        if (filterRuleFieldType === "multipicklist" && valueApiName) {
+        
+        var fieldName = cmp.get("v.activeFilterRule.fieldName");
+        if (fieldName === 'RecordTypeId') {
+            var labelList = [];
+            var value = cmp.get("v.activeFilterRule.value");
+            var filterRuleConstantPicklist = cmp.get("v.filterRuleConstantPicklist");
+            for (var i=0; i<valueApiName.length; i++) {
+                labelList.push(this.retrieveFieldLabel(valueApiName[i], filterRuleConstantPicklist));
+            }
+            updatedLabel = labelList.join(";\n");
+            cmp.set("v.activeFilterRule.value", valueApiName.join(";"));
+        } else if (filterRuleFieldType === "multipicklist" && valueApiName) {
+            // reformat for separate lines
             updatedLabel = valueApiName.join(";\n");
             var newValueApiName = valueApiName.join(";");
             cmp.set("v.activeFilterRule.value", newValueApiName);
