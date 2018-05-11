@@ -215,7 +215,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // parentKeyField needed for the rollup logic.
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                 parentKeyField = 'ContactId';
-            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 parentKeyField = 'Contact.AccountId';
             }
 
