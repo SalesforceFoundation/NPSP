@@ -96,7 +96,7 @@
      * @param allFields: list of mapped fields to their type to filter
      * @return: the filtered list of values
      */
-    filterFieldsByType: function (cmp, typeList, allFields) {
+    filterFieldsByType: function (cmp, typeList, allFields, summaryFieldReferenceTo) {
         //if type is null, no detail field is selected
         console.log("filter fields by type function");
         var newFields = [];
@@ -105,7 +105,15 @@
             if (!(type === undefined || type === null)) {
                 allFields.forEach(function (field) {
                     if(field !== undefined) {
-                        if (field.type === type) {
+                        //field.type is the detail field
+                        //type is the target field
+                        if (type === 'REFERENCE') { //rolling up into a lookup field
+                            if (field.type === 'REFERENCE' || field.type === 'ID') { // possible detail fields are IDs and other lookup fields because they store IDs
+                                if(summaryFieldReferenceTo && (field.referenceTo === summaryFieldReferenceTo)) { // make sure the referenced objects match
+                                    newFields.push(field);
+                                }
+                            }
+                        } else if (field.type === type) {
                             newFields.push(field);
                         }
                     }
@@ -138,19 +146,24 @@
             var objectFields = cmp.get("v.objectDetails")[potentialDetailObjects[i]];
             allFields = allFields.concat(objectFields);
         }
-
         var newFields = [];
 
         //loop over all summary fields to get the type of selected field
         var summaryFields = cmp.get("v.summaryFields");
-        var type = this.retrieveFieldType(cmp, summaryField, summaryFields);
+        var field = this.retrieveFieldTypeAndReferenceTo(cmp, summaryField, summaryFields);
+        var type;
+        var summaryFieldReferenceTo;
+        if (field) {
+            type = field.type;
+            summaryFieldReferenceTo = field.referenceTo;
+        }
 
         //TODO: maybe check if type is the same to see if need to filter?
         //if type is undefined, return all fields
         if (type === undefined || allFields === undefined) {
             newFields = allFields;
         } else {
-            newFields = this.filterFieldsByType(cmp, [type], allFields);
+            newFields = this.filterFieldsByType(cmp, [type], allFields, summaryFieldReferenceTo);
         }
 
         if (newFields.length > 0) {
@@ -748,6 +761,20 @@
             if (fieldList[i].name === field) {
                 var type = fieldList[i].type;
                 return type;
+            }
+        }
+    },
+
+    /**
+     * @description: gets the type of a field
+     * @param field: name of the field
+     * @param fieldList: list of fields with name, type and label keys
+     * @return: the map of the field
+     */
+    retrieveFieldTypeAndReferenceTo: function(cmp, field, fieldList){
+        for (var i = 0; i < fieldList.length; i++) {
+            if (fieldList[i].name === field) {
+                return fieldList[i];
             }
         }
     },
