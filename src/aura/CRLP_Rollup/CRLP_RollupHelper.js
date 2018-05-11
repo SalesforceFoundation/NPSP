@@ -152,12 +152,6 @@
         }
 
         cmp.set("v.detailFields", newFields);
-
-        var currentMode = cmp.get("v.mode");
-        if (currentMode === 'create') {
-            //reset detail field to null to prompt user selection
-            cmp.set("v.activeRollup.detailField", null);
-        }
     },
 
     /**
@@ -395,6 +389,13 @@
         renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupTypeLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
+
+        //reset detail fields once rendering is determined
+        var currentMode = cmp.get("v.mode");
+        if (currentMode === 'create' || !renderMap["detailField"]) {
+            //reset detail field to null to prompt user selection or if it's not displayed
+            cmp.set("v.activeRollup.detailField", null);
+        }
 
         //check if save button can be activated
         this.verifyRollupSaveActive(cmp, activeRollup.detailField);
@@ -795,7 +796,7 @@
         if (cmp.get("v.activeRollup.detailField")) {
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
-            if(detailList[1] === 'null') {
+            if (detailList[1] === 'null') {
                 // check for null string because we had to concatenate potentially null values
                 // and server requires actual null, not string of null
                 rollupCMT.detailField = null;

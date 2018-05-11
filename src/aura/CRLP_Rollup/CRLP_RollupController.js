@@ -7,8 +7,6 @@
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
         helper.toggleSpinner(cmp, true);
-         /*
-         * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
         var detailObjects = cmp.get("v.detailObjects");
         var summaryObjects = cmp.get("v.summaryObjects");
