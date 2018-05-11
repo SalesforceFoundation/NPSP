@@ -194,7 +194,6 @@
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
         if(cmp.get("v.mode") == 'delete') {
-            console.log('HITTING DELETE MODE IN SAVE FUNCTION');
             cmp.set("v.activeFilterGroup.isDeleted", true);
             helper.toggleFilterRuleModal(cmp);
         }
@@ -237,6 +236,9 @@
                 //special reformatting for multipicklist and semi-colon delimited lists, as well as Record Type ID field
                 if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
                     filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value);
+                } else if (filterRule.fieldName === 'RecordTypeId' && 
+                           (filterRule.operationName === 'Equals' || filterRule.operationName === 'Not_Equals')) {
+                    filterRule.valueLabel = helper.retrieveFieldLabel(filterRule.value, cmp.get("v.filterRuleConstantPicklist"));
                 } else {
                     filterRule.valueLabel = filterRule.value;
                 }

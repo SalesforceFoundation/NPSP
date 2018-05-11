@@ -168,9 +168,40 @@ public class CRLP_RollupCMT {
                 this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
-                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
+        }
+
+        /**
+         * @description Convert the value label to a readable format based on the developer name for record types
+         * or split with new lines
+         * @param value the API value
+         * @param objectName the API name of the object
+         * @param fieldName the API name of the field
+         * @return Metadata.CustomMetadata instance for deployment
+         */
+        private String getValueLabel (String value, String objectName, String fieldName) {
+            String valueLabel;
+            List<String> rtLabels = new List<String>();
+            if (fieldName == 'RecordTypeId') {
+                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType = :objectName AND IsActive = true];
+                // TODO: refactor to use this after summer18:
+                // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
+                Map<String, String> rtDeveloperNameToName = new Map<String,String>();
+                for (RecordType rt : rts) {
+                    rtDeveloperNameToName.put(rt.DeveloperName, rt.Name);
+                }
+                for (String val : value.split(';')) {
+                    //val is the RT dev name
+                    rtLabels.add(rtDeveloperNameToName.get(val));
+                }
+                valueLabel = String.join(rtLabels,';');
+            } else {
+                valueLabel = value;
+            }
+            valueLabel = (valueLabel != null ? valueLabel.replace(';', ';\n') : null);
+            return valueLabel;
         }
 
         /**
@@ -299,7 +330,7 @@ public class CRLP_RollupCMT {
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
-                this.detailFieldLabel =  rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
+                this.detailFieldLabel = rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
                 this.amountObjectLabel = rlp.Amount_Object__r.Label;
                 this.amountFieldLabel = rlp.Amount_Field__r.Label;
                 this.dateObjectLabel = rlp.Date_Object__r.Label;
@@ -383,8 +414,6 @@ public class CRLP_RollupCMT {
 
         // replace all special characters and underscores
         recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_', ''), true);
-
-        System.debug(recordName);
 
         if (makeUnique == true) {
             // Create a GUID format unique string
