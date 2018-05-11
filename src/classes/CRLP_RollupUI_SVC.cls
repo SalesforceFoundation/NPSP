@@ -779,12 +779,12 @@ public with sharing class CRLP_RollupUI_SVC {
             picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
         } else {
             Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
-            picklistValues = UTIL_RecordTypes.getRecordTypesForSelectList(sObjectType);
+            picklistValues = UTIL_RecordTypes.getRecordTypeDevNamesForSelectList(sObjectType);
         }
 
         for (SelectOption o: picklistValues) {
             Map<String, String> labeledOption = new Map<String, String>();
-            labeledOption.put('value', (selectedField != 'RecordTypeId' ? o.getValue() : o.getLabel()));
+            labeledOption.put('value', o.getValue());
             labeledOption.put('label', o.getLabel());
 
             optionsList.add(labeledOption);
