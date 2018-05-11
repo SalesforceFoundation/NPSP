@@ -12,11 +12,15 @@
         <!-- Hands on table for Angular 0.13 -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/ngHandsontable.min.js')}"/>
 
-        <!-- jQuery JavaScript 3.2.1 -->
+        <!-- jQuery 3.2.1 -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/jquery.min.js')}"/>
 
+        <!-- Custom JS -->
+        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils.js')}"/>
+
         <!-- Custom CSS -->
-        <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/BGEStyle.css')}"/>
+        <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/style.css')}"/>
+
 
         <style>
 
@@ -138,10 +142,12 @@
                 margin-right: 85px !important;
             }
 
-        </style>
+            td.tooltip-cell {
+                background: white !important;
+            }
 
-        <!-- Custom Javascript -->
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/BGEUtils.js')}"/>
+
+        </style>
 
         <script>
             function commit() {
@@ -154,7 +160,9 @@
 
         <script>
 
-            var myApp;
+                var rowErrors = {};
+
+                var myApp;
 
                 myApp = angular.module('myApp', ['ngHandsontable','ngSanitize'])
                 myApp.controller('MainCtrl', function($scope, $compile) {
@@ -208,34 +216,52 @@
                     }
                 };
 
-                function cellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+                function recordIdRenderer (instance, td, row, col, prop, value, cellProperties) {
 
-                    try {
-
-                        Handsontable.TextCell.renderer.apply(this, arguments);
-
-                        if (col == 0) {
-
-                            var dataRowId = instance.getDataAtRowProp(row, 'Id');
-                            td.id = dataRowId;
-
-                            if (dataRowId) {
-
-                                $('#' + dataRowId).css( "border-top", "none");
-                                $('#' + dataRowId).css( "border-bottom", "none");
-                                $('#' + dataRowId).attr( "readonly", "readonly");
-                            }
-
-                            var escaped = Handsontable.helper.stringify(value);
-                            td.innerHTML = escaped;
-                            return td;
-                        }
-                    }
-                    catch(ex) {
-                        console.warn('Catching text exception');
-                    }
+                    var renderedCell = instance.getCell.(row, col);
+                    console.log(renderedCell);
                 }
 
+                function cellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+                    var iconContainer = document.createElement('div');
+                    iconContainer.style.display = 'none';
+
+                    Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+                    });
+                    Handsontable.dom.addEvent(iconContainer, 'mouseleave', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+                        removeMessage(td);
+                    });
+                    Handsontable.dom.addEvent(iconContainer, 'mousemove', function (e) {
+                        e.preventDefault(); // prevent selection quirk
+
+                        if (rowErrors[td.id]) {
+                            iconContainer.style.display = 'block';
+                            addMessage(td, rowErrors[td.id]);
+                        }
+                    });
+
+                    var iconImage = document.createElement('img');
+                    iconImage.className = 'tooltip-image';
+                    iconImage.src = "{!URLFOR($Resource.BGEResources, '/icons/warning.png')}";
+                    iconImage.style.width = "60%";
+                    iconImage.style.cursor = "pointer";
+
+                    iconContainer.appendChild(iconImage);
+                    Handsontable.dom.empty(td);
+                    td.appendChild(iconContainer);
+
+                    td.style.borderBottom = 'none';
+                    td.style.borderTop = 'none';
+                    td.style.borderLeft = 'none';
+                    td.style.background = 'white !important';
+                    td.className = 'tooltip-cell';
+                    td.id = row + col + Date.now();
+
+                    return td;
+                }
 
                 if(window.attachEvent) {
 
@@ -270,6 +296,7 @@
                     return window.innerHeight * 70 /100;
                 }
 
+                function
 
                 //To display action column icons
                 function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -289,14 +316,6 @@
                     var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
 
                     td.innerHTML = actionIcon;
-                    return td;
-                }
-
-                function bgeActionRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-                    var escaped = '<button>click me</button>';
-                    td.innerHTML = escaped;
-
                     return td;
                 }
 
@@ -382,7 +401,10 @@
                         col.hidden = true;
                         col.className = "htCenter htMiddle slds-truncate slds-hide";
                         col.disableVisualSelection = true;
+                        col.renderer = recordIdRenderer
                         recordIdCol = col;
+
+
                         // dynamicColumns.splice(3, 3, col);
                     }
 
@@ -491,6 +513,29 @@
                         }
 
                     },
+
+                    afterInit: function() {
+
+                        renderState = true;
+
+                        var totalColumns = this.countCols();
+                        var totalRows = this.countRows();
+
+                        var idColumns = this.getDataAtCol(totalColumns - 1);
+
+                        for (var indexRow = 0; indexRow < totalRows; indexRow ++) {
+
+                            var cellValue = this.getDataAtCell(indexRow, totalColumns - 1);
+
+                            if (cellValue == null) {
+                                console.log(indexRow, totalColumns - 1);
+                                this.setDataAtCell(indexRow, totalColumns - 1, Date.now());
+                            }
+                        }
+
+                        console.log("table ready");
+                    },
+
 
                     beforeRemoveRow: function(index, amount){
 
@@ -676,6 +721,7 @@
                         }
                     },
 
+                    //fernando
                     afterSelectionEnd: function(row, column, rowEnd, columnEnd) {
 
                         var timeout = 0;
@@ -686,7 +732,6 @@
                             timeout = 450;
                         }
 
-
                         setTimeout(function() {
 
                             wait = false;
@@ -694,6 +739,8 @@
                             var dataRowId = self.getDataAtRowProp(lastSelectedRow, 'Id');
 
                             var dataAtRow = self.getDataAtRow(lastSelectedRow);
+
+
 
                             if (lastSelectedRow !== null && lastSelectedRow !== row) {
 
@@ -705,7 +752,10 @@
                                         wasUpArrowPressed = false;
                                     }
 
-                                    triggerSave(dataRowId, row, lastSelectedRow, self, function(result) {
+                                    console.log(row);
+                                    console.log(lastSelectedRow);
+
+                                    triggerSave(dataRowId, row, lastSelectedRow, self, function(result, indexId) {
 
                                         if (!dataRowId) {
 
@@ -713,8 +763,6 @@
 
                                             dataRowId  = result.dataImportIds[0];
                                         }
-
-                                        console.error(result.messages);
 
                                         var messages = validateRequiredFields(row, result.messages, false);
 
@@ -724,6 +772,14 @@
                                             var escaped = addTooltip(dataRowId, row, result, messages);
                                             console.log('es aca');
                                             data[lastSelectedRow]['Errors'] = escaped;
+
+                                            console.warn('processing errors on "afterselection" ends');
+                                            if (!rowErrors[indexId]) {
+                                                rowErrors[indexId] = [];
+                                            }
+
+                                            rowErrors[indexId] = rowErrors[indexId].concat(messages);
+                                            $('#' + indexId).find('div').show();
                                         }
                                         else {
 
@@ -757,10 +813,7 @@
                             hot.deselectCell();
                         }
                     },
-                    afterInit: function () {
 
-                        renderState = true;
-                    },
                     afterCreateRow: function(index, amount) {
 
                         if(renderState == true) {
@@ -922,6 +975,12 @@
                     // Get Batch Id from URL
                     var pBatchId = getAllUrlParams().batchid;
 
+                    console.log('new row');
+
+                    var totalColumns = self.countCols();
+
+                    var recordCell = self.getCell(lastSelectedRow, totalColumns - 1);
+
                     if (data) {
 
                         Visualforce.remoting.Manager.invokeAction(
@@ -932,7 +991,7 @@
 
                             function (result, event) {
 
-                                callback(result);
+                                callback(result, $(recordCell).text());
 
                                 $scope.$apply();
                             }
@@ -965,6 +1024,9 @@
 
                         var pBatchId = getAllUrlParams().batchid;
 
+                        console.log('cellupdate');
+                        console.error(dataAtLastSelectedRow);
+
                         Visualforce.remoting.Manager.invokeAction(
                             '{!$RemoteAction.BGE_HandsOnGridController.updateCell}',
                             dataRowId,
@@ -991,7 +1053,7 @@
                             var row = gridData[r];
                             var dataRowId = row[getColumnFromName('Id')];
 
-                            triggerSave(dataRowId, row, r, hot, function(result) {
+                            triggerSave(dataRowId, row, r, hot, function(result, indexId) {
 
                                 if (dataRowId === null) {
 
@@ -1005,6 +1067,15 @@
                                     //Add tooltip message
                                     var escaped = addTooltip(dataRowId, r, result, messages);
                                     data[r]['Errors'] = escaped;
+
+                                    console.warn('processing errors on "triggerSaveAll" ends');
+                                    if (!rowErrors[indexId]) {
+                                        rowErrors[indexId] = [];
+                                    }
+
+                                    rowErrors[indexId] = rowErrors[indexId].concat(messages);
+                                    $('#' + indexId).find('div').show();
+
                                 }
                                 else {
 
@@ -1301,18 +1372,19 @@
                 $(".tooltip-error" ).remove();
             }
 
-            function addMessage(dataRowId, messages, styleTop) {
-
-                $('.tooltip-error').remove();
+            function addMessage(instance, messages) {
 
                 var htmlTooltip = '<section class="slds-popover slds-nubbin_left slds-theme_error tooltip-error" role="dialog" aria-label="Error Tooltip">';
                 htmlTooltip += '<div class="slds-popover__body">';
-                htmlTooltip += '<p>' + messages + '</p>';
+                htmlTooltip += '<ul>';
+
+                for (var i = 0; i < messages.length; i ++) {
+                    htmlTooltip += '<li>' + messages[i] + '</li>';
+                }
+                htmlTooltip += '</ul>';
                 htmlTooltip += '</div></section>';
 
-                // var htmlTooltip = '<span id="selector" style="position: absolute; margin-top: ' + styleTop + 'em;"><div class="slds-popover slds-popover_tooltip slds-nubbin_bottom-left slds-theme_error" style="min-width: 28em;" role="tooltip" id="contentTooltip"><div class="slds-popover__body slds-text-body_small" id="notifyContent">' + messages + '</div></span>';
-
-                $(dataRowId).append(htmlTooltip);
+                instance.append(htmlTooltip)
             }
 
             function displayActionMenu(row) {
