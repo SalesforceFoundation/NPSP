@@ -898,7 +898,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Timeout error message</shortDescription>
-        <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
+        <value>Deleting the {0} has timed out. Please try again.</value>
     </labels>
     <labels>
         <fullName>CRLP_DisabledTitle</fullName>
