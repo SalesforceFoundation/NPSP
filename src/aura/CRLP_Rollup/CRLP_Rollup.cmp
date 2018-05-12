@@ -283,7 +283,7 @@
                                                 entityLabel="{!v.activeRollup.detailFieldLabel}"
                                                 apiName="{!v.activeRollup.detailField}"
                                                 options="{!v.detailFields}"
-                                                mediumDeviceSize="3"
+                                                mediumDeviceSize="4"
                                                 isRequired="true"
                                                 helpText="{!v.labels.createDetailFieldHelp}"
                             />
@@ -295,7 +295,7 @@
                                                 entityLabel="{!v.activeRollup.dateFieldLabel}"
                                                 apiName="{!v.activeRollup.dateField}"
                                                 options="{!v.dateFields}"
-                                                mediumDeviceSize="3"
+                                                mediumDeviceSize="4"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createDateFieldHelp}"
                             />
@@ -307,7 +307,7 @@
                                                 entityLabel="{!v.activeRollup.amountFieldLabel}"
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
-                                                mediumDeviceSize="3"
+                                                mediumDeviceSize="4"
                                                 hasNullOption="false"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
                             />
