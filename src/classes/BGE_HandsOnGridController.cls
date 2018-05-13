@@ -240,7 +240,7 @@ global class BGE_HandsOnGridController {
      * @return ResponseWrapper
      */
     @RemoteAction
-    global static ResponseWrapper save (Id rowId, String pBatchId, String jsonData) {
+    global static ResponseWrapper save (String rowId, String pBatchId, String jsonData) {
 
         ResponseWrapper response = new ResponseWrapper();
 
@@ -252,9 +252,9 @@ global class BGE_HandsOnGridController {
 
             newDataImport.NPSP_Data_Import_Batch__c = pBatchId;
 
-            if (rowId != null && !String.isEmpty(rowId)) {
+            if (rowId != null && !String.isEmpty(rowId) && rowId.length() >= 15) {
 
-                newDataImport.Id = rowId;
+                newDataImport.Id = Id.valueOf(rowId);
             }
 
 
