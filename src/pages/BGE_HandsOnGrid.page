@@ -401,9 +401,8 @@
                         col.hidden = true;
                         col.className = "htCenter htMiddle slds-truncate slds-hide";
                         col.disableVisualSelection = true;
-                        col.renderer = recordIdRenderer
+                        col.renderer = recordIdRenderer;
                         recordIdCol = col;
-
 
                         // dynamicColumns.splice(3, 3, col);
                     }
@@ -757,13 +756,6 @@
 
                                     triggerSave(dataRowId, row, lastSelectedRow, self, function(result, indexId) {
 
-                                        if (!dataRowId) {
-
-                                            self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
-
-                                            dataRowId  = result.dataImportIds[0];
-                                        }
-
                                         var messages = validateRequiredFields(row, result.messages, false);
 
                                         if (messages && messages.length > 0) {
@@ -782,6 +774,9 @@
                                             $('#' + indexId).find('div').show();
                                         }
                                         else {
+
+                                            self.setDataAtCell(row-1, getColumnFromName('Id'), result.dataImportIds[0]);
+                                            dataRowId  = result.dataImportIds[0];
 
                                             data[lastSelectedRow]['Errors'] = '';
                                         }
@@ -866,29 +861,6 @@
 
                     // return -1 if nothing can be found
                     return -1;
-                }
-
-
-                function addTooltip(dataRowId, row, result, messages) {
-
-                    var iconStyle = 'warning';
-                    var styleSuccess = '';
-                    var styleTop = -5 -  messages.length;
-
-                    var htmlTooltipId = 'selector' + dataRowId;
-                    var htmlTooltipIdParam = '\'#selector' + dataRowId + '\'';
-                    var newRowClass = '';
-
-                    if (!dataRowId) {
-                        htmlTooltipId = row + 'selectorNew';
-                        htmlTooltipIdParam = '\'#' + row + 'selectorNew\'';
-                    }
-
-                    var htmlIcon = '<div id='+ htmlTooltipId + ' onmouseleave="removeMessage(' + htmlTooltipIdParam + ');" onmousemove="addMessage(' + htmlTooltipIdParam + ', \'' + messages + '\', \'' + styleTop +  '\');" ><div class="slds-form-element" style="position: relative; z-index: 2;"><div class="slds-form-element__icon slds-align-middle"><button class="slds-button slds-button_icon slds-button slds-button_icon" aria-describedby="help" title="Help"><svg class="slds-icon slds-icon-text-error slds-icon_small" ' + styleSuccess + 'aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#' + iconStyle + '"' + ' /></svg></button></div></div></div>';
-
-                    var escaped = Handsontable.helper.stringify(htmlIcon);
-
-                    return escaped;
                 }
 
                 function validateRequiredFields(row, messages, onMass) {
