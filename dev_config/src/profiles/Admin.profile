@@ -91,6 +91,10 @@
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
     <tabVisibilities>
+        <tab>Batch_Template__c</tab>
+        <visibility>DefaultOn</visibility>
+    </tabVisibilities>
+    <tabVisibilities>
         <tab>Contact_Merge</tab>
         <visibility>DefaultOn</visibility>
     </tabVisibilities>
