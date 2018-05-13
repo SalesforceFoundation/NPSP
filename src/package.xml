@@ -1266,6 +1266,7 @@
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
+        <members>healthDetailsInvalidRecordtypeName</members>
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>
