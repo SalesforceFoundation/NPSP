@@ -482,6 +482,7 @@ public class CRLP_RollupCMT {
                     replace('Payment', 'Pmt').
                     replace('Allocation', 'Allo').
                     replace('Allocations', 'Allo').
+                    replace('Opportunities', 'Opps').
                     replace('Partial Soft Credit', 'PSC').
                     replace('Partial_Soft_Credit', 'PSC').
                     replace('Soft_Credit', 'sftCr').
