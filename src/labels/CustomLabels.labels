@@ -834,7 +834,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
-        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This field must be of the same Type as the Target Field.</value>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This list only shows fields whose field types are compatible with the selected Target field.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
