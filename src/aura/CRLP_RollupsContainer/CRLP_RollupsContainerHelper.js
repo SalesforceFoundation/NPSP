@@ -131,11 +131,11 @@
 
         if (context === 'rollup') {
             this.resetRollupDataGrid(cmp, list);
-            //todo: MAYBE change this to only be called when filter group is changed
-            this.requeryFilterGroups(cmp);
         } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
+        //todo: MAYBE change this to only be called when filter group is changed
+        this.requeryFilterGroups(cmp);
     },
 
     /**
