@@ -137,8 +137,9 @@
     /**
      * @description: filters possible detail fields by summary type and updates the detailFields attribute
      * @param potentialDetailObjects: list of potential detail objects for this rollup type
+     * @param isOnChange: flag to note if this is on change. Only set from onChangeRollupType.
      */
-    filterDetailFieldsBySummaryField: function (cmp, potentialDetailObjects) {
+    filterDetailFieldsBySummaryField: function (cmp, potentialDetailObjects, isOnChange) {
 
         //current version filters strictly; update will include type conversion fields
         var summaryField = cmp.get("v.activeRollup.summaryField");
@@ -167,6 +168,11 @@
             newFields = allFields;
         } else {
             newFields = this.filterFieldsByType(cmp, [type], allFields, summaryFieldReferenceTo);
+        }
+
+        //clear detail field on change
+        if (isOnChange) {
+            cmp.set("v.activeRollup.detailField", null);
         }
 
         cmp.set("v.detailFields", newFields);
@@ -345,7 +351,7 @@
 
         var amountObjectName = rollupTypeObject;
         var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObjectName);
-        this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
+        this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects, true);
 
         cmp.set("v.selectedRollupType", {label: rollupTypeLabel, name: rollupTypeObject});
         this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
@@ -407,13 +413,6 @@
         renderMap = this.renderDetailField(cmp, activeRollup.operation, rollupTypeLabel, renderMap);
 
         cmp.set("v.renderMap", renderMap);
-
-        //reset detail fields once rendering is determined
-        var currentMode = cmp.get("v.mode");
-        if (currentMode === 'create' || !renderMap["detailField"]) {
-            //reset detail field to null to prompt user selection or if it's not displayed
-            cmp.set("v.activeRollup.detailField", null);
-        }
 
         //check if save button can be activated
         this.verifyRollupSaveActive(cmp, activeRollup.detailField);
