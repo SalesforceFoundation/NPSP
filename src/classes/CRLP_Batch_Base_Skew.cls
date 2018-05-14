@@ -35,7 +35,6 @@
 * @description Abstract base class Skew Mode batch rollup operations
 */
 public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
-
     protected CRLP_Batch_Base_Skew() { }
 
     /**
@@ -288,8 +287,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // current data scope to the processing class to avoid taking up additional heap size with
             // cloned data.
             options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                options.setMapOfProcessedOppIdsByParentId(this.statefulMapOfOppIdsByParentId, parentIds);
             }
 
             // Call the method to do the actual rollups. This returns only records that require updating
@@ -305,8 +305,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             }
             if (lastParentIdProcessed != null && options.getUpdatedMapOfRollupsByParentId().containsKey(lastParentIdProcessed)) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    this.statefulMapOfOppIdsByAcct.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
+                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                    this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByParentId().get(lastParentIdProcessed));
                 }
             }
 
@@ -358,7 +359,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 // current data scope to the processing class to avoid taking up additional heap size with
                 // cloned data.
                 options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+                options.setMapOfProcessedOppIdsByParentId(this.statefulMapOfOppIdsByParentId, parentIds);
 
                 // Call the method to do the actual rollup on this last remaining record, which is basically
                 // just to return the updated record
