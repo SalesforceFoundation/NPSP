@@ -172,7 +172,15 @@ public class CRLP_RollupCMT {
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
         }
-        
+
+        /**
+         * @description Convert the value label to a readable format based on the developer name for record types
+         * or split with new lines
+         * @param value the API value
+         * @param objectName the API name of the object
+         * @param fieldName the API name of the field
+         * @return Metadata.CustomMetadata instance for deployment
+         */
         private String getValueLabel (String value, String objectName, String fieldName) {
             String valueLabel;
             List<String> rtLabels = new List<String>();
@@ -322,7 +330,7 @@ public class CRLP_RollupCMT {
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
-                this.detailFieldLabel = rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName);
+                this.detailFieldLabel = rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName.toLowerCase());
                 this.amountObjectLabel = rlp.Amount_Object__r.Label;
                 this.amountFieldLabel = rlp.Amount_Field__r.Label;
                 this.dateObjectLabel = rlp.Date_Object__r.Label;
@@ -475,6 +483,7 @@ public class CRLP_RollupCMT {
                     replace('Payment', 'Pmt').
                     replace('Allocation', 'Allo').
                     replace('Allocations', 'Allo').
+                    replace('Opportunities', 'Opps').
                     replace('Partial Soft Credit', 'PSC').
                     replace('Partial_Soft_Credit', 'PSC').
                     replace('Soft_Credit', 'sftCr').

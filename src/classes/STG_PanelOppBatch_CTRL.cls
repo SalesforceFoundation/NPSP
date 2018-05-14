@@ -66,6 +66,7 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             // run legacy batch rollups
             RLLP_OppRollup rg = new RLLP_OppRollup();
             rg.rollupAll();
+            this.numJobSubmitted = 4; // hardcoded to match what this runs
         } else {
 
             // Customizable Rollup Jobs are more complicated. There are 4 base jobs, but there may be 4 more
@@ -76,6 +77,8 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                     CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
             };
+
+            this.numJobSubmitted = 0;
             for (CRLP_RollupProcessingOptions.RollupType jobType : jobTypeList) {
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
                 this.numJobSubmitted++;
