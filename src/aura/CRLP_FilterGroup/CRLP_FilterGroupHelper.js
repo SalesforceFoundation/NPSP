@@ -264,7 +264,7 @@
                                 cmp.set("v.cachedFilterRuleList", filterRuleListCached);
                                 cmp.set("v.deletedRuleList", []);
                                 
-                                var rollupItems = cmp.get("v.rollupItems");
+                                var rollupList = cmp.get("v.rollupList");
 
                                 // need to send back an object with the following properties
                                 var filterGroupTableItem = {};
@@ -277,8 +277,8 @@
                                 } else {
                                     filterGroupTableItem.countFilterRules = 0;
                                 }
-                                if (rollupItems) {
-                                    filterGroupTableItem.countRollups = rollupItems.length;
+                                if (rollupList) {
+                                    filterGroupTableItem.countRollups = rollupList.length;
                                 } else {
                                     filterGroupTableItem.countRollups = 0;
                                 }
