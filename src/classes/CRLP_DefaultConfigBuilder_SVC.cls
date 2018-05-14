@@ -325,6 +325,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypePaid.fieldName = 'RecordTypeId';
             ruleRecordTypePaid.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordTypePaid.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
+            ruleRecordTypePaid.isDeleted = false;
             groupPaymentsPaid.rules.add(ruleRecordTypePaid);
         }
 
@@ -335,6 +336,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleOppTypePaid.fieldName = 'Type';
             ruleOppTypePaid.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleOppTypePaid.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
+            ruleOppTypePaid.isDeleted = false;
             groupPaymentsPaid.rules.add(ruleOppTypePaid);
         }
 
@@ -348,6 +350,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groupPaymentsPaidContacts.recordName = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid_Contacts;
             groupPaymentsPaidContacts.description = 'All paid Payments.'+
                     (conRTExclusionsExist ? ' Excludes Record Types as defined in legacy NPSP Rollup Settings.' : '');
+            groupPaymentsPaidContacts.isDeleted = false;
 
             CRLP_RollupCMT.FilterRule rulePaidCon = new CRLP_RollupCMT.FilterRule(groupPaymentsPaidContacts.recordName, contPmt + ': Paid Only');
             rulePaidCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + rulePaid.recordName;
@@ -355,6 +358,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             rulePaidCon.fieldName = 'npe01__Paid__c';
             rulePaidCon.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
             rulePaidCon.value = 'true';
+            rulePaidCon.isDeleted = false;
             groupPaymentsPaidContacts.rules.add(rulePaidCon);
 
             if (conRTExclusionsExist) {
@@ -364,6 +368,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypePaidCon.fieldName = 'RecordTypeId';
                 ruleRecordTypePaidCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleRecordTypePaidCon.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
+                ruleRecordTypePaidCon.isDeleted = false;
                 groupPaymentsPaidContacts.rules.add(ruleRecordTypePaidCon);
             }
 
@@ -374,6 +379,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleOppTypePaidCon.fieldName = 'Type';
                 ruleOppTypePaidCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleOppTypePaidCon.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
+                ruleOppTypePaidCon.isDeleted = false;
                 groupPaymentsPaidContacts.rules.add(ruleOppTypePaidCon);
             }
 
@@ -403,6 +409,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeWrittenOff.fieldName = 'RecordTypeId';
             ruleRecordTypeWrittenOff.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleRecordTypeWrittenOff.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
+            ruleRecordTypeWrittenOff.isDeleted = false;
             groupPaymentsWrittenOff.rules.add(ruleRecordTypeWrittenOff);
         }
 
@@ -413,6 +420,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleOppTypeWrittenOff.fieldName = 'Type';
             ruleOppTypeWrittenOff.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
             ruleOppTypeWrittenOff.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Types__c;
+            ruleOppTypeWrittenOff.isDeleted = false;
             groupPaymentsWrittenOff.rules.add(ruleOppTypeWrittenOff);
         }
 
@@ -426,6 +434,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groupPaymentsWrittenOffContacts.recordName = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsWrittenOff_Contacts;
             groupPaymentsWrittenOffContacts.description = 'All written off Payments.'+
                     (conRTExclusionsExist ? ' Excludes Record Types as defined in legacy NPSP Rollup Settings.' : '');
+            groupPaymentsWrittenOffContacts.isDeleted = false;
 
             CRLP_RollupCMT.FilterRule ruleWrittenOffCon = new CRLP_RollupCMT.FilterRule(groupPaymentsWrittenOffContacts.recordName, contPmt + ': Written Off Only');
             ruleWrittenOffCon.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleWrittenOffCon.recordName;
@@ -433,6 +442,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleWrittenOffCon.fieldName = 'npe01__Written_Off__c';
             ruleWrittenOffCon.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
             ruleWrittenOffCon.value = 'true';
+            ruleWrittenOffCon.isDeleted = false;
             groupPaymentsWrittenOffContacts.rules.add(ruleWrittenOffCon);
 
             if (conRTExclusionsExist) {
@@ -442,6 +452,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeWrittenOffCon.fieldName = 'RecordTypeId';
                 ruleRecordTypeWrittenOffCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleRecordTypeWrittenOffCon.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
+                ruleRecordTypeWrittenOffCon.isDeleted = false;
                 groupPaymentsWrittenOffContacts.rules.add(ruleRecordTypeWrittenOffCon);
             }
 
@@ -452,6 +463,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleOppTypeWrittenOffCon.fieldName = 'Type';
                 ruleOppTypeWrittenOffCon.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
                 ruleOppTypeWrittenOffCon.value = CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Types__c;
+                ruleOppTypeWrittenOffCon.isDeleted = false;
                 groupPaymentsWrittenOffContacts.rules.add(ruleOppTypeWrittenOffCon);
             }
 

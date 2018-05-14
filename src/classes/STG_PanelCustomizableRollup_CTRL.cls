@@ -134,6 +134,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
         Savepoint sp = Database.setSavepoint();
         try {
+
             Boolean settingHasChanged = (isCRLPenabledPrevious != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
 
             if (settingHasChanged) {
@@ -167,7 +168,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                     // reset to legacy jobs
                     UTIL_MasterSchedulableHelper.setScheduledJobs();
                 }
-
+            }
 
         } catch (Exception e) {
             Database.rollback(sp);
