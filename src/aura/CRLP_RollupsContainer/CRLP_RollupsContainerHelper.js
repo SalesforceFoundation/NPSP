@@ -1,35 +1,28 @@
 ({
     /**
      * @description: return to main grid from rollup detail and remove the rollup from the cached and active grids
-     * @param message: passed in from the handleMessage
+     * @param recordName: message passed in from the handleMessage
+     * @param list: active working list
+     * @param grid: active grid, either rollup or filterGroup
     */
-    deleteRollup: function(cmp, message) {
-        this.handleCancelDetailEvent(cmp, 'rollup');
-        var rollupsList = cmp.get("v.rollupList");
-        for (var i = 0; i < rollupsList.length; i++) {
-            if (rollupsList[i].recordName === message) {
+    deleteGridItem: function (cmp, list, recordName, grid) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].recordName === recordName || list[i].name === recordName) {
                 // if the Id matches, delete that record
-                rollupsList.splice(i, 1);
+                list.splice(i, 1);
                 break;
             }
         }
-        this.resetRollupDataGrid(cmp, rollupsList);
-        this.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
-    },
-
-    deleteFilterGroup: function(cmp, message) {
-        var filterGroupList = cmp.get("v.filterGroupList");
-        for (var i = 0; i < filterGroupList.length; i++) {
-            if (filterGroupList[i].name === message) {
-                // if the Id matches, delete that record
-                filterGroupList.splice(i, 1);
-                break;
-            }
+        if (grid === 'rollup') {
+            this.resetRollupDataGrid(cmp, list);
+            this.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+        } else if (grid === 'filterGroup') {
+            cmp.set("v.filterGroupList", list);
+            this.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
         }
-        cmp.set("v.filterGroupList", filterGroupList);
-        this.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
-
+        this.handleCancelDetailEvent(cmp, grid);
     },
+
     /**
      * @description: resets the view assignments, clears detail information, and displays rollup grid
      */

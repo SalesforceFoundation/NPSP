@@ -925,6 +925,22 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_NoAvailableDetailFieldsMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message when user doesn't have available detail fields on a custom rollup.</shortDescription>
+        <value>There are no available fields. Only fields with the same field Type as the Target field appear in this picklist.  </value>
+    </labels>
+    <labels>
+        <fullName>CRLP_NoAvailableTargetFieldsMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label when user doesn't have available summary fields on a custom rollup</shortDescription>
+        <value>There are no available fields. You need to create a writeable, custom field that your data can roll up to.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_NoFilterGroupSelected</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
