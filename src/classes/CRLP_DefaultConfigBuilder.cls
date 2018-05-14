@@ -308,59 +308,59 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Account Hard Credit ======== */
             'Account.npo02__TotalOppAmount__c' =>
-                    new List<String>{ 'Account: Total Gifts', 'Total of all gifts from the Household' },
+                    new List<String>{ 'Account: Total Gifts', 'Total of all gifts from the Account' },
             'Account.npo02__AverageAmount__c' =>
-                    new List<String>{ 'Account: Average Gift', 'Average of all gifts from the Household' },
+                    new List<String>{ 'Account: Average Gift', 'Average of all gifts from the Account' },
             'Account.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ 'Account: Best Gift Year', 'Year with the highest total gifts' },
+                    new List<String>{ 'Account: Best Gift Year', 'Year of the highest total gifts from the Account' },
             'Account.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ 'Account: Best Gift Year Total', 'Total gifts in the year with the highest total gifts' },
+                    new List<String>{ 'Account: Best Gift Year Total', 'Total gifts in the year of the highest total gifts from the Account' },
             'Account.npo02__FirstCloseDate__c' =>
-                    new List<String>{ 'Account: First Gift Date', 'Date of the first gift from the Household' },
+                    new List<String>{ 'Account: First Gift Date', 'Date of the first gift from the Account' },
             'Account.npo02__LargestAmount__c' =>
-                    new List<String>{ 'Account: Largest Gift', 'Largest gift amount from the Household' },
+                    new List<String>{ 'Account: Largest Gift', 'Largest gift amount from the Account' },
             'Account.npo02__LastCloseDate__c' =>
-                    new List<String>{ 'Account: Last Gift Date', 'Date of the last gift from the Household' },
+                    new List<String>{ 'Account: Last Gift Date', 'Date of the last gift from the Account' },
             'Account.npo02__LastOppAmount__c' =>
-                    new List<String>{ 'Account: Last Gift Amount', 'Amount of the last gift from the Household' },
+                    new List<String>{ 'Account: Last Gift Amount', 'Amount of the last gift from the Account' },
             'Account.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ 'Account: Total Number of Gifts', 'Total number of all gifts from the Household' },
+                    new List<String>{ 'Account: Total Number of Gifts', 'Total number of all gifts from the Account' },
             'Account.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ 'Account: Total Gifts Two Years Ago', 'Total of all gifts from two calendar years ago' },
+                    new List<String>{ 'Account: Total Gifts Two Years Ago', 'Total of all gifts two calendar years ago from the Account' },
             'Account.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ 'Account: Total Gifts Last N Days', 'Total of all gifts for the last N days' },
+                    new List<String>{ 'Account: Total Gifts Last N Days', 'Total of all gifts for the last N days from the Account' },
             'Account.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ 'Account: Total Gifts Last Year', 'Total of all gifts from the previous calendar year' },
+                    new List<String>{ 'Account: Total Gifts Last Year', 'Total of all gifts in the previous calendar year from the Account' },
             'Account.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ 'Account: Total Gifts This Year', 'Total of all gifts in the current calendar year' },
+                    new List<String>{ 'Account: Total Gifts This Year', 'Total of all gifts in the current calendar year from the Account' },
             'Account.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ 'Account: Number of Gifts Two Years Ago', 'Count of all gifts from two calendar years ago' },
+                    new List<String>{ 'Account: Number of Gifts Two Years Ago', 'Count of all gifts two calendar years ago from the Account' },
             'Account.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ 'Account: Number of Gifts Last N Days', 'Count of all gifts for the last N days' },
+                    new List<String>{ 'Account: Number of Gifts Last N Days', 'Count of all gifts for the last N days from the Account' },
             'Account.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ 'Account: Number of Gifts Last Year', 'Count of all gifts from the previous calendar year' },
+                    new List<String>{ 'Account: Number of Gifts Last Year', 'Count of all gifts in the previous calendar year from the Account' },
             'Account.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ 'Account: Number of Gifts This Year', 'Count of all gifts in the current calendar year' },
+                    new List<String>{ 'Account: Number of Gifts This Year', 'Count of all gifts in the current calendar year from the Account' },
             'Account.npo02__SmallestAmount__c' =>
-                    new List<String>{ 'Account: Smallest Gift', 'Smallest gift amount from the Household' },
+                    new List<String>{ 'Account: Smallest Gift', 'Smallest gift amount from the Account' },
 
             /* ======== Account Membership ======== */
             'Account.npo02__TotalMembershipOppAmount__c' =>
-                    new List<String>{ 'Account: Total Membership Amount', 'Total of all Memberships for the Household' },
+                    new List<String>{ 'Account: Total Membership Amount', 'Total of all Memberships for the Account' },
             'Account.npo02__LastMembershipAmount__c' =>
-                    new List<String>{ 'Account: Last Membership Amount', 'Amount of the most recent Membership Opportunity for the Household' },
+                    new List<String>{ 'Account: Last Membership Amount', 'Amount of the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipDate__c' =>
-                    new List<String>{ 'Account: Last Membership Date', 'Close Date of the most recent Membership Opportunity for the Household' },
+                    new List<String>{ 'Account: Last Membership Date', 'Close Date of the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipLevel__c' =>
-                    new List<String>{ 'Account: Last Membership Level', 'Membership Level from the most recent Membership Opportunity for the Household' },
+                    new List<String>{ 'Account: Last Membership Level', 'Membership Level from the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipOrigin__c' =>
-                    new List<String>{ 'Account: Last Membership Origin', 'Membership Origin from the most recent Membership Opportunity for the Household' },
+                    new List<String>{ 'Account: Last Membership Origin', 'Membership Origin from the most recent Membership Opportunity for the Account' },
             'Account.npo02__MembershipEndDate__c' =>
-                    new List<String>{ 'Account: Membership End Date', 'Last Membership End Date for the Household' },
+                    new List<String>{ 'Account: Membership End Date', 'Last Membership End Date for the Account' },
             'Account.npo02__MembershipJoinDate__c' =>
-                    new List<String>{ 'Account: Membership Join Date', 'First Membership Join Date for the Household' },
+                    new List<String>{ 'Account: Membership Join Date', 'First Membership Join Date for the Account' },
             'Account.npo02__NumberOfMembershipOpps__c' =>
-                    new List<String>{ 'Account: Number of Memberships', 'Count of all Membership Opportunities for the Household' },
+                    new List<String>{ 'Account: Number of Memberships', 'Count of all Membership Opportunities for the Account' },
 
             /* ======== Contact Hard Credit ======== */
             'Contact.npo02__TotalOppAmount__c' =>
