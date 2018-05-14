@@ -132,18 +132,18 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         isEditMode = false;
 
-        Boolean settingHasChanged = (isCRLPenabledPrevious != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
+        Savepoint sp = Database.setSavepoint();
+        try {
+            Boolean settingHasChanged = (isCRLPenabledPrevious != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
 
-        if (settingHasChanged) {
-            // we only proceed with deployment/save if they changed the checkbox.
+            if (settingHasChanged) {
+                // we only proceed with deployment/save if they changed the checkbox.
 
-            // if they hit edit and then they hit save without changing the setting checkbox,
-            // we do NOT want to reset their CRLP customizations (if the box was/is true)
-            // or run extraneous code (if the box was/is false) so in that case we do nothing.
-            // they have essentially hit cancel.
+                // if they hit edit and then they hit save without changing the setting checkbox,
+                // we do NOT want to reset their CRLP customizations (if the box was/is true)
+                // or run extraneous code (if the box was/is false) so in that case we do nothing.
+                // they have essentially hit cancel.
 
-            Savepoint sp = Database.setSavepoint();
-            try {
                 if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
                     // check for existing Rollup__mdts
                     List<Rollup__mdt> existingRollups = CRLP_Rollup_SEL.cachedRollups;
@@ -167,15 +167,17 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                     // reset to legacy jobs
                     UTIL_MasterSchedulableHelper.setScheduledJobs();
                 }
-            } catch (Exception e) {
-                Database.rollback(sp);
-                ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
-                isPolling = false;
-                Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-                crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
-            }
+
+
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            isPolling = false;
+            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+            crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
+
         return null;
     }
 
