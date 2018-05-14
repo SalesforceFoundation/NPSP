@@ -361,7 +361,6 @@
         cmp.set("v.activeRollup.amountObject", amountObjectName);
         var labels = cmp.get("v.labels");
 
-        var amountFields = cmp.get("v.amountFields");
         var amountFieldName;
         // Set the amount field and assumed detail object based on the selected rollup type
         if (amountObjectName === labels.objectPayment) {
@@ -382,6 +381,8 @@
             cmp.set("v.activeRollup.detailObject",labels.objectOpportunity);
         }
 
+        this.resetFields(cmp, activeRollup.amountObject, "amount");
+        var amountFields = cmp.get("v.amountFields");
         cmp.set("v.activeRollup.amountField", amountFieldName);
         cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
 
@@ -391,7 +392,6 @@
         //reset date fields
         //set date object label and api name based on the selected detail object then reset fields + selected value
         //defaults field to Payment on the payment object, and CloseDate for everything else
-        var dateFields = cmp.get("v.dateFields");
         var dateFieldName;
         if (rollupTypeObject === labels.objectPayment) {
             cmp.set("v.activeRollup.dateObjectLabel", labels.labelPayment);
@@ -403,7 +403,10 @@
             dateFieldName = labels.objectOpportunity+' CloseDate';
         }
         this.resetFields(cmp, activeRollup.dateObject, "date");
-        cmp.set("v.activeRollup.dateFieldLabel", this.retrieveFieldLabel(dateFieldName, dateFields));
+        var dateFields = cmp.get("v.dateFields");
+
+        var dateFieldLabel = this.retrieveFieldLabel(dateFieldName, dateFields);
+        cmp.set("v.activeRollup.dateFieldLabel", dateFieldLabel);
         cmp.set("v.activeRollup.dateField", dateFieldName);
 
         //AMOUNT, DATE & DETAIL FIELD RENDERING
