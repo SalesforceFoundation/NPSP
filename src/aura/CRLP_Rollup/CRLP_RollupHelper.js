@@ -114,6 +114,11 @@
                                 }
                             } else if (field.type === type) {
                                 newFields.push(field);
+                            } else if (((type === 'PICKLIST' || type === 'MULTIPICKLIST') && field.type === 'STRING') ||
+                                (type === 'STRING' && (field.type === 'PICKLIST' || field.type === 'MULTIPICKLIST')) ||
+                                ((type ===  'PICKLIST' || type === 'MULTIPICKLIST') && (field.type === 'PICKLIST' || field.type === 'MULTIPICKLIST'))) {
+                                // matching picklists and multipicklists as strings because strings and picklists are interchangeable for rolling up
+                                newFields.push(field);
                             }
                         }
                     });

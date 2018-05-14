@@ -440,7 +440,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', objectName+' '+dfr.name);
                 fieldObject.put('label', objectLabel+': '+dfr.label);
-                String fieldType = getFieldType(objectName, dfr.name);
+                String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
                 fieldObject.put('type', fieldType);
 
                 if (fieldType == 'REFERENCE') {
@@ -475,7 +475,7 @@ public with sharing class CRLP_RollupUI_SVC {
             //this method is reused for rollups, where obj concatenation is needed, and filter groups, where it is not
             fieldObject.put('name', (concatenate ? objectName+' ' : '') + field);
             fieldObject.put('label', (concatenate ? objectLabel +': ' : '') + UTIL_Describe.getFieldLabel(objectName, field.toLowerCase()));
-            String fieldType = getFieldType(objectName, field);
+            String fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
             fieldObject.put('type', fieldType);
 
             fieldObjectList.add(fieldObject);
@@ -483,23 +483,6 @@ public with sharing class CRLP_RollupUI_SVC {
 
         return fieldObjectList;
 
-    }
-
-    /*******************************************************************************************************
-     @description get field type and fixes it for CRLP UI to map
-     *
-     * @param objectName api name of object
-     * @param field api name of field
-     *
-     * @return data type string
-     */
-    private static String getFieldType (String objectName, String field) {
-        String fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
-        // re-casting picklists and multipicklists as strings because strings and picklists are interchangeable for rollups
-        if (fieldType == 'PICKLIST' || fieldType == 'MULTIPICKLIST') {
-            fieldType = 'STRING';
-        }
-        return fieldType;
     }
 
     /*******************************************************************************************************
@@ -846,14 +829,15 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
-            String fieldType = getFieldType(objectName, dfr.name);
+            String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
             Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
             Boolean isValidType = validTypeSet.contains(fieldType);
 
             //check that summary field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if ((dfr.isUpdateable() && dfr.isCustom() && !dfr.name.toLowerCase().contains('__system') && isValidType && !isRolledUp)
+            if ((dfr.isUpdateable() && dfr.isCustom() && isValidType && !isRolledUp && !dfr.name.toLowerCase().contains('__system')
+                    && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s'))
                     || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
