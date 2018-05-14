@@ -1,0 +1,40 @@
+#notifications {
+
+    cursor: pointer;
+    position: fixed;
+    right: 0px;
+    z-index: 9999;
+    bottom: 0px;
+    margin-bottom: 22px;
+    margin-right: 15px;
+    max-width: 300px;
+}
+
+.currentRow {
+
+    background-color: #F9F9FB !important;
+}
+
+/* All headers */
+.handsontable th {
+
+    font-family: "Salesforce Sans", Arial, sans-serif;
+    font-size: 12px;
+    background-color: white;
+    /* background-color: #a8b7c7;*/
+    /*    color: white;*/
+}
+
+.scrollable {
+
+    <!— height: 400px; —> <!-- Don't need this if it's okay for height to be dynamic -->
+    overflow-y:auto;
+}
+
+.slds-page-header{
+    background: white !important;
+}
+
+.slds-docked-form-footer{
+    background: white !important;
+}

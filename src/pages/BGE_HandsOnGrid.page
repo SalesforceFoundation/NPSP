@@ -214,7 +214,7 @@
 
                         callback(true);
                     }
-                };
+                }
 
                 function recordIdRenderer (instance, td, row, col, prop, value, cellProperties) {
 
