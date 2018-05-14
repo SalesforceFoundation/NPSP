@@ -228,13 +228,10 @@
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
-                            if(mode === 'delete') {
+                            if (mode === 'delete') {
 
                                 helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
                                 helper.sendMessage(cmp, 'filterGroupDeleted', recordName);
-
-                                //punt back to filterGroup grid
-                                helper.sendMessage(cmp, 'cancelEvent', {grid: 'filterGroup'});
 
                             } else {
 
@@ -574,8 +571,8 @@
         var description = cmp.get("v.activeFilterGroup.description");
         var filterRuleList = cmp.get("v.filterRuleList");
 
-        cmp.find("nameInput").showHelpMessageIfInvalid();
-        cmp.find("descriptionInput").showHelpMessageIfInvalid();
+        cmp.find("nameInput").focus();
+        cmp.find("descriptionInput").focus();
 
         if (!description || !name || name.length > 40) {
             canSave = false;
