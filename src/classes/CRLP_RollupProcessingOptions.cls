@@ -117,16 +117,16 @@ public class CRLP_RollupProcessingOptions {
          * of Opportunity Id's that have been rolled up to a given Account. The data is retained in a stateful var
          * in the batch job to support scenarios where a given Account's rollups straddle multiple batch operations
          */
-        public Map<Id,Set<Id>> mapOfProcessedOppIdsByAcctId = new Map<Id,Set<Id>>();
+        public Map<Id,Set<Id>> mapOfProcessedOppIdsByParentId = new Map<Id,Set<Id>>();
 
         /**
          * @description Set the property
          */
-        public void setMapOfProcessedOppIdsByAccountId(Map<Id,Set<Id>> theMap, List<Id> parentIds) {
-            this.mapOfProcessedOppIdsByAcctId = new Map<Id, Set<Id>>();
+        public void setMapOfProcessedOppIdsByParentId(Map<Id,Set<Id>> theMap, List<Id> parentIds) {
+            this.mapOfProcessedOppIdsByParentId = new Map<Id, Set<Id>>();
             for (Id mapKey : parentIds) {
                 if (theMap.containsKey(mapKey)) {
-                    this.mapOfProcessedOppIdsByAcctId.put(mapKey, theMap.get(mapKey));
+                    this.mapOfProcessedOppIdsByParentId.put(mapKey, theMap.get(mapKey));
                 }
             }
         }
@@ -154,8 +154,8 @@ public class CRLP_RollupProcessingOptions {
          * @description Returns the updated Map of processed Opportunity Id's by the parent Account Id.
          * Used to expose this value to the LDV Batch Job to retrieve the current setting.
          */
-        public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByAccountId() {
-            return this.mapOfProcessedOppIdsByAcctId;
+        public Map<Id,Set<Id>> getUpdatedMapOfProcessedOppsByParentId() {
+            return this.mapOfProcessedOppIdsByParentId;
         }
 
         /**
