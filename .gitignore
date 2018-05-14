@@ -28,4 +28,7 @@ Referenced Packages
 *.pyc
 *.sublime-project
 *.sublime-workspace
+**/.sfdx/
+**/.vscode/
+**/.idea/
 /config/
