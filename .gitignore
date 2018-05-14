@@ -29,4 +29,6 @@ Referenced Packages
 *.sublime-project
 *.sublime-workspace
 **/.sfdx/
+**/.vscode/
+**/.idea/
 /config/
