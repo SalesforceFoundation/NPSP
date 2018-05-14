@@ -59,7 +59,7 @@ public abstract class CRLP_Batch_Base {
      * @description Map of Opportunity Id's already processed by Account to avoid duplicating a donation amount
      * to the Account when rolling up soft credits by the Contact.AccountId
      */
-    protected Map<Id,Set<Id>> statefulMapOfOppIdsByAcct;
+    protected Map<Id,Set<Id>> statefulMapOfOppIdsByParentId;
 
     /** @description Simple counters used to track state */
     protected Integer batchIteration = 0;
@@ -86,7 +86,7 @@ public abstract class CRLP_Batch_Base {
      * @description Constructs the class, inits the class instance vars used across all CRLP batch jobs
      */
     public CRLP_Batch_Base() {
-        this.statefulMapOfOppIdsByAcct = new Map<Id, Set<Id>>();
+        this.statefulMapOfOppIdsByParentId = new Map<Id, Set<Id>>();
         this.summaryObjectType = CRLP_RollupBatch_SVC.getSummaryObjectType(this.jobType);
     }
 
