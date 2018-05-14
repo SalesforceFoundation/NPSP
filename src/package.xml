@@ -1131,6 +1131,8 @@
         <members>CRLP_DisabledTitle</members>
         <members>CRLP_DisabledMessage</members>
         <members>CRLP_HardCredit</members>
+        <members>CRLP_NoAvailableDetailFieldsMessage</members>
+        <members>CRLP_NoAvailableTargetFieldsMessage</members>
         <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
         <members>CRLP_Return</members>
