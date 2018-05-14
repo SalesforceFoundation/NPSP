@@ -231,7 +231,7 @@ public class UTIL_Describe {
     * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE,
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return string the name of the of the field's type
     */
     public static string getFieldType(String objectName, String fieldName) {
@@ -247,7 +247,7 @@ public class UTIL_Describe {
     * @description Gives field type name - ID, STRING, TEXTAREA, DATE, DATETIME, BOOLEAN, REFERENCE,
     * PICKLIST, MULTIPICKLIST, CURRENCY, DOUBLE, INTEGER, PERCENT, PHONE, EMAIL
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return Displaytype the Displaytype of the field
     */
     public static Schema.Displaytype getFieldDisplaytype(String objectName, String fieldName) {
@@ -272,7 +272,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Returns field describe data
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return Schema.DescribeFieldResult the describe field result for the given field
     */
     public static Schema.DescribeFieldResult getFieldDescribe(String objectName, String fieldName) {
@@ -287,7 +287,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Gives field friendly name
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return string the label of the field
     */
     public static string getFieldLabel(String objectName, String fieldName) {
@@ -302,7 +302,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description Gives field friendly name without throwing exception if not valid.
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return string the label of the field
     */
     public static string getFieldLabelSafe(string strObj, string strField) {
@@ -316,7 +316,7 @@ public class UTIL_Describe {
     /*******************************************************************************************************
     * @description checks whether the field exists
     * @param objectName the name of the object to look up
-    * @param fieldName the name of the field to look up
+    * @param fieldName the name of the field to look up -- LOWERCASE
     * @return boolean whether the field exists
     */
     public static boolean isValidField(String objectName, String fieldName) {
@@ -430,7 +430,7 @@ public class UTIL_Describe {
 
     /** @description Returns a list of SelectOptions for a given object and picklist field name.
     * @param objectName The name of the object.
-    * @param fieldName The name of the field.
+    * @param fieldName The name of the field. -- LOWERCASE
     * @return List<SelectOption> The select options for this picklist field.
     */
 
@@ -449,7 +449,7 @@ public class UTIL_Describe {
 
     /** @description Returns the default SelectOption for a given object and picklist field name.
     * @param objectName The name of the object.
-    * @param fieldName The name of the field.
+    * @param fieldName The name of the field. -- LOWERCASE
     * @return String The default select option for this picklist field.
     */
     public static String getDefaultSelectOption(String objectName, String fieldName) {

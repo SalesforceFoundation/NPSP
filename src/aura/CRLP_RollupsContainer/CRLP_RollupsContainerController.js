@@ -49,8 +49,7 @@
                         fieldName: 'displayName',
                         type: 'button',
                         sortable: 'true',
-                        initialWidth: 300
-                        ,
+                        initialWidth: 300,
                         typeAttributes: {
                             label: {fieldName: 'displayName'},
                             name: 'view',
@@ -58,8 +57,18 @@
                             title: {fieldName: 'description'}
                         }
                     }
-                        , {label: labels.summaryObject, fieldName: 'summaryObject', type: 'string', sortable: 'true'}
-                        , {label: labels.detailObject, fieldName: 'detailObject', type: 'string', sortable: 'true'}
+                        , {
+                            label: labels.summaryObject,
+                            fieldName: 'summaryObject',
+                            type: 'string',
+                            sortable: 'true'
+                        }
+                        , {
+                            label: labels.detailObject,
+                            fieldName: 'detailObject',
+                            type: 'string',
+                            sortable: 'true'
+                        }
                         , {
                             label: labels.creditType,
                             fieldName: 'creditType',
@@ -85,8 +94,7 @@
                             fieldName: 'active',
                             type: 'string',
                             sortable: 'true',
-                            initialWidth: 100
-                            ,
+                            initialWidth: 100,
                             cellAttributes: {iconName: {fieldName: 'activeIcon'}}
                         }
                         , {type: 'action', typeAttributes: {rowActions: actions}}
@@ -262,10 +270,10 @@
             cmp.set("v.activeRecord", activeRecord);
 
         } else if (channel === 'rollupDeleted') {
-            helper.deleteRollup(cmp, message);
+            helper.deleteGridItem(cmp, cmp.get("v.cachedRollupList"), message, 'rollup');
 
         } else if (channel === 'filterGroupDeleted') {
-            helper.deleteFilterGroup(cmp, message);
+            helper.deleteGridItem(cmp, cmp.get("v.filterGroupList"), message, 'filterGroup');
 
         } else if (channel === 'navigateEvent') {
             helper.handleNavigateEvent(cmp, message);

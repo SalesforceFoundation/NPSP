@@ -6,7 +6,7 @@
     changeField: function(cmp, event){
         var fieldName = cmp.get('v.auraId');
         var value = event.getSource().get("v.value");
-        if(value === undefined){
+        if (value === undefined) {
             value = '';
         }
 

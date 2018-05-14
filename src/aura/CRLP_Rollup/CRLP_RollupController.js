@@ -7,8 +7,6 @@
     doInit: function(cmp, event, helper) {
         console.log("In Rollup doInit");
         helper.toggleSpinner(cmp, true);
-         /*
-         * switches the display to the detail view and sets the width for the buttons**/
         var labels = cmp.get("v.labels");
         var detailObjects = cmp.get("v.detailObjects");
         var summaryObjects = cmp.get("v.summaryObjects");
@@ -60,10 +58,9 @@
                     return a.name > b.name;
                 });
                 cmp.set("v.timeBoundOperations", tOps);
-
                 cmp.set("v.operations", model.operations);
                 cmp.set("v.objectDetails", model.fieldsByDataType);
-                console.log('before change mode');
+
                 //change mode needs to be fired here because the sibling change of mode isn't being registered
                 helper.changeMode(cmp);
                 helper.setObjectAndFieldDependencies(cmp);
