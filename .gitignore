@@ -28,4 +28,5 @@ Referenced Packages
 *.pyc
 *.sublime-project
 *.sublime-workspace
+**/.sfdx/
 /config/
