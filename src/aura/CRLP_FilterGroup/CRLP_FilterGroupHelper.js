@@ -20,6 +20,7 @@
                 cmp.set("v.activeFilterGroup.recordId", null);
                 cmp.set("v.activeFilterGroup.recordName", null);
                 cmp.set("v.rollupItems", []);
+                cmp.set("v.rollupList", []);
                 cmp.set("v.activeFilterGroup.label", cmp.get("v.activeFilterGroup.label") + " (Clone)");
 
                 var filterRuleList = cmp.get("v.filterRuleList");
@@ -36,7 +37,7 @@
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "delete") {
                 //verify no rollups use the filter group before deleting
-                var countRollups = cmp.get("v.rollupItems").length;
+                var countRollups = cmp.get("v.rollupList").length;
 
                 this.toggleFilterRuleModal(cmp);
                 if (countRollups === 0) {
@@ -59,6 +60,7 @@
         var filteredRollupList = rollupList.filter(function(rollup) {
             return rollup.filterGroupName === filterGroupLabel;
         });
+        cmp.set("v.rollupList", filteredRollupList);
 
         //create data structure for tree
         var summaryObjects = cmp.get("v.summaryObjects");

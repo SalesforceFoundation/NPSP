@@ -119,6 +119,10 @@
                 if (list[i].label !== item.label && context === 'filterGroup') {
                     this.requeryRollups(cmp);
                 }
+                //update filter group grid only if filter group reference on rollup has changed
+                if (list[i].filterGroupName !== item.filterGroupName && context === 'rollup') {
+                    this.requeryFilterGroups(cmp);
+                }
                 // if the Id matches, update that record
                 list[i] = item;
                 newItem = false;
@@ -127,6 +131,9 @@
         }
         if (newItem) {
             list.push(item);
+            if (context === 'rollup') {
+                this.requeryFilterGroups(cmp);
+            }
         }
 
         if (context === 'rollup') {
@@ -134,8 +141,6 @@
         } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
-        //todo: MAYBE change this to only be called when filter group is changed
-        this.requeryFilterGroups(cmp);
     },
 
     /**

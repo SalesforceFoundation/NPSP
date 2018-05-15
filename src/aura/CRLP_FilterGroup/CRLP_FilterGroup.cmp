@@ -49,10 +49,10 @@
                     description="The current mode of the component. Options are: view, edit, clone, or create."/>
     <aura:attribute name="isReadOnly" type="Boolean" default="true"
                     description="Determines if fields should be read-only. This only applies to View."/>
-    <aura:attribute name="rollupList" type="List" description="List of all rollups, passed from the parent component." access="public"/>
+    <aura:attribute name="rollupList" type="List" description="List of all rollups, passed from the parent component. Used on init and for the size of related rollups." access="public"/>
     <aura:attribute name="filterRuleList" type="List" description="List of available filter rules" access="public"/>
     <aura:attribute name="cachedFilterRuleList" type="List" description="List of available filter rules" access="public"/>
-    <aura:attribute name="rollupItems" type="List" default="[]" description="Filtered rollup list of rollups using this filter group."/>
+    <aura:attribute name="rollupItems" type="List" default="[]" description="List of maps of rollups using this filter group. Used in the lightning:tree only."/>
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="Summary objects to use for filtering rollups" access="public"/>
     <aura:attribute name="filterRuleFieldType" type="String" default="text"

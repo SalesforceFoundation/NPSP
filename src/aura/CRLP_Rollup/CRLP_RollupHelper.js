@@ -300,7 +300,8 @@
             cmp.set("v.selectedTimeBoundOperationLabel", timeBoundLabel);
         }
         if (operation) {
-            if (operation !== 'Donor_Streak' && operation !== 'Years_Donated') {
+            if (operation !== 'Donor_Streak' && operation !== 'Years_Donated'
+            && operation !== 'Best_Year' && operation !== 'Best_Year_Total') {
                 renderMap["timeBoundOperationType"] = true;
             } else {
                 renderMap["timeBoundOperationType"] = false;
@@ -579,9 +580,13 @@
         var timeBoundOperation = cmp.get("v.activeRollup.timeBoundOperationType");
         if (timeBoundOperation !== null &&
             (operation === 'First'
-            || operation === 'Last'
-            || timeBoundOperation === 'Years_Ago'
-            || timeBoundOperation === 'Days_Back')
+                || operation === 'Last'
+                || operation === 'Best_Year'
+                || operation === 'Best_Year_Total'
+                || operation === 'Donor_Streak'
+                || operation === 'Years_Donated'
+                || timeBoundOperation === 'Years_Ago'
+                || timeBoundOperation === 'Days_Back')
             && rollupLabel) {
             //enable date field
             renderMap["dateField"] = true;
@@ -1071,14 +1076,9 @@
         } else if (type === 'CURRENCY') {
             allowedOps.push({name: 'Sum', label: ops['Sum']});
             allowedOps.push({name: 'Average', label: ops['Average']});
-            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Best_Year_Total', label: ops['Best_Year_Total']});
-        } else if (type === 'TEXT' || type === 'STRING' || type === 'TEXTAREA') {
+        } else if (type === 'STRING' || type === 'TEXTAREA' || type === 'PICKLIST' || type === 'MULTIPICKLIST') {
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
-            allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
-        } else if (type === 'PICKLIST') {
-            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
-        } else if (type === 'MULTIPICKLIST') {
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
         }
 
@@ -1294,8 +1294,18 @@
             cmp.find("descriptionInput").showHelpMessageIfInvalid();
             canSave = false;
         }
+        /* TODO: a bug prevents this from working, so using explicit regex. replace when it's fixed.
+        * validity is preferable since it checks for all validity, not just a regex
         var integerInput = cmp.find("integerInput");
         if (renderMap["integerDays"] && !integerInput.get("v.validity").valid) {
+            integerInput.showHelpMessageIfInvalid();
+            canSave = false;
+        }*/
+
+        var regex = /^\d{1,4}|10000$/;
+        var intValue = activeRollup.intValue.toString();
+        var isValidInteger = intValue.match(regex);
+        if (renderMap["integerDays"] && !isValidInteger){
             integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }
