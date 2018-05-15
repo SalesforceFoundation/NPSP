@@ -803,12 +803,11 @@ public with sharing class CRLP_RollupUI_SVC {
 
                 optionsList.add(labeledOption);
             }
+            return optionsList;
         } catch (Exception ex) {
             // error retrieving the filter rule constant picklist
             throw new AuraHandledException(ex.getMessage());
         }
-
-        return optionsList;
     }
 
     /*******************************************************************************************************
@@ -854,11 +853,11 @@ public with sharing class CRLP_RollupUI_SVC {
         Schema.SObjectType sobjType = UTIL_Describe.getSObjectType(objectName);
         List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(sobjType);
         Set<Schema.DescribeFieldResult> referencedFieldSet = new Set<Schema.DescribeFieldResult>(referencedFields);
+        Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
             String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
-            Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
             Boolean isValidType = validTypeSet.contains(fieldType);
 
             //check that summary field isn't being used on another rollup

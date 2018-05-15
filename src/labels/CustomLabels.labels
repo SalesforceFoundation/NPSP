@@ -930,7 +930,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message when user doesn't have available detail fields on a custom rollup.</shortDescription>
-        <value>There are no available fields. Only fields with the same field Type as the Target field appear in this picklist.  </value>
+        <value>There are no available fields. Only fields whose field types are compatible with the Target field appear in the Field to Roll Up picklist.</value>
     </labels>
     <labels>
         <fullName>CRLP_NoAvailableTargetFieldsMessage</fullName>
@@ -938,7 +938,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Label when user doesn't have available summary fields on a custom rollup</shortDescription>
-        <value>There are no available fields. You need to create a writeable, custom field that your data can roll up to.</value>
+        <value>There are no available Target fields. You need to create a writeable, custom field that your data can roll up to.</value>
     </labels>
     <labels>
         <fullName>CRLP_NoFilterGroupSelected</fullName>
