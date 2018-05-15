@@ -16,6 +16,7 @@
         if (grid === 'rollup') {
             this.resetRollupDataGrid(cmp, list);
             this.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+            this.requeryFilterGroups(cmp);
         } else if (grid === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
             this.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
@@ -118,6 +119,10 @@
                 if (list[i].label !== item.label && context === 'filterGroup') {
                     this.requeryRollups(cmp);
                 }
+                //update filter group grid only if filter group reference on rollup has changed
+                if (list[i].filterGroupName !== item.filterGroupName && context === 'rollup') {
+                    this.requeryFilterGroups(cmp);
+                }
                 // if the Id matches, update that record
                 list[i] = item;
                 newItem = false;
@@ -126,6 +131,9 @@
         }
         if (newItem) {
             list.push(item);
+            if (context === 'rollup') {
+                this.requeryFilterGroups(cmp);
+            }
         }
 
         if (context === 'rollup') {
@@ -177,6 +185,35 @@
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
         var modal = cmp.find('modaldialog');
         $A.util.toggleClass(modal, 'slds-fade-in-open');
+    },
+
+    /**
+     * @description: queries the filter groups to update the count of rollups after deleting
+     */
+    requeryFilterGroups: function(cmp) {
+        var action = cmp.get("c.getFilterGroupDefinitions");
+
+        //requery filter group records
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var filterGroupList = JSON.parse(JSON.stringify(response.getReturnValue()));
+
+                cmp.set("v.filterGroupList", filterGroupList);
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(cmp, "error", cmp.get("v.labels.error"), errors[0].message);
+                    }
+                } else {
+                    this.showToast(cmp, "error", cmp.get("v.labels.error"), "Unknown Error");
+                }
+            }
+        });
+
+        $A.enqueueAction(action);
     },
 
     /**

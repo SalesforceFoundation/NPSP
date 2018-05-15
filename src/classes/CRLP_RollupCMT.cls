@@ -381,10 +381,13 @@ public class CRLP_RollupCMT {
                     'Summary_Field__c' => combineObjectAndField(summaryObject, summaryField),
                     'Detail_Object__c' => detailObject,
                     'Amount_Object__c' => amountObject,
-                    'Date_Object__c' => dateObject
+                    'Date_Object__c' => dateObject,
+                    'Is_Deleted__c' => isDeleted
                 };
                 if (detailField != null) {
                     fldValues.put('Detail_Field__c', combineObjectAndField(detailObject, detailField));
+                } else {
+                    fldValues.put('Detail_Field__c', null);
                 }
                 if (amountField != null) {
                     fldValues.put('Amount_Field__c', combineObjectAndField(amountObject, amountField));
