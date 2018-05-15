@@ -1653,7 +1653,6 @@
         <members>stgCRLPInfoOnUDRBody</members>
         <members>stgCRLPInfoOnUDRHeading</members>
         <members>stgCRLPNonAdminError</members>
-        <members>stgCRLPReset</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
