@@ -668,6 +668,16 @@ public with sharing class CRLP_RollupUI_SVC {
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.Rollup rollupCMTObj = (CRLP_RollupCMT.Rollup) JSON.deserialize(rollupCMT, CRLP_RollupCMT.Rollup.class);
 
+            // Check for duplicate Target fields on active Rollups
+            for (Rollup__mdt rlp : CRLP_Rollup_SEL.cachedRollups) {
+                if (rlp.DeveloperName != rollupCMTObj.recordName
+                        && rlp.Active__c
+                        && rollupCMTObj.summaryObject == rlp.Summary_Object__r.QualifiedApiName
+                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName) {
+                    throw new RollupException(Label.CRLP_DuplicateTargetField);
+                }
+            }
+
             // Queue up the deployment
             CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{rollupCMTObj});
 
