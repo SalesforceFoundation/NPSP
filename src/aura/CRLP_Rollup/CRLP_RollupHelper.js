@@ -1076,6 +1076,10 @@
         } else if (type === 'TEXT' || type === 'STRING' || type === 'TEXTAREA') {
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
+        } else if (type === 'PICKLIST') {
+            allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
+        } else if (type === 'MULTIPICKLIST') {
+            allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
         }
 
         cmp.set("v.allowedOperations", allowedOps);
