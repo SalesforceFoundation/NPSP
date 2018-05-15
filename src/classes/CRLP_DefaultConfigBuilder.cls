@@ -308,59 +308,59 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Account Hard Credit ======== */
             'Account.npo02__TotalOppAmount__c' =>
-                    new List<String>{ 'Account: Total Gifts', 'Total of all gifts from the household' },
+                    new List<String>{ 'Account: Total Gifts', 'Total of all gifts from the Account' },
             'Account.npo02__AverageAmount__c' =>
-                    new List<String>{ 'Account: Average Gift', 'Average of all Gifts to the Household' },
+                    new List<String>{ 'Account: Average Gift', 'Average of all gifts from the Account' },
             'Account.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ 'Account: Best Gift Year', 'Year with the highest total gifts' },
+                    new List<String>{ 'Account: Best Gift Year', 'Year of the highest total gifts from the Account' },
             'Account.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ 'Account: Best Gift Year Total', 'Total gifts in the year with the highest total gifts' },
+                    new List<String>{ 'Account: Best Gift Year Total', 'Total gifts in the year of the highest total gifts from the Account' },
             'Account.npo02__FirstCloseDate__c' =>
-                    new List<String>{ 'Account: First Gift Date', 'Date of the first gift from the Household' },
+                    new List<String>{ 'Account: First Gift Date', 'Date of the first gift from the Account' },
             'Account.npo02__LargestAmount__c' =>
-                    new List<String>{ 'Account: Largest Gift', 'Largest gift amount from the Household' },
+                    new List<String>{ 'Account: Largest Gift', 'Largest gift amount from the Account' },
             'Account.npo02__LastCloseDate__c' =>
-                    new List<String>{ 'Account: Last Gift Date', 'Date of the last gift from the Household' },
+                    new List<String>{ 'Account: Last Gift Date', 'Date of the last gift from the Account' },
             'Account.npo02__LastOppAmount__c' =>
-                    new List<String>{ 'Account: Last Gift Amount', 'Amount of the last gift from the Household' },
+                    new List<String>{ 'Account: Last Gift Amount', 'Amount of the last gift from the Account' },
             'Account.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ 'Account: Total Number of Gifts', 'Total number of all gifts from the Household' },
+                    new List<String>{ 'Account: Total Number of Gifts', 'Total number of all gifts from the Account' },
             'Account.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ 'Account: Total Gifts Two Years Ago', 'Total of all gifts from 2 Calendar Years ago' },
+                    new List<String>{ 'Account: Total Gifts Two Years Ago', 'Total of all gifts two calendar years ago from the Account' },
             'Account.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ 'Account: Total Gifts Last N Days', 'Total of all gifts for the last N days. N is defined in Household Settings.' },
+                    new List<String>{ 'Account: Total Gifts Last N Days', 'Total of all gifts for the last N days from the Account' },
             'Account.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ 'Account: Total Gifts Last Year', 'Total of all gifts from the previous Calendar year' },
+                    new List<String>{ 'Account: Total Gifts Last Year', 'Total of all gifts in the previous calendar year from the Account' },
             'Account.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ 'Account: Total Gifts This Year', 'Total of all gifts in the current Calendar year' },
+                    new List<String>{ 'Account: Total Gifts This Year', 'Total of all gifts in the current calendar year from the Account' },
             'Account.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ 'Account: Number of Gifts Two Years Ago', 'Count of all gifts from 2 Calendar Years ago' },
+                    new List<String>{ 'Account: Number of Gifts Two Years Ago', 'Count of all gifts two calendar years ago from the Account' },
             'Account.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ 'Account: Number of Gifts Last N Days', 'Count of all gifts for the last N days. N is defined in Household Settings.' },
+                    new List<String>{ 'Account: Number of Gifts Last N Days', 'Count of all gifts for the last N days from the Account' },
             'Account.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ 'Account: Number of Gifts Last Year', 'Count of all gifts from the previous Calendar year' },
+                    new List<String>{ 'Account: Number of Gifts Last Year', 'Count of all gifts in the previous calendar year from the Account' },
             'Account.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ 'Account: Number of Gifts This Year', 'Count of all gifts in the current Calendar year' },
+                    new List<String>{ 'Account: Number of Gifts This Year', 'Count of all gifts in the current calendar year from the Account' },
             'Account.npo02__SmallestAmount__c' =>
-                    new List<String>{ 'Account: Smallest Gift', 'Smallest gift amount from the Household' },
+                    new List<String>{ 'Account: Smallest Gift', 'Smallest gift amount from the Account' },
 
             /* ======== Account Membership ======== */
             'Account.npo02__TotalMembershipOppAmount__c' =>
-                    new List<String>{ 'Account: Total Membership Amount', 'Total of all Memberships for the household' },
+                    new List<String>{ 'Account: Total Membership Amount', 'Total of all Memberships for the Account' },
             'Account.npo02__LastMembershipAmount__c' =>
-                    new List<String>{ 'Account: Last Membership Amount', 'Amount of the most recent Membership Opportunity for the household' },
+                    new List<String>{ 'Account: Last Membership Amount', 'Amount of the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipDate__c' =>
-                    new List<String>{ 'Account: Last Membership Date', 'CloseDate of the most recent Membership Opportunity for the household' },
+                    new List<String>{ 'Account: Last Membership Date', 'Close Date of the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipLevel__c' =>
-                    new List<String>{ 'Account: Last Membership Level', 'Membership Level from the most recent Membership Opportunity for the household' },
+                    new List<String>{ 'Account: Last Membership Level', 'Membership Level from the most recent Membership Opportunity for the Account' },
             'Account.npo02__LastMembershipOrigin__c' =>
-                    new List<String>{ 'Account: Last Membership Origin', 'Membership Origin from the most recent Membership Opportunity for the household' },
+                    new List<String>{ 'Account: Last Membership Origin', 'Membership Origin from the most recent Membership Opportunity for the Account' },
             'Account.npo02__MembershipEndDate__c' =>
-                    new List<String>{ 'Account: Membership End Date', 'Last Membership End Date for the household' },
+                    new List<String>{ 'Account: Membership End Date', 'Last Membership End Date for the Account' },
             'Account.npo02__MembershipJoinDate__c' =>
-                    new List<String>{ 'Account: Membership Join Date', 'First Membership Join Date for the household' },
+                    new List<String>{ 'Account: Membership Join Date', 'First Membership Join Date for the Account' },
             'Account.npo02__NumberOfMembershipOpps__c' =>
-                    new List<String>{ 'Account: Number of Memberships', 'Count of all Membership Opportunities for the household' },
+                    new List<String>{ 'Account: Number of Memberships', 'Count of all Membership Opportunities for the Account' },
 
             /* ======== Contact Hard Credit ======== */
             'Contact.npo02__TotalOppAmount__c' =>
@@ -376,7 +376,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.npo02__LargestAmount__c' =>
                     new List<String>{ 'Contact: Largest Gift', 'The largest gift where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__LastCloseDate__c' =>
-                    new List<String>{ 'Contact: Last Gift Date', 'The close date most recent gift where the Contact is the Opportunity Primary Contact' },
+                    new List<String>{ 'Contact: Last Gift Date', 'The close date of the most recent gift where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__LastOppAmount__c' =>
                     new List<String>{ 'Contact: Last Gift Amount', 'The amount of the most recent gift where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__NumberOfClosedOpps__c' =>
@@ -384,7 +384,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.npo02__OppAmount2YearsAgo__c' =>
                     new List<String>{ 'Contact: Total Gifts Two Years Ago', 'The total of all gifts two calendar years ago where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ 'Contact: Total Gifts Last N Days', 'The total of all gifts in the last N days where the Contact is the Opportunity Primary Contact.  N is defined in Household Settings.' },
+                    new List<String>{ 'Contact: Total Gifts Last N Days', 'The total of all gifts in the last N days where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppAmountLastYear__c' =>
                     new List<String>{ 'Contact: Total Gifts Last Year', 'The total of all gifts in the last calendar year where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppAmountThisYear__c' =>
@@ -392,7 +392,7 @@ public class CRLP_DefaultConfigBuilder {
             'Contact.npo02__OppsClosed2YearsAgo__c' =>
                     new List<String>{ 'Contact: Number of Gifts Two Years Ago', 'The count of all gifts two calendar years ago where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ 'Contact: Number of Gifts Last N Days', 'The count of all gifts in the last N days where the Contact is the Opportunity Primary Contact.  N is defined in Household Settings.' },
+                    new List<String>{ 'Contact: Number of Gifts Last N Days', 'The count of all gifts in the last N days where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppsClosedLastYear__c' =>
                     new List<String>{ 'Contact: Number of Gifts Last Year', 'The count of all gifts in the last calendar year where the Contact is the Opportunity Primary Contact' },
             'Contact.npo02__OppsClosedThisYear__c' =>
@@ -402,37 +402,37 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Contact Soft Credit ======== */
             'Contact.First_Soft_Credit_Date__c' =>
-                    new List<String>{ 'Contact: First Soft Credit Date', 'Date of the first gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: First Soft Credit Date', 'Date of the first gift where the Contact received a Soft Credit' },
             'Contact.Last_Soft_Credit_Date__c' =>
-                    new List<String>{ 'Contact: Last Soft Credit Date', 'Date of the last gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Last Soft Credit Date', 'Date of the last gift where the Contact received a Soft Credit' },
             'Contact.First_Soft_Credit_Amount__c' =>
-                    new List<String>{ 'Contact: First Soft Credit Amount', 'Amount of the first gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: First Soft Credit Amount', 'Amount of the first gift where the Contact received a Soft Credit' },
             'Contact.Largest_Soft_Credit_Amount__c' =>
-                    new List<String>{ 'Contact: Largest Soft Credit Amount', 'Largest gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Largest Soft Credit Amount', 'Largest gift where the Contact received a Soft Credit' },
             'Contact.Largest_Soft_Credit_Date__c' =>
-                    new List<String>{ 'Contact: Largest Soft Credit Date', 'Date of the Largest gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Largest Soft Credit Date', 'Date of the largest gift where the Contact received a Soft Credit' },
             'Contact.Last_Soft_Credit_Amount__c' =>
-                    new List<String>{ 'Contact: Last Soft Credit Amount', 'Amount of the most recent gift where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Last Soft Credit Amount', 'Amount of the most recent gift where the Contact received a Soft Credit' },
             'Contact.npo02__Soft_Credit_Total__c' =>
-                    new List<String>{ 'Contact: Soft Credit Total', 'Total of all gifts where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Soft Credit Total', 'Total of all gifts where the Contact received Soft Credit' },
             'Contact.npo02__Soft_Credit_This_Year__c' =>
-                    new List<String>{ 'Contact: Soft Credit This Year', 'Total of all gifts in the current calendar year where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Soft Credit This Year', 'Total of all gifts in the current calendar year where the Contact received Soft Credit' },
             'Contact.npo02__Soft_Credit_Last_Year__c' =>
-                    new List<String>{ 'Contact: Soft Credit Last Year', 'Total of all gifts in the previous calendar year where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Soft Credit Last Year', 'Total of all gifts in the previous calendar year where the Contact received Soft Credit' },
             'Contact.npo02__Soft_Credit_Two_Years_Ago__c' =>
-                    new List<String>{ 'Contact: Soft Credit Two Years Ago', 'Total of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Soft Credit Two Years Ago', 'Total of all gifts two calendar years ago where the Contact received Soft Credit' },
             'Contact.Soft_Credit_Last_N_Days__c' =>
-                    new List<String>{ 'Contact: Soft Credit Last N Days', 'Total of all first gifts in the last N days where the Contact is designed for Soft Credit.  N is defined in Household Settings.' },
+                    new List<String>{ 'Contact: Soft Credit Last N Days', 'Total of all first gifts in the last N days where the Contact received Soft Credit' },
             'Contact.Number_of_Soft_Credits__c' =>
-                    new List<String>{ 'Contact: Number of Soft Credits', 'Count of all gifts where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Number of Soft Credits', 'Count of all gifts where the Contact received Soft Credit' },
             'Contact.Number_of_Soft_Credits_This_Year__c' =>
-                    new List<String>{ 'Contact: Number of Soft Credits This Year', 'Count of all gifts in the current calendar year where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Number of Soft Credits This Year', 'Count of all gifts in the current calendar year where the Contact received Soft Credit' },
             'Contact.Number_of_Soft_Credits_Last_Year__c' =>
-                    new List<String>{ 'Contact: Number of Soft Credits Last Year', 'Count of all gifts in the previous calendar year where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Number of Soft Credits Last Year', 'Count of all gifts in the previous calendar year where the Contact received Soft Credit' },
             'Contact.Number_of_Soft_Credits_Two_Years_Ago__c' =>
-                    new List<String>{ 'Contact: Number of Soft Credits Two Years Ago', 'Count of all gifts two calendar years ago where the Contact is designed for Soft Credit' },
+                    new List<String>{ 'Contact: Number of Soft Credits Two Years Ago', 'Count of all gifts two calendar years ago where the Contact received Soft Credit' },
             'Contact.Number_of_Soft_Credits_Last_N_Days__c' =>
-                    new List<String>{ 'Contact: Number of Soft Credits Last N Days', 'Count of all first gifts in the last N days where the Contact is designed for Soft Credit.  N is defined in Household Settings.' },
+                    new List<String>{ 'Contact: Number of Soft Credits Last N Days', 'Count of all first gifts in the last N days where the Contact received Soft Credit' },
 
             /* ======== Contact Membership ======== */
             'Contact.npo02__TotalMembershipOppAmount__c' =>
@@ -460,11 +460,11 @@ public class CRLP_DefaultConfigBuilder {
             'General_Accounting_Unit__c.Largest_Allocation__c' =>
                     new List<String>{ 'GAU: Largest Allocation', 'Largest amount allocated to this GAU' },
             'General_Accounting_Unit__c.Smallest_Allocation__c' =>
-                    new List<String>{ 'GAU: Smallest Allocation', 'Smallest amount of allocated to this GAU' },
+                    new List<String>{ 'GAU: Smallest Allocation', 'Smallest amount allocated to this GAU' },
             'General_Accounting_Unit__c.Total_Number_of_Allocations__c' =>
                     new List<String>{ 'GAU: Total Number of Allocations', 'Count of all Allocation Amounts to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_N_Days__c' =>
-                    new List<String>{ 'GAU: Number of Allocations Last N Days', 'Count of all Allocation Amounts in the last N days to this GAU.  N is defined in Household Settings.' },
+                    new List<String>{ 'GAU: Number of Allocations Last N Days', 'Count of all Allocation Amounts in the last N days to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_Last_Year__c' =>
                     new List<String>{ 'GAU: Number of Allocations Last Year','Count of all Allocation Amounts in the last calendar year to this GAU' },
             'General_Accounting_Unit__c.Number_of_Allocations_This_Year__c' =>
@@ -476,7 +476,7 @@ public class CRLP_DefaultConfigBuilder {
             'General_Accounting_Unit__c.Total_Allocations__c' =>
                     new List<String>{ 'GAU: Total Allocations', 'Total of all Allocation Amounts to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_N_Days__c' =>
-                    new List<String>{ 'GAU: Total Allocations Last N Days', 'Total of all Allocation Amounts in the last N days to this GAU.  N is defined in Household Settings.' },
+                    new List<String>{ 'GAU: Total Allocations Last N Days', 'Total of all Allocation Amounts in the last N days to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_Last_Year__c' =>
                     new List<String>{ 'GAU: Total Allocations Last Year', 'Total of all Allocation Amounts in the last calendar year to this GAU' },
             'General_Accounting_Unit__c.Total_Allocations_This_Year__c' =>

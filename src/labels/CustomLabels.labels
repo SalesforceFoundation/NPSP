@@ -786,7 +786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine which records don't get rolled up.</value>
+        <value>The field shows which filter group to apply to this rollup. A filter group is a collection of filter rules that determine which records get rolled up.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupOperationHelpText</fullName>
@@ -834,7 +834,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
-        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This field must be of the same Type as the Target Field.</value>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This list only shows fields whose field types are compatible with the selected Target field.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
@@ -898,7 +898,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Timeout error message</shortDescription>
-        <value>Deleting the {0} has timed out. Please see the Customizable Rollups documentation for more information.</value>
+        <value>Deleting the {0} has timed out. Please try again.</value>
     </labels>
     <labels>
         <fullName>CRLP_DisabledTitle</fullName>
@@ -5367,7 +5367,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 82 out-of-box NPSP rollups, into Customizable Rollups.
+            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups.
         </value>
     </labels>
     <labels>
