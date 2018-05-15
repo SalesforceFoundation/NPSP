@@ -546,25 +546,27 @@ public class CRLP_DefaultConfigBuilder_SVC {
         };
 
         for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
-            String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_','') + ' to ' +
-                    udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_','');
-            CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
-            // rollup.recordName = 'UDR_' + rollup.recordName;
-            rollup.description = 'User Defined Roll-up';
-            rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
-                    ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts
-                    : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts);
-            rollup.summaryObject = applyNameSpaceToObjectField(udr.npo02__Object_Name__c);
-            rollup.summaryField = applyNameSpaceToObjectField(udr.npo02__Target_Field__c);
-            rollup.detailObject = 'Opportunity';
-            rollup.detailField = udr.npo02__Source_Field__c;
-            rollup.amountObject = 'Opportunity';
-            rollup.amountField = 'Amount';
-            rollup.dateObject = 'Opportunity';
-            rollup.dateField = 'CloseDate';
-            rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
-            rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-            rollups.add(rollup);
+            if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
+                String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_', '') + ' to ' +
+                        udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_', '');
+                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
+                // rollup.recordName = 'UDR_' + rollup.recordName;
+                rollup.description = 'User Defined Roll-up';
+                rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
+                        ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts
+                        : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts);
+                rollup.summaryObject = applyNameSpaceToObjectField(udr.npo02__Object_Name__c);
+                rollup.summaryField = applyNameSpaceToObjectField(udr.npo02__Target_Field__c);
+                rollup.detailObject = 'Opportunity';
+                rollup.detailField = udr.npo02__Source_Field__c;
+                rollup.amountObject = 'Opportunity';
+                rollup.amountField = 'Amount';
+                rollup.dateObject = 'Opportunity';
+                rollup.dateField = 'CloseDate';
+                rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
+                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                rollups.add(rollup);
+            }
         }
         return rollups;
     }
