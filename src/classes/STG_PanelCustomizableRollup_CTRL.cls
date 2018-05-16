@@ -34,7 +34,6 @@
 * @group-content ../../ApexDocContent/Settings.htm
 * @description Controller extension for the Customizable Rollups settings panel.
 */
-
 public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
 
     /*********************************************************************************************************
@@ -169,6 +168,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                     UTIL_MasterSchedulableHelper.setScheduledJobs();
                 }
             }
+            UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
 
         } catch (Exception e) {
             Database.rollback(sp);
