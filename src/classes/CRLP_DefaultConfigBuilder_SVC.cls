@@ -555,10 +555,19 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.intValue = Integer.valueOf(rollupDetails[6]);
             }
 
-            // If the legacy 'Enable Soft Credit Rollups' field is false, set all the soft credit rollup
-            // definitions to inactive.
+            // If the legacy 'Enable Soft Credit Rollups' field is false,
+            // set all the soft credit rollup definitions to inactive.
             if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Enable_Soft_Credit_Rollups__c == false &&
                     rollupDetails[2] == CRLP_DefaultConfigBuilder.pscAmountFld) {
+                rollup.isActive = false;
+            } else {
+                rollup.isActive = true;
+            }
+
+            // If the legacy Membership Record Type setting is null,
+            // set all the membership rollup definitions to inactive.
+            if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c == null &&
+                    rollupDetails[1] == CRLP_DefaultConfigBuilder.FilterGroup_Membership) {
                 rollup.isActive = false;
             } else {
                 rollup.isActive = true;
