@@ -93,7 +93,6 @@ public class ERR_Handler {
 
         // We do NOT want to try to store errors or send error email notifications here. We want to be able to
         //manually do that after the rollback.
-
         return errors;
     }
 
@@ -359,7 +358,6 @@ public class ERR_Handler {
             error.Error_Type__c = getStatusCode(undeleteResult.getErrors()[0].getStatusCode());
             error.Full_Message__c = undeleteResult.getErrors()[0].getMessage();
         }
-
         UTIL_Debug.debug('**** createError() returns error: ' + error);
         return error;
     }
