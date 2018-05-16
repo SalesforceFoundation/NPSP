@@ -85,6 +85,7 @@
         <members>BGE_AuraController</members>
         <members>BGE_AuraController_TEST</members>
         <members>BGE_BatchController</members>
+        <members>BGE_DataImportBatchTriggerHandler</members>
         <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
@@ -445,6 +446,7 @@
         <name>ApexPage</name>
     </types>
     <types>
+    	<members>BGE_DataImportBatchTrigger</members>
         <members>BGE_TemplateTrigger</members>
         <members>TDTM_Account</members>
         <members>TDTM_Address</members>
