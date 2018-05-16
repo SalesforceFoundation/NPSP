@@ -707,7 +707,7 @@ public with sharing class CRLP_RollupUI_SVC {
             // CMT data will generate a unique RecordName to use for the new record.
             CRLP_RollupCMT.FilterGroup filterGroupCMTObj = (CRLP_RollupCMT.FilterGroup) JSON.deserialize(filterGroupCMT, CRLP_RollupCMT.FilterGroup.class);
 
-            if (filterGroupCMTObj.isDeleted) {
+            if (filterGroupCMTObj.isDeleted == true) {
                 Map<Id, List<Rollup__mdt>> rollupsByFilterGroup = CRLP_Rollup_SEL.getRollupsByFilterGroup();
                 Integer countRollups = rollupsByFilterGroup.containsKey(filterGroupCMTObj.recordId) ? rollupsByFilterGroup.get(filterGroupCMTObj.recordId).size() : 0;
 
