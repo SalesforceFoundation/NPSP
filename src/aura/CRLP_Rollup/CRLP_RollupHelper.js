@@ -835,23 +835,19 @@
         if (cmp.get("v.activeRollup.detailField")) {
             var detailObjectAndField = cmp.get("v.activeRollup.detailField");
             var detailList = detailObjectAndField.split(' ');
-            if (detailList[1] === 'null') {
-                // check for null string because we had to concatenate potentially null values
-                // and server requires actual null, not string of null
-                rollupCMT.detailField = null;
-            } else {
-                rollupCMT.detailField = detailList[1];
-            }
+            // check for null string because we had to concatenate potentially null values
+            // and server requires actual null, not string of null
+            rollupCMT.detailField = (detailList[1] === 'null' ? null : detailList[1]);
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
             var amountList = amountObjectAndField.split(' ');
-            rollupCMT.amountField = amountList[1];
+            rollupCMT.amountField = (amountList[1] === 'null' ? null : amountList[1]);
         }
         if (cmp.get("v.activeRollup.dateField")) {
             var dateObjectAndField = cmp.get("v.activeRollup.dateField");
             var dateList = dateObjectAndField.split(' ');
-            rollupCMT.dateField = dateList[1];
+            rollupCMT.dateField = (dateList[1] === 'null' ? null : dateList[1]);
         }
 
         var action = cmp.get("c.saveRollup");
