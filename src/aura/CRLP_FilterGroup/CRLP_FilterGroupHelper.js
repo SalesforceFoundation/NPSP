@@ -140,17 +140,16 @@
      * @param errors - list of errors from response
      */
     handleErrors: function(cmp, errors) {
-        var helper = this;
         var msg = "Unknown error";
         if (errors && errors[0] && errors[0].message) {
             msg = errors[0].message;
         }
         if (cmp.get("v.mode") === 'delete') {
-            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
+            this.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
         } else {
-            helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+            this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
             cmp.set("v.mode", 'edit');
-            helper.onChangeMode(cmp, event, helper);
+            this.changeMode(cmp);
         }
     },
 
