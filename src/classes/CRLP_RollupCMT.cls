@@ -391,9 +391,13 @@ public class CRLP_RollupCMT {
                 }
                 if (amountField != null) {
                     fldValues.put('Amount_Field__c', combineObjectAndField(amountObject, amountField));
+                } else {
+                    fldValues.put('Amount_Field__c', null);
                 }
                 if (dateField != null) {
                     fldValues.put('Date_Field__c', combineObjectAndField(dateObject, dateField));
+                } else {
+                    fldValues.put('Date_Field__c', null);
                 }
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted , 'Active__c' => isActive };
