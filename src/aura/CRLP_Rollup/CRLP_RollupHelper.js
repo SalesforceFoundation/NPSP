@@ -1301,12 +1301,13 @@
             integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }*/
-
-        var regex = /^\d{1,4}|10000$/;
-        var intValue = activeRollup.intValue.toString();
-        var isValidInteger = intValue.match(regex);
+        var intValue = activeRollup.intValue;
+        var isValidInteger;
+        if (intValue !== undefined || intValue !== null) {
+            var regex = new RegExp(/(^\d{1,4}$)/);
+            isValidInteger = regex.test(intValue);
+        }
         if (renderMap["integerDays"] && !isValidInteger){
-            integerInput.showHelpMessageIfInvalid();
             canSave = false;
         }
         return canSave;
