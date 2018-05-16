@@ -344,10 +344,14 @@
             var newValueApiName = valueApiName.join(";");
             cmp.set("v.activeFilterRule.value", newValueApiName);
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
-            var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
-            updatedLabel = valueApiName.replace(labelRe, ";\n");
-            var nameRe = /\n| /g;
-            var newValueApiName = valueApiName.replace(nameRe, "");
+            var valueList = valueApiName.split(';');
+            var cleanList = valueList.map(function(value){
+               return value.replace('\n', '').trim();
+            });
+            updatedLabel = cleanList.join(";\n");
+            var newValueApiName = updatedLabel.replace(/\n/g, "");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
+        } else if (filterRuleFieldType === "text" && valueApiName) {
             cmp.set("v.activeFilterRule.value", newValueApiName);
         }
 
