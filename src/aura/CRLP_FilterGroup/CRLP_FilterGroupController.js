@@ -60,6 +60,8 @@
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
                 if (model.filterGroup) {
                     helper.filterRollupList(cmp, model.filterGroup.label, labels);
+                } else {
+                    cmp.set("v.rollupList", []);
                 }
                 helper.changeMode(cmp);
 
@@ -129,7 +131,7 @@
             //cautions user about deleting filter rule
             cmp.set("v.filterRuleMode", 'delete');
             helper.toggleFilterRuleModal(cmp);
-            if(cmp.get("v.rollupItems").length === 0) {
+            if (cmp.get("v.rollupList").length === 0) {
                 cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteConfirm);
             } else {
                 cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteWarning);
