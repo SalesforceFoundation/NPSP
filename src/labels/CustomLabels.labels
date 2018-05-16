@@ -917,6 +917,14 @@
         <value>You don't have Customizable Rollups enabled. Return to NPSP Settings for information on how to enable these.</value>
     </labels>
     <labels>
+        <fullName>CRLP_DuplicateTargetField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user tries to save a Rollup with a duplicate Target Field.</shortDescription>
+        <value>This Target field is already in use by an active Customizable Rollup.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
