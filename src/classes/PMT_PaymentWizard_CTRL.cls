@@ -50,6 +50,13 @@ public with sharing class PMT_PaymentWizard_CTRL {
     */ 
     public Boolean redirect {get; set;}
 
+    /**
+     * @description The currency symbol or ISO code of the related record or
+     * org default
+     */
+    @TestVisible
+    private String currencySymbol;
+
     /*******************************************************************************************************
     * @description Class that stored numbered payment
     */ 
@@ -176,7 +183,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
             haveAmount = false;
         } else {
             currentOpp = o[0];
-            haveAmount = (currentOpp.npe01__amount_outstanding__c > 0);
+            haveAmount = (getAmountOutstanding() > 0);
             isClosedLost = currentOpp.isClosed && !currentOpp.isWon;
             samplePayment = new npe01__OppPayment__c();
             samplePayment.npe01__Scheduled_Date__c = system.today();
@@ -203,9 +210,9 @@ public with sharing class PMT_PaymentWizard_CTRL {
             paymentcount = [select count() from npe01__OppPayment__c where npe01__Opportunity__c = :o[0].id and npe01__Paid__c != true];
             
             outstanding_payments = paymentcount;
-            haveAmount = (currentOpp.npe01__amount_outstanding__c > 0);
+            haveAmount = (getAmountOutstanding() > 0);
             writeoffPayment = new npe01__OppPayment__c();
-            writeoffPayment.npe01__Payment_Amount__c = currentOpp.npe01__amount_outstanding__c;
+            writeoffPayment.npe01__Payment_Amount__c = getAmountOutstanding();
             writeoffPayment.npe01__Written_Off__c = true;
             writeoffPayment.npe01__Opportunity__c = currentOpp.Id;
             writeoffPayment.npe01__Payment_Date__c = system.today();
@@ -225,7 +232,8 @@ public with sharing class PMT_PaymentWizard_CTRL {
             if (!query.contains(pfms.npe01__Opportunity_Field__c.toLowerCase())) {               
                 query += ', ' + pfms.npe01__Opportunity_Field__c;
             }   
-        }       
+        }
+        query += ', (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM  npe01__OppPayment__r)';
         //if currencyiso field exists add it to query for use later
         if(Schema.sObjectType.Opportunity.fields.getMap().get('CurrencyIsoCode') != null)
             query = query + ',CurrencyIsoCode';
@@ -244,10 +252,11 @@ public with sharing class PMT_PaymentWizard_CTRL {
             // clear the list
             newPayments.clear();
                         
-            Decimal OppAmountFloat = currentOpp.npe01__Amount_Outstanding__c;
-            if (removePaidPayments == true)
+            Decimal OppAmountFloat = getAmountOutstanding();
+            if (removePaidPayments == true) {
                 OppAmountFloat = currentOpp.Amount;
-    
+            }
+
             //divide the amount by the number of installments, and deal with the remainder
             Decimal paymentAmount = OppAmountFloat.divide(numberOfPayments, 2, system.roundingmode.FLOOR);
             decimal remainder = OppAmountFloat - (paymentAmount * numberOfPayments);
@@ -285,9 +294,10 @@ public with sharing class PMT_PaymentWizard_CTRL {
                 }
                 
                 //in multicurrency SFDC set the payment currency field to equal the opp currency
-                if(PaymentCurrencyField != null && OppCurrencyField != null)
-                    thisPayment.oppPayment.put(PaymentCurrencyField,CurrentOpp.get(OppCurrencyField));
-                    
+                if(PaymentCurrencyField != null && OppCurrencyField != null) {
+                    thisPayment.oppPayment.put(PaymentCurrencyField, CurrentOpp.get(OppCurrencyField));
+                }
+
                 // modify new payment records with any Opp-Payment Mappings.
                 if (PMT_PaymentCreator.paymentMappings.size() > 0) {
                     for (string s : PMT_PaymentCreator.paymentMappings.keyset()) {
@@ -458,7 +468,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
         }
         return null;
     }
-    
+
     /*******************************************************************************************************
     * @description ActionMethod for the Remove Paid Payments button, which sets the internal flag to
     * track this.
@@ -468,5 +478,42 @@ public with sharing class PMT_PaymentWizard_CTRL {
         removePaidPayments = true;
         return null;
     }
-   
+
+    /**
+     * @description Return the currency symbol appropriate for the current
+     * user/org/record.  If the org is multi currency enabled, it will use the
+     * currency iso code from the related record.  If the org is not multi
+     * currency enabled, it will return the symbol for the currency of the org,
+     * or the currency iso code if no symbol is known.
+     *
+     * @return String A currency symbol or currency ISO code
+     */
+    public String getCurrencySymbol() {
+        if (currencySymbol == null) {
+            currencySymbol = UTIL_Currency.getInstance().getCurrencySymbol(currentOpp.Id);
+        }
+        return currencySymbol;
+    }
+
+    /*******************************************************************************************************
+    * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
+    * from the Payment object will not work. This method will detect that scenario and return either the
+    * value from the formula or calculate the Amount Outstanding from the payment records
+    * track this.
+    * @return Decimal amount outstanding
+    */
+    public Decimal getAmountOutstanding() {
+        return PMT_PaymentCreator.getAmountOutstanding(this.currentOpp);
+    }
+
+    /*******************************************************************************************************
+    * @description When Advanced Currency Management is enabled in an org, the packaged rollups and formula
+    * from the Payment object will not work. This method will detect that scenario and return either the
+    * value from the formula or calculate the Amount Outstanding from the payment records
+    * track this.
+    * @return Decimal total paid payments
+    */
+    public Decimal getTotalPaymentsMade() {
+        return PMT_PaymentCreator.getPaymentsMade(this.currentOpp);
+    }
 }

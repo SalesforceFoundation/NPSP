@@ -51,14 +51,18 @@ public class RLLP_OppRollup_TDTM extends TDTM_Runnable {
 
         map<Id, Opportunity> mapIdOppNew;
         map<Id, Opportunity> mapIdOppOld;
-        if (newlist != null) 
-           mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
-        if (oldlist != null) 
-           mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
-        RLLP_OppRollup rg = new RLLP_OppRollup(); 	           
-        rg.rollupForOppTrigger(mapIdOppNew, mapIdOppOld);
-	    
-	    // we aren't using dmlWrapper to defer DML, due to the existing complexity of the rollup code.
-	    return null;
+        if (newlist != null) {
+            mapIdOppNew = new map<id, Opportunity>((list<Opportunity>) newlist);
+        }
+        if (oldlist != null) {
+            mapIdOppOld = new map<id, Opportunity>((list<Opportunity>) oldlist);
+        }
+        RLLP_OppRollup rg = new RLLP_OppRollup();
+        if (RLLP_OppRollup_UTIL.customizableRollupEngineEnabled == false) {
+            rg.rollupForOppTrigger(mapIdOppNew, mapIdOppOld);
+        }
+
+        // we aren't using dmlWrapper to defer DML, due to the existing complexity of the rollup code.
+        return null;
     }
 }

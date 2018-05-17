@@ -65,4 +65,16 @@ global class TDTM_Config_API {
         }
         return TDTM_ObjectDataGateway.listTH;
     }
+
+    /**
+     * @description Method to disable all NPSP roll-up triggers for the current code execution context.
+     */
+    @InvocableMethod(Label='Disable NPSP Rollup Triggers')
+    global static void disableAllRollupTriggers() {
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
+    }
+
 }
