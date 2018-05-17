@@ -85,7 +85,7 @@ private with sharing class ALLO_Rollup_TEST {
         PageReference pageRef = Page.ALLO_RollupBTN;
         Test.setCurrentPage(pageRef);
 
-        ALLO_RollupBTN_CTRL ctrl = new ALLO_RollupBTN_CTRL(new ApexPages.StandardController(gau));
+        CRLP_RecalculateBTN_CTRL ctrl = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
 
         ctrl.buttonClick();
 
@@ -127,7 +127,7 @@ private with sharing class ALLO_Rollup_TEST {
         PageReference pageRef = Page.ALLO_RollupBTN;
         Test.setCurrentPage(pageRef);
 
-        ALLO_RollupBTN_CTRL ctrl = new ALLO_RollupBTN_CTRL(new ApexPages.StandardController(gau));
+        CRLP_RecalculateBTN_CTRL ctrl = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(gau));
 
         ctrl.buttonClick();
 

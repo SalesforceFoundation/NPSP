@@ -88,9 +88,9 @@ public with sharing class UTIL_JobProgress_CTRL {
 
         Integer completedCount = 0;
         //Query the Batch apex jobs
-        for(AsyncApexJob a : [select TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id, 
+        for(AsyncApexJob a : [SELECT TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id,
                                     CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name, CreatedBy.Name
-                                    From AsyncApexJob where JobType='BatchApex' order by CreatedDate desc limit :numberOfJobs]) {
+                                    FROM AsyncApexJob WHERE JobType='BatchApex' ORDER BY CreatedDate DESC, Id LIMIT :numberOfJobs]) {
             Double itemsProcessed = a.JobItemsProcessed;
             Double totalItems = a.TotalJobItems;
 

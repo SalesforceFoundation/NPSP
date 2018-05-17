@@ -94,23 +94,28 @@
         <externalId>false</externalId>
         <inlineHelpText>Status of Acknowledgment of this payment.</inlineHelpText>
         <label>Payment Acknowledgment Status</label>
-        <picklist>
-            <picklistValues>
-                <fullName>To Be Acknowledged</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Acknowledged</fullName>
-                <default>false</default>
-            </picklistValues>
-            <picklistValues>
-                <fullName>Do Not Acknowledge</fullName>
-                <default>false</default>
-            </picklistValues>
-            <sorted>false</sorted>
-        </picklist>
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
+        <valueSet>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>To Be Acknowledged</fullName>
+                    <default>false</default>
+                    <label>To Be Acknowledged</label>
+                </value>
+                <value>
+                    <fullName>Acknowledged</fullName>
+                    <default>false</default>
+                    <label>Acknowledged</label>
+                </value>
+                <value>
+                    <fullName>Do Not Acknowledge</fullName>
+                    <default>false</default>
+                    <label>Do Not Acknowledge</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
     </fields>
 </CustomObject>

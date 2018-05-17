@@ -35,14 +35,17 @@
 */
 public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
 
+    /**
+     * @description public Interface to enable mocking of this class functionality for unit tests in orgs
+     * that may or may not have multicurrency enabled.
+     */
     public interface Interface_x {
         Boolean isMultiCurrencyOrganization();
+        Boolean isAdvancedCurrencyManagementEnabled();
+        String getOrgDefaultCurrency();
         String getDefaultCurrency();
         String getDefaultCurrencySymbol();
-        String getCurrencySymbol(Id recordId);
         String getCurrencySymbol(String currCode);
-        String getCurrencyIsoCodeQuery(Id recordId);
-        String queryCurrencyIsoCode(Id recordId);
     }
 
     /** @description Store instance for Singleton pattern */
@@ -72,45 +75,59 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
     }
 
     /**
-     * @description Wrapper for UserInfo.getDefaultCurrency()
+     * @description Returns true if Advanced Currency Management is enabled in the org
+     * - technically this will return true even if the Admin disables ACM after it's enabled the first time
+     * - This is as accurate an assessment as we can get within Apex at present.
+     */
+    private Boolean isACMEnabled = null;
+    public Boolean isAdvancedCurrencyManagementEnabled() {
+        if (isACMEnabled == null) {
+            isACMEnabled = false;
+            if (isMultiCurrencyOrganization()) {
+                // Using a string in Database.query because this query won't compile if multicurrency isn't enabled
+                // Using try/catch in case platform bug gets fixed whereby
+                // DatedConverstionRate will (accurately) not exist in MultiCurrency org without ACM enabled
+                try {
+                    Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate LIMIT 1').size();
+                    if (DCRCount == 1) {
+                        isACMEnabled = true;
+                    }
+                } catch (Exception e) {
+                    // Nothing to do, ACM = false
+                }
+            }
+        }
+        return isACMEnabled;
+    }
+
+    /**
+     * @description Returns the organizations default currency code (i.e., "Corporate" or "Home" Currency)
+     */
+    public String getOrgDefaultCurrency() {
+        return UTIL_CurrencyCache.getOrgDefaultCurrency();
+    }
+
+    /**
+     * @description Wrapper for UserInfo.getDefaultCurrency(). Returns the context user's default currency code
+     * for multiple currency organizations or the organization's currency code for single currency organizations.
      */
     public String getDefaultCurrency() {
         return UserInfo.getDefaultCurrency();
     }
 
     /**
-     * @description For single currency orgs, return the symbol of the org's
-     * currency or the org's currency ISO code if no symbol is known for that
+     * @description For single currency orgs, return the symbol of the user's
+     * default currency or the user's currency ISO code if no symbol is known for that
      * currency
      *
      * @return String
      */
     public String getDefaultCurrencySymbol() {
-        String orgCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
-        if (currencySymbols.containsKey(orgCurrency)) {
-            return currencySymbols.get(orgCurrency);
+        String userCurrency = UTIL_Currency.getInstance().getDefaultCurrency();
+        if (currencySymbols.containsKey(userCurrency)) {
+            return currencySymbols.get(userCurrency);
         } else {
-            return orgCurrency;
-        }
-    }
-
-    /**
-     * @description Return the currency symbol appropriate for the given record
-     * id.
-     * If the org is multi currency enabled, it will return the
-     * currency iso code from the given record.  If the org is not multi
-     * currency enabled, it will return the symbol for the currency of the org,
-     * or the currency iso code if no symbol is known.
-     *
-     * @param recordId The id of the record to determine currency symbol from
-     * @return String
-     */
-    public String getCurrencySymbol(Id recordId) {
-        Interface_x currencyUtil = UTIL_Currency.getInstance();
-        if (currencyUtil.isMultiCurrencyOrganization() && recordId != null) {
-            return currencyUtil.queryCurrencyIsoCode(recordId);
-        } else {
-            return currencyUtil.getDefaultCurrencySymbol();
+            return userCurrency;
         }
     }
 
@@ -126,34 +143,6 @@ public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
         } else {
             return currencyUtil.getDefaultCurrencySymbol();
         }
-    }
-
-    /**
-     * @description Build a SOQL string to query CurrencyIsoCode from the
-     * object identified by the given record id
-     *
-     * @param recordId The id of the record that should be queried
-     * @return String
-     */
-    public String getCurrencyIsoCodeQuery(Id recordId) {
-        String objectName = recordId.getSobjectType().getDescribe().getName();
-        return String.format(
-            'SELECT CurrencyIsoCode FROM {0} WHERE Id = \'\'{1}\'\' LIMIT 1',
-            new List<String>{objectName, recordId}
-        );
-    }
-
-    /**
-     * @description Query the database for the CurrencyIsoCode of the object
-     * identified by the given record id
-     *
-     * @param recordId The id of the record that should be queried
-     * @return String
-     */
-    public String queryCurrencyIsoCode(Id recordId) {
-        String isoCodeQuery = UTIL_Currency.getInstance().getCurrencyIsoCodeQuery(recordId);
-        sObject objectWithCurrency = Database.query(isoCodeQuery);
-        return (String) objectWithCurrency.get('CurrencyIsoCode');
     }
 
     /**
