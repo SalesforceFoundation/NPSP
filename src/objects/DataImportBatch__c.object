@@ -340,6 +340,18 @@
         <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
     </webLinks>
     <webLinks>
+        <fullName>Edit_Processing_Settings</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Edit Processing Settings</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
+    </webLinks>
+    <webLinks>
         <fullName>Process_Batch</fullName>
         <availability>online</availability>
         <description>invoke the Data Importer on all records associated with this Batch</description>
