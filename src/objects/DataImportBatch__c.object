@@ -89,7 +89,7 @@
         <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
         <label>Batch Process Size</label>
         <precision>3</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -130,7 +130,7 @@
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
         <label>Contact Matching Rule</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -144,7 +144,7 @@
         <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
         <label>Number of Days from Donation Date</label>
         <precision>2</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -186,7 +186,7 @@
             <restrictedPicklist>true</restrictedPicklist>
             <sorted>false</sorted>
         </picklist>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -212,7 +212,7 @@
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
         <label>Donation Matching Rule</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -338,6 +338,18 @@
         <openType>replace</openType>
         <protected>false</protected>
         <url>/apex/BGE_HandsOnGrid?batchId={!DataImportBatch__c.Id}</url>
+    </webLinks>
+    <webLinks>
+        <fullName>Edit_Processing_Settings</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Edit Processing Settings</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/BDI_BatchOverride?Id={!DataImportBatch__c.Id}</url>
     </webLinks>
     <webLinks>
         <fullName>Process_Batch</fullName>

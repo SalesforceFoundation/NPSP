@@ -85,9 +85,12 @@
         <members>BGE_AuraController</members>
         <members>BGE_AuraController_TEST</members>
         <members>BGE_BatchController</members>
+        <members>BGE_DataImportBatchTriggerHandler</members>
+        <members>BGE_BatchTemplateOverrideController</members>
         <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
+        <members>BGE_SettingsUITemplateController</members>
         <members>BGE_HandsOnGridSelector</members>
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
@@ -357,6 +360,7 @@
     </types>
     <types>
         <members>BDI_SettingsUI</members>
+        <members>BGE_SettingsUITemplate</members>
         <members>RP_GettingStarted</members>
         <members>RP_GitHub</members>
         <members>RP_Youtube</members>
@@ -384,6 +388,7 @@
         <members>BDI_BatchOverride</members>
         <members>BDI_DataImport</members>
         <members>BDI_DataImportDeleteBTN</members>
+	<members>BGE_BatchTemplateOverride</members>
         <members>BGE_HandsOnGrid</members>
         <members>CONV_Account_Conversion</members>
         <members>CON_ContactMerge</members>
@@ -446,6 +451,7 @@
         <name>ApexPage</name>
     </types>
     <types>
+        <members>BGE_DataImportBatchTrigger</members>
         <members>BGE_TemplateTrigger</members>
         <members>TDTM_Account</members>
         <members>TDTM_Address</members>
@@ -1208,6 +1214,7 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+	<members>bgeErrorBatchTemplateNameRequired</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
