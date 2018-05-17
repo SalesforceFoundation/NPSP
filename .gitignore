@@ -33,3 +33,9 @@ Referenced Packages
 .vscode
 .vim-force.com
 .sfdx/sfdx-config.json
+StaticResourceSources/BGEResources/cert.pem
+StaticResourceSources/BGEResources/key.pem
+StaticResourceSources/BGEResources/package-lock.json
+-meta.xml
+.release
+run.sh
