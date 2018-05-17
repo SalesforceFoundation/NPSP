@@ -57,9 +57,6 @@ private class CRLP_RollupRecurringDonation_TEST {
      */
     private static void mockRollupCMTValues() {
 
-        String donationRTId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
-        RecordType rtDonation = [SELECT DeveloperName FROM RecordType WHERE Id = :donationRTId LIMIT 1];
-
         // Create a single Filter Group (no need for filter rules here)
         String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
         String filterGroupId2 = CMT_UnitTestData_TEST.getNewRecordId();
@@ -72,10 +69,8 @@ private class CRLP_RollupRecurringDonation_TEST {
         String filterRulesJSON = '[' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule1', 'Opportunity', 'IsWon', 'Equals', 'False') + ',' +
                 CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule2', 'Opportunity', 'IsClosed', 'Equals', 'False') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, 'Group1.Rule3', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) + ',' +
 
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
-                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', rtDonation.DeveloperName) +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId2, 'Group2.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') +
                 ']';
 
         // Deserialize the filter group and filter rule to use for the tests
