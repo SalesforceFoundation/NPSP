@@ -1913,6 +1913,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeErrorBatchTemplateNameRequired</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when a batch template is missing a name</shortDescription>
+        <value>Batch Template Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>

@@ -236,4 +236,17 @@
     <pluralLabel>Batch Templates</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
+    <webLinks>
+        <fullName>Edit_Processing_Settings</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <height>600</height>
+        <linkType>url</linkType>
+        <masterLabel>Edit Processing Settings</masterLabel>
+        <openType>sidebar</openType>
+        <protected>false</protected>
+        <url>/apex/BGE_BatchTemplateOverride?Id={!Batch_Template__c.Id}</url>
+    </webLinks>
 </CustomObject>
