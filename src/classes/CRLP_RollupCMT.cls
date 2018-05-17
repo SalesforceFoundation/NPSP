@@ -85,7 +85,7 @@ public class CRLP_RollupCMT {
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
-            String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Group.Name() + '__mdt';
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(CRLP_RollupCMT.MetadataObject.Filter_Group.Name() + '__mdt');
 
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -212,7 +212,7 @@ public class CRLP_RollupCMT {
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
-            String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt');
 
             if (this.label == null) {
                 String prefix = abbreviateForSpace(this.filterGroupRecordName, true).replace('NPSP','').replace('_', '');
@@ -346,7 +346,7 @@ public class CRLP_RollupCMT {
         public Metadata.CustomMetadata getMetadataRecord() {
             Metadata.CustomMetadata md = new Metadata.CustomMetadata();
 
-            String mdTypeName = CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt';
+            String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(CRLP_RollupCMT.MetadataObject.Rollup.Name() + '__mdt');
 
             if (this.label.length() > 40) {
                 this.label = abbreviateForSpace(this.label, false).left(40);
