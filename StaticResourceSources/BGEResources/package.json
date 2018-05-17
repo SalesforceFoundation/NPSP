@@ -1,0 +1,18 @@
+{
+  "main": "./js/grid/app.js",
+  "dependencies": {
+    "http-server": "^0.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^3.5.1",
+    "grunt-html-angular-validate": "^0.5.8",
+    "gulp": "^3.9.1",
+    "http-server": "^0.11.1",
+    "nodemon": "^1.14.11"
+  },
+  "scripts": {
+    "start": "node_modules/http-server/bin/http-server -S -C cert.pem --cors -p 8080",
+    "watch-changes": "nodemon --ignore dist --ignore lib -x",
+    "dev": "concurrently --kill-others \"npm run start\" \"npm run watch-changes\""
+  }
+}

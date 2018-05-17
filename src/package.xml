@@ -91,6 +91,7 @@
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_SettingsUITemplateController</members>
+        <members>BGE_HandsOnGridSelector</members>
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
@@ -1273,6 +1274,7 @@
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
+        <members>healthDetailsInvalidRecordtypeName</members>
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>

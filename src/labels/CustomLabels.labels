@@ -2390,6 +2390,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Recordtype Id {0} is invalid.</value>
     </labels>
     <labels>
+        <fullName>healthDetailsInvalidRecordtypeName</fullName>
+        <categories>Health Check</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>healthDetailsInvalidRecordtypeName</shortDescription>
+        <value>Recordtype Name {0} is invalid.</value>
+    </labels>
+    <labels>
         <fullName>healthDetailsInvalidScheduledJob</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
