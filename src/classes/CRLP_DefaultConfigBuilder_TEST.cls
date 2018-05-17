@@ -93,9 +93,9 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer fgCount = 0;
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
-            if (md.fullName.startsWith('Filter_Group__mdt')) {
+            if (md.fullName.contains('Filter_Group__mdt')) {
                 fgCount++;
-            } else if (md.fullName.startsWith('Rollup__mdt')) {
+            } else if (md.fullName.contains('Rollup__mdt')) {
                 rlpCount++;
             }
         }
@@ -128,9 +128,9 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer fgCount = 0;
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
-            if (md.fullName.startsWith('Filter_Group__mdt')) {
+            if (md.fullName.contains('Filter_Group__mdt')) {
                 fgCount++;
-            } else if (md.fullName.startsWith('Rollup__mdt')) {
+            } else if (md.fullName.contains('Rollup__mdt')) {
                 rlpCount++;
                 String lbl = md.label;
                 for (Metadata.CustomMetadataValue val : md.values) {
