@@ -1,15 +1,15 @@
 public with sharing class BGE_DataImportBatchTriggerHandler {
 
 	private DataImportBatch__c[] batchesNew;
-	private DataImportBatch__c[] batchesOld;
+	private Map<Id, DataImportBatch__c> batchesOldMap;
 
 	private Data_Import_Settings__c campaignSettings;
 	private Map<Id, Batch_Template__c> batchTemplatesMap;
 
-	public BGE_DataImportBatchTriggerHandler(DataImportBatch__c[] batchesNew, DataImportBatch__c[] batchesOld) {
+	public BGE_DataImportBatchTriggerHandler(DataImportBatch__c[] batchesNew, Map<Id, DataImportBatch__c> batchesOldMap) {
 
 		this.batchesNew = batchesNew;
-		this.batchesOld = batchesOld;
+		this.batchesOldMap = batchesOldMap;
 
 		batchTemplatesMap = new Map<Id, Batch_Template__c>();
 	}
@@ -27,6 +27,20 @@ public with sharing class BGE_DataImportBatchTriggerHandler {
 			}
 			else {
 				setOrgWideSettingsValues(batch);
+			}
+		}
+	}
+
+	public void updateDefaultValues() {
+
+		campaignSettings = Data_Import_Settings__c.getOrgDefaults();
+		batchTemplatesMap = getBatchTemplatesMap();
+
+		for (DataImportBatch__c batch : batchesNew) {
+
+			if (batch.Batch_Template__c != null && (batch.Batch_Template__c != batchesOldMap.get(batch.Id).Batch_Template__c)) {
+
+				setBatchTemplateValues(batch);
 			}
 		}
 	}
