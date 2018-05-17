@@ -48,7 +48,7 @@ public class CMT_MetadataAPI {
      */
     public static void upsertCustomMetadata(CRLP_RollupCMT.MetadataObject mdObject, String recordName, String recordLabel, Map<String,Object> fldValues) {
 
-        String mdTypeName = mdObject.Name() + '__mdt';
+        String mdTypeName = UTIL_Namespace.StrTokenNSPrefix(mdObject.Name() + '__mdt');
 
         // Setup custom metadata to be created or updated in the subscriber org.
         Metadata.CustomMetadata customMd = new Metadata.CustomMetadata();
@@ -72,7 +72,7 @@ public class CMT_MetadataAPI {
         Metadata.CustomMetadataValue customField;
         for (String k : fldValues.keySet()) {
             customField = new Metadata.CustomMetadataValue();
-            customField.field = k;
+            customField.field = UTIL_Namespace.StrAllNSPrefix(k);
             customField.value = fldValues.get(k);
             md.values.add(customField);
         }
