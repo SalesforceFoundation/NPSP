@@ -359,10 +359,16 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2OneToOneOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOne2One') return;
         merge2OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneHHAccount') return;
         merge2OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
@@ -418,10 +424,16 @@ public class CON_ContactMerge_TEST {
 
 
     static testMethod void merge2OneToOneOppsOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsOne2One') return;
         merge2OneToOneOpps(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2OneToOneOppsHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2OneToOneOppsHHAccount') return;
         merge2OneToOneOpps(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
@@ -563,10 +575,16 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2PrivateContactsOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsOne2One') return;
         merge2PrivateContacts(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2PrivateContactsHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2PrivateContactsHHAccount') return;
         merge2PrivateContacts(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
@@ -620,10 +638,16 @@ public class CON_ContactMerge_TEST {
     }
     
     static testMethod void merge2IndividualsOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsOne2One') return;
         merge2Individuals(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge2IndividualsHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge2IndividualsHHAccount') return;
         merge2Individuals(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    
@@ -780,10 +804,16 @@ public class CON_ContactMerge_TEST {
 
 
     static testMethod void merge1Org1OneToOneOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneOne2One') return;
         merge1Org1OneToOne(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
     static testMethod void merge1Org1OneToOneHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'merge1Org1OneToOneHHAccount') return;
         merge1Org1OneToOne(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }    

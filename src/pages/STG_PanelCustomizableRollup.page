@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelCustomizableRollup_CTRL" action="{!checkPermissions}"  >
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" >
 
     <apex:slds/>
     <div class="slds-scope">
@@ -13,6 +13,54 @@
                 </div>
             </div>
             <c:UTIL_PageMessages allowClose="false" id="messages"/>
+
+            <apex:outputPanel rendered="{! !isHHAccount }">
+                <div class="slds" id="page_messages">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+                        <div class="notify__content">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <apex:outputText>
+                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
+                                            <path  d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 5.6c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4zm2.3 9.7c0 .2-.2.4-.5.4h-3.6c-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5.2 0 .4-.2.4-.4v-1.9c0-.2-.2-.5-.4-.5-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5h2.7c.3 0 .5.2.5.5v3.7c0 .2.2.4.4.4.3 0 .5.2.5.5v.9z"/>
+                                        </svg>
+                                    </apex:outputText>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                        <apex:outputText value="{!$Label.PageMessagesInfo}: " />
+                                        <apex:outputText value="{!$Label.stgCRLPHouseholdAccountError}"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
+
+            <apex:outputPanel rendered="{! !isAdmin }">
+                <div class="slds" id="page_messages">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+                        <div class="notify__content">
+                            <div class="slds-media">
+                                <div class="slds-media__figure">
+                                    <apex:outputText>
+                                        <svg class="slds-icon" aria-hidden="true" viewBox="0 0 24 24">
+                                            <path  d="M12 .9C5.9.9.9 5.9.9 12s5 11.1 11.1 11.1 11.1-5 11.1-11.1S18.1.9 12 .9zm0 5.6c.8 0 1.4.6 1.4 1.4s-.6 1.4-1.4 1.4-1.4-.6-1.4-1.4.6-1.4 1.4-1.4zm2.3 9.7c0 .2-.2.4-.5.4h-3.6c-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5.2 0 .4-.2.4-.4v-1.9c0-.2-.2-.5-.4-.5-.3 0-.5-.1-.5-.4v-.9c0-.3.2-.5.5-.5h2.7c.3 0 .5.2.5.5v3.7c0 .2.2.4.4.4.3 0 .5.2.5.5v.9z"/>
+                                        </svg>
+                                    </apex:outputText>
+                                </div>
+                                <div class="slds-media__body">
+                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                        <apex:outputText value="{!$Label.PageMessagesInfo}: " />
+                                        <apex:outputText value="{!$Label.stgCRLPNonAdminError}"/>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </apex:outputPanel>
 
             <div class="slds-card {!IF(isPolling,'','slds-hide')}">
                 <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
@@ -32,7 +80,7 @@
             <div class="{!IF(isHHAccount, '', 'slds-hide')}">
 
                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large {!IF(isAdmin, '', 'slds-hide')}">
-                    <apex:commandButton id="editOppRollups" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode && !isPolling}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton id="editCRLPs" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode && !isPolling}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
                 </div>
 
                 <div class="slds-form--horizontal slds-m-around--large">
@@ -49,9 +97,12 @@
                 </div>
 
                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="saveOppRollups" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
-                    <apex:commandButton id="cancelOppRollups" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-                    <apex:commandButton id="navigate" value="Go to Customizable Rollup Summaries Setup" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
+                    <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
+                    <apex:commandButton id="cancelCRLPs" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
+                    <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
+<!--
+                    <apex:commandButton id="resetCRLPs" value="{!$Label.stgCRLPReset}" action="{!resetRollupsToDefaultConfig}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button&#45;&#45;small slds-button&#45;&#45;neutral" />
+-->
                 </div>
 
             </div>

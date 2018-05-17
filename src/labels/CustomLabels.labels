@@ -596,12 +596,68 @@
         <value>Closed Won Opportunities</value>
     </labels>
     <labels>
+        <fullName>CMT_FilterGroupActiveRollupsHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the active rollups tree</shortDescription>
+        <value>The list of active rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_DeleteConfirm</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Confirmation message when a user wants to delete something.</shortDescription>
+        <value>Are you sure you want to delete this {0}?</value>
+    </labels>
+    <labels>
         <fullName>CMT_FilterGroupDeleteError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error message when a user wants to delete a filter group with rollups.</shortDescription>
-        <value>You can not delete this filter group because there are rollups associated with it. View this filter group for more information on these rollups.</value>
+        <value>You can't delete this filter group because there is at least one rollup using it. To delete this filter group, either remove it from the associated rollups or delete the rollups.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupDescriptionHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group description</shortDescription>
+        <value>It's important to enter a detailed description that explains the filter rules in this group so that users in your org can understand if this filter group is right for their rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter group name</shortDescription>
+        <value>A unique name for this filter group.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterGroupNameLimitError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>New filter group button</shortDescription>
+        <value>Filter group name is limited to 40 characters.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rules</shortDescription>
+        <value>The list of rules included in this filter group. The filter rules set the criteria to ensure that you only get the data you need. Keep in mind that filter groups use AND criteria for filter rules, so if the data doesn't match ALL filter rules within a filter group, it won't be included in the rollup.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRulesValueHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Help text for the filter rule value field</shortDescription>
+        <value>If the Operator is In List or Not in List and you don't see a picklist, enter values separated by semi-colons.</value>
     </labels>
     <labels>
         <fullName>CMT_FilterNew</fullName>
@@ -617,7 +673,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message when a user wants to delete a filter rule.</shortDescription>
-        <value>Deleting this filter rule will affect the rollups associated to the filter group. Do you still want to delete this rule?</value>
+        <value>There are rollups using the filter group that this rule is part of. If you delete this filter rule, it will affect those rollup calculations. Are you sure you want to delete?</value>
     </labels>
     <labels>
         <fullName>CMT_FilterRuleDuplicateError</fullName>
@@ -625,7 +681,15 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Warning message when a user creates a duplicate filter rule.</shortDescription>
-        <value>This filter rule already exists on this filter group. Edit one or more fields to create a unique filter rule.</value>
+        <value>This filter rule already exists in this filter group. Edit one or more fields to create a unique filter rule.</value>
+    </labels>
+    <labels>
+        <fullName>CMT_FilterRuleFieldsMissing</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error message preventing a user from saving a filter rule with fields missing.</shortDescription>
+        <value>One or more fields are missing. Complete all fields to save this filter rule.</value>
     </labels>
     <labels>
         <fullName>ConfirmDeleteAccount</fullName>
@@ -657,7 +721,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
-        <value>The fields that appear in this area are determined by the selected Operation.</value>
+        <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
@@ -665,7 +729,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Help text for user adding a summary object, field, and a description.</shortDescription>
-        <value>Select the Summary Object to determine the available fields, then select the Summary Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
+        <value>Select the Target Object to determine the available fields, then select the Target Field that this information should roll up to. Be sure to enter a detailed description that will help you (and others) understand exactly what this rollup does.
         </value>
     </labels>
     <labels>
@@ -682,7 +746,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for target field.</shortDescription>
-        <value>Custom field on the selected Target Object that you are rolling up donation data to. Fields must be of the following types: Date, Datetime, Double, ID, MultiPicklist, Picklist, String, TextArea. Note that a Target Field can only be associated with one rollup.</value>
+        <value>Custom field on the selected Target Object that you are rolling up donation data to. Note that a Target Field can only be associated with one rollup.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupActiveHelpText</fullName>
@@ -714,7 +778,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for rollup type.</shortDescription>
-        <value>The combination of which object you're rolling up and the attribution</value>
+        <value>The combination of which object you're rolling up data from and whether the rollup is a hard credit or soft credit.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupFilterGroupHelpText</fullName>
@@ -722,7 +786,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for filter group.</shortDescription>
-        <value>The field shows which filter group will be applied to this rollup. A filter group is a collection of filter rules that determine what records don't get rolled up.</value>
+        <value>The field shows which filter group to apply to this rollup. A filter group is a collection of filter rules that determine which records get rolled up.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupOperationHelpText</fullName>
@@ -770,7 +834,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for detail field picklist.</shortDescription>
-        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation Type is  a single result operation (First, Last, Largest, or Smallest).</value>
+        <value>The field from the result of the rollup operation that you want to copy to the Target Field. Only available if the Operation is a single result operation (First, Last, Largest, or Smallest). This list only shows fields whose field types are compatible with the selected Target field.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupDateFieldHelpText</fullName>
@@ -778,7 +842,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Tooltip help text for date field picklist.</shortDescription>
-        <value>The date field to use when calculating the rollup. The Time Bound Operation depends on this field.</value>
+        <value>The date field to use when calculating the rollup. This is the date that the Time Frame uses to figure out whether to include this record or not.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupAmountFieldHelpText</fullName>
@@ -797,6 +861,22 @@
         <value>Credit Type</value>
     </labels>
     <labels>
+        <fullName>CRLP_DaysBack</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Days back error message for integers with any characters other than numbers.</shortDescription>
+        <value>You must enter a positive whole number that is less than 10000.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DeleteError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Successfully Deleted</shortDescription>
+        <value>Error deleting the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_DeleteProgress</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -813,6 +893,38 @@
         <value>{0} Successfully Deleted</value>
     </labels>
     <labels>
+        <fullName>CRLP_DeleteTimeout</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Timeout error message</shortDescription>
+        <value>Deleting the {0} has timed out. Please try again.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DisabledTitle</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Title for CRLP Disabled Toast</shortDescription>
+        <value>These aren't the rollups you're looking for.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DisabledMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message for CRLP Disabled Toast</shortDescription>
+        <value>You don't have Customizable Rollups enabled. Return to NPSP Settings for information on how to enable these.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_DuplicateTargetField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error when user tries to save a Rollup with a duplicate Target Field.</shortDescription>
+        <value>This Target field is already in use by an active Customizable Rollup.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_HardCredit</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -821,12 +933,36 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
-        <fullName>CRLP_NoRollupType</fullName>
+        <fullName>CRLP_NoAvailableDetailFieldsMessage</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Label to be used for option to bypass rollup type selection</shortDescription>
-        <value>No Rollup Type</value>
+        <shortDescription>Message when user doesn't have available detail fields on a custom rollup.</shortDescription>
+        <value>There are no available fields. Only fields whose field types are compatible with the Target field appear in the Field to Roll Up picklist.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_NoAvailableTargetFieldsMessage</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label when user doesn't have available summary fields on a custom rollup</shortDescription>
+        <value>There are no available Target fields. You need to create a writeable, custom field that your data can roll up to.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_NoFilterGroupSelected</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label when user doesn't select a filter group.</shortDescription>
+        <value>No Filter Group (Include All Records)</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_PleaseWait</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Message to indicate in-progress operation for metadata deployments</shortDescription>
+        <value>Please wait a moment</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>
@@ -858,7 +994,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Rollup Summary Page Title</shortDescription>
-        <value>Customizable Rollup Summaries</value>
+        <value>Customizable Rollups</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupType</fullName>
@@ -1039,6 +1175,14 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <value>Subject is a required field.</value>
     </labels>
     <labels>
+        <fullName>OCRRemovePrimaryDuplicateBatchErrorText</fullName>
+        <categories>Opportunity</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>OCR Remove Primary Duplicate Batch Error Text</shortDescription>
+        <value>Unable to remove the duplicate primary OCRs from the Opportunity {0}. Review the Contact Roles on the Opportunity record, choose which is the correct one, and delete the others.</value>
+    </labels>
+    <labels>
         <fullName>OrganizationalOpportunities</fullName>
         <categories>Error</categories>
         <language>en_US</language>
@@ -1094,7 +1238,6 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <shortDescription>More ClosedWon donations than Installments</shortDescription>
         <value>There are more Closed Won Opportunities associated with this Recurring Donation than the number of Installments defined.</value>
     </labels>
-    RD_ErrorNotEnoughClosedValueForFixedLength
     <labels>
         <fullName>RD_ErrorNotEnoughClosedValueForFixedLength</fullName>
         <categories>Recurring-Donations, Error</categories>
@@ -1356,6 +1499,13 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <protected>true</protected>
         <shortDescription>Zipcode Verification Limit</shortDescription>
         <value>You cannot verify more than 100 zipcodes at a time.</value>
+    </labels>
+    <labels>
+        <fullName>adapterException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Throw exception to external call</shortDescription>
+        <value>Invalid call. This function is reserved for Salesforce use.</value>
     </labels>
     <labels>
         <fullName>addrCiceroMissingAPIKey</fullName>
@@ -2396,6 +2546,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You do not have permissions to modify {0}.</value>
     </labels>
     <labels>
+        <fullName>giftProcessingAccountException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing account model error</shortDescription>
+        <value>Gift Processing doesn&apos;t support the Individual (&quot;Bucket&quot;) account model.</value>
+    </labels>
+    <labels>
+        <fullName>giftProcessingConfigException</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Gift Processing configuration error</shortDescription>
+        <value>Your org is missing required configuration for Gift Processing. Contact your admin for help.</value>
+    </labels>
+    <labels>
         <fullName>healthButtonRun</fullName>
         <categories>Health Check</categories>
         <language>en_US</language>
@@ -3351,7 +3515,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionOCRDupPrimary</shortDescription>
-        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles.</value>
+        <value>Having multiple OpportunityContactRoles marked Primary can cause Opportunity rollups, such as Total Gifts, to be incorrectly calculated.  View these Opportunities by running the &lt;b&gt;Opportunities with Primary Contact Roles&lt;/b&gt; report in the NPSP Health Check reports folder, and looking at the records with 2 or more Primary Contact Roles. To easily remove the duplicate Primary Opportunity Contact Roles (OCRs) in your org, go to &lt;strong&gt;NPSP Settings | Bulk Data Processes | Remove Duplicate Primary OCRs&lt;/strong&gt; and click &lt;strong&gt;Run Batch&lt;/strong&gt;.</value>
     </labels>
     <labels>
         <fullName>healthSolutionOCRException</fullName>
@@ -4895,12 +5059,43 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must be using the Household Account Model in order to use Customizable Rollups.</value>
     </labels>
     <labels>
+        <fullName>stgCRLPInfoOnUDRBody</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRBody</shortDescription>
+        <value>Customizable Rollups offer all the functionality of User Defined Rollups and so much more:&lt;br/&gt;
+            &lt;br/&gt;
+            ● Roll up Payments in addition to Opportunities&lt;br/&gt;
+            ● Use filters to easily exclude certain records or data&lt;br/&gt;
+            ● Roll up data for more than 2 years back&lt;br/&gt;
+            &lt;br/&gt;
+            Go to NPSP Settings | Donations | Customizable Rollups to enable Customizable Rollups and get started using them!
+        </value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPInfoOnUDRHeading</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPInfoOnUDRHeading</shortDescription>
+        <value>Why not try Customizable Rollups instead?</value>
+    </labels>
+    <labels>
         <fullName>stgCRLPNonAdminError</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgCRLPNonAdminError</shortDescription>
         <value>Only System Administrators can enable or disable Customizable Rollups.</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPGoToSetup</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPGoToSetup</shortDescription>
+        <value>Go to Customizable Rollups Setup</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -5180,7 +5375,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 82 out-of-box NPSP rollups, into Customizable Rollups.
+            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups.
         </value>
     </labels>
     <labels>
@@ -5196,7 +5391,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
             &lt;br/&gt;● Existing Rollup settings (in NPSP Settings) are removed and saved as metadata
             &lt;br/&gt;● New Rollup Settings appear in NPSP Settings under Donations
             &lt;br/&gt;&lt;br/&gt;
-            For complete details, see this doc.
+            For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
         </value>
@@ -5208,7 +5403,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When active, enables Customizable Rollup Summaries.
+            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
         </value>
     </labels>
     <labels>
@@ -5642,6 +5837,25 @@ IMPORTANT: Both of these fields must have the same data type.</value>
 
 &lt;b&gt;This is an irreversible process.&lt;/b&gt;
 This change updates Opportunity records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities: 
+&lt;br/&gt;
+&lt;br/&gt;
+● Custom Validation Rules&lt;br/&gt;
+● Workflow Rules&lt;br/&gt;
+● Process Builder&lt;br/&gt;
+● Visual Workflows&lt;br/&gt;
+● Custom Triggers&lt;br/&gt;&lt;br/&gt;
+Once the process is 100% complete, you can safely leave or refresh this page.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpPrimaryContactRoleMergeBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Content of the &quot;Bulk Data Processes - Remove Duplicate Primary OCRs&quot; page</shortDescription>
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate a batch that permanently removes any duplicate Primary Opportunity Contact Roles that exist in your org. These records won&apos;t be recoverable in the recycle bin, so be careful to review expected changes in advance.&lt;br/&gt;&lt;br/&gt;
+
+&lt;b&gt;This is an irreversible process.&lt;/b&gt;
+This change updates Opportunity Contact Role records. Before starting this process, we recommend that you back up your data. We also recommend disabling the following when they affect Opportunities:
 &lt;br/&gt;
 &lt;br/&gt;
 ● Custom Validation Rules&lt;br/&gt;
@@ -6185,7 +6399,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelAutoContactRoles</shortDescription>
-        <value>Automatic Contact Roles</value>
+        <value>Default Contact Roles</value>
     </labels>
     <labels>
         <fullName>stgLabelBatchJobSizes</fullName>
@@ -6578,6 +6792,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelPaymentSettings</shortDescription>
         <value>Payment Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelPrimaryContactRoleMergeBatch</fullName>
+        <categories>NPSP Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Menu title for the Duplicate Primary OCRs in NPSP Settings</shortDescription>
+        <value>Remove Duplicate Primary OCRs</value>
     </labels>
     <labels>
         <fullName>stgLabelRDFieldMap</fullName>

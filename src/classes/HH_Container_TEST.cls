@@ -203,6 +203,8 @@ private class HH_Container_TEST {
     * @description Tests getAddresses()
     */
     public static testMethod void testGetAddresses() { 
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
         
         initTestData();
 
@@ -422,6 +424,9 @@ private class HH_Container_TEST {
         No Household is merged.
     **********************************************************************************************************/ 
     private static testMethod void saveShouldAddRemovedContactToNewHousehold() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         Integer accountSize = 2;
         Account[] accounts = buildAccounts(accountSize);
         insert accounts;
@@ -545,6 +550,9 @@ private class HH_Container_TEST {
     */
     public static testMethod void testAddContactAddresses() { 
         
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         initTestData();
 
         Test.startTest();

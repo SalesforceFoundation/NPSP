@@ -1,11 +1,12 @@
 ({
-    /* @description: gets the fieldAPIName of the the field and selected value
-    * the intended recipient of the message is the rollup component
-    */
+    /**
+     * @description: gets the fieldAPIName of the the field and selected value
+     * the intended recipient of the message is the rollup component
+     */
     changeField: function(cmp, event){
         var fieldName = cmp.get('v.auraId');
         var value = event.getSource().get("v.value");
-        if(value === undefined){
+        if (value === undefined) {
             value = '';
         }
 
@@ -26,5 +27,15 @@
             'channel': 'selectField'
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description: handles the ltng:message event to check for an invalid lightning input
+     */
+    handleMessage: function(cmp, event) {
+        if (event.getParam("channel") === 'validateCmp') {
+            var inputCmp = cmp.find('selectField');
+            inputCmp.showHelpMessageIfInvalid();
+        }
     }
 })

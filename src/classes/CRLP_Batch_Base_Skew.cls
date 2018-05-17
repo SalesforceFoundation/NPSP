@@ -35,7 +35,6 @@
 * @description Abstract base class Skew Mode batch rollup operations
 */
 public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
-
     protected CRLP_Batch_Base_Skew() { }
 
     /**
@@ -288,8 +287,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // current data scope to the processing class to avoid taking up additional heap size with
             // cloned data.
             options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+            if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                options.setMapOfProcessedOppIdsByParentId(this.statefulMapOfOppIdsByParentId, parentIds);
             }
 
             // Call the method to do the actual rollups. This returns only records that require updating
@@ -305,8 +305,9 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             }
             if (lastParentIdProcessed != null && options.getUpdatedMapOfRollupsByParentId().containsKey(lastParentIdProcessed)) {
                 this.statefulRollupsById.put(lastParentIdProcessed, options.getUpdatedMapOfRollupsByParentId().get(lastParentIdProcessed));
-                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                    this.statefulMapOfOppIdsByAcct.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByAccountId().get(lastParentIdProcessed));
+                if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit || 
+                        this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                    this.statefulMapOfOppIdsByParentId.put(lastParentIdProcessed, options.getUpdatedMapOfProcessedOppsByParentId().get(lastParentIdProcessed));
                 }
             }
 
@@ -316,10 +317,11 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             }
 
             // Handle dml on the records to be updated
-            if (updatedRecords != null) {
+            if (updatedRecords != null && !updatedRecords.isEmpty()) {
                 CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, this.jobType);
                 this.totalRecordsModified += updatedRecords.size();
                 this.totalCommits++;
+
                 // If the record was committed and the Id is in the parentIdsNotCommittedWithBatch collection
                 // that tracks the last batch iteration by Id, remove it from that collection now that it's committed.
                 for (SObject s : updatedRecords) {
@@ -357,7 +359,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 // current data scope to the processing class to avoid taking up additional heap size with
                 // cloned data.
                 options.setMapOfRollupsByParentId(this.statefulRollupsById, parentIds);
-                options.setMapOfProcessedOppIdsByAccountId(this.statefulMapOfOppIdsByAcct, parentIds);
+                options.setMapOfProcessedOppIdsByParentId(this.statefulMapOfOppIdsByParentId, parentIds);
 
                 // Call the method to do the actual rollup on this last remaining record, which is basically
                 // just to return the updated record
@@ -388,6 +390,22 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
         if (this.lastIdProcessedForChunking != null) {
             database.executeBatch(new CRLP_SkewDispatcher_BATCH(this.jobType, this.jobFilter, this.lastIdProcessedForChunking),
                     CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+        }
+
+        // In debug mode, write a summary of the job to the error log
+        if (CRLP_Debug_UTIL.isDebuggingEnabled) {
+            Error__c logEntry = new Error__c(
+                    Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + this.jobType.name() + ' ' + this.jobMode.name(),
+                    Error_Type__c = 'DEBUG LOG',
+                    Full_Message__c = ('Total Batch Iterations: ' + this.batchIteration + '\n' +
+                            'Total DML Operations: ' + this.totalCommits + '\n' +
+                            'Total Records Updates: ' + this.totalRecordsModified + '\n' +
+                            'Parent Ids Commited in Finish: ' + (this.parentIdsNotCommittedWithBatch !=  null ?
+                                '(' + this.parentIdsNotCommittedWithBatch.size() + ')\n' +
+                                        JSON.serializePretty(this.parentIdsNotCommittedWithBatch) : 'none') + '\n' +
+                            'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+            );
+            insert logEntry;
         }
 
     }

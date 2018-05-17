@@ -81,19 +81,45 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description action method run on page load to check account model and admin status of running user
-    * and add pagemessages as needed
+    * @description the existing value of the CRLP enablement setting, cached upon entering edit mode
     */
-    public void checkPermissions() {
-        // throw an error if the org isn't on HH account model
-        if (!isHHAccount) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.stgCRLPHouseholdAccountError));
-        }
-        // throw an error if the user isn't an admin
-        if (!isAdmin) {
-            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.WARNING, Label.stgCRLPNonAdminError));
-        }
+    private Boolean isCRLPenabledPrevious;
+
+    /*******************************************************************************************************
+    * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
+    * @return null
+    */
+    public virtual override PageReference editSettings() {
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        // cache the status of CRLP settings upon entering edit mode so we can check for no change
+        isCRLPenabledPrevious = UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings().Customizable_Rollups_Enabled__c;
+        isEditMode = true;
+        return null;
     }
+
+    /*******************************************************************************************************
+    * @description Action Method to simply redeploy/reset all CMDTs, only offered when CRLPs are enabled
+    * @return void
+    */
+/*
+    public PageReference resetRollupsToDefaultConfig() {
+        STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
+        Savepoint sp = Database.setSavepoint();
+        try {
+            isPolling = true;
+            jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+            if (Test.isRunningTest()) {
+                jobId = '123';
+            }
+        } catch (Exception e) {
+            Database.rollback(sp);
+            ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
+            ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
+            isPolling = false;
+        }
+        return null;
+    }
+*/
 
     /*******************************************************************************************************
     * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
@@ -103,35 +129,56 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public virtual override PageReference saveSettings() {
 
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
-        Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-        Savepoint sp = Database.setSavepoint();
         isEditMode = false;
+
+        Savepoint sp = Database.setSavepoint();
         try {
-            if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
-                String oldStatus = STG_Panel.stgService.stgCRLP.CMT_API_Status__c;
-                // Only start polling if it's their first time or the last deployment wasn't a success
-                if(String.isEmpty(oldStatus) || !oldStatus.contains('Succeeded')) {
-                    isPolling = true;
+
+            Boolean settingHasChanged = (isCRLPenabledPrevious != STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c);
+
+            if (settingHasChanged) {
+                // we only proceed with deployment/save if they changed the checkbox.
+
+                // if they hit edit and then they hit save without changing the setting checkbox,
+                // we do NOT want to reset their CRLP customizations (if the box was/is true)
+                // or run extraneous code (if the box was/is false) so in that case we do nothing.
+                // they have essentially hit cancel.
+
+                if (STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c) {
+                    // check for existing Rollup__mdts
+                    List<Rollup__mdt> existingRollups = CRLP_Rollup_SEL.cachedRollups;
+                    if (existingRollups.size() == 0) {
+                        // only do the deployment here if they've never deployed before
+                        isPolling = true;
+                        jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
+                        if (Test.isRunningTest()) {
+                            jobId = '123';
+                        }
+                    } else {
+                        // there are existing rollups. just save the setting and reschedule jobs, don't deploy.
+                        stgService.saveAll();
+                        UTIL_MasterSchedulableHelper.setScheduledJobs();
+                    }
+
+                } else {
+                    // The deployment method takes care of setting the Enabled flag to true if it succeeds.
+                    // In here, we only set it to false in the case on disabling CRLPs.
+                    stgService.saveAll();
+                    // reset to legacy jobs
+                    UTIL_MasterSchedulableHelper.setScheduledJobs();
                 }
-                // This method includes committing Customizable_Rollups_Enabled__c as true if the deployment succeeds
-                jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
-                if (Test.isRunningTest()) {
-                    jobId = '123';
-                }
-            } else {
-                // The deployment method takes care of setting the Enabled flag to true if it succeeds.
-                // In here, we only set it to false.
-                stgService.saveAll();
             }
             UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
-            UTIL_MasterSchedulableHelper.setScheduledJobs();
+
         } catch (Exception e) {
             Database.rollback(sp);
             ERR_Handler.processError(e, ERR_Handler_API.Context.STTG);
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             isPolling = false;
+            Customizable_Rollup_Settings__c crlpSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             crlpSettings.Customizable_Rollups_Enabled__c = !STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c;
         }
+
         return null;
     }
 
@@ -156,6 +203,8 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         if(!String.isEmpty(newStatus) && newStatus.contains(jobId)){
             isPolling = false;
             if (newStatus.contains('Succeeded')) {
+                // reset to CRLP jobs
+                UTIL_MasterSchedulableHelper.setScheduledJobs();
                 return null;
             } else {
                 crlpSettings.Customizable_Rollups_Enabled__c = false;

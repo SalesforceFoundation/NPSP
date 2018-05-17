@@ -67,7 +67,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
     public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
         string strAction = action.Name();
         string currUserName = UserInfo.getUserName();
-        List<SObject> listClasses = new list<Sobject>();
+        List<SObject> listClasses = new List<Sobject>();
         for (Trigger_Handler__c th : listTH) {
             Set<String> excludedUserNames = (th.Usernames_to_Exclude__c != null ?
                     new Set<String>(th.Usernames_to_Exclude__c.split(';')) : new Set<String>());
@@ -81,7 +81,7 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
 
     /*******************************************************************************************************
      * @description to allow test code to modify the saved trigger handlers and have them reread into the cache.
-     */ 
+     */
     public static void ClearCachedTriggerHandlersForTest() {
         listTH = null;
     }
@@ -91,49 +91,16 @@ public without sharing class TDTM_ObjectDataGateway implements TDTM_iTableDataGa
      */
     public static list<Trigger_Handler__c> listTH {
         get {
-            if (listTH == null) {
-                listTH =  [SELECT Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
-                    Trigger_Action__c, User_Managed__c FROM Trigger_Handler__c ORDER BY Load_Order__c];
+            if (ADV_PackageInfo_SVC.useAdv() && ADV_PackageInfo_SVC.getApiNPSP() != null) {
+                listTH = ADV_PackageInfo_SVC.getApiNPSP().getDefaultTdtmConfigNpspRecords(listTH);
+            } else {
+                if (listTH == null) {
+                    listTH =  [SELECT Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, Usernames_to_Exclude__c,
+                        Trigger_Action__c, User_Managed__c FROM Trigger_Handler__c ORDER BY Load_Order__c];
+                }
             }
             return listTH;
         }
         set;
     }
-
-/********* old implementation ****************
-    public static List<SObject> getClassesToCallForObject(String objectName, TDTM_Runnable.Action action) {   
-        ToRunOnObjectAction toRun = objectActionQueried(objectName, action);
-        if(toRun != null) {
-            return toRun.classesToCall;
-        } else {
-            List<SObject> classesToCall =  [select Asynchronous__c, Class__c, Load_Order__c, Object__c, Active__c, 
-                Trigger_Action__c from Trigger_Handler__c where Active__c = true and Object__c = :objectName and 
-                Trigger_Action__c includes ( :action.name() ) order by Load_Order__c];
-            toRun = new ToRunOnObjectAction(objectName, action, classesToCall);
-            classesQueried.add(toRun);
-            return classesToCall;
-        }
-    }
-    
-    private static ToRunOnObjectAction objectActionQueried(String objectName, TDTM_Runnable.Action action) {
-        for(ToRunOnObjectAction toRun : classesQueried) {
-            if(toRun.objectName == objectName && toRun.action == action) {
-              return toRun;
-            }
-        }
-        return null;
-    }
-    
-    private class ToRunOnObjectAction {
-        private String objectName;
-        private TDTM_Runnable.Action action;
-        private List<SObject> classesToCall;
-        
-        ToRunOnObjectAction(String objectName, TDTM_Runnable.Action action, List<SObject> classesToCall) {
-            this.objectName = objectName;
-            this.action = action;
-            this.classesToCall = classesToCall;
-        }
-    }
-***************/
 }

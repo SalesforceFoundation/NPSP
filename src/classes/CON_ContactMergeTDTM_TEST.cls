@@ -282,6 +282,9 @@ public with sharing class CON_ContactMergeTDTM_TEST {
     *   the Contact's mailing address matches the override
     */
     static testMethod void mergeContactsDifferentHHAccountAddressOverride() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'mergeContactsDifferentHHAccountAddressOverride') return;
         
         // this creates 2 Household Accounts, each with 2 Contacts, and a default Address for each HH

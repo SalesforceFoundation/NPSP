@@ -58,6 +58,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidAddress() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'oneValidAddress') return;
 
     	TDTM_DefaultConfig.startTestDataInit();
@@ -121,9 +124,11 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidAddresses() {
-    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
 
         Integer batchSize = 100;
+    	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddresses') return;
 
         UTIL_Debug.disableDebugLogging();
         TDTM_DefaultConfig.startTestDataInit();
@@ -182,6 +187,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void oneValidZipcode() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'oneValidZipcode') return;
 
         TDTM_DefaultConfig.startTestDataInit();
@@ -227,6 +235,9 @@ public with sharing class ADDR_Validator_Batch_TEST {
     }
     
     public static testmethod void multipleValidAddressessZipcodes() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'multipleValidAddressessZipcodes') return;  
 
         TDTM_DefaultConfig.startTestDataInit();

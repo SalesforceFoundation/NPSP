@@ -164,12 +164,44 @@ public class CRLP_RollupCMT {
             this.recordId = filterRule.Id;
 
             try {
-                this.objectLabel = filterRule.Object__r.MasterLabel;
-                this.fieldLabel = filterRule.Field__r.MasterLabel;
-                this.operationLabel = this.operationName; // will to be updated in the RollupUI lgic
-                this.valueLabel = (this.value != null ? this.value.replace(';', ';\n') : null);
+                // obfuscating "Partial Soft Credit" object; relabeling to simply "Soft Credit"
+                this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
+                this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
+                this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
+                this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);
                 this.isDeleted = filterRule.Is_Deleted__c;
             } catch (Exception ex) {}
+        }
+
+        /**
+         * @description Convert the value label to a readable format based on the developer name for record types
+         * or split with new lines
+         * @param value the API value
+         * @param objectName the API name of the object
+         * @param fieldName the API name of the field
+         * @return Metadata.CustomMetadata instance for deployment
+         */
+        private String getValueLabel (String value, String objectName, String fieldName) {
+            String valueLabel;
+            List<String> rtLabels = new List<String>();
+            if (fieldName == 'RecordTypeId') {
+                List<RecordType> rts = [SELECT Id, Name, DeveloperName FROM RecordType WHERE SobjectType = :objectName AND IsActive = true];
+                // TODO: refactor to use this after summer18:
+                // Map<String,Schema.RecordTypeInfo> rtMapByName = d.getRecordTypeInfoByDeveloperName();
+                Map<String, String> rtDeveloperNameToName = new Map<String,String>();
+                for (RecordType rt : rts) {
+                    rtDeveloperNameToName.put(rt.DeveloperName, rt.Name);
+                }
+                for (String val : value.split(';')) {
+                    //val is the RT dev name
+                    rtLabels.add(rtDeveloperNameToName.get(val));
+                }
+                valueLabel = String.join(rtLabels,';');
+            } else {
+                valueLabel = value;
+            }
+            valueLabel = (valueLabel != null ? valueLabel.replace(';', ';\n') : null);
+            return valueLabel;
         }
 
         /**
@@ -183,12 +215,9 @@ public class CRLP_RollupCMT {
             String mdTypeName = CRLP_RollupCMT.MetadataObject.Filter_Rule.Name() + '__mdt';
 
             if (this.label == null) {
-                String prefix = this.filterGroupRecordName;
-                if (prefix.countMatches('_') > 1) {
-                    prefix = prefix.split('_')[0] + '_' + prefix.split('_')[1];
-                }
-                this.label = abbreviateForSpace(prefix.left(20).removeEnd('_') + '_Rule: ' + /*this.objectName + '.' + */this.fieldName +
-                        ' ' + this.operationName, false).left(40);
+                String prefix = abbreviateForSpace(this.filterGroupRecordName, true).replace('NPSP','').replace('_', '');
+                this.label = abbreviateForSpace(prefix.left(8) + ' ' + this.objectName + '.' + this.fieldName +
+                        ' ' + this.operationName + ' ' + this.value, false).left(40);
             }
             if (this.recordName == null) {
                 this.recordName = generateRecordName(this.label, true);
@@ -297,11 +326,11 @@ public class CRLP_RollupCMT {
             this.isActive = rlp.Active__c;
 
             try {
-                this.filterGroupLabel = rlp.Filter_Group__r.MasterLabel;
+                this.filterGroupLabel = rlp.Filter_Group__c == null ? System.Label.CRLP_NoFilterGroupSelected : rlp.Filter_Group__r.MasterLabel;
                 this.summaryObjectLabel = rlp.Summary_Object__r.Label;
                 this.summaryFieldLabel = rlp.Summary_Field__r.Label;
                 this.detailObjectLabel = rlp.Detail_Object__r.Label;
-                this.detailFieldLabel = rlp.Detail_Field__r.Label;
+                this.detailFieldLabel = rlp.Detail_Field__c == null ? null : UTIL_Describe.getFieldLabel(rlp.Detail_Object__r.QualifiedApiName, rlp.Detail_Field__r.QualifiedApiName.toLowerCase());
                 this.amountObjectLabel = rlp.Amount_Object__r.Label;
                 this.amountFieldLabel = rlp.Amount_Field__r.Label;
                 this.dateObjectLabel = rlp.Date_Object__r.Label;
@@ -352,16 +381,23 @@ public class CRLP_RollupCMT {
                     'Summary_Field__c' => combineObjectAndField(summaryObject, summaryField),
                     'Detail_Object__c' => detailObject,
                     'Amount_Object__c' => amountObject,
-                    'Date_Object__c' => dateObject
+                    'Date_Object__c' => dateObject,
+                    'Is_Deleted__c' => isDeleted
                 };
                 if (detailField != null) {
                     fldValues.put('Detail_Field__c', combineObjectAndField(detailObject, detailField));
+                } else {
+                    fldValues.put('Detail_Field__c', null);
                 }
                 if (amountField != null) {
                     fldValues.put('Amount_Field__c', combineObjectAndField(amountObject, amountField));
+                } else {
+                    fldValues.put('Amount_Field__c', null);
                 }
                 if (dateField != null) {
                     fldValues.put('Date_Field__c', combineObjectAndField(dateObject, dateField));
+                } else {
+                    fldValues.put('Date_Field__c', null);
                 }
             } else {
                 fldValues = new Map<String, Object>{ 'Is_Deleted__c' => isDeleted , 'Active__c' => isActive };
@@ -383,19 +419,18 @@ public class CRLP_RollupCMT {
         // Shorten specific words
         String recordName = abbreviateForSpace(label, false);
 
-        // replace all special characters and double underscores
-        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_+', '_'), true);
-
-        //remove leading and trailing underscores
-        recordName = recordName.removeStart('_').removeEnd('_');
+        // replace all special characters and underscores
+        recordName = abbreviateForSpace(recordName.replaceAll('[^\\w]+', '_').replaceAll('_', ''), true);
 
         if (makeUnique == true) {
             // Create a GUID format unique string
             Blob b = Crypto.GenerateAESKey(128);
             String h = EncodingUtil.ConvertTohex(b);
-            recordName += '_' + h.substring(4);
+            // force everything to have a 8-char random string at the end
+            recordName = recordName.left(32) + h.left(8);
+        } else {
+            recordName = recordName.left(40);
         }
-        recordName = recordName.left(39).removeEnd('_');
         return recordName;
     }
 
@@ -440,7 +475,10 @@ public class CRLP_RollupCMT {
         // TODO Talk to Beth about LowerCase().
         txt = txt.replace('General Accounting Unit', 'GAU').
                 replace('Recurring Donation', 'RD').
+                replace('Opportunity', 'Opp').
                 replace('Partial Soft Credit', 'PSC').
+                replace('Partial_Soft_Credit', 'PSC').
+                replace('ClosedWon', 'Won').
                 replace('npsp__', '').replace('npe01__', '').replace('npe03__', '').replace('__c', '').
                 replace(' of ', '');
 
@@ -449,10 +487,18 @@ public class CRLP_RollupCMT {
                     replace('Account', 'Acct').
                     replace('Contact', 'Con').
                     replace('Payment', 'Pmt').
+                    replace('Allocation', 'Allo').
                     replace('Allocations', 'Allo').
-                    replace('Soft_Credit', 'sftCr').replace('Hard_Credit', 'hrdCr').
-                    replace('#', 'num').replace('year', 'yr').
-                    replace('Number', 'Num').replace('Count', 'cnt');
+                    replace('Opportunities', 'Opps').
+                    replace('Partial Soft Credit', 'PSC').
+                    replace('Partial_Soft_Credit', 'PSC').
+                    replace('Soft_Credit', 'sftCr').
+                    replace('Hard_Credit', 'hrdCr').
+                    replace('#', 'num').
+                    replace('year', 'yr').
+                    replace('Number', 'Num').
+                    replace('Count', 'cnt').
+                    replace('Equals', 'Eq');
         }
         return txt;
     }

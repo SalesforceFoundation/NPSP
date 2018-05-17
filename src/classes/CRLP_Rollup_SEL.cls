@@ -299,7 +299,9 @@ public class CRLP_Rollup_SEL {
             // Rollup Type Job AND the Type Filter if there is one.
             for (Rollup__mdt r : rlps) {
                 Boolean includeRollupDefinition=false;
-                if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                if (r.Is_Deleted__c == true || r.Active__c == false) {
+                    // ignore deleted or inactive rollups
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
                         rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
                             && r.Amount_Object__r.QualifiedApiName != pscObjectName);

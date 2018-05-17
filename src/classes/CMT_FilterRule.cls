@@ -370,7 +370,9 @@ public class CMT_FilterRule {
             // If the field is the RecordTypeId AND the value is not an Id, then treat it as Text
             // using RecordType.DeveloperName values
             if (rule.field.getDescribe().getName() == 'RecordTypeId' && !compareValue.contains(recordTypeIdPrefix)) {
-                fieldValue = (String)record.getSObject('RecordType').get('DeveloperName');
+                if (record.getSObject('RecordType') != null) {
+                    fieldValue = (String) record.getSObject('RecordType').get('DeveloperName');
+                }
             }
 
             if (fieldValue == null && compareValue == null) {

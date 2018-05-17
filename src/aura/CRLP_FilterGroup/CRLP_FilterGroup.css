@@ -1,0 +1,27 @@
+.THIS .slds-form-element__icon {
+    margin-left: .2rem;
+}
+.THIS .slds-input[readonly] {
+    padding-left: .5rem;
+}
+/*removes the extra required asterisk for tooltip workaround*/
+.THIS .slds-form-element__label > [title='required'] {
+    display: none; visibility: hidden;
+}
+/*elongates filter group fields*/
+.THIS .filterGroupField > .slds-form-element__control {
+    display: inline;
+}
+.THIS .datatableContainer {
+    height: 175px;
+}
+.THIS .datatableContainer .slds-scrollable_y{
+    height: 100%;
+}
+/*stops save button from jumping by fixing the size of the error height*/
+.THIS .slds-has-error {
+    max-height: 60px;
+}
+.THIS .nameField {
+    height: 60px;
+}

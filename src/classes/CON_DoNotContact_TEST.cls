@@ -87,6 +87,9 @@ private class CON_DoNotContact_TEST {
     * household member.
     */
     static testMethod void testDeceasedInHousehold() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         if (strTestOnly != '*' && strTestOnly != 'testDeceasedInHousehold') return;
 
         UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR));    

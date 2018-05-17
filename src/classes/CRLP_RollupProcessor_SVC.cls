@@ -83,13 +83,15 @@ public class CRLP_RollupProcessor_SVC {
 
             // When PreventDupesInRollup is true, ensure the list of Opps in the detailsForParent
             // collection is unique by Opportunity Id
-            if (detailsForParent != null && options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+            if (detailsForParent != null && 
+                (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit)) {
                 List<SObject> oppsToRollup = new List<SObject>();
                 for (Integer nd=0, listSizeDtl=detailsForParent.size(); nd<listSizeDtl; nd++) {
                     SObject dtl = detailsForParent[nd];
                     Id dtlId = (Id)dtl.get(Partial_Soft_Credit__c.Opportunity__c);
-                    if (!options.mapOfProcessedOppIdsByAcctId.containsKey(parentId) ||
-                            !options.mapOfProcessedOppIdsByAcctId.get(parentId).contains(dtlId)) {
+                    if (!options.mapOfProcessedOppIdsByParentId.containsKey(parentId) ||
+                            !options.mapOfProcessedOppIdsByParentId.get(parentId).contains(dtlId)) {
                         oppsToRollup.add(dtl);
                     }
                 }
@@ -116,7 +118,9 @@ public class CRLP_RollupProcessor_SVC {
                 recordsToUpdate.put(parentId, updatedRecord);
             }
 
-            CRLP_Debug_UTIL.clearCurrentRollupState();
+            if (listSizeSum > 1) {
+                CRLP_Debug_UTIL.clearCurrentRollupState();
+            }
             previousParentIdProcessed = parentId;
         }
 
@@ -290,8 +294,9 @@ public class CRLP_RollupProcessor_SVC {
 
             handler.processRollups(detailRecords, childRecordsByDetailId);
 
-            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                options.mapOfProcessedOppIdsByAcctId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                options.mapOfProcessedOppIdsByParentId.put(parentId, handler.getListOfOppIdsThatWereRolledUp());
             }
 
             // only set the lastParentId when there are actually detail records

@@ -128,6 +128,9 @@ public with sharing class RLLP_OppRollup_TEST {
     * @description Runs testGivingRollupProcessor test method for the One to One account processor.
     */
     static testMethod void testGivingRollupOne2One(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
     	if (strTestOnly != '*' && strTestOnly != 'testGivingRollupOne2One') return;
         testGivingRollupProcessor(CAO_Constants.ONE_TO_ONE_PROCESSOR);
     }
@@ -135,6 +138,9 @@ public with sharing class RLLP_OppRollup_TEST {
     * @description Runs testGivingRollupProcessor test method for the household account processor.
     */
     static testMethod void testGivingRollupHHAccount(){
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         if (strTestOnly != '*' && strTestOnly != 'testGivingRollupHHAccount') return;
         testGivingRollupProcessor(CAO_Constants.HH_ACCOUNT_PROCESSOR);
     }

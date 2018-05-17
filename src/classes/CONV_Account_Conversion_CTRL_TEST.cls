@@ -37,11 +37,15 @@
 
 @isTest
 public with sharing class CONV_Account_Conversion_CTRL_TEST {
+
     /*******************************************************************************************************
     * @description Envokes a successful run of the controller
     */
     public static testmethod void testConversionCtrl() {
 
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 

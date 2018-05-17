@@ -1,6 +1,32 @@
 ({
-    /* @description: resets the view assignments, clears detail information, and displays rollup grid
+    /**
+     * @description: return to main grid from rollup detail and remove the rollup from the cached and active grids
+     * @param recordName: message passed in from the handleMessage
+     * @param list: active working list
+     * @param grid: active grid, either rollup or filterGroup
     */
+    deleteGridItem: function (cmp, list, recordName, grid) {
+        for (var i = 0; i < list.length; i++) {
+            if (list[i].recordName === recordName || list[i].name === recordName) {
+                // if the Id matches, delete that record
+                list.splice(i, 1);
+                break;
+            }
+        }
+        if (grid === 'rollup') {
+            this.resetRollupDataGrid(cmp, list);
+            this.showToast(cmp, 'success', cmp.get("v.labels.rollupDeleteProgress"), cmp.get("v.labels.rollupDeleteSuccess"));
+            this.requeryFilterGroups(cmp);
+        } else if (grid === 'filterGroup') {
+            cmp.set("v.filterGroupList", list);
+            this.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+        }
+        this.handleCancelDetailEvent(cmp, grid);
+    },
+
+    /**
+     * @description: resets the view assignments, clears detail information, and displays rollup grid
+     */
     displayRollupsGrid: function(cmp) {
         cmp.set("v.isRollupsGrid", true);
         cmp.set("v.isFilterGroupsGrid", false);
@@ -13,8 +39,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
-    /* @description: resets the view assignments, clears detail information, and displays filter group grid
-    */
+    /**
+     * @description: resets the view assignments, clears detail information, and displays filter group grid
+     */
     displayFilterGroupsGrid: function(cmp) {
         cmp.set("v.isFilterGroupsGrid",true);
         cmp.set("v.isRollupsGrid", false);
@@ -26,8 +53,9 @@
         cmp.set("v.activeRecordId", null);
     },
 
-    /* @description: filters row data based on user's selection of summary object
-    */
+    /**
+     * @description: filters row data based on user's selection of summary object
+     */
     filterData: function(cmp, object) {
         var cachedRollupList = cmp.get("v.cachedRollupList");
         if(object === 'All'){
@@ -41,19 +69,59 @@
     },
 
     /**
+     * @description: switches to selected grid with correct width after hearing cancel event from rollup or filter group detail
+     */
+    handleCancelDetailEvent: function(cmp, grid){
+        //reset lastActiveRecordId in case user navigates from one detail component to another
+        cmp.set("v.lastActiveRecordId", null);
+
+        if (grid === 'rollup') {
+            this.displayRollupsGrid(cmp);
+            cmp.set("v.width", 12);
+        } else if (grid === 'filterGroup') {
+            this.displayFilterGroupsGrid(cmp);
+            cmp.set("v.width", 12);
+        }
+    },
+
+    /**
+     * @description: handles the selection of a specific rollup from the filter group view and then return to filter group
+     * @param message: passed in from the handleMessage
+     */
+    handleNavigateEvent: function(cmp, message) {
+        //handles the selection of a specific rollup from the filter group view and then return to filter group
+        cmp.set("v.activeRecordId", message.id);
+        cmp.set("v.detailMode", 'view');
+        cmp.set("v.width", 8);
+
+        if (message.target === 'rollup') {
+            cmp.set("v.lastActiveRecordId", message.lastId);
+            cmp.set("v.isRollupDetail", true);
+            cmp.set("v.isFilterGroupDetail", false);
+        } else if (message.target === 'filterGroup'){
+            cmp.set("v.lastActiveRecordId", null);
+            cmp.set("v.isRollupDetail", false);
+            cmp.set("v.isFilterGroupDetail", true);
+        }
+    },
+
+    /**
      *  @description: merges and saves the updated row item into the existing list of rows
-     *  @param list - list of items to merge into
+     *  @param list - list of items to merge into (this is the cached list for rollups)
      *  @param item - item to be merged into the list
      *  @param context - context running the merge
      */
-    mergeRowItem: function(cmp, list, item, context){
+    mergeRowItem: function(cmp, list, item, context) {
         var newItem = true;
         for (var i = 0; i < list.length; i++) {
-            //todo: refactor to lowercase Id after CMT save information is added
             if (list[i].recordId === item.recordId) {
                 //update filter group information on rollups only if master label has changed
-                if (list[i].MasterLabel !== item.MasterLabel && context === 'filterGroup') {
+                if (list[i].label !== item.label && context === 'filterGroup') {
                     this.requeryRollups(cmp);
+                }
+                //update filter group grid only if filter group reference on rollup has changed
+                if (list[i].filterGroupName !== item.filterGroupName && context === 'rollup') {
+                    this.requeryFilterGroups(cmp);
                 }
                 // if the Id matches, update that record
                 list[i] = item;
@@ -61,28 +129,43 @@
                 break;
             }
         }
-        if (newItem === true) {
+        if (newItem) {
             list.push(item);
+            if (context === 'rollup') {
+                this.requeryFilterGroups(cmp);
+            }
         }
 
-        //save the updated list
-        if(context === 'rollup'){
-            cmp.set("v.rollupList", list);
-        } else if (context === 'filterGroup'){
+        if (context === 'rollup') {
+            this.resetRollupDataGrid(cmp, list);
+        } else if (context === 'filterGroup') {
             cmp.set("v.filterGroupList", list);
         }
     },
 
-    /* @description: sorts data by user's selected field and field direction
-    */
+    /**
+     * @description: set an updated, sorted, unfiltered rollup list
+     */
+    resetRollupDataGrid: function(cmp, list) {
+        var rollupList = JSON.parse(JSON.stringify(list));
+        var sortedData = this.sortData(cmp, 'displayName', 'asc', rollupList);
+        cmp.set("v.rollupList", sortedData);
+        cmp.set("v.cachedRollupList", sortedData);
+        cmp.set("v.filteredSummaryObject", "All");
+    },
+
+    /**
+     * @description: sorts data by user's selected field and field direction
+     */
     sortData: function(cmp, fieldName, sortDirection, data) {
         var reverse = sortDirection !== 'asc';
         data.sort(this.sortBy(fieldName, reverse));
         return data;
     },
 
-    /* @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
-    */
+    /**
+     * @description: called by sortData, sorts by provided key and direction. Provided by Salesforce lightning:datatable documentation.
+     */
     sortBy: function (field, reverse, primer) {
         var key = primer ?
             function(x) {return primer(x[field])} :
@@ -94,13 +177,43 @@
         }
     },
 
-    /* @description: toggles a modal popup and backdrop
-    */
+    /**
+     * @description: toggles a modal popup and backdrop
+     */
     toggleFilterRuleModal: function(cmp) {
         var backdrop = cmp.find('backdrop');
         $A.util.toggleClass(backdrop, 'slds-backdrop_open');
         var modal = cmp.find('modaldialog');
         $A.util.toggleClass(modal, 'slds-fade-in-open');
+    },
+
+    /**
+     * @description: queries the filter groups to update the count of rollups after deleting
+     */
+    requeryFilterGroups: function(cmp) {
+        var action = cmp.get("c.getFilterGroupDefinitions");
+
+        //requery filter group records
+        action.setCallback(this, function(response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var filterGroupList = JSON.parse(JSON.stringify(response.getReturnValue()));
+
+                cmp.set("v.filterGroupList", filterGroupList);
+            }
+            else if (state === "ERROR") {
+                var errors = response.getError();
+                if (errors) {
+                    if (errors[0] && errors[0].message) {
+                        this.showToast(cmp, "error", cmp.get("v.labels.error"), errors[0].message);
+                    }
+                } else {
+                    this.showToast(cmp, "error", cmp.get("v.labels.error"), "Unknown Error");
+                }
+            }
+        });
+
+        $A.enqueueAction(action);
     },
 
     /**
@@ -111,7 +224,6 @@
 
         //requery rollup records
         action.setCallback(this, function(response) {
-            console.log('requeried rollup definitions');
             var state = response.getState();
             if (state === "SUCCESS") {
                 var rollupList = JSON.parse(JSON.stringify(response.getReturnValue()));
@@ -123,11 +235,10 @@
                 var errors = response.getError();
                 if (errors) {
                     if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
+                        this.showToast(cmp, "error", cmp.get("v.labels.error"), errors[0].message);
                     }
                 } else {
-                    console.log("Unknown error");
+                    this.showToast(cmp, "error", cmp.get("v.labels.error"), "Unknown Error");
                 }
             }
         });
@@ -147,5 +258,18 @@
         var text = {message: message, title: title, alternativeText: altText};
         cmp.set("v.notificationText", text);
         cmp.set("v.notificationClasses", "");
+    },
+
+    /**
+     * @description Show or Hide the page spinner
+     * @param showSpinner - true to show; false to hide
+     */
+    toggleSpinner : function(cmp, showSpinner) {
+        var spinner = cmp.find("waitingSpinner");
+        if (showSpinner === true) {
+            $A.util.removeClass(spinner, "slds-hide");
+        } else {
+            $A.util.addClass(spinner, "slds-hide");
+        }
     }
 })

@@ -43,6 +43,9 @@ private class TDTM_Config_API_Test {
     */
     @isTest
     static void test_disable_trigger_in_context() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+        
         TDTM_DefaultConfig.startTestDataInit();
         Test.startTest();
 
@@ -72,6 +75,9 @@ private class TDTM_Config_API_Test {
     */
     @isTest
     static void test_disable_for_specific_user() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         // disable this one trigger
         List<Trigger_Handler__c> handlers = TDTM_Config_API.getDefaultRecords();
         for (Trigger_Handler__c th : handlers) {

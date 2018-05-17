@@ -3,6 +3,7 @@
      * @description: setup for the filter group component which sets the active filter group and datatable
      */
     doInit: function (cmp, event, helper) {
+        helper.toggleSpinner(cmp, true);
         //query for the active filter group
         var activeFilterGroupId = cmp.get("v.activeFilterGroupId");
         var objectList = cmp.get("v.detailObjects");
@@ -52,12 +53,15 @@
                 var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
 
                 cmp.set("v.filterRuleList", filterRuleList);
-                cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                cmp.set("v.cachedFilterRuleList", filterRuleList);
+
                 cmp.set("v.filterRuleColumns", filterRuleColumns);
                 cmp.set("v.filterRuleActionColumns", filterRuleActionColumns);
                 cmp.set("v.objectDetails", model.filterFieldsByDataType);
                 if (model.filterGroup) {
                     helper.filterRollupList(cmp, model.filterGroup.label, labels);
+                } else {
+                    cmp.set("v.rollupList", []);
                 }
                 helper.changeMode(cmp);
 
@@ -88,20 +92,17 @@
     },
 
     /**
-     * @description: cancels the pop up for filter rule and clears the active filter rule
+     * @description: closes modal and resets filter rules as needed
      */
-    cancelFilterRule: function(cmp, event, helper){
+    cancelModal: function(cmp, event, helper){
+        if (cmp.get("v.mode") === 'delete') {
+            cmp.set("v.mode", 'view');
+        } else {
+            helper.resetActiveFilterRule(cmp);
+            cmp.set("v.filterRuleMode", "");
+            cmp.set("v.filterRuleError", "");
+        }
         helper.toggleFilterRuleModal(cmp);
-        helper.resetActiveFilterRule(cmp);
-        cmp.set("v.filterRuleMode", "");
-        cmp.set("v.filterRuleError", "")
-    },
-
-    /**
-     * @description: closes the toast notification window
-     */
-    closeNotificationWindow : function(cmp, event, helper) {
-        cmp.set("v.notificationClasses", "slds-hide");
     },
 
     /**
@@ -111,6 +112,7 @@
         var action = event.getParam('action');
         var row = event.getParam('row');
         var rows = cmp.get("v.filterRuleList");
+        var labels = cmp.get("v.labels");
         row.index = rows.indexOf(row);
 
         //break the shared reference to avoid accidental data updates
@@ -123,12 +125,17 @@
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
-            helper.rerenderValue(cmp, cleanRow.operationName);
+            helper.rerenderValue(cmp, cleanRow.operationName, cleanRow.value);
 
         } else {
             //cautions user about deleting filter rule
             cmp.set("v.filterRuleMode", 'delete');
             helper.toggleFilterRuleModal(cmp);
+            if (cmp.get("v.rollupList").length === 0) {
+                cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteConfirm);
+            } else {
+                cmp.find('deleteModalMessage').set("v.value", labels.filterRuleDeleteWarning);
+            }
         }
     },
 
@@ -138,15 +145,15 @@
     onCancel: function(cmp, event, helper){
         if((cmp.get("v.mode") === 'clone' || cmp.get("v.mode") === 'create') && cmp.get("v.activeFilterGroupId") === null){
             //set off cancel event for container
-            var cancelEvent = $A.get("e.c:CRLP_CancelEvent");
-            cancelEvent.setParams({grid: 'filterGroup'});
-            cancelEvent.fire();
+            helper.sendMessage(cmp, 'cancelEvent', {grid: 'filterGroup'});
         } else {
             cmp.set("v.mode", "view");
             var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
             //json shenanigans to avoid shared reference
             cmp.set("v.activeFilterGroup", helper.restructureResponse(cachedFilterGroup));
             cmp.set("v.filterRuleList", cmp.get("v.cachedFilterRuleList"));
+            //clear any filter rules previously marked for delete
+            cmp.set("v.deletedRuleList", []);
         }
 
     },
@@ -173,31 +180,31 @@
         var field = event.getSource().get("v.value");
         helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operationName", "");
+        cmp.set("v.activeFilterRule.value", "");
     },
 
     /**
-     * @description: renders constant value based on selected operator
+     * @description: renders value based on selected operator
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
-        helper.rerenderValue(cmp, operator);
+        helper.rerenderValue(cmp, operator, "");
     },
 
     /**
      * @description: saves a new filter group and associated filter rules
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
-        //placeholder for on cancel function in !view mode
-        //add check for description, name and a filter rule
+        if(cmp.get("v.mode") == 'delete') {
+            cmp.set("v.activeFilterGroup.isDeleted", true);
+            helper.toggleFilterRuleModal(cmp);
+        }
         var activeFilterGroup = cmp.get("v.activeFilterGroup");
         var filterRuleList = cmp.get("v.filterRuleList");
         var deletedRuleList = cmp.get("v.deletedRuleList");
         var canSave = helper.validateFilterGroupFields(cmp, activeFilterGroup);
         if (canSave) {
-            cmp.set("v.mode", 'view');
-
             helper.saveFilterGroupAndRules(cmp, activeFilterGroup, filterRuleList, deletedRuleList);
-            //todo note: only sendMessage once filter rule has been deployed successfully
 
             //sends the message to the parent cmp RollupsContainer
             var sendMessage = $A.get('e.ltng:sendMessage');
@@ -228,11 +235,14 @@
                 filterRule.fieldLabel = helper.retrieveFieldLabel(filterRule.fieldName, cmp.get("v.filteredFields"));
                 filterRule.operationLabel = helper.retrieveFieldLabel(filterRule.operationName, cmp.get("v.filteredOperators"));
 
-                //special reformatting for multipicklist and semi-colon delimited lists
+                //special reformatting for multipicklist and semi-colon delimited lists, as well as Record Type ID field
                 if (filterRule.operationName === 'In_List' || filterRule.operationName === 'Not_In_List') {
-                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value, filterRule.operationName);
+                    filterRule.valueLabel = helper.reformatValueLabel(cmp, filterRule.value);
+                } else if (filterRule.fieldName === 'RecordTypeId' && 
+                           (filterRule.operationName === 'Equals' || filterRule.operationName === 'Not_Equals')) {
+                    filterRule.valueLabel = helper.retrieveFieldLabel(filterRule.value, cmp.get("v.filterRuleConstantPicklist"));
                 } else {
-                    filterRule.valueLabel = filterRule.valueName;
+                    filterRule.valueLabel = filterRule.value;
                 }
 
                 //if mode is create, just add to list, otherwise update the item in the existing list
@@ -264,12 +274,17 @@
      */
     selectRollup: function(cmp, event, helper){
         //select rollup for navigation
+        var channel = 'navigateEvent';
         var rollupId = event.getParam('name');
         var filterGroupId = cmp.get("v.activeFilterGroupId");
-        if(rollupId !== 'title'){
-            var navEvent = $A.get("e.c:CRLP_NavigateEvent");
-            navEvent.setParams({id: rollupId, target: 'rollup', lastId: filterGroupId});
-            navEvent.fire();
+        if (rollupId !== 'title') {
+            var message = {id: rollupId, target: 'rollup', lastId: filterGroupId};
+            var sendMessage = $A.get('e.ltng:sendMessage');
+            sendMessage.setParams({
+                'channel': channel,
+                'message': message
+            });
+            sendMessage.fire();
         }
     }
 })

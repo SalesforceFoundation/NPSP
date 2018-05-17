@@ -47,19 +47,18 @@
     <aura:attribute name="options" type="List" description="List of entities to be displayed in the select list"/>
     <aura:attribute name="mediumDeviceSize" type="Integer" default="6"
                     description="Controls the number of items per row on a medium device"/>
-    <aura:attribute name="objectLabel" type="String" default=""
-                    description="Optional parameter to concatenate the object label with the field labels"/>
     <aura:attribute name="isRequired" type="Boolean" default="" description="Sets the required flag on the field"/>
     <aura:attribute name="hasNullOption" type="Boolean" default="true"
                     description="Optional parameter to include the first null option in a list"/>
     <aura:attribute name="helpText" type="String" default="Example text"
                     description="Help text to describe the field and its requirements"/>
 
+    <!-- events we handle -->
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
+
     <lightning:layoutItem padding="around-medium" mediumDeviceSize="{!v.mediumDeviceSize}" size="12">
-        <!--Field Label: {!v.fieldLabel}<br/>
-        Entity Label: {!v.entityLabel}-->
         <aura:if isTrue="{!v.isReadOnly}">
-            <lightning:input aura:id="{!v.auraId + 'View'}"
+            <lightning:input aura:id="inputField"
                              label="{!v.fieldLabel}"
                              name="{!v.fieldLabel}"
                              value="{!v.entityLabel}"
@@ -67,7 +66,7 @@
             <aura:set attribute="else">
 
                 <c:CRLP_Tooltip helpText="{!v.helpText}" fieldLabel="{!v.fieldLabel}" isRequired="{!v.isRequired}"/>
-                <lightning:select aura:id="{!v.auraId + 'Select'}" class="rollupField"
+                <lightning:select aura:id="selectField" class="rollupField"
                                   name="{!v.fieldLabel}"
                                   label="{!v.fieldLabel}"
                                   value="{!v.apiName}"
@@ -80,7 +79,7 @@
                     </aura:if>
 
                     <aura:iteration items="{!v.options}" var="option">
-                        <option value="{!option.name}" text="{!v.objectLabel+option.label}"
+                        <option value="{!option.name}" text="{!option.label}"
                                 selected="{!option.name == v.apiName}"/>
                     </aura:iteration>
                 </lightning:select>

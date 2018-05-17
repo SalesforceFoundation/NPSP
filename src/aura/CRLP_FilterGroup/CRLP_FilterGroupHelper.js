@@ -5,6 +5,7 @@
      */
     changeMode: function(cmp) {
         var mode = cmp.get("v.mode");
+        var labels = cmp.get("v.labels");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
             console.log("Mode is " + mode);
@@ -18,6 +19,9 @@
                 cmp.set("v.activeFilterGroupId", null);
                 cmp.set("v.activeFilterGroup.recordId", null);
                 cmp.set("v.activeFilterGroup.recordName", null);
+                cmp.set("v.rollupItems", []);
+                cmp.set("v.rollupList", []);
+                cmp.set("v.activeFilterGroup.label", cmp.get("v.activeFilterGroup.label") + " (Clone)");
 
                 var filterRuleList = cmp.get("v.filterRuleList");
                 for (var i = 0; i < filterRuleList.length; i++) {
@@ -31,22 +35,34 @@
                 cmp.set("v.isReadOnly", false);
             } else if (mode === "create") {
                 cmp.set("v.isReadOnly", false);
+            } else if (mode === "delete") {
+                //verify no rollups use the filter group before deleting
+                var countRollups = cmp.get("v.rollupList").length;
+
+                this.toggleFilterRuleModal(cmp);
+                if (countRollups === 0) {
+                    cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteConfirm);
+                } else {
+                    cmp.find('deleteModalMessage').set("v.value", labels.filterGroupDeleteWarning);
+                }
             }
         }
     },
 
     /**
-     * @description: filters the full rollup data to find which rollups use a particular filter group
+     * @description: filters the full rollup data to find which rollups use the selected filter group and display them in a tree
      * @param filterGroupLabel: label of the selected filter group
      * @param labels: labels for the rollups UI
      */
     filterRollupList: function(cmp, filterGroupLabel, labels) {
-        //filters row data based selected filter group
+        //filters rollups that use this filter group
         var rollupList = cmp.get("v.rollupList");
         var filteredRollupList = rollupList.filter(function(rollup) {
             return rollup.filterGroupName === filterGroupLabel;
         });
+        cmp.set("v.rollupList", filteredRollupList);
 
+        //create data structure for tree
         var summaryObjects = cmp.get("v.summaryObjects");
         var rollupsBySummaryObj = [];
         for (var i=0; i<summaryObjects.length; i++) {
@@ -54,9 +70,9 @@
             rollupsBySummaryObj.push(listItem);
         }
 
-        //filter rollup list by type
+        //place rollups in the array of the matching summary object
         filteredRollupList.forEach(function (rollup) {
-            var item = {label: rollup.rollupName, name: rollup.id}
+            var item = {label: rollup.displayName, name: rollup.recordId}
             for (i=0; i<rollupsBySummaryObj.length; i++){
                 if (rollup.summaryObject === rollupsBySummaryObj[i].label) {
                     rollupsBySummaryObj[i].list.push(item);
@@ -65,9 +81,9 @@
         });
 
         var itemList = [];
-        //only add object to list if there are rollups with matching summary objects
+        //only display summary object list item if there are rollups that use that summary object
         rollupsBySummaryObj.forEach(function(objList){
-           if (objList.list.length > 1) {
+           if (objList.list.length > 0) {
                var obj = {label: objList.label
                          , name: "title"
                          , expanded: false
@@ -118,10 +134,30 @@
     },
 
     /**
+     * @description handles errors from both
+     * save function (queueing up deployment)
+     * and pollForDeploymentStatus (actual deployment)
+     * @param errors - list of errors from response
+     */
+    handleErrors: function(cmp, errors) {
+        var msg = "Unknown error";
+        if (errors && errors[0] && errors[0].message) {
+            msg = errors[0].message;
+        }
+        if (cmp.get("v.mode") === 'delete') {
+            this.showToast(cmp, 'error', cmp.get("v.labels.filtersDeleteFail"), msg);
+        } else {
+            this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
+            cmp.set("v.mode", 'edit');
+            this.changeMode(cmp);
+        }
+    },
+
+    /**
      * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
-    getFieldType: function(cmp, field) {
+    retrieveFieldType: function(cmp, field) {
         var filteredFields = cmp.get("v.filteredFields");
         var type;
 
@@ -141,7 +177,6 @@
     getPicklistOptions: function(cmp, field) {
         var action = cmp.get("c.getFilterRuleConstantPicklistOptions");
         action.setParams({objectName: cmp.get("v.activeFilterRule.objectName"), selectedField: field});
-        console.log(cmp.get("v.activeFilterRule.objectName"), field);
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
@@ -179,64 +214,81 @@
                 counter++;
                 console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
-                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter'});
+                var mode = cmp.get("v.mode");
+                action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter', mode: mode});
                 action.setCallback(this, function (response) {
                     console.log('getDeploymentStatus.callback');
                     var state = response.getState();
+                    var mode = cmp.get("v.mode");
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + deployResult);
+                        console.log('deployResult=' + JSON.stringify(deployResult));
                         // if there is a record id response
-                        if (deployResult && deployResult.completed === true && deployResult.filterGroupItem) {
+                        if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
-                            helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
 
-                            var model = helper.restructureResponse(deployResult.filterGroupItem);
+                            if (mode === 'delete') {
 
-                            // Save the inserted/updated record id
-                            cmp.set("v.activeFilterGroup", model.filterGroup);
-                            cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteSuccess"));
+                                helper.sendMessage(cmp, 'filterGroupDeleted', recordName);
 
-                            // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
-                            if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
-                                var activeFilterGroup = cmp.get("v.activeFilterGroup");
-                                var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
-                                for (var key in activeFilterGroup) {
-                                    if (activeFilterGroup.hasOwnProperty(key)) {
-                                        cachedFilterGroup[key] = activeFilterGroup[key];
+                            } else {
+
+                                helper.showToast(cmp, 'success', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveSuccess"));
+
+                                var model = helper.restructureResponse(deployResult.filterGroupItem);
+
+                                // Save the inserted/updated record id
+                                cmp.set("v.activeFilterGroup", model.filterGroup);
+                                cmp.set("v.activeFilterGroupId", model.filterGroup.recordId);
+
+                                // for a new record, copy the activeFilterGroup map to the cachedFilterGroup map
+                                if (cmp.get("v.cachedFilterGroup") === null) {
+                                    cmp.set("v.cachedFilterGroup", helper.restructureResponse(cmp.get("v.activeFilterGroup")));
+                                } else if (cmp.get("v.cachedFilterGroup") && cmp.get("v.cachedFilterGroup.recordName")) {
+                                    var activeFilterGroup = cmp.get("v.activeFilterGroup");
+                                    var cachedFilterGroup = cmp.get("v.cachedFilterGroup");
+                                    for (var key in activeFilterGroup) {
+                                        if (cachedFilterGroup.hasOwnProperty(key)) {
+                                            cachedFilterGroup[key] = activeFilterGroup[key];
+                                        }
                                     }
+                                    cmp.set("v.cachedFilterGroup", cachedFilterGroup);
                                 }
-                                cmp.set("v.cachedFilterGroup", cachedFilterGroup);
+
+                                var filterRuleList = helper.restructureResponse(model.filterRuleList);
+                                var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
+
+                                cmp.set("v.filterRuleList", filterRuleList);
+                                cmp.set("v.cachedFilterRuleList", filterRuleListCached);
+                                cmp.set("v.deletedRuleList", []);
+                                
+                                var rollupList = cmp.get("v.rollupList");
+
+                                // need to send back an object with the following properties
+                                var filterGroupTableItem = {};
+                                filterGroupTableItem.label = model.filterGroup.label;
+                                filterGroupTableItem.description = model.filterGroup.description;
+                                filterGroupTableItem.name = model.filterGroup.recordName;
+                                filterGroupTableItem.recordId = model.filterGroup.recordId;
+                                if (filterRuleList) {
+                                    filterGroupTableItem.countFilterRules = filterRuleList.length;
+                                } else {
+                                    filterGroupTableItem.countFilterRules = 0;
+                                }
+                                if (rollupList) {
+                                    filterGroupTableItem.countRollups = rollupList.length;
+                                } else {
+                                    filterGroupTableItem.countRollups = 0;
+                                }
+
+                                // Send a message with the changed or new Rollup to the RollupContainer Component
+                                helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
+
+                                cmp.set("v.mode",'view');
                             }
-
-                            var filterRuleList = helper.restructureResponse(model.filterRuleList);
-                            var filterRuleListCached = helper.restructureResponse(model.filterRuleList);
-
-                            cmp.set("v.filterRuleList", filterRuleList);
-                            cmp.set("v.cachedFilterRuleList", filterRuleListCached);
-                            var rollupItems = cmp.get("v.rollupItems");
-
-                            // need to send back an object with the following properties
-                            var filterGroupTableItem = {};
-                            filterGroupTableItem.label = model.filterGroup.label;
-                            filterGroupTableItem.description = model.filterGroup.description;
-                            filterGroupTableItem.name = model.filterGroup.recordName;
-                            filterGroupTableItem.recordId = model.filterGroup.recordId;
-                            if (filterRuleList) {
-                                filterGroupTableItem.countFilterRules = filterRuleList.length;
-                            } else {
-                                filterGroupTableItem.countFilterRules = 0;
-                            }
-                            if (rollupItems) {
-                                filterGroupTableItem.countRollups = rollupItems.length;
-                            } else {
-                                filterGroupTableItem.countRollups = 0;
-                            }
-
-                            // Send a message with the changed or new Rollup to the RollupContainer Component
-                            helper.sendMessage(cmp, 'filterRecordChange', filterGroupTableItem);
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
@@ -244,20 +296,21 @@
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened
-                                helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                if (mode === 'delete') {
+                                    helper.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.filtersDeleteTimeout"));
+                                } else {
+                                    helper.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveTimeout"));
+                                }
                                 helper.toggleSpinner(cmp, false);
+
                             }
                         }
-                    } else {
+                    } else if (state === "ERROR") {
                         // If an error is returned, parse the message, display and remove the spinner
                         var errors = response.getError();
-                        var msg = "Unknown error";
-                        if (errors && errors[0] && errors[0].message) {
-                            msg = errors[0].message;
-                        }
-                        helper.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
-                        window.clearTimeout(poller);
                         helper.toggleSpinner(cmp, false);
+                        helper.handleErrors(cmp, errors);
+                        window.clearTimeout(poller);
                     }
                 });
                 $A.enqueueAction(action);
@@ -268,22 +321,37 @@
     /**
      * @description: parses the constant label into constant name form depending on the format of the value
      * @param valueApiName - API name of the constant
-     * @param operation - API name of the operator
      * @return constantLabel - formatted name for display in the lightning:datatable
      */
-    reformatValueLabel: function(cmp, valueApiName, operation){
+    reformatValueLabel: function(cmp, valueApiName){
         var updatedLabel;
 
         var filterRuleFieldType = cmp.get("v.filterRuleFieldType");
-
-        if (filterRuleFieldType === "multipicklist" && valueApiName) {
+        
+        var fieldName = cmp.get("v.activeFilterRule.fieldName");
+        if (fieldName === 'RecordTypeId') {
+            var labelList = [];
+            var value = cmp.get("v.activeFilterRule.value");
+            var filterRuleConstantPicklist = cmp.get("v.filterRuleConstantPicklist");
+            for (var i=0; i<valueApiName.length; i++) {
+                labelList.push(this.retrieveFieldLabel(valueApiName[i], filterRuleConstantPicklist));
+            }
+            updatedLabel = labelList.join(";\n");
+            cmp.set("v.activeFilterRule.value", valueApiName.join(";"));
+        } else if (filterRuleFieldType === "multipicklist" && valueApiName) {
+            // reformat for separate lines
             updatedLabel = valueApiName.join(";\n");
+            var newValueApiName = valueApiName.join(";");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
         } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
-            var labelRe = /;[\n]+[ ]+|;[ ]+[\n]+|;/g;
-            updatedLabel = valueApiName.replace(labelRe, ";\n");
-
-            var nameRe = /\n| /g;
-            var newValueApiName = valueApiName.replace(nameRe, "");
+            var valueList = valueApiName.split(';');
+            var cleanList = valueList.map(function(value){
+               return value.replace('\n', '').trim();
+            });
+            updatedLabel = cleanList.join(";\n");
+            var newValueApiName = updatedLabel.replace(/\n/g, "");
+            cmp.set("v.activeFilterRule.value", newValueApiName);
+        } else if (filterRuleFieldType === "text" && valueApiName) {
             cmp.set("v.activeFilterRule.value", newValueApiName);
         }
 
@@ -291,12 +359,12 @@
     },
 
     /**
-     * @description - changes picklist values or input type based on field type
+     * @description - changes picklist values or input type based on field type. Reformats values based on type.
      * @param operator - selected filter rule operator API name
-     * @param type - DisplayType of the selected field transformed to lower case
+     * @param value - active filter rule value
      */
-    rerenderValue: function(cmp, operator) {
-        var type = this.getFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
+    rerenderValue: function(cmp, operator, value) {
+        var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
         console.log('type is ' + type);
         console.log('operator is ' + operator);
         if (type === 'boolean') {
@@ -310,11 +378,15 @@
             cmp.set("v.filterRuleFieldType", 'datetime-local');
         } else if (type === 'picklist' || type === 'multipicklist') {
             if (operator === 'Equals' || operator === 'Not_Equals') {
+                cmp.set("v.activeFilterRule.value", value);
                 cmp.set("v.filterRuleFieldType", 'picklist');
-            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain'){
+            } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
                 cmp.set("v.filterRuleFieldType", 'text');
             } else if (operator === 'In_List' || operator === 'Not_In_List'
-                || operator === 'Is_Included' || operator === 'Is_Not_Included'){
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                //clear array or reformat values into an array
+                var values = (value === "") ? [] : value.split(";");
+                cmp.set("v.activeFilterRule.value", values);
                 cmp.set("v.filterRuleFieldType", 'multipicklist');
             }
         } else if (type === 'reference') {
@@ -324,13 +396,15 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
+                    cmp.set("v.activeFilterRule.value", value);
                     cmp.set("v.filterRuleFieldType", 'picklist');
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
+                    //clear array or reformat values into an array
+                    var values = (value === "") ? [] : value.split(";");
+                    cmp.set("v.activeFilterRule.value", values);
                     cmp.set("v.filterRuleFieldType", 'multipicklist');
                 }
             }
-        } else if (type === 'time') {
-            cmp.set("v.filterRuleFieldType", 'time');
         } else if (type === 'double' || type === 'integer'
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
@@ -364,7 +438,7 @@
      * @param type - type of the selected field
      */
     resetFilterRuleOperators: function(cmp, field) {
-        var type = this.getFieldType(cmp, field);
+        var type = this.retrieveFieldType(cmp, field);
         if (type === 'picklist' || type === 'multipicklist' || field === 'RecordTypeId') {
             this.getPicklistOptions(cmp, field);
         }
@@ -380,11 +454,12 @@
         return JSON.parse(JSON.stringify(resp));
     },
 
-    /* @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
-    * @param apiName: the name of the field
-    * @param entityList: list of fields to search
-    * @return label: field label that matches the apiName
-    */
+    /**
+     * @description: retrieves the label of an entity (field, operation, etc) based on the api name from a LIST of objects with name and label entries
+     * @param apiName: the name of the field
+     * @param entityList: list of fields to search
+     * @return label: field label that matches the apiName
+     */
     retrieveFieldLabel: function (apiName, entityList) {
         var label;
         if (entityList) {
@@ -433,18 +508,18 @@
                 console.log('Returned RecordName = ' + recordName);
 
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
-            } else if (state === "ERROR") {
 
+            } else if (state === "ERROR") {
                 var errors = response.getError();
-                var msg = "Unknown error";
-                if (errors && errors[0] && errors[0].message) {
-                    msg = errors[0].message;
-                }
-                this.showToast(cmp, 'error', cmp.get("v.labels.filtersSaveFail"), msg);
                 this.toggleSpinner(cmp, false);
+                this.handleErrors(cmp, errors);
             }
         });
-        this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.filtersSaveProgress"));
+        if (cmp.get("v.mode") === 'delete') {
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersDeleteProgress"), cmp.get("v.labels.pleaseWait"));
+        } else {
+            this.showToast(cmp, 'info', cmp.get("v.labels.filtersSaveProgress"), cmp.get("v.labels.pleaseWait"));
+        }
         $A.enqueueAction(action);
     },
 
@@ -463,17 +538,15 @@
     },
 
     /**
-     * @description Show a message on the screen
+     * @description Show a message on the screen in the parent cmp
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
      */
     showToast: function(cmp, type, title, message) {
-        cmp.set("v.toastStatus", type);
-        var altText = cmp.get("v.labels." + type);
-        var text = {message: message, title: title, alternativeText: altText};
-        cmp.set("v.notificationText", text);
-        cmp.set("v.notificationClasses", "");
+        var channel = 'showToast';
+        var message = {type: type, title: title, message: message};
+        this.sendMessage(cmp, channel, message);
     },
 
     /**
@@ -487,16 +560,10 @@
     },
 
     /**
-     * @description Show or Hide the page spinner
-     * @param showSpinner - true to show; false to hide
+     * @description Show or Hide the page spinner in the parent cmp
      */
     toggleSpinner: function(cmp, showSpinner) {
-        var spinner = cmp.find("waitingSpinner");
-        if (showSpinner === true) {
-            $A.util.removeClass(spinner, "slds-hide");
-        } else {
-            $A.util.addClass(spinner, "slds-hide");
-        }
+        this.sendMessage(cmp, 'toggleSpinner', {showSpinner: showSpinner});
     },
 
     /**
@@ -509,16 +576,14 @@
         var description = cmp.get("v.activeFilterGroup.description");
         var filterRuleList = cmp.get("v.filterRuleList");
 
-        cmp.find("nameInput").showHelpMessageIfInvalid();
-        cmp.find("descriptionInput").showHelpMessageIfInvalid();
+        cmp.find("nameInput").focus();
+        cmp.find("descriptionInput").focus();
 
-        if (!description || !name) {
+        if (!description || !name || name.length > 40) {
             canSave = false;
         }
 
-        if (filterRuleList.length === 0) {
-            canSave = false;
-        } else if (!filterRuleList || filterRuleList.length === 0) {
+        if (!filterRuleList || filterRuleList.length === 0) {
             canSave = false;
             cmp.find("noFilterRulesMessage").set("v.severity", "error");
         }
@@ -538,33 +603,17 @@
             return validSoFar && filterRuleCmp.get("v.validity").valid;
         }, true);
 
-        //check for specific API name duplicates instead of the full row to avoid issues with the ID not matching
-        for (var i = 0; i < filterRuleList.length; i++) {
-            if (i !== filterRule.index
-                && filterRuleList[i].objectName === filterRule.objectName
-                && filterRuleList[i].fieldName === filterRule.fieldName
-                && filterRuleList[i].operatorName === filterRule.operatorName
-                && filterRuleList[i].constantName === filterRule.constantName) {
-                cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                return canSave = false;
-            }
+        //custom error handling for multipicklist bug
+        if (cmp.get("v.filterRuleFieldType") === 'multipicklist' && filterRule.value.length < 1){
+            canSave = false;
+            cmp.find("filterRuleFieldPicklist").showHelpMessageIfInvalid();
         }
 
         //check for duplicates
         if (!filterRuleList) {
             // nothing to compare
-        } else if (cmp.get("v.filterRuleMode") === 'create') {
-            //check for specific API names instead of the full row to avoid issues with the ID not matching
-            for (var i = 0; i < filterRuleList.length; i++) {
-                if (filterRuleList[i].objectName === filterRule.objectName
-                    && filterRuleList[i].fieldName === filterRule.fieldName
-                    && filterRuleList[i].operationName === filterRule.operationName
-                    && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
-                }
-            }
         } else {
+            //check for specific API names instead of the full row to avoid issues with the ID not matching
             for (var i = 0; i < filterRuleList.length; i++) {
                 if (i !== filterRule.index
                     && filterRuleList[i].objectName === filterRule.objectName
@@ -572,12 +621,16 @@
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
                     cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
-                    return canSave = false;
+                    return false;
                 }
             }
         }
 
-        cmp.set("v.filterRuleError", "");
+        if (canSave) {
+            cmp.set("v.filterRuleError", "");
+        } else {
+            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        }
 
         return canSave;
 
