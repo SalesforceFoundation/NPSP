@@ -362,7 +362,7 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @return Decimal The converted amount.
     */
     public static decimal convertFromCorporate(String ISO,Decimal amt){
-        if(currCorporate == ISO || currCorporate == null) // no need to convert
+        if (currCorporate == ISO || currCorporate == null) // no need to convert
             return amt;
         else //return value to 2DP
             return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP);
@@ -375,10 +375,11 @@ public without sharing class RLLP_OppRollup_UTIL {
     * @return Decimal The converted amount.
     */
     public static decimal convertCurrency(String fromISO, String toISO, Decimal amt){
-        if(fromISO == toISO) // no need to convert
+        if (fromISO == toISO || fromISO == null || toISO == null) { // no need to convert
             return amt;
-        else //return value to 2DP
+        } else { // return value to 2DP
             return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2,System.RoundingMode.UP);
+        }
     }
     /*********************************************************************************************************
     * @description Retrieves the Opportunities CurrencyIsoCode related to the objects passed in
