@@ -49,6 +49,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c householdNamingSettings;
     static Allocations_Settings__c allocationsSettings;
     static Data_Import_Settings__c dataImportSettings;
+    static Customizable_Rollup_Settings__c customizableRollupSettings;
     
     //storing org-level custom settings in-memory to avoid slowing down the settings page
     static npe01__Contacts_And_Orgs_Settings__c orgContactsSettings;
@@ -62,6 +63,7 @@ public without sharing class UTIL_CustomSettingsFacade {
     static Household_Naming_Settings__c orgHouseholdNamingSettings;
     static Allocations_Settings__c orgAllocationsSettings;
     static Data_Import_Settings__c orgDataImportSettings;
+    static Customizable_Rollup_Settings__c orgCustomizableRollupSettings;
     
     /*******************************************************************************************************
     * @description Resets specific Custom Settings that are updated after 
@@ -73,11 +75,13 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings = null;
         allocationsSettings = null;
         recurringDonationsSettings = null;
+        customizableRollupSettings = null;
 
         orgContactsSettings = null;
         orgHouseholdsSettings = null;
         orgAllocationsSettings = null;
         orgRecurringDonationsSettings = null;
+        orgCustomizableRollupSettings = null;
     }
 
     /*******************************************************************************************************
@@ -156,7 +160,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         }
         return relationshipsSettings;
     }
-    
+
     /*******************************************************************************************************
     * @description Returns the default Affiliations settings. 
     * @return npe5__Affiliations_Settings__c Custom settings record for Affiliations configuration. At the org level, 
@@ -501,22 +505,22 @@ public without sharing class UTIL_CustomSettingsFacade {
         
         for(Schema.PicklistEntry pe : P){
             if (pe.isDefaultValue()){
-                if(pe.getValue() == HH_Households.ALL_PROCESSOR){
+                if (pe.getValue() == HH_Households.ALL_PROCESSOR){
                     oldProcessor = HH_Households.ALL_PROCESSOR;
-                } else if(pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+                } else if (pe.getValue() == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
                     oldProcessor = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-                } else if(pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+                } else if (pe.getValue() == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
                     oldProcessor = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
                 }
                 break;
             }
         }
         //set them up with their old setting in the new settings object
-        if(oldProcessor == HH_Households.ALL_PROCESSOR){
+        if (oldProcessor == HH_Households.ALL_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR;
-        } else if(oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
+        } else if (oldProcessor == HH_Households.ALL_INDIVIDUALS_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.ALL_INDIVIDUALS_PROCESSOR;
-        } else if(oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
+        } else if (oldProcessor == HH_Households.NO_HOUSEHOLDS_PROCESSOR){
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
         } else {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
@@ -541,10 +545,11 @@ public without sharing class UTIL_CustomSettingsFacade {
         hs.npo02__Soft_Credit_Roles__c = 'Matched Donor;Soft Credit;Household Member';
         hs.Matched_Donor_Role__c = 'Matched Donor';
         hs.npo02__Household_Contact_Roles_On__c = true;
-                
+
         // new HH Account model overrides having HH objects
-        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR)
+        if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
             hs.npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR;
+        }
     }
     
     private static void configRecurringDonationsSettings(npe03__Recurring_Donations_Settings__c rds) {
@@ -663,7 +668,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         orgContactsSettings = contactsSettings;
         return contactsSettings;
     }
-    
+
     /*******************************************************************************************************
     * @description Creates instance of settings to use in tests. It does not insert it, but all other methods will see these settings
     * as the configured settings.
@@ -671,9 +676,10 @@ public without sharing class UTIL_CustomSettingsFacade {
     * @return npo02__Households_Settings__c The configured settings.
     **/
     public static npo02__Households_Settings__c getHouseholdsSettingsForTests(npo02__Households_Settings__c mySettings) {
-        if(householdsSettings == null)
+        if(householdsSettings == null) {
             householdsSettings = new npo02__Households_Settings__c();
-            
+        }
+
         //create our own based on what's passed in from the test
         householdsSettings.npo02__Household_Rules__c = mySettings.npo02__Household_Rules__c;
         householdsSettings.npo02__Household_Contact_Roles_On__c = mySettings.npo02__Household_Contact_Roles_On__c;
@@ -695,13 +701,15 @@ public without sharing class UTIL_CustomSettingsFacade {
         householdsSettings.npo02__Household_Creation_Excluded_Recordtypes__c = mySettings.npo02__Household_Creation_Excluded_Recordtypes__c;
         householdsSettings.npo02__Household_Mailing_List_ID__c = mySettings.npo02__Household_Mailing_List_ID__c;
         householdsSettings.npo02__Schedule_Job_Limit__c = 25;
+        householdsSettings.Use_Dated_Conversion_Rates__c = mySettings.Use_Dated_Conversion_Rates__c;
+
         orgHouseholdsSettings = householdsSettings;
  
         // if the caller explicitly is testing Household objects, make sure we have HH Accounts turned off.
         if (householdsSettings != null && householdsSettings.npo02__Household_Rules__c != HH_Households.NO_HOUSEHOLDS_PROCESSOR) {
             if (contactsSettings != null && contactsSettings.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR) {
                 contactsSettings.npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR;
-            }   
+            }
         }
         return householdsSettings;
     }
@@ -815,6 +823,85 @@ public without sharing class UTIL_CustomSettingsFacade {
 
       orgHouseholdNamingSettings = householdNamingSettings;
       return householdNamingSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the default Customizable Rollups settings. 
+    * @return Customizable_Rollup_Settings__c 
+    */
+    public static Customizable_Rollup_Settings__c getCustomizableRollupSettings() {
+        if(Test.isRunningTest() && customizableRollupSettings == null) {
+            customizableRollupSettings = new Customizable_Rollup_Settings__c();
+            configRollupSettings(customizableRollupSettings);
+        } else if (customizableRollupSettings == null) {
+            customizableRollupSettings = Customizable_Rollup_Settings__c.getInstance();
+            if(customizableRollupSettings.Id == null) {
+                customizableRollupSettings = getOrgCustomizableRollupSettings();
+            }
+        }
+        return customizableRollupSettings;
+    }
+
+    /*******************************************************************************************************
+    * @description Returns the Org Level Customizable Rollups settings. 
+    * @return Customizable_Rollup_Settings__c 
+    */
+    public static Customizable_Rollup_Settings__c getOrgCustomizableRollupSettings() {
+        if(orgCustomizableRollupSettings == null) {
+            orgCustomizableRollupSettings = Customizable_Rollup_Settings__c.getOrgDefaults();
+            if(orgCustomizableRollupSettings.Id == null) {
+                configRollupSettings(orgCustomizableRollupSettings);
+                if(!Test.isRunningTest()) {
+                    upsert orgCustomizableRollupSettings;
+                }
+            }
+        }
+        return orgCustomizableRollupSettings;
+    }
+
+    private static void configRollupSettings(Customizable_Rollup_Settings__c crs) {
+        // New default settings for the Customizable Rollups engine
+        crs.Customizable_Rollups_Enabled__c = false;
+        crs.Rollups_Account_Batch_Size__c = 200;
+        crs.Rollups_Contact_Batch_Size__c = 200;
+        crs.Rollups_Account_SkewMode_Batch_Size__c = 1000;
+        crs.Rollups_Contact_SkewMode_Batch_Size__c = 1000;
+        crs.Rollups_Account_Soft_Credit_Batch_Size__c = 200;
+        crs.Rollups_Contact_Soft_Credit_Batch_Size__c = 200;
+        crs.Rollups_GAU_Batch_Size__c = 1000;
+        crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
+        crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
+        crs.Disable_Related_Records_Filter__c = false;
+    }
+
+    /*******************************************************************************************************
+    * @description Creates instance of settings to use in tests. It does not insert it, but all other methods 
+    * will see these settings as the configured settings.
+    * @parameter mySettings Settings instance with the values to set.
+    * @return Customizable_Rollup_Settings__c The configured settings.
+    **/
+    public static Customizable_Rollup_Settings__c getRollupSettingsForTests(Customizable_Rollup_Settings__c mySettings) {
+        if(customizableRollupSettings == null) {
+            customizableRollupSettings = new Customizable_Rollup_Settings__c();
+        }
+
+        // Customizable Rollups Settings
+        customizableRollupSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
+        customizableRollupSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c = mySettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c = mySettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c  = mySettings.Rollups_Account_SkewMode_Batch_Size__c;
+        customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c  = mySettings.Rollups_Contact_SkewMode_Batch_Size__c;
+        customizableRollupSettings.Rollups_GAU_Batch_Size__c = mySettings.Rollups_GAU_Batch_Size__c;
+        customizableRollupSettings.Rollups_Skew_Dispatcher_Batch_Size__c = mySettings.Rollups_Skew_Dispatcher_Batch_Size__c;
+        customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = mySettings.Rollups_Limit_on_Attached_Opps_for_Skew__c;
+        customizableRollupSettings.Disable_Related_Records_Filter__c = mySettings.Disable_Related_Records_Filter__c;
+        customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
+
+        orgCustomizableRollupSettings = customizableRollupSettings;
+
+        return customizableRollupSettings;
     }
 
 }

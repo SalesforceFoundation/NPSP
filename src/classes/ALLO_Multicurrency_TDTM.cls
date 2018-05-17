@@ -36,14 +36,11 @@
 */
 public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
 
-    /** @description Boolean holds whether this org has multicurrency enabled. */
-    public static boolean multiCurrency;
-
     /** @description Map holds exchange rates to avoid multiple queries. */
     public static map<string, decimal> exchangeRates = new map<string,decimal>();
     
     /** @description This organization's default corporate currency. */
-    public static string currCorporate;
+    public static string currCorporate = UTIL_Currency.getInstance().getOrgDefaultCurrency();
 
     /** @description DmlWrapper to hold object changes. */
     public DmlWrapper wrapper = new DmlWrapper();
@@ -62,7 +59,7 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
         //if this is a multicurrency org, update child objects 
-        if (isMultiCurrency() && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+        if (UTIL_Currency.getInstance().isMultiCurrencyOrganization() && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
             wrapper.objectsToUpdate.addAll((list<sObject>) updateAllocationCurrencyFromParent(newlist, oldlist));
 
             // Increment the recursion flag to prevent the allocation triggers from running,
@@ -115,106 +112,64 @@ public class ALLO_Multicurrency_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description For a list of allocations, set the currency based on the parent object.
+    * @description For a list of allocations, set the currency based on the parent object, and if the setting
+    *   has been configured when ACM is enabled also store the applied dated exchange rate on the record.
     * @param listAllo The list of allocations. 
     * @return void This method modifies the list of allocations directly and returns nothing.
     ********************************************************************************************************/
-    public static void updateAllocationCurrency(list<Allocation__c> listAllo) {
-        map<id,string> mapIdToISO = new map<id,string>();
+    public static void updateAllocationCurrency(List<Allocation__c> listAllo) {
+        Map<Id,SObject> mapIdToParentObject = new Map<Id,SObject>();
 
-        //collect parent Ids
+        // collect parent Ids
+        Set<Id> parentIds = new Set<Id>();
         for (Allocation__c allo : listAllo) {
-            mapIdToISO.put(ALLO_Allocations_TDTM.getParentId(allo),null);
+            parentIds.add(ALLO_Allocations_TDTM.getParentId(allo));
         }
 
-        //get iso codes of parents
-        mapIdToISO = getISOFromIdSet(mapIdToISO.keySet());
+        // Get parent SObject (with IsoCode)
+        mapIdToParentObject = getParentFromIdSet(parentIds);
 
-        //update allocation ISO code to match parent
         for (Allocation__c allo : listAllo) {
-            allo.put('CurrencyIsoCode',mapIdToISO.get(ALLO_Allocations_TDTM.getParentId(allo)));
+            // Update allocation ISO code to match parent
+            String parentCurrCode = (String)mapIdToParentObject.get(ALLO_Allocations_TDTM.getParentId(allo)).get('CurrencyIsoCode');
+            allo.put('CurrencyIsoCode', parentCurrCode);
         }
     }
 
     /*******************************************************************************************************
     * @description For any set of ids of any sObject, gets the sObject's currency code.
     * @param setId A set of ids of any sObjects.
-    * @return map<id,string> A map from the id of the object to the object's currency code string.
+    * @return Map<Id,SObject> A map from the Id of the object to the parent SObject with the currency code
+    *   and optionally the CloseDate
     ********************************************************************************************************/
-    public static map<id,string> getISOFromIdSet (set<id> setId) {
-        map<id,string> results = new map<id,string>();
-        set<string> parentTypes = new set<string>();
+    private static Map<Id,SObject> getParentFromIdSet (Set<Id> setId) {
+        Map<Id,SObject> results = new Map<Id,SObject>();
+        Set<string> parentTypes = new Set<string>();
 
         //get parent object names for query
-        for (id thisId : setId)
+        for (Id thisId : setId)
             parentTypes.add(thisId.getSObjectType().getDescribe().getName());
 
         //query for ISO codes, fill out map
         for (string parent : parentTypes) {
-            string query = 'SELECT Id, CurrencyIsoCode FROM ' + parent + ' WHERE Id IN :setId';
+            string query = 'SELECT Id, CurrencyIsoCode';
+            if (parent == 'Opportunity') {
+                query += ', CloseDate';
+            }
+            query += ' FROM ' + parent + ' WHERE Id IN :setId';
             for (sObject sobj : database.query(query))
-                results.put((id)sobj.get('id'),(string)sobj.get('CurrencyIsoCode'));
+                results.put((Id)sobj.get('Id'),sobj);
         }
 
         return results;
     }
 
-    /*******************************************************************************************************
-    * @description Detects if this organization has multicurrency enabled, and populates class variables if 
-    * so.
-    * @return boolean Whether this org has multicurrency enabled.
-    ********************************************************************************************************/
-    public static boolean isMultiCurrency() {
-        if (multiCurrency==null) {
-
-            String queryExchangeRates = 'select IsoCode, ConversionRate, IsCorporate from CurrencyType';
-            SObjectType soCurrencyType = Schema.getGlobalDescribe().get('CurrencyType'); 
-
-            //are we in a multi-currency org?
-            if (userInfo.isMultiCurrencyOrganization() && soCurrencyType != null) {
-                multiCurrency = true;
-
-                //iterate over all the currencies in the org (inc. inactive ones as they may have been used previously)
-                //this allows us to put them in a map and use the ISO code as key and also set the corporate
-                for(sObject ct: Database.query(queryExchangeRates)){
-                    exchangeRates.put((string)ct.get('IsoCode'),(decimal)ct.get('ConversionRate'));
-                    if ((boolean)ct.get('IsCorporate'))
-                        currCorporate=(string)ct.get('IsoCode');
-                }
-            }
-            else
-                multiCurrency = false; 
-        }        
-        return multiCurrency;
+    /**
+     * @description Wrapper for the utility method to determine if multi-currency is enabled in the org
+     * The target utility class can be mocked for unit tests.
+     * @return True if multi-currency is enabled in the org
+     */
+    public static Boolean isMultiCurrency() {
+        return UTIL_Currency.getInstance().isMultiCurrencyOrganization();
     }
-
-    /*******************************************************************************************************
-    * @description Converts an amount from the corporate currency to a given currency.
-    * @param ISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-        //do a conversion from amount in corporate currency to the currency specified by the ISO code
-    public static decimal convertFromCorporate(String ISO,Decimal amt) {
-        if(currCorporate == ISO || currCorporate == null) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return (amt * exchangeRates.get(ISO)).setScale(2,System.RoundingMode.UP) ;
-    }
-
-
-    /*******************************************************************************************************
-    * @description Converts an amount from any given currency to any other currency.
-    * @param fromISO A string of the currency's iso code of the amount we wish to convert.
-    * @param toISO A string of the currency's iso code that we wish to convert the amount to.
-    * @param amt A decimal of the amount to convert.
-    * @return decimal The converted amount.
-    ********************************************************************************************************/
-   public static decimal convertCurrency(String fromISO, String toISO, Decimal amt) {
-        if(fromISO == toISO) // no need to convert
-            return amt;
-        else //return value to 2DP
-            return ((amt / exchangeRates.get(fromISO)) * exchangeRates.get(toISO)).setScale(2,System.RoundingMode.UP) ;
-    }
-
 }

@@ -217,9 +217,10 @@ public class RLLP_OppPartialSoftCreditRollup {
     */ 
     private static Contact countSoftCreditsSharedLogic(Contact c, decimal amount, string currencyIsoCode, Date oppDate, Date currentYearStart) {
         // calculate amounts into correct currency if needed
-        if (RLLP_OppRollup_UTIL.isMultiCurrency())
-           amount = RLLP_OppRollup_UTIL.convertCurrency(currencyIsoCode, (string)c.get('CurrencyIsoCode'), amount);
-                
+        if (RLLP_OppRollup_UTIL.isMultiCurrency()) {
+            amount = UTIL_CurrencyConversion.convertAmountUsingStandardRates(currencyIsoCode, (string)c.get('CurrencyIsoCode'), amount);
+        }
+
         if (oppDate != null) {
             
             // first soft credit
