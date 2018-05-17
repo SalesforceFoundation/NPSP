@@ -88,6 +88,7 @@
         <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
+        <members>BGE_HandsOnGridSelector</members>
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
