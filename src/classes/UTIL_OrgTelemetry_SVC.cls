@@ -81,7 +81,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         }
 
         Integer maxAffiliations = getMaxAffiliationToAccount();
-        if (relatedOpps != null) {
+        if (maxAffiliations != null) {
             System.FeatureManagement.setPackageIntegerValue('Data_MaxAffilationsToAccount', maxAffiliations);
         }
 
