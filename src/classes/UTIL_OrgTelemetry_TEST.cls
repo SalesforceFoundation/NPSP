@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@isTest(IsParallel=true)
+@isTest
 private class UTIL_OrgTelemetry_TEST {
 
     @TestSetup
