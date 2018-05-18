@@ -61,8 +61,7 @@
 
 .handsontable td {
     color: #536787 !important;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 1px 5px !important;
 }
 
 .fixed-horizontal {
@@ -83,8 +82,8 @@
 
 .tooltip-error {
     position: absolute !important;
-    margin-left: 25px;
-    margin-top: -60px;
+    /* margin-left: 25px;
+    margin-top: -60px; */
 }
 
 .handsontable th:first-child {

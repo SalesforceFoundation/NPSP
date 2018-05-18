@@ -78,11 +78,13 @@
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 2,
                 columns: getHotColumns(),
-    
+                contextMenu: ['remove_row'],
+
                 hiddenColumns: {
                     indicators: false
                 },
 
+                cells: cellsHandler,
                 afterInit: afterInitHandler,
                 beforeRemoveRow: beforeRemoveRowHandler,
                 afterRemoveRow: afterRemoveRowHandler,
@@ -95,6 +97,17 @@
             });
 
             $scope.$apply();
+        }
+
+        function cellsHandler(row, col, prop) {
+
+            if (col == 0) {
+                return { type: { renderer: tooltipCellRenderer } };
+            }
+            else if (col == 1) {
+                return { type: { renderer: actionCellsRenderer } };
+            }
+
         }
 
         /**
@@ -310,6 +323,13 @@
 
                             console.log(cellResponse);
 
+                            if (cellResponse.sfdcid) {
+                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
+                                setTimeout(function() {
+                                    hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid);
+                                }, 500);
+                            }
+
                             if (cellResponse.errors) {
 
                                 var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
@@ -323,12 +343,9 @@
                                 $scope.rowErrors[cellResponse.recordId] = cellResponse.errors;
 
                                 debugRowErrors = $scope.rowErrors;
-                            }
 
-                            if (cellResponse.sfdcid) {
-                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
                                 setTimeout(function() {
-                                    hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid);
+                                    hot.render();
                                 }, 500);
                             }
                         });
@@ -512,6 +529,7 @@
 
         function getHotColumns() {
 
+            var frozenColumns = [];
             var resultColumns = [];
 
             var errorCol = new Object();
@@ -522,76 +540,68 @@
             errorCol.wordWrap = true;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
-
-            resultColumns.push(errorCol);
+            errorCol.readOnly = true;
+            frozenColumns.push(errorCol);
 
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.type = 'text';
             actionCol.data = 'Actions';
+            actionCol.disableVisualSelection = true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle";
             actionCol.renderer = actionCellsRenderer;
+            frozenColumns.push(actionCol);
 
-            resultColumns.push(actionCol);
+            var recordCol = [];
 
-            var recordIdCol = undefined;
+            for (var i = 0; i < $scope.columnsData.length; i++) {
 
-            for (var i=0; i < $scope.columnsData.length; i++) {
-
-                var col = new Object();
                 var templateField = $scope.columnsData[i];
 
+                var col = new Object();
                 col.data = templateField.apiName;
-
-                if (templateField.required) {
-
-                    col.required = true;
-                }
-
-                col.title = '<span>' + templateField.name.toUpperCase() + '</span>';
+                col.required = templateField.required;
+                col.title = templateField.name.toUpperCase();
                 col.type = templateField.type;
-
-                // Enable type checking. If for example the user places text in a numeric column, mark the cell as red
                 col.allowInvalid = true;
-
-                // Center the content of the columns
-                col.className = "htCenter htMiddle slds-truncate";
-
-                // Do not wrap the content of the column
                 col.wordWrap = false;
+
+                col.className = "htLeft htMiddle slds-truncate";
 
                 if (templateField.apiName == "Id") {
 
                     col.readOnly = true;
+                    col.title = ' ';
                     col.hidden = true;
                     col.className = "htCenter htMiddle slds-truncate slds-hide";
                     col.disableVisualSelection = true;
-                    recordIdCol = col;
+                    col.colWidths = 0;
+                    col.defaultWidth = 0;
+                    recordCol.push(col);
                 }
-
-                if (templateField.type === "date") {
+                else if (templateField.type === "date") {
 
                     col.dateFormat = "YYYY-MM-DD";
                     col.correctFormat = true;
                     col.defaultDate = "today";
+                    resultColumns.push(col);
                 }
-
-                if (templateField.isDecimal === "true") {
+                else if (templateField.isDecimal === "true") {
 
                     col.format = '$0,0.00';
-                    col.className = "htRight htMiddle";
+                    col.className = "htRight htMiddle slds-truncate";
                     col.title = '<span style="float: right">' + templateField.name.toUpperCase() + '</span>';
+                    resultColumns.push(col);
                 }
-
-                if (templateField.type === "email") {
+                else if (templateField.type === "email") {
 
                     col.type = 'text';
+                    resultColumns.push(col);
                 }
+                else if (templateField.type === "text") {
 
-                if (templateField.type === "text") {
-
-                    col.className = "htLeft htMiddle";
+                    resultColumns.push(col);
                 }
 
                 // if (templateField.type === "dropdown") {
@@ -607,18 +617,9 @@
                 //     }
                 // }
 
-
-                if (templateField.apiName !== "Id") {
-
-                    resultColumns.push(col);
-                }
-
             }
 
-            // Add Id column to the end
-            resultColumns.push(recordIdCol);
-
-            return resultColumns;
+            return frozenColumns.concat(resultColumns).concat(recordCol);
         }
 
         function getColumnIndexByProp(prop){
@@ -638,11 +639,7 @@
         function addMessage(cell, errors) {
 
             removeMessage();
-
-            var popupId = Date.now().toString();
-
             var messageSection = document.createElement('section');
-            messageSection.id = popupId;
             messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
             messageSection.role = 'dialog'
 
@@ -659,19 +656,33 @@
             })
 
             messageSectionDiv.appendChild(messageSectionDivList);
-            messageSection.appendChild(messageSectionDivList);
+            messageSection.appendChild(messageSectionDiv);
+            document.body.appendChild(messageSection);
 
-            // cell.appendChild(messageSection);
-            typpy(cell, {html: '#' + popupId});
+            var popper = new Popper(cell, messageSection, {
+                placement: 'right'
+            });
         }
 
         function removeMessage() {
-
-            $(".tooltip-error" ).remove();
+            // $(".tooltip-error" ).remove();
         }
 
         // Renderers
 
+        // function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+        //     instance.setDataAtCell(row, col, value.format('dsdas/dsd/dsd'), 'ignore')
+
+        //     Handsontable.TextCell.renderer.apply(this, arguments);
+
+        //     console.log('este es el valor:', value);
+        // }
+
+        function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+
+        }
 
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
@@ -679,9 +690,6 @@
 
             var rowId = instance.getDataAtCell(row, instance.propToCol('Id'));
             var rowErrors = $scope.rowErrors[rowId];
-
-            console.log(rowId);
-            console.log(rowErrors);
 
             if (rowErrors && rowErrors.length > 0) {
                 iconContainer.style.display = 'block';
@@ -695,7 +703,7 @@
             });
             Handsontable.dom.addEvent(iconContainer, 'mouseleave', function (e) {
                 e.preventDefault(); // prevent selection quirk
-                // removeMessage();
+                removeMessage();
             });
             Handsontable.dom.addEvent(iconContainer, 'mousemove', function (e) {
                 e.preventDefault(); // prevent selection quirk
@@ -721,17 +729,23 @@
             td.style.borderLeft = 'none';
             td.style.background = 'white !important';
             td.className = 'tooltip-cell';
-            td.id = row + col + Date.now();
 
             return td;
         }
 
+        // Validation Errors
 
-
+        function emailValidator(value, callback) {
+            setTimeout(function () {
+                if (/.+@.+/.test(value)) {
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            }, 1000);
+        };
 
         /// LEGACY Methods
-
-
 
         function getColumnFromName(name) {
             return -1;
@@ -1053,8 +1067,23 @@
     });
 
 
+    if (window.attachEvent) {
+        window.attachEvent('onresize', updateHotTable);
+    }
+    else {
+        window.addEventListener('resize', updateHotTable, true);
+    }
 
+    function updateHotTable() {
 
+        var newWidth = window.innerWidth * .91;
+        var newHeight = window.innerHeight * .70;
+
+        hot.updateSettings({
+            width: newWidth,
+            height: newHeight
+        });
+    }
 
 })();
 

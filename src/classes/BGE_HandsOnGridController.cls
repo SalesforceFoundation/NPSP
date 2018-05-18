@@ -100,8 +100,26 @@ global class BGE_HandsOnGridController {
             }
 
             DataImport__c[] upsertRecords = dataImports.values();
+            Database.UpsertResult[] upsertResults = new Database.UpsertResult[] {};
 
-            Database.UpsertResult[] upsertResults = Database.upsert(upsertRecords, true);
+            try {
+
+                upsertResults = Database.upsert(upsertRecords, true);
+            }
+            catch (DmlException ex) {
+
+                Object cell = result.values()[0];
+
+                Map<String, Object> cellData = (Map<String, Object>) cell;
+
+                Map<String, String[]> exceptionError = new Map<String, String[]>();
+                exceptionError.put('fields', new String[] {(String) cellData.get('field')});
+                exceptionError.put('messages', new String[] {ex.getMessage()});
+
+                Object[] exceptionErrors = new Object[] {};
+                exceptionErrors.add((Object) exceptionError);
+                cellData.put('errors', exceptionErrors);
+            }
 
             for (Integer i = 0; i < upsertResults.size(); i ++) {
 
