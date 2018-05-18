@@ -103,14 +103,14 @@ private class CRLP_RollupScheduler_TEST {
         Test.startTest();
 
         System.schedule('UNITTEST-GAU', '0 0 23 ? * *', new CRLP_GAU_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-CONTACT', '0 0 23 ? * *', new CRLP_Contact_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-SOFTCREDIT-ACCOUNT', '0 0 23 ? * *', new CRLP_Account_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-SOFTCREDIT-CONTACT', '0 0 23 ? * *', new CRLP_Contact_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-ACCOUNT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-CONTACT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-ACCOUNT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_AccountSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
-        System.schedule('UNITTEST-CONTACT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_ContactSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT', '0 0 23 ? * *', new CRLP_AccountHardCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT', '0 0 23 ? * *', new CRLP_ContactHardCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-ACCOUNT', '0 0 23 ? * *', new CRLP_AccountContactSoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-SOFTCREDIT-CONTACT', '0 0 23 ? * *', new CRLP_ContactSoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SKEW', '0 0 23 ? * *', new CRLP_AccountHardCreditSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SKEW', '0 0 23 ? * *', new CRLP_ContactHardCreditSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-ACCOUNT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_AccountContactSoftCreditSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
+        System.schedule('UNITTEST-CONTACT-SOFTCREDIT-SKEW', '0 0 23 ? * *', new CRLP_ContactSoftCreditSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter.All));
 
         System.assertEquals(9, [SELECT count() FROM AsyncApexJob
         WHERE JobType = 'ScheduledApex' AND ApexClass.Name LIKE 'CRLP_%' AND Status != 'Aborted'],
