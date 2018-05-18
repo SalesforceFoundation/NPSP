@@ -32,36 +32,35 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Account Soft Credit Rollup Batch Job for the "Skew" rollup method
+* @description Account Hard Credit Rollup Batch Job
 */
-public class CRLP_AccountSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+public class CRLP_AccountHardCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    public CRLP_AccountSkew_SoftCredit_BATCH() { }
+    public CRLP_AccountHardCredit_BATCH() { }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_AccountSkew_SoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, jobFilter);
+    public CRLP_AccountHardCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
     }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup is for a specific set of Account Id's
-     * @param recordIds Specific set of parent record id's to roll up to
-     * @param lastIdProcessedForChunking If this job is called by the SkewDispatcher, this contains the last Id queried
-     * by the SkewDispatcher Id chunking logic.
+     * @param jobType Defines the type of rollup job
+     * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_AccountSkew_SoftCredit_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds, lastIdProcessedForChunking);
+    public CRLP_AccountHardCredit_BATCH(List<Id> recordIds) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
     }
 
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 }

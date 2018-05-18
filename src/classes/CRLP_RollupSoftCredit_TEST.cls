@@ -178,7 +178,7 @@ private class CRLP_RollupSoftCredit_TEST {
                 Rollups_Account_SkewMode_Batch_Size__c = 600,
                 Rollups_Contact_SkewMode_Batch_Size__c = 600,
                 Rollups_Contact_Soft_Credit_Batch_Size__c = 600,
-                Rollups_Account_Soft_Credit_Batch_Size__c = 600,
+                Rollups_Account_Lvl_Con_SC_Batch_Size__c = 600,
                 Rollups_Account_Batch_Size__c = 20,
                 Rollups_Contact_Batch_Size__c = 20
             ));

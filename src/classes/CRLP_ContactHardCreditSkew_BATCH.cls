@@ -32,35 +32,36 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Account Hard Credit Rollup Batch Job using the "Skew" rollup method
+* @description Contact Hard Credit Rollup Batch Job using the "Skew" rollup method
 */
-public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+public class CRLP_ContactHardCreditSkew_BATCH extends CRLP_Batch_Base_Skew implements Database.Batchable<SObject>, Database.Stateful,Schedulable {
 
-    public CRLP_AccountSkew_BATCH() {}
+    public CRLP_ContactHardCreditSkew_BATCH() { }
 
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup all Accounts that meet the "Skew" criteria
+     * @description Constructs the class - Rollup all Contacts that meet the "Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_AccountSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
+    public CRLP_ContactHardCreditSkew_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, jobFilter);
     }
 
     /*******************************************************************************************************
-     * @description Constructs the class - Rollup is for a specific set of Account Id's
+     * @description Constructs the class - Rollup is for a specific set of Contact Id's
      * @param recordIds Specific set of parent record id's to roll up to
      * @param lastIdProcessedForChunking If this job is called by the SkewDispatcher, this contains the last Id queried
      * by the SkewDispatcher Id chunking logic.
      */
-    public CRLP_AccountSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds, lastIdProcessedForChunking);
+    public CRLP_ContactHardCreditSkew_BATCH(List<Id> recordIds, Id lastIdProcessedForChunking) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds, lastIdProcessedForChunking);
     }
 
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
     }
 }

@@ -60,7 +60,7 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Rollups_Account_Soft_Credit_Batch_Size__c</fullName>
+        <fullName>Rollups_Account_Lvl_Con_SC_Batch_Size__c</fullName>
         <defaultValue>200</defaultValue>
         <description>Only used by the new Customizable Rollups engine</description>
         <externalId>false</externalId>

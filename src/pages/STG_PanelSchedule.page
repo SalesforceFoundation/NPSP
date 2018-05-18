@@ -32,10 +32,10 @@
                 </div>
             </div>
             <div class="slds-form-element">
-                <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Soft_Credit_Batch_Size__c.Label}" for="tbxAccSoft" styleClass="slds-form-element__label" />
+                <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Rollups_Account_Lvl_Con_SC_Batch_Size__c.Label}" for="tbxAccSoft" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
-                    <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
-                    <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Soft_Credit_Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxAccSoft" html-aria-describedby="{!$Component.tbxAccSoftHelp}" styleClass="slds-input" />
+                    <apex:outputField value="{!stgService.stgCRLP.Rollups_Account_Lvl_Con_SC_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:inputField value="{!stgService.stgCRLP.Rollups_Account_Lvl_Con_SC_Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxAccSoft" html-aria-describedby="{!$Component.tbxAccSoftHelp}" styleClass="slds-input" />
                 </div>
             </div>
             <div class="slds-form-element">

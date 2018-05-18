@@ -32,19 +32,19 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Account Hard Credit Rollup Batch Job
+* @description Account Soft Credit Rollup Batch Job
 */
-public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+public class CRLP_AccountContactSoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    public CRLP_Account_BATCH() { }
+    public CRLP_AccountContactSoftCredit_BATCH() {}
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_Account_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, jobFilter);
+    public CRLP_AccountContactSoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -52,15 +52,15 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_Account_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit, recordIds);
+    public CRLP_AccountContactSoftCredit_BATCH(List<Id> recordIds) {
+        super(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, recordIds);
     }
 
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 }

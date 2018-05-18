@@ -37,7 +37,7 @@
     <fields>
         <help><!-- Number of records per batch to process when recalculating soft credit donor roll-ups to the Account object --></help>
         <label><!-- Rollups: Account Soft Credit Batch Size --></label>
-        <name>Rollups_Account_Soft_Credit_Batch_Size__c</name>
+        <name>Rollups_Account_Lvl_Con_SC_Batch_Size__c</name>
     </fields>
     <fields>
         <help><!-- Number of records per batch to process when recalculating donor roll-ups to the Contact object --></help>
