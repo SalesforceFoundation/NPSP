@@ -198,7 +198,8 @@ public with sharing class CRLP_RollupUI_SVC {
 
         if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    || rlp.Amount_Object__r.QualifiedAPIName == 'Account_Soft_Credit__c') {
                 item.creditType = Label.CRLP_SoftCredit;
             } else {
                 item.creditType = Label.CRLP_HardCredit;
@@ -207,7 +208,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
             item.creditType = Label.CRLP_HardCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
-                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                && (rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    || rlp.Detail_Object__r.QualifiedAPIName == 'Account_Soft_Credit__c')) {
             item.creditType = Label.CRLP_SoftCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
@@ -580,8 +582,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
+                'labelAccountSoftCredit' => Schema.SObjectType.Account_Soft_Credit__c.getLabel(),
                 'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
                 'labelContact' => Schema.SObjectType.Contact.getLabel(),
+                'labelContactSoftCredit' => Schema.SObjectType.Contact.getLabel()+' '+Label.CRLP_SoftCredit,
                 'labelGAU' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
                 'labelPayment' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
                 'labelOpportunity' => Schema.SObjectType.Opportunity.getLabel(),
@@ -601,6 +605,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'objectAccount' => Schema.SObjectType.Account.getName(),
+                'objectAccountSoftCredit' => Schema.SObjectType.Account_Soft_Credit__c.getName(),
                 'objectAllocation' => Schema.SObjectType.Allocation__c.getName(),
                 'objectContact' => Schema.SObjectType.Contact.getName(),
                 'objectGAU' => Schema.SObjectType.General_Accounting_Unit__c.getName(),

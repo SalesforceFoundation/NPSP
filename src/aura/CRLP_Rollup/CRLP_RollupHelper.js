@@ -186,14 +186,11 @@
     getPotentialDetailObjects: function (cmp, amountObject) {
         var labels = cmp.get("v.labels");
         var potentialDetailObjects = [];
-        if (amountObject === labels.objectPartialSoftCredit) {
-            potentialDetailObjects.push(labels.objectPartialSoftCredit);
+        potentialDetailObjects.push(amountObject);
+        if (amountObject === labels.objectPartialSoftCredit
+            || amountObject === labels.objectAllocation
+            || amountObject === labels.objectAccountSoftCredit) {
             potentialDetailObjects.push(labels.objectOpportunity);
-        } else if (amountObject === labels.objectAllocation) {
-            potentialDetailObjects.push(labels.objectOpportunity);
-            potentialDetailObjects.push(labels.objectAllocation);
-        } else {
-            potentialDetailObjects.push(amountObject);
         }
         return potentialDetailObjects;
     },
@@ -376,6 +373,10 @@
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
             amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
             cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
+        } else if (amountObjectName === labels.objectAccountSoftCredit) {
+            cmp.set("v.activeRollup.amountObjectLabel", labels.labelAccountSoftCredit);
+            amountFieldName = labels.objectAccountSoftCredit + ' ' + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject",labels.objectAccountSoftCredit);
         } else {
             cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
             amountFieldName = labels.objectOpportunity + ' Amount';
@@ -714,28 +715,48 @@
         var summaryObject = activeRollup.summaryObject;
         var labels = cmp.get("v.labels");
         var templateList = [];
+        // in templateList, the `name` attribute is the api name of the detail object
         if (summaryObject === labels.objectAccount) {
-            templateList.push({
+            templateList.push(
+                {
                     label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')',
-                    summaryObject: labels.objectAccount, name: labels.objectOpportunity
+                    summaryObject: labels.objectAccount,
+                    name: labels.objectOpportunity
+                },
+                {
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.softCredit + ')',
+                    summaryObject: labels.objectAccount,
+                    name: labels.objectAccountSoftCredit
+                },
+                {
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')',
+                    summaryObject: labels.objectAccount,
+                    name: labels.objectPartialSoftCredit
+                },
+                {
+                    label: labels.labelPayment + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')',
+                    summaryObject: labels.objectAccount,
+                    name: labels.objectPayment
                 }
-                , { label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')'
-                    , summaryObject: labels.objectAccount, name: labels.objectPartialSoftCredit
-                }
-                , { label: labels.labelPayment + ' -> ' + labels.labelAccount + ' (' + labels.hardCredit + ')'
-                    , summaryObject: labels.objectAccount, name: labels.objectPayment
-            });
+            );
         } else if (summaryObject === labels.objectContact) {
-            templateList.push({
-                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')'
-                    , summaryObject: labels.objectContact, name: labels.objectOpportunity
+            templateList.push(
+                {
+                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')',
+                    summaryObject: labels.objectContact,
+                    name: labels.objectOpportunity
+                },
+                {
+                    label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.softCredit + ')',
+                    summaryObject: labels.objectContact,
+                    name: labels.objectPartialSoftCredit
+                },
+                {
+                    label: labels.labelPayment + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')',
+                    summaryObject: labels.objectContact,
+                    name: labels.objectPayment
                 }
-                , { label: labels.labelOpportunity + ' -> ' + labels.labelContact + ' (' + labels.softCredit + ')'
-                    , summaryObject: labels.objectContact, name: labels.objectPartialSoftCredit
-                }
-                , { label: labels.labelPayment + ' -> ' + labels.labelContact + ' (' + labels.hardCredit + ')'
-                    , summaryObject: labels.objectContact, name: labels.objectPayment
-            });
+            );
         } else if (summaryObject === labels.objectGAU) {
             //check for the detail object to ensure correct value is selected on edit mode
             var detailName;
@@ -744,15 +765,21 @@
             } else {
                 detailName = labels.objectOpportunity;
             }
-            templateList.push({
-                label: labels.labelAllocation + ' -> ' + labels.labelGAU
-                , summaryObject: labels.objectGAU, name: detailName
-            });
+            templateList.push(
+                {
+                    label: labels.labelAllocation + ' -> ' + labels.labelGAU,
+                    summaryObject: labels.objectGAU,
+                    name: detailName
+                }
+            );
         } else if (summaryObject === labels.objectRD) {
-            templateList.push({
-                label: labels.labelOpportunity + ' -> ' + labels.labelRD
-                , summaryObject: labels.objectRD, name: labels.objectOpportunity
-            });
+            templateList.push(
+                {
+                    label: labels.labelOpportunity + ' -> ' + labels.labelRD,
+                    summaryObject: labels.objectRD,
+                    name: labels.objectOpportunity
+                }
+            );
         }
 
         cmp.set("v.rollupTypes", templateList);
@@ -841,8 +868,10 @@
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
+            console.log('amountObjectAndField: '+amountObjectAndField);
             var amountList = amountObjectAndField.split(' ');
             rollupCMT.amountField = (amountList[1] === 'null' ? null : amountList[1]);
+            console.log(rollupCMT.amountField);
         }
         if (cmp.get("v.activeRollup.dateField")) {
             var dateObjectAndField = cmp.get("v.activeRollup.dateField");
@@ -917,6 +946,11 @@
                 rollupType.summaryObject = labels.objectAccount;
                 rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')';
                 cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
+            } else if (amountObject === labels.objectAccountSoftCredit) {
+                rollupType.name = labels.objectOpportunity;
+                rollupType.summaryObject = labels.objectAccount;
+                rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.softCredit + ')';
+                cmp.set("v.activeRollup.rollupTypeObject", labels.objectAccountSoftCredit);
             } else {
                 rollupType.name = labels.objectOpportunity;
                 rollupType.summaryObject = labels.objectAccount;
@@ -935,6 +969,12 @@
             rollupType.summaryObject = labels.objectAccount;
             rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelContact + ' ' + labels.softCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectPartialSoftCredit);
+
+        } else if (detailObject === labels.objectAccountSoftCredit && summaryObject === labels.objectAccount) {
+            rollupType.name = labels.objectAccountSoftCredit;
+            rollupType.summaryObject = labels.objectAccount;
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.softCredit + ')';
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectAccountSoftCredit);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
             if (amountObject === labels.objectPartialSoftCredit) {
