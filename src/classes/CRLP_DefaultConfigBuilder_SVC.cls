@@ -635,8 +635,6 @@ public class CRLP_DefaultConfigBuilder_SVC {
             for (String rtId : excludedRtIds.split(';')) {
                 if (recordTypesById.containsKey(rtId)) {
                     rtDevNames.add(recordTypesById.get(rtId).DeveloperName);
-                } else {
-                    rtDevNames.add(rtId);
                 }
             }
         } else if (defRT != null) {
