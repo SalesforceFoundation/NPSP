@@ -140,6 +140,37 @@
                     console.log(indexRow, this.propToCol('Id'));
                     this.setDataAtCell(indexRow, this.propToCol('Id'), Date.now().toString());
                 }
+
+
+                for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
+
+                    var cellType = this.getDataType(indexRow, indexCol);
+
+                    if (cellType === 'date') {
+
+                        cellValue = this.getDataAtCell(indexRow, indexCol);
+
+                        if (cellValue != null) {
+
+                            // get date valie displayed in milliseconds
+                            var dateOriginalMilliseconds = new Date(cellValue);
+
+                            // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
+                            var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
+
+                            // create new date using UTC milliseconds value
+                            var dateUTC = new Date(dateUTCMilliseconds);
+
+                            // format to ISO standard format
+                            var dateISOFormatted = dateUTC.toISOString();
+
+                            // set correct data in cell
+                            this.setDataAtCell(indexRow, indexCol, dateISOFormatted);
+                        }
+                    }
+
+                }
+
             }
 
             $scope.isIndexLoading = false;
