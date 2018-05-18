@@ -22,7 +22,7 @@
         <!-- Custom CSS -->
         <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/style.css')}"/>
 
-        <script src="https://unpkg.com/tippy.js/dist/tippy.all.min.js"></script>
+        <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 
         <apex:slds/>
 
@@ -41,7 +41,17 @@
 
             <div id="notifications"></div>
             <div id="wrapper" class="slds-form" ng-controller="MainCtrl">
-        
+
+                <div class="demo-only" style="height: 6rem;" ng-hide="isTableLoaded">
+                    <div class="slds-spinner_container">
+                        <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_delayed">
+                            <span class="slds-assistive-text">Loading</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ALERT MESSAGE -->
         
                 <apex:outputPanel layout="block" styleClass="demo-only" style="height: 4rem; margin-top: 17%" rendered="{!hasError}">
@@ -104,7 +114,7 @@
                 <!-- / TABLE -->
         
                 <!-- FOOTER -->
-        
+
                 <apex:outputPanel layout="block" styleClass="slds-m-around_small" style="text-align: center;" rendered="{!NOT(hasError)}">
         
                     <div>
