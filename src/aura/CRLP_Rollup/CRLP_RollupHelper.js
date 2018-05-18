@@ -868,10 +868,8 @@
         }
         if (cmp.get("v.activeRollup.amountField")) {
             var amountObjectAndField = cmp.get("v.activeRollup.amountField");
-            console.log('amountObjectAndField: '+amountObjectAndField);
             var amountList = amountObjectAndField.split(' ');
             rollupCMT.amountField = (amountList[1] === 'null' ? null : amountList[1]);
-            console.log(rollupCMT.amountField);
         }
         if (cmp.get("v.activeRollup.dateField")) {
             var dateObjectAndField = cmp.get("v.activeRollup.dateField");
