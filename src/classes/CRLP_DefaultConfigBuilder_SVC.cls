@@ -42,7 +42,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
     private static final Map<Id, RecordType> recordTypesById = new Map<Id, RecordType>(
         [SELECT Id, RecordType.DeveloperName
             FROM RecordType
-            WHERE SobjectType = 'Opportunity' AND IsActive = True]);
+            WHERE SobjectType = 'Opportunity']);
 
     /*************************************************************************************************************
      * @description Call each of the methods in this class to build the default Filter Groups and each of the four
