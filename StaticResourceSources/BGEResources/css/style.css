@@ -52,7 +52,6 @@
 }
 
 .handsontable th {
-    border-right: none;
     color: #758696 !important;
     border-bottom: 1px solid #cccccc !important;
     height: 40px;
@@ -81,14 +80,35 @@
 }
 
 .tooltip-error {
-    position: absolute !important;
+    left: 6% !important;
     /* margin-left: 25px;
     margin-top: -60px; */
 }
 
+.action-global {
+    float: right;
+}
+
+.slds-scope .slds-spinner_container {
+    background-color: rgba(255,255,255,1) !important;
+}
+
 .handsontable th:first-child {
     border: none !important;
+}
+
+.handsontable th:nth-child(2) {
+    border: none !important;
     border-right: 1px solid #cccccc !important;
+}
+
+.handsontable .htDimmed {
+    border: none !important;
+    color: transparent !important;
+}
+
+.handsontable .listbox.listbox td {
+    color: #536787 !important;
 }
 
 /* Edit mode */
@@ -101,21 +121,6 @@
 
 .htDatepickerHolder {
     width: 470px;
-}
-
-.pika-lendar {
-    float: left;
-    width: 400px;
-    margin: 32px;
-}
-
-.pika-button {
-    text-align: left;
-}
-
-.pika-prev,
-.pika-next {
-    margin-right: 85px !important;
 }
 
 .htAutocompleteArrow {
@@ -131,7 +136,7 @@
     width: 470px;
 }
 
-.pika-lendar {
+/* .pika-lendar {
     float: left;
     width: 400px;
     margin: 32px;
@@ -144,7 +149,8 @@
 .pika-prev,
 .pika-next {
     margin-right: 85px !important;
-}
+} */
+
 
 td.tooltip-cell {
     background: white !important;

@@ -2,7 +2,7 @@
 
     var myApp = angular.module('myApp', ['ngHandsontable', 'ngSanitize']);
 
-    myApp.controller('MainCtrl', function ($scope, $compile) {
+    myApp.controller('MainCtrl', function ($scope, $compile, $timeout) {
 
         var changesToSave = [];
 
@@ -10,12 +10,14 @@
 
         function onInitHandler(result, event) {
 
-            console.warn('BGE - onInitHandler');
+            // console.warn('BGE - onInitHandler');
 
             $scope.rowsCount = result.rowsCount;
             $scope.rowsAmount = result.rowsAmount;
-            $scope.totalPages = result.rowsCount / 50;
+            $scope.offset = 0;
+            $scope.totalPages = Math.ceil(result.rowsCount / 50);
             $scope.columnsData = result.columns;
+            $scope.prevButonEnabled = false;
             $scope.rowErrors = {};
 
             console.debug(result);
@@ -27,16 +29,18 @@
             $scope.tableWidth = window.innerWidth * 91 / 100;
             $scope.tableHeight = window.innerHeight * 70 /100;
 
+            $scope.nextPageAction = nextPageAction;
+            $scope.prevPageAction = prevPageAction;
 
             // Flag that is set true if the user have just pressed the up arrow key.
             wasUpArrowPressed = false;
 
             //Map to save cells with invalid format values
             movedSideWays = false;
-    
+
             wait = false;
             updatedCellsMap = {};
-    
+
             var changesToSave = {};
 
 
@@ -58,8 +62,6 @@
                 observeChanges: true,
                 persistantState: false,
                 contextMenu: true,
-                manualColumnResize: true,
-                manualRowResize: true,
                 readOnly: false,
                 sortIndicator: true,
                 fillHandle: true,
@@ -71,21 +73,16 @@
                 height: $scope.tableHeight,
                 minRows: 50,
                 maxRows: 50,
-                manualColumnResize: [50],
-                colWidths: 150,
                 rowHeights: 30,
                 colHeaders: true,
                 columnHeaderHeight: 40,
-                fixedColumnsLeft: 2,
+                fixedColumnsLeft: 3,
                 columns: getHotColumns(),
                 contextMenu: ['remove_row'],
 
-                hiddenColumns: {
-                    indicators: false
-                },
-
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
+                afterRender: afterRenderHandler,
                 beforeRemoveRow: beforeRemoveRowHandler,
                 afterRemoveRow: afterRemoveRowHandler,
                 afterChange: afterChangeHandler,
@@ -99,14 +96,53 @@
             $scope.$apply();
         }
 
+        function prevPageAction() {
+            console.log("prev");
+
+            if ($scope.offset > 0) {
+                $scope.offset --;
+                changePageHandler();
+            }
+        }
+
+        function nextPageAction() {
+
+            $scope.offset ++;
+            changePageHandler();
+        }
+
+        function changePageHandler() {
+
+            $scope.isTableLoaded = false;
+
+            BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
+
+            function changePageGridHandler(result, event) {
+
+                $scope.prevButonEnabled = true;
+                if ($scope.offset > 0) {
+                    $scope.prevButonEnabled = false;
+                }
+
+                hot.loadData(result.data);
+                $scope.isTableLoaded = true;
+
+                $scope.$apply();
+            }
+        }
+
+
         function cellsHandler(row, col, prop) {
 
-            if (col == 0) {
+            // console.warn('HOT - cellsHandler');
+
+            if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
-            else if (col == 1) {
+            else if (prop == 'Actions') {
                 return { type: { renderer: actionCellsRenderer } };
             }
+
 
         }
 
@@ -137,7 +173,7 @@
 
         function afterInitHandler() {
 
-            console.warn('HOT - afterInitHandler');
+            // console.warn('HOT - afterInitHandler');
 
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
@@ -148,142 +184,141 @@
             for (var indexRow = 0; indexRow < totalRows; indexRow++) {
 
                 var cellValue = this.getDataAtCell(indexRow, this.propToCol('Id'));
-
                 if (cellValue == null) {
-                    console.log(indexRow, this.propToCol('Id'));
-                    this.setDataAtCell(indexRow, this.propToCol('Id'), Date.now().toString());
+                    this.setDataAtCell(indexRow, this.propToCol('Id'), Date.now().toString(), 'manual');
                 }
+
+                for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
+
+                    var cellType = this.getDataType(indexRow, indexCol);
+
+                    if (cellType === 'date') {
+
+                        cellValue = this.getDataAtCell(indexRow, indexCol);
+
+                        if (cellValue != null) {
+
+                            // get date valie displayed in milliseconds
+                            var dateOriginalMilliseconds = new Date(cellValue);
+
+                            // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
+                            var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
+
+                            // create new date using UTC milliseconds value
+                            var dateUTC = new Date(dateUTCMilliseconds);
+
+                            // format to ISO standard format
+                            var dateISOFormatted = dateUTC.toISOString();
+
+                            // set correct data in cell
+                            this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
+                        }
+                    }
+
+                }
+
             }
 
             $scope.isIndexLoading = false;
             console.log("table ready");
+
+            renderBindings();
         }
 
-        function beforeRemoveRowHandler(index, amount) {
+        function afterRenderHandler(isForced) {
 
-            if (!deletingRecords) {
+            console.warn('HOT - afterRenderHandler');
 
-                var selection = hot.getSelected();
+        }
 
-                if (selection != undefined) {
+        function beforeRemoveRowHandler(index, amount, visualRows) {
 
-                    var r = confirm("Delete record?");
+            console.warn('HOT - beforeRemoveRowHandler');
+            console.log(index, amount);
+            console.log(visualRows);
 
-                    if (r == true) {
+            var rowRecordIds = [];
+            var columnIndex = this.propToCol('Id');
 
-                        // Set the flag on true so the "before remove" event does not fire the individual remove function hence showing an exception error.
-                        deletingRecords = true;
+            visualRows.forEach(function(element) {
 
-                        var start = selection[0];
-                        var end = selection[2];
-                        var gridData = hot.getData();
-                        var batchIds = [];
+                var rowRecordId = hot.getDataAtCell(element,columnIndex);
+                rowRecordIds.push(rowRecordId);
 
-                        if (start <= end) {
-
-                            for (var r = start; r <= end; r++) {
-
-                                var row = gridData[r];
-                                var dataRowId = row[getColumnFromName('Id')];
-                                batchIds.push(dataRowId);
-                            }
-                        } else {
-
-                            for (i = -start; i <= -end; i++) {
-
-                                var row = gridData[-i];
-                                var dataRowId = row[getColumnFromName('Id')];
-                                batchIds.push(dataRowId);
-                            }
-                        }
-
-                        Visualforce.remoting.Manager.invokeAction(
-                            '{!$RemoteAction.BGE_HandsOnGridController.deleteAll}',
-                            batchIds,
-                            function (result, event) {
-
-                                $scope.$apply();
-                            }
-                        );
-
-                        hot.alter('remove_row');
-                        hot.deselectCell();
-
-                        // Set the flag back on false so we can continue deleting records individualy.
-                        deletingRecords = false;
-                    } else {
-
-                        return false;
-                    }
-                } else {
-
-                    alert("please select cell first");
+                var requestData = {
+                    batchId: batchId,
+                    rowRecordIds: JSON.stringify(rowRecordIds)
                 }
-            }
+
+                BGE_HandsOnGridController.deleteRowsGrid(requestData, deleteRowsGridHandler);
+
+                function deleteRowsGridHandler(result, event) {};
+            });
         }
 
         function afterRemoveRowHandler(index, amount) {
 
-            var pBatchId = getAllUrlParams().batchid;
-            totalOfRecords = 0;
+            console.warn('HOT - afterRemoveRowHandler');
 
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalOfRecords}',
-                pBatchId,
-                function (result) {
-
-                    document.getElementById("totalOfRecords").value = result;
-                    totalOfRecords = parseInt(result);
-
-                    $scope.totalPages = calculateTotalPages(totalOfRecords);
-                    $scope.$apply();
-                });
-
-            Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.BGE_HandsOnGridController.calculateTotalAmount}',
-                pBatchId,
-                function (result) {
-
-                    document.getElementById("totalAmount").value = result;
-                });
-
-            reloadCurrentPageOfTheGrid();
+            updateSummaryData();
         }
 
         function afterChangeHandler(changes, source) {
 
             console.warn('HOT - afterChangeHandler', source);
 
-            if (source === 'edit' && !$scope.isIndexLoading) {
+            var sourceOptions = ['edit', 'autofill', 'paste'];
+
+            if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
 
                 var cellRecords = [];
 
                 for (var i = 0; i < changes.length; i ++) {
 
-                    if (changes[i][1] !== 'Id') {
+                    var cellRecord = {};
+
+                    if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
+
+                        var col = this.propToCol(changes[i][1])
+                        var cellType = this.getDataType(changes[i][0], col);
+                        var newValue = changes[i][3];
+
+                        if (cellType == 'date') {
+                            newValue = (new Date(newValue)).getTime().toString();
+                        }
 
                         var cellRecord = {
                             row: changes[i][0],
                             field: changes[i][1],
                             oldValue: changes[i][2],
-                            newValue: changes[i][3],
+                            newValue: newValue,
+                            type: cellType,
                             recordId: this.getDataAtRowProp(changes[i][0], 'Id')
                         };
 
-                        cellRecords.push(cellRecord);
+                        if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue)) {
+                            cellRecords.push(cellRecord);
+                        }
+                    }
+                    else {
+                        updateSummaryData();
                     }
                 }
 
-                var requestData = {
-                    batchId: batchId,
-                    cellRecords: JSON.stringify(cellRecords)
-                };
+                if (cellRecords.length > 0) {
 
-                console.log(requestData);
+                    var requestData = {
+                        batchId: batchId,
+                        cellRecords: JSON.stringify(cellRecords)
+                    };
 
-                BGE_HandsOnGridController.dmlCellsGrid(requestData, onDmlGridHandler);
+                    console.log(requestData);
+
+                    BGE_HandsOnGridController.dmlCellsGrid(requestData, onDmlGridHandler);
+                }
 
                 function onDmlGridHandler(result, event) {
+
                     console.log(result);
 
                     if (result && result.length > 0) {
@@ -294,14 +329,14 @@
 
                             if (cellResponse.sfdcid) {
                                 // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
-                                setTimeout(function() {
-                                    hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid);
-                                }, 500);
+                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
                             }
 
-                            if (cellResponse.errors) {
+                            var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
-                                var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
+                            $scope.rowErrors[cellResponse.recordId] = [];
+
+                            if (cellResponse.errors) {
 
                                 errCell.valid = false;
                                 errCell.hasError = true;
@@ -309,14 +344,22 @@
                                 if (!$scope.rowErrors[cellResponse.recordId]) {
                                     $scope.rowErrors[cellResponse.recordId] = [];
                                 }
+
                                 $scope.rowErrors[cellResponse.recordId] = cellResponse.errors;
 
                                 debugRowErrors = $scope.rowErrors;
-
-                                setTimeout(function() {
-                                    hot.render();
-                                }, 500);
                             }
+                            else {
+
+                                errCell.valid = true;
+                                errCell.hasError = false;
+                            }
+
+                            $timeout(function() {
+
+                                hot.render();
+                                updateSummaryData();
+                            }, 500);
                         });
                     }
                 }
@@ -455,11 +498,7 @@
 
                 hot.selectCell(rowIndex, colIndex);
             }
-        }
-
-        Handsontable.Dom.addEvent(document.body, 'keydown', function (e) {
-
-            if (e.keyCode === 9 || e.keyCode === 39) {
+            if (event.keyCode === 9 || event.keyCode === 39) {
 
                 // Tab or right arrow was pressed
                 movedSideWays = true;
@@ -475,7 +514,8 @@
                 }
 
                 hot.selectCell(rowIndex, colIndex);
-            } else if (e.keyCode === 37) {
+            }
+            else if (event.keyCode === 37) {
 
                 // Left arrow was pressed
                 movedSideWays = true;
@@ -492,14 +532,61 @@
 
                 hot.selectCell(rowIndex, colIndex);
             }
-        });
+        }
 
         /// Auxiliary Methods
+
+        function getCellDataType(sfdcDatatype) {
+
+            var result = undefined;
+
+            switch(sfdcDatatype) {
+
+                case 'PICKLIST':
+                    result = 'dropdown'
+                    break;
+
+                case 'BOOLEAN':
+                    result = 'boolean'
+                    break;
+
+                case 'STRING':
+                case 'EMAIL':
+                case 'ID':
+                    result = 'text';
+                    break;
+
+                case 'DATE':
+                case 'DATETIME':
+                    result = 'date';
+                    break;
+
+                case 'CURRENCY':
+                case 'NUMBER':
+                case 'DECIMAL':
+                    result = 'numeric';
+                    break;
+            }
+
+            return result;
+        }
 
         function getHotColumns() {
 
             var frozenColumns = [];
             var resultColumns = [];
+
+            var idCol = new Object();
+            idCol.title = ' ';
+            idCol.type = 'text';
+            idCol.data = 'Id';
+            idCol.className = "htCenter htMiddle tooltip-column";
+            idCol.wordWrap = true;
+            idCol.colWidths = 5;
+            idCol.readOnly = true;
+            idCol.manualColumnResize = false;
+            idCol.disableVisualSelection = true;
+            frozenColumns.push(idCol);
 
             var errorCol = new Object();
             errorCol.title = ' ';
@@ -507,6 +594,8 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
+            errorCol.manualColumnResize = false;
+            errorCol.colWidths = 30;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
@@ -514,15 +603,14 @@
 
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
-            actionCol.type = 'text';
+            // actionCol.type = 'text';
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
-            actionCol.colWidths = 80;
+            actionCol.manualColumnResize =  true;
+            actionCol.colWidths = 65;
             actionCol.className = "htCenter htMiddle";
-            actionCol.renderer = actionCellsRenderer;
+            // actionCol.renderer = actionCellsRenderer;
             frozenColumns.push(actionCol);
-
-            var recordCol = [];
 
             for (var i = 0; i < $scope.columnsData.length; i++) {
 
@@ -531,64 +619,56 @@
                 var col = new Object();
                 col.data = templateField.apiName;
                 col.required = templateField.required;
-                col.title = templateField.name.toUpperCase();
-                col.type = templateField.type;
+                col.title = templateField.label.toUpperCase();
+                col.type = getCellDataType(templateField.type);
                 col.allowInvalid = true;
                 col.wordWrap = false;
+                col.colWidths = 200;
 
                 col.className = "htLeft htMiddle slds-truncate";
 
-                if (templateField.apiName == "Id") {
-
-                    col.readOnly = true;
-                    col.title = ' ';
-                    col.hidden = true;
-                    col.className = "htCenter htMiddle slds-truncate slds-hide";
-                    col.disableVisualSelection = true;
-                    col.colWidths = 0;
-                    col.defaultWidth = 0;
-                    recordCol.push(col);
-                }
-                else if (templateField.type === "date") {
-
-                    col.dateFormat = "YYYY-MM-DD";
+                if (templateField.type === "DATE") {
+                    // col.dateFormat = "YYYY-MM-DD";
+                    col.dateFormat = 'MM/DD/YYYY';
+                    col.className = "htRight htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
-                    col.defaultDate = "today";
-                    resultColumns.push(col);
+                    col.renderer = dateCellRenderer;
                 }
-                else if (templateField.isDecimal === "true") {
-
-                    col.format = '$0,0.00';
+                else if (templateField.type === "CURRENCY") {
+                    col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<span style="float: right">' + templateField.name.toUpperCase() + '</span>';
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                }
+                else if (templateField.type === "DECIMAL") {
+                    col.format = '0.00';
+                    col.className = "htRight htMiddle slds-truncate";
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                }
+                else if (templateField.type === "NUMBER") {
+                    col.format = '0';
+                    col.className = "htRight htMiddle slds-truncate";
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                }
+                else if (templateField.type === "EMAIL") {
+
+                }
+                if (templateField.type === "PICKLIST") {
+
+                    // Check if by any change the list containing picklist values are null empty or undefined.
+                    if (templateField.picklistValues) {
+
+                         // allowInvalid: false - does not allow manual input of value that does not exist in the source.
+                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                        col.source = Object.values(templateField.picklistValues);
+                    }
+                }
+
+                if (templateField.apiName !== "Id") {
                     resultColumns.push(col);
                 }
-                else if (templateField.type === "email") {
-
-                    col.type = 'text';
-                    resultColumns.push(col);
-                }
-                else if (templateField.type === "text") {
-
-                    resultColumns.push(col);
-                }
-
-                // if (templateField.type === "dropdown") {
-
-                //     // Check if by any change the list containing picklist values are null empty or undefined.
-                //     if (templateField.pickListValuesList) {
-
-                //          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                //          // In this case, the ENTER key is ignored and the editor field remains opened.
-                //         col.allowInvalid = false;
-
-                //         col.source = templateField.pickListValuesList;
-                //     }
-                // }
-
             }
 
-            return frozenColumns.concat(resultColumns).concat(recordCol);
+            return frozenColumns.concat(resultColumns);
         }
 
         function getColumnIndexByProp(prop){
@@ -634,26 +714,105 @@
         }
 
         function removeMessage() {
-            // $(".tooltip-error" ).remove();
+            $(".tooltip-error" ).remove();
+        }
+
+        function renderBindings() {
+
+            $('.action-items').click(function(event) {
+
+                event.preventDefault();
+
+                var optionSelect = document.createElement('select');
+                // messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
+
+                var optionSelectOption = document.createElement('option');
+                optionSelectOption.value = 'delete row';
+                optionSelectOption.innerHTML = 'delete row';
+
+                optionSelect.appendChild(optionSelectOption);
+
+                var popper = new Popper(this, optionSelectOption, {
+                    placement: 'right'
+                });
+            });
+
+            if (window.attachEvent) {
+                window.attachEvent('onresize', updateHotTable);
+            }
+            else {
+                window.addEventListener('resize', updateHotTable, true);
+            }
+        }
+
+        function updateSummaryData() {
+
+            BGE_HandsOnGridController.getSummaryData({batchId: batchId}, getSummaryDataHandler)
+
+            function getSummaryDataHandler(result, event) {
+
+                $scope.rowsCount = result.rowsCount;
+                $scope.rowsAmount = result.rowsAmount;
+                $scope.$apply();
+            }
+        }
+
+        function updateHotTable() {
+
+            var newWidth = window.innerWidth * .91;
+            var newHeight = window.innerHeight * .70;
+    
+            if (hot) {
+    
+            }
+            hot.updateSettings({
+                width: newWidth,
+                height: newHeight
+            });
         }
 
         // Renderers
 
-        // function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+        function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-        //     instance.setDataAtCell(row, col, value.format('dsdas/dsd/dsd'), 'ignore')
-
-        //     Handsontable.TextCell.renderer.apply(this, arguments);
-
-        //     console.log('este es el valor:', value);
-        // }
+            Handsontable.DateCell.renderer.apply(this, arguments);
+        }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
 
         }
 
+        //To display action column icons
+        function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+            Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+            Handsontable.dom.addEvent(td, 'click', function (e) {
+                e.preventDefault(); // prevent selection quirk
+            });
+
+            var dataRowId = instance.getDataAtRowProp(row, 'Id');
+
+            var isDisabled = 'disabled=\"false\"';
+
+            var actionsMenu = '';
+
+            if (dataRowId) {
+                actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral remove-my-row" style="border: none;">Remove row</button></div></div></div></div>';
+            }
+
+            // var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
+            // var actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral" style="border: none;">Remove row</button></div></div></div></div>';
+            var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
+
+            td.innerHTML = actionIcon;
+            return td;
+        }
+
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+            Handsontable.renderers.TextRenderer.apply(this, arguments);
 
             var iconContainer = document.createElement('div');
 
@@ -686,7 +845,7 @@
             var iconImage = document.createElement('img');
             iconImage.className = 'tooltip-image';
             iconImage.src = resourcePath + '/icons/warning.png';
-            iconImage.style.width = "60%";
+            // iconImage.style.width = "60%";
             iconImage.style.cursor = "pointer";
 
             iconContainer.appendChild(iconImage);
@@ -979,80 +1138,7 @@
             }
         }
 
-        //To display action column icons
-        function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-            Handsontable.TextCell.renderer.apply(this, arguments);
-
-            var dataRowId = instance.getDataAtRowProp(row, 'Id');
-
-            var isDisabled = 'disabled=\"false\"';
-
-            var actionsMenu = '';
-
-            if (dataRowId) {
-                actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral remove-my-row" style="border: none;">Remove row</button></div></div></div></div>';
-            }
-
-            // var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
-            // var actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral" style="border: none;">Remove row</button></div></div></div></div>';
-            var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
-
-            td.innerHTML = actionIcon;
-            return td;
-        }
-
-        function cellsRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-            try {
-
-                Handsontable.TextCell.renderer.apply(this, arguments);
-
-                if (col == 0) {
-
-                    var dataRowId = instance.getDataAtRowProp(row, 'Id');
-                    td.id = dataRowId;
-
-                    if (dataRowId) {
-
-                        $('#' + dataRowId).css( "border-top", "none");
-                        $('#' + dataRowId).css( "border-bottom", "none");
-                        $('#' + dataRowId).attr( "readonly", "readonly");
-                    }
-
-                    var escaped = Handsontable.helper.stringify(value);
-                    td.innerHTML = escaped;
-                    return td;
-                }
-            }
-            catch(ex) {
-                console.warn('Catching text exception');
-            }
-        }
-
-
-
-
     });
-
-
-    if (window.attachEvent) {
-        window.attachEvent('onresize', updateHotTable);
-    }
-    else {
-        window.addEventListener('resize', updateHotTable, true);
-    }
-
-    function updateHotTable() {
-
-        var newWidth = window.innerWidth * .91;
-        var newHeight = window.innerHeight * .70;
-
-        hot.updateSettings({
-            width: newWidth,
-            height: newHeight
-        });
-    }
 
 })();
 

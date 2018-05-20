@@ -23,11 +23,11 @@ global class BGE_HandsOnGridController {
 
         Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
 
-        BGE_DynamicalColumnWrapper[] columns = new BGE_DynamicalColumnWrapper[] {};
+        BGE_HandsOnGridColumnWrapper[] columns = new BGE_HandsOnGridColumnWrapper[] {};
         String[] fieldNames = new String[] {};
 
         for (Batch_Template_Field__c templateField :templateFields.values()) {
-            columns.add(new BGE_DynamicalColumnWrapper(templateField));
+            columns.add(new BGE_HandsOnGridColumnWrapper(templateField));
             fieldNames.add(templateField.Name);
         }
 
@@ -72,11 +72,20 @@ global class BGE_HandsOnGridController {
             }
 
             dataImport.put('External_Id__c', (Object) cellKey);
-            String value = (String) cellData.get('newValue');
+
+            String cellType = (String) cellData.get('type');
 
             try {
 
-                dataImport.put((String) cellData.get('field'), value);
+                if (cellType.equalsIgnoreCase('DATE')) {
+
+                    Date cellDate = Datetime.newInstance(Long.valueOf(((String) cellData.get('newValue')))).dateGmt();
+                    dataImport.put((String) cellData.get('field'), cellDate);
+                }
+                else {
+                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                }
+
                 dataImports.put(cellKey, (DataImport__c) dataImport);
             }
             catch (SObjectException ex) {
@@ -157,13 +166,89 @@ global class BGE_HandsOnGridController {
     }
 
     @RemoteAction
-    global static Map<String, Object> deleteRowGrid(Map<String, Object> parameters) {
+    global static Map<String, Object> dryRunRowGrid(Map<String, Object> parameters) {
+
+        // upsert newDataImport;
+
+        // response.addDataImportId(newDataImport.Id);
+
+        // dryRunProcessByRow(newDataImport, pBatchId);
+
+        // update newDataImport;
+
         return null;
     }
 
     @RemoteAction
-    global static Map<String, Object> deleteGrid(Map<String, Object> parameters) {
-        return null;
+    global static Map<String, Object> getSummaryData(Map<String, Object> parameters) {
+
+        Map<String, Object> result = new Map<String, Object>();
+
+        BGE_HandsOnGridSelector selector = new BGE_HandsOnGridSelector();
+
+        Id batchId = Id.valueOf((String) parameters.get('batchId'));
+
+        result.put('rowsCount', selector.getDataImportBatchCountByBatchId(batchId));
+        result.put('rowsAmount', selector.getDataImportDonationAmountByBatchId(batchId));
+
+        return result;
     }
+
+    @RemoteAction
+    global static Map<String, Object> deleteRowsGrid(Map<String, Object> parameters) {
+
+        Map<String, Object> result = new Map<String, Object>();
+
+        BGE_HandsOnGridSelector selector = new BGE_HandsOnGridSelector();
+
+        Id batchId = Id.valueOf((String) parameters.get('batchId'));
+
+        Object[] dataImportIds = (Object[]) JSON.deserializeUntyped((String) parameters.get('rowRecordIds'));
+
+        Set<Id> recordsIds = new Set<Id>();
+
+        for (Object dataImportId :dataImportIds) {
+
+            String recordsId = (String) dataImportId;
+
+            if (recordsId instanceOf Id) {
+                recordsIds.add(Id.valueOf(recordsId));
+            }
+
+        }
+
+        selector.deleteRowsById(recordsIds);
+
+        return result;
+    }
+
+    @RemoteAction
+    global static Map<String, Object> changePageGrid(Map<String, Object> parameters) {
+
+        Map<String, Object> result = new Map<String, Object>();
+
+        BGE_HandsOnGridSelector selector = new BGE_HandsOnGridSelector();
+
+        Id batchId = Id.valueOf((String) parameters.get('batchId'));
+        Decimal offset = (Decimal) parameters.get('offset');
+
+        DataImportBatch__c batch = selector.getBatchById(batchId);
+
+        Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
+
+        String[] fieldNames = new String[] {};
+        for (Batch_Template_Field__c templateField :templateFields.values()) {
+            fieldNames.add(templateField.Name);
+        }
+
+        if (!fieldNames.isEmpty()) {
+            SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
+            result.put('data', records);
+        }
+
+        return result;
+    }
+
+
 
 }

@@ -14,16 +14,15 @@ public with sharing class BGE_HandsOnGridSelector {
                                                                                         WHERE Batch_Template__c =: recordId
                                                                                         ORDER BY Order__c ASC
                                                                                         LIMIT :SQL_MAJOR_LIMIT]);
-
         return result;
     }
 
     public SObject[] getDataImportsByBatchId(Id recordId, String[] fieldNames) {
 
-        return getDataImportsByBatchIdWithOffset(recordId, fieldNames, 0);
+        return getDataImportsByBatchId(recordId, fieldNames, 0);
     }
 
-    public SObject[] getDataImportsByBatchIdWithOffset(Id recordId, String[] fieldNames, Integer offset) {
+    public SObject[] getDataImportsByBatchId(Id recordId, String[] fieldNames, Integer offset) {
 
         String query = 'SELECT ';
         query += String.join(fieldNames, ',');
@@ -39,6 +38,12 @@ public with sharing class BGE_HandsOnGridSelector {
         result = [SELECT Batch_Template__c FROM DataImportBatch__c WHERE Id = :recordId LIMIT :SQL_MINOR_LIMIT];
 
         return !result.isEmpty() ? result[0] : null;
+    }
+
+    public void deleteRowsById(Set<Id> recordIds) {
+
+        delete [SELECT Id FROM DataImport__c WHERE Id IN :recordIds];
+
     }
 
     public Integer getDataImportBatchCountByBatchId(Id recordId) {

@@ -86,6 +86,7 @@
         <members>BGE_AuraController_TEST</members>
         <members>BGE_BatchController</members>
         <members>BGE_DynamicalColumnWrapper</members>
+        <members>BGE_HandsOnGridColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_HandsOnGridSelector</members>
