@@ -88,6 +88,7 @@
         <members>BGE_DataImportBatchTriggerHandler</members>
         <members>BGE_BatchTemplateOverrideController</members>
         <members>BGE_DynamicalColumnWrapper</members>
+        <members>BGE_HandsOnGridColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_SettingsUITemplateController</members>
