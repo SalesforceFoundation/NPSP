@@ -56,7 +56,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
             }
         }
 
-        label = dataImportFieldDescribe.getLabel();
+        label = recordFieldDescribe.getLabel();
         type = String.valueOf(recordFieldDescribe.getType()).toUpperCase();
         apiName = templateField.Name;
         required = templateField.Required__c;
