@@ -83,7 +83,7 @@
 
                     <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <button class="slds-button slds-button_brand" title="Commit and Save" onClick="commit();">Commit</button>
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL={!$CurrentPage.Name}">Commit</apex:outputLink>
                         </div>
                     </div>
 
