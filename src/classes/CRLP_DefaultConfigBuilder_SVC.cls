@@ -113,7 +113,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeHC.objectName = 'Opportunity';
             ruleRecordTypeHC.fieldName = 'RecordTypeId';
             ruleRecordTypeHC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypeHC.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
+            ruleRecordTypeHC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
             ruleRecordTypeHC.isDeleted = false;
             groupClosedWonDonationsHC.rules.add(ruleRecordTypeHC);
         }
@@ -156,7 +156,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeConHC.objectName = 'Opportunity';
                 ruleRecordTypeConHC.fieldName = 'RecordTypeId';
                 ruleRecordTypeConHC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypeConHC.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c, 'Membership');
+                ruleRecordTypeConHC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
                 ruleRecordTypeConHC.isDeleted = false;
                 groupClosedWonDonationsContactsHC.rules.add(ruleRecordTypeConHC);
             }
@@ -199,7 +199,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleRecordTypeSC.objectName = 'Opportunity';
             ruleRecordTypeSC.fieldName = 'RecordTypeId';
             ruleRecordTypeSC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-            ruleRecordTypeSC.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c, 'Membership');
+            ruleRecordTypeSC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Account_Opp_Rectypes__c);
             ruleRecordTypeSC.isDeleted = false;
             groupClosedWonDonationsSC.rules.add(ruleRecordTypeSC);
         }
@@ -253,7 +253,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 ruleRecordTypeConSC.objectName = 'Opportunity';
                 ruleRecordTypeConSC.fieldName = 'RecordTypeId';
                 ruleRecordTypeConSC.operationName = CMT_FilterRule.FilterOperation.NOT_IN_LIST.name();
-                ruleRecordTypeConSC.value = convertExcludedRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
+                ruleRecordTypeConSC.value = convertRecordTypeIdsToDevNames(CRLP_DefaultConfigBuilder.legacySettings.npo02__Excluded_Contact_Opp_Rectypes__c);
                 ruleRecordTypeConSC.isDeleted = false;
                 groupClosedWonDonationsContactsSC.rules.add(ruleRecordTypeConSC);
             }
