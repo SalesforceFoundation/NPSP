@@ -24,7 +24,7 @@
 
         <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 
-        <apex:slds/>
+        <apex:slds />
 
         <script>
 

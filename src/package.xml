@@ -88,8 +88,8 @@
         <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
-        <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_HandsOnGridSelector</members>
+        <members>BGE_HandsOnGridTemplateHelper</members>
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
@@ -761,6 +761,7 @@
         <members>DataImport__c.Donation_Record_Type_Name__c</members>
         <members>DataImport__c.Donation_Stage__c</members>
         <members>DataImport__c.Donation_Type__c</members>
+        <members>DataImport__c.External_Id__c</members>
         <members>DataImport__c.FailureInformation__c</members>
         <members>DataImport__c.HomeAddressImportStatus__c</members>
         <members>DataImport__c.HomeAddressImported__c</members>
@@ -1268,7 +1269,6 @@
         <members>healthDetailsInvalidRDCustomPeriod</members>
         <members>healthDetailsInvalidRDCustomPeriodPIcklist</members>
         <members>healthDetailsInvalidRecordtypeId</members>
-        <members>healthDetailsInvalidRecordtypeName</members>
         <members>healthDetailsInvalidScheduledJob</members>
         <members>healthDetailsMailingListReportMissing</members>
         <members>healthDetailsMissingOppPayments</members>

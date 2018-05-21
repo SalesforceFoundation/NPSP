@@ -521,7 +521,7 @@
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
-            actionCol.colWidths = 65;
+            actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle";
             // actionCol.renderer = actionCellsRenderer;
             frozenColumns.push(actionCol);
@@ -697,8 +697,40 @@
 
         }
 
-        //To display action column icons
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+            var divElement = document.createElement('div');
+            var selectElement = document.createElement('select');
+            selectElement.style.width = "90%";
+            var optionElement = document.createElement('option');
+            optionElement.setAttribute('label', '');
+            optionElement.setAttribute('value', 'None');
+            optionElement.setAttribute('selected', 'true');
+            selectElement.appendChild(optionElement);
+            optionElement = document.createElement('option');
+            optionElement.setAttribute('label', 'Remove');
+            optionElement.setAttribute('value', 'Remove');
+            selectElement.appendChild(optionElement);
+            divElement.appendChild(selectElement);
+
+            Handsontable.dom.addEvent(selectElement, 'change', function (e){
+                e.preventDefault(); // prevent selection quirk
+                console.log('on change');
+            });
+
+            Handsontable.dom.addEvent(selectElement, 'click', function (e){
+                e.preventDefault(); // prevent selection quirk
+                console.log('on click');
+            });
+
+            Handsontable.dom.empty(td);
+            td.appendChild(divElement);
+
+            return td;
+        }
+
+        //To display action column icons
+        function actionCellsRendererOld(instance, td, row, col, prop, value, cellProperties) {
 
             Handsontable.renderers.TextRenderer.apply(this, arguments);
 
