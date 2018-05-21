@@ -33,6 +33,7 @@
     <actionOverrides>
         <actionName>New</actionName>
         <content>BGE_TemplateCreation</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -230,7 +231,7 @@
         <label>All</label>
     </listViews>
     <nameField>
-        <label>BGE Batch Template Name</label>
+        <label>Template Name</label>
         <type>Text</type>
     </nameField>
     <pluralLabel>Batch Templates</pluralLabel>
