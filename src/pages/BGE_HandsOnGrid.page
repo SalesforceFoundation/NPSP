@@ -24,7 +24,7 @@
 
         <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 
-        <apex:slds/>
+        <apex:slds />
 
         <script>
 
@@ -54,8 +54,8 @@
 
                 <!-- ALERT MESSAGE -->
 
-                <apex:outputPanel layout="block" styleClass="demo-only" style="height: 4rem; margin-top: 17%" rendered="{!hasError}">
-                    <div class="demo-only" style="height: 640px;">
+                <apex:outputPanel layout="block" style="height: 4rem; margin-top: 17%" rendered="{!hasError}">
+                    <div style="height: 640px;">
                         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
                             class="slds-modal slds-fade-in-open">
                             <div class="slds-modal__container">
@@ -79,19 +79,20 @@
                 <!-- ALERT MESSAGE -->
 
                 <!-- TABLE -->
-                <apex:outputPanel layout="block" styleClass="slds-m-horizontal_xx-large" rendered="{!NOT(hasError)}">
+                <apex:outputPanel layout="block" styleClass="slds-m-horizontal_medium" rendered="{!NOT(hasError)}">
 
-                    <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
+                    <!-- <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix"> -->
+                    <div class="slds-m-horizontal_large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL={!$CurrentPage.Name}">Commit</apex:outputLink>
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL={!$CurrentPage.Name}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
                         </div>
-                    </div>
+                    <!-- </div> -->
 
-                    <div class="slds-m-horizontal_xx-large slds-grid slds-m-bottom_medium">
+                    <!-- <div class="slds-m-horizontal_xx-large slds-grid slds-m-bottom_medium"> -->
 
-                        <div class="slds-grid pagination-section">
+                        <div class="slds-grid pagination-section slds-float_left">
 
-                            <button ng-model="button" ng-click="prevPageAction()" ng-disabled="prevButonEnabled" class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Previous">
+                            <button ng-model="button" ng-click="prevPageAction()" ng-disabled="prevButtonEnabled" class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Previous">
                                 <p class="slds-text-heading_medium slds-align_absolute-center">&lt;</p>
                             </button>
 

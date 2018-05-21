@@ -1921,6 +1921,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Batch Template Name is a required field.</value>
     </labels>
     <labels>
+        <fullName>bgeHandsOnGridCommitBatch</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeHandsOnGridCommitBatch</shortDescription>
+        <value>Commit Batch</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>

@@ -17,7 +17,8 @@
             $scope.offset = 0;
             $scope.totalPages = Math.ceil(result.rowsCount / 50);
             $scope.columnsData = result.columns;
-            $scope.prevButonEnabled = false;
+            $scope.rowsData = result.data;
+            $scope.prevButtonEnabled = false;
             $scope.rowErrors = {};
 
             console.debug(result);
@@ -26,8 +27,8 @@
             $scope.isTableLoaded = false; // Needed for afterCreateRow:as it fires before afterInit: & confuses all
             $scope.isIndexLoading = false;
 
-            $scope.tableWidth = window.innerWidth * 91 / 100;
-            $scope.tableHeight = window.innerHeight * 70 /100;
+            $scope.tableWidth = window.innerWidth * .985;
+            $scope.tableHeight = window.innerHeight * .80;
 
             $scope.nextPageAction = nextPageAction;
             $scope.prevPageAction = prevPageAction;
@@ -55,7 +56,7 @@
 
             hot = new Handsontable(table, {
 
-                data: result.data,
+                data: $scope.rowsData,
 
                 outsideClickDeselects: false, //you must add this, otherwise getSelected() will return 'undefined'
                 columnSorting: true,
@@ -119,9 +120,9 @@
 
             function changePageGridHandler(result, event) {
 
-                $scope.prevButonEnabled = true;
+                $scope.prevButtonEnabled = true;
                 if ($scope.offset > 0) {
-                    $scope.prevButonEnabled = false;
+                    $scope.prevButtonEnabled = false;
                 }
 
                 hot.loadData(result.data);
@@ -217,21 +218,26 @@
         function afterRenderHandler(isForced) {
 
             console.warn('HOT - afterRenderHandler');
-
+            updateSummaryData();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
             console.warn('HOT - beforeRemoveRowHandler');
+            deleteRow(index, amount, visualRows);
+        }
+
+        function deleteRow(index, amount, visualRows, callback) {
+
             console.log(index, amount);
             console.log(visualRows);
 
             var rowRecordIds = [];
-            var columnIndex = this.propToCol('Id');
+            var columnIndex = hot.propToCol('Id');
 
             visualRows.forEach(function(element) {
 
-                var rowRecordId = hot.getDataAtCell(element,columnIndex);
+                var rowRecordId = hot.getDataAtCell(element, columnIndex);
                 rowRecordIds.push(rowRecordId);
 
                 var requestData = {
@@ -241,7 +247,12 @@
 
                 BGE_HandsOnGridController.deleteRowsGrid(requestData, deleteRowsGridHandler);
 
-                function deleteRowsGridHandler(result, event) {};
+                function deleteRowsGridHandler(result, event) {
+
+                    if (callback) {
+                        callback();
+                    }
+                };
             });
         }
 
@@ -521,7 +532,7 @@
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
-            actionCol.colWidths = 65;
+            actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle";
             // actionCol.renderer = actionCellsRenderer;
             frozenColumns.push(actionCol);
@@ -673,9 +684,9 @@
 
         function updateHotTable() {
 
-            var newWidth = window.innerWidth * .91;
-            var newHeight = window.innerHeight * .70;
-    
+            var newWidth = window.innerWidth * .985;
+            var newHeight = window.innerHeight * .80;
+
             if (hot) {
     
             }
@@ -697,8 +708,48 @@
 
         }
 
-        //To display action column icons
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
+
+            var divElement = document.createElement('div');
+            var selectElement = document.createElement('select');
+            selectElement.style.width = "90%";
+            selectElement.style.marginLeft = "5px";
+            selectElement.style.marginRight = "5px";
+            var optionElement = document.createElement('option');
+            optionElement.setAttribute('label', '');
+            optionElement.setAttribute('value', 'None');
+            optionElement.setAttribute('selected', 'true');
+            selectElement.appendChild(optionElement);
+            optionElement = document.createElement('option');
+            optionElement.setAttribute('label', 'Remove');
+            optionElement.setAttribute('value', 'Remove');
+            selectElement.appendChild(optionElement);
+            divElement.appendChild(selectElement);
+
+            Handsontable.dom.addEvent(selectElement, 'change', function (e) {
+                e.preventDefault(); // prevent selection quirk
+                console.log('on change');
+
+                var value = $(selectElement).val();
+
+                if (value === 'Remove') {
+                    hot.alter('remove_row', row);
+                }
+            });
+
+            Handsontable.dom.addEvent(selectElement, 'click', function (e) {
+                e.preventDefault(); // prevent selection quirk
+                console.log('on click');
+            });
+
+            Handsontable.dom.empty(td);
+            td.appendChild(divElement);
+
+            return td;
+        }
+
+        //To display action column icons
+        function actionCellsRendererOld(instance, td, row, col, prop, value, cellProperties) {
 
             Handsontable.renderers.TextRenderer.apply(this, arguments);
 
