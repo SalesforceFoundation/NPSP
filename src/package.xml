@@ -354,6 +354,9 @@
         <members>UTIL_UnitTestData_TEST</members>
         <members>UTIL_Version_API</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>BGE_DataImportBatchTriggerHandler</members>
+        <members>BGE_SettingsUITemplateController</members>
+        <members>BGE_BatchTemplateOverrideController</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -448,6 +451,7 @@
     </types>
     <types>
         <members>BGE_TemplateTrigger</members>
+        <members>BGE_DataImportBatchTrigger</members>
         <members>TDTM_Account</members>
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
