@@ -115,19 +115,19 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
-        <members>CRLP_AccountSkew_BATCH</members>
-        <members>CRLP_AccountSkew_SoftCredit_BATCH</members>
-        <members>CRLP_Account_BATCH</members>
-        <members>CRLP_Account_SoftCredit_BATCH</members>
+        <members>CRLP_AccountContactSoftCreditSkew_BATCH</members>
+        <members>CRLP_AccountContactSoftCredit_BATCH</members>
+        <members>CRLP_AccountHardCreditSkew_BATCH</members>
+        <members>CRLP_AccountHardCredit_BATCH</members>
         <members>CRLP_Batch_Base</members>
         <members>CRLP_Batch_Base_NonSkew</members>
         <members>CRLP_Batch_Base_Skew</members>
         <members>CRLP_ConfigBuilder_SVC</members>
         <members>CRLP_ConfigBuilder_TEST</members>
-        <members>CRLP_ContactSkew_BATCH</members>
-        <members>CRLP_ContactSkew_SoftCredit_BATCH</members>
-        <members>CRLP_Contact_BATCH</members>
-        <members>CRLP_Contact_SoftCredit_BATCH</members>
+        <members>CRLP_ContactHardCreditSkew_BATCH</members>
+        <members>CRLP_ContactHardCredit_BATCH</members>
+        <members>CRLP_ContactSoftCreditSkew_BATCH</members>
+        <members>CRLP_ContactSoftCredit_BATCH</members>
         <members>CRLP_Debug_UTIL</members>
         <members>CRLP_DefaultConfigBuilder</members>
         <members>CRLP_DefaultConfigBuilder_SVC</members>
@@ -695,8 +695,8 @@
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
+        <members>Customizable_Rollup_Settings__c.Rollups_Account_Lvl_Con_SC_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
-        <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Contact_Soft_Credit_Batch_Size__c</members>
@@ -1130,8 +1130,8 @@
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
-        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>

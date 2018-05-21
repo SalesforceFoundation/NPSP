@@ -83,14 +83,22 @@ public without sharing class UTIL_MasterSchedulableHelper {
                 if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
                     // When the Customizable Rollups Engine is enabled, the actual rollup job target classes change, but
                     // keep the naming similar and stagger the job start times slightly.
-                    defaultScheduledJobs.put('NPSP 01A - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_Account_BATCH'});
-                    defaultScheduledJobs.put('NPSP 02A - Customizable Rollups - Contact Hard Credit', new List<String>{'0 05 23 ? * *', 'CRLP_Contact_BATCH'});
-                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_SoftCredit_BATCH'});
-                    defaultScheduledJobs.put('NPSP 04A - Customizable Rollups - Contact Soft Credit', new List<String>{'0 15 23 ? * *', 'CRLP_Contact_SoftCredit_BATCH'});
-                    defaultScheduledJobs.put('NPSP 01B - Customizable Rollups - Account Hard Credit Skew', new List<String>{'0 0 23 ? * *', 'CRLP_AccountSkew_BATCH'});
-                    defaultScheduledJobs.put('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew', new List<String>{'0 05 23 ? * *', 'CRLP_ContactSkew_BATCH'});
-                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_SoftCredit_BATCH'});
-                    defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSkew_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 01A - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_AccountHardCredit_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 02A - Customizable Rollups - Contact Hard Credit', new List<String>{'0 05 23 ? * *', 'CRLP_ContactHardCredit_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_AccountContactSoftCredit_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 04A - Customizable Rollups - Contact Soft Credit', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSoftCredit_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 01B - Customizable Rollups - Account Hard Credit Skew', new List<String>{'0 0 23 ? * *', 'CRLP_AccountHardCreditSkew_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew', new List<String>{'0 05 23 ? * *', 'CRLP_ContactHardCreditSkew_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountContactSoftCreditSkew_BATCH'
+                    });
+                    defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSoftCreditSkew_BATCH'
+                    });
                     defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<String>{'0 20 23 ? * *', 'CRLP_GAU_BATCH'});
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled

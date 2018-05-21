@@ -34,17 +34,17 @@
 * @group-content ../../ApexDocContent/Rollups2.htm
 * @description Contact Hard Credit Rollup Batch Job
 */
-public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+public class CRLP_ContactSoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
 
-    public CRLP_Contact_BATCH() { }
+    public CRLP_ContactSoftCredit_BATCH() {}
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_Contact_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, jobFilter);
+    public CRLP_ContactSoftCredit_BATCH(CRLP_RollupProcessingOptions.RollupTypeFilter jobFilter) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, jobFilter);
     }
 
     /*******************************************************************************************************
@@ -52,15 +52,15 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
      */
-    public CRLP_Contact_BATCH(List<Id> recordIds) {
-        super(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit, recordIds);
+    public CRLP_ContactSoftCredit_BATCH(List<Id> recordIds) {
+        super(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, recordIds);
     }
 
     /**
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 }

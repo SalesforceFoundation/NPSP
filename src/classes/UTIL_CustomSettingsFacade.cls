@@ -866,7 +866,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Rollups_Contact_Batch_Size__c = 200;
         crs.Rollups_Account_SkewMode_Batch_Size__c = 1000;
         crs.Rollups_Contact_SkewMode_Batch_Size__c = 1000;
-        crs.Rollups_Account_Soft_Credit_Batch_Size__c = 200;
+        crs.Rollups_Account_Lvl_Con_SC_Batch_Size__c = 200;
         crs.Rollups_Contact_Soft_Credit_Batch_Size__c = 200;
         crs.Rollups_GAU_Batch_Size__c = 1000;
         crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
@@ -889,7 +889,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Customizable_Rollups_Enabled__c = mySettings.Customizable_Rollups_Enabled__c;
         customizableRollupSettings.Rollups_Account_Batch_Size__c = mySettings.Rollups_Account_Batch_Size__c;
         customizableRollupSettings.Rollups_Contact_Batch_Size__c = mySettings.Rollups_Contact_Batch_Size__c;
-        customizableRollupSettings.Rollups_Account_Soft_Credit_Batch_Size__c = mySettings.Rollups_Account_Soft_Credit_Batch_Size__c;
+        customizableRollupSettings.Rollups_Account_Lvl_Con_SC_Batch_Size__c = mySettings.Rollups_Account_Lvl_Con_SC_Batch_Size__c;
         customizableRollupSettings.Rollups_Contact_Soft_Credit_Batch_Size__c = mySettings.Rollups_Contact_Soft_Credit_Batch_Size__c;
         customizableRollupSettings.Rollups_Account_SkewMode_Batch_Size__c  = mySettings.Rollups_Account_SkewMode_Batch_Size__c;
         customizableRollupSettings.Rollups_Contact_SkewMode_Batch_Size__c  = mySettings.Rollups_Contact_SkewMode_Batch_Size__c;
