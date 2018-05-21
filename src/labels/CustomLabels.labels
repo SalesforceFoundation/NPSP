@@ -6611,4 +6611,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
     </labels>
+    <labels>
+        <fullName>bgeErrorBatchTemplateNameRequired</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when a batch template is missing a name</shortDescription>
+        <value>Batch Template Name is a required field.</value>
+    </labels>
 </CustomLabels>
