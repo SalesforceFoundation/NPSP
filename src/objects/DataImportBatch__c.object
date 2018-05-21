@@ -89,7 +89,7 @@
         <inlineHelpText>The number of NPSP Data Import records to process at a time in each batch.</inlineHelpText>
         <label>Batch Process Size</label>
         <precision>3</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -98,7 +98,7 @@
     </fields>
     <fields>
         <fullName>Batch_Template__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
         <label>Batch Template</label>
         <referenceTo>Batch_Template__c</referenceTo>
@@ -130,7 +130,7 @@
         <inlineHelpText>Specifies which rule to follow when trying to match Contacts in Data Import records against existing Contacts.</inlineHelpText>
         <label>Contact Matching Rule</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -144,7 +144,7 @@
         <inlineHelpText>Enter the number of days from the Donation Date to consider when looking for a matching Opportunity or Payment. The Data Importer will choose the matching Opp or Payment whose date falls within the number of days AND is closest to the Donation Date.</inlineHelpText>
         <label>Number of Days from Donation Date</label>
         <precision>2</precision>
-        <required>true</required>
+        <required>false</required>
         <scale>0</scale>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -186,7 +186,7 @@
             <restrictedPicklist>true</restrictedPicklist>
             <sorted>false</sorted>
         </picklist>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
@@ -212,7 +212,7 @@
         <inlineHelpText>Specifies which fields to match by when trying to match Donations in Data Import records against existing Opportunities and Payments. Control or Command click to select more than one field.</inlineHelpText>
         <label>Donation Matching Rule</label>
         <length>255</length>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Text</type>
@@ -309,11 +309,11 @@
         <fullName>All</fullName>
         <columns>OBJECT_ID</columns>
         <columns>NAME</columns>
+        <columns>Status__c</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Batch_Description__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
-        <language>en_US</language>
     </listViews>
     <nameField>
         <label>Batch Name</label>
@@ -328,6 +328,13 @@
         <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>No_Batch_Template_associated</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISBLANK( Batch_Template__c )</errorConditionFormula>
+        <errorDisplayField>Batch_Template__c</errorDisplayField>
+        <errorMessage>There is no Batch Template associated with this Batch. Please associate this Batch with a Batch Template.</errorMessage>
+    </validationRules>
     <webLinks>
         <fullName>Batch_Gift_Entry</fullName>
         <availability>online</availability>

@@ -85,7 +85,7 @@ public with sharing class BGE_BatchTemplateOverrideController {
         // make sure name set
         if (String.isBlank(template.Name)) {
 
-            throw(new BDIException(Label.bgeErrorBatchTemplateNameRequired));
+            throw(new BDIException('Batch Template Name is Required'));
         }
 
         String strBatchTemplateObj = UTIL_Namespace.StrTokenNSPrefix('Batch_Template__c');
