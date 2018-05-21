@@ -17,6 +17,7 @@
             $scope.offset = 0;
             $scope.totalPages = Math.ceil(result.rowsCount / 50);
             $scope.columnsData = result.columns;
+            $scope.rowsData = result.data;
             $scope.prevButonEnabled = false;
             $scope.rowErrors = {};
 
@@ -55,7 +56,7 @@
 
             hot = new Handsontable(table, {
 
-                data: result.data,
+                data: $scope.rowsData,
 
                 outsideClickDeselects: false, //you must add this, otherwise getSelected() will return 'undefined'
                 columnSorting: true,
@@ -217,21 +218,26 @@
         function afterRenderHandler(isForced) {
 
             console.warn('HOT - afterRenderHandler');
-
+            updateSummaryData();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
             console.warn('HOT - beforeRemoveRowHandler');
+            deleteRow(index, amount, visualRows);
+        }
+
+        function deleteRow(index, amount, visualRows, callback) {
+
             console.log(index, amount);
             console.log(visualRows);
 
             var rowRecordIds = [];
-            var columnIndex = this.propToCol('Id');
+            var columnIndex = hot.propToCol('Id');
 
             visualRows.forEach(function(element) {
 
-                var rowRecordId = hot.getDataAtCell(element,columnIndex);
+                var rowRecordId = hot.getDataAtCell(element, columnIndex);
                 rowRecordIds.push(rowRecordId);
 
                 var requestData = {
@@ -241,7 +247,12 @@
 
                 BGE_HandsOnGridController.deleteRowsGrid(requestData, deleteRowsGridHandler);
 
-                function deleteRowsGridHandler(result, event) {};
+                function deleteRowsGridHandler(result, event) {
+
+                    if (callback) {
+                        callback();
+                    }
+                };
             });
         }
 
@@ -675,7 +686,7 @@
 
             var newWidth = window.innerWidth * .91;
             var newHeight = window.innerHeight * .70;
-    
+
             if (hot) {
     
             }
@@ -702,6 +713,8 @@
             var divElement = document.createElement('div');
             var selectElement = document.createElement('select');
             selectElement.style.width = "90%";
+            selectElement.style.marginLeft = "5px";
+            selectElement.style.marginRight = "5px";
             var optionElement = document.createElement('option');
             optionElement.setAttribute('label', '');
             optionElement.setAttribute('value', 'None');
@@ -713,12 +726,18 @@
             selectElement.appendChild(optionElement);
             divElement.appendChild(selectElement);
 
-            Handsontable.dom.addEvent(selectElement, 'change', function (e){
+            Handsontable.dom.addEvent(selectElement, 'change', function (e) {
                 e.preventDefault(); // prevent selection quirk
                 console.log('on change');
+
+                var value = $(selectElement).val();
+
+                if (value === 'Remove') {
+                    hot.alter('remove_row', row);
+                }
             });
 
-            Handsontable.dom.addEvent(selectElement, 'click', function (e){
+            Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
                 console.log('on click');
             });
