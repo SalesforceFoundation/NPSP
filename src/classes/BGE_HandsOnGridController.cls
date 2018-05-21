@@ -168,15 +168,45 @@ global class BGE_HandsOnGridController {
     @RemoteAction
     global static Map<String, Object> dryRunRowGrid(Map<String, Object> parameters) {
 
-        // upsert newDataImport;
+        Map<String, Object> result = new Map<String, Object>();
 
-        // response.addDataImportId(newDataImport.Id);
+        result = parameters;
 
-        // dryRunProcessByRow(newDataImport, pBatchId);
+        BGE_HandsOnGridSelector selector = new BGE_HandsOnGridSelector();
 
-        // update newDataImport;
+        Id batchId = Id.valueOf((String) parameters.get('batchId'));
 
-        return null;
+        String recordId = (String) parameters.get('recordId');
+
+        DataImportBatch__c batch = selector.getBatchById(batchId);
+
+        if (batch != null) {
+
+            try {
+
+                Data_Import_Settings__c diSetting = BDI_DataImportService.diSettingsFromDiBatch(batch);
+
+                result.put('status', 'NONE');
+
+                if (recordId InstanceOf Id) {
+
+                    DataImport__c dataImport = selector.getDataImportForDryRunByBatchId(recordId);
+
+                    if (diSetting != null && dataImport != null) {
+
+                        BDI_DataImport_API.processDataImportRecords(diSetting, new DataImport__c[] {dataImport}, true);
+                        result.put('status', 'OK');
+                        result.put('data', JSON.serialize(dataImport));
+                    }
+                }
+            }
+            catch (Exception ex) {
+                result.put('status', 'ERROR');
+                result.put('message', ex.getMessage());
+            }
+        }
+
+        return result;
     }
 
     @RemoteAction

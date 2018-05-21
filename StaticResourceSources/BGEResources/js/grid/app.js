@@ -147,17 +147,6 @@
         }
 
         /**
-         * When HOT starts - it sets the initial row on the last selected ROW.
-         * @param {*} row
-         */
-        function afterSelectionHandler(row) {
-
-            if ($scope.lastSelectedRow === null) {
-                $scope.lastSelectedRow = row;
-            }
-        }
-
-        /**
          * We want to prevent header row being selected
          * TODO: we need to the same with first columns too
          * 'coords.row < 0' because we only want to handle clicks on the header row
@@ -372,108 +361,33 @@
             }
         }
 
+        /**
+         * When HOT starts - it sets the initial row on the last selected ROW.
+         * @param {*} row
+         */
+        function afterSelectionHandler(row) {
+
+            if ($scope.lastSelectedRow === null) {
+                $scope.lastSelectedRow = row;
+            }
+        }
+
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
 
-            var timeout = 0;
-            var self = this;
+            if ((row != $scope.lastSelectedRow) && ($scope.hasRowChanged)) {
 
-            if (wait) {
+                var recordId = self.getDataAtRowProp($scope.lastSelectedRow, 'Id');
 
-                timeout = 450;
-            }
+                BGE_HandsOnGridController.dryRunRowGrid({batchId: batchId, recordId: recordId}, dryRunRowGridHandler);
 
-            setTimeout(function () {
+                function dryRunRowGridHandler(result, event) {
 
-                wait = false;
+                    console.log(result);
 
-                var dataRowId = self.getDataAtRowProp($scope.lastSelectedRow, 'Id');
-
-                var dataAtRow = self.getDataAtRow($scope.lastSelectedRow);
-
-
-                if ($scope.lastSelectedRow !== null && $scope.lastSelectedRow !== row) {
-
-                    if (changesToSave[dataRowId]) {
-
-                        if (wasUpArrowPressed) {
-
-                            row = row + 2;
-                            wasUpArrowPressed = false;
-                        }
-
-                        console.log(row);
-                        console.log($scope.lastSelectedRow);
-
-                        triggerSave(dataRowId, row, $scope.lastSelectedRow, self, function (result, indexId) {
-
-                            if (!dataRowId) {
-
-                                self.setDataAtCell(row - 1, getColumnFromName('Id'), result.dataImportIds[0]);
-
-                                dataRowId = result.dataImportIds[0];
-                            }
-
-                            var messages = validateRequiredFields(row, result.messages, false);
-
-                            if (messages && messages.length > 0) {
-
-                                // Add tooltip message
-                                var escaped = addTooltip(dataRowId, row, result, messages);
-                                console.log('es aca');
-                                data[$scope.lastSelectedRow]['Errors'] = escaped;
-
-                                console.warn('processing errors on "afterselection" ends');
-                                if (!rowErrors[indexId]) {
-                                    rowErrors[indexId] = [];
-                                }
-
-                                rowErrors[indexId] = rowErrors[indexId].concat(messages);
-                                $('#' + indexId).find('div').show();
-                            } else {
-
-                                data[$scope.lastSelectedRow]['Errors'] = '';
-                            }
-
-                            var cellsToUpdate = [];
-
-                            cellsToUpdate = [
-                                [row - 1, getColumnFromName('Name'), result.name],
-                                [row - 1, getColumnFromName('FailureInformation__c'), result.failureInformation],
-                                [row - 1, getColumnFromName('Account1ImportStatus__c'), result.account1ImportStatus],
-                                [row - 1, getColumnFromName('Account1Imported__c'), result.account1Imported],
-                                [row - 1, getColumnFromName('Account2ImportStatus__c'), result.account2ImportStatus],
-                                [row - 1, getColumnFromName('Account2Imported__c'), result.account2Imported],
-                                [row - 1, getColumnFromName('Campaign_Member_Status__c'), result.campaignMemberStatus],
-                                [row - 1, getColumnFromName('Contact1Imported__c'), result.contact1Imported],
-                                [row - 1, getColumnFromName('Contact1ImportStatus__c'), result.contact1ImportStatus],
-                                [row - 1, getColumnFromName('Contact2ImportStatus__c'), result.contact2ImportStatus],
-                                [row - 1, getColumnFromName('Contact2Imported__c'), result.contact2Imported],
-                                [row - 1, getColumnFromName('HomeAddressImportStatus__c'), result.homeAddressImportStatus],
-                                [row - 1, getColumnFromName('HomeAddressImported__c'), result.homeAddressImported],
-                                [row - 1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported],
-                                [row - 1, getColumnFromName('HouseholdAccountImported__c'), result.householdAccountImported],
-                                [row - 1, getColumnFromName('ImportedDate__c'), result.importedDate],
-                                [row - 1, getColumnFromName('DonationImportStatus__c'), result.donationImportStatus],
-                                [row - 1, getColumnFromName('DonationImported__c'), result.donationImported],
-                                [row - 1, getColumnFromName('PaymentImportStatus__c'), result.paymentImportStatus],
-                                [row - 1, getColumnFromName('PaymentImported__c'), result.paymentImported],
-                                [row - 1, getColumnFromName('Status__c'), result.status]
-                            ];
-
-                            self.setDataAtCell(cellsToUpdate);
-
-                            changesToSave = {};
-
-                            // Inside a callback
-                            $scope.lastSelectedRow = row;
-                        });
-
-                        changesToSave = {};
-                    }
+                    $scope.lastSelectedRow = row;
+                    $scope.$apply();
                 }
-
-            }, timeout);
-
+            }
         }
 
         function afterCreateRowHandler(index, amount) {
@@ -637,7 +551,7 @@
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = templateField.label.toUpperCase();
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
