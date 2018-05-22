@@ -2,7 +2,11 @@
 
     var myApp = angular.module('myApp', ['ngHandsontable', 'ngSanitize']);
 
-    myApp.controller('MainCtrl', function ($scope, $compile, $timeout) {
+    myApp.controller('MainCtrl', function ($scope, $compile, $timeout, $window) {
+
+        $scope.nextPageAction = nextPageAction;
+        $scope.prevPageAction = prevPageAction;
+        $scope.backAction = backAction;
 
         var changesToSave = [];
 
@@ -42,9 +46,6 @@
 
             $scope.tableWidth = window.innerWidth * 91 / 100;
             $scope.tableHeight = window.innerHeight * 70 /100;
-
-            $scope.nextPageAction = nextPageAction;
-            $scope.prevPageAction = prevPageAction;
 
             var table = document.getElementById('my-hot-table');
 
@@ -307,8 +308,6 @@
                             recordId: this.getDataAtRowProp(changes[i][0], 'Id')
                         };
 
-
-
                         if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue)) {
                             cellRecords.push(cellRecord);
                         }
@@ -368,16 +367,13 @@
 
                             console.log(cellResponse);
 
-                            if (cellResponse.sfdcid) {
-                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
-                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
-                            }
-
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
                             // $scope.rowErrors[cellResponse.recordId] = [];
 
                             if (cellResponse.errors) {
+
+                                console.log(cellResponse.errors);
 
                                 errCell.valid = false;
                                 errCell.hasError = true;
@@ -388,12 +384,18 @@
                                 }
                                 else {
 
+                                    var isFieldIn = false;
                                     $scope.rowErrors[cellResponse.recordId].forEach(function(element){
 
                                         if (element.field === cellResponse.field) {
                                             element.messages = cellResponse.messages
+                                            isFieldIn = true;
                                         }
                                     });
+
+                                    if (!isFieldIn) {
+                                        $scope.rowErrors[cellResponse.recordId] = $scope.rowErrors[cellResponse.recordId].concat(cellResponse.errors);
+                                    }
                                 }
 
                                 debugRowErrors = $scope.rowErrors;
@@ -413,11 +415,24 @@
                                 }
                             }
 
+
+                            if (cellResponse.sfdcid) {
+                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
+                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
+
+                                if (cellResponse.sfdcid !== cellResponse.recordId) {
+
+                                    if ($scope.rowErrors[cellResponse.recordId] && $scope.rowErrors[cellResponse.recordId].length > 0) {
+                                        $scope.rowErrors[cellResponse.sfdcid] = $scope.rowErrors[cellResponse.recordId];
+                                    }
+                                }
+                            }
+
                             $timeout(function() {
 
                                 hot.render();
                                 updateSummaryData();
-                            }, 500);
+                            }, 200);
                         });
                     }
                 }
@@ -677,6 +692,7 @@
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
+            messageSectionDivList.style.listStyleType = 'disc';
 
             errors.forEach(function(errorElement) {
 
