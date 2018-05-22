@@ -65,7 +65,7 @@
                                 </p>
                             </div>
                             <footer class="slds-modal__footer">
-                                <button class="slds-button slds-button_brand" ng-click="backAction()" ></button>
+                                <button class="slds-button slds-button_brand" ng-click="backAction()">Close</button>
                             </footer>
                         </div>
                     </section>

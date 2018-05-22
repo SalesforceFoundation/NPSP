@@ -1913,6 +1913,21 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeErrorBatchTemplateMissing</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
+        <value>There is no Batch Template associated to this Batch</value>
+    </labels>
+    <labels>
+        <fullName>bgeErrorBatchTemplateNameRequired</fullName>
+        <categories>Data Importer</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>error when a batch template is missing a name</shortDescription>
+        <value>Batch Template Name is a required field.</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -6610,13 +6625,5 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgValidationHHAccountHHRules</shortDescription>
         <value>The Account Model is set to &apos;Household Account&apos;, which requires Household Rules to be set to &apos;No Contacts&apos;.   When using Household Accounts, there is no need to have an additional Household Object.</value>
-    </labels>
-    <labels>
-        <fullName>bgeErrorBatchTemplateNameRequired</fullName>
-        <categories>Data Importer</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>error when a batch template is missing a name</shortDescription>
-        <value>Batch Template Name is a required field.</value>
     </labels>
 </CustomLabels>
