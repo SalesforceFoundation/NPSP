@@ -44,7 +44,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
      * this number of batch iterations. After that number, the record will be committed to the database.
      * Salesforce can easily put data significantly out of sequence -- hundreds or even thousands of batch iterations.
      */
-    private Integer MAX_BATCHES_TO_HOLD_BEFORE_COMMIT = 200;
+    private Integer MAX_BATCHES_TO_HOLD_BEFORE_COMMIT = 1500;
 
     /** @description The last Id of a set of records passed to this method. Passed back to the SkewDispatcher batch job */
     private Id lastIdProcessedForChunking;

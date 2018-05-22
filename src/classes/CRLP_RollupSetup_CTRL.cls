@@ -1,4 +1,4 @@
-<!--
+/*
     Copyright (c) 2018, Salesforce.org
     All rights reserved.
 
@@ -26,36 +26,17 @@
     LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
     ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
     POSSIBILITY OF SUCH DAMAGE.
--->
-<!--
-  @author Salesforce.org
-  @date 2018
-  @group Rollups
-  @group-content ../../ApexDocContent/Rollups2.htm
-  @description Wrapper page for the Rollups UI Lightning Container.
--->
-<apex:page standardStylesheets="false" applyBodyTag="false" id="CRLP_Setup" showHeader="true" sideBar="false"
-           controller="CRLP_RollupSetup_CTRL" docType="html-5.0">
+*/
+/**
+* @author Salesforce.org
+* @date 2018
+* @group Customizable Rollups
+* @description Visualforce page Controller for the Customizable Rollups Setup VF page
+*/public class CRLP_RollupSetup_CTRL {
 
-    <apex:slds />
-    <apex:includeLightning/>
+    /** @description what is the namespace (an empty string if unmanaged, or 'npsp' if managed) */
+    public string getNamespacePrefix() {
+        return UTIL_Namespace.getNamespace();
+    }
 
-    <div class="slds-scope">
-        <div id="gridWrapperCmp">
-        </div>
-    </div>
-
-    <script>
-        var ns = '{!namespacePrefix}';
-        if (!ns || ns === '') {
-            ns = 'c';
-        }
-        $Lightning.use(ns + ":CRLP_RollupApp", function() {
-            $Lightning.createComponent(ns + ":CRLP_RollupsContainer",
-                {},
-                "gridWrapperCmp",
-                function() { }
-            );
-        });
-    </script>
-</apex:page>
+}
