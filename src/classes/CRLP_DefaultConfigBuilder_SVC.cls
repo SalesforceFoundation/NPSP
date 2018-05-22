@@ -696,7 +696,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.detailObject = 'Opportunity';
                 rollup.detailField = udr.npo02__Source_Field__c;
                 rollup.amountObject = 'Opportunity';
-                rollup.amountField = 'Amount';
+                rollup.amountField = udr.npo02__Source_Field__c;
                 rollup.dateObject = 'Opportunity';
                 rollup.dateField = 'CloseDate';
                 rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
