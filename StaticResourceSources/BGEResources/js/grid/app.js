@@ -555,14 +555,14 @@
                 if (templateField.type === "DATE") {
                     // col.dateFormat = "YYYY-MM-DD";
                     col.dateFormat = 'MM/DD/YYYY';
-                    col.className = "htRight htMiddle slds-truncate custom-date";
+                    col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.renderer = dateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = templateField.label.toUpperCase();
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
