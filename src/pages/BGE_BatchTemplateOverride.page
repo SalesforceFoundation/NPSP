@@ -18,7 +18,7 @@
             <c:UTIL_NavigateBack recordId="{!diBatchTemplate.Id}" redirect="{!redirect}"/>
 
             <!-- BODY -->
-            <div class="slds-grid slds-m-around_medium" >
+            <div class="slds-grid slds-m-around_medium" style="margin-bottom: 80px;">
                 <div class="slds-size_3-of-5">
                     <c:BGE_SettingsUITemplate bdiBatchTemplate="{!diBatchTemplate}" editMode="true" showBatchOnlyFields="true" />
                 </div>

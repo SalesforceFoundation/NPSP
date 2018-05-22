@@ -1326,6 +1326,17 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>External_Id__c</fullName>
+        <caseSensitive>false</caseSensitive>
+        <externalId>true</externalId>
+        <label>External Id</label>
+        <length>50</length>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Text</type>
+        <unique>true</unique>
+    </fields>
+    <fields>
         <fullName>FailureInformation__c</fullName>
         <description>Description of what caused the Data Import record to fail to be imported.</description>
         <externalId>false</externalId>

@@ -98,7 +98,7 @@
     </fields>
     <fields>
         <fullName>Batch_Template__c</fullName>
-        <deleteConstraint>SetNull</deleteConstraint>
+        <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
         <label>Batch Template</label>
         <referenceTo>Batch_Template__c</referenceTo>
@@ -309,11 +309,11 @@
         <fullName>All</fullName>
         <columns>OBJECT_ID</columns>
         <columns>NAME</columns>
+        <columns>Status__c</columns>
         <columns>LAST_UPDATE</columns>
         <columns>Batch_Description__c</columns>
         <filterScope>Everything</filterScope>
         <label>All</label>
-        <language>en_US</language>
     </listViews>
     <nameField>
         <label>Batch Name</label>
@@ -328,6 +328,13 @@
         <searchResultsAdditionalFields>UPDATEDBY_USER</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
+    <validationRules>
+        <fullName>No_Batch_Template_associated</fullName>
+        <active>false</active>
+        <errorConditionFormula>ISBLANK( Batch_Template__c )</errorConditionFormula>
+        <errorDisplayField>Batch_Template__c</errorDisplayField>
+        <errorMessage>There is no Batch Template associated with this Batch. Please associate this Batch with a Batch Template.</errorMessage>
+    </validationRules>
     <webLinks>
         <fullName>Batch_Gift_Entry</fullName>
         <availability>online</availability>
