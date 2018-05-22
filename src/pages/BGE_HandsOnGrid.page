@@ -39,7 +39,6 @@
 
         <div class="slds-scope" ng-controller="MainCtrl">
 
-            <div id="notifications"></div>
             <div id="wrapper" class="slds-form">
 
                 <div style="height: 6rem;" ng-hide="isTableLoaded">
@@ -54,36 +53,33 @@
 
                 <!-- ALERT MESSAGE -->
 
-                <apex:outputPanel layout="block" styleClass="demo-only" style="height: 4rem; margin-top: 17%" rendered="{!hasError}">
-                    <div class="demo-only" style="height: 640px;">
-                        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1"
-                            class="slds-modal slds-fade-in-open">
-                            <div class="slds-modal__container">
-                                <header class="slds-modal__header">
-                                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Missing Batch Template</h2>
-                                </header>
-                                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-                                    <p class="slds-align_absolute-center">There is no Batch Template associated with this Batch.
-                                        <br/>Please associate this Batch with a Batch Template.</p>
-                                </div>
-                                <footer class="slds-modal__footer">
-                                    <button class="slds-button slds-button_brand" onClick="window.history.back();">Close</button>
-                                </footer>
+                <div style="height: 640px;" ng-hide="templateId">
+                    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+                        <div class="slds-modal__container">
+                            <header class="slds-modal__header">
+                                <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Missing Batch Template</h2>
+                            </header>
+                            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                                <p class="slds-align_absolute-center">
+                                    {!$Label.bgeErrorBatchTemplateMissing}
+                                </p>
                             </div>
-                        </section>
-                        <div class="slds-backdrop slds-backdrop_open"></div>
-                    </div>
-
-                </apex:outputPanel>
+                            <footer class="slds-modal__footer">
+                                <button class="slds-button slds-button_brand" ng-click="backAction()">Close</button>
+                            </footer>
+                        </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+                </div>
 
                 <!-- ALERT MESSAGE -->
 
                 <!-- TABLE -->
-                <apex:outputPanel layout="block" styleClass="slds-m-horizontal_xx-large" rendered="{!NOT(hasError)}">
+                <div class="slds-m-horizontal_xx-large" ng-show="templateId">
 
                     <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL={!$CurrentPage.Name}">Commit</apex:outputLink>
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL=/{!$CurrentPage.Name}">Commit Batch</apex:outputLink>
                         </div>
                     </div>
 
@@ -106,15 +102,14 @@
                             </button>
                         </div>
                     </div>
-
-                </apex:outputPanel>
-                <!-- / TABLE -->
+                </div>
+                <!-- /TABLE -->
 
                 <div id="my-hot-table" class="handsontable" style=""/>
 
                 <!-- FOOTER -->
 
-                <apex:outputPanel layout="block" styleClass="slds-m-around_small" style="text-align: center;" rendered="{!NOT(hasError)}">
+                <div class="slds-m-around_small" style="text-align: center;" ng-show="templateId">
 
                     <div>
                         <b>TOTAL OF RECORDS: </b>&nbsp;
@@ -125,9 +120,9 @@
                         <output id="totalAmount" ng-bind-html="rowsAmount | currency" style="width: 150px;" />
                     </div>
 
-                </apex:outputPanel>
+                </div>
 
-                <!-- / FOOTER -->
+                <!-- /FOOTER -->
             </div>
         </div>
 

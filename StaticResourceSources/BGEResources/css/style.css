@@ -80,9 +80,9 @@
 }
 
 .tooltip-error {
-    left: 6% !important;
-    /* margin-left: 25px;
-    margin-top: -60px; */
+    margin-left: 1% !important;
+    margin-top: -6% !important;
+    background-color: rgba(194,57,52,0.85) !important;
 }
 
 .action-global {
@@ -119,10 +119,6 @@
     line-height: 40px !important;
 }
 
-.htDatepickerHolder {
-    width: 470px;
-}
-
 .htAutocompleteArrow {
     float: right;
     font-size: 10px;
@@ -132,24 +128,9 @@
     text-align: center;
 }
 
-.htDatepickerHolder {
-    width: 470px;
+.pika-prev, .pika-next {
+    overflow: hidden !important;
 }
-
-/* .pika-lendar {
-    float: left;
-    width: 400px;
-    margin: 32px;
-}
-
-.pika-button {
-    text-align: left;
-}
-
-.pika-prev,
-.pika-next {
-    margin-right: 85px !important;
-} */
 
 
 td.tooltip-cell {
