@@ -79,6 +79,10 @@ tasks:
             env:
                 SELENIUM_BROWSER: chrome
 
+    pmd:
+        description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
+        class_path: tasks.pmd.pmd
+
     test_data_dev_org:
         description: 'Loads a test data set for most NPSP objects based on 100 Contacts that should fit into a scratch org or DE org'
         class_path: cumulusci.tasks.bulkdata.LoadData
