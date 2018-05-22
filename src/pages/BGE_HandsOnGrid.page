@@ -75,16 +75,13 @@
                 <!-- ALERT MESSAGE -->
 
                 <!-- TABLE -->
-                <div class="slds-m-horizontal_xx-large" class="slds-m-horizontal_medium" ng-show="templateId">
+                <div class="slds-m-horizontal_medium" ng-show="templateId">
 
                     <!-- <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix"> -->
                     <div class="slds-m-horizontal_large slds-m-vertical_medium slds-clearfix">
                         <div class="slds-float_right">
-                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?id={!$CurrentPage.parameters.batchId}?retURL=/{!$CurrentPage.Name}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?batchId={!$CurrentPage.parameters.batchId}&retURL=/apex/{!$CurrentPage.Name}?batchId={!$CurrentPage.parameters.batchId}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
                         </div>
-                    <!-- </div> -->
-
-                    <!-- <div class="slds-m-horizontal_xx-large slds-grid slds-m-bottom_medium"> -->
 
                         <div class="slds-grid pagination-section slds-float_left">
 
