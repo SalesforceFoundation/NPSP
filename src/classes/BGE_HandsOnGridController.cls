@@ -38,6 +38,7 @@ global class BGE_HandsOnGridController {
             System.debug(JSON.serializePretty(records));
 
             result.put('data', records);
+            result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
             result.put('rowsCount', selector.getDataImportBatchCountByBatchId(batchId));
             result.put('rowsAmount', selector.getDataImportDonationAmountByBatchId(batchId));
@@ -90,9 +91,9 @@ global class BGE_HandsOnGridController {
             }
             catch (SObjectException ex) {
 
-                Map<String, String[]> exceptionError = new Map<String, String[]>();
-                exceptionError.put('fields', new String[] {(String) cellData.get('field')});
-                exceptionError.put('messages', new String[] {ex.getMessage()});
+                Map<String, String> exceptionError = new Map<String, String>();
+                exceptionError.put('field', (String) cellData.get('field'));
+                exceptionError.put('messages', (String) ex.getMessage());
 
                 Object[] exceptionErrors = new Object[] {};
                 exceptionErrors.add((Object) exceptionError);
@@ -121,9 +122,9 @@ global class BGE_HandsOnGridController {
 
                 Map<String, Object> cellData = (Map<String, Object>) cell;
 
-                Map<String, String[]> exceptionError = new Map<String, String[]>();
-                exceptionError.put('fields', new String[] {(String) cellData.get('field')});
-                exceptionError.put('messages', new String[] {ex.getMessage()});
+                Map<String, String> exceptionError = new Map<String, String>();
+                exceptionError.put('field', (String) cellData.get('field'));
+                exceptionError.put('messages', (String) ex.getMessage());
 
                 Object[] exceptionErrors = new Object[] {};
                 exceptionErrors.add((Object) exceptionError);
@@ -139,15 +140,16 @@ global class BGE_HandsOnGridController {
 
                 if (!upsertResult.isSuccess()) {
 
-                    Map<Integer, Map<String, String[]>> upsertErrors = new Map<Integer, Map<String, String[]>>();
+                    Map<Integer, Map<String, String>> upsertErrors = new Map<Integer, Map<String, String>>();
                     Database.Error[] upsertResultErrors = upsertResult.getErrors();
 
                     for (Integer j = 0; j < upsertResultErrors.size(); j ++) {
 
                         Database.Error upsertResultError = upsertResultErrors[j];
-                        Map<String, String[]> upsertErrorDetail = new Map<String, String[]>();
-                        upsertErrorDetail.put('fields', upsertResultError.getFields());
-                        upsertErrorDetail.put('messages', new String[] {upsertResultError.getMessage()});
+                        Map<String, String> upsertErrorDetail = new Map<String, String>();
+
+                        upsertErrorDetail.put('field', (String) upsertResultError.getFields()[0]);
+                        upsertErrorDetail.put('messages', (String) upsertResultError.getMessage());
                         upsertErrors.put(j, upsertErrorDetail);
                     }
 
