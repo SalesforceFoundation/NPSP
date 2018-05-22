@@ -89,8 +89,12 @@
     float: right;
 }
 
-.slds-scope .slds-spinner_container {
+.slds-scope .slds-spinner_container.main-loader{
     background-color: rgba(255,255,255,1) !important;
+}
+
+.slds-scope .slds-spinner_container.table-loader{
+    background-color: rgba(255,255,255,.6) !important;
 }
 
 .handsontable th:first-child {
