@@ -20,6 +20,7 @@
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
             $scope.isTableLoaded = false; // Needed for afterCreateRow:as it fires before afterInit: & confuses all
+            $scope.pageChangeLoader = false;
 
             if (!$scope.templateId || $scope.templateId == null) {
                 $scope.templateId = false;
@@ -34,10 +35,11 @@
             $scope.rowsAmount = result.rowsAmount;
 
             $scope.offset = 0;
-            $scope.totalPages = Math.ceil(result.rowsCount / 50);
             $scope.columnsData = result.columns;
             $scope.rowsData = result.data;
-            $scope.prevButonEnabled = false;
+            $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
+            $scope.prevButonDisabled = true;
+            $scope.nextButonDisabled = false;
             $scope.rowErrors = {};
 
             console.debug(result);
@@ -120,6 +122,7 @@
 
             if ($scope.offset > 0) {
                 $scope.offset --;
+                $scope.nextButonDisabled = false;
                 changePageHandler();
             }
         }
@@ -127,21 +130,29 @@
         function nextPageAction() {
 
             $scope.offset ++;
+
+            if ($scope.offset >= $scope.totalPages - 1) {
+                $scope.offset = $scope.totalPages - 1;
+                $scope.nextButonDisabled = true;
+            }
+
             changePageHandler();
         }
 
         function changePageHandler() {
 
+            $scope.pageChangeLoader = true;
             BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
 
             function changePageGridHandler(result, event) {
 
-                $scope.prevButonEnabled = true;
+                $scope.prevButonDisabled = true;
                 if ($scope.offset > 0) {
-                    $scope.prevButonEnabled = false;
+                    $scope.prevButonDisabled = false;
                 }
 
                 hot.loadData(result.data);
+                $scope.pageChangeLoader = false;
                 $scope.$apply();
             }
         }
@@ -227,9 +238,50 @@
             renderBindings();
         }
 
-        function afterRenderHandler(isForced) {
+        function afterRenderHandler(isForced) {}
 
-            console.warn('HOT - afterRenderHandler');
+        function afterRenderHandler2(isForced) {
+
+            console.warn('HOT - afterRenderHandler', isForced);
+
+            var totalColumns = this.countCols();
+            var totalRows = this.countRows();
+
+            for (var indexRow = 0; indexRow < totalRows; indexRow++) {
+
+                var cellValue = this.getDataAtCell(indexRow, this.propToCol('Id'));
+
+                for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
+
+                    var cellType = this.getDataType(indexRow, indexCol);
+
+                    if (cellType === 'date') {
+
+                        cellValue = this.getDataAtCell(indexRow, indexCol);
+
+                        if (cellValue != null) {
+
+                            // get date valie displayed in milliseconds
+                            var dateOriginalMilliseconds = new Date(cellValue);
+
+                            // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
+                            var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
+
+                            // create new date using UTC milliseconds value
+                            var dateUTC = new Date(dateUTCMilliseconds);
+
+                            // format to ISO standard format
+                            var dateISOFormatted = dateUTC.toISOString();
+
+                            // set correct data in cell
+                            this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
+                        }
+                    }
+
+                }
+
+            }
+
             updateSummaryData();
         }
 
@@ -750,6 +802,7 @@
 
                 $scope.rowsCount = result.rowsCount;
                 $scope.rowsAmount = result.rowsAmount;
+                $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
                 $scope.$apply();
             }
         }
@@ -773,6 +826,9 @@
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
             Handsontable.DateCell.renderer.apply(this, arguments);
+
+
+
         }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
