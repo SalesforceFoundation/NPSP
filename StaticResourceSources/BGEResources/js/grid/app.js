@@ -28,7 +28,7 @@
             $scope.isIndexLoading = false;
 
             $scope.tableWidth = window.innerWidth * .985;
-            $scope.tableHeight = window.innerHeight * .80;
+            $scope.tableHeight = window.innerHeight * .81;
 
             $scope.nextPageAction = nextPageAction;
             $scope.prevPageAction = prevPageAction;
@@ -685,7 +685,7 @@
         function updateHotTable() {
 
             var newWidth = window.innerWidth * .985;
-            var newHeight = window.innerHeight * .80;
+            var newHeight = window.innerHeight * .81;
 
             if (hot) {
     
