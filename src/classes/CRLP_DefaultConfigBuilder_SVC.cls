@@ -695,10 +695,19 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.summaryField = applyNameSpaceToObjectField(udr.npo02__Target_Field__c);
                 rollup.detailObject = 'Opportunity';
                 rollup.detailField = udr.npo02__Source_Field__c;
+
+                String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
+                Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
+                                                || udrSourceFieldType == 'INTEGER'
+                                                || udrSourceFieldType == 'PERCENT'
+                                                || udrSourceFieldType == 'DOUBLE');
+                Boolean sourceFieldIsDate = (udrSourceFieldType == 'DATE'
+                                                || udrSourceFieldType == 'DATETIME');
+
                 rollup.amountObject = 'Opportunity';
-                rollup.amountField = 'Amount';
+                rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
                 rollup.dateObject = 'Opportunity';
-                rollup.dateField = 'CloseDate';
+                rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
                 rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
                 rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
                 rollup.isActive = true;
