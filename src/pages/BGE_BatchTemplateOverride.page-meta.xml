@@ -29,9 +29,4 @@
         <minorNumber>10</minorNumber>
         <namespace>npo02</namespace>
     </packageVersions>
-    <packageVersions>
-        <majorNumber>1</majorNumber>
-        <minorNumber>15</minorNumber>
-        <namespace>sf_chttr_apps</namespace>
-    </packageVersions>
 </ApexPage>
