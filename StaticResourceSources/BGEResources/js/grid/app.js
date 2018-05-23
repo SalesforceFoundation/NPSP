@@ -80,7 +80,6 @@
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
-                afterRender: afterRenderHandler,
                 beforeRemoveRow: beforeRemoveRowHandler,
                 afterRemoveRow: afterRemoveRowHandler,
                 afterChange: afterChangeHandler,
@@ -240,7 +239,7 @@
 
         function afterRenderHandler2(isForced) {}
 
-        function afterRenderHandler(isForced) {
+        function afterRenderHandler3(isForced) {
 
             console.warn('HOT - afterRenderHandler', isForced);
 
@@ -827,7 +826,9 @@
 
             Handsontable.DateCell.renderer.apply(this, arguments);
 
-
+            if (value && value != null) {
+                
+            }
 
         }
 
