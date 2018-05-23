@@ -54,6 +54,7 @@
         <style>CustomLinks</style>
     </layoutSections>
     <platformActionList>
+        <actionListContext>Record</actionListContext>
         <platformActionListItems>
             <actionName>Edit_Processing_Settings</actionName>
             <actionType>CustomButton</actionType>
