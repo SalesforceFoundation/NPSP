@@ -685,7 +685,7 @@
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
-            newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
+            newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY", "PERCENT"], newFields);
             cmp.set("v.amountFields", newFields);
         }
     },
@@ -1261,10 +1261,10 @@
      */
     sortFields: function(fields){
         fields.sort(function (a, b) {
-            if (a.label < b.label) {
+            if (a.label.toUpperCase() < b.label.toUpperCase()) {
                 return -1;
             }
-            if (a.label > b.label) {
+            if (a.label.toUpperCase() > b.label.toUpperCase()) {
                 return 1;
             }
             return 0;
