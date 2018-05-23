@@ -2,7 +2,6 @@
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
     <customButtons>Process_Batch</customButtons>
     <customButtons>Batch_Gift_Entry</customButtons>
-    <customButtons>Batch_Gift_Entry_Test</customButtons>
     <customButtons>Edit_Processing_Settings</customButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
