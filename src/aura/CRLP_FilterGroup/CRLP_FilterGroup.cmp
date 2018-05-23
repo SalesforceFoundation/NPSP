@@ -56,7 +56,7 @@
     <aura:attribute name="detailObjects" type="List" description="List of potential objects to be used in a filter rule" access="public"/>
     <aura:attribute name="summaryObjects" type="List" description="Summary objects to use for filtering rollups" access="public"/>
     <aura:attribute name="filterRuleFieldType" type="String" default="text"
-                    description="Determines type of field. Supported options are boolean, text, date, datetime-local, number, picklist, and multipicklist."/>
+                    description="Determines type of field. Supported options are boolean, text, date, datetime-local, number, picklist, multipicklist, and text-picklist."/>
 
     <!-- private attributes -->
     <aura:attribute name="deletedRuleList" type="List" description="Filter Rules that were deleted" access="private"/>
@@ -203,7 +203,7 @@
                     </aura:if>
                     <lightning:layout>
                         <aura:if isTrue="{! !empty(v.filterRuleError)}">
-                            <div aura:id="filterRuleErrorDiv" class="slds-text-color_error slds-p-around_small">
+                            <div aura:id="filterRuleErrorDiv" class="slds-text-color_error slds-p-horizontal_small">
                                 {!v.filterRuleError}
                             </div>
                         </aura:if>
@@ -251,14 +251,20 @@
                             </lightning:layoutItem>
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <!--START CONSTANT INPUT OPTIONS-->
-                                <aura:if isTrue="{!equals(v.filterRuleFieldType, 'text')}">
+                                <aura:if isTrue="{!or(equals(v.filterRuleFieldType, 'text'), equals(v.filterRuleFieldType, 'text-picklist'))}">
                                     <!--todo: combine dynamic type with 214 release-->
                                     <div class="slds-p-top_small">
-                                        <div class="slds-p-horizontal_small">
-                                            <c:CRLP_Tooltip helpText="{!v.labels.filterRuleValueHelp}" fieldLabel="{!v.labels.constant}" isRequired="true"/>
-                                        </div>
-                                        <lightning:textarea aura:id="filterRuleField" class="slds-p-horizontal_small hasTooltip filterGroupField" value="{!v.activeFilterRule.value}"
-                                                            required="true" label="{!v.labels.constant}" maxlength="300" variant="label-hidden" />
+                                        <!--text-picklist requires special helptext but also uses textarea-->
+                                        <aura:if isTrue="{!equals(v.filterRuleFieldType, 'text-picklist')}">
+                                            <div class="slds-p-horizontal_small">
+                                                <c:CRLP_Tooltip helpText="{!v.labels.filterRuleValueHelp}" fieldLabel="{!v.labels.constant}" isRequired="true"/>
+                                            </div>
+                                        </aura:if>
+                                        <lightning:textarea aura:id="filterRuleField"
+                                                            class="{!concat('slds-p-horizontal_small filterGroupField', equals(v.filterRuleFieldType, 'text') ? '' : ' hasTooltip')}"
+                                                            value="{!v.activeFilterRule.value}"
+                                                            required="true" label="{!v.labels.constant}" maxlength="300"
+                                                            variant="{!equals(v.filterRuleFieldType, 'text') ? 'standard' : 'label-hidden'}"/>
                                     </div>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'date')}">

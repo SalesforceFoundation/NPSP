@@ -409,7 +409,13 @@
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
         } else {
-            cmp.set("v.filterRuleFieldType", 'text');
+            //special case where text field is offered but a user can enter a list of semi-colon separated values
+            if (operator === 'In_List' || operator === 'Not_In_List'
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                cmp.set("v.filterRuleFieldType", 'text-picklist');
+            } else {
+                cmp.set("v.filterRuleFieldType", 'text');
+            }
         }
     },
 
