@@ -827,7 +827,7 @@
             Handsontable.DateCell.renderer.apply(this, arguments);
 
             if (value && value != null) {
-                
+                console.log('value = ', value);
             }
 
         }
