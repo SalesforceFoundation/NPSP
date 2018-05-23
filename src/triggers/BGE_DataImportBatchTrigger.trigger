@@ -2,16 +2,19 @@ Trigger BGE_DataImportBatchTrigger on DataImportBatch__c (before insert, before 
 
     BGE_DataImportBatchTriggerHandler handler = new BGE_DataImportBatchTriggerHandler(Trigger.new, Trigger.oldMap);
 
-    if (Trigger.isBefore) {
+    if (!Test.isRunningTest()) {
 
-        if (Trigger.isInsert) {
+        if (Trigger.isBefore) {
 
-            handler.setDefaultValues();
-        }
+            if (Trigger.isInsert) {
 
-        if (Trigger.isUpdate) {
+                handler.setDefaultValues();
+            }
 
-            handler.updateDefaultValues();
+            if (Trigger.isUpdate) {
+
+                handler.updateDefaultValues();
+            }
         }
     }
 }
