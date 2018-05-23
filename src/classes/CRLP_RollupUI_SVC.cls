@@ -863,7 +863,7 @@ public with sharing class CRLP_RollupUI_SVC {
         Schema.SObjectType sobjType = UTIL_Describe.getSObjectType(objectName);
         List<Schema.DescribeFieldResult> referencedFields = CRLP_Rollup_SEL.getReferencedFieldsByObject(sobjType);
         Set<Schema.DescribeFieldResult> referencedFieldSet = new Set<Schema.DescribeFieldResult>(referencedFields);
-        Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
+        Set<String> validTypeSet = new Set<String>{'CURRENCY', 'DATE', 'DATETIME', 'DOUBLE', 'INTEGER', 'MULTIPICKLIST', 'PERCENT', 'PICKLIST', 'REFERENCE', 'STRING', 'TEXTAREA'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
             //valid types are taken from the DisplayType Enum and only include values that make sense to roll up
