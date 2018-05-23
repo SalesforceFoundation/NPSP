@@ -74,16 +74,13 @@
 
                 <!-- ALERT MESSAGE -->
 
-                <!-- TABLE -->
-                <div class="slds-m-horizontal_medium" ng-show="templateId">
+                <!-- HEADER -->
+                <div id="headerContainer" class="slds-grid slds-size_12-of-12" ng-show="templateId">
 
-                    <!-- <div class="slds-m-horizontal_xx-large slds-m-vertical_medium slds-clearfix"> -->
-                    <div class="slds-m-horizontal_large slds-m-vertical_medium slds-clearfix">
-                        <div class="slds-float_right">
-                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?batchId={!$CurrentPage.parameters.batchId}&retURL=/apex/{!$CurrentPage.Name}?batchId={!$CurrentPage.parameters.batchId}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
-                        </div>
+                    <!-- PAGINATION BUTTONS -->
+                    <div class="slds-size_4-of-12">
 
-                        <div class="slds-grid pagination-section slds-float_left">
+                        <div class="slds-m-around_x-large slds-grid pagination-section slds-float_left">
 
                             <button ng-model="button" ng-click="prevPageAction()" ng-disabled="prevButtonEnabled" class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Previous">
                                 <p class="slds-text-heading_medium slds-align_absolute-center">&lt;</p>
@@ -100,27 +97,33 @@
                             </button>
                         </div>
                     </div>
-                </div>
-                <!-- /TABLE -->
 
+                    <!-- SUMMARY INFO -->
+                    <div class="slds-size_4-of-12">
+                        <div class="slds-m-around_x-large" style="text-align: center;">
+                            <div>
+                                <b>TOTAL OF RECORDS: </b>&nbsp;
+                                <output id="totalOfRecords" ng-bind-html="rowsCount" style="width: 150px;" />
+                            </div>
+                            <div>
+                                <b>TOTAL AMOUNT: </b>&nbsp;
+                                <output id="totalAmount" ng-bind-html="rowsAmount | currency" style="width: 150px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- COMMIT BATCH BUTTON -->
+                    <div class="slds-size_4-of-12">
+                        <div class="slds-m-around_x-large slds-float_right">
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?batchId={!$CurrentPage.parameters.batchId}&retURL=/apex/{!$CurrentPage.Name}?batchId={!$CurrentPage.parameters.batchId}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TABLE -->
                 <div id="my-hot-table" class="slds-size_12-of-12 handsontable" style=""/>
 
-                <!-- FOOTER -->
-
-                <div class="slds-m-around_small slds-m-bottom_none" style="text-align: center;" ng-show="templateId">
-
-                    <div>
-                        <b>TOTAL OF RECORDS: </b>&nbsp;
-                        <output id="totalOfRecords" ng-bind-html="rowsCount" style="width: 150px;" />
-                    </div>
-                    <div>
-                        <b>TOTAL AMOUNT: </b>&nbsp;
-                        <output id="totalAmount" ng-bind-html="rowsAmount | currency" style="width: 150px;" />
-                    </div>
-
-                </div>
-
-                <!-- /FOOTER -->
             </div>
         </div>
 
