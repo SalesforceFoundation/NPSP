@@ -489,7 +489,14 @@ public with sharing class CRLP_RollupUI_SVC {
             //this method is reused for rollups, where obj concatenation is needed, and filter groups, where it is not
             fieldObject.put('name', (concatenate ? objectName+' ' : '') + field);
             fieldObject.put('label', (concatenate ? objectLabel +': ' : '') + UTIL_Describe.getFieldLabel(objectName, field.toLowerCase()));
-            String fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
+            String fieldType;
+            //treat PSC Role as a Picklist because we actually use the OCR Role picklist values in the UI
+            if (objectName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    && field == UTIL_Namespace.StrAllNSPrefix('Role_Name__c')) {
+                fieldType = 'picklist';
+            } else {
+                fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
+            }
             fieldObject.put('type', fieldType);
 
             fieldObjectList.add(fieldObject);
@@ -799,7 +806,10 @@ public with sharing class CRLP_RollupUI_SVC {
             List<Map<String, String>> optionsList = new List<Map<String, String>>();
             List<SelectOption> picklistValues = new List<SelectOption>();
 
-            if (selectedField != 'RecordTypeId') {
+            if (objectName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    && selectedField == UTIL_Namespace.StrAllNSPrefix('Role_Name__c')) {
+                picklistValues = UTIL_Describe.getSelectOptions('OpportunityContactRole', 'Role');
+            } else if (selectedField != 'RecordTypeId') {
                 picklistValues = UTIL_Describe.getSelectOptions(objectName, selectedField);
             } else {
                 Schema.SObjectType sObjectType = UTIL_Describe.getSObjectType(objectName);
