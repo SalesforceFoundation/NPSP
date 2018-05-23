@@ -691,8 +691,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
                         ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC
                         : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC);
-                rollup.summaryObject = applyNameSpaceToObjectField(udr.npo02__Object_Name__c);
-                rollup.summaryField = applyNameSpaceToObjectField(udr.npo02__Target_Field__c);
+                rollup.summaryObject = udr.npo02__Object_Name__c;
+                rollup.summaryField = udr.npo02__Target_Field__c;
                 rollup.detailObject = 'Opportunity';
                 rollup.detailField = udr.npo02__Source_Field__c;
 
