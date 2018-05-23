@@ -46,8 +46,8 @@
 
             $scope.lastSelectedRow = null;
 
-            $scope.tableWidth = window.innerWidth * 91 / 100;
-            $scope.tableHeight = window.innerHeight * 70 /100;
+            $scope.tableWidth = window.innerWidth * .985;
+            $scope.tableHeight = window.innerHeight * .81;
 
             var table = document.getElementById('my-hot-table');
 
@@ -656,7 +656,7 @@
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
-            actionCol.colWidths = 60;
+            actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle";
             frozenColumns.push(actionCol);
 
@@ -678,14 +678,14 @@
                 if (templateField.type === "DATE") {
                     // col.dateFormat = "YYYY-MM-DD";
                     col.dateFormat = 'MM/DD/YYYY';
-                    col.className = "htRight htMiddle slds-truncate custom-date";
+                    col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.renderer = dateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = templateField.label.toUpperCase();
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
@@ -809,8 +809,8 @@
 
         function updateHotTable() {
 
-            var newWidth = window.innerWidth * .91;
-            var newHeight = window.innerHeight * .70;
+            var newWidth = window.innerWidth * .985;
+            var newHeight = window.innerHeight * .81;
 
             if (hot) {
     
