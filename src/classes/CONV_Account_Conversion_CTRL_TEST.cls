@@ -97,8 +97,8 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
         //create a new user w/ sysadmin profile
         Id sysadminId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
-        User u = new User(LastName = 'TestUser', Email = 'UserEmail@email.com', ProfileId = sysadminId,
-                            isActive = true, UserName = 'UserEmail@email.com',
+        User u = new User(LastName = 'TestUser', Email = 'UserEmail99332244@emailX.com', ProfileId = sysadminId,
+                            isActive = true, UserName = 'UserEmail99332244@emailX.npsp.test',
                             Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
                             LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
                             EmailEncodingKey = 'ISO-8859-1');
