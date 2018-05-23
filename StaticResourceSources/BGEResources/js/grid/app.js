@@ -237,53 +237,6 @@
             renderBindings();
         }
 
-        function afterRenderHandler2(isForced) {}
-
-        function afterRenderHandler3(isForced) {
-
-            console.warn('HOT - afterRenderHandler', isForced);
-
-            var totalColumns = this.countCols();
-            var totalRows = this.countRows();
-
-            for (var indexRow = 0; indexRow < totalRows; indexRow++) {
-
-                var cellValue = this.getDataAtCell(indexRow, this.propToCol('Id'));
-
-                for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
-
-                    var cellType = this.getDataType(indexRow, indexCol);
-
-                    if (cellType === 'date') {
-
-                        cellValue = this.getDataAtCell(indexRow, indexCol);
-
-                        if (cellValue != null) {
-
-                            // get date valie displayed in milliseconds
-                            var dateOriginalMilliseconds = new Date(cellValue);
-
-                            // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
-                            var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
-
-                            // create new date using UTC milliseconds value
-                            var dateUTC = new Date(dateUTCMilliseconds);
-
-                            // format to ISO standard format
-                            var dateISOFormatted = dateUTC.toISOString();
-
-                            // set correct data in cell
-                            this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
-                        }
-                    }
-
-                }
-
-            }
-
-            updateSummaryData();
-        }
-
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
             console.warn('HOT - beforeRemoveRowHandler');
@@ -500,8 +453,9 @@
          * When HOT starts - it sets the initial row on the last selected ROW.
          * @param {*} row
          */
-        function afterSelectionHandler(row) {
+        function afterSelectionHandler(row, col) {
 
+            console.log(row, col);
             if ($scope.lastSelectedRow === null) {
                 $scope.lastSelectedRow = row;
             }
@@ -824,12 +778,18 @@
 
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            Handsontable.DateCell.renderer.apply(this, arguments);
+            console.log(row, col, value);
+            console.log(td);
 
-            if (value && value != null) {
-                console.log('value = ', value);
+            if (value && value !== null) {
+
+                var formattedDate =  new Date(parseFloat(value));
+                value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
             }
 
+            Handsontable.DateCell.renderer.apply(this, arguments);
+
+            return td;
         }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
