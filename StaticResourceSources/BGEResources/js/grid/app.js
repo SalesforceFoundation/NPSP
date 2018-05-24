@@ -49,6 +49,8 @@
             $scope.tableWidth = window.innerWidth * .985;
             $scope.tableHeight = window.innerHeight - 130;
 
+            $scope.removeRowOnColumnAction = removeRowOnColumnAction;
+
             var table = document.getElementById('my-hot-table');
 
             hot = new Handsontable(table, {
@@ -137,6 +139,31 @@
 
             changePageHandler();
         }
+
+        function removeRowOnColumnAction() {
+            console.log('REMOVE');
+            console.log('HOT');
+            console.dir(hot);
+            if (hot) {
+                var row = $scope.lastSelectedRow;
+            //    var selection = hot.getSelected();
+                console.log('SELECTION');
+                console.dir(selection);
+                if (selection) {
+
+                    hot.alter('remove_row', row);
+
+                    //    var rowIndex = selection[0];
+
+                    //   $('.removeAction').click(function(event) {
+
+                    //    hot.alter('remove_row', rowIndex);
+
+                    //    });
+                }
+            }
+        }
+
 
         function changePageHandler() {
 
@@ -770,7 +797,7 @@
             var newHeight = window.innerHeight - document.getElementById("my-hot-table").offsetTop - 27;
 
             if (hot) {
-    
+
             }
             hot.updateSettings({
                 width: newWidth,
@@ -816,10 +843,12 @@
             //     }
             // });
 
+
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
 
                 console.log('on click');
+
 
                 // var divCombo = document.createElement('div');
                 // divCombo.className = 'slds-dropdown slds-dropdown_left';
@@ -937,6 +966,7 @@
             var divButton = document.createElement('button');
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
+            divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
 
             var iconImage = document.createElement('img');
             iconImage.className = 'slds-button__icon';
@@ -967,8 +997,6 @@
 
             return liElement;
         }
-
-
 
     });
 
