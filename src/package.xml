@@ -1803,6 +1803,8 @@
         <members>stgPowerOfUsHub</members>
         <members>stgTools</members>
         <members>stgValidationHHAccountHHRules</members>
+        <members>healthDetailsInvalidRecordtypeName</members>
+	<members>bgeHandsOnGridCommitBatch</members>
         <name>CustomLabel</name>
     </types>
     <types>

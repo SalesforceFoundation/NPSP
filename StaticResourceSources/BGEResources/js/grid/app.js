@@ -2,7 +2,11 @@
 
     var myApp = angular.module('myApp', ['ngHandsontable', 'ngSanitize']);
 
-    myApp.controller('MainCtrl', function ($scope, $compile, $timeout) {
+    myApp.controller('MainCtrl', function ($scope, $compile, $timeout, $window) {
+
+        $scope.nextPageAction = nextPageAction;
+        $scope.prevPageAction = prevPageAction;
+        $scope.backAction = backAction;
 
         var changesToSave = [];
 
@@ -16,6 +20,7 @@
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
             $scope.isTableLoaded = false; // Needed for afterCreateRow:as it fires before afterInit: & confuses all
+            $scope.pageChangeLoader = false;
 
             if (!$scope.templateId || $scope.templateId == null) {
                 $scope.templateId = false;
@@ -30,21 +35,19 @@
             $scope.rowsAmount = result.rowsAmount;
 
             $scope.offset = 0;
-            $scope.totalPages = Math.ceil(result.rowsCount / 50);
             $scope.columnsData = result.columns;
             $scope.rowsData = result.data;
-            $scope.prevButonEnabled = false;
+            $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
+            $scope.prevButonDisabled = true;
+            $scope.nextButonDisabled = false;
             $scope.rowErrors = {};
 
             console.debug(result);
 
             $scope.lastSelectedRow = null;
 
-            $scope.tableWidth = window.innerWidth * 91 / 100;
-            $scope.tableHeight = window.innerHeight * 70 /100;
-
-            $scope.nextPageAction = nextPageAction;
-            $scope.prevPageAction = prevPageAction;
+            $scope.tableWidth = window.innerWidth * .985;
+            $scope.tableHeight = window.innerHeight - 130;
 
             $scope.removeRowOnColumnAction = removeRowOnColumnAction;
 
@@ -121,6 +124,7 @@
 
             if ($scope.offset > 0) {
                 $scope.offset --;
+                $scope.nextButonDisabled = false;
                 changePageHandler();
             }
         }
@@ -128,6 +132,12 @@
         function nextPageAction() {
 
             $scope.offset ++;
+
+            if ($scope.offset >= $scope.totalPages - 1) {
+                $scope.offset = $scope.totalPages - 1;
+                $scope.nextButonDisabled = true;
+            }
+
             changePageHandler();
         }
 
@@ -158,16 +168,18 @@
 
         function changePageHandler() {
 
+            $scope.pageChangeLoader = true;
             BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
 
             function changePageGridHandler(result, event) {
 
-                $scope.prevButonEnabled = true;
+                $scope.prevButonDisabled = true;
                 if ($scope.offset > 0) {
-                    $scope.prevButonEnabled = false;
+                    $scope.prevButonDisabled = false;
                 }
 
                 hot.loadData(result.data);
+                $scope.pageChangeLoader = false;
                 $scope.$apply();
             }
         }
@@ -253,9 +265,50 @@
             renderBindings();
         }
 
-        function afterRenderHandler(isForced) {
+        function afterRenderHandler(isForced) {}
 
-            console.warn('HOT - afterRenderHandler');
+        function afterRenderHandler2(isForced) {
+
+            console.warn('HOT - afterRenderHandler', isForced);
+
+            var totalColumns = this.countCols();
+            var totalRows = this.countRows();
+
+            for (var indexRow = 0; indexRow < totalRows; indexRow++) {
+
+                var cellValue = this.getDataAtCell(indexRow, this.propToCol('Id'));
+
+                for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
+
+                    var cellType = this.getDataType(indexRow, indexCol);
+
+                    if (cellType === 'date') {
+
+                        cellValue = this.getDataAtCell(indexRow, indexCol);
+
+                        if (cellValue != null) {
+
+                            // get date valie displayed in milliseconds
+                            var dateOriginalMilliseconds = new Date(cellValue);
+
+                            // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
+                            var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
+
+                            // create new date using UTC milliseconds value
+                            var dateUTC = new Date(dateUTCMilliseconds);
+
+                            // format to ISO standard format
+                            var dateISOFormatted = dateUTC.toISOString();
+
+                            // set correct data in cell
+                            this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
+                        }
+                    }
+
+                }
+
+            }
+
             updateSummaryData();
         }
 
@@ -334,8 +387,6 @@
                             recordId: this.getDataAtRowProp(changes[i][0], 'Id')
                         };
 
-
-
                         if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue)) {
                             cellRecords.push(cellRecord);
                         }
@@ -395,16 +446,13 @@
 
                             console.log(cellResponse);
 
-                            if (cellResponse.sfdcid) {
-                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
-                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
-                            }
-
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
                             // $scope.rowErrors[cellResponse.recordId] = [];
 
                             if (cellResponse.errors) {
+
+                                console.log(cellResponse.errors);
 
                                 errCell.valid = false;
                                 errCell.hasError = true;
@@ -415,12 +463,18 @@
                                 }
                                 else {
 
+                                    var isFieldIn = false;
                                     $scope.rowErrors[cellResponse.recordId].forEach(function(element){
 
                                         if (element.field === cellResponse.field) {
                                             element.messages = cellResponse.messages
+                                            isFieldIn = true;
                                         }
                                     });
+
+                                    if (!isFieldIn) {
+                                        $scope.rowErrors[cellResponse.recordId] = $scope.rowErrors[cellResponse.recordId].concat(cellResponse.errors);
+                                    }
                                 }
 
                                 debugRowErrors = $scope.rowErrors;
@@ -440,11 +494,24 @@
                                 }
                             }
 
+
+                            if (cellResponse.sfdcid) {
+                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
+                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
+
+                                if (cellResponse.sfdcid !== cellResponse.recordId) {
+
+                                    if ($scope.rowErrors[cellResponse.recordId] && $scope.rowErrors[cellResponse.recordId].length > 0) {
+                                        $scope.rowErrors[cellResponse.sfdcid] = $scope.rowErrors[cellResponse.recordId];
+                                    }
+                                }
+                            }
+
                             $timeout(function() {
 
                                 hot.render();
                                 updateSummaryData();
-                            }, 500);
+                            }, 200);
                         });
                     }
                 }
@@ -616,7 +683,7 @@
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
-            actionCol.colWidths = 60;
+            actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle";
             frozenColumns.push(actionCol);
 
@@ -638,14 +705,14 @@
                 if (templateField.type === "DATE") {
                     // col.dateFormat = "YYYY-MM-DD";
                     col.dateFormat = 'MM/DD/YYYY';
-                    col.className = "htRight htMiddle slds-truncate custom-date";
+                    col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.renderer = dateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = templateField.label.toUpperCase();
+                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
@@ -704,6 +771,7 @@
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
+            messageSectionDivList.style.listStyleType = 'disc';
 
             errors.forEach(function(errorElement) {
 
@@ -761,14 +829,15 @@
 
                 $scope.rowsCount = result.rowsCount;
                 $scope.rowsAmount = result.rowsAmount;
+                $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
                 $scope.$apply();
             }
         }
 
         function updateHotTable() {
 
-            var newWidth = window.innerWidth * .91;
-            var newHeight = window.innerHeight * .70;
+            var newWidth = window.innerWidth * .985;
+            var newHeight = window.innerHeight - document.getElementById("my-hot-table").offsetTop - 27;
 
             if (hot) {
 
@@ -784,6 +853,9 @@
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
             Handsontable.DateCell.renderer.apply(this, arguments);
+
+
+
         }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
