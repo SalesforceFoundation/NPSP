@@ -765,7 +765,8 @@
         }
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
-
+            console.log('instance');
+            console.dir(instance);
             var selectElement = getLightningPicklist();
 
             // Handsontable.dom.addEvent(selectElement, 'change', function (e) {
@@ -779,10 +780,29 @@
             //     }
             // });
 
+            function removeRowOnActionColumn() {
+
+                var selection = instance.getSelected();
+                console.log('SELECTION');
+                console.dir(selection);
+                if (selection) {
+
+                    var rowIndex = selection[0];
+
+                    $('.removeAction').click(function(event) {
+    
+                        instance.alter('remove_row', rowIndex);
+                    });
+                }
+
+            }
+
+
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
 
                 console.log('on click');
+
 
                 // var divCombo = document.createElement('div');
                 // divCombo.className = 'slds-dropdown slds-dropdown_left';
@@ -795,6 +815,8 @@
                 //     placement: 'top-end'
                 // });
             });
+
+            removeRowOnActionColumn();
 
             Handsontable.dom.empty(td);
             td.appendChild(selectElement);
@@ -900,6 +922,7 @@
             var divButton = document.createElement('button');
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
+            divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
 
             var iconImage = document.createElement('img');
             iconImage.className = 'slds-button__icon';
@@ -930,6 +953,7 @@
 
             return liElement;
         }
+
 
 
 
