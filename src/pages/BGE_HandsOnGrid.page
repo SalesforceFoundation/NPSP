@@ -140,12 +140,13 @@
                 </div>
 
             </div>
-        </div>
 
-        <div id="jq-dropdown-1" class="jq-dropdown jq-dropdown-tip">
-            <ul class="jq-dropdown-menu">
-                <li><a href="#4" ng-click="removeRowOnColumnAction();" style="color: #006dcc">Remove Row</a></li>
-            </ul>
+            <div id="jq-dropdown-1" class="jq-dropdown jq-dropdown-tip">
+                <ul class="jq-dropdown-menu">
+                    <li><a href="javascript:void(0)" ng-click="removeRowOnColumnAction()" style="color: #006dcc">Remove Row</a></li>
+                </ul>
+            </div>
+
         </div>
 
     </html>

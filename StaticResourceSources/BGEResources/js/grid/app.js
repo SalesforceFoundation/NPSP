@@ -143,6 +143,9 @@
         function removeRowOnColumnAction() {
 
             var row = hot.getSelected()[0];
+
+            console.log('removeRowOnColumnAction', row);
+
             hot.alter('remove_row', row);
 
             $timeout(function() {
@@ -212,36 +215,6 @@
                 if (cellValue == null) {
                     this.setDataAtCell(indexRow, this.propToCol('Id'), Date.now().toString(), 'manual');
                 }
-
-                // for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
-
-                //     var cellType = this.getDataType(indexRow, indexCol);
-
-                //     if (cellType === 'date') {
-
-                //         cellValue = this.getDataAtCell(indexRow, indexCol);
-
-                //         if (cellValue != null) {
-
-                //             // get date valie displayed in milliseconds
-                //             var dateOriginalMilliseconds = new Date(cellValue);
-
-                //             // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
-                //             var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
-
-                //             // create new date using UTC milliseconds value
-                //             var dateUTC = new Date(dateUTCMilliseconds);
-
-                //             // format to ISO standard format
-                //             var dateISOFormatted = dateUTC.toISOString();
-
-                //             // set correct data in cell
-                //             this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
-                //         }
-                //     }
-
-                // }
-
             }
 
             $scope.isIndexLoading = false;
@@ -468,7 +441,6 @@
          */
         function afterSelectionHandler(row, col) {
 
-            console.log(row, col);
             if ($scope.lastSelectedRow === null) {
                 $scope.lastSelectedRow = row;
             }
@@ -677,7 +649,11 @@
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
                          // In this case, the ENTER key is ignored and the editor field remains opened.
-                        col.source = Object.values(templateField.picklistValues);
+                        col.source = Object.keys(templateField.picklistValues);
+
+                        if (templateField.isRecordType) {
+                            $scope.recordTypeMap = templateField.picklistValues;
+                        }
                     }
                 }
 
@@ -924,6 +900,8 @@
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
             divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
+            divButton.style.height = "25px";
+            divButton.style.width = "25px";
 
             var iconImage = document.createElement('img');
             iconImage.className = 'slds-button__icon';

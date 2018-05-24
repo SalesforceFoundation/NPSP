@@ -125,6 +125,18 @@ public with sharing class BGE_HandsOnGridSelector {
     }
 
 
+	public static Map<String, String> getObjectRecordTypesById(String objectName) {
 
+        Map<String, String> result = new Map<String, String>();
+
+        Map<String, Schema.RecordTypeInfo> recordTypes = Schema.getGlobalDescribe().get(objectName).getDescribe().getRecordTypeInfosByName();
+
+        for (Schema.RecordTypeInfo recordType :recordTypes.values()) {
+
+            result.put(recordType.getRecordTypeId(), recordType.getName());
+        }
+
+        return result;
+    }
 
 }

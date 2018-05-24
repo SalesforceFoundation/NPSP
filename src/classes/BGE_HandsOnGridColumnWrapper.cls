@@ -83,7 +83,6 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
             result.put(value.getLabel(), value.getValue());
 		}
-
         return result;
     }
 
@@ -95,7 +94,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         for (Schema.RecordTypeInfo recordType :recordTypes.values()) {
 
-            result.put(recordType.getRecordTypeId(), recordType.getName());
+            result.put(recordType.getName(), recordType.getRecordTypeId());
         }
 
         return result;
