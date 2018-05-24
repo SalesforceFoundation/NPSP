@@ -122,7 +122,7 @@
                     <!-- COMMIT BATCH BUTTON -->
                     <div class="slds-size_4-of-12">
                         <div class="slds-m-around_x-large slds-float_right">
-                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?batchId={!$CurrentPage.parameters.batchId}&retURL=/apex/{!$CurrentPage.Name}?batchId={!$CurrentPage.parameters.batchId}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
+                            <apex:outputLink id="commitButton" styleClass="slds-button slds-button_brand" value="/apex/BDI_DataImport?batchId={!$CurrentPage.parameters.batchId}">{!$Label.bgeHandsOnGridCommitBatch}</apex:outputLink>
                         </div>
                     </div>
 
@@ -144,12 +144,6 @@
 
         <div id="jq-dropdown-1" class="jq-dropdown jq-dropdown-tip">
             <ul class="jq-dropdown-menu">
-                <li><a href="#1" style="color: #006dcc">Check Errors</a></li>
-                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
-                <li><a href="#2" style="color: #006dcc">Contact Match</a></li>
-                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
-                <li><a href="#3" style="color: #006dcc">Pledge Match</a></li>
-                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
                 <li><a href="#4" ng-click="removeRowOnColumnAction();" style="color: #006dcc">Remove Row</a></li>
             </ul>
         </div>

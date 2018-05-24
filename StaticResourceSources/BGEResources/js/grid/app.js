@@ -141,29 +141,15 @@
         }
 
         function removeRowOnColumnAction() {
-            console.log('REMOVE');
-            console.log('HOT');
-            console.dir(hot);
-            if (hot) {
-                var row = $scope.lastSelectedRow;
-            //    var selection = hot.getSelected();
-                console.log('SELECTION');
-                console.dir(selection);
-                if (selection) {
 
-                    hot.alter('remove_row', row);
+            var row = hot.getSelected()[0];
+            hot.alter('remove_row', row);
 
-                    //    var rowIndex = selection[0];
-
-                    //   $('.removeAction').click(function(event) {
-
-                    //    hot.alter('remove_row', rowIndex);
-
-                    //    });
-                }
-            }
+            $timeout(function() {
+                hot.render();
+                updateSummaryData();
+            }, 200);
         }
-
 
         function changePageHandler() {
 
@@ -829,34 +815,8 @@
 
             var selectElement = getLightningPicklist();
 
-            // Handsontable.dom.addEvent(selectElement, 'change', function (e) {
-            //     e.preventDefault(); // prevent selection quirk
-            //     console.log('on change');
-
-            //     var value = $(selectElement).val();
-
-            //     if (value === 'Remove') {
-            //         hot.alter('remove_row', row);
-            //     }
-            // });
-
-
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
-
-                console.log('on click');
-
-
-                // var divCombo = document.createElement('div');
-                // divCombo.className = 'slds-dropdown slds-dropdown_left';
-                // var ulCombo = document.createElement('ul');
-                // divCombo.className = 'slds-dropdown__list';
-                // ulCombo.appendChild(getLightningPicklistOption('Remove row'));
-                // divCombo.appendChild(ulCombo);
-
-                // var popper = new Popper(selectElement, divCombo, {
-                //     placement: 'top-end'
-                // });
             });
 
             Handsontable.dom.empty(td);
