@@ -459,6 +459,10 @@
             if ($scope.lastSelectedRow === null) {
                 $scope.lastSelectedRow = row;
             }
+
+            if (col < 3) {
+                hot.selectCell(row, 3);
+            }
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
