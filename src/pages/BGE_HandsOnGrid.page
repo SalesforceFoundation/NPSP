@@ -142,7 +142,7 @@
                 <li class="jq-dropdown-divider" style="color: #006dcc"></li>
                 <li><a href="#3" style="color: #006dcc">Pledge Match</a></li>
                 <li class="jq-dropdown-divider" style="color: #006dcc"></li>
-                <li><a href="#4" class="removeAction" style="color: #006dcc">Remove Row</a></li>
+                <li><a href="#4" ng-click="alert('click');removeRowOnColumnAction();" class="removeAction" style="color: #006dcc">Remove Row</a></li>
             </ul>
         </div>
 

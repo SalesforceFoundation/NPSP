@@ -46,6 +46,8 @@
             $scope.nextPageAction = nextPageAction;
             $scope.prevPageAction = prevPageAction;
 
+            $scope.removeRowOnColumnAction = removeRowOnColumnAction;
+
             var table = document.getElementById('my-hot-table');
 
             hot = new Handsontable(table, {
@@ -128,6 +130,29 @@
             $scope.offset ++;
             changePageHandler();
         }
+
+        function removeRowOnColumnAction() {
+            console.log('REMOVE');
+            console.log('HOT');
+            console.dir(hot);
+            if (hot) {
+                var row = $scope.lastSelectedRow;
+            //    var selection = hot.getSelected();
+                console.log('SELECTION');
+                console.dir(selection);
+                if (selection) {
+
+                //    var rowIndex = selection[0];
+
+                 //   $('.removeAction').click(function(event) {
+
+                    //    hot.alter('remove_row', rowIndex);
+                        hot.alter('remove_row', row);
+                //    });
+                }
+            }
+        }
+
 
         function changePageHandler() {
 
@@ -744,7 +769,7 @@
             var newHeight = window.innerHeight * .70;
 
             if (hot) {
-    
+
             }
             hot.updateSettings({
                 width: newWidth,
@@ -765,8 +790,7 @@
         }
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
-            console.log('instance');
-            console.dir(instance);
+
             var selectElement = getLightningPicklist();
 
             // Handsontable.dom.addEvent(selectElement, 'change', function (e) {
@@ -779,23 +803,6 @@
             //         hot.alter('remove_row', row);
             //     }
             // });
-
-            function removeRowOnActionColumn() {
-
-                var selection = instance.getSelected();
-                console.log('SELECTION');
-                console.dir(selection);
-                if (selection) {
-
-                    var rowIndex = selection[0];
-
-                    $('.removeAction').click(function(event) {
-    
-                        instance.alter('remove_row', rowIndex);
-                    });
-                }
-
-            }
 
 
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
@@ -815,8 +822,6 @@
                 //     placement: 'top-end'
                 // });
             });
-
-            removeRowOnActionColumn();
 
             Handsontable.dom.empty(td);
             td.appendChild(selectElement);
@@ -953,9 +958,6 @@
 
             return liElement;
         }
-
-
-
 
     });
 
