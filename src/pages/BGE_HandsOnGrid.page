@@ -24,6 +24,13 @@
 
         <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 
+        <!-- jQuery dropdown -->
+        <!-- <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/jquery.dropdown.min.css')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/jquery.dropdown.min.js')}"/> -->
+
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-dropdown/2.0.3/jquery.dropdown.min.css" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-dropdown/2.0.3/jquery.dropdown.min.js"></script>
+
         <apex:slds />
 
         <script>
@@ -135,7 +142,17 @@
             </div>
         </div>
 
-
+        <div id="jq-dropdown-1" class="jq-dropdown jq-dropdown-tip">
+            <ul class="jq-dropdown-menu">
+                <li><a href="#1" style="color: #006dcc">Check Errors</a></li>
+                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
+                <li><a href="#2" style="color: #006dcc">Contact Match</a></li>
+                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
+                <li><a href="#3" style="color: #006dcc">Pledge Match</a></li>
+                <li class="jq-dropdown-divider" style="color: #006dcc"></li>
+                <li><a href="#4" ng-click="removeRowOnColumnAction();" style="color: #006dcc">Remove Row</a></li>
+            </ul>
+        </div>
 
     </html>
 
