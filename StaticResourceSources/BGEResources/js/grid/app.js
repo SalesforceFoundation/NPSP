@@ -141,29 +141,18 @@
         }
 
         function removeRowOnColumnAction() {
-            console.log('REMOVE');
-            console.log('HOT');
-            console.dir(hot);
-            if (hot) {
-                var row = $scope.lastSelectedRow;
-            //    var selection = hot.getSelected();
-                console.log('SELECTION');
-                console.dir(selection);
-                if (selection) {
 
-                    hot.alter('remove_row', row);
+            var row = hot.getSelected()[0];
 
-                    //    var rowIndex = selection[0];
+            console.log('removeRowOnColumnAction', row);
 
-                    //   $('.removeAction').click(function(event) {
+            hot.alter('remove_row', row);
 
-                    //    hot.alter('remove_row', rowIndex);
-
-                    //    });
-                }
-            }
+            $timeout(function() {
+                hot.render();
+                updateSummaryData();
+            }, 200);
         }
-
 
         function changePageHandler() {
 
@@ -226,36 +215,6 @@
                 if (cellValue == null) {
                     this.setDataAtCell(indexRow, this.propToCol('Id'), Date.now().toString(), 'manual');
                 }
-
-                // for (var indexCol = 0; indexCol < totalColumns; indexCol++) {
-
-                //     var cellType = this.getDataType(indexRow, indexCol);
-
-                //     if (cellType === 'date') {
-
-                //         cellValue = this.getDataAtCell(indexRow, indexCol);
-
-                //         if (cellValue != null) {
-
-                //             // get date valie displayed in milliseconds
-                //             var dateOriginalMilliseconds = new Date(cellValue);
-
-                //             // create a new milliseconds date value that match with UTC time (getTimezoneOffset function retrieve value in seconds)
-                //             var dateUTCMilliseconds = cellValue + ((dateOriginalMilliseconds.getTimezoneOffset() * 60 * 1000));
-
-                //             // create new date using UTC milliseconds value
-                //             var dateUTC = new Date(dateUTCMilliseconds);
-
-                //             // format to ISO standard format
-                //             var dateISOFormatted = dateUTC.toISOString();
-
-                //             // set correct data in cell
-                //             this.setDataAtCell(indexRow, indexCol, dateISOFormatted, 'manual');
-                //         }
-                //     }
-
-                // }
-
             }
 
             $scope.isIndexLoading = false;
@@ -482,7 +441,6 @@
          */
         function afterSelectionHandler(row, col) {
 
-            console.log(row, col);
             if ($scope.lastSelectedRow === null) {
                 $scope.lastSelectedRow = row;
             }
@@ -691,7 +649,11 @@
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
                          // In this case, the ENTER key is ignored and the editor field remains opened.
-                        col.source = Object.values(templateField.picklistValues);
+                        col.source = Object.keys(templateField.picklistValues);
+
+                        if (templateField.isRecordType) {
+                            $scope.recordTypeMap = templateField.picklistValues;
+                        }
                     }
                 }
 
@@ -809,9 +771,6 @@
 
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            console.log(row, col, value);
-            console.log(td);
-
             if (value && value !== null) {
 
                 var formattedDate =  new Date(parseFloat(value));
@@ -832,34 +791,8 @@
 
             var selectElement = getLightningPicklist();
 
-            // Handsontable.dom.addEvent(selectElement, 'change', function (e) {
-            //     e.preventDefault(); // prevent selection quirk
-            //     console.log('on change');
-
-            //     var value = $(selectElement).val();
-
-            //     if (value === 'Remove') {
-            //         hot.alter('remove_row', row);
-            //     }
-            // });
-
-
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
-
-                console.log('on click');
-
-
-                // var divCombo = document.createElement('div');
-                // divCombo.className = 'slds-dropdown slds-dropdown_left';
-                // var ulCombo = document.createElement('ul');
-                // divCombo.className = 'slds-dropdown__list';
-                // ulCombo.appendChild(getLightningPicklistOption('Remove row'));
-                // divCombo.appendChild(ulCombo);
-
-                // var popper = new Popper(selectElement, divCombo, {
-                //     placement: 'top-end'
-                // });
             });
 
             Handsontable.dom.empty(td);
@@ -967,6 +900,8 @@
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
             divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
+            divButton.style.height = "25px";
+            divButton.style.width = "25px";
 
             var iconImage = document.createElement('img');
             iconImage.className = 'slds-button__icon';
