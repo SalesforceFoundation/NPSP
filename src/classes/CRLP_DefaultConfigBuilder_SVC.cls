@@ -681,6 +681,11 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 'SUM' => CRLP_Operation.RollupType.Sum.name()
         };
 
+        Map<String, String> convertDateUDROperationMap = new Map<String, String>{
+                'MIN' => CRLP_Operation.RollupType.First.name(),
+                'MAX' => CRLP_Operation.RollupType.Last.name()
+        };
+
         for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
             if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
                 String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_', '') + ' to ' +
@@ -708,7 +713,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
                 rollup.dateObject = 'Opportunity';
                 rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
-                rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
+                rollup.operation = (sourceFieldIsDate ? convertDateUDROperationMap.get(udr.npo02__Field_Action__c) : convertUDROperationMap.get(udr.npo02__Field_Action__c));
                 rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
                 rollup.isActive = true;
                 rollup.isDeleted = false;
