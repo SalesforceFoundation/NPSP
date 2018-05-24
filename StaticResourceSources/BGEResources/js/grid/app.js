@@ -782,9 +782,6 @@
 
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            console.log(row, col, value);
-            console.log(td);
-
             if (value && value !== null) {
 
                 var formattedDate =  new Date(parseFloat(value));

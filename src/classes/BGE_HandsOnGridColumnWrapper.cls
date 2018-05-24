@@ -91,7 +91,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         for (Schema.RecordTypeInfo recordType :recordTypes.values()) {
 
-            result.put(recordType.getName(), recordType.getRecordTypeId());
+            result.put(recordType.getRecordTypeId(), recordType.getName());
         }
 
         return result;
