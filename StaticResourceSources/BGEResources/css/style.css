@@ -118,10 +118,9 @@
 /* Edit mode */
 
 .handsontableInput {
-    /* vertical-align: middle;
+    vertical-align: middle;
     text-align: center;
-    line-height: 40px !important; */
-    line-height: 25px !important
+    line-height: 35px !important;
 }
 
 .htAutocompleteArrow {
