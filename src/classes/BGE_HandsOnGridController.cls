@@ -78,7 +78,7 @@ global class BGE_HandsOnGridController {
 
             try {
 
-                if (cellType.equalsIgnoreCase('DATE')) {
+                if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
                     Date cellDate = Datetime.newInstance(Long.valueOf(((String) cellData.get('newValue')))).dateGmt();
                     dataImport.put((String) cellData.get('field'), cellDate);
