@@ -142,13 +142,15 @@
                 console.dir(selection);
                 if (selection) {
 
-                //    var rowIndex = selection[0];
+                    hot.alter('remove_row', row);
 
-                 //   $('.removeAction').click(function(event) {
+                    //    var rowIndex = selection[0];
+
+                    //   $('.removeAction').click(function(event) {
 
                     //    hot.alter('remove_row', rowIndex);
-                        hot.alter('remove_row', row);
-                //    });
+
+                    //    });
                 }
             }
         }
