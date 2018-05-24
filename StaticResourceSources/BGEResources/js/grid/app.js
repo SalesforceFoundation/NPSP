@@ -47,7 +47,7 @@
             $scope.lastSelectedRow = null;
 
             $scope.tableWidth = window.innerWidth * .985;
-            $scope.tableHeight = window.innerHeight * .81;
+            $scope.tableHeight = window.innerHeight - 130;
 
             var table = document.getElementById('my-hot-table');
 
@@ -767,7 +767,7 @@
         function updateHotTable() {
 
             var newWidth = window.innerWidth * .985;
-            var newHeight = window.innerHeight * .81;
+            var newHeight = window.innerHeight - document.getElementById("my-hot-table").offsetTop - 27;
 
             if (hot) {
     
