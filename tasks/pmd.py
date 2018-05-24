@@ -1,19 +1,26 @@
 from cumulusci.core.exceptions import CommandException
 from cumulusci.core.tasks import BaseTask
+from cumulusci.core.utils import process_bool_arg
+import os
+from subprocess import Popen, PIPE
 
 class pmd(BaseTask):
     name = 'pmd'
     task_options = {
         'path': {
             'description': 'The local path to run PMD against. Defaults to src/classes',
-            'required': False,
+            'required': False
         },
         'output': {
             'description': 'The report type to the output. Available options are text and html. The html report type creates a file in the current working directory. Defaults to text.',
-            'required': False,
+            'required': False
         },
         'htmlfilename': {
             'description': 'The name of the html file to be written to the directory. This only applies if the output is html. Defaults to pmd.html',
+            'required': False
+        },
+        'runAllApex' : {
+            'description': 'If True, runs the entire path specified instead of just changed files',
             'required': False
         }
     }
@@ -30,20 +37,32 @@ class pmd(BaseTask):
             self.options['htmlfilename'] = 'pmd.html'
 
     def _run_task(self):
-        args = [
-            'pmd', 'pmd',
-            '-d', self.options['path'],
-            '-l', 'apex',
-            '-f', self.options['output'],
-            '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
-            '-failOnViolation', 'false'
-        ]
+        if process_bool_arg(self.options.get('runAllApex', True)):
+            args = [
+                'pmd', 'pmd',
+                '-d', self.options['path'],
+                '-l', 'apex',
+                '-f', self.options['output'],
+                '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
+                '-failOnViolation', 'false'
+            ]
+        else:
+            #create CSV file and save list of changed files
+            file = open('changedFiles.txt', 'w')
+            pr = Popen(("git status --porcelain | sed s/^...// | paste -s -d, changedFiles.txt", os.getcwd() ), stdout=PIPE, stderr=PIPE, shell=True)
+
+            args = [
+                'pmd', 'pmd',
+                '-filelist', 'changedFiles.txt',
+                '-l', 'apex',
+                '-f', self.options['output'],
+                '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
+                '-failOnViolation', 'false'
+            ]
 
         stdout = None
         if self.options['output'] == 'html':
             stdout = open(self.options['htmlfilename'], 'w')
-
-        from subprocess import Popen, PIPE
 
         process = Popen(args, stdout=stdout, stderr=PIPE)
 
