@@ -162,6 +162,9 @@ public class CMT_MetadataAPI {
             if (!Test.isRunningTest()) {
                 upsert crlpSettings;
             }
+            if (isSuccess) {
+                UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
+            }
         }
     }
 }
