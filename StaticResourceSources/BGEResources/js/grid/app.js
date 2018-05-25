@@ -599,7 +599,7 @@
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
-            actionCol.className = "htCenter htMiddle";
+            actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
             for (var i = 0; i < $scope.columnsData.length; i++) {
@@ -798,6 +798,8 @@
             Handsontable.dom.empty(td);
             td.appendChild(selectElement);
 
+            td.className = 'action-cell';
+
             return td;
         }
 
@@ -825,6 +827,7 @@
             var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
 
             td.innerHTML = actionIcon;
+
             return td;
         }
 
@@ -894,6 +897,7 @@
         function getLightningPicklist() {
 
             var divControl = document.createElement('div');
+
             divControl.className = 'slds-dropdown-trigger slds-dropdown-trigger_click picklist-click';
 
             var divButton = document.createElement('button');

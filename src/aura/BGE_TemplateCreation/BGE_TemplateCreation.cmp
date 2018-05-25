@@ -65,9 +65,14 @@
                 </aura:if>
 
                 <div class="slds-size_1-of-2 slds-clearfix">
-                    <div class="slds-float_right">
+
+                    <div class="slds-float_right slds-m-right_small">
+                            <lightning:button class="button-style button-size" label="Cancel" onclick="{! c.cancel }" />
+                    </div>
+                    <div class="slds-float_right slds-m-right_small">
                         <lightning:button class="button-style button-size" label="Save Template" onclick="{! c.save }" />
                     </div>
+
                 </div>
             </div>
         </div>
