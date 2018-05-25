@@ -85,7 +85,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, 
             BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
-            from Account where Name <> 'OrgAccount' order by Id]);
+            from Account where Id != :accOrg.Id order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
             from Contact order by Id];
@@ -162,7 +162,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         list<Account> listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, 
             BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry 
-            from Account where Name <> 'OrgAccount' order by Id]);
+            from Account where Id != :accOrg.Id order by Id]);
         system.assertEquals(conWinner.AccountId, listAcc[0].Id);
         Account accWinner = listAcc[0];
         system.assertEquals(conLoser.AccountId, listAcc[1].Id);
