@@ -270,7 +270,9 @@
             console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
-
+            console.warn('SOURCE OPTIONS:    ', sourceOptions);
+            console.warn('INDEX IS LOADING   ', $scope.isIndexLoading);
+            console.warn('CHANGES:    ', changes);
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
 
                 var cellRecords = [];
@@ -749,6 +751,16 @@
                 $scope.rowsCount = result.rowsCount;
                 $scope.rowsAmount = result.rowsAmount;
                 $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
+
+                if ($scope.offset >= $scope.totalPages - 1) {
+
+                    $scope.nextButonDisabled = true;
+                }
+                else {
+
+                    $scope.nextButonDisabled = false;
+                }
+ 
                 $scope.$apply();
             }
         }
