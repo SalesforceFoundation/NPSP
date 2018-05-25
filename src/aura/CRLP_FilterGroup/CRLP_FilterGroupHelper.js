@@ -393,7 +393,13 @@
             var field = cmp.get("v.activeFilterRule.fieldName");
             //record type is a special case where we want to exactly match options and provide picklists
             if (field !== 'RecordTypeId') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                //check if text field is offered but a user can enter a list of semi-colon separated values
+                if (operator === 'In_List' || operator === 'Not_In_List'
+                    || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                    cmp.set("v.filterRuleFieldType", 'text-picklist');
+                } else {
+                    cmp.set("v.filterRuleFieldType", 'text');
+                }
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.activeFilterRule.value", value);
@@ -409,7 +415,7 @@
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
         } else {
-            //special case where text field is offered but a user can enter a list of semi-colon separated values
+            //same check for semi-colon separated values
             if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
                 cmp.set("v.filterRuleFieldType", 'text-picklist');
