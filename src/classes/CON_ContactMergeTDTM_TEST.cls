@@ -88,7 +88,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
             from Account where Name <> 'OrgAccount' order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the merge
         system.assertEquals(1, listAcc.size());
@@ -172,7 +172,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
         system.assertEquals(conWinner.Id, listCon[1].Id);
         conWinner = listCon[1];            
             
@@ -260,7 +260,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
         system.assertEquals(conWinner.Id, listCon[1].Id);
         conWinner = listCon[1];            
             
@@ -318,7 +318,7 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
         system.assertEquals(3, listCon.size());
         system.assertEquals(conWinner.Id, listCon[2].Id);
         conWinner = listCon[2];            
