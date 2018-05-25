@@ -162,7 +162,7 @@ global class BGE_HandsOnGridController {
         }
 
 
-    //    System.debug(JSON.serializePretty(result));
+        // System.debug(JSON.serializePretty(result));
 
         return result.values();
     }
