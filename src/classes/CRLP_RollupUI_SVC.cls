@@ -513,7 +513,7 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public static Map<String, String> getAppLabels() {
 
-        PageReference settingsPage = new PageReference('/apex/STG_SettingsManager');
+        PageReference settingsPage = Page.STG_SettingsManager;
 
             Map<String, String> labels = new Map<String,String>
             {
