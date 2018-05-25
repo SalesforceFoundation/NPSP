@@ -178,6 +178,28 @@
         return false;
     },
 
+    cancel : function (component, event, helper) {
+
+        var recordId = component.get("v.recordId");
+        var cancelEvent = $A.get("e.force:navigateToURL");
+
+        if (recordId) {
+            cancelEvent = $A.get("e.force:navigateToSObject");
+
+            cancelEvent.setParams({
+                "recordId": recordId,
+                "slideDevName": "details"
+            });
+        }
+        else {
+            cancelEvent.setParams({
+                "url": "/one/one.app#/sObject/Batch_Template__c/list"
+            });
+        }
+
+        cancelEvent.fire();
+    },
+
     nextToInitial: function (component, event, helper) {
 
         $A.createComponent(

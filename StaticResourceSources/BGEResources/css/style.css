@@ -140,3 +140,7 @@
 td.tooltip-cell {
     background: white !important;
 }
+
+.action-cell {
+    text-align: center !important;
+}
