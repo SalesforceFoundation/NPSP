@@ -19,14 +19,12 @@
     <actionOverrides>
         <actionName>Edit</actionName>
         <content>BGE_TemplateCreation</content>
-        <formFactor>Small</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
         <content>BGE_TemplateCreation</content>
-        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -41,14 +39,12 @@
     <actionOverrides>
         <actionName>New</actionName>
         <content>BGE_TemplateCreation</content>
-        <formFactor>Small</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
         <content>BGE_TemplateCreation</content>
-        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
