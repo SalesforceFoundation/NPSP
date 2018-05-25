@@ -1,0 +1,30 @@
+<apex:page controller="STG_PanelMultipleTribute_CTRL">
+    <apex:form id="form" styleClass="slds-m-around--x-large">
+        <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="Multiple Tributes" />
+        <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgMultipleTributeSettings}" escape="false" /></div>
+        <c:UTIL_PageMessages />
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton id="editMT" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+        <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form-element">
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Multiple_Tributes__c.label}" for="multipleTributeModel" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Multiple_Tributes__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.Multiple_Tributes__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="multipleTributeModel" html-aria-describedby="{!$Component.multipleTributeModelHelp}" styleClass="slds-select" >
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeST}" itemLabel="{!$Label.stgMultipleTributeST}"/>
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeLose}" itemLabel="{!$Label.stgMultipleTributeLose}"/>
+                        <apex:selectOption itemValue="{!$Label.stgMultipleTributeStrict}" itemLabel="{!$Label.stgMultipleTributeStrict}"/>
+                    </apex:selectList>
+                    <apex:outputPanel id="multipleTributeModelHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Multiple_Tributes__c.inlineHelpText}" />
+                    </apex:outputPanel>
+                </div>
+            </div>
+        </div>
+        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">
+            <apex:commandButton id="saveBDE" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
+            <apex:commandButton id="cancelBDE" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        </div>
+    </apex:form>
+</apex:page>

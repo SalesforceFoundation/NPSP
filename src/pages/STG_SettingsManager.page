@@ -158,6 +158,7 @@
                                 <!--in an outputlink so it can be rerendered when CRLP enablement changes-->
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelUserRollupNav"><apex:outputLink id="UDRsTreeItem" value="#" onClick="ShowPanel('idPanelUserRollup');return false;" styleClass="slds-grow slds-m-left--large" style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:none', 'display:block')}">{!$Label.stgNavUserDefinedRollups}</apex:outputLink></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelCustomizableRollupNav"><a href="#" onclick="ShowPanel('idPanelCustomizableRollup');return false;" class="slds-grow slds-m-left--large">{!$Label.CRLP_RollupSummary}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPaneMultipleTributeNav"><a href="#" onclick="ShowPanel('idPaneMultipleTribute');return false;" class="slds-grow slds-m-left--large">Multiple Tributes</a></li>
                             </ul>
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
@@ -196,6 +197,7 @@
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelRDBatchNav"><a href="#" onclick="ShowPanel('idPanelRDBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgNavRDBatch}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelLvlAssignBatchNav"><a href="#" onclick="ShowPanel('idPanelLvlAssignBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelLvlAssignBatchTitle}</a></li>
                                 <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelPrimaryContactRoleMergeNav"><a href="#" onclick="ShowPanel('idPanelPrimaryContactRoleMergeBatch');return false;" class="slds-grow slds-m-left--large">{!$Label.stgLabelPrimaryContactRoleMergeBatch}</a></li>
+                                <li class="slds-tree__item" role="treeitem" aria-level="2" id="idPanelMTBatchNav"><a href="#" onclick="ShowPanel('idPanelMTBatch');return false;" class="slds-grow slds-m-left--large">Create Tribute from Opportunity</a></li>
                             </ul>
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
@@ -307,6 +309,8 @@
 
                 <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
                     <apex:include pageName="STG_PanelCustomizableRollup" />
+                <div class="panel noborder" id="idPaneMultipleTribute" style="display:none" >
+                    <apex:include pageName="STG_PanelMultipleTribute" />
                 </div>
 
                 <!-- Recurring Donations -->
@@ -365,6 +369,10 @@
 
                 <div class="panel noborder" id="idPanelRDBatch" style="display:none" >
                     <apex:include pageName="STG_PanelRDBatch" />
+                </div>
+
+                <div class="panel noborder" id="idPanelMTBatch" style="display:none" >
+                    <apex:include pageName="STG_PanelMTBatch" />
                 </div>
 
                 <!-- System Tools -->

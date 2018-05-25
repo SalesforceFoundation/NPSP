@@ -53,10 +53,16 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             setOpportunityAccountField((list<Opportunity>) newlist);
-            updateHonoreeNotificationFields((list<Opportunity>) newlist, null);
+
+            updateHonoreeNotificationFields(newlist, null, 'Opportunity');
 
         } else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
-            updateHonoreeNotificationFields((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
+            //If user only use Tribute object, we need to prevent user update existing Tribute Fields on Opportunity based on the setting
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeStrict) {
+                preventUpdateTributeInfoOnOpportunity((List<Opportunity>) newlist, (list<Opportunity>) oldlist);
+            }
+
+            updateHonoreeNotificationFields(newlist, oldlist, 'Opportunity');
 
         } else if (triggerAction == TDTM_Runnable.Action.AfterInsert) {
             upsertContactRolesAfterInsert((list<Opportunity>) newlist);
@@ -65,6 +71,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             } catch (Exception ex) {
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.OPP);
             }
+
+            //If user only use Tribute object, system should Auto create Tribute record
+            if (UTIL_CustomSettingsFacade.getContactsSettings().Multiple_Tributes__c == Label.stgMultipleTributeStrict) {
+                createTributeFromOpportunity((list<Opportunity>) newlist);
+            }
+
         } else if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
             upsertContactRolesAfterUpdate((list<Opportunity>) newlist, (list<Opportunity>) oldlist);
         }
@@ -151,49 +163,110 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     }
 
     /*******************************************************************************************************
+    * @description
+    * @param listOpps List of Opportunities from trigger.new
+    ********************************************************************************************************/
+    private static void createTributeFromOpportunity(List<Opportunity> listOpps) {
+        List<Tribute__c> tributeToInsert = new List<Tribute__c>();
+        for(Opportunity opp : listOpps) {
+            if(opp.Honoree_Contact__c != null || opp.Honoree_Name__c != null ||
+                    opp.Notification_Recipient_Contact__c != null || opp.Notification_Recipient_Name__c != null) {
+                //Create new Tribute Record based on the Opportunity Tribute Fields
+                Tribute__c newTribute = new Tribute__c();
+                createTributeFromOpportunityHelper(newTribute, opp);
+                tributeToInsert.add(newTribute);
+            }
+        }
+
+        //Set a flag in Tribute TDTM to remember to clear the tribute field on Opportunity
+        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = true;
+        insert tributeToInsert;
+        TBU_OpportintyContactRoles_TDTM.clearTributeFieldsFromOpportunity = false;
+
+    }
+
+
+    public static void createTributeFromOpportunityHelper(Tribute__c newTribute, Opportunity opp) {
+        newTribute.Opportunity__c = opp.Id;
+        newTribute.Tribute_Type__c = opp.Tribute_Type__c;
+        newTribute.Honoree_Contact__c = opp.Honoree_Contact__c;
+        newTribute.Honoree_Name__c = opp.Honoree_Name__c;
+        newTribute.Notification_Recipient_Contact__c = opp.Notification_Recipient_Contact__c;
+        newTribute.Notification_Recipient_Name__c = opp.Notification_Recipient_Name__c;
+        newTribute.Notification_Recipient_Information__c = opp.Notification_Recipient_Information__c;
+        newTribute.Notification_Preference__c = opp.Notification_Preference__c;
+        newTribute.Notification_Message__c = opp.Notification_Message__c;
+    }
+
+    /*******************************************************************************************************
+    * @description
+    * @param listOpps List of Opportunities from trigger.new
+    * @param oldListOpps List of Opportunities from trigger.old
+    ********************************************************************************************************/
+    private void preventUpdateTributeInfoOnOpportunity(List<Opportunity> listOpps, List<Opportunity> oldListOpps) {
+        for(integer i = 0; i < listOpps.size(); i ++) {
+            Opportunity newOpp = listOpps[i];
+            Opportunity oldOpp = oldListOpps[i];
+
+            if(newOpp.Tribute_Type__c != oldOpp.Tribute_Type__c ||
+                    newOpp.Honoree_Contact__c != oldOpp.Honoree_Contact__c ||
+                    newOpp.Honoree_Name__c != oldOpp.Honoree_Name__c ||
+                    newOpp.Notification_Recipient_Contact__c != oldOpp.Notification_Recipient_Contact__c ||
+                    newOpp.Notification_Recipient_Name__c != oldOpp.Notification_Recipient_Name__c ||
+                    newOpp.Notification_Preference__c != oldOpp.Notification_Preference__c ||
+                    newOpp.Notification_Message__c != oldOpp.Notification_Message__c ||
+                    newOpp.Notification_Recipient_Information__c != oldOpp.Notification_Recipient_Information__c) {
+                newOpp.AddError(Label.stgMultipleTributePreventUpdate);
+
+            }
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Detects changes in the opportunity Honoree Contact, and Notification Recipient Contact 
     * fields and updates Honoree Name and Notification Recipient Name fields.
-    * @param listOpps List of opportunities from trigger.new
-    * @param listOldOpps List of opportunities from trigger.old
+    * @param listSObjs List of Sobjects from trigger.new
+    * @param listOldSObjs List of Sobjects from trigger.old
+    * @param objType The Type of the object
     ********************************************************************************************************/
-    private static void updateHonoreeNotificationFields(list<Opportunity> listOpps, list<Opportunity> listOldOpps) {
+    public static void updateHonoreeNotificationFields(list<Sobject> listSObjs, list<Sobject> listOldSObjs, String objType) {
         map<id,Contact> mapConIdContact = new map<id,Contact>();
         list<String> listFields = new list<string>{'Honoree_Contact__c','Notification_Recipient_Contact__c'};
 
-        for (integer i=0; i<listOpps.size(); i++) {
-            Opportunity newOpp = listOpps[i];
-            Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+        for (integer i=0; i<listSObjs.size(); i++) {
+            Sobject newSObj = listSObjs[i];
+            Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  UTIL_Describe.getPrototypeObject(objType);
             for (string field : listFields) {
-                if (newOpp.get(field) != oldOpp.get(field)) {
-                    if (newOpp.get(field)!=null)
-                        mapConIdContact.put((id)newOpp.get(field), null);
-                    if (oldOpp.get(field)!=null)
-                        mapConIdContact.put((id)oldOpp.get(field), null);
+                if (newSObj.get(field) != oldSObj.get(field)) {
+                    if (newSObj.get(field)!=null)
+                        mapConIdContact.put((id)newSObj.get(field), null);
+                    if (oldSObj.get(field)!=null)
+                        mapConIdContact.put((id)oldSObj.get(field), null);
                 }
             }
         }
 
         if (!mapConIdContact.isEmpty()) {
             mapConIdContact = new map<id,Contact>([SELECT Id, Name FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
-            for (integer i=0; i<listOpps.size(); i++) {
-                Opportunity newOpp = listOpps[i];
-                Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+            for (integer i=0; i<listSObjs.size(); i++) {
+                Sobject newSObj = listSObjs[i];
+                Sobject oldSObj = listOldSObjs!=null && !listOldSObjs.IsEmpty() ? listOldSObjs[i] :  UTIL_Describe.getPrototypeObject(objType);
 
                 for (string field : listFields) {
-                    if (newOpp.get(field) != oldOpp.get(field)) {
+                    if (newSObj.get(field) != oldSObj.get(field)) {
                         //get the text name field
                         string nameField = field.replace('Contact','Name');
                         
                         string oldName;
-                        if (oldOpp.get(field)!=null)
-                            oldName = mapConIdContact.get((id)oldOpp.get(field)).Name;
+                        if (oldSObj.get(field)!=null)
+                            oldName = mapConIdContact.get((id)oldSObj.get(field)).Name;
                         //only overwrite the name field if it's blank, or if we've switched contacts and it contained the old name
-                        if (newOpp.get(nameField) == null || newOpp.get(nameField) == oldName) {
-                            id newContactId = (id)newOpp.get(field);
+                        if (newSObj.get(nameField) == null || newSObj.get(nameField) == oldName) {
+                            id newContactId = (id)newSObj.get(field);
                             if (newContactId != null) {
-                                newOpp.put(nameField, mapConIdContact.get(newContactId).Name);
+                                newSObj.put(nameField, mapConIdContact.get(newContactId).Name);
                             } else {
-                                newOpp.put(nameField, '');
+                                newSObj.put(nameField, '');
                             }
                         }
                     }
@@ -258,11 +331,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }
             }
             //using cloned opp to check if these OCRs need to be managed, as it relies on the Primary Contact field being populated
-            if (needsManageOCR(clonedOpp, new Opportunity(), 'Honoree_Contact__c')) {
+            if (needsManageOCR(clonedOpp, new Opportunity(), 'Honoree_Contact__c', clonedOpp.Primary_Contact__c)) {
                 dmlWrapper.objectsToInsert.add(getOCR(clonedOpp,'Honoree_Contact__c'));
             }
 
-            if (needsManageOCR(clonedOpp, new Opportunity(), 'Notification_Recipient_Contact__c')) {
+            if (needsManageOCR(clonedOpp, new Opportunity(), 'Notification_Recipient_Contact__c', clonedOpp.Primary_Contact__c)) {
                 dmlWrapper.objectsToInsert.add(getOCR(clonedOpp, 'Notification_Recipient_Contact__c'));
             }
         }
@@ -308,8 +381,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         //find changed opportunities and instantiate a map entry to hold OCRs
         for (integer i=0; i<listOpps.size(); i++) {
             if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
-                needsManageOCR(listOpps[i], listOldOpps[i], 'Honoree_Contact__c') || 
-                needsManageOCR(listOpps[i], listOldOpps[i], 'Notification_Recipient_Contact__c')) {
+                needsManageOCR(listOpps[i], listOldOpps[i], 'Honoree_Contact__c', listOpps[i].Primary_Contact__c) ||
+                needsManageOCR(listOpps[i], listOldOpps[i], 'Notification_Recipient_Contact__c', listOpps[i].Primary_Contact__c)) {
 
                 mapOppIdMapConIdOCR.put(listOpps[i].id, new map<id,OpportunityContactRole>());
             }
@@ -326,16 +399,16 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 Opportunity newOpp = listOpps[i];
                 Opportunity oldOpp = listOldOpps[i];
                 //first, manage primary contact role if the primary contact has changed
-                if (needsManageOCR(newOpp, oldOpp, 'Primary_Contact__c')) {
+                if (needsManageOCR(newOpp, oldOpp, 'Primary_Contact__c', newOpp.Primary_Contact__c)) {
                     managePrimaryOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id));
                 }
                 //then manage honoree, if it has changed and it's not the same as the primary contact
-                if (needsManageOCR(newOpp, oldOpp, 'Honoree_Contact__c')) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), 'Honoree_Contact__c');
+                if (needsManageOCR(newOpp, oldOpp, 'Honoree_Contact__c', newOpp.Primary_Contact__c)) {
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), 'Honoree_Contact__c', false);
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
-                if (needsManageOCR(newOpp, oldOpp, 'Notification_Recipient_Contact__c')) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), 'Notification_Recipient_Contact__c');
+                if (needsManageOCR(newOpp, oldOpp, 'Notification_Recipient_Contact__c', newOpp.Primary_Contact__c)) {
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), 'Notification_Recipient_Contact__c', false);
                 }
             }
         }
@@ -404,30 +477,30 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     /*******************************************************************************************************
     * @description Manages create and update of the Opportunity Contact Roles for the Honoree and Notification
     * Recipient contact lookup fields.
-    * @param opp The current opportunity from trigger.new
-    * @param oldOpp The old opportunity from trigger.old
+    * @param obj The current opportunity from trigger.new
+    * @param oldObj The old opportunity from trigger.old
     * @param mapConIdOCR A map of contact id to Opportunity Contact Role records for this opportunity.
     * @param fieldName The API name of the field to verify
     * @return void This method adds records to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private void manageOtherOCR(Opportunity opp, Opportunity oldOpp, map<id,OpportunityContactRole> mapConIdOCR, string fieldName) {
-        id idNewCon = (id)opp.get(fieldName);
-        id idOldCon = (id)oldOpp.get(fieldName);
+    public void manageOtherOCR(SObject obj, SObject oldObj, map<id,OpportunityContactRole> mapConIdOCR, string fieldName, boolean processDML) {
+        id idNewCon = (id) obj.get(fieldName);
+        id idOldCon = (id) oldObj.get(fieldName);
         OpportunityContactRole ocrNewCon = mapConIdOCR.get(idNewCon);
         OpportunityContactRole ocrOldCon = mapConIdOCR.get(idOldCon);
 
         if (idNewCon == null) {
             //if the lookup field was blanked out, and an OCR matches the previous contact with the correct role, delete it
-            if (idOldCon!=null && ocrOldCon!=null) {
+            if (idOldCon != null && ocrOldCon != null) {
                 if (ocrOldCon.Role == getRole(fieldName)) {
-                    dmlWrapper.objectsToDelete.add((SObject)ocrOldCon);
+                    dmlWrapper.objectsToDelete.add((SObject) ocrOldCon);
                 }
             }
-        //the lookup has a new contact
+            //the lookup has a new contact
         } else if (idNewCon != null) {
             //net new contact, i.e. no old contact; create a contact role if we don't have one for this contact yet
             if (idOldCon == null && ocrNewCon == null) {
-                dmlWrapper.objectsToInsert.add(getOCR(opp,fieldName));
+                dmlWrapper.objectsToInsert.add(getOCR(obj, fieldName));
             }
             //contact lookup changed from one contact to another
             if (idOldCon != null) {
@@ -437,15 +510,20 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     if (ocrNewCon == null) {
                         ocrOldCon.ContactId = idNewCon;
                         dmlWrapper.objectsToUpdate.add(ocrOldCon);
-                    //our new contact already has an OCR, delete the old one
+                        //our new contact already has an OCR, delete the old one
                     } else {
                         dmlWrapper.objectsToDelete.add(ocrOldCon);
                     }
-                //new contact doesn't have an OCR yet, create one with the appropriate role
+                    //new contact doesn't have an OCR yet, create one with the appropriate role
                 } else if (ocrNewCon == null) {
-                    dmlWrapper.objectsToInsert.add(getOCR(opp,fieldName));
+                    dmlWrapper.objectsToInsert.add(getOCR(obj, fieldName));
                 }
             }
+        }
+
+        //If other class call manageOtherOCR method, we might need to processDML right away
+        if (processDML) {
+            TDTM_TriggerHandler.processDML(dmlWrapper);
         }
     }
 
@@ -469,14 +547,20 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     /*******************************************************************************************************
     * @description Returns a new OpportunityContactRole record, based on an opportunity and the API name of 
     * the contact lookup field.
-    * @param opp The opportunity for which to create an OCR.
+    * @param obj The opportunity for which to create an OCR.
     * @param fieldName The name of the opportunity field.
     * @return OpportunityContactRole The newly created OCR.
     ********************************************************************************************************/
-    private OpportunityContactRole getOCR(Opportunity opp, string fieldName) {
+    public OpportunityContactRole getOCR(SObject obj, string fieldName) {
         OpportunityContactRole ocr = new OpportunityContactRole();
-        ocr.OpportunityId = opp.id;
-        ocr.ContactId = (id)opp.get(fieldname);
+        //If it is an opportunity, then we just use the id,
+        //otherwise we assume that the obj (Such as Tribute) has a lookup (Opportunity__c) field
+        if (obj instanceof Opportunity) {
+            ocr.OpportunityId = obj.id;
+        } else {
+            ocr.OpportunityId = (id)obj.get('Opportunity__c');
+        }
+        ocr.ContactId = (id)obj.get(fieldname);
         ocr.Role = getRole(fieldName);
         if (fieldName == 'Primary_Contact__c')
             ocr.isPrimary = true;
@@ -488,26 +572,26 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * Contact Role associated with that field. For automatic management, the lookup field's associated role custom
     * setting needs a value, the value in the lookup field needs to be new or have changed, and the contact
     * needs to be different from a contact that's already managed.
-    * @param opp The current opportunity from trigger.new
-    * @param oldOpp The old opportunity from trigger.old
+    * @param obj The current opportunity from trigger.new
+    * @param oldObj The old opportunity from trigger.old
     * @param fieldName The API name of the field to verify
     * @return boolean Whether this opportunity and field needs OCR handling.
     ********************************************************************************************************/
-    private boolean needsManageOCR(Opportunity opp, Opportunity oldOpp, string fieldName) {
+    public boolean needsManageOCR(SObject obj, SObject oldObj, string fieldName, Id primaryContactId) {
         //no role for this field
         if (string.isBlank(getRole(fieldName)))
             return false;
         //field value hasn't changed
-        if (opp.get(fieldName) == oldOpp.get(fieldName))
+        if (obj.get(fieldName) == oldObj.get(fieldName))
             return false;
         //the honoree contact is the same as the primary contact, thus is already managed
-        if (fieldName == 'Honoree_Contact__c' && opp.Honoree_Contact__c == opp.Primary_Contact__c)
+        if (fieldName == 'Honoree_Contact__c' && obj.get('Honoree_Contact__c') == primaryContactId)
             return false;
         //the notification recipient contact is the same as the primary contact, thus the OCR is already managed
-        if (fieldName == 'Notification_Recipient_Contact__c' && opp.Notification_Recipient_Contact__c == opp.Primary_Contact__c)
+        if (fieldName == 'Notification_Recipient_Contact__c' && obj.get('Notification_Recipient_Contact__c') == primaryContactId)
             return false;
         //the notification recipient contact is the same as the honoree contact, thus the OCR is already managed
-        if (fieldName == 'Notification_Recipient_Contact__c' && opp.Notification_Recipient_Contact__c == opp.Honoree_Contact__c)
+        if (fieldName == 'Notification_Recipient_Contact__c' && obj.get('Notification_Recipient_Contact__c') == obj.get('Honoree_Contact__c'))
             return false;
 
         return true;
