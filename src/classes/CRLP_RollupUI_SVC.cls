@@ -513,6 +513,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public static Map<String, String> getAppLabels() {
 
+        PageReference settingsPage = Page.STG_SettingsManager;
+
             Map<String, String> labels = new Map<String,String>
             {
                 'action' => Label.stgLabelActionColumn,
@@ -648,6 +650,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'summaryObject' => Schema.Rollup__mdt.Summary_Object__c.getDescribe().getLabel(),
                 'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
+                'urlNamespacePrefix' => settingsPage.getUrl(),
                 'view' => Label.stgLabelView,
                 'warning' => Label.PageMessagesWarning
             };
