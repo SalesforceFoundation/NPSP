@@ -62,12 +62,20 @@ public class CRLP_DefaultConfigBuilder {
     public static final String LastNDaysAllocString = (legacyAllocSettings.Rollup_N_Day_Value__c != null ?
         String.valueOf(legacyAllocSettings.Rollup_N_Day_Value__c.intValue()) : '365');
 
-        /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Account rollups) */
-    public static String FilterGroup_Opps_Accounts = RecordNamePrefix + 'ClosedWon_Opps' +
+    /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Account rollups) */
+    public static String FilterGroup_Opps_Accounts_HC = RecordNamePrefix + 'ClosedWon_Opps_HC' +
+            (isDifferentContactFilterGroupNeeded  ? '_Accounts' : '');
+
+    /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Account rollups) */
+    public static String FilterGroup_Opps_Accounts_SC = RecordNamePrefix + 'ClosedWon_Opps_SC' +
             (isDifferentContactFilterGroupNeeded  ? '_Accounts' : '');
 
     /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Contact rollups) */
-    public static String FilterGroup_Opps_Contacts = RecordNamePrefix + 'ClosedWon_Opps' +
+    public static String FilterGroup_Opps_Contacts_HC = RecordNamePrefix + 'ClosedWon_Opps_HC' +
+            (isDifferentContactFilterGroupNeeded ? '_Contacts' : '');
+
+    /** @description The RecordName for the default filter group of Closed Won Donations (Unique to Contact rollups) */
+    public static String FilterGroup_Opps_Contacts_SC = RecordNamePrefix + 'ClosedWon_Opps_SC' +
             (isDifferentContactFilterGroupNeeded ? '_Contacts' : '');
 
     /** @description The RecordName for the default filter group of Closed Won Membership */
@@ -111,41 +119,41 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Account Hard Credit ======== */
             'Account.npo02__AverageAmount__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Account.npo02__FirstCloseDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Account.npo02__LargestAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
             'Account.npo02__LastCloseDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__LastOppAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
             'Account.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
             'Account.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
             'Account.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
             'Account.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
             'Account.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
             'Account.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
             'Account.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
             'Account.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
             'Account.npo02__SmallestAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
             'Account.npo02__TotalOppAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Accounts_HC, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
 
             /* ======== Account Membership ======== */
             'Account.npo02__TotalMembershipOppAmount__c' =>
@@ -167,75 +175,75 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Contact Hard Credit ======== */
             'Contact.npo02__AverageAmount__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Average', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Best_Year', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ opportunityObject, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Contact.npo02__FirstCloseDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Contact.npo02__LargestAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
             'Contact.npo02__LastCloseDate__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__LastOppAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Count', '', '' },
             'Contact.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
             'Contact.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
             'Contact.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
             'Contact.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
             'Contact.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
             'Contact.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
             'Contact.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
             'Contact.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
             'Contact.npo02__SmallestAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Smallest', 'All_Time', '' },
             'Contact.npo02__TotalOppAmount__c' =>
-                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
+                    new List<String>{ oppAmountFld, FilterGroup_Opps_Contacts_HC, oppAmountFld, oppCloseDateFld, 'Sum', '', '' },
 
             /* ======== Contact Soft Credit ======== */
             'Contact.First_Soft_Credit_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Contact.Last_Soft_Credit_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.First_Soft_Credit_Amount__c' =>
-                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'First', 'All_Time', '' },
             'Contact.Largest_Soft_Credit_Amount__c' =>
-                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
             'Contact.Largest_Soft_Credit_Date__c' =>
-                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ oppCloseDateFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Largest', 'All_Time', '' },
             'Contact.Last_Soft_Credit_Amount__c' =>
-                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ pscAmountFld, FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__Soft_Credit_Last_Year__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '1' },
             'Contact.npo02__Soft_Credit_This_Year__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '0' },
             'Contact.npo02__Soft_Credit_Total__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Sum', 'All_Time', '' },
             'Contact.npo02__Soft_Credit_Two_Years_Ago__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Sum', 'Years_Ago', '2' },
             'Contact.Number_of_Soft_Credits__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Count', 'All_Time', '' },
             'Contact.Number_of_Soft_Credits_Last_N_Days__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Count', 'Days_Back', LastNDaysString },
             'Contact.Number_of_Soft_Credits_Last_Year__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '1' },
             'Contact.Number_of_Soft_Credits_This_Year__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '0' },
             'Contact.Number_of_Soft_Credits_Two_Years_Ago__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Count', 'Years_Ago', '2' },
             'Contact.Soft_Credit_Last_N_Days__c' =>
-                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts, pscAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
+                    new List<String>{ 'Partial_Soft_Credit__c', FilterGroup_Opps_Contacts_SC, pscAmountFld, oppCloseDateFld, 'Sum', 'Days_Back', LastNDaysString },
 
             /* ======== Contact Membership ======== */
             'Contact.npo02__TotalMembershipOppAmount__c' =>
