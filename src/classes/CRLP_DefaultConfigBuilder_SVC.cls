@@ -732,40 +732,47 @@ public class CRLP_DefaultConfigBuilder_SVC {
         };
 
         for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
-            if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
-                String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
-                Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
-                        || udrSourceFieldType == 'INTEGER'
-                        || udrSourceFieldType == 'PERCENT'
-                        || udrSourceFieldType == 'DOUBLE');
-                Boolean sourceFieldIsDate = (udrSourceFieldType == 'DATE'
-                        || udrSourceFieldType == 'DATETIME');
-                String operation = (sourceFieldIsDate ? convertDateUDROperationMap.get(udr.npo02__Field_Action__c) : convertUDROperationMap.get(udr.npo02__Field_Action__c));
-                List<String> sourceListWithoutNamespace = udr.npo02__Source_Field__c.split('__');
-                String sourceWithoutNamespace = (sourceListWithoutNamespace.size() == 3 ? sourceListWithoutNamespace[1]: sourceListWithoutNamespace[0]);
+            try {
+                if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
+                    String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
+                    String udrTargetFieldType = UTIL_Describe.getFieldType(udr.npo02__Object_Name__c, udr.npo02__Target_Field__c.toLowerCase());
 
-                String udrName = 'UDR: ' + operation + ' ' + sourceWithoutNamespace.replace('_', '') + ' to ' +
-                        udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_', '');
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
+                    Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
+                            || udrSourceFieldType == 'INTEGER'
+                            || udrSourceFieldType == 'PERCENT'
+                            || udrSourceFieldType == 'DOUBLE');
+                    Boolean sourceFieldIsDate = (udrSourceFieldType == 'DATE'
+                            || udrSourceFieldType == 'DATETIME');
+                    String operation = (sourceFieldIsDate ? convertDateUDROperationMap.get(udr.npo02__Field_Action__c) : convertUDROperationMap.get(udr.npo02__Field_Action__c));
+                    List<String> sourceListWithoutNamespace = udr.npo02__Source_Field__c.split('__');
+                    String sourceWithoutNamespace = (sourceListWithoutNamespace.size() == 3 ? sourceListWithoutNamespace[1]: sourceListWithoutNamespace[0]);
 
-                rollup.description = 'User Defined Roll-up';
-                rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
-                        ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC
-                        : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC);
-                rollup.summaryObject = udr.npo02__Object_Name__c;
-                rollup.summaryField = udr.npo02__Target_Field__c;
-                rollup.detailObject = 'Opportunity';
-                rollup.detailField = udr.npo02__Source_Field__c;
-                rollup.amountObject = 'Opportunity';
-                rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
-                rollup.dateObject = 'Opportunity';
-                rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
-                rollup.operation = operation;
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                rollup.isActive = true;
-                rollup.isDeleted = false;
-                rollups.add(rollup);
+                    String udrName = 'UDR: ' + operation + ' ' + sourceWithoutNamespace.replace('_', '') + ' to ' +
+                            udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_', '');
+                    CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
+
+                    rollup.description = 'User Defined Roll-up';
+                    rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
+                            ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC
+                            : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC);
+                    rollup.summaryObject = udr.npo02__Object_Name__c;
+                    rollup.summaryField = udr.npo02__Target_Field__c;
+                    rollup.detailObject = 'Opportunity';
+                    rollup.detailField = udr.npo02__Source_Field__c;
+                    rollup.amountObject = 'Opportunity';
+                    rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
+                    rollup.dateObject = 'Opportunity';
+                    rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
+                    rollup.operation = operation;
+                    rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                    rollup.isActive = true;
+                    rollup.isDeleted = false;
+                    rollups.add(rollup);
+                }
             }
+            catch(Exception ex) {
+                continue;
+            }  
         }
         return rollups;
     }
