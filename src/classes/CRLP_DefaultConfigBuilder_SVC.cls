@@ -107,6 +107,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStageHC.isDeleted = false;
         groupClosedWonDonationsHC.rules.add(ruleCloseWonStageHC);
 
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsHC.recordName, acctOpp +': Amount Not Null (HC)');
+        ruleAmountNotNullHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullHC.recordName;
+        ruleAmountNotNullHC.objectName = 'Opportunity';
+        ruleAmountNotNullHC.fieldName = 'Amount';
+        ruleAmountNotNullHC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullHC.value = null;
+        ruleAmountNotNullHC.isDeleted = false;
+        groupClosedWonDonationsHC.rules.add(ruleAmountNotNullHC);
+
         if (acctRTExclusionsExist) {
             CRLP_RollupCMT.FilterRule ruleRecordTypeHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsHC.recordName, acctOpp + ': Excl RT (HC)');
             ruleRecordTypeHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeHC.recordName;
@@ -150,6 +159,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStage1HC.isDeleted = false;
             groupClosedWonDonationsContactsHC.rules.add(ruleCloseWonStage1HC);
 
+            CRLP_RollupCMT.FilterRule ruleAmountNotNullConHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsHC.recordName, contOpp +': Amount Not Null (HC)');
+            ruleAmountNotNullConHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullConHC.recordName;
+            ruleAmountNotNullConHC.objectName = 'Opportunity';
+            ruleAmountNotNullConHC.fieldName = 'Amount';
+            ruleAmountNotNullConHC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+            ruleAmountNotNullConHC.value = null;
+            ruleAmountNotNullConHC.isDeleted = false;
+            groupClosedWonDonationsContactsHC.rules.add(ruleAmountNotNullConHC);
+
             if (conRTExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleRecordTypeConHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsHC.recordName, contOpp +': Excl RT (HC)');
                 ruleRecordTypeConHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeConHC.recordName;
@@ -192,6 +210,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStageSC.value = 'true';
         ruleCloseWonStageSC.isDeleted = false;
         groupClosedWonDonationsSC.rules.add(ruleCloseWonStageSC);
+
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsSC.recordName, acctOpp +': Amount Not Null (SC)');
+        ruleAmountNotNullSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullSC.recordName;
+        ruleAmountNotNullSC.objectName = 'Opportunity';
+        ruleAmountNotNullSC.fieldName = 'Amount';
+        ruleAmountNotNullSC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullSC.value = null;
+        ruleAmountNotNullSC.isDeleted = false;
+        groupClosedWonDonationsSC.rules.add(ruleAmountNotNullSC);
 
         if (acctRTExclusionsExist) {
             CRLP_RollupCMT.FilterRule ruleRecordTypeSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsSC.recordName, acctOpp + ': Excl RT (SC)');
@@ -247,6 +274,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStageConSC.isDeleted = false;
             groupClosedWonDonationsContactsSC.rules.add(ruleCloseWonStageConSC);
 
+            CRLP_RollupCMT.FilterRule ruleAmountNotNullConSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsSC.recordName, contOpp +': Amount Not Null (SC)');
+            ruleAmountNotNullConSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullConSC.recordName;
+            ruleAmountNotNullConSC.objectName = 'Opportunity';
+            ruleAmountNotNullConSC.fieldName = 'Amount';
+            ruleAmountNotNullConSC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+            ruleAmountNotNullConSC.value = null;
+            ruleAmountNotNullConSC.isDeleted = false;
+            groupClosedWonDonationsContactsSC.rules.add(ruleAmountNotNullConSC);
+
             if (conRTExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleRecordTypeConSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsSC.recordName, contOpp +': Excluded RT (SC)');
                 ruleRecordTypeConSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeConSC.recordName;
@@ -297,6 +333,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage2.value = 'true';
         ruleCloseWonStage2.isDeleted = false;
         groupMemberships.rules.add(ruleCloseWonStage2);
+
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullMembership = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Amount Not Null');
+        ruleAmountNotNullMembership.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullMembership.recordName;
+        ruleAmountNotNullMembership.objectName = 'Opportunity';
+        ruleAmountNotNullMembership.fieldName = 'Amount';
+        ruleAmountNotNullMembership.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullMembership.value = null;
+        ruleAmountNotNullMembership.isDeleted = false;
+        groupMemberships.rules.add(ruleAmountNotNullMembership);
 
         if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c != null) {
             CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
@@ -681,39 +726,53 @@ public class CRLP_DefaultConfigBuilder_SVC {
                 'SUM' => CRLP_Operation.RollupType.Sum.name()
         };
 
+        Map<String, String> convertDateUDROperationMap = new Map<String, String>{
+                'MIN' => CRLP_Operation.RollupType.First.name(),
+                'MAX' => CRLP_Operation.RollupType.Last.name()
+        };
+
         for (npo02__User_Rollup_Field_Settings__c udr : CRLP_DefaultConfigBuilder.legacyUDRSettings) {
-            if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
-                String udrName = 'UDR: ' + udr.npo02__Source_Field__c.replace('__c', '').replace('_', '') + ' to ' +
-                        udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_', '');
-                CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
-                // rollup.recordName = 'UDR_' + rollup.recordName;
-                rollup.description = 'User Defined Roll-up';
-                rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
-                        ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC
-                        : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC);
-                rollup.summaryObject = udr.npo02__Object_Name__c;
-                rollup.summaryField = udr.npo02__Target_Field__c;
-                rollup.detailObject = 'Opportunity';
-                rollup.detailField = udr.npo02__Source_Field__c;
+            try {
+                if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
+                    String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
+                    String udrTargetFieldType = UTIL_Describe.getFieldType(udr.npo02__Object_Name__c, udr.npo02__Target_Field__c.toLowerCase());
 
-                String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
-                Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
-                                                || udrSourceFieldType == 'INTEGER'
-                                                || udrSourceFieldType == 'PERCENT'
-                                                || udrSourceFieldType == 'DOUBLE');
-                Boolean sourceFieldIsDate = (udrSourceFieldType == 'DATE'
-                                                || udrSourceFieldType == 'DATETIME');
+                    Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
+                            || udrSourceFieldType == 'INTEGER'
+                            || udrSourceFieldType == 'PERCENT'
+                            || udrSourceFieldType == 'DOUBLE');
+                    Boolean sourceFieldIsDate = (udrSourceFieldType == 'DATE'
+                            || udrSourceFieldType == 'DATETIME');
+                    String operation = (sourceFieldIsDate ? convertDateUDROperationMap.get(udr.npo02__Field_Action__c) : convertUDROperationMap.get(udr.npo02__Field_Action__c));
+                    List<String> sourceListWithoutNamespace = udr.npo02__Source_Field__c.split('__');
+                    String sourceWithoutNamespace = (sourceListWithoutNamespace.size() == 3 ? sourceListWithoutNamespace[1]: sourceListWithoutNamespace[0]);
 
-                rollup.amountObject = 'Opportunity';
-                rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
-                rollup.dateObject = 'Opportunity';
-                rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
-                rollup.operation = convertUDROperationMap.get(udr.npo02__Field_Action__c);
-                rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
-                rollup.isActive = true;
-                rollup.isDeleted = false;
-                rollups.add(rollup);
+                    String udrName = 'UDR: ' + operation + ' ' + sourceWithoutNamespace.replace('_', '') + ' to ' +
+                            udr.npo02__Object_Name__c + '.' + udr.npo02__Target_Field__c.replace('__c', '').replace('_', '');
+                    CRLP_RollupCMT.Rollup rollup = new CRLP_RollupCMT.Rollup(udrName.left(40));
+
+                    rollup.description = 'User Defined Roll-up';
+                    rollup.filterGroupRecordName = (udr.npo02__Object_Name__c == 'Account'
+                            ? CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC
+                            : CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC);
+                    rollup.summaryObject = udr.npo02__Object_Name__c;
+                    rollup.summaryField = udr.npo02__Target_Field__c;
+                    rollup.detailObject = 'Opportunity';
+                    rollup.detailField = udr.npo02__Source_Field__c;
+                    rollup.amountObject = 'Opportunity';
+                    rollup.amountField = (sourceFieldIsAmount ? udr.npo02__Source_Field__c : 'Amount');
+                    rollup.dateObject = 'Opportunity';
+                    rollup.dateField = (sourceFieldIsDate ? udr.npo02__Source_Field__c : 'CloseDate');
+                    rollup.operation = operation;
+                    rollup.useFiscalYear = CRLP_DefaultConfigBuilder.legacySettings.npo02__Use_Fiscal_Year_for_Rollups__c;
+                    rollup.isActive = true;
+                    rollup.isDeleted = false;
+                    rollups.add(rollup);
+                }
             }
+            catch(Exception ex) {
+                continue;
+            }  
         }
         return rollups;
     }
