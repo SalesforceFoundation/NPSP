@@ -42,7 +42,7 @@
                 <field>Field__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Required</behavior>
+                <behavior>Edit</behavior>
                 <field>Constant__c</field>
             </layoutItems>
         </layoutColumns>
