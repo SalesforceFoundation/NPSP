@@ -158,6 +158,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                         // there are existing rollups. just save the setting and reschedule jobs, don't deploy.
                         stgService.saveAll();
                         UTIL_MasterSchedulableHelper.setScheduledJobs();
+                        UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
                     }
 
                 } else {
@@ -166,9 +167,9 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                     stgService.saveAll();
                     // reset to legacy jobs
                     UTIL_MasterSchedulableHelper.setScheduledJobs();
+                    UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
                 }
             }
-            UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
 
         } catch (Exception e) {
             Database.rollback(sp);
