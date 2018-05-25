@@ -735,6 +735,8 @@ public class CRLP_DefaultConfigBuilder_SVC {
             try {
                 if(udr.npo02__Object_Name__c != 'npo02__Household__c') {
                     String udrSourceFieldType = UTIL_Describe.getFieldType('Opportunity', udr.npo02__Source_Field__c.toLowerCase());
+                    String udrTargetFieldType = UTIL_Describe.getFieldType(udr.npo02__Object_Name__c, udr.npo02__Target_Field__c.toLowerCase());
+
                     Boolean sourceFieldIsAmount = (udrSourceFieldType == 'CURRENCY'
                             || udrSourceFieldType == 'INTEGER'
                             || udrSourceFieldType == 'PERCENT'
