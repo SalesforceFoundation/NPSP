@@ -760,7 +760,7 @@
 
                     $scope.nextButonDisabled = false;
                 }
-
+ 
                 $scope.$apply();
             }
         }
