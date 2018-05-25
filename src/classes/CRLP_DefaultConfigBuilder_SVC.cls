@@ -107,6 +107,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStageHC.isDeleted = false;
         groupClosedWonDonationsHC.rules.add(ruleCloseWonStageHC);
 
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsHC.recordName, acctOpp +': Amount Not Null (HC)');
+        ruleAmountNotNullHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullHC.recordName;
+        ruleAmountNotNullHC.objectName = 'Opportunity';
+        ruleAmountNotNullHC.fieldName = 'Amount';
+        ruleAmountNotNullHC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullHC.value = null;
+        ruleAmountNotNullHC.isDeleted = false;
+        groupClosedWonDonationsHC.rules.add(ruleAmountNotNullHC);
+
         if (acctRTExclusionsExist) {
             CRLP_RollupCMT.FilterRule ruleRecordTypeHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsHC.recordName, acctOpp + ': Excl RT (HC)');
             ruleRecordTypeHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeHC.recordName;
@@ -150,6 +159,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStage1HC.isDeleted = false;
             groupClosedWonDonationsContactsHC.rules.add(ruleCloseWonStage1HC);
 
+            CRLP_RollupCMT.FilterRule ruleAmountNotNullConHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsHC.recordName, contOpp +': Amount Not Null (HC)');
+            ruleAmountNotNullConHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullConHC.recordName;
+            ruleAmountNotNullConHC.objectName = 'Opportunity';
+            ruleAmountNotNullConHC.fieldName = 'Amount';
+            ruleAmountNotNullConHC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+            ruleAmountNotNullConHC.value = null;
+            ruleAmountNotNullConHC.isDeleted = false;
+            groupClosedWonDonationsContactsHC.rules.add(ruleAmountNotNullConHC);
+
             if (conRTExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleRecordTypeConHC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsHC.recordName, contOpp +': Excl RT (HC)');
                 ruleRecordTypeConHC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeConHC.recordName;
@@ -192,6 +210,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStageSC.value = 'true';
         ruleCloseWonStageSC.isDeleted = false;
         groupClosedWonDonationsSC.rules.add(ruleCloseWonStageSC);
+
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsSC.recordName, acctOpp +': Amount Not Null (SC)');
+        ruleAmountNotNullSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullSC.recordName;
+        ruleAmountNotNullSC.objectName = 'Opportunity';
+        ruleAmountNotNullSC.fieldName = 'Amount';
+        ruleAmountNotNullSC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullSC.value = null;
+        ruleAmountNotNullSC.isDeleted = false;
+        groupClosedWonDonationsSC.rules.add(ruleAmountNotNullSC);
 
         if (acctRTExclusionsExist) {
             CRLP_RollupCMT.FilterRule ruleRecordTypeSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsSC.recordName, acctOpp + ': Excl RT (SC)');
@@ -247,6 +274,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
             ruleCloseWonStageConSC.isDeleted = false;
             groupClosedWonDonationsContactsSC.rules.add(ruleCloseWonStageConSC);
 
+            CRLP_RollupCMT.FilterRule ruleAmountNotNullConSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsSC.recordName, contOpp +': Amount Not Null (SC)');
+            ruleAmountNotNullConSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullConSC.recordName;
+            ruleAmountNotNullConSC.objectName = 'Opportunity';
+            ruleAmountNotNullConSC.fieldName = 'Amount';
+            ruleAmountNotNullConSC.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+            ruleAmountNotNullConSC.value = null;
+            ruleAmountNotNullConSC.isDeleted = false;
+            groupClosedWonDonationsContactsSC.rules.add(ruleAmountNotNullConSC);
+
             if (conRTExclusionsExist) {
                 CRLP_RollupCMT.FilterRule ruleRecordTypeConSC = new CRLP_RollupCMT.FilterRule(groupClosedWonDonationsContactsSC.recordName, contOpp +': Excluded RT (SC)');
                 ruleRecordTypeConSC.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleRecordTypeConSC.recordName;
@@ -297,6 +333,15 @@ public class CRLP_DefaultConfigBuilder_SVC {
         ruleCloseWonStage2.value = 'true';
         ruleCloseWonStage2.isDeleted = false;
         groupMemberships.rules.add(ruleCloseWonStage2);
+
+        CRLP_RollupCMT.FilterRule ruleAmountNotNullMembership = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: Amount Not Null');
+        ruleAmountNotNullMembership.recordName = CRLP_DefaultConfigBuilder.RecordNamePrefix + ruleAmountNotNullMembership.recordName;
+        ruleAmountNotNullMembership.objectName = 'Opportunity';
+        ruleAmountNotNullMembership.fieldName = 'Amount';
+        ruleAmountNotNullMembership.operationName = CMT_FilterRule.FilterOperation.NOT_EQUALS.name();
+        ruleAmountNotNullMembership.value = null;
+        ruleAmountNotNullMembership.isDeleted = false;
+        groupMemberships.rules.add(ruleAmountNotNullMembership);
 
         if (CRLP_DefaultConfigBuilder.legacySettings.npo02__Membership_Record_Types__c != null) {
             CRLP_RollupCMT.FilterRule ruleRecordType = new CRLP_RollupCMT.FilterRule(groupMemberships.recordName, 'Membership: for Record Types');
