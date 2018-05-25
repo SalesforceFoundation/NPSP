@@ -785,10 +785,17 @@
 
             if (value && value !== null) {
 
-                var formattedDate =  new Date(parseFloat(value));
-                value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+                var strValue = value.toString();
+
+                if (strValue.indexOf('/') == -1) {
+
+                    var formattedDate = new Date(parseFloat(value));
+
+                    value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+                }
             }
 
+            console.log('RESULT ' + value);
             Handsontable.DateCell.renderer.apply(this, arguments);
 
             return td;

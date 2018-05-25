@@ -143,4 +143,5 @@ td.tooltip-cell {
 
 .action-cell {
     text-align: center !important;
+    vertical-align: middle !important;
 }
