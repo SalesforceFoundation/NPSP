@@ -1076,6 +1076,8 @@
         } else if (type === 'STRING' || type === 'TEXTAREA' || type === 'PICKLIST' || type === 'MULTIPICKLIST') {
             allowedOps.push({name: 'Best_Year', label: ops['Best_Year']});
             allowedOps.push({name: 'Years_Donated', label: ops['Years_Donated']});
+        } else if (type === 'PERCENT') {
+            allowedOps.push({name: 'Average', label: ops['Average']});
         }
 
         cmp.set("v.allowedOperations", allowedOps);
