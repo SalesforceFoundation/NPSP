@@ -70,7 +70,7 @@
     <aura:attribute name="filterRuleMode" type="String" access="private"
                     description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
     <aura:attribute name="filterRuleError" type="String" access="private" description="Inline error text when editing a filter rule."/>
-    <aura:attribute name="isValueRequired" type="Boolean" default="true" access="private" description="Conditional requireness for Value on a Filter Rule."/>
+    <aura:attribute name="isValueRequired" type="Boolean" default="true" access="private" description="Conditional requirement for Value on a Filter Rule."/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -275,7 +275,7 @@
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
                                     <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.constant}"
-                                                      required="{!v.isValueRequired}" value="{!v.activeFilterRule.value}">
+                                                      required="true" value="{!v.activeFilterRule.value}">
                                         <option value="" text=""/>
                                         <aura:iteration items="{!v.filterRuleConstantPicklist}" var="option">
                                             <option value="{!option.value}" text="{!option.label}" selected="{!option.value == v.activeFilterRule.value}"/>
