@@ -309,6 +309,8 @@
 
                 <div class="panel noborder" id="idPanelCustomizableRollup" style="display:none" >
                     <apex:include pageName="STG_PanelCustomizableRollup" />
+                </div>
+                
                 <div class="panel noborder" id="idPaneMultipleTribute" style="display:none" >
                     <apex:include pageName="STG_PanelMultipleTribute" />
                 </div>
