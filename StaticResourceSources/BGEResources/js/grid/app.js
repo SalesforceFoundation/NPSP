@@ -789,16 +789,29 @@
 
                 if (strValue.indexOf('/') == -1) {
 
-                    var formattedDate = new Date(parseFloat(value));
+                    var dateValue = new Date(parseFloat(value));
 
-                    value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+                    var formattedDate = dateValue.toISOString().split('T')[0].split('-');
+
+                    value = formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0];
                 }
             }
 
-            console.log('RESULT ' + value);
             Handsontable.DateCell.renderer.apply(this, arguments);
 
             return td;
+
+            // OLD CODE
+
+            // if (value && value !== null) {
+
+            //     var formattedDate =  new Date(parseFloat(value));
+            //     value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+            // }
+
+            // Handsontable.DateCell.renderer.apply(this, arguments);
+
+            // return td;
         }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
