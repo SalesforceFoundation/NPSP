@@ -236,23 +236,24 @@ public class CRLP_Operation_SVC {
                     rollup.maxDateTime = dateTimeValue;
                 }
             }
-        }
-        if (dateValue != null && amountValue != null) {
             if (rollup.sumByYear.containsKey(theYear)) {
-                rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
                 rollup.countByYear.put(theYear, rollup.countByYear.get(theYear) + 1);
-
-                if (rollup.minByYear.get(theYear) > amountValue) {
-                    rollup.minByYear.put(theYear, amountValue);
-                }
-                if (rollup.maxByYear.get(theYear) < amountValue) {
-                    rollup.maxByYear.put(theYear, amountValue);
+                if (amountValue != null) {
+                    rollup.sumByYear.put(theYear, rollup.sumByYear.get(theYear) + amountValue);
+                    if (rollup.minByYear.get(theYear) > amountValue) {
+                        rollup.minByYear.put(theYear, amountValue);
+                    }
+                    if (rollup.maxByYear.get(theYear) < amountValue) {
+                        rollup.maxByYear.put(theYear, amountValue);
+                    }
                 }
             } else {
                 rollup.countByYear.put(theYear, 1);
-                rollup.sumByYear.put(theYear, amountValue);
-                rollup.minByYear.put(theYear, amountValue);
-                rollup.maxByYear.put(theYear, amountValue);
+                if (amountValue != null) {
+                    rollup.sumByYear.put(theYear, amountValue);
+                    rollup.minByYear.put(theYear, amountValue);
+                    rollup.maxByYear.put(theYear, amountValue);
+                }
             }
         }
     }
