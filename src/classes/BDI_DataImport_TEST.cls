@@ -1462,7 +1462,7 @@ public with sharing class BDI_DataImport_TEST {
     /*********************************************************************************************************
     * @description operation:
     *    Retrieves account records in the order they were created during the test. 
-    * @return List<Account> All account records in creation order
+    * @return List<Account> All account records, where type is not a Household, in creation order
     **********************************************************************************************************/
     private static List<Account> getOrganizations() {
         return [

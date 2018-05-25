@@ -1367,7 +1367,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         listCon = [
             SELECT Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity
             FROM Contact
-            ORDER BY Account.Id
+            ORDER BY AccountId
         ];
         system.assertEquals(cAcc, listCon.size());        
         
@@ -1443,7 +1443,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         listCon = [
             SELECT Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity
             FROM Contact
-            ORDER BY Account.Id
+            ORDER BY AccountId
         ];
         system.assertEquals(cAcc, listCon.size());        
         
