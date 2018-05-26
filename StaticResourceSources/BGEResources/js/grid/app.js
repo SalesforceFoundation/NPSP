@@ -89,7 +89,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                beforeRenderer: beforeRendererHandler
             });
 
             $scope.$apply();
@@ -289,6 +290,7 @@
 
                         if (cellType == 'date') {
                             newValue = (new Date(newValue)).getTime().toString();
+
                         }
 
                         var cellRecord = {
@@ -525,6 +527,26 @@
                 }
 
                 hot.selectCell(rowIndex, colIndex);
+            }
+        }
+
+        function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
+
+            if (prop != 'Actions' && prop != 'Errors') {
+
+                if (value != null && value.toString().match(/^\d+$/)) {
+
+                    var cellType = this.getDataType(row, col);
+
+                    if (cellType === 'date') {
+
+                        var strValue = value.toString();
+
+                        value = formatDateValue(strValue);
+
+                        this.setDataAtCell(row, col, value);
+                    }
+                }
             }
         }
 
@@ -779,6 +801,27 @@
             });
         }
 
+        function dateFormatValid(dateValue) {
+
+            var pattern = /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)(\d{2})/;
+            var res = dateValue.match(pattern);
+
+            if (res != null && res.includes(dateValue)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function formatDateValue(value) {
+
+            var dateValue = new Date(parseFloat(value));
+            var formattedDate = dateValue.toISOString().split('T')[0].split('-');
+
+            return (formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0]);
+        }
+
         // Renderers
 
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -787,13 +830,14 @@
 
                 var strValue = value.toString();
 
-                if (strValue.indexOf('/') == -1) {
+                if (!dateFormatValid(strValue)) { // if value format isn't MM/DD/YYYY
 
-                    var dateValue = new Date(parseFloat(value));
+                    var floatPattern = /^\d+$/;
 
-                    var formattedDate = dateValue.toISOString().split('T')[0].split('-');
+                    if (strValue.match(floatPattern)) { // if value format is milliseconds format
 
-                    value = formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0];
+                        value = formatDateValue(strValue);
+                    }
                 }
             }
 
