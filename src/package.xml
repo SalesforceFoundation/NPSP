@@ -450,6 +450,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_RollupRD_BTN</members>
         <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
