@@ -37,7 +37,7 @@ global class BGE_HandsOnGridController {
 
             System.debug(JSON.serializePretty(records));
 
-            result.put('data', records);
+            result.put('data', selector.sanitizeDataImports(records));
             result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
             result.put('rowsCount', selector.getDataImportBatchCountByBatchId(batchId));
@@ -80,16 +80,20 @@ global class BGE_HandsOnGridController {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
-                    Date cellDate = Datetime.newInstance(Long.valueOf(((String) cellData.get('newValue')))).dateGmt();
-                    dataImport.put((String) cellData.get('field'), cellDate);
+                    String dtString = (String) cellData.get('newValue');
+                    String[] dts = dtString.split('/');
+                    Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
+                    dataImport.put((String) cellData.get('field'), (Object) dt);
                 }
                 else {
                     dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
                 }
 
+                System.debug(JSON.serializePretty(dataImport));
+
                 dataImports.put(cellKey, (DataImport__c) dataImport);
             }
-            catch (SObjectException ex) {
+            catch (Exception ex) {
 
                 Map<String, String> exceptionError = new Map<String, String>();
                 exceptionError.put('field', (String) cellData.get('field'));
@@ -275,12 +279,10 @@ global class BGE_HandsOnGridController {
 
         if (!fieldNames.isEmpty()) {
             SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
-            result.put('data', records);
+            result.put('data', selector.sanitizeDataImports(records));
         }
 
         return result;
     }
-
-
 
 }

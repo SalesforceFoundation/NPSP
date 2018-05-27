@@ -8,8 +8,6 @@
         $scope.prevPageAction = prevPageAction;
         $scope.backAction = backAction;
 
-        var changesToSave = [];
-
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
         function onInitHandler(result, event) {
@@ -89,29 +87,13 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler,
-                beforeRenderer: beforeRendererHandler
+                beforeKeyDown: beforeKeyDownHandler
             });
 
             $scope.$apply();
 
-
-            // Flag that is set true if the user have just pressed the up arrow key.
-            wasUpArrowPressed = false;
-
             //Map to save cells with invalid format values
             movedSideWays = false;
-
-            wait = false;
-            updatedCellsMap = {};
-
-            var changesToSave = {};
-
-
-            // Flag to prevent a bug when deleting multiple records.
-            var deletingRecords = false;
-
-            var dynamicColumns = [];
         }
 
         function backAction() {
@@ -169,6 +151,21 @@
 
                 hot.loadData(result.data);
                 $scope.pageChangeLoader = false;
+
+                var totalColumns = hot.countCols();
+                var totalRows = hot.countRows();
+    
+                for (var indexRow = 0; indexRow < totalRows; indexRow++) {
+    
+                    var cellValue = hot.getDataAtCell(indexRow, hot.propToCol('Id'));
+                    if (cellValue == null) {
+                        hot.setDataAtCell(indexRow, hot.propToCol('Id'), Date.now().toString(), 'manual');
+                    }
+                }
+
+                // clean errors when changing pages
+                $scope.rowErrors = {};
+
                 $scope.$apply();
             }
         }
@@ -271,10 +268,10 @@
             console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
-            console.warn('SOURCE OPTIONS:    ', sourceOptions);
-            console.warn('INDEX IS LOADING   ', $scope.isIndexLoading);
-            console.warn('CHANGES:    ', changes);
+
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
+
+                console.log('CHANGES:    ', changes);
 
                 var cellRecords = [];
 
@@ -287,11 +284,6 @@
                         var col = this.propToCol(changes[i][1])
                         var cellType = this.getDataType(changes[i][0], col);
                         var newValue = changes[i][3];
-
-                        if (cellType == 'date') {
-                            newValue = (new Date(newValue)).getTime().toString();
-
-                        }
 
                         var cellRecord = {
                             row: changes[i][0],
@@ -449,7 +441,7 @@
                 $scope.lastSelectedRow = row;
             }
 
-            if (col < 3) {
+            if (col < 2) {
                 hot.selectCell(row, 3);
             }
         }
@@ -642,31 +634,31 @@
                 col.className = "htLeft htMiddle slds-truncate";
 
                 if (templateField.type === "DATE") {
-                    // col.dateFormat = "YYYY-MM-DD";
-                    col.dateFormat = 'MM/DD/YYYY';
+                    col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
-                    col.renderer = dateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "EMAIL") {
 
                 }
                 if (templateField.type === "PICKLIST") {
+
+                    col.strict = true;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
@@ -738,30 +730,14 @@
 
         function renderBindings() {
 
-            // $('.action-items').click(function(event) {
-
-            //     event.preventDefault();
-
-            //     var optionSelect = document.createElement('select');
-            //     // messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-
-            //     var optionSelectOption = document.createElement('option');
-            //     optionSelectOption.value = 'delete row';
-            //     optionSelectOption.innerHTML = 'delete row';
-
-            //     optionSelect.appendChild(optionSelectOption);
-
-            //     $scope.selectPopper = new Popper(this, optionSelectOption, {
-            //         placement: 'right'
-            //     });
-            // });
-
             if (window.attachEvent) {
                 window.attachEvent('onresize', updateHotTable);
             }
             else {
                 window.addEventListener('resize', updateHotTable, true);
             }
+
+            $(".amount-style").parent().css('text-align', 'right');
         }
 
         function updateSummaryData() {
@@ -775,14 +751,12 @@
                 $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
 
                 if ($scope.offset >= $scope.totalPages - 1) {
-
                     $scope.nextButonDisabled = true;
                 }
                 else {
-
                     $scope.nextButonDisabled = false;
                 }
- 
+
                 $scope.$apply();
             }
         }
@@ -801,62 +775,7 @@
             });
         }
 
-        function dateFormatValid(dateValue) {
-
-            var pattern = /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)(\d{2})/;
-            var res = dateValue.match(pattern);
-
-            if (res != null && res.includes(dateValue)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        function formatDateValue(value) {
-
-            var dateValue = new Date(parseFloat(value));
-            var formattedDate = dateValue.toISOString().split('T')[0].split('-');
-
-            return (formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0]);
-        }
-
         // Renderers
-
-        function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-            if (value && value !== null) {
-
-                var strValue = value.toString();
-
-                if (!dateFormatValid(strValue)) { // if value format isn't MM/DD/YYYY
-
-                    var floatPattern = /^\d+$/;
-
-                    if (strValue.match(floatPattern)) { // if value format is milliseconds format
-
-                        value = formatDateValue(strValue);
-                    }
-                }
-            }
-
-            Handsontable.DateCell.renderer.apply(this, arguments);
-
-            return td;
-
-            // OLD CODE
-
-            // if (value && value !== null) {
-
-            //     var formattedDate =  new Date(parseFloat(value));
-            //     value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
-            // }
-
-            // Handsontable.DateCell.renderer.apply(this, arguments);
-
-            // return td;
-        }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
@@ -875,34 +794,6 @@
             td.appendChild(selectElement);
 
             td.className = 'action-cell';
-
-            return td;
-        }
-
-        //To display action column icons
-        function actionCellsRendererOld(instance, td, row, col, prop, value, cellProperties) {
-
-            // Handsontable.renderers.TextRenderer.apply(this, arguments);
-
-            Handsontable.dom.addEvent(td, 'click', function (e) {
-                e.preventDefault(); // prevent selection quirk
-            });
-
-            var dataRowId = instance.getDataAtRowProp(row, 'Id');
-
-            var isDisabled = 'disabled=\"false\"';
-
-            var actionsMenu = '';
-
-            if (dataRowId) {
-                actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral remove-my-row" style="border: none;">Remove row</button></div></div></div></div>';
-            }
-
-            // var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
-            // var actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral" style="border: none;">Remove row</button></div></div></div></div>';
-            var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
-
-            td.innerHTML = actionIcon;
 
             return td;
         }
