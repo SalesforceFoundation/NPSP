@@ -89,9 +89,11 @@ global class BGE_HandsOnGridController {
                     dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
                 }
 
+                System.debug(JSON.serializePretty(dataImport));
+
                 dataImports.put(cellKey, (DataImport__c) dataImport);
             }
-            catch (SObjectException ex) {
+            catch (Exception ex) {
 
                 Map<String, String> exceptionError = new Map<String, String>();
                 exceptionError.put('field', (String) cellData.get('field'));

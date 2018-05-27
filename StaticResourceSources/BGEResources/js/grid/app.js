@@ -168,6 +168,19 @@
 
                 hot.loadData(result.data);
                 $scope.pageChangeLoader = false;
+
+                var totalColumns = hot.countCols();
+                var totalRows = hot.countRows();
+    
+                for (var indexRow = 0; indexRow < totalRows; indexRow++) {
+    
+                    var cellValue = hot.getDataAtCell(indexRow, hot.propToCol('Id'));
+                    if (cellValue == null) {
+                        hot.setDataAtCell(indexRow, hot.propToCol('Id'), Date.now().toString(), 'manual');
+                    }
+                }
+
+
                 $scope.$apply();
             }
         }
@@ -636,24 +649,24 @@
                 col.className = "htLeft htMiddle slds-truncate";
 
                 if (templateField.type === "DATE") {
-                    col.dateFormat = 'MM/DD/YYYY';
+                    col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
-                    col.title = '<div style="float: right">' + templateField.label.toUpperCase() + '</div>';
+                    col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "EMAIL") {
 
@@ -732,30 +745,14 @@
 
         function renderBindings() {
 
-            // $('.action-items').click(function(event) {
-
-            //     event.preventDefault();
-
-            //     var optionSelect = document.createElement('select');
-            //     // messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-
-            //     var optionSelectOption = document.createElement('option');
-            //     optionSelectOption.value = 'delete row';
-            //     optionSelectOption.innerHTML = 'delete row';
-
-            //     optionSelect.appendChild(optionSelectOption);
-
-            //     $scope.selectPopper = new Popper(this, optionSelectOption, {
-            //         placement: 'right'
-            //     });
-            // });
-
             if (window.attachEvent) {
                 window.attachEvent('onresize', updateHotTable);
             }
             else {
                 window.addEventListener('resize', updateHotTable, true);
             }
+
+            $(".amount-style").parent().css('text-align', 'right');
         }
 
         function updateSummaryData() {
@@ -814,34 +811,6 @@
             td.appendChild(selectElement);
 
             td.className = 'action-cell';
-
-            return td;
-        }
-
-        //To display action column icons
-        function actionCellsRendererOld(instance, td, row, col, prop, value, cellProperties) {
-
-            // Handsontable.renderers.TextRenderer.apply(this, arguments);
-
-            Handsontable.dom.addEvent(td, 'click', function (e) {
-                e.preventDefault(); // prevent selection quirk
-            });
-
-            var dataRowId = instance.getDataAtRowProp(row, 'Id');
-
-            var isDisabled = 'disabled=\"false\"';
-
-            var actionsMenu = '';
-
-            if (dataRowId) {
-                actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral remove-my-row" style="border: none;">Remove row</button></div></div></div></div>';
-            }
-
-            // var actionIcon = '<div>' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled" onClick="displayActionMenu(' + row + ');"><svg class="slds-icon slds-icon-text-default slds-icon_x-small" aria-hidden="true"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down" /></svg></button></div>';
-            // var actionsMenu = '<div class="action-options slds-m-top slds-hide" style="position:absolute;"><div class="slds-popover toggle" style="position:absolute; width: 11em;" role="tooltip"><div class="slds-popover__body" style="padding: 0 !important"><div class="slds-media slds-no-space slds-has-divider_bottom-space slds-media_center"><button class="slds-button slds-button_neutral" style="border: none;">Remove row</button></div></div></div></div>';
-            var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
-
-            td.innerHTML = actionIcon;
 
             return td;
         }
