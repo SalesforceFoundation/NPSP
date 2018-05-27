@@ -87,7 +87,6 @@
         <members>BGE_BatchController</members>
         <members>BGE_BatchTemplateOverrideController</members>
         <members>BGE_DataImportBatchTriggerHandler</members>
-        <members>BGE_DynamicalColumnWrapper</members>
         <members>BGE_HandsOnGridColumnWrapper</members>
         <members>BGE_HandsOnGridController</members>
         <members>BGE_HandsOnGridSelector</members>
@@ -1804,7 +1803,7 @@
         <members>stgTools</members>
         <members>stgValidationHHAccountHHRules</members>
         <members>healthDetailsInvalidRecordtypeName</members>
-	<members>bgeHandsOnGridCommitBatch</members>
+        <members>bgeHandsOnGridCommitBatch</members>
         <name>CustomLabel</name>
     </types>
     <types>
