@@ -2,7 +2,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
     // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_enum_Schema_DisplayType.htm
 
-    private static final String DATA_IMPORT_NAME = 'DataImport__c';
+    public static final String DATA_IMPORT_NAME = 'DataImport__c';
     private static final String ACCOUNT_NAME = 'Account';
     private static final String CONTACT_NAME = 'Contact';
     private static final String OPPORTUNITY_NAME = 'Opportunity';
@@ -100,7 +100,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
         return result;
     }
 
-    private static Map<String, Schema.SObjectField> getObjectFields(String objectName) {
+    public static Map<String, Schema.SObjectField> getObjectFields(String objectName) {
 
         return Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap();
     }
