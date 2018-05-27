@@ -139,4 +139,17 @@ public with sharing class BGE_HandsOnGridSelector {
         return result;
     }
 
+    public static Object[] sanitizeDataImports(SObject[] records) {
+
+        Object[] result = new Object[] {};
+
+        for (SObject record :records) {
+
+            Map<String, Object> values = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(record));
+
+            result.add((Object) values);
+        }
+
+        return records;
+    }
 }

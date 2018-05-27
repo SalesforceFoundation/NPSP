@@ -37,7 +37,7 @@ global class BGE_HandsOnGridController {
 
             System.debug(JSON.serializePretty(records));
 
-            result.put('data', records);
+            result.put('data', selector.sanitizeDataImports(records));
             result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
             result.put('rowsCount', selector.getDataImportBatchCountByBatchId(batchId));
@@ -275,12 +275,10 @@ global class BGE_HandsOnGridController {
 
         if (!fieldNames.isEmpty()) {
             SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
-            result.put('data', records);
+            result.put('data', selector.sanitizeDataImports(records));
         }
 
         return result;
     }
-
-
 
 }
