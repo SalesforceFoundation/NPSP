@@ -89,8 +89,7 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler,
-                beforeRenderer: beforeRendererHandler
+                beforeKeyDown: beforeKeyDownHandler
             });
 
             $scope.$apply();
@@ -271,10 +270,10 @@
             console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
-            console.warn('SOURCE OPTIONS:    ', sourceOptions);
-            console.warn('INDEX IS LOADING   ', $scope.isIndexLoading);
-            console.warn('CHANGES:    ', changes);
+
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
+
+                console.log('CHANGES:    ', changes);
 
                 var cellRecords = [];
 
@@ -287,11 +286,6 @@
                         var col = this.propToCol(changes[i][1])
                         var cellType = this.getDataType(changes[i][0], col);
                         var newValue = changes[i][3];
-
-                        if (cellType == 'date') {
-                            newValue = (new Date(newValue)).getTime().toString();
-
-                        }
 
                         var cellRecord = {
                             row: changes[i][0],
@@ -642,11 +636,9 @@
                 col.className = "htLeft htMiddle slds-truncate";
 
                 if (templateField.type === "DATE") {
-                    // col.dateFormat = "YYYY-MM-DD";
                     col.dateFormat = 'MM/DD/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
-                    col.renderer = dateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -803,62 +795,7 @@
             });
         }
 
-        function dateFormatValid(dateValue) {
-
-            var pattern = /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)(\d{2})/;
-            var res = dateValue.match(pattern);
-
-            if (res != null && res.includes(dateValue)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-
-        function formatDateValue(value) {
-
-            var dateValue = new Date(parseFloat(value));
-            var formattedDate = dateValue.toISOString().split('T')[0].split('-');
-
-            return (formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0]);
-        }
-
         // Renderers
-
-        function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-            if (value && value !== null) {
-
-                var strValue = value.toString();
-
-                if (!dateFormatValid(strValue)) { // if value format isn't MM/DD/YYYY
-
-                    var floatPattern = /^\d+$/;
-
-                    if (strValue.match(floatPattern)) { // if value format is milliseconds format
-
-                        value = formatDateValue(strValue);
-                    }
-                }
-            }
-
-            Handsontable.DateCell.renderer.apply(this, arguments);
-
-            return td;
-
-            // OLD CODE
-
-            // if (value && value !== null) {
-
-            //     var formattedDate =  new Date(parseFloat(value));
-            //     value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
-            // }
-
-            // Handsontable.DateCell.renderer.apply(this, arguments);
-
-            // return td;
-        }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 

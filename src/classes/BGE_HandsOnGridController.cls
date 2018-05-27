@@ -80,8 +80,10 @@ global class BGE_HandsOnGridController {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
-                    Date cellDate = Datetime.newInstance(Long.valueOf(((String) cellData.get('newValue')))).dateGmt();
-                    dataImport.put((String) cellData.get('field'), cellDate);
+                    String dtString = (String) cellData.get('newValue');
+                    String[] dts = dtString.split('/');
+                    Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
+                    dataImport.put((String) cellData.get('field'), (Object) dt);
                 }
                 else {
                     dataImport.put((String) cellData.get('field'), cellData.get('newValue'));

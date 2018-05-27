@@ -98,6 +98,46 @@ public with sharing class BGE_HandsOnGridSelector {
         return result;
     }
 
+    public Object[] sanitizeDataImports(SObject[] records) {
+
+        Object[] result = new Object[] {};
+
+        for (SObject record :records) {
+
+            Map<String, Object> values = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(record));
+
+            // Here is where we fix the issue with dates in order to maintain a format standard when returning data.
+
+            for (String key :values.keySet()) {
+
+                Schema.SObjectField dataImportField = BGE_HandsOnGridColumnWrapper.getObjectFields(BGE_HandsOnGridColumnWrapper.DATA_IMPORT_NAME).get(key);
+
+                if (dataImportField != null) {
+
+                    Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
+
+                    String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
+
+                    if (type.equalsIgnoreCase('DATE')) {
+                        String dtString = (String) values.get(key);
+                        String[] dts = dtString.split('-');
+                        Date dt = Date.newInstance(Integer.valueOf(dts[0]), Integer.valueOf(dts[1]), Integer.valueOf(dts[2]));
+                        values.put(key, (Object) dt.format());
+                    }
+
+                    if (type.equalsIgnoreCase('DATETIME')) {
+                        Datetime dt = (Datetime) values.get(key);
+                        values.put(key, (Object) dt.date().format());
+                    }
+                }
+            }
+
+            result.add((Object) values);
+        }
+
+        return result;
+    }
+
     private static String[] getAllFields(Id id) {
 
         Schema.DescribeSObjectResult objectType = id.getSobjectType().getDescribe();
@@ -137,19 +177,5 @@ public with sharing class BGE_HandsOnGridSelector {
         }
 
         return result;
-    }
-
-    public static Object[] sanitizeDataImports(SObject[] records) {
-
-        Object[] result = new Object[] {};
-
-        for (SObject record :records) {
-
-            Map<String, Object> values = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(record));
-
-            result.add((Object) values);
-        }
-
-        return records;
     }
 }
