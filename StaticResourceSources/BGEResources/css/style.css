@@ -120,7 +120,7 @@
 .handsontableInput {
     vertical-align: middle;
     text-align: center;
-    line-height: 35px !important;
+    line-height: 31px !important;
 }
 
 .htAutocompleteArrow {
@@ -139,4 +139,9 @@
 
 td.tooltip-cell {
     background: white !important;
+}
+
+.action-cell {
+    text-align: center !important;
+    vertical-align: middle !important;
 }

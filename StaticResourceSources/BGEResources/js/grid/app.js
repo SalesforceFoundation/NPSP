@@ -89,7 +89,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                beforeRenderer: beforeRendererHandler
             });
 
             $scope.$apply();
@@ -270,7 +271,9 @@
             console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
-
+            console.warn('SOURCE OPTIONS:    ', sourceOptions);
+            console.warn('INDEX IS LOADING   ', $scope.isIndexLoading);
+            console.warn('CHANGES:    ', changes);
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
 
                 var cellRecords = [];
@@ -287,6 +290,7 @@
 
                         if (cellType == 'date') {
                             newValue = (new Date(newValue)).getTime().toString();
+
                         }
 
                         var cellRecord = {
@@ -526,6 +530,26 @@
             }
         }
 
+        function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
+
+            if (prop != 'Actions' && prop != 'Errors') {
+
+                if (value != null && value.toString().match(/^\d+$/)) {
+
+                    var cellType = this.getDataType(row, col);
+
+                    if (cellType === 'date') {
+
+                        var strValue = value.toString();
+
+                        value = formatDateValue(strValue);
+
+                        this.setDataAtCell(row, col, value);
+                    }
+                }
+            }
+        }
+
         /// Auxiliary Methods
 
         function getCellDataType(sfdcDatatype) {
@@ -599,7 +623,7 @@
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
-            actionCol.className = "htCenter htMiddle";
+            actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
             for (var i = 0; i < $scope.columnsData.length; i++) {
@@ -751,6 +775,16 @@
                 $scope.rowsCount = result.rowsCount;
                 $scope.rowsAmount = result.rowsAmount;
                 $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
+
+                if ($scope.offset >= $scope.totalPages - 1) {
+
+                    $scope.nextButonDisabled = true;
+                }
+                else {
+
+                    $scope.nextButonDisabled = false;
+                }
+ 
                 $scope.$apply();
             }
         }
@@ -769,19 +803,61 @@
             });
         }
 
+        function dateFormatValid(dateValue) {
+
+            var pattern = /(0\d{1}|1[0-2])\/([0-2]\d{1}|3[0-1])\/(19|20)(\d{2})/;
+            var res = dateValue.match(pattern);
+
+            if (res != null && res.includes(dateValue)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        function formatDateValue(value) {
+
+            var dateValue = new Date(parseFloat(value));
+            var formattedDate = dateValue.toISOString().split('T')[0].split('-');
+
+            return (formattedDate[1] + '/' + formattedDate[2] + '/' + formattedDate[0]);
+        }
+
         // Renderers
 
         function dateCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
             if (value && value !== null) {
 
-                var formattedDate =  new Date(parseFloat(value));
-                value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+                var strValue = value.toString();
+
+                if (!dateFormatValid(strValue)) { // if value format isn't MM/DD/YYYY
+
+                    var floatPattern = /^\d+$/;
+
+                    if (strValue.match(floatPattern)) { // if value format is milliseconds format
+
+                        value = formatDateValue(strValue);
+                    }
+                }
             }
 
             Handsontable.DateCell.renderer.apply(this, arguments);
 
             return td;
+
+            // OLD CODE
+
+            // if (value && value !== null) {
+
+            //     var formattedDate =  new Date(parseFloat(value));
+            //     value = formattedDate.getMonth() + '/' + formattedDate.getDate() + '/' + formattedDate.getFullYear();
+            // }
+
+            // Handsontable.DateCell.renderer.apply(this, arguments);
+
+            // return td;
         }
 
         function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
@@ -799,6 +875,8 @@
 
             Handsontable.dom.empty(td);
             td.appendChild(selectElement);
+
+            td.className = 'action-cell';
 
             return td;
         }
@@ -827,6 +905,7 @@
             var actionIcon = '<div class="action-global">' + actionsMenu + '<button class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small action-items" tabindex="-1" title="Actions"><svg class="slds-button__icon slds-button__icon_hint slds-button__icon_small" aria-hidden="true"><use xlink:href="/apexpages/slds/latest/assets/icons/utility-sprite/svg/symbols.svg#down"></use></svg><span class="slds-assistive-text">Actions</span></button></div>';
 
             td.innerHTML = actionIcon;
+
             return td;
         }
 
@@ -896,6 +975,7 @@
         function getLightningPicklist() {
 
             var divControl = document.createElement('div');
+
             divControl.className = 'slds-dropdown-trigger slds-dropdown-trigger_click picklist-click';
 
             var divButton = document.createElement('button');
