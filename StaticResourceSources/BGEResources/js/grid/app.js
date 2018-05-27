@@ -8,8 +8,6 @@
         $scope.prevPageAction = prevPageAction;
         $scope.backAction = backAction;
 
-        var changesToSave = [];
-
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
         function onInitHandler(result, event) {
@@ -94,23 +92,8 @@
 
             $scope.$apply();
 
-
-            // Flag that is set true if the user have just pressed the up arrow key.
-            wasUpArrowPressed = false;
-
             //Map to save cells with invalid format values
             movedSideWays = false;
-
-            wait = false;
-            updatedCellsMap = {};
-
-            var changesToSave = {};
-
-
-            // Flag to prevent a bug when deleting multiple records.
-            var deletingRecords = false;
-
-            var dynamicColumns = [];
         }
 
         function backAction() {
@@ -180,6 +163,8 @@
                     }
                 }
 
+                // clean errors when changing pages
+                $scope.rowErrors = {};
 
                 $scope.$apply();
             }
@@ -456,7 +441,7 @@
                 $scope.lastSelectedRow = row;
             }
 
-            if (col < 3) {
+            if (col < 2) {
                 hot.selectCell(row, 3);
             }
         }
@@ -766,14 +751,12 @@
                 $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
 
                 if ($scope.offset >= $scope.totalPages - 1) {
-
                     $scope.nextButonDisabled = true;
                 }
                 else {
-
                     $scope.nextButonDisabled = false;
                 }
- 
+
                 $scope.$apply();
             }
         }
