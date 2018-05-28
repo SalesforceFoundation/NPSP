@@ -43,6 +43,7 @@
             console.debug(result);
 
             $scope.lastSelectedRow = null;
+            $scope.lastSelectedColumn = null;
 
             $scope.tableWidth = window.innerWidth * .985;
             $scope.tableHeight = window.innerHeight - 130;
@@ -447,18 +448,22 @@
 
             if ($scope.lastSelectedRow === null) {
                 $scope.lastSelectedRow = row;
+                $scope.lastSelectedColumn = col;
             }
 
-            if (col < 2) {
-                hot.selectCell(row, 3);
+            if (col < 3) {
+                hot.selectCell(row, $scope.lastSelectedColumn);
+            }
+            else {
+                $scope.lastSelectedColumn = col;
             }
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
 
-            if ((row != $scope.lastSelectedRow) && ($scope.hasRowChanged)) {
+            if ((row != $scope.lastSelectedRow)) {
 
-                var recordId = self.getDataAtRowProp($scope.lastSelectedRow, 'Id');
+                var recordId = hot.getDataAtRowProp($scope.lastSelectedRow, 'Id');
 
                 BGE_HandsOnGridController.dryRunRowGrid({batchId: batchId, recordId: recordId}, dryRunRowGridHandler);
 
