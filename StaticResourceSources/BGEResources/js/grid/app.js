@@ -671,7 +671,7 @@
                 }
                 if (templateField.type === "PICKLIST") {
 
-                    col.strict = true;
+                    col.strict = false;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
