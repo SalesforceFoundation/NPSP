@@ -294,11 +294,19 @@
                             recordId: this.getDataAtRowProp(changes[i][0], 'Id')
                         };
 
-                        if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue)) {
+                        if (!newValue) {
+                            newValue = null;
+                            cellRecord.newValue = null;
+                            console.log('NEW VALUE:    ' + newValue);
+                        }
+
+                        if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
+                            console.log('NEW VALUE INSIDE:    ' + newValue);
+                            console.log('CELL RECORD NEW VALUE:    ' + cellRecord.newValue);
+
                             cellRecords.push(cellRecord);
                         }
                         else if ((newValue == 'NaN') && (cellType == 'date')) {
-
                             if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
                                 $scope.rowErrors[cellRecord.recordId] = [];
                                 $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
