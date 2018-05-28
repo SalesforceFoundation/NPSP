@@ -185,7 +185,7 @@ global class BGE_HandsOnGridController {
 
         Map<String, Object> result = new Map<String, Object>();
 
-        result = parameters;
+        result = parameters.clone();
 
         BGE_HandsOnGridSelector selector = new BGE_HandsOnGridSelector();
 
