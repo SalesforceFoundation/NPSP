@@ -75,6 +75,7 @@ global class BGE_HandsOnGridController {
             dataImport.put('External_Id__c', (Object) cellKey);
 
             String cellType = (String) cellData.get('type');
+            system.debug('CELL TYPE:    ' + cellType);
 
             try {
 
@@ -94,7 +95,39 @@ global class BGE_HandsOnGridController {
                     }
                 }
                 else {
-                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                    if (cellType != null && cellType.equalsIgnoreCase('TEXT')) {
+
+                        Schema.SObjectField dataImportField = BGE_HandsOnGridColumnWrapper.getObjectFields(BGE_HandsOnGridColumnWrapper.DATA_IMPORT_NAME).get((String) cellData.get('field'));
+
+                        Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
+
+                        String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
+
+                        if (type == 'EMAIL'){
+
+                            if (!validateEmail( (String) cellData.get('newValue') )){
+
+                                String emailErrorMessage = 'INVALID EMAIL FORMAT';
+
+                                cellData.put('errors', emailErrorMessage);
+                            }
+                            else {
+
+                                dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                            }
+                        }
+                        else {
+                            
+                            dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                        }
+                    }
+                    else {
+
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                    }
+
+
                 }
 
                 System.debug(JSON.serializePretty(dataImport));
@@ -292,6 +325,22 @@ global class BGE_HandsOnGridController {
         }
 
         return result;
+    }
+
+    private static Boolean validateEmail(String email) {
+        system.debug('PARAM EMAIL ' + email);
+        Boolean isValid = true;
+
+        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+        Pattern MyPattern = Pattern.compile(emailRegex);
+        Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
+
+        if (!MyMatcher.matches()) {
+
+            isValid = false;
+        }
+        system.debug('IS VALID:    ' + isValid);
+        return isValid;
     }
 
 }
