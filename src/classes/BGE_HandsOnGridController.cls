@@ -108,31 +108,50 @@ global class BGE_HandsOnGridController {
 
                             if (!validateEmail( (String) cellData.get('newValue') )){
 
-                                String emailErrorMessage = 'INVALID EMAIL FORMAT';
+                                String emailErrorMessage = 'invalid email format';
 
-                                cellData.put('errors', emailErrorMessage);
+                                Map<String, String> emailError = new Map<String, String>();
+                                emailError.put('field', (String) cellData.get('field'));
+                                emailError.put('messages', emailErrorMessage);
+
+                                Object[] emailErrorMessagesList = new Object[] {};
+                                emailErrorMessagesList.add((Object) emailError);
+
+                                cellData.put('errors', emailErrorMessagesList);
                             }
                             else {
-
+                                system.debug('LINE 123');
                                 dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                                System.debug(JSON.serializePretty(dataImport));
+
+                                dataImports.put(cellKey, (DataImport__c) dataImport);
                             }
                         }
                         else {
-                            
+                            system.debug('LINE 128');
                             dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                            System.debug(JSON.serializePretty(dataImport));
+
+                            dataImports.put(cellKey, (DataImport__c) dataImport);
                         }
                     }
                     else {
-
+                        system.debug('LINE 133');
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                        System.debug(JSON.serializePretty(dataImport));
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
                     }
 
 
                 }
 
-                System.debug(JSON.serializePretty(dataImport));
+            //    System.debug(JSON.serializePretty(dataImport));
 
-                dataImports.put(cellKey, (DataImport__c) dataImport);
+            //    dataImports.put(cellKey, (DataImport__c) dataImport);
             }
             catch (Exception ex) {
 
