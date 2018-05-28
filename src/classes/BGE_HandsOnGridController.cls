@@ -112,11 +112,22 @@ global class BGE_HandsOnGridController {
 
                                 cellData.put('errors', emailErrorMessage);
                             }
-                        }
+                            else {
 
+                                dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                            }
+                        }
+                        else {
+                            
+                            dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                        }
+                    }
+                    else {
+
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
                     }
 
-                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
                 }
 
                 System.debug(JSON.serializePretty(dataImport));
