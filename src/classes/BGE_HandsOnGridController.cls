@@ -80,10 +80,18 @@ global class BGE_HandsOnGridController {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
-                    String dtString = (String) cellData.get('newValue');
-                    String[] dts = dtString.split('/');
-                    Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
-                    dataImport.put((String) cellData.get('field'), (Object) dt);
+                    if (cellData.get('newValue') == null) {
+
+                        Date dt = null;
+                        dataImport.put((String) cellData.get('field'), (Object) dt);
+                    }
+                    else {
+
+                        String dtString = (String) cellData.get('newValue');
+                        String[] dts = dtString.split('/');
+                        Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
+                        dataImport.put((String) cellData.get('field'), (Object) dt);
+                    }
                 }
                 else {
                     dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
@@ -141,7 +149,7 @@ global class BGE_HandsOnGridController {
                 DataImport__c upsertRecord = upsertRecords[i];
 
                 Map<String, Object> cellData = (Map<String, Object>) result.get(upsertRecord.External_Id__c);
-
+                system.debug('UPSERT RESULT:    ' + upsertResult);
                 if (!upsertResult.isSuccess()) {
 
                     Map<Integer, Map<String, String>> upsertErrors = new Map<Integer, Map<String, String>>();
@@ -160,6 +168,7 @@ global class BGE_HandsOnGridController {
                     cellData.put('errors', (Object) upsertErrors.values());
                 }
                 else {
+
                     cellData.put('sfdcid', (Object) upsertResult.getId());
                 }
             }
