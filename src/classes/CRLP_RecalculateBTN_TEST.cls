@@ -166,6 +166,9 @@ private class CRLP_RecalculateBTN_TEST {
         if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType)) {
             expectedJobCount++;
         }
+        if (CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType)) {
+            expectedJobCount++;
+        }
         System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
                 expectedJobCount + ' jobs should been queued');
 

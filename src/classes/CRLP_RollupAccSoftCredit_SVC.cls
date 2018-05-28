@@ -32,31 +32,21 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Rollup Services unique to the Contact Soft Credit roll-ups TO both Contact and Account.
-* The Partial_Soft_Credit__c object is used for all Soft Credit Rollups as a Proxy for OpportunityContactRole
-* which isn't supported as a selectable Entity in the Rollup__mdt object.
-* A Single Instance of this class will be for EITHER the Account or the Contact, but NOT BOTH AT THE SAME TIME!
+* @description Rollup Services unique to the Account Soft Credit roll-ups to Account.
 */
-public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
+public class CRLP_RollupAccSoftCredit_SVC extends CRLP_VRollupHandler {
 
-    public CRLP_RollupSoftCredit_SVC() {
+    public CRLP_RollupAccSoftCredit_SVC() {
     }    // default constructor
 
     /**
      * @description Called by the setRecordId() method in the parent (super) class, this configures the
      * CRLP_Rollup object instances that are used to do the actual rollup work for the target Account
-     * OR Contact records. Soft Credit rollups operate on both target objects at the same time using a
-     * single LDV query in the batch job, but a single instance of this class is for EITHER the Account OR Contact.
+     * records.
      */
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
-        CRLP_RollupProcessingOptions.RollupType rollupType;
-        if (this.objectId.getSobjectType() == Account.SObjectType) {
-            rollupType = CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit;
-        } else {
-            rollupType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
-        }
-        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
+        for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, this.jobFilter)) {
             addRollupDefinition(r);
         }
     }
@@ -74,27 +64,32 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      */
     public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
 
-        // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
-        SObjectType summaryObjectType = this.objectId.getSobjectType();
-        List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
-        for (Integer n=0, listSize = pscs.size(); n<listSize; n++) {
-            Partial_Soft_Credit__c psc = pscs[n];
-            Opportunity opp = psc.Opportunity__r;
-            // Account and Contact Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
-            // the same parent Account or Contact more than one time.
-            if (this.processedOppIds.contains(opp.Id)) {
-                continue;
-            }
-            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
-                CRLP_Rollup rollup = this.rollups[nsr];
-                Id filterGroupId = rollup.filterGroup;
-                // Does this row pass the evaluation?
-                if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, psc }, filterGroupId)) {
-                    // YES -- now need to do the actual rollup!
-                    CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
-                    this.processedOppIds.add(opp.Id);
+        SObjectType detailObjectType = details[0].getSObjectType();
+
+        // some of the query builders are assuming opportunities; we will only proceed if we actually have ASCs
+        if (detailObjectType == Account_Soft_Credit__c.SObjectType) {
+            // ACCOUNT SOFT CREDITS
+            List<Account_Soft_Credit__c> detailASCList = (List<Account_Soft_Credit__c>) details;
+
+            for (Integer n = 0, listSize = detailASCList.size(); n < listSize; n++) {
+                Account_Soft_Credit__c accSC = detailASCList[n];
+                Opportunity opp = accSC.Opportunity__r;
+
+                for (Integer nsr = 0, rollupsListSize = this.rollups.size(); nsr < rollupsListSize; nsr++) {
+                    CRLP_Rollup rollup = this.rollups[nsr];
+                    Id filterGroupId = rollup.filterGroup;
+
+                    // Does this row pass the evaluation?
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                            opp, accSC
+                    }, filterGroupId)) {
+                        // YES -- now need to do the actual rollup!
+                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, accSC);
+                        this.processedOppIds.add(opp.Id);
+                    }
                 }
             }
+
             // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
             CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
         }

@@ -115,8 +115,10 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_AccountSkew_AccSoftCredit_BATCH</members>
         <members>CRLP_AccountSkew_BATCH</members>
         <members>CRLP_AccountSkew_SoftCredit_BATCH</members>
+        <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
         <members>CRLP_Batch_Base</members>
@@ -145,6 +147,7 @@
         <members>CRLP_RecalculateBTN_CTRL</members>
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
+        <members>CRLP_RollupAccSoftCredit_SVC</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -511,6 +514,7 @@
     </types>
     <types>
         <members>TDTM_Account</members>
+        <members>TDTM_AccountSoftCredit</members>
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
         <members>TDTM_Allocation</members>
@@ -1134,8 +1138,8 @@
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
-        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>

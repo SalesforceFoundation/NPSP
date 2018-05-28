@@ -151,9 +151,11 @@ public class CRLP_RollupProcessor_SVC {
     private static Type getHanderClassType(CRLP_RollupProcessingOptions.ProcessingOptions options) {
         Type handlerClass;
         if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
-                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
-                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             handlerClass = CRLP_RollupSoftCredit_SVC.class;
+
+        } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            handlerClass = CRLP_RollupAccSoftCredit_SVC.class;
 
         } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             // Opportunity and Payment to Account
@@ -195,7 +197,7 @@ public class CRLP_RollupProcessor_SVC {
         }
 
         npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
-        String detailsQuery = CRLP_Query_SEL.buildFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments);
+        String detailsQuery = CRLP_Query_SEL.buildFullDetailsQueryForSummaryRecords(summaryRecordIds, includeChildPayments, options);
 
         String orderBy;
         List<String> whereClauses = new List<String>();
@@ -210,11 +212,13 @@ public class CRLP_RollupProcessor_SVC {
             detailsQuery = detailsQuery.split(' WHERE ')[0];
         }
 
-        // Identify a common filter that can be applied to the main query to reduce the number of records queried
-        String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryRecords[0].getSObjectType(),
-                Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(options.rollupJobType, options.rollupTypesToProcess));
-        if (!String.isEmpty(addlFilter)) {
-            whereClauses.add(addlFilter);
+        if (options.rollupJobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            // Identify a common filter that can be applied to the main query to reduce the number of records queried
+            String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(summaryRecords[0].getSObjectType(),
+                    Opportunity.SObjectType, CRLP_Rollup_SEL.getRollupDefinitionsToUse(options.rollupJobType, options.rollupTypesToProcess));
+            if (!String.isEmpty(addlFilter)) {
+                whereClauses.add(addlFilter);
+            }
         }
 
         // Exclude Organization Donations from Contact Hard Credit rollups (where Opp.Account.SYSTEM_IsIndividual=false)

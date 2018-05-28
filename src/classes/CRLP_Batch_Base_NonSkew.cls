@@ -48,7 +48,10 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     protected List<String> fieldsToCheckForNonZero {
         get {
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+                    ) {
                 return new List<String>{
                         'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
                 };
@@ -61,7 +64,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName()
                 };
             }
-            return new List<String >();
+            return new List<String>();
         } private set;
     }
 
@@ -96,7 +99,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            if (this.summaryObjectType == Contact.SObjectType) {
+            if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
                 for (String f : fieldsToCheckForNonZero) {
                     if (!query.containsIgnoreCase(f)) {
                         query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
@@ -126,7 +129,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ) {
                         // It's not possible to do an inner query on this due to the following Salesforce error:
                         // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {

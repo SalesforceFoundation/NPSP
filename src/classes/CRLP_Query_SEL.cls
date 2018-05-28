@@ -171,7 +171,8 @@
      * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * @return SOQL
      */
-    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
+    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments,
+            CRLP_RollupProcessingOptions.ProcessingOptions options) {
         SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
         SObjectType mainObject;
         String detailKeyField;
@@ -179,12 +180,21 @@
 
         // The specific set of 'detail' records is fixed based on the target summary object.
         if (objType == Account.SObjectType) {
-            // Opportunity and Payment to Account
-            mainObject = Opportunity.SObjectType;
-            if (includeChildPayments == true) {
-                childObjects.add(npe01__OppPayment__c.SObjectType);
+
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+
+                // Opportunity and Payment to Account
+                mainObject = Opportunity.SObjectType;
+                if (includeChildPayments == true) {
+                    childObjects.add(npe01__OppPayment__c.SObjectType);
+                }
+                detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                // Account Soft Credit to Account
+                mainObject = Account_Soft_Credit__c.SObjectType;
+                detailKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
             }
-            detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
 
         } else if (objType == Contact.SObjectType) {
             // Opportunity and Payment to Contact
