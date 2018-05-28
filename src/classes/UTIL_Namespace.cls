@@ -98,15 +98,22 @@ public class UTIL_Namespace {
     
     /*******************************************************************************************************
     * @description Static method that takes a string of a multiple potential field names or object names.  
-    * If it is a custom object or field (name ends with __c), it prepends the namespace prefix if required.
+    * If it is a custom object or field (name ends with __c, __r or __mdt), it prepends the namespace prefix if required.
     * If we are in a managed package, tokens in dynamic SOQL must include the package namespace prefix.
     * If you ever deploy this package as unmanaged, this routine will do nothing!
     * @param str string that contains 0 or more token names 
     * @return same string with token names, namespace prefixed, if required.
     ********************************************************************************************************/
     public static string StrAllNSPrefix(string str) {
-        if (getNamespace() == '') return str;
-        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__c');
+        if (str == null || getNamespace() == '') {
+            // There is no current package namespace, or the field is null
+            return str;
+        } else if (str.split('__').size() == 3) {
+            // The field already has a namespace.
+            return str;
+        }
+
+        Pattern pat = Pattern.Compile('[a-zA-z0-9]*__(?:c|r|mdt)');
         Matcher match = pat.matcher(str);
         return match.replaceAll(getNamespace()+'__$0');
     }

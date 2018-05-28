@@ -1402,13 +1402,13 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);       
         system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
         
-        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        Opportunity opp = getOpportunityWithPayments(di.DonationImported__c);
         npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
         
         system.assertEquals(false, opp.IsWon);
         system.assertEquals(false, opp.IsClosed);
         system.assertEquals(600, opp.Amount);
-        system.assertEquals(250, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(250, PMT_PaymentCreator.getAmountOutstanding(opp));
         system.assertEquals(350, pmt.npe01__Payment_Amount__c);
         system.assertEquals(true, pmt.npe01__Paid__c);
     }
@@ -1526,13 +1526,13 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
         system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
 
-        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        Opportunity opp = getOpportunityWithPayments(di.DonationImported__c);
         npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
 
         system.assertEquals(false, opp.IsWon);
         system.assertEquals(false, opp.IsClosed);
         system.assertEquals(48, opp.Amount);
-        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(36, PMT_PaymentCreator.getAmountOutstanding(opp));
         system.assertEquals(12, pmt.npe01__Payment_Amount__c);
         system.assertEquals(true, pmt.npe01__Paid__c);
     }
@@ -1569,13 +1569,13 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
         system.assertEquals(label.bdiMatchedBest, di.PaymentImportStatus__c);
 
-        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        Opportunity opp = getOpportunityWithPayments(di.DonationImported__c);
         npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
 
         system.assertEquals(false, opp.IsWon);
         system.assertEquals(false, opp.IsClosed);
         system.assertEquals(48, opp.Amount);
-        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(36, PMT_PaymentCreator.getAmountOutstanding(opp));
         system.assertEquals(12, pmt.npe01__Payment_Amount__c);
         system.assertEquals(true, pmt.npe01__Paid__c);
         system.assertEquals(system.Today(), pmt.npe01__Scheduled_Date__c);
@@ -1613,13 +1613,13 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
         system.assertEquals(label.bdiMatchedBest, di.PaymentImportStatus__c);
 
-        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        Opportunity opp = getOpportunityWithPayments(di.DonationImported__c);
         npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
 
         system.assertEquals(false, opp.IsWon);
         system.assertEquals(false, opp.IsClosed);
         system.assertEquals(48, opp.Amount);
-        system.assertEquals(36, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(36, PMT_PaymentCreator.getAmountOutstanding(opp));
         system.assertEquals(12, pmt.npe01__Payment_Amount__c);
         system.assertEquals(true, pmt.npe01__Paid__c);
         system.assertEquals(system.Today()+1, pmt.npe01__Scheduled_Date__c);
@@ -1681,13 +1681,13 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals(label.bdiMatched, di.DonationImportStatus__c);
         system.assertEquals(label.bdiMatched, di.PaymentImportStatus__c);
 
-        Opportunity opp = [select Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c from Opportunity where id = :di.DonationImported__c];
+        Opportunity opp = getOpportunityWithPayments(di.DonationImported__c);
         npe01__OppPayment__c pmt = [select Id, npe01__Payment_Amount__c, npe01__Paid__c, npe01__Scheduled_Date__c, npe01__Payment_Date__c from npe01__OppPayment__c where id = :di.PaymentImported__c];
 
         system.assertEquals(true, opp.IsWon);
         system.assertEquals(true, opp.IsClosed);
         system.assertEquals(15, opp.Amount);
-        system.assertEquals(0, opp.npe01__Amount_Outstanding__c);
+        system.assertEquals(0, PMT_PaymentCreator.getAmountOutstanding(opp));
         system.assertEquals(15, pmt.npe01__Payment_Amount__c);
         system.assertEquals(true, pmt.npe01__Paid__c);
         system.assertEquals(system.Today(), pmt.npe01__Payment_Date__c);
@@ -1833,5 +1833,12 @@ public with sharing class BDI_Donations_TEST {
 	        list<Opportunity> listOppX = [select Id, Name, Amount, Primary_Contact__c from Opportunity];
 	        system.assertEquals(listOpp.size(), listOppX.size());
         }
+    }
+
+    private static Opportunity getOpportunityWithPayments(Id oppId) {
+        // requery the Opportunity for all fields that we need.
+        return [SELECT Id, IsWon, IsClosed, Amount, npe01__Amount_Outstanding__c,
+            (SELECT Id, npe01__Payment_Amount__c, npe01__Written_Off__c, npe01__Paid__c FROM  npe01__OppPayment__r)
+            FROM Opportunity WHERE Id = :oppId LIMIT 1];
     }
 }

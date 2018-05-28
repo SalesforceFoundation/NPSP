@@ -594,7 +594,7 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         oh.refresh();
 
-        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(oh.opp.Amount, oh.getTotalPaymentsMade());
         System.assertEquals(closedWonStage, oh.opp.StageName);
     }
 
@@ -629,7 +629,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(500, oh.opp.Amount);
-        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(250, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
 
         Test.startTest();
@@ -642,7 +642,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(250, oh.opp.Amount);
-        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(oh.opp.Amount, oh.getTotalPaymentsMade());
         System.assertEquals(closedWonStage, oh.opp.StageName);
     }
 
@@ -677,7 +677,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(500, oh.opp.Amount);
-        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(0, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
 
         Test.startTest();
@@ -690,7 +690,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(500, oh.opp.Amount);
-        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(250, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
     }
 
@@ -726,7 +726,7 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         oh.refresh();
 
-        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(oh.opp.Amount, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
     }
 
@@ -762,7 +762,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(500, oh.opp.Amount);
-        System.assertEquals(250, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(250, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
 
         Test.startTest();
@@ -776,7 +776,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(250, oh.opp.Amount);
-        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(oh.opp.Amount, oh.getTotalPaymentsMade());
         System.assertEquals(closedLostStage, oh.opp.StageName);
     }
 
@@ -801,7 +801,7 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         System.assertEquals(1, payments.size());
         System.assertEquals(oh.opp.Amount, payments.get(0).npe01__Payment_Amount__c);
-        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(0, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
 
         payments.get(0).npe01__Written_Off__c = true;
@@ -814,7 +814,7 @@ private with sharing class PMT_PaymentCreator_TEST {
 
         oh.refresh();
 
-        System.assertEquals(0, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(0, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
     }
 
@@ -851,7 +851,7 @@ private with sharing class PMT_PaymentCreator_TEST {
         oh.refresh();
 
         System.assertEquals(0, oh.opp.Amount);
-        System.assertEquals(oh.opp.Amount, oh.opp.npe01__Payments_Made__c);
+        System.assertEquals(oh.opp.Amount, oh.getTotalPaymentsMade());
         System.assertEquals(openStage, oh.opp.StageName);
     }
 
@@ -875,11 +875,13 @@ private with sharing class PMT_PaymentCreator_TEST {
                     IsClosed,
                     IsWon,
                     npe01__Number_Of_Payments__c,
+                    npe01__Amount_Outstanding__c,
                     npe01__Payments_Made__c,
                     (
                         SELECT
                             npe01__Paid__c,
-                            npe01__Payment_Amount__c
+                            npe01__Payment_Amount__c,
+                            npe01__Written_Off__c
                         FROM npe01__OppPayment__r
                     )
                 FROM Opportunity
@@ -888,6 +890,12 @@ private with sharing class PMT_PaymentCreator_TEST {
         }
         public List<npe01__OppPayment__c> getPayments() {
             return opp.npe01__OppPayment__r;
+        }
+        public Decimal getTotalPaymentsMade() {
+            return PMT_PaymentCreator.getPaymentsMade(this.opp);
+        }
+        public Decimal getAmountOutstanding() {
+            return PMT_PaymentCreator.getAmountOutstanding(this.opp);
         }
         public void deletePayments() {
             delete getPayments();
