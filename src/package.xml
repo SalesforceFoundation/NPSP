@@ -2437,6 +2437,7 @@
         <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
+        <members>npe03__Recurring_Donation__c.Recalculate_Rollups</members>
         <name>WebLink</name>
     </types>
     <types>
