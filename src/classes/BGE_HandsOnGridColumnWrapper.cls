@@ -5,8 +5,14 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
     public static final String DATA_IMPORT_NAME = 'DataImport__c';
     private static final String ACCOUNT_NAME = 'Account';
     private static final String CONTACT_NAME = 'Contact';
+    private static final String PAYMENT_NAME = 'npe01__OppPayment__c';
+    private static final String HOUSEHOLD_NAME = 'npo02__Household__c';
+    private static final String ADDRESS_NAME = 'Address';
     private static final String OPPORTUNITY_NAME = 'Opportunity';
 
+    private static final Set<String> LOOKUP_VALUES_PAYMENT = new Set<String>(new String[] {'payment', 'npe01__opppayment__c'});
+    private static final Set<String> LOOKUP_VALUES_HOUSEHOLD = new Set<String>(new String[] {'household', 'npo02__household__c'});
+    private static final Set<String> LOOKUP_VALUES_ADDRESS = new Set<String>(new String[] {'address'});
     private static final Set<String> LOOKUP_VALUES_CONTACT = new Set<String>(new String[] {'contact1', 'contact2'});
     private static final Set<String> LOOKUP_VALUES_ACCOUNT = new Set<String>(new String[] {'account1', 'account2'});
 
@@ -50,6 +56,24 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
                 recordFieldDescribe = recordField.getDescribe();
                 objectName = ACCOUNT_NAME;
             }
+            else if (LOOKUP_VALUES_PAYMENT.contains(fieldsRelationship[0]) && String.isNotEmpty(fieldsRelationship[1])) {
+
+                recordField = getObjectFields(PAYMENT_NAME).get(fieldsRelationship[1]);
+                recordFieldDescribe = recordField.getDescribe();
+                objectName = PAYMENT_NAME;
+            }
+            else if (LOOKUP_VALUES_HOUSEHOLD.contains(fieldsRelationship[0]) && String.isNotEmpty(fieldsRelationship[1])) {
+
+                recordField = getObjectFields(HOUSEHOLD_NAME).get(fieldsRelationship[1]);
+                recordFieldDescribe = recordField.getDescribe();
+                objectName = HOUSEHOLD_NAME;
+            }
+            else if (LOOKUP_VALUES_ADDRESS.contains(fieldsRelationship[0]) && String.isNotEmpty(fieldsRelationship[1])) {
+
+                recordField = getObjectFields(ADDRESS_NAME).get(fieldsRelationship[1]);
+                recordFieldDescribe = recordField.getDescribe();
+                objectName = ADDRESS_NAME;
+            }
             else if (fieldsRelationship[0].contains(OPPORTUNITY_NAME.toLowerCase()) && String.isNotEmpty(fieldsRelationship[1])) {
 
                 recordField = getObjectFields(OPPORTUNITY_NAME).get(fieldsRelationship[1]);
@@ -62,6 +86,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
         type = String.valueOf(recordFieldDescribe.getType()).toUpperCase();
         apiName = templateField.Name;
         required = templateField.Required__c;
+
+        System.debug(objectName + ' ' +  type);
 
         if (type.equalsIgnoreCase('PICKLIST')) {
             picklistValues = getObjectFieldPicklistValues(recordFieldDescribe);
