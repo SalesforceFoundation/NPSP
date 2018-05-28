@@ -107,7 +107,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == Contact.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
             }
-            if (jobType != null && CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
+            if (jobType != null && CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(this.objType)) {
                 // Is skew mode needed?
                 if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                     jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;

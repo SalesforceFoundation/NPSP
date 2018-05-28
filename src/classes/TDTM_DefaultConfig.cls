@@ -333,6 +333,11 @@ public without sharing class TDTM_DefaultConfig {
                 Class__c = 'CRLP_Rollup_TDTM', Load_Order__c = 2, Object__c = 'npe01__OppPayment__c',
                 Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
 
+        // Customizable Rollups on Account Soft Credit
+        handlers.add(new Trigger_Handler__c(Active__c = true, Asynchronous__c = false,
+                Class__c = 'CRLP_Rollup_TDTM', Load_Order__c = 1, Object__c = 'Account_Soft_Credit__c',
+                Trigger_Action__c = 'AfterInsert;AfterUpdate;AfterDelete;AfterUndelete'));
+
         return handlers;
     }
 

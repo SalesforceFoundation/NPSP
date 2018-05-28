@@ -263,7 +263,7 @@ public class UTIL_UnitTestData_TEST {
         return oppsToAdd;
     }
 
-    public static List<Account> CreateMultipleTestAccounts (integer n, string strType) {
+    public static List<Account> createMultipleTestAccounts (integer n, string strType) {
         
         List<Account> AcctsToAdd = New List<Account> ();
         

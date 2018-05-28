@@ -56,6 +56,11 @@
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Role_Name__c.getSobjectField().getDescribe());
+        } else if (resultObject == Account_Soft_Credit__c.SObjectType) {
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Opportunity__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Account__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Role__c.getSobjectField().getDescribe());
         } else if (resultObject == OpportunityContactRole.SObjectType) {
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.ContactId.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.OpportunityId.getSobjectField().getDescribe());
@@ -113,11 +118,13 @@
         // Get the main SOQL statement for the detail object and parse out the FROM portion
         String mainSoql = buildObjectQueryForRollup(detailObject).split(' FROM ')[0];
 
-        if (detailObject == OpportunityContactRole.SObjectType || detailObject == Partial_Soft_Credit__c.SObjectType
-                    || detailObject == Allocation__c.SObjectType) {
+        if (detailObject == OpportunityContactRole.SObjectType
+                || detailObject == Partial_Soft_Credit__c.SObjectType
+                || detailObject == Allocation__c.SObjectType
+                || detailObject == Account_Soft_Credit__c.SObjectType) {
 
             // ====================================================================================================
-            // If the detailObject is OCR, PSC or Allocation, then rather than include a sub-query for the child objects
+            // If the detailObject is OCR, PSC, ASC or Allocation, then rather than include a sub-query for the child objects
             // we'll include foreignkey references to the Opportunity object
             // ====================================================================================================
 

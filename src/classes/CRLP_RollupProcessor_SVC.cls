@@ -151,7 +151,8 @@ public class CRLP_RollupProcessor_SVC {
     private static Type getHanderClassType(CRLP_RollupProcessingOptions.ProcessingOptions options) {
         Type handlerClass;
         if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
-                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit
+                || options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             handlerClass = CRLP_RollupSoftCredit_SVC.class;
 
         } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {

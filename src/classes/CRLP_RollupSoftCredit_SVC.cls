@@ -50,11 +50,24 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      */
     public override void initRollup() {
         // Get Soft Credit Rollups to the Account OR Contact object, but NOT BOTH
-        CRLP_RollupProcessingOptions.RollupType rollupType = (this.objectId.getSobjectType() == Account.SObjectType ?
+        if (this.objectId.getSobjectType() == Account.SObjectType) {
+            /*for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, this.jobFilter)) {
+                addRollupDefinition(r);
+            }*/
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, this.jobFilter)) {
+                addRollupDefinition(r);
+            }
+        } else {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, this.jobFilter)) {
+                addRollupDefinition(r);
+            }
+        }
+
+        /*CRLP_RollupProcessingOptions.RollupType rollupType = (this.objectId.getSobjectType() == Account.SObjectType ?
                 CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit : CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
         for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupDefinitionsToUse(rollupType, this.jobFilter)) {
             addRollupDefinition(r);
-        }
+        }*/
     }
 
     /**
@@ -69,35 +82,63 @@ public class CRLP_RollupSoftCredit_SVC extends CRLP_VRollupHandler {
      * @return none
      */
     public override void processRollups(List<SObject> details, Map<Id, List<SObject>> childRecordsByDetailId) {
-        // This service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
 
-        SObjectType summaryObjectType = this.objectId.getSobjectType();
+        Opportunity opp;
 
-        List<Partial_Soft_Credit__c> pscs = (List<Partial_Soft_Credit__c>) details;
-        for (Integer n=0, listSize = pscs.size(); n<listSize; n++) {
-            Partial_Soft_Credit__c psc = pscs[n];
-            Opportunity opp = psc.Opportunity__r;
+        if (details[0].Id.getSobjectType() == Partial_Soft_Credit__c.SObjectType) {
+            // ACCOUNT-LEVEL CONTACT SOFT CREDITS AND CONTACT SOFT CREDITS
+            // This section of the service class is specific to Rollups from the PartialSoftCredit to the Account AND/OR Contact object
+            List<Partial_Soft_Credit__c> detailPSCList = (List<Partial_Soft_Credit__c>) details;
 
-            // Account and Contact Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
-            // the same parent Account or Contact more than one time.
-            if (this.processedOppIds.contains(opp.Id)) {
-                continue;
-            }
+            for (Integer n = 0, listSize = detailPSCList.size(); n < listSize; n++) {
+                Partial_Soft_Credit__c psc = detailPSCList[n];
+                opp = psc.Opportunity__r;
 
-            for (Integer nsr=0, rollupsListSize=this.rollups.size(); nsr<rollupsListSize; nsr++) {
-                CRLP_Rollup rollup = this.rollups[nsr];
-                Id filterGroupId = rollup.filterGroup;
+                // Account and Contact Soft Credit Rollups are unique in that a single Opportunity cannot be rolled up to
+                // the same parent Account or Contact more than one time.
+                if (this.processedOppIds.contains(opp.Id)) {
+                    continue;
+                }
 
-                // Does this row pass the evaluation?
-                if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{ opp, psc }, filterGroupId)) {
-                    // YES -- now need to do the actual rollup!
-                    CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
-                    this.processedOppIds.add(opp.Id);
+                for (Integer nsr = 0, rollupsListSize = this.rollups.size(); nsr < rollupsListSize; nsr++) {
+                    CRLP_Rollup rollup = this.rollups[nsr];
+                    Id filterGroupId = rollup.filterGroup;
+
+                    // Does this row pass the evaluation?
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                            opp, psc
+                    }, filterGroupId)) {
+                        // YES -- now need to do the actual rollup!
+                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, psc);
+                        this.processedOppIds.add(opp.Id);
+                    }
                 }
             }
+        } else {
+            // ACCOUNT SOFT CREDITS
+            List<Account_Soft_Credit__c> detailASCList = (List<Account_Soft_Credit__c>) details;
 
-            // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
-            CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
+            for (Integer n = 0, listSize = detailASCList.size(); n < listSize; n++) {
+                Account_Soft_Credit__c accSC = detailASCList[n];
+                opp = accSC.Opportunity__r;
+
+                for (Integer nsr = 0, rollupsListSize = this.rollups.size(); nsr < rollupsListSize; nsr++) {
+                    CRLP_Rollup rollup = this.rollups[nsr];
+                    Id filterGroupId = rollup.filterGroup;
+
+                    // Does this row pass the evaluation?
+                    if (CMT_FilterRuleEvaluation_SVC.evaluateFilterGroup(new List<SObject>{
+                            opp, accSC
+                    }, filterGroupId)) {
+                        // YES -- now need to do the actual rollup!
+                        CRLP_Operation_SVC.doRollupOperation(rollup, opp, accSC);
+                        this.processedOppIds.add(opp.Id);
+                    }
+                }
+            }
         }
+
+        // There's no need to keep the filter group evaluation cache beyond the lifetime of a single detail record
+        CMT_FilterRuleEvaluation_SVC.clearEvaluationCache();
     }
 }

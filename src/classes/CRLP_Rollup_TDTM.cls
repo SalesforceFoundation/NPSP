@@ -161,9 +161,21 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             }
             opps = [SELECT Id, AccountId, Primary_Contact__c, npe03__Recurring_Donation__c FROM Opportunity WHERE Id IN :oppIds];
 
+        } else if (detailObjType == Account_Soft_Credit__c.SObjectType) {
+            // If the Account Soft Credit records were modified, get the parent Opportunity records so that
+            // the linked AccountId and PrimaryContactId values can be retrieved for the rollups
+            Set<Id> oppIds = new Set<Id>();
+            for (SObject s  : detailRecordsToRollup) {
+                Account_Soft_Credit__c accSC = (Account_Soft_Credit__c)s;
+                if (accSC.npe01__Opportunity__c != null) {
+                    oppIds.add(accSC.npe01__Opportunity__c);
+                }
+            }
+            opps = [SELECT Id, AccountId, Primary_Contact__c, npe03__Recurring_Donation__c FROM Opportunity WHERE Id IN :oppIds];
         }
 
-        // If there are Opportunities, get the Account and/or Contact or RD Ids to roll up to
+
+    // If there are Opportunities, get the Account and/or Contact or RD Ids to roll up to
         if (!opps.isEmpty()) {
             for (Opportunity opp : opps) {
                 if (opp.AccountId != null && !alreadyQueuedForRollupJob.contains(opp.AccountId)) {

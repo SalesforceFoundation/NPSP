@@ -48,6 +48,8 @@ private class CRLP_RollupAccount_TEST {
     private static void setupBaseTestData() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
+        Account acc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+        insert acc;
     }
 
     /**
@@ -134,8 +136,12 @@ private class CRLP_RollupAccount_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToAcct,
-                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') +
+                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + /*',' +
 
+                // Using a nonsense field for an Account Soft Credit test since we don't package anything for Account Soft Credits
+                CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'npo02__Best_Gift_Year_Total__c',
+                        CRLP_Operation.RollupType.SUM, 'Amount__c') +*/
                 ']';
 
         // Deserialize the rollups to use for testing
@@ -201,7 +207,8 @@ private class CRLP_RollupAccount_TEST {
 
         // Retrieve the dummy Contact and then insert 100 Opportunity records
         Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
-        Id acctId = c.AccountId;
+        Id hardCreditAccId = c.AccountId;
+        Account softCreditAcc = [SELECT Id FROM Account WHERE Id != :hardCreditAccId];
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -249,8 +256,21 @@ private class CRLP_RollupAccount_TEST {
 
         insert opps;
 
+        // create 2 $10 Account Soft Credits
+        Integer scAmount = 10;
+        Integer ascCount = 2;
+        List<Account_Soft_Credit__c> accSCs = new List<Account_Soft_Credit__c>();
+        for (Integer i=0; i<ascCount; i++) {
+            Account_Soft_Credit__c accSC = new Account_Soft_Credit__c (
+                    Amount__c = scAmount,
+                    Account__c = softCreditAcc.Id,
+                    Opportunity__c = opps[i].Id);
+            accSCs.add(accSC);
+        }
+        insert accSCs;
+
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+        WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
         pmt1.npe01__Written_Off__c = true;
         pmt1.npe01__Paid__c = false;    // technically this does not cause a DML change!?
 
@@ -275,19 +295,24 @@ private class CRLP_RollupAccount_TEST {
                                 WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
                 'The total Amount of all Paid Payments should be $10800');
 
-        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
-        Account a = database.query(acctQuery);
+        String hardCreditAccQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :hardCreditAccId LIMIT 1';
+        Account hardCreditAcc = database.query(hardCreditAccQuery);
+
+        Id softCreditAccId = softCreditAcc.Id;
+        String softCreditedAccQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :softCreditAccId LIMIT 1';
+        softCreditAcc = database.query(softCreditedAccQuery);
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger) {
-            System.assertEquals(0, a.npo02__TotalOppAmount__c);
-            System.assertEquals(0, a.npo02__AverageAmount__c);
-            System.assertEquals(0, a.npo02__OppAmount2YearsAgo__c);
-            System.assertEquals(0, a.npo02__LargestAmount__c);
-            System.assertEquals(0, a.npo02__SmallestAmount__c);
-            System.assertEquals(null, a.npo02__LastCloseDate__c);
-            System.assertEquals(null, a.npo02__FirstCloseDate__c);
-            System.assertEquals(null, a.npo02__Best_Gift_Year__c);
+            System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
+            System.assertEquals(0, hardCreditAcc.npo02__LargestAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__SmallestAmount__c);
+            System.assertEquals(null, hardCreditAcc.npo02__LastCloseDate__c);
+            System.assertEquals(null, hardCreditAcc.npo02__FirstCloseDate__c);
+            System.assertEquals(null, hardCreditAcc.npo02__Best_Gift_Year__c);
+//            System.assertEquals(null, softCreditAcc.npo02__Best_Gift_Year_Total__c);
         }
 
         // Now test the rollups to the Account from the Opportunity
@@ -296,33 +321,51 @@ private class CRLP_RollupAccount_TEST {
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+/*
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+*/
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{acctId}, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
+                            hardCreditAccId
+                    }, null);
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
+                            softCreditAcc.Id
+                    }, null);
         } else if (tt == TestType.TestQueueuable) {
-            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{acctId}));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{
+                    hardCreditAccId
+            }));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{
+                    softCreditAcc.Id
+            }));
         }
         Test.stopTest();
 
         // Query the Account with all the target fields specified in the rollups
-        a = database.query(acctQuery);
+        hardCreditAcc = database.query(hardCreditAccQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), a.npo02__AverageAmount__c);
-        System.assertEquals(total2YearsAgo, a.npo02__OppAmount2YearsAgo__c);
-        System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
-        System.assertEquals(closeDate, a.npo02__FirstCloseDate__c);
-        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
-        System.assertEquals(baseAmt, a.npo02__SmallestAmount__c);
-        System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);
+        System.assertEquals(totalDonations, hardCreditAcc.npo02__TotalOppAmount__c);
+        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), hardCreditAcc.npo02__AverageAmount__c);
+        System.assertEquals(total2YearsAgo, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
+        System.assertEquals(lastCloseDate, hardCreditAcc.npo02__LastCloseDate__c);
+        System.assertEquals(closeDate, hardCreditAcc.npo02__FirstCloseDate__c);
+        System.assertEquals(maxAmt, hardCreditAcc.npo02__LargestAmount__c);
+        System.assertEquals(baseAmt, hardCreditAcc.npo02__SmallestAmount__c);
+        System.assertEquals(bestGiftYear, hardCreditAcc.npo02__Best_Gift_Year__c);
 
         // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in
-        System.assertEquals(totalDonations - baseAmt, a.AnnualRevenue,
+        System.assertEquals(totalDonations - baseAmt, hardCreditAcc.AnnualRevenue,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
-        System.assertEquals(baseAmt, a.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
-        System.assertEquals(donationYears.size(), a.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
-        System.assertEquals(donationYears.size(), a.Description.split(';').size(), 'The list of donated years should match');
+        System.assertEquals(baseAmt, hardCreditAcc.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
+        System.assertEquals(donationYears.size(), hardCreditAcc.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
+        System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
+
+        // Account Soft Credit rollup assert uses nonsense NPSP field not otherwise used in these tests
+//        System.assertEquals(scAmount * ascCount, softCreditAcc.npo02__Best_Gift_Year_Total__c, 'The total of Account Soft Credits is incorrect.');
     }
 }

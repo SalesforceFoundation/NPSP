@@ -69,13 +69,14 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             this.numJobSubmitted = 4; // hardcoded to match what this runs
         } else {
 
-            // Customizable Rollup Jobs are more complicated. There are 4 base jobs, but there may be 4 more
+            // Customizable Rollup Jobs are more complicated. There are 5 base jobs, but there may be 5 more
             // Skew jobs to execute if necessary.
             List<CRLP_RollupProcessingOptions.RollupType> jobTypeList = new List<CRLP_RollupProcessingOptions.RollupType>{
-                    CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                    CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                    CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit
+                    //CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                    //CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                    //CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                    //CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
             };
 
             this.numJobSubmitted = 0;
@@ -86,7 +87,8 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                 // Determine if the SkewMode job is needed based on a simple count of the number of records
                 // that meet the skew mode criteria.
                 String objName = (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ? 'Account' : 'Contact');
+                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ? 'Account' : 'Contact');
 
                 String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
                         CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +
