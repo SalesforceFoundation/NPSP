@@ -28,8 +28,14 @@ Referenced Packages
 *.pyc
 *.sublime-project
 *.sublime-workspace
+**/.sfdx/
+**/.vscode/
+**/.idea/
 /config/
 .sfdx
 .vscode
 .vim-force.com
 .sfdx/sfdx-config.json
+-meta.xml
+.release
+run.sh
