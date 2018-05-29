@@ -2508,7 +2508,6 @@
         <name>Translations</name>
     </types>
     <types>
-        <members>DataImportBatch__c.No_Batch_Template_associated</members>
         <members>Level__c.Target_Required</members>
         <name>ValidationRule</name>
     </types>
