@@ -281,8 +281,10 @@ public class CRLP_RollupCMT {
         public Integer intValue;
 
         public Rollup(String label) {
+            //check to see if UDR; these need a unique name
+            Boolean isUDR = (label.left(3) == 'UDR');
             this.label = label.replace('Number', 'Num').left(40).trim();
-            this.recordName = generateRecordName(this.label, false);
+            this.recordName = generateRecordName(this.label, isUDR);
             this.useFiscalYear = false;
             this.isActive = true;
         }

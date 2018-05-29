@@ -40,7 +40,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
         POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
         CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
-        UPDATE_ORG_TELEMETRY
+        UPDATE_ORG_TELEMETRY, CREATE_DEFAULT_SETTINGS
     }
 
     /*******************************************************************************************************
@@ -60,7 +60,14 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
         } else if (context.isUpgrade() || context.isPush()) {
+            // Ensure the any new Custom Settings objects are populated
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS, logger);
+
+            // Insert/Update the TDTM defaults as needed
             executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
+
+            // Submit generic org telemetry data back to the LMO using FeatureManagement
+            executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
         }
 
         executeAction(InstallAction.ABORT_OLD_SCHEDULED_JOBS, logger);
@@ -71,10 +78,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
         if (context.previousVersion() == null || context.previousVersion().compareTo(new Version(3, 112)) < 0) {
             executeAction(InstallAction.UPDATE_CAMPAIGN_LIST_REPORT, logger);
-        }
-
-        if (context.isUpgrade() || context.isPush()) {
-            executeAction(InstallAction.UPDATE_ORG_TELEMETRY, logger);
         }
 
         logger.log();
@@ -106,6 +109,9 @@ global without sharing class STG_InstallScript implements InstallHandler {
             } else if (action == InstallAction.UPDATE_ORG_TELEMETRY) {
                 UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
 
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS) {
+                createNewDefaultCustomSettingRecords();
+
             }
 
         } catch(Exception e) {
@@ -116,7 +122,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     /*******************************************************************************************************
-    * @description Sets up TDTM in new orgs.
+    * @description Sets up TDTM in new orgs. Also called by the NPSP Settings page on page load (i.e., this method
+    * runs every single time the NPSP Settings page is loaded).
     * @return void
     */
     global void runNewOrgScript() {      
@@ -148,6 +155,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }
     }
 
+    /*******************************************************************************************************
+     * @description Called only during a new install of v3 by runNewOrgScript() to configure the default NPSP TDTM
+     * Trigger Configuration. This could involve removing legacy TDTM entries as well.
+     * @param npspToCumulusMap
+     * @return
+     */
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
@@ -163,7 +176,6 @@ global without sharing class STG_InstallScript implements InstallHandler {
         UTIL_CustomSettingsFacade.getOrgBDESettings();
         UTIL_CustomSettingsFacade.getOrgAllocationsSettings();
         UTIL_CustomSettingsFacade.getOrgDataImportSettings();
-        UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
 
         UTIL_Debug.debug('****NPSP-to-Cumulus Map: ' + JSON.serializePretty(npspToCumulusMap));
  
@@ -290,6 +302,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 
     }
 
+    /*******************************************************************************************************
+     * @description Ensure that any default Custom Settings Records are created for "new" custom settings objects
+     * added
+     */
+    private void createNewDefaultCustomSettingRecords() {
+        UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+    }
 
     /*******************************************************************************************************
     * @description Collects exceptions. Logs exceptions by sending an email and processing error via ERR_Handler.
