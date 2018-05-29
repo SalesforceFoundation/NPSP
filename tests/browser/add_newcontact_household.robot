@@ -19,17 +19,3 @@ Add New Contact to Household With Different LastName
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
     Page Should Contain  &{contact1}[FirstName] &{contact1}[LastName] and &{contact2}[FirstName] &{contact2}[LastName] Household
     Header Field Should Have Link  Account Name
-    
-    
-    
-
-
-
-*** Keywords ***
-
-Get Random Contact Info
-    ${first_name} =  Generate Random String
-    ${last_name} =  Generate Random String
-    Set Test Variable  ${first_name}  ${first_name}
-    Set Test Variable  ${last_name}  ${last_name}
-
