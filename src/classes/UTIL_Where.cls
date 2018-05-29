@@ -38,18 +38,18 @@ public with sharing class UTIL_Where {
     public class CriteriaException extends Exception {}
 
     /** @description Filter operator options */
-	public Enum Operator {
-		EQUALS,
-		NOT_EQUALS
-	}
-	
+    public Enum Operator {
+        EQUALS,
+        NOT_EQUALS
+    }
+    
     /*********************************************************************************************************
     * @description Translates field expression operator to a String
     * @param operant The operator
     * @return String The string value of the operator
     */
-	private static String operatorToString(Operator operant) {
-    	String result = null;
+    private static String operatorToString(Operator operant) {
+        String result = null;
 
         if (operant == Operator.EQUALS) { result = '='; }       
         else if (operant == Operator.NOT_EQUALS) { result = '!='; }   
@@ -63,33 +63,33 @@ public with sharing class UTIL_Where {
     * @param logicOperator The logic ooperator (AND/OR)
     * @return Boolean
     */
-	public static Boolean meetsCriteria(List<Boolean> matchResult, String logicOperator) {
-		if (matchResult == null || matchResult.isEmpty()) {
-			return true;
-		}
+    public static Boolean meetsCriteria(List<Boolean> matchResult, String logicOperator) {
+        if (matchResult == null || matchResult.isEmpty()) {
+            return true;
+        }
 
-		if (logicOperator == AND_OPERATOR) {
-			for (Boolean result : matchResult) {
-				if (!result) {
-					return false;
-				}
-			}
-			return true;
+        if (logicOperator == AND_OPERATOR) {
+            for (Boolean result : matchResult) {
+                if (!result) {
+                    return false;
+                }
+            }
+            return true;
 
-		} else {
-			for (Boolean result : matchResult) {
-				if (result) {
-					return true;
-				}
-			}
-			return false;
-		}
-	}
+        } else {
+            for (Boolean result : matchResult) {
+                if (result) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
     
     /** @description AND logic operator */
-	public static final String AND_OPERATOR = 'AND';
+    public static final String AND_OPERATOR = 'AND';
     /** @description OR logic operator */
-	public static final String OR_OPERATOR = 'OR';
+    public static final String OR_OPERATOR = 'OR';
 
     /** @description Group expressions contained in the WHERE clause */
     private List<GroupExpression> groups;
@@ -240,14 +240,14 @@ public with sharing class UTIL_Where {
     * @return Boolean
     */
     @TestVisible 
-	private Boolean meetsCriteria(sObject record) {
-		List<Boolean> matchResult = new List<Boolean>();
+    private Boolean meetsCriteria(sObject record) {
+        List<Boolean> matchResult = new List<Boolean>();
 
         for (GroupExpression groupExp : groups) {
             matchResult.add(groupExp.meetsCriteria(record));
         }
 
-		return meetsCriteria(matchResult, logicOperator);
+        return meetsCriteria(matchResult, logicOperator);
     }
 
 
@@ -571,13 +571,13 @@ public with sharing class UTIL_Where {
         * @return String
         */
         public override String toString() {
-			if (operant == null) {
+            if (operant == null) {
                 throw new CriteriaException('Field Expression Operator is required');// TODO: Create a CustomLabel
-			}
+            }
 
             return getFieldPath() + ' ' + operatorToString(operant) + ' ' + toLiteral(value);
         }
-		
+        
         /*********************************************************************************************************
         * @description Returns the value as String
         * @return String
@@ -601,7 +601,7 @@ public with sharing class UTIL_Where {
         * @param record The sObject to verify
         * @return Boolean
         */
-		public Boolean meetsCriteria(sObject record) {
+        public Boolean meetsCriteria(sObject record) {
             if (isRelationshipField()) {
                 sObject referenceSObject = record.getSObject(getRelationshipName());
 
@@ -610,8 +610,8 @@ public with sharing class UTIL_Where {
                     : isMatching(referenceSObject.get(String.valueOf(sObjField)));
 
             } 
-			
-			return isMatching(record.get(String.valueOf(sObjField)));
+            
+            return isMatching(record.get(String.valueOf(sObjField)));
         }
 
         /*********************************************************************************************************
@@ -622,14 +622,14 @@ public with sharing class UTIL_Where {
         @TestVisible private Boolean isMatching(Object fieldValue) {
             if (operant == Operator.EQUALS) {
                 return value == null 
-					? String.isBlank(String.valueOf(fieldValue))
-					: String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
+                    ? String.isBlank(String.valueOf(fieldValue))
+                    : String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
 
             } else if (operant == Operator.NOT_EQUALS) {
                 return value == null 
-					? String.isNotBlank(String.valueOf(fieldValue))
-					: !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
-				
+                    ? String.isNotBlank(String.valueOf(fieldValue))
+                    : !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
+                
             } else {
                 throw new CriteriaException('Invalid operator: ' + operant.name());// TODO: Create a CustomLabel
             }

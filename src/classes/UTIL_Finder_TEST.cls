@@ -36,7 +36,7 @@
 @isTest
 private class UTIL_Finder_TEST {
     /** @description Fields that should be used in the SOQL SELECT clause */
-	private static final Set<String> SELECT_FIELDS = new Set<String>{ 'FirstName', 'LastName', 'Title' };
+    private static final Set<String> SELECT_FIELDS = new Set<String>{ 'FirstName', 'LastName', 'Title' };
 
 
     /*********************************************************************************************************
@@ -51,106 +51,106 @@ private class UTIL_Finder_TEST {
     /*******************************************************************************************************
     * @description Verifies a SOSL with all possible segments is built
     */
-	@isTest static private void searchBuildReturnsSoslWithAllElements() {
-		String sosl = new UTIL_Finder.SearchBuilder()
-			.withFind('foo*')
-			.withReturning(Contact.sObjectType)
+    @isTest static private void searchBuildReturnsSoslWithAllElements() {
+        String sosl = new UTIL_Finder.SearchBuilder()
+            .withFind('foo*')
+            .withReturning(Contact.sObjectType)
             .withFields(SELECT_FIELDS)
             .withOrderBy('LastName')
             .build();
-			
-		String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
-		assertSearch(expectedSosl, sosl);
-	}
+            
+        String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
+        assertSearch(expectedSosl, sosl);
+    }
 
     /*******************************************************************************************************
     * @description Verifies a SOSL is built correctly when ORDER BY is empty string
     */
-	@isTest static private void searchBuildReturnsSoslWhenOrderByIsNotProvided() {
-		String sosl = new UTIL_Finder.SearchBuilder()
-			.withFind('foo*')
-			.withReturning(Contact.sObjectType)
+    @isTest static private void searchBuildReturnsSoslWhenOrderByIsNotProvided() {
+        String sosl = new UTIL_Finder.SearchBuilder()
+            .withFind('foo*')
+            .withReturning(Contact.sObjectType)
             .withFields(SELECT_FIELDS)
             .build();
-			
-		String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title)';
-		assertSearch(expectedSosl, sosl);
-	}
+            
+        String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title)';
+        assertSearch(expectedSosl, sosl);
+    }
 
     /*******************************************************************************************************
     * @description Verifies a SOSL is built correctly when the FIND clause is a complex search criteria
     */
-	@isTest static private void searchBuildReturnsSoslWithLogicOperatorsInTheFind() {
-		String sosl = new UTIL_Finder.SearchBuilder()
-			.withFind('foo* AND bar*')
-			.withReturning(Contact.sObjectType)
+    @isTest static private void searchBuildReturnsSoslWithLogicOperatorsInTheFind() {
+        String sosl = new UTIL_Finder.SearchBuilder()
+            .withFind('foo* AND bar*')
+            .withReturning(Contact.sObjectType)
             .withFields(SELECT_FIELDS)
             .withOrderBy('LastName')
             .build();
-			
-		String expectedSosl = 'FIND \'foo* AND bar*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
-		assertSearch(expectedSosl, sosl);
-	}
+            
+        String expectedSosl = 'FIND \'foo* AND bar*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
+        assertSearch(expectedSosl, sosl);
+    }
 
     /*******************************************************************************************************
     * @description Verifies build() throws an exception when search criteria is not provided
     */
-	@isTest static private void searchBuildThrowsAnExceptionWhenSearchCriteriaIsNotProvided() {
-		UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
-			.withReturning(Contact.sObjectType)
-			.withFields(SELECT_FIELDS);
-			
-		Exception actual;
-		try {
-			utilSearch.build();
-		} catch(Exception e) {
-			actual = e;
-		}
+    @isTest static private void searchBuildThrowsAnExceptionWhenSearchCriteriaIsNotProvided() {
+        UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
+            .withReturning(Contact.sObjectType)
+            .withFields(SELECT_FIELDS);
+            
+        Exception actual;
+        try {
+            utilSearch.build();
+        } catch(Exception e) {
+            actual = e;
+        }
 
-		System.assertNotEquals(null, actual, 'An exception should be thrown');
-		System.assertEquals(UTIL_Finder.SEARCH_CRITERIA_REQUIRED, actual.getMessage());
-	}
+        System.assertNotEquals(null, actual, 'An exception should be thrown');
+        System.assertEquals(UTIL_Finder.SEARCH_CRITERIA_REQUIRED, actual.getMessage());
+    }
 
     /*******************************************************************************************************
     * @description Verifies build() throws an exception when the sObjectType is not provided
     */
-	@isTest static private void searchBuildThrowsAnExceptionWhenSObjectTypeIsNotProvided() {
-		UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
-			.withFind('foo*')
-			.withFields(SELECT_FIELDS);
+    @isTest static private void searchBuildThrowsAnExceptionWhenSObjectTypeIsNotProvided() {
+        UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
+            .withFind('foo*')
+            .withFields(SELECT_FIELDS);
 
-		Exception actual;
-		try {
-			utilSearch.build();
-		} catch(Exception e) {
-			actual = e;
-		}
+        Exception actual;
+        try {
+            utilSearch.build();
+        } catch(Exception e) {
+            actual = e;
+        }
 
-		System.assertNotEquals(null, actual, 'An exception should be thrown');
-		System.assertEquals(UTIL_Finder.SOBJECT_TYPE_REQUIRED, actual.getMessage());
-	}
+        System.assertNotEquals(null, actual, 'An exception should be thrown');
+        System.assertEquals(UTIL_Finder.SOBJECT_TYPE_REQUIRED, actual.getMessage());
+    }
 
     /*******************************************************************************************************
     * @description Verifies build() throws an exception when returning fields are not provided
     */
-	@isTest static private void searchBuildThrowsAnExceptionWhenFieldsAreNotProvided() {
-		UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
-			.withFind('foo*')
-			.withReturning(Contact.sObjectType);
-			
-		Exception actual;
-		try {
-			utilSearch.build();
-		} catch(Exception e) {
-			actual = e;
-		}
+    @isTest static private void searchBuildThrowsAnExceptionWhenFieldsAreNotProvided() {
+        UTIL_Finder.SearchBuilder utilSearch = new UTIL_Finder.SearchBuilder()
+            .withFind('foo*')
+            .withReturning(Contact.sObjectType);
+            
+        Exception actual;
+        try {
+            utilSearch.build();
+        } catch(Exception e) {
+            actual = e;
+        }
 
-		System.assertNotEquals(null, actual, 'An exception should be thrown');
-		System.assertEquals(UTIL_Finder.FIELDS_REQUIRED, actual.getMessage());
-	}
+        System.assertNotEquals(null, actual, 'An exception should be thrown');
+        System.assertEquals(UTIL_Finder.FIELDS_REQUIRED, actual.getMessage());
+    }
 
-	// Helpers
-	////////////
+    // Helpers
+    ////////////
 
     /*********************************************************************************************************
     * @description Asserts the SOSL is correct
@@ -158,22 +158,22 @@ private class UTIL_Finder_TEST {
     * @param sosl The actual SOSL String 
     * @return void
     */
-	private static void assertSearch(String expectedSosl, String sosl) {
-		System.assertEquals(expectedSosl, sosl);
+    private static void assertSearch(String expectedSosl, String sosl) {
+        System.assertEquals(expectedSosl, sosl);
 
-	    Test.setFixedSearchResults(new List<Id>{ getContactId() });
-	    List<List<SObject>> result = Search.query(sosl);
+        Test.setFixedSearchResults(new List<Id>{ getContactId() });
+        List<List<SObject>> result = Search.query(sosl);
 
-		System.assert(result != null, 'Search should return data');
-		System.assertEquals(1, result[0].size(), 'One record should be returned from the search');
-	}
+        System.assert(result != null, 'Search should return data');
+        System.assertEquals(1, result[0].size(), 'One record should be returned from the search');
+    }
 
     /*********************************************************************************************************
     * @description Returns the Id of an existing Contact 
     * @return Id
     */
-	private static Id getContactId() {
-		return [SELECT Id FROM Contact LIMIT 1].Id;
-	}
-	
+    private static Id getContactId() {
+        return [SELECT Id FROM Contact LIMIT 1].Id;
+    }
+    
 }

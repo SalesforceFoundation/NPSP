@@ -141,9 +141,7 @@ private class UTIL_Where_TEST {
         } catch (Exception e) {
             actual = e;
         }
-
         System.assertNotEquals(null, actual, 'An exception should be thrown');
-
     }
 
     /*******************************************************************************************************
