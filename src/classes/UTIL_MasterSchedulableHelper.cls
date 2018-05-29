@@ -185,4 +185,22 @@ public without sharing class UTIL_MasterSchedulableHelper {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);
         }
     }
+
+    /*******************************************************************************************************
+    * @description Checks for presently running jobs of a particular method
+    * @param methodName The name of the method to check for running jobs on
+    * @return Boolean
+    */
+    public Boolean hasRunningJobs(String methodName) {
+        List<AsyncApexJob> runningJobs = [SELECT Id, MethodName
+            FROM AsyncApexJob
+            WHERE MethodName = :methodName
+            AND Status NOT IN ('Aborted','Completed','Failed')
+            LIMIT 1];
+        if (runningJobs.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

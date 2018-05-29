@@ -61,8 +61,10 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      */
     public void execute(SchedulableContext context) {
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJobs('CRLP_Account_BATCH')) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            }
         }
     }
 }
