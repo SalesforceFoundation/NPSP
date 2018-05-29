@@ -277,7 +277,7 @@ public class CRLP_Rollup_SEL {
         String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
         String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
         String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
-        String accSCObjectName = UTIL_Describe.getObjectDescribe('Account_Soft_Credit__c').getName();
+        String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
 
         // Determine the correct base summary object based on the Rollup Type
         SObjectType summaryObjectType;

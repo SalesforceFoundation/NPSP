@@ -199,7 +199,7 @@ public with sharing class CRLP_RollupUI_SVC {
         if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
             if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
-                    || rlp.Amount_Object__r.QualifiedAPIName == 'Account_Soft_Credit__c') {
+                    || rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
             } else {
                 item.creditType = Label.CRLP_HardCredit;
@@ -209,7 +209,7 @@ public with sharing class CRLP_RollupUI_SVC {
             item.creditType = Label.CRLP_HardCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && (rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
-                    || rlp.Detail_Object__r.QualifiedAPIName == 'Account_Soft_Credit__c')) {
+                    || rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c'))) {
             item.creditType = Label.CRLP_SoftCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {

@@ -54,7 +54,7 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String rdObjectName = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String ascObjectName = UTIL_Describe.getObjectDescribe('Account_Soft_Credit__c').getName();
+    protected final String ascObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
 
     /* @description The SObject record being rolled up to. Not visible to classes that extend this virtual class */
     private SObject record;
