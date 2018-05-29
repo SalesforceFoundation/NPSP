@@ -685,6 +685,13 @@ public class UTIL_UnitTestData_TEST {
         TDTM_ProcessControl.toggleTriggerState('Opportunity', 'RLLP_OppRollup_TDTM', false);
         TDTM_ProcessControl.toggleTriggerState('Task', 'EP_TaskRollup_TDTM', false);
     }
+    /* @description Disable all OppRollup related trigger handlers when not needed to improve performance */
+    public static void disableCustomizableRollupTriggers() {
+        createDefaultTDTMHandlers();
+        TDTM_ProcessControl.toggleTriggerState('Opportunity', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('npe01__OppPayment__c', 'CRLP_Rollup_TDTM', false);
+        TDTM_ProcessControl.toggleTriggerState('Allocation__c', 'CRLP_Rollup_TDTM', false);
+    }
     /* @description Disable all Account/Contact Merge related trigger handlers when not needed to improve performance */
     public static void disableMergeTriggers() {
         createDefaultTDTMHandlers();
