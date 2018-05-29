@@ -2,6 +2,7 @@ from cumulusci.core.exceptions import CommandException
 from cumulusci.core.tasks import BaseTask
 from cumulusci.core.utils import process_bool_arg
 import os
+import re
 from subprocess import Popen, PIPE
 
 class pmd(BaseTask):
@@ -35,25 +36,38 @@ class pmd(BaseTask):
             self.options['output'] = 'text'
         if 'htmlfilename' not in self.options:
             self.options['htmlfilename'] = 'pmd.html'
+        if 'runAllApex' not in self.options:
+            self.options['runAllApex'] = False
 
     def _run_task(self):
-        if process_bool_arg(self.options.get('runAllApex', True)):
+        if not process_bool_arg(self.options.get('runAllApex', True)):
+            #create CSV file and save list of changed files
+            fr = open('changedFiles.txt', 'r')
+            git = "git status --porcelain | sed s/^...// > changedFiles.txt"
+            Popen((git, os.getcwd() ), stdout=PIPE, stderr=PIPE, shell=True)
+            #filter for specific file types
+            filteredList = []
+            for line in fr:
+                #if re.match(".+\.(cls|js|cmp)$", line): --> look at adding support for lightning components
+                if re.match(".+\.(cls)$", line):
+                    filteredList.append(line)
+            fw = open('filteredFiles.txt', 'w')
+            fw.write(','.join(filteredList))
+            fr.close()
+            fw.close()
+
             args = [
                 'pmd', 'pmd',
-                '-d', self.options['path'],
+                '-filelist', 'filteredFiles.txt',
                 '-l', 'apex',
                 '-f', self.options['output'],
                 '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
                 '-failOnViolation', 'false'
             ]
         else:
-            #create CSV file and save list of changed files
-            file = open('changedFiles.txt', 'w')
-            pr = Popen(("git status --porcelain | sed s/^...// | paste -s -d, changedFiles.txt", os.getcwd() ), stdout=PIPE, stderr=PIPE, shell=True)
-
             args = [
                 'pmd', 'pmd',
-                '-filelist', 'changedFiles.txt',
+                '-d', self.options['path'],
                 '-l', 'apex',
                 '-f', self.options['output'],
                 '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
@@ -73,3 +87,6 @@ class pmd(BaseTask):
             message = 'Return code: {}\nstderr: {}'.format(returncode, stderr)
             self.logger.error(message)
             raise CommandException(message)
+
+        os.remove('changedFiles.txt')
+        os.remove('filteredFiles.txt')
