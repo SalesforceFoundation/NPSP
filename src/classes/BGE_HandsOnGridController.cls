@@ -76,6 +76,7 @@ global class BGE_HandsOnGridController {
 
             String cellType = (String) cellData.get('type');
 
+
             try {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
@@ -94,12 +95,49 @@ global class BGE_HandsOnGridController {
                     }
                 }
                 else {
-                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                    // If the type we get from the front end is TEXT
+                    if (cellType != null && cellType.equalsIgnoreCase('TEXT')) {
+
+                        Schema.SObjectField dataImportField = BGE_HandsOnGridColumnWrapper.getObjectFields(BGE_HandsOnGridColumnWrapper.DATA_IMPORT_NAME).get((String) cellData.get('field'));
+
+                        Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
+
+                        String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
+
+                        // If the actual type is EMAIL
+                        if (type == 'EMAIL' && !validateEmail( (String) cellData.get('newValue') )){
+
+                            String emailErrorMessage = 'invalid email format';
+
+                            Map<String, String> emailError = new Map<String, String>();
+                            emailError.put('field', (String) cellData.get('field'));
+                            emailError.put('messages', emailErrorMessage);
+
+                            Object[] emailErrorMessagesList = new Object[] {};
+                            emailErrorMessagesList.add((Object) emailError);
+
+                            cellData.put('errors', emailErrorMessagesList);
+                        }
+                        else {
+                            // If we are receiving just text or the email is valid.
+                            dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                            System.debug(JSON.serializePretty(dataImport));
+
+                            dataImports.put(cellKey, (DataImport__c) dataImport);
+                        }
+                    }
+                    else {
+                        // If type from the frontend is number or boolean.
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+
+                        System.debug(JSON.serializePretty(dataImport));
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
+                    }
+
                 }
-
-                System.debug(JSON.serializePretty(dataImport));
-
-                dataImports.put(cellKey, (DataImport__c) dataImport);
             }
             catch (Exception ex) {
 
@@ -149,7 +187,7 @@ global class BGE_HandsOnGridController {
                 DataImport__c upsertRecord = upsertRecords[i];
 
                 Map<String, Object> cellData = (Map<String, Object>) result.get(upsertRecord.External_Id__c);
-                system.debug('UPSERT RESULT:    ' + upsertResult);
+
                 if (!upsertResult.isSuccess()) {
 
                     Map<Integer, Map<String, String>> upsertErrors = new Map<Integer, Map<String, String>>();
@@ -173,9 +211,6 @@ global class BGE_HandsOnGridController {
                 }
             }
         }
-
-
-        // System.debug(JSON.serializePretty(result));
 
         return result.values();
     }
@@ -292,6 +327,22 @@ global class BGE_HandsOnGridController {
         }
 
         return result;
+    }
+
+    private static Boolean validateEmail(String email) {
+
+        Boolean isValid = true;
+
+        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+        Pattern MyPattern = Pattern.compile(emailRegex);
+        Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
+
+        if (!MyMatcher.matches()) {
+
+            isValid = false;
+        }
+
+        return isValid;
     }
 
 }
