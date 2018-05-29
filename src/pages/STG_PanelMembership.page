@@ -6,7 +6,7 @@
             <apex:commandButton id="editMembership" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
         <div class="slds-form--horizontal slds-m-around--large">
-            <div class="slds-form-element">
+            <div class="slds-form-element" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Membership_Record_Types__c.Label}" for="slMRT" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgHH}" fieldname="npo02__Membership_Record_Types__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strMembershipRecTypesReadOnly}" inEditMode="{!isEditMode}" />

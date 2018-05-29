@@ -1,0 +1,16 @@
+<apex:page standardController="Contact" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
+    <apex:slds />
+    <div class="slds-scope">
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.Contact.Label }"
+                               parentAction="/003" parentRecordName="{!$ObjectType.Contact.Name }"
+                               parentRecordAction="/{!Contact.Id}" header="Recalculate Roll-Ups"
+                               icon="contact_120" iconCategory="standard"
+                               showSaveBtn="false" showCancelBtn="true"
+                               cancelLabel="Return" cancelAction="/{!Contact.Id}"
+                               rendered="{!hasError == true}" />
+        </apex:form>
+        <c:UTIL_PageMessages />
+    </div>
+    <c:UTIL_NavigateBack recordId="{!Contact.Id}" redirect="true" rendered="{!hasError == false}"/>
+</apex:page>
