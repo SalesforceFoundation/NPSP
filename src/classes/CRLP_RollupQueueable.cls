@@ -116,7 +116,7 @@ public class CRLP_RollupQueueable implements System.Queueable {
             //options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
+            jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.RecurringDonations);
         }
 
         // Query the parent records

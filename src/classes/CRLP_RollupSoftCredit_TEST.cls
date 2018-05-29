@@ -359,7 +359,7 @@ private class CRLP_RollupSoftCredit_TEST {
         // Basic rollup asserts using existing NPSP rollup fields.
         if (tt == TestType.TestBatchAccount) {
             // Query the Household
-            String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :hardCreditAccId LIMIT 1';
+            String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
             Account a = database.query(acctQuery);
 
             System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
