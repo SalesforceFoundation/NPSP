@@ -96,6 +96,7 @@ global class BGE_HandsOnGridController {
                 }
                 else {
 
+                    // If the type we get from the front end is TEXT
                     if (cellType != null && cellType.equalsIgnoreCase('TEXT')) {
 
                         Schema.SObjectField dataImportField = BGE_HandsOnGridColumnWrapper.getObjectFields(BGE_HandsOnGridColumnWrapper.DATA_IMPORT_NAME).get((String) cellData.get('field'));
@@ -104,32 +105,22 @@ global class BGE_HandsOnGridController {
 
                         String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
 
-                        if (type == 'EMAIL'){
+                        // If the actual type is EMAIL
+                        if (type == 'EMAIL' && !validateEmail( (String) cellData.get('newValue') )){
 
-                            if (!validateEmail( (String) cellData.get('newValue') )){
+                            String emailErrorMessage = 'invalid email format';
 
-                                String emailErrorMessage = 'invalid email format';
+                            Map<String, String> emailError = new Map<String, String>();
+                            emailError.put('field', (String) cellData.get('field'));
+                            emailError.put('messages', emailErrorMessage);
 
-                                Map<String, String> emailError = new Map<String, String>();
-                                emailError.put('field', (String) cellData.get('field'));
-                                emailError.put('messages', emailErrorMessage);
+                            Object[] emailErrorMessagesList = new Object[] {};
+                            emailErrorMessagesList.add((Object) emailError);
 
-                                Object[] emailErrorMessagesList = new Object[] {};
-                                emailErrorMessagesList.add((Object) emailError);
-
-                                cellData.put('errors', emailErrorMessagesList);
-                            }
-                            else {
-                                system.debug('LINE 123');
-                                dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
-
-                                System.debug(JSON.serializePretty(dataImport));
-
-                                dataImports.put(cellKey, (DataImport__c) dataImport);
-                            }
+                            cellData.put('errors', emailErrorMessagesList);
                         }
                         else {
-                            system.debug('LINE 128');
+                            // If we are receiving just text or the email is valid.
                             dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
                             System.debug(JSON.serializePretty(dataImport));
@@ -138,7 +129,7 @@ global class BGE_HandsOnGridController {
                         }
                     }
                     else {
-                        system.debug('LINE 133');
+                        // If type from the frontend is number or boolean.
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
                         System.debug(JSON.serializePretty(dataImport));
@@ -146,12 +137,7 @@ global class BGE_HandsOnGridController {
                         dataImports.put(cellKey, (DataImport__c) dataImport);
                     }
 
-
                 }
-
-            //    System.debug(JSON.serializePretty(dataImport));
-
-            //    dataImports.put(cellKey, (DataImport__c) dataImport);
             }
             catch (Exception ex) {
 
