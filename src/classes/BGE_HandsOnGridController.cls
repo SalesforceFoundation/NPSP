@@ -75,7 +75,7 @@ global class BGE_HandsOnGridController {
             dataImport.put('External_Id__c', (Object) cellKey);
 
             String cellType = (String) cellData.get('type');
-            system.debug('CELL TYPE:    ' + cellType);
+
 
             try {
 
@@ -187,7 +187,7 @@ global class BGE_HandsOnGridController {
                 DataImport__c upsertRecord = upsertRecords[i];
 
                 Map<String, Object> cellData = (Map<String, Object>) result.get(upsertRecord.External_Id__c);
-                system.debug('UPSERT RESULT:    ' + upsertResult);
+
                 if (!upsertResult.isSuccess()) {
 
                     Map<Integer, Map<String, String>> upsertErrors = new Map<Integer, Map<String, String>>();
@@ -211,9 +211,6 @@ global class BGE_HandsOnGridController {
                 }
             }
         }
-
-
-        // System.debug(JSON.serializePretty(result));
 
         return result.values();
     }
@@ -333,7 +330,7 @@ global class BGE_HandsOnGridController {
     }
 
     private static Boolean validateEmail(String email) {
-        system.debug('PARAM EMAIL ' + email);
+
         Boolean isValid = true;
 
         String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
@@ -344,7 +341,7 @@ global class BGE_HandsOnGridController {
 
             isValid = false;
         }
-        system.debug('IS VALID:    ' + isValid);
+
         return isValid;
     }
 
