@@ -101,7 +101,7 @@
         <!--BEGIN BREADCRUMB-->
         <div class="slds-p-horizontal_large slds-p-top_large">
             <lightning:breadcrumbs>
-                <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="/apex/STG_SettingsManager"/>
+                <lightning:breadcrumb label="{!v.labels.returnNPSP}" href="{!v.labels.urlNamespacePrefix}"/>
                 <aura:if isTrue="{!v.isCRLPEnabled}">
                     <aura:if isTrue="{! and(!v.isRollupsGrid, or(v.lastActiveRecordId == null, v.lastActiveRecordId == 'null'))}">
                         <lightning:breadcrumb label="{!v.labels.rollupSummaryTitle}"
