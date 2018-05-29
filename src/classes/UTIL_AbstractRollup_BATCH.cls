@@ -60,6 +60,17 @@ public abstract class UTIL_AbstractRollup_BATCH implements database.batchable<SO
     private integer batchSize;
     private boolean isRunningBatch = false;
 
+    /* @description The legacy Allocations rollup is disabled when the Customizable Rollups Engine is enabled */
+    protected Boolean customizableRollupEngineEnabled {
+        get {
+            if (customizableRollupEngineEnabled == null) {
+                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+                customizableRollupEngineEnabled = (customizableRollupSettings.Customizable_Rollups_Enabled__c == true);
+            }
+            return customizableRollupEngineEnabled;
+        } private set;
+    }
+
     // constructors - pass in one or more parent object ids
     public UTIL_AbstractRollup_BATCH ( id parentRecId ) {
         // this.parentObjName = parentObjName;
