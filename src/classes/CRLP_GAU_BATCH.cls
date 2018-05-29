@@ -62,8 +62,10 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
      */
     public void execute(SchedulableContext context) {
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_GAU_BATCH')) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            }
         }
     }
 }

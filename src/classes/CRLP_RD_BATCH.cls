@@ -60,7 +60,11 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_RD_BATCH')) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            }
+        }
     }
 }

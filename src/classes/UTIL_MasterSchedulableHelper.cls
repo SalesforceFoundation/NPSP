@@ -191,11 +191,11 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @param methodName The name of the method to check for running jobs on
     * @return Boolean
     */
-    public Boolean hasRunningJobs(String methodName) {
-        List<AsyncApexJob> runningJobs = [SELECT Id, MethodName
+    public static Boolean hasRunningJob(String className) {
+        List<AsyncApexJob> runningJobs = [SELECT Id, ApexClass.Name
             FROM AsyncApexJob
-            WHERE MethodName = :methodName
-            AND Status NOT IN ('Aborted','Completed','Failed')
+            WHERE ApexClass.Name = :className
+            AND Status NOT IN ('Queued','Aborted','Completed','Failed')
             LIMIT 1];
         if (runningJobs.isEmpty()) {
             return false;

@@ -61,6 +61,10 @@
          * @description Scheduler execute method to support scheduling this job directly from the UI
          */
         public void execute(SchedulableContext context) {
-            Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.RecurringDonations), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+            if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+                if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_RDSkew_BATCH')) {
+                    Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.RecurringDonations), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+                }
+            }
         }
     }

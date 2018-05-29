@@ -61,8 +61,10 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
      */
     public void execute(SchedulableContext context) {
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_Account_SoftCredit_BATCH')) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            }
         }
     }
 }

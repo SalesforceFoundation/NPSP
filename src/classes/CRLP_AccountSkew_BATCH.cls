@@ -62,7 +62,9 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      */
     public void execute(SchedulableContext context) {
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_AccountSkew_BATCH')) {
+                Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+            }
         }
     }
 }

@@ -62,8 +62,10 @@ public class CRLP_ContactSkew_SoftCredit_BATCH extends CRLP_Batch_Base_Skew impl
      */
     public void execute(SchedulableContext context) {
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_ContactSkew_SoftCredit_BATCH')) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            }
         }
     }
 }
