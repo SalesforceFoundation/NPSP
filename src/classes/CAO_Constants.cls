@@ -145,11 +145,6 @@ public with sharing class CAO_Constants {
     public static Id individualAccountId;
 
     /*******************************************************************************************************
-    * @description The name of the Individual Bucket Account
-    */ 
-    private static String individualAccountName = CAO_Constants.BUCKET_ACCOUNT_NAME;
-
-    /*******************************************************************************************************
     * @description returns the Salesforce Id of the Individual Bucket Account
     * @return  Id
     */ 
@@ -186,7 +181,6 @@ public with sharing class CAO_Constants {
         insert individualAccountForTests;
 
         CAO_Constants.BUCKET_ACCOUNT_NAME = accountName;
-        individualAccountName = accountName;
 
         return individualAccountForTests.Id;
     }
