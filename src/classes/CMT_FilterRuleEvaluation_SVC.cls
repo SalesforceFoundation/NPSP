@@ -52,6 +52,9 @@ public class CMT_FilterRuleEvaluation_SVC {
     @TestVisible
     private static Map<String, Boolean> cachedFilterEvalResults = new Map<String, Boolean>();
 
+    /* @description When working with the filterRule Cache, if the recordId is null make up a value to use to make each record unique */
+    private static Integer nullIdRowCounter = 1;
+
     /**
      * @description Allow the cache of filter group eval results to be cleared externally, such as when the
      * detail record changes.
@@ -77,7 +80,8 @@ public class CMT_FilterRuleEvaluation_SVC {
         // Build a unique key of a concatenation of the Id's of all the detail rows.
         String cacheKey = filterGroupId + '.';
         for (SObject record : detailRows) {
-            cacheKey += record.Id;
+            String recordId = (record.Id == null ? (nullIdRowCounter++).format() : record.Id);
+            cacheKey += recordId;
         }
         // If this set of detail rows has already been evaluated for this filter group, return the cached result
         if (cachedFilterEvalResults.containsKey(cacheKey)) {
@@ -97,11 +101,23 @@ public class CMT_FilterRuleEvaluation_SVC {
         List<CMT_FilterRule> rulesToEvaluate = mapOfFilterRulesByGroupId.get(filterGroupId);
 
         for (SObject record : detailRows) {
+            String recordId = (record.Id == null ? (nullIdRowCounter++).format() : record.Id);
             SObjectType objType = record.getSObjectType();
             for (CMT_FilterRule rule : rulesToEvaluate) {
                 if (objType == rule.getObjectType()) {
-                    if (!rule.isIncluded(record)) {
+                    // Not only caching the entire FilterGroup result, we're also caching the
+                    // individual filter rule result to help with performance.
+                    String ruleCacheKey = recordId + '.' + rule.getCacheKeyPrefix();
+                    Boolean isIncluded;
+                    if (cachedFilterEvalResults.containsKey(ruleCacheKey)) {
+                        isIncluded = cachedFilterEvalResults.get(ruleCacheKey);
+                    } else {
+                        isIncluded = rule.isIncluded(record);
+                        cachedFilterEvalResults.put(ruleCacheKey, isIncluded);
+                    }
+                    if (!isIncluded) {
                         // No reason to continue if any one rule for any one record fails the evaluation
+                        cachedFilterEvalResults.put(cacheKey, false);
                         return false;
                     }
                 }
