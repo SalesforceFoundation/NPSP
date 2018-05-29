@@ -81,10 +81,18 @@ global class BGE_HandsOnGridController {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
-                    if (cellData.get('newValue') == null) {
+                    String oldValue = (String) cellData.get('oldValue');
+                    string newValue = (String) cellData.get('newValue');
+
+                    if (newValue == null && oldValue != null ) {
 
                         Date dt = null;
                         dataImport.put((String) cellData.get('field'), (Object) dt);
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
+                    }
+                    else if (newValue == null && oldValue == null ) {
+
                     }
                     else {
 
@@ -92,7 +100,11 @@ global class BGE_HandsOnGridController {
                         String[] dts = dtString.split('/');
                         Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
                         dataImport.put((String) cellData.get('field'), (Object) dt);
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
                     }
+
+
                 }
                 else {
 
@@ -119,7 +131,7 @@ global class BGE_HandsOnGridController {
 
                             cellData.put('errors', emailErrorMessagesList);
                         }
-                        else {
+                        else if ((String) cellData.get('newValue') != (String) cellData.get('oldValue')) {
                             // If we are receiving just text or the email is valid.
                             dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
@@ -128,7 +140,7 @@ global class BGE_HandsOnGridController {
                             dataImports.put(cellKey, (DataImport__c) dataImport);
                         }
                     }
-                    else {
+                    else if (cellData.get('newValue') != cellData.get('oldValue')) {
                         // If type from the frontend is number or boolean.
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
@@ -333,13 +345,16 @@ global class BGE_HandsOnGridController {
 
         Boolean isValid = true;
 
-        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
-        Pattern MyPattern = Pattern.compile(emailRegex);
-        Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
+        if (!String.isEmpty(email) ) {
 
-        if (!MyMatcher.matches()) {
+            String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+            Pattern MyPattern = Pattern.compile(emailRegex);
+            Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
 
-            isValid = false;
+            if (!MyMatcher.matches()) {
+
+                isValid = false;
+            }
         }
 
         return isValid;
