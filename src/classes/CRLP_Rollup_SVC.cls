@@ -207,7 +207,7 @@ public class CRLP_Rollup_SVC {
      * @return True or False
      */
     public static Boolean hasActiveAccountSoftCreditRollupsForSObject(SObjectType sObj) {
-        String accSCObjectName = UTIL_Describe.getObjectDescribe('Account_Soft_Credit__c').getName();
+        String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Account_Soft_Credit__c')).getName();
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == accSCObjectName) {
