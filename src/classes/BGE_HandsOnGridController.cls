@@ -51,6 +51,7 @@ global class BGE_HandsOnGridController {
     global static Object[] dmlCellsGrid(Map<String, Object> parameters) {
 
         Map<String, Object> result = new Map<String, Object>();
+        Object[] exceptionResult = new Object[] {};
 
         Id batchId = Id.valueOf((String) parameters.get('batchId'));
 
@@ -61,10 +62,10 @@ global class BGE_HandsOnGridController {
         for (Object cell :cells) {
 
             Map<String, Object> cellData = (Map<String, Object>) cell;
-            cellData.put('errors', null);
 
             String cellKey = (String) cellData.get('recordId');
             result.put(cellKey, cell);
+            exceptionResult.add(cell);
 
             SObject dataImport = (SObject) new DataImport__c(NPSP_Data_Import_Batch__c = batchId);
 
@@ -76,6 +77,7 @@ global class BGE_HandsOnGridController {
 
             String cellType = (String) cellData.get('type');
 
+            System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
 
             try {
 
@@ -159,7 +161,22 @@ global class BGE_HandsOnGridController {
 
                 Object[] exceptionErrors = new Object[] {};
                 exceptionErrors.add((Object) exceptionError);
-                cellData.put('errors', exceptionErrors);
+
+                if (cellData.containsKey('errors')) {
+
+                    Object[] existingExceptionErrors = (Object[]) cellData.get('errors');
+
+                    if (existingExceptionErrors != null && existingExceptionErrors.size() > 0) {
+                        existingExceptionErrors.addAll(exceptionErrors);
+                        cellData.put('errors', (Object) existingExceptionErrors);
+                    }
+                    else {
+                        cellData.put('errors', (Object) existingExceptionErrors);
+                    }
+                }
+                else {
+                    cellData.put('errors', (Object) exceptionErrors);
+                }
             }
         }
 
@@ -222,9 +239,14 @@ global class BGE_HandsOnGridController {
                     cellData.put('sfdcid', (Object) upsertResult.getId());
                 }
             }
+
+            return result.values();
+        }
+        else {
+            return exceptionResult;
         }
 
-        return result.values();
+        return null;
     }
 
     @RemoteAction
