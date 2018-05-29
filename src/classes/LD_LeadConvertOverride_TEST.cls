@@ -89,10 +89,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         // fill the lists (for coverage)
@@ -178,10 +175,8 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
 
-        //pass the controller into the extension
         Test.setFixedSearchResults(new List<Id>{ c.Id });
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
@@ -254,9 +249,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);  
         
         assertNewOptionAndNoAccountIsRetrieved(ext);
@@ -332,9 +325,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-        //pass the controller into the extension
 
         Test.setFixedSearchResults(new List<Id>{ acc.Id });
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
@@ -412,9 +403,8 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-        //pass the controller into the extension
+
         Test.setFixedSearchResults(new List<Id>{ acc.Id });
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
@@ -485,11 +475,9 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
         assertNoAccountIsRetrieved(ext);
 
         // fill the lists (for coverage)
@@ -659,10 +647,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         // fill the lists (for coverage)
@@ -754,10 +739,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         // fill the lists (for coverage)
@@ -852,7 +834,6 @@ private class LD_LeadConvertOverride_TEST {
         con.lastname = 'Testy';
         insert con;
         con = getContacts()[0];
-        system.assertNotEquals(null, con.Id);
         system.assertNotEquals(null, con.AccountId);
 
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
@@ -870,7 +851,6 @@ private class LD_LeadConvertOverride_TEST {
         //pass lead into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
 
-        //pass the controller into the extension
         Test.setFixedSearchResults(new List<Id>{ con.Id });
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
@@ -975,10 +955,7 @@ private class LD_LeadConvertOverride_TEST {
 
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         // fill the lists (for coverage)
@@ -1049,10 +1026,7 @@ private class LD_LeadConvertOverride_TEST {
         Test.setCurrentPageReference(new PageReference('Page.LD_LeadConvertOverride'));
         system.currentPageReference().getParameters().put('id', l.id);
 
-        //pass contact into the controller
         ApexPages.StandardController sc = new ApexPages.standardController(l);
-
-        //pass the controller into the extension
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
 
         // fill the lists (for coverage)
@@ -1074,33 +1048,158 @@ private class LD_LeadConvertOverride_TEST {
         System.assertEquals(l.CompanyStreet__c,result.BillingStreet);
     }
 
+    /*******************************************************************************************************
+    * @description Verifies correct Contacts are retrieved when SOQL is used (all fields are filterable)
+    */
+    @isTest private static void contactFinderBuildsCorrectSOQLQuery() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        Lead l = new Lead();
+        l.FirstName = 'Jane';
+        l.LastName = 'Smith Soql';
+        l.Company = SPECIAL_ACCOUNT_NAME;
+        l.Email = 'jane.smithsoql@example.com';
+        insert l;
+
+        List<Contact> contacts = new List<Contact>{
+            new Contact(FirstName = l.FirstName, LastName = 'Clark'),
+            new Contact(FirstName = 'John', LastName = l.LastName),
+            new Contact(FirstName = l.FirstName, LastName = l.LastName, Email = 'notmatchemail@example.com'),
+            new Contact(FirstName = 'Kent', LastName = l.LastName, Email = l.Email)
+        };
+        insert contacts;
+
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        ext.contactFinder.criteria.isFilterable = true;
+        System.assert(ext.contactFinder.isSoql(), 'SOQL query should be executed');
+
+        Map<Id, Contact> actual = new Map<Id, Contact>((List<Contact>) ext.contactFinder.find());
+
+        System.assertEquals(2, actual.size(), 'Contact finder should return Contacts: ' + actual);
+        System.assert(actual.containsKey(contacts[2].Id), 'Contact with the same First and Last Names should be returned: ' + actual);
+        System.assert(actual.containsKey(contacts[3].Id), 'Contact with the same Email should be returned: ' + actual);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies correct Contacts are retrieved when search is used (a field is not filterable)
+    */
+    @isTest private static void contactFinderBuildsCorrectSearchQuery() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        Lead l = new Lead();
+        l.FirstName = 'Jane';
+        l.LastName = 'Smith Sosl';
+        l.Company = SPECIAL_ACCOUNT_NAME;
+        l.Email = 'jane.smithsosl@example.com';
+        insert l;
+
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        ext.contactFinder.criteria.isFilterable = false;
+        System.assert(!ext.contactFinder.isSoql(), 'Search query should be executed'); 
+        List<sObject> actual = ext.contactFinder.find();  //no need to return any data, validate the SOSL only
+        
+        UTIL_Finder.SearchBuilder searchBuilder = ext.contactFinder.searchBuilder();
+
+        Set<String> fieldSetFields = new Set<String>();
+        for (FieldSetMember member : ext.conFieldSet) {
+            fieldSetFields.add(member.getFieldPath());
+        }
+        System.assert(ext.contactFinder.selectFields.containsAll(fieldSetFields));
+
+        String sosl = searchBuilder.build();
+        System.assert(sosl.startsWith(
+            'FIND \'(Smith Sosl AND Jane) OR jane.smithsosl@example.com*\' IN ALL FIELDS RETURNING Contact(Id, Name, FirstName, LastName, Email'), 
+            'SOSL should search expected values: ' + sosl
+        );
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies correct SOQL or SOSL is used to retrieve Accounts
+    */
+    @isTest private static void accFinderBuildsCorrectSearchQuery() {
+        UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+            new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
+        CAO_Constants.setIndividualAccountForTests(CAO_Constants.INDIVIDUAL_ACCOUNT_NAME_FOR_TESTS);
+        
+        Lead l = new Lead();
+        l.FirstName = 'Jane';
+        l.LastName = 'Smith AccFinder';
+        l.Company = SPECIAL_ACCOUNT_NAME;
+        insert l;
+
+        ApexPages.StandardController sc = new ApexPages.standardController(l);
+        LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
+
+        ext.accountFinder.criteria.isFilterable = true;
+        String soql = ext.accountFinder.queryBuilder().build();
+        SYstem.assertEquals('SELECT Id, Name, BillingCity FROM Account WHERE Name = \'' + l.Company + '\' LIMIT 50', soql, 'SOQL should be as expected');
+
+        ext.accountFinder.criteria.isFilterable = false;
+        String sosl = ext.accountFinder.searchBuilder().build();
+        SYstem.assertEquals('FIND \'' + l.Company + '*\' IN NAME FIELDS RETURNING Account(Id, Name, BillingCity)', sosl, 'Search should be as expected');
+    }
+
+
     // Helpers
     /////////////
 
+    /*********************************************************************************************************
+    * @description Asserts the controller's list of Accounts contains no existing Account 
+    * @param ext The controller
+    * @return void
+    */
     private static void assertNoAccountIsRetrieved(LD_LeadConvertOverride_CTRL ext) {
         System.assertEquals(1, ext.listSOAccounts.size(), 'An AUTO select option should exist: ' + ext.listSOAccounts);
         System.assertEquals(1, ext.listSOAfflAccounts.size(), 'Label None should exist: ' + ext.listSOAfflAccounts);
         System.assertEquals(0, ext.mapIdAccountMatches.size(), 'No Account should be returned: ' + ext.mapIdAccountMatches);
     }
 
+    /*********************************************************************************************************
+    * @description Asserts the controller's list of Accounts contains New option and has no existing Account 
+    * @param ext The controller
+    * @return void
+    */
     private static void assertNewOptionAndNoAccountIsRetrieved(LD_LeadConvertOverride_CTRL ext) {
         System.assertEquals(2, ext.listSOAccounts.size(), 'AUTO and New select options should exist: ' + ext.listSOAccounts);
         System.assertEquals(2, ext.listSOAfflAccounts.size(), 'None and NEW select options should exist: ' + ext.listSOAfflAccounts);
         System.assertEquals(0, ext.mapIdAccountMatches.size(), 'No Account should exist: ' + ext.mapIdAccountMatches);
     }
 
+    /*********************************************************************************************************
+    * @description Asserts the controller's list of Accounts contains existing Account 
+    * @param ext The controller
+    * @return void
+    */
     private static void assertAccountIsReturned(LD_LeadConvertOverride_CTRL ext) {
         System.assertEquals(3, ext.listSOAccounts.size(), 'The existing Account should be returned among select options: ' + ext.listSOAccounts);
         System.assertEquals(3, ext.listSOAfflAccounts.size(), 'The existing Account should be returned among select options: ' + ext.listSOAfflAccounts);
         System.assertEquals(1, ext.mapIdAccountMatches.size(), 'The Account should be returned: ' + ext.mapIdAccountMatches);
     }
 
+    /*********************************************************************************************************
+    * @description Asserts the controller's list of Contacts contains no existing Contact 
+    * @param ext The controller
+    * @return void
+    */
     private static void assertNoContactIsRetrieved(LD_LeadConvertOverride_CTRL ext) {
         System.assertEquals(0, ext.conMap.size(), 'Expected no Contact for the Special Account: ' + ext.conMap);
         System.assertEquals(2, ext.conList.size(), 'Labels None and New Contact should exist: ' + ext.conList);
         System.assert(ext.lcStatuses.size() > 0);
     }
 
+    /*********************************************************************************************************
+    * @description Asserts the controller's list of Contacts contains existing Contact 
+    * @param ext The controller
+    * @return void
+    */
     private static void assertContactIsReturned(LD_LeadConvertOverride_CTRL ext) {
         System.assertEquals(1, ext.conMap.size(), 'Contact should be retrieved: ' + ext.conMap);
         System.assertEquals(3, ext.conList.size(), 'Labels None, New Contact and existing Contact name should exist: ' + ext.conList);
@@ -1110,7 +1209,8 @@ private class LD_LeadConvertOverride_TEST {
     /*********************************************************************************************************
     * @description Asserts only one Account exists with the provided name
     * @param accountName The Account name
-    **********************************************************************************************************/
+    * @return void
+    */
     private static void assertAccountWithName(String accountName) {
         assertAccountWithName(accountName, 1);
     }
@@ -1118,7 +1218,8 @@ private class LD_LeadConvertOverride_TEST {
     /*********************************************************************************************************
     * @description Asserts specified number of Accounts exist with the provided name
     * @param accountName The Account name
-    **********************************************************************************************************/
+    * @return void
+    */
     private static void assertAccountWithName(String accountName, Integer size) {
         UTIL_Finder finder = new UTIL_Finder(Account.SObjectType).withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(accountName));
 
@@ -1139,7 +1240,7 @@ private class LD_LeadConvertOverride_TEST {
     /*********************************************************************************************************
     * @description Returns existing Contacts 
     * @return List<Contact> Contacts
-    **********************************************************************************************************/
+    */
     private static List<Contact> getContacts() {
         return [
             SELECT Id, FirstName, LastName, 
@@ -1154,7 +1255,7 @@ private class LD_LeadConvertOverride_TEST {
     /*********************************************************************************************************
     * @description Returns existing Leads that are not converted 
     * @return List<Lead> Leads
-    **********************************************************************************************************/
+    */
     private static List<Lead> getUnconvertedLeads() {
         return [
             SELECT Id, FirstName, LastName 

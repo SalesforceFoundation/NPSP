@@ -177,7 +177,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         set;
     }
 
-    @TestVisible private UTIL_QueryApi.Finder contactFinder {
+    /*******************************************************************************************************
+    * @description Finder used to search Contact using either SOQl or SOSL
+    */
+    @TestVisible private UTIL_Finder contactFinder {
         get {
             if (contactFinder == null) {
                 UTIL_Where whereClause = new UTIL_Where().withOr()
@@ -294,7 +297,10 @@ public with sharing class LD_LeadConvertOverride_CTRL {
         set;
     }
 
-    @TestVisible private UTIL_QueryApi.Finder accountFinder {
+    /*******************************************************************************************************
+    * @description Finder used to search Accounts using either SOQl or SOSL (the Account.Name is encryted)
+    */
+    @TestVisible private UTIL_Finder accountFinder {
         get {
             if (accountFinder == null) {
                 accountFinder = new UTIL_Finder(Account.sObjectType)

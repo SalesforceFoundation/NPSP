@@ -31,18 +31,25 @@
 * @author Salesforce.org
 * @date 2018
 * @group Utilities
-* @description Utility used to build the SOQL Order By clause
+* @description Utility used to build the ORDER BY clause
 */
 public with sharing class UTIL_OrderBy {
 
+    /** @description Sorting Order options */
     public enum SortingOrder { ASCENDING, DESCENDING }
+    /** @description SOQL NULLS options */
     public enum NullsOrder { FIRST, LAST }
 
+    /** @description Used in a class implementing Comparable to indicate objects have the same values */
     private static final Integer SORT_SAME = 0;
+    /** @description The object is greater than the "other" object being compared to */
     private static final Integer SORT_GREATER = 1;
+    /** @description The object is less than the "other" object being compared to */
     private static final Integer SORT_LESS = -1;
 
+    /** @description Contains field expressions in the ORDER BY segment */
     private List<FieldExpression> fieldExpressions;
+    /** @description Indicates if a manual post sort is required once records are retrieved */
     @TestVisible private Boolean isPostSort {
         get {
             if (isPostSort == null) {
@@ -67,7 +74,7 @@ public with sharing class UTIL_OrderBy {
     }
 
     /*********************************************************************************************************
-    * @description Adds the field into the Order By fieldExpressions
+    * @description Adds the field expression
     * @param field The field expression
     * @return UTIL_OrderBy The object instance
     */
@@ -77,8 +84,8 @@ public with sharing class UTIL_OrderBy {
     }
 
     /*********************************************************************************************************
-    * @description Builds the SOQL Order By clause
-    * @return String The Order By clause
+    * @description Builds the SOQL ORDER BY clause
+    * @return String The ORDER BY clause
     */
     public String build() {
         List<String> orderBy = new List<String>();
@@ -94,6 +101,10 @@ public with sharing class UTIL_OrderBy {
         return String.join(orderBy, ', ');
     }
 
+    /*********************************************************************************************************
+    * @description Returns field names (including relationship if any) from all ORDER BY field expressions
+    * @return Set<String> The Set of field names
+    */
     public Set<String> getFields() {
         Set<String> result = new Set<String>();
         for (FieldExpression field : fieldExpressions) {
@@ -103,12 +114,16 @@ public with sharing class UTIL_OrderBy {
         return result;
     }
 
+    /*********************************************************************************************************
+    * @description Indicates if the manual sorting (outside of SOQL/SOSL) should be done after records retrieval
+    * @return Boolean
+    */
     public Boolean isPostSort() {
         return isPostSort;
     }
 
     /*********************************************************************************************************
-    * @description Sorts records by the order by fieldExpressions
+    * @description Sorts records based on the ORDER BY field expressions
     * @param records Records to sort
     * @return List<sObject> Sorted records
     */
@@ -128,13 +143,13 @@ public with sharing class UTIL_OrderBy {
     /*********************************************************************************************************
     * @description Sorts records by the field value
     * @param records Records to sort
-    * @param field Order By field expression
+    * @param fieldExp ORDER BY field expression
     * @return List<sObject> Sorted records
     */
-    private List<sObject> sort(List<sObject> records, FieldExpression field) {
+    private List<sObject> sort(List<sObject> records, FieldExpression fieldExp) {
         List<SortableRecord> sortableRecords = new List<SortableRecord>();
         for (sObject record : records) {
-            sortableRecords.add(new SortableRecord(record, field));
+            sortableRecords.add(new SortableRecord(record, fieldExp));
         }
 
         sortableRecords.sort();
@@ -152,19 +167,22 @@ public with sharing class UTIL_OrderBy {
     * @description The sObject wrapper used to sort records in the list
     */
     public class SortableRecord implements Comparable {
+        /** @description The sObject */
         private sObject record;
-        private FieldExpression field;
+        /** @description An ORDER BY field expression */
+        private FieldExpression fieldExp;
+        /** @description The sObject field value */
         private String value;
 
         /*********************************************************************************************************
         * @description Constructor
         * @param record The sObject to be sorted
-        * @param field The Order By field expression
+        * @param field The ORDER BY field expression
         */
-        public SortableRecord(sObject record, FieldExpression field) {
+        public SortableRecord(sObject record, FieldExpression fieldExp) {
             this.record = record;
-            this.field = field;
-            this.value = field.getValue(record);
+            this.fieldExp = fieldExp;
+            this.value = fieldExp.getValue(record);
         }
 
         /*********************************************************************************************************
@@ -188,32 +206,41 @@ public with sharing class UTIL_OrderBy {
             }
 
             if (String.isBlank(otherValue)) {
-                return field.isNullsLast() ? SORT_LESS : SORT_GREATER;
+                return fieldExp.isNullsLast() ? SORT_LESS : SORT_GREATER;
             }
 
             if (String.isBlank(value)) {
-                return field.isNullsLast() ? SORT_GREATER : SORT_LESS;
+                return fieldExp.isNullsLast() ? SORT_GREATER : SORT_LESS;
             }
 
-            Integer result = value.compareTo(otherValue);
+            //Sorting is case insensitive.
+            Integer result = value.toLowerCase().compareTo(otherValue.toLowerCase());
 
-            return (field.isSortDesc() ? -1 : 1) * result;
+            return (fieldExp.isSortDesc() ? -1 : 1) * result;
         }
     }
 
 
     /*********************************************************************************************************
-    * @description The composite field used in the Order By clause
+    * @description A field expression used in the ORDER BY clause
     */
     public class FieldExpression {
+        /** @description The sObject field to ORDER BY */
         Schema.sObjectField sObjField;
+        /** @description The sObject reference field */
         Schema.sObjectField referenceField;
+        /** @description The sorting order */
         SortingOrder sortOrder;
+        /** @description The NULLS order */
         NullsOrder nullOrder;
+        /** @description The field name */
         String fieldName;
+        /** @description Indicates if sorting is DESC*/
         Boolean isSortDesc;
+        /** @description Indicate if NULLS LAST is the order */
         Boolean isNullsLast;
 
+        /** @description Indicates if the field is sortable (ie not encrypted) */
         @TestVisible private Boolean isSortable {
             get {
                 if (isSortable == null) {
@@ -245,7 +272,7 @@ public with sharing class UTIL_OrderBy {
         * @description Constructor
         * @param sObjField The field
         * @param sortOrder Sorting order
-        * @param nullOrder The null order
+        * @param nullOrder The null value order
         */
         public FieldExpression(Schema.sObjectField sObjField, SortingOrder sortOrder, NullsOrder nullOrder) {
             this.sObjField = sObjField;
@@ -258,7 +285,7 @@ public with sharing class UTIL_OrderBy {
         }
 
         /*********************************************************************************************************
-        * @description Sets field name to include the relationship name
+        * @description Indicates the field is a relationship field
         * @param referenceField The Lookup/M-D field on the sObject
         * @return Field The object instance 
         */
@@ -285,7 +312,7 @@ public with sharing class UTIL_OrderBy {
         }
 
         /*********************************************************************************************************
-        * @description Returns true for NULLS LAST value
+        * @description Returns true if the order is NULLS LAST 
         * @return Boolean
         */
         public Boolean isNullsLast() {
@@ -293,25 +320,41 @@ public with sharing class UTIL_OrderBy {
         }
 
         /*********************************************************************************************************
-        * @description Returns the field name taking into the account the relationship name (if any) and namespace
+        * @description Returns the field name including the namespace
         * @return String The field name
         */
         public String getFieldName() {
             return fieldName;
         }
 
+        /*********************************************************************************************************
+        * @description Returns the field name incorporating the relationship name (if any) and a namespace
+        * @return String The field path
+        */
         public String getFieldPath() {
             return (isRelationshipField() ? referenceField.getDescribe().getRelationshipName() + '.' : '') + fieldName;
         }
 
+        /*********************************************************************************************************
+        * @description Indicates if the field is a relationship field
+        * @return Boolean
+        */
         private Boolean isRelationshipField() {
             return referenceField != null;
         }
 
+        /*********************************************************************************************************
+        * @description Returns the relationship name or empty string if none
+        * @return String The relationship name
+        */
         private String getRelationshipName() {
             return referenceField != null ? referenceField.getDescribe().getRelationshipName() : '';
         }
 
+        /*********************************************************************************************************
+        * @description Returns the field value on the sObject
+        * @return String The field value
+        */
         public String getValue(sObject record) {
             if (isRelationshipField()) {
                 sObject referenceSObject = record.getSObject(getRelationshipName());
@@ -324,13 +367,13 @@ public with sharing class UTIL_OrderBy {
         }
 
         /*********************************************************************************************************
-        * @description Builds order by segment for the field
-        * @return String The order by 
+        * @description Builds ORDER BY segment for this field expression
+        * @return String The field's ORDER BY
         */
         public override String toString() {
             String fieldNameStatement = getFieldPath();
-            String sortStatement = sortOrder == SortingOrder.DESCENDING ? ' DESC ' : ' ';
-            String nullStatement = nullOrder == NullsOrder.LAST ? 'NULLS LAST' : '';
+            String sortStatement = isSortDesc ? ' DESC ' : ' ';
+            String nullStatement = isNullsLast ? 'NULLS LAST' : '';
 
             return String.format('{0}{1}{2}', new String[]{ fieldNameStatement, sortStatement, nullStatement }).trim(); 
         }

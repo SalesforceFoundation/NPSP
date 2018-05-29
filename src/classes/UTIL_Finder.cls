@@ -31,17 +31,23 @@
 * @author Salesforce.org
 * @date 2018
 * @group Utilities
-* @description SObject Finder
+* @description The SObject Finder use to query, filter, sort and limit number of records by using SOQL or SOSL
 */
 public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
+    /** @description Search exception class */
     public class SoslException extends Exception {}
 
+    /** @description Message to indicate the Search is constructed incorrectly when sObjectType is not provided */
     @TestVIsible private static final String SOBJECT_TYPE_REQUIRED = 'sObjectType is required for the search';
+    /** @description Message to indicate the Search is constructed incorrectly when no value is specified in FIND clause */
     @TestVIsible private static final String SEARCH_CRITERIA_REQUIRED = 'Search criteria is required for the search';
+    /** @description Message to indicate the Search is constructed incorrectly when no sObject field is specified */
     @TestVIsible private static final String FIELDS_REQUIRED = 'At least one field required to be returned from the search';
 
+    /** @description The sObjectType to query/search */
     private sObjectType sObjType;
-    private Set<String> selectFields {
+    /** @description Fields to return from the query/search */
+    @TestVisible private Set<String> selectFields {
         get {
             if (selectFields == null) {
                 selectFields = new Set<String>{ 'Id' };
@@ -50,12 +56,15 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         }
         set;
     }
-    private UTIL_Where criteria;
+    /** @description The WHERE clause */
+    @TestVisible private UTIL_Where criteria;
+    /** @description The ORDER BY segment */
     private UTIL_OrderBy orderBy;
+    /** @description The LIMIT segment */
     private Integer limitRows;
 
     /*******************************************************************************************************************
-    * @description UTIL_Finder constructor for the provided sObject Type
+    * @description THe constructor for the provided sObjectType
     */
     public UTIL_Finder(sObjectType sObjType) {
         this.sObjType = sObjType;
@@ -63,19 +72,10 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         this.criteria = new UTIL_Where();
     }
 
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with all passed in select fields
-    */
-    public UTIL_Finder withSelectFields(Set<Schema.sObjectField> sObjFields, Schema.SObjectField referenceField) {
-        for (Schema.sObjectField sObjField : sObjFields) {
-            selectFields.add(referenceField.getDescribe().getRelationshipName() + '.' + String.valueOf(sObjField));
-        }
-
-        return this;
-    }
-
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with all passed in select fields
+    /*********************************************************************************************************
+    * @description Sets SELECT fields in the SOQL or RETURNING fields in the SOSL
+    * @param sObjFields Fields
+    * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withSelectFields(Set<Schema.sObjectField> sObjFields) {
         for (Schema.sObjectField sObjField : sObjFields) {
@@ -85,6 +85,11 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return this;
     }
 
+    /*********************************************************************************************************
+    * @description Sets SELECT fields in the SOQL or RETURNING fields in the SOSL
+    * @param fieldSet The Field Set fields
+    * @return UTIL_Finder The object instance
+    */
     public UTIL_Finder withSelectFields(List<FieldSetMember> fieldSet) {
         for (FieldSetMember member : fieldSet) {
             selectFields.add(member.getFieldPath());
@@ -93,8 +98,10 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return this;
     }
 
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with where condition
+    /*********************************************************************************************************
+    * @description Adds the field expression to the WHERE clause
+    * @param fieldExp The field expression
+    * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withWhere(UTIL_Where.FieldExpression fieldExp) {
         criteria.add(fieldExp);
@@ -102,22 +109,30 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return this;
     }
 
+    /*********************************************************************************************************
+    * @description Sets the WHERE clause
+    * @param criteria The WHERE clause
+    * @return UTIL_Finder The object instance
+    */
     public UTIL_Finder withWhere(UTIL_Where criteria) {
         this.criteria = criteria;
 
         return this;
     }
     
-
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with passed in order by field
+    /*********************************************************************************************************
+    * @description Adds the field to the ORDER BY clause
+    * @param sObjField The field
+    * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withOrderBy(Schema.sObjectField sObjField) {
         return withOrderBy(new List<Schema.sObjectField>{ sObjField });
     }
 
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with passed in order by fields
+    /*********************************************************************************************************
+    * @description Adds fields to the ORDER BY clause
+    * @param sObjFields Fields
+    * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withOrderBy(List<Schema.sObjectField> sObjFields) {
         for (Schema.sObjectField sObjField : sObjFields) {
@@ -127,17 +142,21 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return this;
     }
 
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with passed in order by field
+    /*********************************************************************************************************
+    * @description Adds the field expression to the ORDER BY clause
+    * @param fieldExp The field expression
+    * @return UTIL_Finder The object instance
     */
-    public UTIL_Finder withOrderBy(UTIL_OrderBy.FieldExpression field) {
-        orderBy.add(field);
+    public UTIL_Finder withOrderBy(UTIL_OrderBy.FieldExpression fieldExp) {
+        orderBy.add(fieldExp);
 
         return this;
     }
 
-    /*******************************************************************************************************************
-    * @description Returns UTIL_Finder with passed in limit number
+    /*********************************************************************************************************
+    * @description Sets how many records should be returned
+    * @param limitRows The number of records to return
+    * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withLimit(Integer limitRows) {
         this.limitRows = limitRows;
@@ -145,12 +164,17 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return this;
     }
 
+    /*********************************************************************************************************
+    * @description Determines if the SOQL will be used to query for records
+    * @return Boolean
+    */
     public Boolean isSoql() {
         return criteria.isFilterable();
     }
 
-    /*******************************************************************************************************************
-    * @description Returns all sObjects for this sObject Type
+    /*********************************************************************************************************
+    * @description Queries records, filters them (where applicable) and applies post sorting (if applicable)
+    * @return List<sObject>
     */
     public List<sObject> find() {
         List<sObject> records;
@@ -160,37 +184,49 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         }
 
         if (isSoql() ) {
-            records = Database.query(buildQuery());
+            records = Database.query(queryBuilder().build());
             return orderBy.sort(records);
 
         } else {
-            selectFields.addAll(criteria.getFields());
-            records = criteria.filter(Search.query(buildSearch())[0]);
+            records = criteria.filter(Search.query(searchBuilder().build())[0]);
             records = orderBy.sort(records);
             return getLimitRows(records);
         }
     }
 
-    private String buildQuery() {
+    /*********************************************************************************************************
+    * @description Returns SOQL builder
+    * @return UTIL_Query
+    */
+    @TestVisible private UTIL_Query queryBuilder() {
         return new UTIL_Query()
             .withFrom(sObjType)
             .withSelectFields(selectFields)
             .withWhere(criteria.build())
             .withOrderBy(orderBy.build())
-            .withLimit(limitRows)
-            .build();
+            .withLimit(limitRows);
     }
 
-    private String buildSearch() {
+    /*********************************************************************************************************
+    * @description Returns search (SOSL) builder
+    * @return SearchBuilder
+    */
+    @TestVisible private SearchBuilder searchBuilder() {
+        selectFields.addAll(criteria.getFields());
+
         return new SearchBuilder()
             .withFind(criteria.build())
             .withSearchGroup(criteria.isNameField() ? 'NAME' : 'ALL')
             .withReturning(sObjType)
             .withFields(selectFields)
-            .withOrderBy(orderBy.build())
-            .build();
+            .withOrderBy(orderBy.build());
     }
 
+    /*********************************************************************************************************
+    * @description Returns LIMIT number of records
+    * @param records The sObjects 
+    * @return List<sObject>
+    */
     private List<sObject> getLimitRows(List<sObject> records) {
         if (limitRows == null || limitRows <= 0 || limitRows >= records.size()) {
             return records;
@@ -203,65 +239,104 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
         return result;
     }
 
-    @TestVisible private with sharing class SearchBuilder {
-        private String searchCriteria;
-        private String searchGroup;
-        private sObjectType sObjType;
-        private Set<String> fields;
-        private String orderBy;
-        private Integer limitRows;
 
+
+
+
+    /** @description The search (SOSL) builder class */
+    @TestVisible private with sharing class SearchBuilder {
+        /** @description The search criteria used in FIND clause */
+        private String searchCriteria;
+        /** @description The search group: search in all fields or just Name fields */
+        private String searchGroup;
+        /** @description The sObjectType to search on */
+        private sObjectType sObjType;
+        /** @description Fields to return */
+        private Set<String> fields;
+        /** @description The ORDER BY clause */
+        private String orderBy;
+
+        /*********************************************************************************************************
+        * @description Constructor
+        */
         @TestVisible private SearchBuilder() {
             fields = new Set<String>();
             searchGroup = 'ALL';
         }
 
+        /*********************************************************************************************************
+        * @description Sets the search criteria to the SOSL
+        * @param searchCriteria The search criteria to be used in the FIND clause
+        * @return SearchBuilder The object instance
+        */
         @TestVisible private SearchBuilder withFind(String searchCriteria) {
             this.searchCriteria = searchCriteria;
             return this;
         }
 
+        /*********************************************************************************************************
+        * @description Sets the search group
+        * @param searchGroup The value indicating if ALL or just Name fields will be searched
+        * @return SearchBuilder The object instance
+        */
         @TestVisible private SearchBuilder withSearchGroup(String searchGroup) {
             this.searchGroup = searchGroup;
             return this;
         }
 
+        /*********************************************************************************************************
+        * @description Sets the sObjectType to search
+        * @param sObjType The sObjectType
+        * @return SearchBuilder The object instance
+        */
         @TestVisible private SearchBuilder withReturning(sObjectType sObjType) {
             this.sObjType = sObjType;
             return this;
         }
 
+        /*********************************************************************************************************
+        * @description Sets fields to return from the search
+        * @param fields The set of fields to return in the SOSL
+        * @return SearchBuilder The object instance
+        */
         @TestVisible private SearchBuilder withFields(Set<String> fields) {
             this.fields = fields;
             return this;
         }
 
+        /*********************************************************************************************************
+        * @description Sets the ORDER BY clause
+        * @param orderBy The ORDE BY clause
+        * @return SearchBuilder The object instance
+        */
         @TestVisible private SearchBuilder withOrderBy(String orderBy) {
             this.orderBy = orderBy;
             return this;
         }
 
-        @TestVisible private SearchBuilder withLimit(Integer limitRows) {
-            this.limitRows = limitRows;
-            return this;
-        }
-
+        /*********************************************************************************************************
+        * @description Builds the SOSL query
+        * @return String
+        */
         @TestVisible private String build() {
             validate();
 
             return String.format(
-                'FIND \'\'{0}\'\' IN {1} FIELDS RETURNING {2}({3}{4}{5})',
+                'FIND \'\'{0}\'\' IN {1} FIELDS RETURNING {2}({3}{4})',
                 new String[] { 
                     searchCriteria,
                     searchGroup,
                     String.valueOf(sObjType), 
                     String.join(new List<String>(fields), ', '), 
-                    buildOrderBy(), 
-                    buildLimit() 
+                    buildOrderBy()
                 }
             );
         }
 
+        /*********************************************************************************************************
+        * @description Validates the SOSL
+        * @return void
+        */
         private void validate() {
             if (sObjType == null) {
                 throw new SoslException(SOBJECT_TYPE_REQUIRED);
@@ -274,16 +349,12 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
             }
         }
 
+        /*********************************************************************************************************
+        * @description Builds the ORDER BY clause (if any)
+        * @return String
+        */
         private String buildOrderBy() {
             return String.isBlank(orderBy) ? '' : ' ORDER BY ' + orderBy;
         }
-
-        @TestVisible private String buildLimit() {
-            return limitRows == null || limitRows <= 0 || limitRows >= 2000
-                ? ''
-                : ' LIMIT ' + limitRows;
-        }
-
-
     }
 }
