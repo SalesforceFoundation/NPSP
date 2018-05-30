@@ -12,6 +12,8 @@
 
         function onInitHandler(result, event) {
 
+            console.log(result);
+
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
@@ -29,6 +31,7 @@
 
             $scope.rowsCount = result.rowsCount;
             $scope.rowsAmount = result.rowsAmount;
+            $scope.templateFields = result.templateFields;
 
             $scope.offset = 0;
             $scope.columnsData = result.columns;
@@ -134,7 +137,7 @@
         function changePageHandler() {
 
             $scope.pageChangeLoader = true;
-            BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
+            BGE_HandsOnGridController.changePageGrid({batchId: batchId, templateFields: $scope.templateFields, offset: $scope.offset}, changePageGridHandler)
 
             function changePageGridHandler(result, event) {
 

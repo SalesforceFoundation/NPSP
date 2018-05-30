@@ -38,6 +38,7 @@ global class BGE_HandsOnGridController {
 
             System.debug(JSON.serializePretty(records));
 
+            result.put('templateFields', String.join(fieldNames, ';'));
             result.put('data', selector.sanitizeDataImports(records));
             result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
@@ -558,12 +559,10 @@ global class BGE_HandsOnGridController {
 
         DataImportBatch__c batch = selector.getBatchById(batchId);
 
-        Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
-
         String[] fieldNames = new String[] {};
-        for (Batch_Template_Field__c templateField :templateFields.values()) {
-            fieldNames.add(templateField.Name);
-        }
+        String templateFields = (String) parameters.get('templateFields');
+
+        fieldNames = templateFields.split(';');
 
         if (!fieldNames.isEmpty()) {
             SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
@@ -572,9 +571,6 @@ global class BGE_HandsOnGridController {
 
         return result;
     }
-
-
-
 
     private static Boolean isEmailValid(String email) {
 
