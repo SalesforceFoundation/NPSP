@@ -192,12 +192,12 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return Boolean
     */
     public static Boolean hasRunningJob(String className) {
-        List<AsyncApexJob> runningJobs = [SELECT Id, ApexClass.Name
+        Integer jobCount = [SELECT COUNT()
             FROM AsyncApexJob
             WHERE ApexClass.Name = :className
             AND Status NOT IN ('Queued','Aborted','Completed','Failed')
             LIMIT 1];
-        if (runningJobs.isEmpty()) {
+        if (jobCount == 0) {
             return false;
         } else {
             return true;

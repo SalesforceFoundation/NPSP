@@ -60,10 +60,15 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
+        String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            if (!UTIL_MasterSchedulableHelper.hasRunningJob('CRLP_Account_BATCH')) {
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            } else {
+                Exception ex;
+                ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
+                ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
             }
         }
     }
