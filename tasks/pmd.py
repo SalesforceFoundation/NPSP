@@ -5,88 +5,74 @@ import os
 import re
 from subprocess import Popen, PIPE
 
-class pmd(BaseTask):
-    name = 'pmd'
+class PMDTask(BaseTask):
+    name = 'PMDTask'
     task_options = {
         'path': {
             'description': 'The local path to run PMD against. Defaults to src/classes',
-            'required': False
+            'required': True
         },
         'output': {
             'description': 'The report type to the output. Available options are text and html. The html report type creates a file in the current working directory. Defaults to text.',
-            'required': False
+            'required': True
         },
         'htmlfilename': {
             'description': 'The name of the html file to be written to the directory. This only applies if the output is html. Defaults to pmd.html',
-            'required': False
+            'required': True
         },
         'runAllApex' : {
             'description': 'If True, runs the entire path specified instead of just changed files',
-            'required': False
+            'required': True
         }
     }
 
     def _init_options(self, kwargs):
-        super(pmd, self)._init_options(kwargs)
-        if 'path' not in self.options:
-            self.options['path'] = 'src/classes'
-        if 'output' not in self.options:
-            self.options['output'] = 'text'
+        super(PMDTask, self)._init_options(kwargs)
         if self.options['output'] not in {'text', 'html'}:
             self.options['output'] = 'text'
-        if 'htmlfilename' not in self.options:
-            self.options['htmlfilename'] = 'pmd.html'
-        if 'runAllApex' not in self.options:
-            self.options['runAllApex'] = False
+        self.pmd_args = [
+            'pmd', 'pmd',
+            '-l', 'apex',
+            '-f', self.options['output'],
+            '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
+            '-failOnViolation', 'false'
+        ]
 
     def _run_task(self):
         if not process_bool_arg(self.options.get('runAllApex', True)):
             #create CSV file and save list of changed files
-            fr = open('changedFiles.txt', 'r')
-            git = "git status --porcelain | sed s/^...// > changedFiles.txt"
-            Popen((git, os.getcwd() ), stdout=PIPE, stderr=PIPE, shell=True)
-            #filter for specific file types
-            filteredList = []
-            for line in fr:
-                #if re.match(".+\.(cls|js|cmp)$", line): --> look at adding support for lightning components
-                if re.match(".+\.(cls)$", line):
-                    filteredList.append(line)
-            fw = open('filteredFiles.txt', 'w')
-            fw.write(','.join(filteredList))
-            fr.close()
-            fw.close()
+            git_cmd = "touch changedFiles.txt | git status --porcelain | sed s/^...// > changedFiles.txt"
+            p = Popen((git_cmd, os.getcwd()), stdout=PIPE, stderr=PIPE, shell=True)
+            p.wait()
 
-            args = [
-                'pmd', 'pmd',
-                '-filelist', 'filteredFiles.txt',
-                '-l', 'apex',
-                '-f', self.options['output'],
-                '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
-                '-failOnViolation', 'false'
-            ]
+            with open('changedFiles.txt', 'r') as fr:
+                # filter for specific file types
+                filteredList = []
+                for line in fr:
+                    # if re.match(".+\.(cls|js|cmp)$", line): --> look at adding support for lightning components
+                    if re.match(".+\.(cls)$", line):
+                        filteredList.append(line)
+                os.remove('changedFiles.txt')
+                if not filteredList:
+                    self.logger.warn('No valid file changes in this diff.')
+                    return
+            with open('filteredFiles.txt', 'w') as fw:
+                fw.write(','.join(filteredList))
+            self.pmd_args.extend(['-filelist', 'filteredFiles.txt'])
         else:
-            args = [
-                'pmd', 'pmd',
-                '-d', self.options['path'],
-                '-l', 'apex',
-                '-f', self.options['output'],
-                '-R', 'apex-apexunit,apex-performance,apex-complexity,apex-style,apex-security',
-                '-failOnViolation', 'false'
-            ]
+            self.pmd_args.extend(['-d', self.options['path']])
 
-        stdout = None
+        pmd_out = None
         if self.options['output'] == 'html':
-            stdout = open(self.options['htmlfilename'], 'w')
+            pmd_out = open(self.options['htmlfilename'], 'w+')
 
-        process = Popen(args, stdout=stdout, stderr=PIPE)
+        process = Popen(self.pmd_args, stdout=pmd_out, stderr=PIPE)
 
         _, stderr = process.communicate()
         returncode = process.returncode
+        os.remove('filteredFiles.txt')
 
         if returncode:
             message = 'Return code: {}\nstderr: {}'.format(returncode, stderr)
             self.logger.error(message)
             raise CommandException(message)
-
-        os.remove('changedFiles.txt')
-        os.remove('filteredFiles.txt')
