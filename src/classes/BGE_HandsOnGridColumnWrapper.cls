@@ -6,13 +6,13 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
     private static final String ACCOUNT_NAME = 'Account';
     private static final String CONTACT_NAME = 'Contact';
     private static final String PAYMENT_NAME = 'npe01__OppPayment__c';
-    private static final String HOUSEHOLD_NAME = 'npo02__Household__c';
-    private static final String ADDRESS_NAME = 'Address';
+    private static final String HOUSEHOLD_NAME = 'Account';
+    private static final String ADDRESS_NAME = 'Address__c';
     private static final String OPPORTUNITY_NAME = 'Opportunity';
 
     private static final Set<String> LOOKUP_VALUES_PAYMENT = new Set<String>(new String[] {'payment', 'npe01__opppayment__c'});
     private static final Set<String> LOOKUP_VALUES_HOUSEHOLD = new Set<String>(new String[] {'household', 'npo02__household__c'});
-    private static final Set<String> LOOKUP_VALUES_ADDRESS = new Set<String>(new String[] {'address'});
+    private static final Set<String> LOOKUP_VALUES_ADDRESS = new Set<String>(new String[] {'address', 'address__c', 'npsp__address__c'});
     private static final Set<String> LOOKUP_VALUES_CONTACT = new Set<String>(new String[] {'contact1', 'contact2'});
     private static final Set<String> LOOKUP_VALUES_ACCOUNT = new Set<String>(new String[] {'account1', 'account2'});
 
@@ -70,7 +70,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
             }
             else if (LOOKUP_VALUES_ADDRESS.contains(fieldsRelationship[0]) && String.isNotEmpty(fieldsRelationship[1])) {
 
-                recordField = getObjectFields(ADDRESS_NAME).get(fieldsRelationship[1]);
+                recordField = getObjectFields(ADDRESS_NAME).get(fieldsRelationship[1].remove('npsp__'));
+
                 recordFieldDescribe = recordField.getDescribe();
                 objectName = ADDRESS_NAME;
             }
@@ -130,7 +131,7 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
     }
 
     public static Map<String, Schema.SObjectField> getObjectFields(String objectName) {
-
+        System.debug('$$$$$$$  ' + objectName);
         return Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap();
     }
 
