@@ -1107,6 +1107,7 @@
         <members>CRLP_AdvancedCustomizationHeader</members>
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
+        <members>CRLP_BatchSkipped</members>
         <members>CRLP_CreateRollupActiveHelpText</members>
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreateRollupDateFieldHelpText</members>
@@ -1130,8 +1131,8 @@
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
-        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>
