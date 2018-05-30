@@ -54,7 +54,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(150);
         insert cons;
-        system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
 
         String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
         List<npo02__Household__c> hhlist = [select id from npo02__Household__c where Name = :HHName];
@@ -63,6 +62,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //add a second contact to a random household
         Contact c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
         insert c;
+
+        List<Account> accounts = [SELECT Id FROM Account WHERE npe01__One2OneContact__c IN :cons OR npe01__One2OneContact__c = :c.Id];
+        system.assertEquals(151, accounts.size());
 
         //add opptys to the Contacts as well
         List<Opportunity> opps = UTIL_UnitTestData_TEST.OppsForContactList(cons, null, UTIL_UnitTestData_TEST.getClosedWonStage(), system.today(), 100, null, '');
@@ -86,7 +88,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Households
-        List<Account> newHHAccounts = [select npo02__TotalOppAmount__c, Id from Account where Name = :HHName];
+        List<Account> newHHAccounts = [SELECT Name, npo02__TotalOppAmount__c, Id FROM Account WHERE Id NOT IN :accounts];
         //should be total HH count from above
         system.assertEquals(150, newHHAccounts.size());
         //total gifts should be the same for any of the 149
@@ -121,9 +123,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
         insert c;
-        Id indID = [select id from Account where Name = 'Individual'].id;
+        Id indID = CAO_Constants.getIndividualAccountId();
 
-        system.assertEquals(indID, CAO_Constants.GetIndividualAccountId());
+        system.assertNotEquals(null, indID);
 
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
@@ -154,7 +156,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household
-        Account newHHAccount = [select npo02__TotalOppAmount__c, Id from Account where Name = :HHName];
+        Account newHHAccount = [SELECT npo02__TotalOppAmount__c, Id FROM Account WHERE Id != :indID];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(newHHAccount.id, [select AccountId from Contact where id = :c.id].AccountId);
         system.assertEquals(newHHAccount.npo02__TotalOppAmount__c, 1000.00);
@@ -182,9 +184,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 MailingStreet = '123 Main St.', MailingCity = 'San Francisco',
                                 MailingPostalCode = '94105', MailingState = 'California', MailingCountry = 'United States');
         insert c;
-        Id indID = [select id from Account where Name = 'Individual'].id;
+        Id indID = CAO_Constants.getIndividualAccountId();
 
-        system.assertEquals(indID, CAO_Constants.GetIndividualAccountId());
+        system.assertNotEquals(null, indID);
 
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
@@ -204,8 +206,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         Test.StopTest();
 
         //get the newly created Household
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, 
-            BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [SELECT npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, 
+            BillingStreet, BillingCity, Id FROM Account WHERE Id != :indID];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(1, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c.MailingStreet, newHHAccount.BillingStreet);
@@ -246,6 +248,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
 
+        List<Account> accounts = [SELECT Id FROM Account];
+
         //clear the values automatically copied to the household
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
         h.npo02__MailingStreet__c = null;
@@ -274,18 +278,18 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
         system.assertEquals(c2.MailingStreet, newHHAccount.BillingStreet);
         system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Address__c]);
-        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
         system.assertEquals('1 1st Avenue', c2.Account.BillingStreet);
         system.assertEquals('1 1st Avenue', c2.MailingStreet);
         system.assertEquals(false, c2.is_Address_Override__c);
         system.assertNotEquals(null, c2.Current_Address__c);
-        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
         system.assertEquals('1 1st Avenue', c.Account.BillingStreet);
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(true, c.is_Address_Override__c);
@@ -323,6 +327,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
                                 npo02__Household__c = c.npo02__Household__c);
         insert c2;
 
+        List<Account> accounts = [SELECT Id FROM Account];
+
         //clear the values automatically copied to the household
         npo02__Household__c h = [select id, npo02__MailingStreet__c, npo02__MailingCountry__c, npo02__MailingPostalCode__c, npo02__MailingCity__c, npo02__MailingState__c from npo02__Household__c where Id = :c.npo02__Household__c];
         h.npo02__MailingStreet__c = null;
@@ -351,18 +357,18 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         //get the newly created Household
         String HHName =  'Contact ' + System.label.npo02.DefaultHouseholdName;
-        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account where Name = :HHName];
+        Account newHHAccount = [select npo02__TotalOppAmount__c, npe01__One2OneContact__c, Number_of_Household_Members__c, BillingStreet, BillingCity, Id from Account WHERE Id NOT IN :accounts];
         system.assertNotEquals(null, newHHAccount);
         system.assertEquals(2, newHHAccount.Number_of_Household_Members__c);
         //system.assertEquals(null, newHHAccount.BillingStreet, 'The contact addresses shouldn\'t be copied over during the conversion.');
         system.assertEquals(c2.Id, newHHAccount.npe01__One2OneContact__c);
         system.assertEquals(0, [select count() from Address__c], 'No address objects should be created.');
-        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id and FirstName = 'Test2'];
+        c2 = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c2.Id];
         system.assertEquals(null, c2.Account.BillingStreet);
         system.assertEquals('1 1st Avenue', c2.MailingStreet);
         system.assertEquals(false, c2.is_Address_Override__c);
         system.assertEquals(null, c2.Current_Address__c);
-        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id and FirstName = 'Test'];
+        c = [select id, is_Address_Override__c, Current_Address__c, Account.BillingStreet, MailingStreet from Contact where Id = :c.Id];
         system.assertEquals(null, c.Account.BillingStreet);
         system.assertEquals('123 Main St.', c.MailingStreet);
         system.assertEquals(false, c.is_Address_Override__c);
