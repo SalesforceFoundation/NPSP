@@ -31,11 +31,6 @@
                     <default>false</default>
                     <label>Solicitor</label>
                 </value>
-                <value>
-                    <fullName>Tribute</fullName>
-                    <default>false</default>
-                    <label>Tribute</label>
-                </value>
             </valueSetDefinition>
         </valueSet>
     </fields>
