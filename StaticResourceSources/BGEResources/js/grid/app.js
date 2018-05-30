@@ -355,7 +355,7 @@
                                 else {
 
                                     var isFieldIn = false;
-                                    $scope.rowErrors[cellResponse.recordId].forEach(function(element){
+                                    $scope.rowErrors[cellResponse.recordId].forEach(function(element) {
 
                                         if (element.field === cellResponse.field) {
                                             element.messages = cellResponse.messages

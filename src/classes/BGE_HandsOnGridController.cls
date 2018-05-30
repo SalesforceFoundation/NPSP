@@ -126,19 +126,28 @@ global class BGE_HandsOnGridController {
                 else if ((new String[] {'DATE', 'DATETIME'}).contains(type)) {
 
                     String dtString = (String) cellData.get('newValue');
-                    String[] dts = dtString.split('/');
-                    if (dts.size() == 3) {
-                        Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
-                        dataImport.put((String) cellData.get('field'), (Object) dt);
+
+                    if (String.isEmpty(dtString)) {
+                        dataImport.put((String) cellData.get('field'), null);
                         dataImports.put(rowKey, (DataImport__c) dataImport);
                     }
                     else {
-                        result.add(buildCellError(cell, cellData.get('field'), 'Invalid Date'));
+
+                        String[] dts = dtString.split('/');
+
+                        if (dts.size() == 3) {
+                            Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
+                            dataImport.put((String) cellData.get('field'), (Object) dt);
+                            dataImports.put(rowKey, (DataImport__c) dataImport);
+                        }
+                        else {
+                            result.add(buildCellError(cell, cellData.get('field'), 'Invalid Date'));
+                        }
                     }
                 }
                 else if ((new String[] {'CURRENCY', 'DECIMAL'}).contains(type)) {
 
-                    if (cellData.get('newValue') instanceOf Decimal) {
+                    if (cellData.get('newValue') instanceOf Decimal || (cellData.get('newValue') == null)) {
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
                         dataImports.put(rowKey, (DataImport__c) dataImport);
                     }
@@ -148,7 +157,7 @@ global class BGE_HandsOnGridController {
                 }
                 else if ((new String[] {'NUMBER'}).contains(type)) {
 
-                    if (cellData.get('newValue') instanceOf Integer) {
+                    if (cellData.get('newValue') instanceOf Integer || (cellData.get('newValue') == null)) {
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
                         dataImports.put(rowKey, (DataImport__c) dataImport);
                     }
