@@ -349,7 +349,7 @@
 
                     console.log(requestData);
 
-                    BGE_HandsOnGridController.dmlCellsGrid(requestData, onDmlGridHandler);
+                    BGE_HandsOnGridController.dmlCellsRowGrid(requestData, onDmlGridHandler);
                 }
 
                 function onDmlGridHandler(result, event) {
