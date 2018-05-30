@@ -167,19 +167,19 @@ private class LVL_LevelAssignBATCH_TEST {
 
         listCon[1].npo02__TotalOppAmount__c = 10;
         listCon[2].npo02__TotalOppAmount__c = 100;
-        
-        listCon[3].npo02__TotalOppAmount__c = 999;
-        listCon[3].npo02__LastMembershipLevel__c = lvlGold.Id;
 
-        listCon[4].npo02__TotalOppAmount__c = 1000;
-        listCon[4].npo02__LastMembershipLevel__c = lvlBronze.Id;
-        
-        listCon[5].npo02__TotalOppAmount__c = 5000;
+        listCon[3].npo02__TotalOppAmount__c = 500;
+        listCon[3].npo02__LastMembershipLevel__c = lvlBronze.Id;
+        listCon[3].npo02__LastMembershipOrigin__c = lvlBronze.Id;
 
-        listCon[6].npo02__TotalOppAmount__c = 500;
-        listCon[6].npo02__LastMembershipLevel__c = lvlBronze.Id;
-        listCon[6].npo02__LastMembershipOrigin__c = lvlBronze.Id;
-        
+        listCon[4].npo02__TotalOppAmount__c = 999;
+        listCon[4].npo02__LastMembershipLevel__c = lvlGold.Id;
+
+        listCon[5].npo02__TotalOppAmount__c = 1000;
+        listCon[5].npo02__LastMembershipLevel__c = lvlBronze.Id;
+
+        listCon[6].npo02__TotalOppAmount__c = 5000;
+
         listCon[7].npo02__TotalOppAmount__c = 100000;
         insert listCon;
         
@@ -277,36 +277,36 @@ private class LVL_LevelAssignBATCH_TEST {
     */
     static void verifyContactLevels() {
         string strSoql = 'SELECT Id, Name, npo02__TotalOppAmount__c, npo02__LastMembershipLevel__c, npo02__LastMembershipOrigin__c, CreatedDate, LastModifiedDate FROM Contact';
-        listCon = database.query(strSoql + ' order by FirstName');
+        listCon = database.query(strSoql + ' ORDER BY npo02__TotalOppAmount__c');
         System.assertEquals(lvlTin.Id, listCon[0].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[0].npo02__LastMembershipOrigin__c);
-        
+
         System.assertEquals(lvlTin.Id, listCon[1].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[1].npo02__LastMembershipOrigin__c);
-        
+
         System.assertEquals(lvlBronze.Id, listCon[2].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[2].npo02__LastMembershipOrigin__c);
-        
+
+        // contact3 should not be touched since it was already Bronze level.
         System.assertEquals(lvlBronze.Id, listCon[3].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlGold.Id, listCon[3].npo02__LastMembershipOrigin__c);
-        
-        System.assertEquals(lvlSilver.Id, listCon[4].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipOrigin__c);
-        
+        System.assertEquals(lvlBronze.Id, listCon[3].npo02__LastMembershipOrigin__c);
+        System.assertEquals(dtCon6Modified, listCon[3].LastModifiedDate);
+
+        System.assertEquals(lvlBronze.Id, listCon[4].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlGold.Id, listCon[4].npo02__LastMembershipOrigin__c);
+
+        System.assertEquals(lvlSilver.Id, listCon[5].npo02__LastMembershipLevel__c);
+        System.assertEquals(lvlBronze.Id, listCon[5].npo02__LastMembershipOrigin__c);
+
         // check Silver's Engagement Plan got created
-        list<Engagement_Plan__c> listEP = [select Id, Contact__c, Engagement_Plan_Template__c from Engagement_Plan__c]; 
-        system.assertEquals(1, listEP.size());
-        system.assertEquals(listCon[4].Id, listEP[0].Contact__c);
-        system.assertEquals(lvlSilver.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
-        
-        System.assertEquals(lvlGold.Id, listCon[5].npo02__LastMembershipLevel__c);
-        System.assertEquals(null, listCon[5].npo02__LastMembershipOrigin__c);
-        
-        // contact6 should not be touched since it was already Bronze level.
-        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipLevel__c);
-        System.assertEquals(lvlBronze.Id, listCon[6].npo02__LastMembershipOrigin__c);
-        System.assertEquals(dtCon6Modified, listCon[6].LastModifiedDate);
-        
+        List<Engagement_Plan__c> listEP = [SELECT Id, Contact__c, Engagement_Plan_Template__c FROM Engagement_Plan__c]; 
+        System.assertEquals(1, listEP.size());
+        System.assertEquals(listCon[5].Id, listEP[0].Contact__c);
+        System.assertEquals(lvlSilver.Engagement_Plan_Template__c, listEP[0].Engagement_Plan_Template__c);
+
+        System.assertEquals(lvlGold.Id, listCon[6].npo02__LastMembershipLevel__c);
+        System.assertEquals(null, listCon[6].npo02__LastMembershipOrigin__c);
+
         System.assertEquals(lvlPlatinum.Id, listCon[7].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listCon[7].npo02__LastMembershipOrigin__c);
     }
@@ -332,7 +332,7 @@ private class LVL_LevelAssignBATCH_TEST {
         Database.executeBatch(batch);
         Test.stopTest();
         
-        listAcc = database.query(strSoql + ' order by Name');
+        listAcc = database.query(strSoql + ' ORDER BY npo02__TotalOppAmount__c');
         System.assertEquals(null, listAcc[0].npo02__LastMembershipLevel__c);
         System.assertEquals(null, listAcc[0].npo02__LastMembershipOrigin__c);
         

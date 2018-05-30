@@ -240,7 +240,7 @@ private class HH_Container_TEST {
         Test.startTest();
                     
         HH_Container_LCTRL.upsertContacts(listCon);
-        listCon = [select FirstName from Contact order by FirstName desc];
+        listCon = [select FirstName from Contact order by CreatedDate];
         system.assertEquals(3, listCon.size());
         system.assertEquals('upserted', listCon[0].FirstName);
         system.assertEquals('upserted', listCon[1].FirstName);

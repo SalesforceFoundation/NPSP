@@ -94,7 +94,7 @@ private class CON_ContactMerge_TEST2 {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by MailingStreet];
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by Id];
         con = listCon[0];
         con2 = listCon[1];
         con3 = listCon[2];
@@ -745,7 +745,7 @@ private class CON_ContactMerge_TEST2 {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, Lastname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         iConLoserSibling--;
