@@ -26,7 +26,7 @@ public with sharing class BGE_HandsOnGridSelector {
 
         String query = 'SELECT ';
         query += String.join(fieldNames, ',');
-        query += ' FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId ORDER BY createdDate ASC LIMIT 50 OFFSET :offset';
+        query += ' FROM DataImport__c WHERE NPSP_Data_Import_Batch__c = :recordId ORDER BY Id LIMIT 50 OFFSET :offset';
 
         return Database.query(query);
     }

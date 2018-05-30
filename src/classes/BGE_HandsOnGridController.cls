@@ -38,6 +38,7 @@ global class BGE_HandsOnGridController {
 
             System.debug(JSON.serializePretty(records));
 
+            result.put('templateFields', String.join(fieldNames, ';'));
             result.put('data', selector.sanitizeDataImports(records));
             result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
@@ -62,18 +63,13 @@ global class BGE_HandsOnGridController {
 
             Map<String, Object> cellData = (Map<String, Object>) cell;
 
-            String oldValue = (String) cellData.get('oldValue');
-            string newValue = (String) cellData.get('newValue');
             String cellKey = (String) cellData.get('recordId');
 
-            if (!(String.isEmpty(oldValue) && String.isEmpty(newValue))) {
-
-                if (!rowCells.containsKey(cellKey)) {
-                    rowCells.put(cellKey, new Object[] {});
-                }
-
-                rowCells.get(cellKey).add(cell);
+            if (!rowCells.containsKey(cellKey)) {
+                rowCells.put(cellKey, new Object[] {});
             }
+
+            rowCells.get(cellKey).add(cell);
         }
 
         result = runDmlCellsRowGrid(batchId, rowCells);
@@ -102,7 +98,7 @@ global class BGE_HandsOnGridController {
                 Map<String, Object> cellData = (Map<String, Object>) cell;
                 String cellType = (String) cellData.get('type');
 
-                System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
+                // System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
 
                 // BASED ON THE CELL TYPE WE PROCESS THE INFO
 
@@ -563,12 +559,10 @@ global class BGE_HandsOnGridController {
 
         DataImportBatch__c batch = selector.getBatchById(batchId);
 
-        Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
-
         String[] fieldNames = new String[] {};
-        for (Batch_Template_Field__c templateField :templateFields.values()) {
-            fieldNames.add(templateField.Name);
-        }
+        String templateFields = (String) parameters.get('templateFields');
+
+        fieldNames = templateFields.split(';');
 
         if (!fieldNames.isEmpty()) {
             SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
@@ -577,9 +571,6 @@ global class BGE_HandsOnGridController {
 
         return result;
     }
-
-
-
 
     private static Boolean isEmailValid(String email) {
 

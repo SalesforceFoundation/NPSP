@@ -12,7 +12,7 @@
 
         function onInitHandler(result, event) {
 
-            // console.warn('BGE - onInitHandler');
+            console.log(result);
 
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
@@ -31,6 +31,7 @@
 
             $scope.rowsCount = result.rowsCount;
             $scope.rowsAmount = result.rowsAmount;
+            $scope.templateFields = result.templateFields;
 
             $scope.offset = 0;
             $scope.columnsData = result.columns;
@@ -39,8 +40,6 @@
             $scope.prevButonDisabled = true;
             $scope.nextButonDisabled = false;
             $scope.rowErrors = {};
-
-            console.debug(result);
 
             $scope.lastSelectedRow = null;
             $scope.lastSelectedColumn = null;
@@ -103,7 +102,6 @@
         }
 
         function prevPageAction() {
-            console.log("prev");
 
             if ($scope.offset > 0) {
                 $scope.offset --;
@@ -128,8 +126,6 @@
 
             var row = hot.getSelected()[0];
 
-            console.log('removeRowOnColumnAction', row);
-
             hot.alter('remove_row', row);
 
             $timeout(function() {
@@ -141,7 +137,7 @@
         function changePageHandler() {
 
             $scope.pageChangeLoader = true;
-            BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
+            BGE_HandsOnGridController.changePageGrid({batchId: batchId, templateFields: $scope.templateFields, offset: $scope.offset}, changePageGridHandler)
 
             function changePageGridHandler(result, event) {
 
@@ -174,8 +170,6 @@
 
         function cellsHandler(row, col, prop) {
 
-            // console.warn('HOT - cellsHandler');
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -200,7 +194,7 @@
 
         function afterInitHandler() {
 
-            console.warn('HOT - afterInitHandler');
+            // console.warn('HOT - afterInitHandler');
 
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
@@ -217,21 +211,17 @@
             }
 
             $scope.isIndexLoading = false;
-            console.log("table ready");
 
             renderBindings();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
-            console.warn('HOT - beforeRemoveRowHandler');
+            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
         }
 
         function deleteRow(index, amount, visualRows, callback) {
-
-            console.log(index, amount);
-            console.log(visualRows);
 
             var rowRecordIds = [];
             var columnIndex = hot.propToCol('Id');
@@ -259,20 +249,18 @@
 
         function afterRemoveRowHandler(index, amount) {
 
-            console.warn('HOT - afterRemoveRowHandler');
+            // console.warn('HOT - afterRemoveRowHandler');
 
             updateSummaryData();
         }
 
         function afterChangeHandler(changes, source) {
 
-            console.warn('HOT - afterChangeHandler', source);
+            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
-
-                console.log('CHANGES:    ', changes);
 
                 var cellRecords = [];
 
@@ -298,13 +286,9 @@
                         if (!newValue) {
                             newValue = null;
                             cellRecord.newValue = null;
-                            console.log('NEW VALUE:    ' + newValue);
                         }
 
                         if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                            console.log('NEW VALUE INSIDE:    ' + newValue);
-                            console.log('CELL RECORD NEW VALUE:    ' + cellRecord.newValue);
-
                             cellRecords.push(cellRecord);
                         }
                         else if ((newValue == 'NaN') && (cellType == 'date')) {
@@ -317,7 +301,6 @@
                                 var isFieldIn = false;
                                 $scope.rowErrors[cellRecord.recordId].forEach(function(element){
 
-                                    console.log(element.field, cellRecord.field)
                                     if (element.field === cellRecord.field) {
                                         element.messages = 'Illegal assignment from String to Date';
                                         isFieldIn = true;
@@ -347,28 +330,20 @@
                         cellRecords: JSON.stringify(cellRecords)
                     };
 
-                    console.log(requestData);
-
                     BGE_HandsOnGridController.dmlCellsRowGrid(requestData, onDmlGridHandler);
                 }
 
                 function onDmlGridHandler(result, event) {
 
-                    console.log(result);
-
                     if (result && result.length > 0) {
 
                         result.forEach(function(cellResponse) {
 
-                            console.log(cellResponse);
+                            // console.log(cellResponse);
 
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
-                            // $scope.rowErrors[cellResponse.recordId] = [];
-
                             if (cellResponse.errors) {
-
-                                console.log(cellResponse.errors);
 
                                 errCell.valid = false;
                                 errCell.hasError = true;
@@ -468,8 +443,6 @@
                 BGE_HandsOnGridController.dryRunRowGrid({batchId: batchId, recordId: recordId}, dryRunRowGridHandler);
 
                 function dryRunRowGridHandler(result, event) {
-
-                    console.log(result);
 
                     $scope.lastSelectedRow = row;
                     $scope.$apply();
@@ -789,11 +762,6 @@
         }
 
         // Renderers
-
-        function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-
-        }
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
