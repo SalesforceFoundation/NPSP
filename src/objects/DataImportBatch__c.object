@@ -158,7 +158,7 @@
         <externalId>false</externalId>
         <inlineHelpText>Defines how the Data Importer should handle matching Donations. You must choose a value.</inlineHelpText>
         <label>Donation Matching Behavior</label>
-        <required>true</required>
+        <required>false</required>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
         <type>Picklist</type>
