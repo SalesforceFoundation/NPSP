@@ -62,18 +62,13 @@ global class BGE_HandsOnGridController {
 
             Map<String, Object> cellData = (Map<String, Object>) cell;
 
-            String oldValue = (String) cellData.get('oldValue');
-            string newValue = (String) cellData.get('newValue');
             String cellKey = (String) cellData.get('recordId');
 
-            if (!(String.isEmpty(oldValue) && String.isEmpty(newValue))) {
-
-                if (!rowCells.containsKey(cellKey)) {
-                    rowCells.put(cellKey, new Object[] {});
-                }
-
-                rowCells.get(cellKey).add(cell);
+            if (!rowCells.containsKey(cellKey)) {
+                rowCells.put(cellKey, new Object[] {});
             }
+
+            rowCells.get(cellKey).add(cell);
         }
 
         result = runDmlCellsRowGrid(batchId, rowCells);
@@ -102,7 +97,7 @@ global class BGE_HandsOnGridController {
                 Map<String, Object> cellData = (Map<String, Object>) cell;
                 String cellType = (String) cellData.get('type');
 
-                System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
+                // System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
 
                 // BASED ON THE CELL TYPE WE PROCESS THE INFO
 
