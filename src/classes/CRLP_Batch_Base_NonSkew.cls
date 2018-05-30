@@ -99,11 +99,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            if (this.summaryObjectType == Contact.SObjectType || this.summaryObjectType == Account.SObjectType) {
-                for (String f : fieldsToCheckForNonZero) {
-                    if (!query.containsIgnoreCase(f)) {
-                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
-                    }
+            for (String f : fieldsToCheckForNonZero) {
+                if (!query.containsIgnoreCase(f)) {
+                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
                 }
             }
 
