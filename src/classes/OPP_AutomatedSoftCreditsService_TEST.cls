@@ -207,7 +207,9 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testCreateRelationshipOCRs() {
         Test.startTest();
 
-        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
+        Contact testCon = returnContact('Primary1');
+        System.assertEquals('Primary1', testCon.FirstName);
+
         List<OpportunityContactRole> retrievedOCR
             = [SELECT Id, ContactId, Role
                 FROM OpportunityContactRole
@@ -231,8 +233,12 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testRetrieveRelationships() {
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
 
-        Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
-        Contact testCon1 = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
+        Contact testCon0 = returnContact('Primary0');
+        System.assertEquals('Primary0', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Primary1');
+        System.assertEquals('Primary1', testCon1.FirstName);
+
         Set<Id> testCons = new Set<Id>{ testCon0.Id, testCon1.Id };
 
         Test.startTest();
@@ -258,9 +264,13 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Map<Id, List<Id>> primaryContactIdToOpportunityIds = new Map<Id, List<Id>>();
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
+        Map<Id, List<OpportunityContactRole>> transactionOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        Contact testCon0 = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
-        Contact testCon1 = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
+        Contact testCon0 = returnContact('Primary0');
+        System.assertEquals('Primary0', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Primary1');
+        System.assertEquals('Primary1', testCon1.FirstName);
 
         List<Opportunity> opptys = [SELECT Id, Primary_Contact__c FROM Opportunity];
         for (Opportunity eachOppty : opptys) {
@@ -274,10 +284,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Test.startTest();
 
-        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole];
+        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, OpportunityId, ContactId, Role FROM OpportunityContactRole];
         System.assertEquals(13, retrievedOCRs.size()); // Five OCRs for the Opportunities' Primary Contacts and three OCRs for the Relationships
+        transactionOCR.put(retrievedOCRs[0].OpportunityId, retrievedOCRs);
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords, transactionOCR);
         System.assertEquals(0, creatededOCRs.size()); // Confirm no duplicate OCRs were created
 
         // Update Relationship records
@@ -286,11 +297,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         testCon0Relationships[1].Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
         update testCon0Relationships;
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildRelationshipOCRs(primaryContactIdToOpportunityIds, relationshipRecords, transactionOCR);
 
         Test.stopTest();
 
-        System.assertEquals(2, creatededOCRs.size()); // Confirm new OCR records were created
+        System.assertEquals(0, creatededOCRs.size()); // Confirm no new OCR records were created
     }
 
 
@@ -304,7 +315,9 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testCreateAffiliationOCRs() {
         Test.startTest();
 
-        Contact testCon = [SELECT Id, AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
+        Contact testCon = returnContact('Affiliation5');
+        System.assertEquals('Affiliation5', testCon.FirstName);
+
         Account testAcount = [SELECT Id, npe01__SYSTEMIsIndividual__c FROM Account WHERE Id = :testCon.AccountId][0];
         System.assertEquals(false, testAcount.npe01__SYSTEMIsIndividual__c);
         List<OpportunityContactRole> retrievedOCR
@@ -336,8 +349,12 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testRetrieveAffiliations() {
         Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
 
-        Contact testCon0 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
-        Contact testCon1 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation6'][0];
+        Contact testCon0 = returnContact('Affiliation5');
+        System.assertEquals('Affiliation5', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Affiliation6');
+        System.assertEquals('Affiliation6', testCon1.FirstName);
+
         Set<Id> testConsAccounts = new Set<Id>{ testCon0.AccountId, testCon1.AccountId };
 
         Test.startTest();
@@ -362,9 +379,14 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Map<Id, List<Id>> accountIdToOpportunityIds = new Map<Id, List<Id>>();
         Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
+        Map<Id, List<OpportunityContactRole>> transactionOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        Contact testCon0 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation5'][0];
-        Contact testCon1 = [SELECT AccountId FROM Contact WHERE FirstName = 'Affiliation6'][0];
+        Contact testCon0 = returnContact('Affiliation5');
+        System.assertEquals('Affiliation5', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Affiliation6');
+        System.assertEquals('Affiliation6', testCon1.FirstName);
+
         List<Id> testAccoutIds = new List<Id>{ testCon0.AccountId, testCon1.AccountId };
 
         List<Opportunity> opptys = [SELECT Id, AccountId FROM Opportunity WHERE AccountId IN :testAccoutIds];
@@ -380,10 +402,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Test.startTest();
 
-        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, ContactId, Role FROM OpportunityContactRole];
+        List<OpportunityContactRole> retrievedOCRs = [SELECT Id, OpportunityId, ContactId, Role FROM OpportunityContactRole];
         System.assertEquals(13, retrievedOCRs.size()); // Seven OCRs for the Opportunities and six OCRs for Relationship and Affiliations
+        transactionOCR.put(retrievedOCRs[0].OpportunityId, retrievedOCRs);
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords, transactionOCR);
         System.assertEquals(0, creatededOCRs.size()); // Confirm no duplicate OCRs were created
 
         // Update Affiliation records
@@ -392,11 +415,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         testCon0Affiliations[1].Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR;
         update testCon0Affiliations;
 
-        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords);
+        creatededOCRs = OPP_AutomatedSoftCreditsService.buildAffiliationOCRs(accountIdToOpportunityIds, affiliationRecords, transactionOCR);
 
         Test.stopTest();
 
-        System.assertEquals(2, creatededOCRs.size()); // Confirm new OCR records were created
+        System.assertEquals(0, creatededOCRs.size()); // Confirm no new OCR records were created
     }
 
 
@@ -408,8 +431,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     **********************************************************************************************************/
     private static testMethod void testRetrieveOpportunityContactRoles() {
         List<List<Id>> opptyIds = new List<List<Id>>();
+        Map<Id, List<OpportunityContactRole>> transactionOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
+        Contact testCon = returnContact('Primary0');
+        System.assertEquals('Primary0', testCon.FirstName);
+
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
             opptyIds.add(new List<Id>{ eachOppty.Id });
@@ -417,7 +443,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Test.startTest();
 
-        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds, transactionOCR.values());
 
         Test.stopTest();
 
@@ -435,8 +461,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testIsDuplicateOCR() {
         Boolean isDuplicate = false;
         List<List<Id>> opptyIds = new List<List<Id>>();
+         Map<Id, List<OpportunityContactRole>> transactionOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary1'][0];
+        Contact testCon = returnContact('Primary1');
+        System.assertEquals('Primary1', testCon.FirstName);
+
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
             opptyIds.add(new List<Id>{ eachOppty.Id });
@@ -444,15 +473,14 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Test.startTest();
 
-        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds, transactionOCR.values());
         List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0][0]);
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
         npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];
 
         isDuplicate = OPP_AutomatedSoftCreditsService.isDuplicateOCR(retrievedOCRs,
-                                                                     currentRelationship.npe4__RelatedContact__c,
-                                                                     currentRelationship.Related_Opportunity_Contact_Role__c);
+                                                                     currentRelationship.npe4__RelatedContact__c);
 
         Test.stopTest();
 
@@ -469,8 +497,11 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static testMethod void testIsNotDuplicateOCR() {
         Boolean isDuplicate = false;
         List<List<Id>> opptyIds = new List<List<Id>>();
+        Map<Id, List<OpportunityContactRole>> transactionOCR = new Map<Id, List<OpportunityContactRole>>();
 
-        Contact testCon = [SELECT Id FROM Contact WHERE FirstName = 'Primary0'][0];
+        Contact testCon = returnContact('Primary0');
+        System.assertEquals('Primary0', testCon.FirstName);
+
         List<Opportunity> opptys = [SELECT Id FROM Opportunity WHERE Primary_Contact__c = :testCon.Id];
         for (Opportunity eachOppty : opptys) {
             opptyIds.add(new List<Id>{ eachOppty.Id });
@@ -478,7 +509,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Test.startTest();
 
-        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds);
+        Map<Id, List<OpportunityContactRole>> opportunityIdToOCR = OPP_AutomatedSoftCreditsService.retrieveOpportunityContactRoles(opptyIds, transactionOCR.values());
         List<OpportunityContactRole> retrievedOCRs = opportunityIdToOCR.get(opptyIds[0][0]);
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
@@ -487,12 +518,107 @@ private class OPP_AutomatedSoftCreditsService_TEST {
         update currentRelationship;
 
         isDuplicate = OPP_AutomatedSoftCreditsService.isDuplicateOCR(retrievedOCRs,
-                                                                     currentRelationship.npe4__RelatedContact__c,
-                                                                     currentRelationship.Related_Opportunity_Contact_Role__c);
+                                                                     currentRelationship.npe4__RelatedContact__c);
 
         Test.stopTest();
 
-        System.assertEquals(false, isDuplicate);
+        System.assertEquals(true, isDuplicate);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests if there are multiple Relationship records for a Contact and removes duplicates.
+    * verify:
+    *   Relationship records are unique based on Contac.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRemoveDuplicateRelationships() {
+        Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
+
+        Contact testCon0 = returnContact('Primary0');
+        System.assertEquals('Primary0', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Primary1');
+        System.assertEquals('Primary1', testCon1.FirstName);
+
+        Set<Id> testCons = new Set<Id>{ testCon0.Id, testCon1.Id };
+
+        npe4__Relationship__c testCon0ToTestCon1
+                = new npe4__Relationship__c(npe4__Contact__c = testCon0.Id,
+                                            npe4__RelatedContact__c = testCon1.Id,
+                                            npe4__Type__c = RELATIONSHIP_TYPE_FRIEND,
+                                            npe4__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                            Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR);
+
+        insert testCon0ToTestCon1;
+
+        Test.startTest();
+
+        relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(testCons);
+
+        Test.stopTest();
+
+        System.assertEquals(2, relationshipRecords.size());
+        System.assertEquals(2, relationshipRecords.get(testCon0.Id).size());
+        System.assertEquals(1, relationshipRecords.get(testCon1.Id).size());
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests if there are multiple Affiliation records for a Contact and removes duplicates.
+    * verify:
+    *   Affiliation records are unique based on Contac.
+    * @return void
+    **********************************************************************************************************/
+    private static testMethod void testRemoveDuplicateAffiliations() {
+        Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
+
+        Contact testCon0 = returnContact('Affiliation5');
+        System.assertEquals('Affiliation5', testCon0.FirstName);
+
+        Contact testCon1 = returnContact('Related2');
+        System.assertEquals('Related2', testCon1.FirstName);
+
+        Set<Id> testConsAccounts = new Set<Id>{ testCon0.AccountId, testCon1.AccountId };
+
+        npe5__Affiliation__c testCon5AccountToTestCon2
+            = new npe5__Affiliation__c(npe5__Organization__c = testCon0.AccountId,
+                                       npe5__Contact__c = testCon1.Id,
+                                       npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
+                                       npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR);
+
+        insert testCon5AccountToTestCon2;
+
+        Test.startTest();
+
+        affiliationRecords = OPP_AutomatedSoftCreditsService.retrieveAffiliations(testConsAccounts);
+
+        Test.stopTest();
+
+        System.assertEquals(1, affiliationRecords.size());
+        System.assertEquals(2, affiliationRecords.get(testCon0.AccountId).size());
+    }
+
+
+
+    /*********************************************************************************************************
+    * @description Returns a Contact based value passed into the method.
+    *
+    * @return Contact
+    **********************************************************************************************************/
+    private static Contact returnContact(String searchValue) {
+        Contact retrievedContact = new Contact();
+
+        List<Contact> allContacts = [SELECT Id, AccountId, FirstName FROM Contact];
+
+        for (Contact eachContact : allContacts) {
+            if (searchValue.equalsIgnoreCase(eachContact.FirstName)) {
+                retrievedContact = eachContact;
+            }
+        }
+
+        return retrievedContact;
     }
 
 

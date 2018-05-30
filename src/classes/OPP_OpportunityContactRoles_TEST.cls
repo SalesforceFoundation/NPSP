@@ -578,23 +578,19 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(queryCon[1].Name, queryOpp[0].Honoree_Name__c, 'Honoree Name should be populated.');
 
         List<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, OpportunityId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId =:opp.id ORDER BY ContactId];
-        System.assertEquals(4, queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
+        System.assertEquals(3, queryOCR.size(), 'Three Opportunity Contact Roles should be created.');
         
-        System.assertEquals(primaryCon.id, queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
+        System.assertEquals(primaryCon.Id, queryOCR[0].ContactId, 'First OCR is for primary contact.' + queryOCR[0]);
         System.assertEquals(true, queryOCR[0].isPrimary, 'Primary OCR is marked primary.' + queryOCR[0]);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, queryOCR[0].Role, 'Primary OCR has the correct role.' + queryOCR[0]);
 
-        System.assertEquals(householdMembers[0].id, queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
+        System.assertEquals(householdMembers[0].Id, queryOCR[1].ContactId, 'Second OCR is for honoree contact.');
         System.assertEquals(false,queryOCR[1].isPrimary, 'Honoree OCR is not marked primary.');
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_HONOREE, queryOCR[1].Role, 'Honoree OCR has the correct role.');
 
-        System.assertEquals(householdMembers[0].id, queryOCR[2].ContactId, 'Third OCR is for household member contact.');
+        System.assertEquals(householdMembers[1].Id, queryOCR[2].ContactId, 'Third OCR is for household member contact.');
         System.assertEquals(false,queryOCR[2].isPrimary, 'Household member OCR is not marked primary.');
         System.assertEquals('Household Member', queryOCR[2].Role, 'Household member OCR has the correct role.');
-
-        System.assertEquals(householdMembers[1].id, queryOCR[3].ContactId, 'Fourth OCR is for household member contact.');
-        System.assertEquals(false,queryOCR[3].isPrimary, 'Household member OCR is not marked primary.');
-        System.assertEquals('Household Member', queryOCR[3].Role, 'Household member OCR has the correct role.');
     }
 
 
@@ -651,7 +647,6 @@ private class OPP_OpportunityContactRoles_TEST {
         List<OpportunityContactRole> ocrsUpdated = [SELECT Id, ContactId, Role, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :oppty.Id];
         System.assertEquals(1, ocrsUpdated.size());
 
-        System.assertEquals(true, ocrsUpdated[0].IsPrimary);
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, ocrsUpdated[0].Role);
         System.assertEquals(oppty.Primary_Contact__c, testContacts[1].Id);
         System.assertEquals(oppty.Primary_Contact__c, ocrsUpdated[0].ContactId);
@@ -752,5 +747,131 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(testOpptys[0].Id, accountToOpportunities.get(testContacts[0].AccountId)[0]);
         System.assertEquals(testOpptys[3].Id, accountToOpportunities.get(testContacts[3].AccountId)[0]);
     }
+
+
+    /*********************************************************************************************************
+    * @description Tests populating a Map of the Opportunity and its associated OpportunityContactRoles.
+    * verify:
+    *   The Map was populated accordingly.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testPopulateTransactionOCRs() {
+        Map<Id, List<OpportunityContactRole>> transactionOCRs = new Map<Id, List<OpportunityContactRole>>();
+        List<OpportunityContactRole> testOCRs = new List<OpportunityContactRole>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        insert testOpptys;
+        testOpptys = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity];
+
+        OpportunityContactRole ocr0 = new OpportunityContactRole();
+        ocr0.OpportunityId = testOpptys[0].Id;
+        ocr0.ContactId = testOpptys[0].Primary_Contact__c;
+        ocr0.Role = OPPORTUNITY_CONTACT_ROLE_DONOR;
+        testOCRs.add(ocr0);
+
+        OpportunityContactRole ocr1 = new OpportunityContactRole();
+        ocr1.OpportunityId = testOpptys[0].Id;
+        ocr1.ContactId = testContacts[2].Id;
+        ocr1.Role = OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+        testOCRs.add(ocr1);
+
+        OpportunityContactRole ocr2 = new OpportunityContactRole();
+        ocr2.OpportunityId = testOpptys[1].Id;
+        ocr2.ContactId = testOpptys[1].Primary_Contact__c;
+        ocr2.Role = OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+        testOCRs.add(ocr2);
+
+        insert testOCRs;
+
+        Test.startTest();
+
+        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr0);
+        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr1);
+        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr2);
+
+        Test.stopTest();
+
+        System.assertEquals(2, transactionOCRs.size());
+        System.assertEquals(2, transactionOCRs.get(testOpptys[0].Id).size());
+        System.assertEquals(1, transactionOCRs.get(testOpptys[1].Id).size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, transactionOCRs.get(testOpptys[0].Id)[0].Role);
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT, transactionOCRs.get(testOpptys[1].Id)[0].Role);
+    }
+
+
+    /*********************************************************************************************************
+    * @description Tests deleting an Opportunity's Opp.
+    * verify:
+    *   The OpportunityContactRoles were deleted accordingly.
+    * @return void
+    *********************************************************************************************************/
+    static testMethod void testClearOCRs() {
+        List<OpportunityContactRole> ocrsToDelete = new List<OpportunityContactRole>();
+        List<OpportunityContactRole> testOCRs = new List<OpportunityContactRole>();
+
+        Map<Id, Map<Id, OpportunityContactRole>> opportunityToContactToOCR = new Map<Id, Map<Id, OpportunityContactRole>>();
+        Map<Id, OpportunityContactRole> contactToOCR0 = new Map<Id, OpportunityContactRole>();
+        Map<Id, OpportunityContactRole> contactToOCR1 = new Map<Id, OpportunityContactRole>();
+
+        List<Contact> testContacts = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(3);
+        insert testContacts;
+        testContacts = [SELECT Id, AccountId, FirstName, LastName FROM Contact];
+
+        List<Opportunity> testOpptys = UTIL_UnitTestData_TEST.OppsForContactWithAccountList(testContacts, null, UTIL_UnitTestData_TEST.getClosedWonStage(),
+                                                                                            System.today(), 100, null, null);
+
+        insert testOpptys;
+        testOpptys = [SELECT Id, AccountId, Primary_Contact__c FROM Opportunity];
+        delete [SELECT Id FROM OpportunityContactRole WHERE OpportunityId IN :testOpptys];
+        List<Opportunity> changedOpptys = new List<Opportunity>{ testOpptys[0], testOpptys[1] };
+
+        OpportunityContactRole ocr0 = new OpportunityContactRole();
+        ocr0.OpportunityId = testOpptys[0].Id;
+        ocr0.ContactId = testOpptys[0].Primary_Contact__c;
+        ocr0.Role = OPPORTUNITY_CONTACT_ROLE_DONOR;
+        ocr0.isPrimary = true;
+        testOCRs.add(ocr0);
+
+        OpportunityContactRole ocr1 = new OpportunityContactRole();
+        ocr1.OpportunityId = testOpptys[0].Id;
+        ocr1.ContactId = testContacts[2].Id;
+        ocr1.Role = OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+        ocr1.isPrimary = false;
+        testOCRs.add(ocr1);
+
+        OpportunityContactRole ocr2 = new OpportunityContactRole();
+        ocr2.OpportunityId = testOpptys[1].Id;
+        ocr2.ContactId = testOpptys[1].Primary_Contact__c;
+        ocr2.Role = OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+        ocr2.isPrimary = false;
+        testOCRs.add(ocr2);
+
+        insert testOCRs;
+
+        contactToOCR0.put(ocr0.ContactId, ocr0);
+        contactToOCR0.put(ocr1.ContactId, ocr1);
+        contactToOCR1.put(ocr2.ContactId, ocr2);
+
+        opportunityToContactToOCR.put(testOpptys[0].Id, contactToOCR0);
+        opportunityToContactToOCR.put(testOpptys[1].Id, contactToOCR1);
+
+        Test.startTest();
+
+        testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
+        System.assertEquals(3, testOCRs.size());
+
+        OPP_OpportunityContactRoles_TDTM.clearOCRs(opportunityToContactToOCR, changedOpptys);
+        testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
+        System.assertEquals(1, testOCRs.size());
+
+        Test.stopTest();
+    }
+
 
 }
