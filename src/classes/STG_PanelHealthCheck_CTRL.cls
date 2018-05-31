@@ -111,10 +111,22 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @description Used to report back the results of each Health Check test
     */
     public class DetectResult {
-        public string strName { get; set; }
-        public string strStatus { get; set; }
-        public string strDetails { get; set; }
-        public string strSolution { get; set; }
+        public string strName { 
+            get; 
+            set {strName = (value == null) ? '' : value.escapeEcmaScript();} 
+        }
+        public string strStatus {
+            get; 
+            set {strStatus = (value == null) ? '' : value.escapeEcmaScript();} 
+        }
+        public string strDetails {
+            get; 
+            set {strDetails = (value == null) ? '' : value.escapeEcmaScript();} 
+        }
+        public string strSolution {
+            get; 
+            set {strSolution = (value == null) ? '' : value.escapeEcmaScript();} 
+        }
     }
     
     /*******************************************************************************************************
