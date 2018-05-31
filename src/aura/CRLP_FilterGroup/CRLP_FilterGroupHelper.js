@@ -423,6 +423,13 @@
                 cmp.set("v.filterRuleFieldType", 'text');
             }
         }
+
+        // Allow for null values ONLY on Equals and Not Equals operators
+        if (operator === 'Equals' || operator === 'Not_Equals') {
+            cmp.set("v.isValueRequired", false);
+        } else {
+            cmp.set("v.isValueRequired", true);
+        }
     },
 
     /**

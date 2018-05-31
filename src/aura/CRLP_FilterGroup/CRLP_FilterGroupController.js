@@ -180,6 +180,7 @@
         helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operationName", "");
         cmp.set("v.activeFilterRule.value", "");
+        cmp.set("v.isValueRequired", true);
     },
 
     /**
@@ -194,7 +195,7 @@
      * @description: saves a new filter group and associated filter rules
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
-        if (cmp.get("v.mode") == 'delete') {
+        if (cmp.get("v.mode") === 'delete') {
             cmp.set("v.activeFilterGroup.isDeleted", true);
             helper.toggleFilterRuleModal(cmp);
         }
