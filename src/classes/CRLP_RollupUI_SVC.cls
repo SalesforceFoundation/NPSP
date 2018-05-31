@@ -888,7 +888,7 @@ public with sharing class CRLP_RollupUI_SVC {
 
             if ((dfr.isUpdateable() && dfr.isCustom() && isValidType && !isRolledUp && !dfr.name.toLowerCase().contains('__system')
                     && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s')
-                    && !(objectName == 'npe03__Recurring_Donation__c' && dfr.name.contains('npe03__')))
+                    && !fieldIsBanned(objectName,dfr.name))
                     || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
@@ -905,6 +905,38 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return fieldObjectList;
+    }
+
+    /*******************************************************************************************************
+    * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
+    *              Includes an exception for a set summary field on the rollup detail.
+    * @param objectName the name of the object to look up
+    * @param selectedField the name of a summary field already in use
+    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    */
+    private static Boolean fieldIsBanned(String objectName, String fieldName) {
+
+        Map<String,Set<String>> bannedFieldsByObject = new Map<String,Set<String>>();
+
+        // BAN ALL NPSP FIELDS ON RD EXCEPT THE FOUR CORE ROLLUP FIELDS
+        bannedFieldsByObject.put('npe03__Recurring_Donation__c',new Set<String>{'npe03__Amount__c'
+                ,'npe03__Recurring_Donation_Campaign__c'
+                ,'npe03__Contact__c'
+                ,'npe03__Date_Established__c'
+                ,'npe03__Donor_Name__c'
+                ,'npe03__Installment_Amount__c'
+                ,'npe03__Installment_Period__c'
+                ,'npe03__Installments__c'
+                ,'npe03__Open_Ended_Status__c'
+                ,'npe03__Organization__c'
+                ,'npe03__Schedule_Type__c'
+                ,'npe03__Total__c'
+                ,'Always_Use_Last_Day_Of_Month__c'});
+
+        // add more objects here as needed with their banned fields
+
+        return bannedFieldsByObject.containsKey(objectName) && bannedFieldsByObject.get(objectName).contains(fieldName);
+
     }
 
     public class RollupException extends Exception {}
