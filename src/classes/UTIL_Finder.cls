@@ -64,7 +64,7 @@ public virtual class UTIL_Finder {
     private Integer limitRows;
 
     /*******************************************************************************************************************
-    * @description THe constructor for the provided sObjectType
+    * @description The constructor for the provided sObjectType
     */
     public UTIL_Finder(sObjectType sObjType) {
         this.sObjType = sObjType;
@@ -203,7 +203,7 @@ public virtual class UTIL_Finder {
 
     /*********************************************************************************************************
     * @description Searches database based on the provided SOSL string
-    * @param sosl The serch string
+    * @param sosl The search string
     * @return List<sObject>
     */
     public virtual List<sObject> searchRecords(String sosl) {

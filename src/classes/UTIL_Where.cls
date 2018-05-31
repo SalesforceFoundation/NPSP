@@ -569,13 +569,13 @@ public class UTIL_Where {
                 }
 
                 if (operant == Operator.NOT_EQUALS) {
-                    throw new CriteriaException('Search cannot be done for != operator');// TODO: Create a CustomLabel 
+                    throw new CriteriaException('Search cannot be done for != operator');
                 }
                
                 return String.escapeSingleQuotes((String) value);
             }
 
-            throw new CriteriaException('Invalid data type for: ' + value);// TODO: Create a CustomLabel
+            throw new CriteriaException('Invalid data type for: ' + value);
         }
 
         /*********************************************************************************************************
@@ -584,7 +584,7 @@ public class UTIL_Where {
         */
         public override String toString() {
             if (operant == null) {
-                throw new CriteriaException('Field Expression Operator is required');// TODO: Create a CustomLabel
+                throw new CriteriaException('Field Expression Operator is required');
             }
 
             return getFieldPath() + ' ' + operatorToString(operant) + ' ' + toLiteral(value);
@@ -605,7 +605,7 @@ public class UTIL_Where {
                     : '\'' + String.escapeSingleQuotes((String) value) + '\'';
             }
 
-            throw new CriteriaException('Invalid data type for: ' + value);// TODO: Create a CustomLabel
+            throw new CriteriaException('Invalid data type for: ' + value);
         }
 
         /*********************************************************************************************************
@@ -643,7 +643,7 @@ public class UTIL_Where {
                     : !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
                 
             } else {
-                throw new CriteriaException('Invalid operator: ' + operant.name());// TODO: Create a CustomLabel
+                throw new CriteriaException('Invalid operator: ' + operant.name());
             }
         }
 

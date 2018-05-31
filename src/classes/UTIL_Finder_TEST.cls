@@ -57,10 +57,10 @@ private class UTIL_Finder_TEST {
             .withFind('foo*')
             .withReturning(Contact.sObjectType)
             .withFields(SELECT_FIELDS)
-            .withOrderBy('LastName')
+            .withOrderBy('Department')
             .build();
             
-        String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
+        String expectedSosl = 'FIND \'foo*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY Department)';
         assertSearch(expectedSosl, sosl);
     }
 
@@ -86,10 +86,10 @@ private class UTIL_Finder_TEST {
             .withFind('foo* AND bar*')
             .withReturning(Contact.sObjectType)
             .withFields(SELECT_FIELDS)
-            .withOrderBy('LastName')
+            .withOrderBy('Department')
             .build();
             
-        String expectedSosl = 'FIND \'foo* AND bar*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY LastName)';
+        String expectedSosl = 'FIND \'foo* AND bar*\' IN ALL FIELDS RETURNING Contact(FirstName, LastName, Title ORDER BY Department)';
         assertSearch(expectedSosl, sosl);
     }
 

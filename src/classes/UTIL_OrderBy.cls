@@ -177,7 +177,7 @@ public class UTIL_OrderBy {
         /*********************************************************************************************************
         * @description Constructor
         * @param record The sObject to be sorted
-        * @param field The ORDER BY field expression
+        * @param fieldExp The ORDER BY field expression
         */
         public SortableRecord(sObject record, FieldExpression fieldExp) {
             this.record = record;
@@ -195,7 +195,7 @@ public class UTIL_OrderBy {
 
         /*********************************************************************************************************
         * @description Compares the record with another record based on the field value
-        * @param other The Lookup/M-D field on the sObject
+        * @param other The other sortable record to compare to
         * @return Integer The integer  (0, <0, >0) representing the order with regards to the "other" sObject
         */
         public Integer compareTo(Object other) {
