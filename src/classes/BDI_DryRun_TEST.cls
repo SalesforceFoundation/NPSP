@@ -315,13 +315,13 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact];
         system.assertEquals(2, listCon.size());
 
-        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c];
+        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c];
         system.assertEquals(2, listAddr.size());
 
-        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c order by Home_City__c];
+        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c];
         system.assertEquals(2, listDI.size());
         for (DataImport__c di : listDI) {
             system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
@@ -369,13 +369,13 @@ public with sharing class BDI_DryRun_TEST {
         Test.stopTest();
 
         // verify expected results
-        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
+        List<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact];
         system.assertEquals(2, listCon.size());
 
-        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c];
+        List<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c];
         system.assertEquals(2, listAddr.size());
 
-        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c order by Home_City__c];
+        listDI = [select Status__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c from DataImport__c];
         system.assertEquals(3, listDI.size());
         for (DataImport__c di : listDI) {
             system.assertEquals(BDI_DataImport_API.bdiDryRunValidated, di.Status__c);
