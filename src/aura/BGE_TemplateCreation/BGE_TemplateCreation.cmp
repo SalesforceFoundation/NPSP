@@ -52,7 +52,8 @@
                         selectedLabel="Active Template Fields"
                         options="{! v.listOptions }"
                         value="{! v.defaultOptions }"
-                        onchange="{! c.handleChange }"/>
+                        onchange="{! c.handleChange }"
+                        min="1"/>
 			</div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">

@@ -266,60 +266,71 @@
 
                 for (var i = 0; i < changes.length; i ++) {
 
+                    var newValue = changes[i][3];
+                    var oldValue = changes[i][2];
+
                     var cellRecord = {};
 
-                    if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
-
-                        var col = this.propToCol(changes[i][1])
-                        var cellType = this.getDataType(changes[i][0], col);
-                        var newValue = changes[i][3];
-
-                        var cellRecord = {
-                            row: changes[i][0],
-                            field: changes[i][1],
-                            oldValue: changes[i][2],
-                            newValue: newValue,
-                            type: cellType,
-                            recordId: this.getDataAtRowProp(changes[i][0], 'Id')
-                        };
-
-                        if (!newValue) {
-                            newValue = null;
-                            cellRecord.newValue = null;
-                        }
-
-                        if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                            cellRecords.push(cellRecord);
-                        }
-                        else if ((newValue == 'NaN') && (cellType == 'date')) {
-                            if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
-                                $scope.rowErrors[cellRecord.recordId] = [];
-                                $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
-                            }
-                            else {
-
-                                var isFieldIn = false;
-                                $scope.rowErrors[cellRecord.recordId].forEach(function(element){
-
-                                    if (element.field === cellRecord.field) {
-                                        element.messages = 'Illegal assignment from String to Date';
-                                        isFieldIn = true;
-                                    }
-                                });
-
-                                if (!isFieldIn) {
-                                    $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
-                                }
-                            }
-
-                            $timeout(function() {
-                                hot.render();
-                            }, 500);
-                        }
-
+                    if ((!newValue) && (!oldValue)) {
+                        // This value is skipped
                     }
                     else {
-                        updateSummaryData();
+
+                        var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
+
+                        if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
+
+                            var col = this.propToCol(changes[i][1])
+                            var cellType = this.getDataType(changes[i][0], col);
+
+
+                            var cellRecord = {
+                                row: changes[i][0],
+                                field: changes[i][1],
+                                oldValue: changes[i][2],
+                                newValue: newValue,
+                                type: cellType,
+                                recordId: this.getDataAtRowProp(changes[i][0], 'Id')
+                            };
+
+                            if (!newValue) {
+                                newValue = null;
+                                cellRecord.newValue = null;
+                            }
+
+                            if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
+                                cellRecords.push(cellRecord);
+                            }
+                            else if ((newValue == 'NaN') && (cellType == 'date')) {
+                                if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
+                                    $scope.rowErrors[cellRecord.recordId] = [];
+                                    $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
+                                }
+                                else {
+
+                                    var isFieldIn = false;
+                                    $scope.rowErrors[cellRecord.recordId].forEach(function(element){
+
+                                        if (element.field === cellRecord.field) {
+                                            element.messages = 'Illegal assignment from String to Date';
+                                            isFieldIn = true;
+                                        }
+                                    });
+
+                                    if (!isFieldIn) {
+                                        $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
+                                    }
+                                }
+
+                                $timeout(function() {
+                                    hot.render();
+                                }, 500);
+                            }
+
+                        }
+                        else {
+                            updateSummaryData();
+                        }
                     }
                 }
 
