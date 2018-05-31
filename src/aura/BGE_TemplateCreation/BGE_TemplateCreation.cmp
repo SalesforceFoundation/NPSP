@@ -13,7 +13,6 @@
     <aura:attribute name="toCreate" type="Boolean" access="global" default="true" />
     <aura:attribute name="toClone" type="Boolean" access="global" default="false" />
     <aura:attribute name="toEdit" type="Boolean" access="global" default="false" />
-    <aura:attribute name="showBackButton" type="Boolean" access="global" default="false" />
 
     <aura:attribute name="listOptions" type="Batch_Template_Field__c[]" default="[]"/>
     <aura:attribute name="defaultOptions" type="Batch_Template_Field__c[]" default="[]"/>
@@ -33,9 +32,6 @@
 
 
     <div aura:id="body">
-        <aura:if isTrue="{!v.showBackButton}">
-            <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
-        </aura:if>
 
         <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
 
@@ -64,13 +60,6 @@
 			</div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">
-
-                <aura:if isTrue="{!v.showBackButton}">
-                    <div class="slds-size_1-of-2 slds-grid slds-wrap">
-                        <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
-                        <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
-                    </div>
-                </aura:if>
 
                 <div class="slds-size_1-of-2 slds-clearfix">
 
