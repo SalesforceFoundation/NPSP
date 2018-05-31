@@ -70,7 +70,7 @@
     <aura:attribute name="filterRuleMode" type="String" access="private"
                     description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
     <aura:attribute name="filterRuleError" type="String" access="private" description="Inline error text when editing a filter rule."/>
-
+    <aura:attribute name="isValueRequired" type="Boolean" default="true" access="private" description="Conditional requirement for Value on a Filter Rule."/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
@@ -88,9 +88,9 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" largeDeviceSize="8" size="12">
                             <aura:if isTrue="{! !v.isReadOnly}">
-                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="{!v.isReadOnly}"/>
+                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupNameHelp}" fieldLabel="{!v.labels.name}" isRequired="true"/>
                             </aura:if>
-                            <lightning:input aura:id="nameInput" class="filterGroupField nameField"
+                            <lightning:input aura:id="nameInput" class="{!v.isReadOnly ? 'filterGroupField nameField' : 'hasTooltip filterGroupField nameField'}"
                                              label="{!v.labels.name}"
                                              name="{!v.labels.name}"
                                              value="{!v.activeFilterGroup.label}"
@@ -105,9 +105,9 @@
                     <lightning:layout multipleRows="true" verticalAlign="start">
                         <lightning:layoutItem padding="horizontal-large" largeDeviceSize="8" size="12">
                             <aura:if isTrue="{! !v.isReadOnly}">
-                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="{!v.isReadOnly}"/>
+                                <c:CRLP_Tooltip helpText="{!v.labels.filterGroupDescriptionHelp}" fieldLabel="{!v.labels.filterGroupDescription}" isRequired="true"/>
                             </aura:if>
-                            <lightning:textarea aura:id="descriptionInput" class="filterGroupField"
+                            <lightning:textarea aura:id="descriptionInput" class="{!v.isReadOnly ? 'filterGroupField' : 'hasTooltip filterGroupField'}"
                                                 label="{!v.labels.filterGroupDescription}"
                                                 name="{!v.labels.filterGroupDescription}"
                                                 value="{!v.activeFilterGroup.description}"
@@ -251,27 +251,27 @@
                             </lightning:layoutItem>
                             <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                 <!--START CONSTANT INPUT OPTIONS-->
+                                <!--todo: combine dynamic type with 214 release-->
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'text')}">
-                                    <!--todo: combine dynamic type with 214 release-->
                                     <div class="slds-p-top_small">
                                         <div class="slds-p-horizontal_small">
-                                            <c:CRLP_Tooltip helpText="{!v.labels.filterRuleValueHelp}" fieldLabel="{!v.labels.constant}"/>
+                                            <c:CRLP_Tooltip helpText="{!v.labels.filterRuleValueHelp}" fieldLabel="{!v.labels.constant}" isRequired="{!v.isValueRequired}"/>
                                         </div>
-                                        <lightning:textarea aura:id="filterRuleField" class="slds-p-horizontal_small filterGroupField" value="{!v.activeFilterRule.value}"
-                                                            required="true" label="{!v.labels.constant}" maxlength="300" variant="label-hidden" />
+                                        <lightning:textarea aura:id="filterRuleField" class="slds-p-horizontal_small hasTooltip filterGroupField" value="{!v.activeFilterRule.value}"
+                                                            required="{!v.isValueRequired}" label="{!v.labels.constant}" maxlength="300" variant="label-hidden" />
                                     </div>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'date')}">
                                     <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
-                                                     required="true" label="{!v.labels.constant}" type="date"/>
+                                                     required="{!v.isValueRequired}" label="{!v.labels.constant}" type="date"/>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'datetime-local')}">
                                     <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
-                                                     required="true" label="{!v.labels.constant}" type="datetime-local"/>
+                                                     required="{!v.isValueRequired}" label="{!v.labels.constant}" type="datetime-local"/>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'number')}">
-                                    <lightning:input class="slds-p-around_small" value="{!v.activeFilterRule.value}"
-                                                     required="true" label="{!v.labels.constant}" type="number" step="any"/>
+                                    <lightning:input aura:id="filterRuleField" class="slds-p-around_small" value="{!v.activeFilterRule.value}"
+                                                     required="{!v.isValueRequired}" label="{!v.labels.constant}" type="number" step="any"/>
                                 </aura:if>
                                 <aura:if isTrue="{!equals(v.filterRuleFieldType, 'picklist')}">
                                     <lightning:select aura:id="filterRuleField" class="slds-p-around_small" label="{!v.labels.constant}"
