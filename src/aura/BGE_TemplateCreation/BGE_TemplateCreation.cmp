@@ -13,7 +13,6 @@
     <aura:attribute name="toCreate" type="Boolean" access="global" default="true" />
     <aura:attribute name="toClone" type="Boolean" access="global" default="false" />
     <aura:attribute name="toEdit" type="Boolean" access="global" default="false" />
-    <aura:attribute name="showBackButton" type="Boolean" access="global" default="false" />
 
     <aura:attribute name="listOptions" type="Batch_Template_Field__c[]" default="[]"/>
     <aura:attribute name="defaultOptions" type="Batch_Template_Field__c[]" default="[]"/>
@@ -28,17 +27,18 @@
     <aura:attribute name="templateNameAttribute" type="String" default="" access="global"/>
     <aura:attribute name="templateDescriptionAttribute" type="String" default="" access="global" />
 
+    <aura:attribute name="validationErrorFound" type="Boolean" default="false" />
+	<aura:attribute name="errorMessage" type="String" default="Please, select at least one option" />
+
+
     <div aura:id="body">
-        <aura:if isTrue="{!v.showBackButton}">
-            <lightning:button class="slds-m-left_xx-large slds-text-heading_small button-hyperlink" onclick="{!c.nextToSelectTemplate}" label="Back"/>
-        </aura:if>
 
         <div class="slds-form slds-form_stacked slds-m-around_medium adapt-margin">
 
             <h2 class="slds-text-heading_medium slds-m-bottom_x-large">New Template</h2>
 
             <div class="slds-form-element">
-                <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.templateNameAttribute}"/>
+                <lightning:input type="text" aura:id="templateName" name="template name" label="Template Name" value="{!v.templateNameAttribute}" />
             </div>
 
             <div class="slds-form-element">
@@ -52,18 +52,14 @@
                         selectedLabel="Active Template Fields"
                         options="{! v.listOptions }"
                         value="{! v.defaultOptions }"
-                        onchange="{! c.handleChange }"
-                        min="1"/>
+                        onchange="{! c.handleChange }" />
+
+                <aura:if isTrue="{!v.validationErrorFound}">
+                    <div class="slds-m-horizontal_medium slds-has-error slds-form-element__help slds-form-element slds-size_1-of-1" style="color: rgb(194, 57, 52);">{!v.errorMessage}</div>
+                </aura:if>
 			</div>
 
             <div class="slds-grid slds-wrap slds-m-top_medium">
-
-                <aura:if isTrue="{!v.showBackButton}">
-                    <div class="slds-size_1-of-2 slds-grid slds-wrap">
-                        <label class="slds-size_1-of-1"> <b>Created by:</b> Admin_xyz </label>
-                        <label class="slds-size_1-of-1"> <b>Created on:</b> August 29, 2017 </label>
-                    </div>
-                </aura:if>
 
                 <div class="slds-size_1-of-2 slds-clearfix">
 
