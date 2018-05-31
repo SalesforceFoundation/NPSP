@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Utility used to build the WHERE clause
 */
-public with sharing class UTIL_Where {
+public class UTIL_Where {
     /** @description Exception class */
     public class CriteriaException extends Exception {}
 
@@ -117,13 +117,7 @@ public with sharing class UTIL_Where {
     @TestVisible private Boolean isNameField {
         get {
             if (isNameField == null) {
-                isNameField = true;
-                for (GroupExpression groupExp : groups) {
-                    if (!groupExp.isNameField()) {
-                        isNameField = false;
-                        break;
-                    }
-                }
+                isNameField = determineIsNameField();
             }
             return isNameField;
         }
@@ -182,6 +176,24 @@ public with sharing class UTIL_Where {
     */
     public Boolean isNameField() {
         return isNameField;
+    }
+
+    /*********************************************************************************************************
+    * @description Determines if the WHERE clause contains a Name field
+    * @return Boolean
+    */
+    private Boolean determineIsNameField() {
+        if (groups.isEmpty()) {
+            return false; //IN ALL FIELDS should be the default for the SOSL
+        }
+
+        for (GroupExpression groupExp : groups) {
+            if (!groupExp.isNameField()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /*********************************************************************************************************

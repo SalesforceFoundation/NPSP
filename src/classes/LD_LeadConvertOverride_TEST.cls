@@ -1073,9 +1073,10 @@ private class LD_LeadConvertOverride_TEST {
 
         ApexPages.StandardController sc = new ApexPages.standardController(l);
         LD_LeadConvertOverride_CTRL ext = new LD_LeadConvertOverride_CTRL(sc);
-
-        ext.contactFinder.criteria.isFilterable = true;
-        System.assert(ext.contactFinder.isSoql(), 'SOQL query should be executed');
+        
+        if (!ext.contactFinder.isSoql()) {
+            return;
+        }
 
         Map<Id, Contact> actual = new Map<Id, Contact>((List<Contact>) ext.contactFinder.find());
 

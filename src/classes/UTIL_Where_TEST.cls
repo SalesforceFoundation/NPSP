@@ -252,6 +252,15 @@ private class UTIL_Where_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Verifies WHERE isFilterable() returns true when WHERE clause contains no expression
+    */
+    @isTest static void whereIsFilterableReturnsTrueWhenWhereClauseIsEmpty() {
+        Boolean isFilterable = new UTIL_Where().isFilterable();
+
+        System.assert(isFilterable, 'The empty WHERE clause should be filterable');
+    }
+
+    /*******************************************************************************************************
     * @description Verifies WHERE isFilterable() returns true when all groups are filterable
     */
     @isTest static void whereIsFilterableReturnsTrueWhenAllGroupExpsAreFilterable() {

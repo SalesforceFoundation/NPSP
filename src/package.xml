@@ -406,7 +406,6 @@
         <members>UTIL_Profile</members>
         <members>UTIL_Profile_TEST</members>
         <members>UTIL_Query</members>
-        <members>UTIL_QueryApi</members>
         <members>UTIL_Query_TEST</members>
         <members>UTIL_RecordTypeSettingsUpdate</members>
         <members>UTIL_RecordTypeSettingsUpdate_TEST</members>

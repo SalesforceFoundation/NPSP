@@ -33,7 +33,7 @@
 * @group Utilities
 * @description The SObject Finder use to query, filter, sort and limit number of records by using SOQL or SOSL
 */
-public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
+public virtual class UTIL_Finder {
     /** @description Search exception class */
     public class SoslException extends Exception {}
 
@@ -59,7 +59,7 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
     /** @description The WHERE clause */
     @TestVisible private UTIL_Where criteria;
     /** @description The ORDER BY segment */
-    private UTIL_OrderBy orderBy;
+    @TestVisible private UTIL_OrderBy orderBy;
     /** @description The LIMIT segment */
     private Integer limitRows;
 
@@ -74,7 +74,7 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
 
     /*********************************************************************************************************
     * @description Sets SELECT fields in the SOQL or RETURNING fields in the SOSL
-    * @param sObjFields Fields
+    * @param sObjFields Fields on the sObject (note: reference fields (Lookups/M-Ds) are not handled by this method)
     * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withSelectFields(Set<Schema.sObjectField> sObjFields) {
@@ -177,21 +177,37 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
     * @return List<sObject>
     */
     public List<sObject> find() {
-        List<sObject> records;
+        selectFields.addAll(criteria.getFields());
+        selectFields.addAll(orderBy.getFields());
 
-        if (orderBy.isPostSort()) {
-            selectFields.addAll(orderBy.getFields());
-        }
-
-        if (isSoql() ) {
-            records = Database.query(queryBuilder().build());
-            return orderBy.sort(records);
+        if (isSoql()) {
+            String soql = queryBuilder().build();
+            return orderBy.sort(queryRecords(soql));
 
         } else {
-            records = criteria.filter(Search.query(searchBuilder().build())[0]);
+            String sosl = searchBuilder().build();
+            List<sObject> records = criteria.filter(searchRecords(sosl));
             records = orderBy.sort(records);
             return getLimitRows(records);
         }
+    }
+
+    /*********************************************************************************************************
+    * @description Queries database based on the provided SOQL string
+    * @param soql The query string
+    * @return List<sObject>
+    */
+    public virtual List<sObject> queryRecords(String soql) {
+        return Database.query(soql);
+    }
+
+    /*********************************************************************************************************
+    * @description Searches database based on the provided SOSL string
+    * @param sosl The serch string
+    * @return List<sObject>
+    */
+    public virtual List<sObject> searchRecords(String sosl) {
+        return Search.query(sosl)[0];
     }
 
     /*********************************************************************************************************
@@ -244,7 +260,7 @@ public with sharing class UTIL_Finder implements UTIL_QueryApi.Finder {
 
 
     /** @description The search (SOSL) builder class */
-    @TestVisible private with sharing class SearchBuilder {
+    @TestVisible private class SearchBuilder {
         /** @description The search criteria used in FIND clause */
         private String searchCriteria;
         /** @description The search group: search in all fields or just Name fields */
