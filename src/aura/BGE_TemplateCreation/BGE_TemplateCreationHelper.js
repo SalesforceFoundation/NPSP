@@ -92,7 +92,6 @@
 					duration: 5
 				});
 
-				//toastEvent.fire();
 				existsInvalidValues = true;
 			}
 		}
@@ -131,4 +130,18 @@
 		}
 
 	},
+
+    validateList: function(component, event) {
+
+		var errorFound = false;
+
+		if (component.get("v.defaultOptions").length == 0) {
+
+			errorFound = true;
+
+		}
+
+		component.set("v.validationErrorFound", errorFound);
+
+	}
 })
