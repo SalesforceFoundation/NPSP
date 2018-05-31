@@ -12,7 +12,7 @@
 
         function onInitHandler(result, event) {
 
-            // console.warn('BGE - onInitHandler');
+            console.log(result);
 
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
@@ -31,6 +31,7 @@
 
             $scope.rowsCount = result.rowsCount;
             $scope.rowsAmount = result.rowsAmount;
+            $scope.templateFields = result.templateFields;
 
             $scope.offset = 0;
             $scope.columnsData = result.columns;
@@ -39,8 +40,6 @@
             $scope.prevButonDisabled = true;
             $scope.nextButonDisabled = false;
             $scope.rowErrors = {};
-
-            console.debug(result);
 
             $scope.lastSelectedRow = null;
             $scope.lastSelectedColumn = null;
@@ -83,6 +82,7 @@
                 afterInit: afterInitHandler,
                 beforeRemoveRow: beforeRemoveRowHandler,
                 afterRemoveRow: afterRemoveRowHandler,
+                beforeChange: beforeChangeHandler,
                 afterChange: afterChangeHandler,
                 afterSelection: afterSelectionHandler,
                 afterSelectionEnd: afterSelectionEndHandler,
@@ -103,7 +103,6 @@
         }
 
         function prevPageAction() {
-            console.log("prev");
 
             if ($scope.offset > 0) {
                 $scope.offset --;
@@ -128,8 +127,6 @@
 
             var row = hot.getSelected()[0];
 
-            console.log('removeRowOnColumnAction', row);
-
             hot.alter('remove_row', row);
 
             $timeout(function() {
@@ -141,7 +138,7 @@
         function changePageHandler() {
 
             $scope.pageChangeLoader = true;
-            BGE_HandsOnGridController.changePageGrid({batchId: batchId, offset: $scope.offset}, changePageGridHandler)
+            BGE_HandsOnGridController.changePageGrid({batchId: batchId, templateFields: $scope.templateFields, offset: $scope.offset}, changePageGridHandler)
 
             function changePageGridHandler(result, event) {
 
@@ -174,8 +171,6 @@
 
         function cellsHandler(row, col, prop) {
 
-            // console.warn('HOT - cellsHandler');
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -200,7 +195,7 @@
 
         function afterInitHandler() {
 
-            console.warn('HOT - afterInitHandler');
+            // console.warn('HOT - afterInitHandler');
 
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
@@ -217,21 +212,17 @@
             }
 
             $scope.isIndexLoading = false;
-            console.log("table ready");
 
             renderBindings();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
-            console.warn('HOT - beforeRemoveRowHandler');
+            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
         }
 
         function deleteRow(index, amount, visualRows, callback) {
-
-            console.log(index, amount);
-            console.log(visualRows);
 
             var rowRecordIds = [];
             var columnIndex = hot.propToCol('Id');
@@ -259,87 +250,105 @@
 
         function afterRemoveRowHandler(index, amount) {
 
-            console.warn('HOT - afterRemoveRowHandler');
+            // console.warn('HOT - afterRemoveRowHandler');
 
             updateSummaryData();
         }
 
+        function beforeChangeHandler(changes, source) {
+
+        }
+
         function afterChangeHandler(changes, source) {
 
-            console.warn('HOT - afterChangeHandler', source);
+            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
 
-                console.log('CHANGES:    ', changes);
-
                 var cellRecords = [];
 
                 for (var i = 0; i < changes.length; i ++) {
 
+                    var newValue = changes[i][3];
+                    var oldValue = changes[i][2];
+
                     var cellRecord = {};
 
-                    if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
+                    if ((!newValue) && (!oldValue)) {
+                        // This value is skipped
+                    }
+                    else {
 
-                        var col = this.propToCol(changes[i][1])
-                        var cellType = this.getDataType(changes[i][0], col);
-                        var newValue = changes[i][3];
+                        var newCell = hot.getCellMeta(changes[i][0], hot.propToCol(changes[i][1]));
+                        var newCellId = hot.getDataAtCell(changes[i][0], hot.propToCol('Id'));
 
-                        var cellRecord = {
-                            row: changes[i][0],
-                            field: changes[i][1],
-                            oldValue: changes[i][2],
-                            newValue: newValue,
-                            type: cellType,
-                            recordId: this.getDataAtRowProp(changes[i][0], 'Id')
-                        };
+                        if (newCell.hasError == true && (newCellId.toString().length < 18) && (!newValue || newValue == null || newValue == '')) {
 
-                        if (!newValue) {
-                            newValue = null;
-                            cellRecord.newValue = null;
-                            console.log('NEW VALUE:    ' + newValue);
-                        }
+                            for (var index = 0; index < $scope.rowErrors[newCellId].length; index ++) {
 
-                        if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                            console.log('NEW VALUE INSIDE:    ' + newValue);
-                            console.log('CELL RECORD NEW VALUE:    ' + cellRecord.newValue);
+                                var element = $scope.rowErrors[newCellId][index];
 
-                            cellRecords.push(cellRecord);
-                        }
-                        else if ((newValue == 'NaN') && (cellType == 'date')) {
-                            if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
-                                $scope.rowErrors[cellRecord.recordId] = [];
-                                $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
-                            }
-                            else {
-
-                                var isFieldIn = false;
-                                $scope.rowErrors[cellRecord.recordId].forEach(function(element){
-
-                                    console.log(element.field, cellRecord.field)
-                                    if (element.field === cellRecord.field) {
-                                        element.messages = 'Illegal assignment from String to Date';
-                                        isFieldIn = true;
-                                    }
-                                });
-
-                                if (!isFieldIn) {
-                                    $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
+                                if (element.field === changes[i][1]) {
+                                    $scope.rowErrors[newCellId].splice(index, 1);
                                 }
                             }
 
-                            $timeout(function() {
-                                hot.render();
-                            }, 500);
+                            newCell.valid = true;
+                            newCell.hasError = false;
                         }
+                        else if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
 
-                    }
-                    else {
-                        updateSummaryData();
+                            var col = this.propToCol(changes[i][1])
+                            var cellType = this.getDataType(changes[i][0], hot.propToCol('Id'));
+
+
+                            var cellRecord = {
+                                row: changes[i][0],
+                                field: changes[i][1],
+                                oldValue: changes[i][2],
+                                newValue: newValue,
+                                type: cellType,
+                                recordId: this.getDataAtRowProp(changes[i][0], 'Id')
+                            };
+
+                            if (!newValue) {
+                                newValue = null;
+                                cellRecord.newValue = null;
+                            }
+
+                            if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
+                                cellRecords.push(cellRecord);
+                            }
+                            else if ((newValue == 'NaN') && (cellType == 'date')) {
+                                if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
+                                    $scope.rowErrors[cellRecord.recordId] = [];
+                                    $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
+                                }
+                                else {
+
+                                    var isFieldIn = false;
+                                    $scope.rowErrors[cellRecord.recordId].forEach(function(element){
+
+                                        if (element.field === cellRecord.field) {
+                                            element.messages = 'Illegal assignment from String to Date';
+                                            isFieldIn = true;
+                                        }
+                                    });
+
+                                    if (!isFieldIn) {
+                                        $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
+                                    }
+                                }
+                            }
+
+                        }
+                        else {
+                            updateSummaryData();
+                        }
                     }
                 }
-
                 if (cellRecords.length > 0) {
 
                     var requestData = {
@@ -347,28 +356,27 @@
                         cellRecords: JSON.stringify(cellRecords)
                     };
 
-                    console.log(requestData);
+                    BGE_HandsOnGridController.dmlCellsRowGrid(requestData, onDmlGridHandler);
+                }
+                else {
 
-                    BGE_HandsOnGridController.dmlCellsGrid(requestData, onDmlGridHandler);
+                    $timeout(function() {
+                        hot.render();
+                    }, 500);
+
                 }
 
                 function onDmlGridHandler(result, event) {
-
-                    console.log(result);
 
                     if (result && result.length > 0) {
 
                         result.forEach(function(cellResponse) {
 
-                            console.log(cellResponse);
+                            // console.log(cellResponse);
 
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
-                            // $scope.rowErrors[cellResponse.recordId] = [];
-
                             if (cellResponse.errors) {
-
-                                console.log(cellResponse.errors);
 
                                 errCell.valid = false;
                                 errCell.hasError = true;
@@ -380,7 +388,7 @@
                                 else {
 
                                     var isFieldIn = false;
-                                    $scope.rowErrors[cellResponse.recordId].forEach(function(element){
+                                    $scope.rowErrors[cellResponse.recordId].forEach(function(element) {
 
                                         if (element.field === cellResponse.field) {
                                             element.messages = cellResponse.messages
@@ -468,8 +476,6 @@
                 BGE_HandsOnGridController.dryRunRowGrid({batchId: batchId, recordId: recordId}, dryRunRowGridHandler);
 
                 function dryRunRowGridHandler(result, event) {
-
-                    console.log(result);
 
                     $scope.lastSelectedRow = row;
                     $scope.$apply();
@@ -789,11 +795,6 @@
         }
 
         // Renderers
-
-        function emailCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-
-
-        }
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 

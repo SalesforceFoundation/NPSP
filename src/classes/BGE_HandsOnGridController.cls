@@ -2,6 +2,7 @@ global class BGE_HandsOnGridController {
 
     private static final String CELL_DML = 'cellsUpdate';
     private static final String ROW_DML = 'ROW_DML';
+    private static final String DATA_IMPORT_NAME = 'DataImport__c';
 
     public Boolean hasError {get; set;}
 
@@ -37,6 +38,7 @@ global class BGE_HandsOnGridController {
 
             System.debug(JSON.serializePretty(records));
 
+            result.put('templateFields', String.join(fieldNames, ';'));
             result.put('data', selector.sanitizeDataImports(records));
             result.put('templateId', batch.Batch_Template__c);
             result.put('columns', columns);
@@ -48,9 +50,228 @@ global class BGE_HandsOnGridController {
     }
 
     @RemoteAction
+    global static Object[] dmlCellsRowGrid(Map<String, Object> parameters) {
+
+        Object[] result = new Object[] {};
+
+        Id batchId = Id.valueOf((String) parameters.get('batchId'));
+
+        Object[] cells = (Object[]) JSON.deserializeUntyped((String) parameters.get('cellRecords'));
+        Map<String, Object[]> rowCells = new Map<String, Object[]>();
+
+        for (Object cell :cells) {
+
+            Map<String, Object> cellData = (Map<String, Object>) cell;
+
+            String cellKey = (String) cellData.get('recordId');
+
+            if (!rowCells.containsKey(cellKey)) {
+                rowCells.put(cellKey, new Object[] {});
+            }
+
+            rowCells.get(cellKey).add(cell);
+        }
+
+        result = runDmlCellsRowGrid(batchId, rowCells);
+
+        return result;
+    }
+
+    private static Object[] runDmlCellsRowGrid(Id batchId, Map<String, Object[]> rowCells) {
+
+        Map<String, DataImport__c> dataImports = new Map<String, DataImport__c>();
+
+        Set<Object> result = new Set<Object>();
+    
+        for (String rowKey :rowCells.keySet()) {
+
+            SObject dataImport = (SObject) new DataImport__c(NPSP_Data_Import_Batch__c = batchId);
+
+            if (dataImports.containsKey(rowKey)) {
+                dataImport = (SObject) dataImports.get(rowKey);
+            }
+
+            dataImport.put('External_Id__c', (Object) rowKey);
+
+            for (Object cell :rowCells.get(rowKey)) {
+
+                Map<String, Object> cellData = (Map<String, Object>) cell;
+                String cellType = (String) cellData.get('type');
+
+                // System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
+
+                // BASED ON THE CELL TYPE WE PROCESS THE INFO
+
+                Schema.SObjectField dataImportField = Schema.getGlobalDescribe().get(DATA_IMPORT_NAME).getDescribe().fields.getMap().get((String) cellData.get('field'));
+                Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
+                String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
+
+                if ((new String[] {'STRING', 'PICKLIST'}).contains(type)) {
+
+                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                    dataImports.put(rowKey, (DataImport__c) dataImport);
+                }
+                else if ((new String[] {'EMAIL'}).contains(type)) {
+
+                    String email = (String) cellData.get('newValue');
+
+                    if (isEmailValid(email)) {
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                        dataImports.put(rowKey, (DataImport__c) dataImport);
+                    }
+                    else {
+                        result.add(buildCellError(cell, cellData.get('field'), 'Invalid Email'));
+                    }
+                }
+                else if ((new String[] {'DATE', 'DATETIME'}).contains(type)) {
+
+                    String dtString = (String) cellData.get('newValue');
+
+                    if (String.isEmpty(dtString)) {
+                        dataImport.put((String) cellData.get('field'), null);
+                        dataImports.put(rowKey, (DataImport__c) dataImport);
+                    }
+                    else {
+
+                        String[] dts = dtString.split('/');
+
+                        if (dts.size() == 3) {
+                            Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
+                            dataImport.put((String) cellData.get('field'), (Object) dt);
+                            dataImports.put(rowKey, (DataImport__c) dataImport);
+                        }
+                        else {
+                            result.add(buildCellError(cell, cellData.get('field'), 'Invalid Date'));
+                        }
+                    }
+                }
+                else if ((new String[] {'CURRENCY', 'DECIMAL'}).contains(type)) {
+
+                    if (cellData.get('newValue') instanceOf Decimal || (cellData.get('newValue') == null)) {
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                        dataImports.put(rowKey, (DataImport__c) dataImport);
+                    }
+                    else {
+                        result.add((buildCellError(cell, cellData.get('field'), 'Invalid Currency')));
+                    }
+                }
+                else if ((new String[] {'NUMBER'}).contains(type)) {
+
+                    if (cellData.get('newValue') instanceOf Integer || (cellData.get('newValue') == null)) {
+                        dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                        dataImports.put(rowKey, (DataImport__c) dataImport);
+                    }
+                    else {
+                        result.add(result.add(buildCellError(cell, cellData.get('field'), 'Invalid number')));
+                    }
+                }
+                else {
+                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                    dataImports.put(rowKey, (DataImport__c) dataImport);
+                }
+            }
+        }
+
+        if (!dataImports.isEmpty()) {
+
+            DataImport__c[] upsertRecords = dataImports.values();
+            Database.UpsertResult[] upsertResults = new Database.UpsertResult[] {};
+
+            for (String key :dataImports.keySet()) {
+                if (key InstanceOf Id) {
+                    dataImports.get(key).Id = Id.valueOf(key);
+                }
+            }
+
+            upsertResults = Database.upsert(upsertRecords, false);
+
+            for (Integer index = 0; index < upsertResults.size(); index ++) {
+
+                Database.UpsertResult upsertResult = upsertResults[index];
+                DataImport__c upsertRecord = upsertRecords[index];
+
+                Object[] cells = (Object[]) rowCells.get(upsertRecord.External_Id__c);
+
+                if (!upsertResult.isSuccess()) {
+
+                    Database.Error upsertResultError = upsertResult.getErrors()[0];
+                    Map<String, String> upsertErrorDetail = new Map<String, String>();
+
+                    String errorField = upsertResultError.getFields()[0];
+                    upsertErrorDetail.put('field', errorField);
+                    upsertErrorDetail.put('messages', upsertResultError.getMessage());
+
+                    for (Object cell :cells) {
+                        Map<String, Object> cellData = (Map<String, Object>) cell;
+                        if (cellData.get('field') == errorField) {
+                            cellData.put('errors', (Object) new Object[] {upsertErrorDetail});
+                            result.add(cell);
+                        }
+                    }
+                }
+                else {
+
+                    for (Object cell :cells) {
+
+                        Map<String, Object> cellData = (Map<String, Object>) cell;
+                        cellData.put('sfdcid', (Object) upsertResult.getId());
+
+                        if (!isCellIncluded(cell, result)) {
+                            result.add(cell);
+                        }
+                    }
+                }
+            }
+        }
+
+        System.debug(JSON.serializePretty(result));
+        result.remove(null);
+        Object[] resultCells = new Object[] {};
+        resultCells.addAll(result);
+        return resultCells;
+    }
+
+    private static Object buildCellError(Object cell, Object fieldNameObject, String message) {
+
+        String fieldName = (String) fieldNameObject;
+
+        Map<String, Object> cellData = (Map<String, Object>) cell;
+        Map<String, String> upsertErrorDetail = new Map<String, String>();
+
+        upsertErrorDetail.put('field', fieldName);
+        upsertErrorDetail.put('messages', message);
+
+        cellData.put('errors', (Object) new Object[] {upsertErrorDetail});
+
+        return cell;
+    }
+
+    private static Boolean isCellIncluded(Object instance, Set<Object> cells) {
+
+        Boolean result = false;
+
+        Map<String, Object> instanceData = (Map<String, Object>) instance;
+        
+        for (Object cell :cells) {
+
+            Map<String, Object> cellData = (Map<String, Object>) cell;
+
+            if ((cellData.get('field') == instanceData.get('field')) && 
+                (cellData.get('recordId') == instanceData.get('recordId'))) {
+
+                    result = true;
+                    break;
+            }
+        }
+
+        return result;
+    }
+
+    @RemoteAction
     global static Object[] dmlCellsGrid(Map<String, Object> parameters) {
 
         Map<String, Object> result = new Map<String, Object>();
+        Object[] exceptionResult = new Object[] {};
 
         Id batchId = Id.valueOf((String) parameters.get('batchId'));
 
@@ -61,10 +282,10 @@ global class BGE_HandsOnGridController {
         for (Object cell :cells) {
 
             Map<String, Object> cellData = (Map<String, Object>) cell;
-            cellData.put('errors', null);
 
             String cellKey = (String) cellData.get('recordId');
             result.put(cellKey, cell);
+            exceptionResult.add(cell);
 
             SObject dataImport = (SObject) new DataImport__c(NPSP_Data_Import_Batch__c = batchId);
 
@@ -72,19 +293,28 @@ global class BGE_HandsOnGridController {
                 dataImport = (SObject) dataImports.get(cellKey);
             }
 
-            dataImport.put('External_Id__c', (Object) cellKey);
+
 
             String cellType = (String) cellData.get('type');
 
+            System.debug((String) cellData.get('field') + (String) cellData.get('newValue'));
 
             try {
 
                 if (cellType != null && cellType.equalsIgnoreCase('DATE')) {
 
-                    if (cellData.get('newValue') == null) {
+                    String oldValue = (String) cellData.get('oldValue');
+                    string newValue = (String) cellData.get('newValue');
+
+                    if (newValue == null && oldValue != null ) {
 
                         Date dt = null;
                         dataImport.put((String) cellData.get('field'), (Object) dt);
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
+                    }
+                    else if (newValue == null && oldValue == null ) {
+
                     }
                     else {
 
@@ -92,7 +322,11 @@ global class BGE_HandsOnGridController {
                         String[] dts = dtString.split('/');
                         Date dt = Date.newInstance(Integer.valueOf(dts[2]), Integer.valueOf(dts[0]), Integer.valueOf(dts[1]));
                         dataImport.put((String) cellData.get('field'), (Object) dt);
+
+                        dataImports.put(cellKey, (DataImport__c) dataImport);
                     }
+
+
                 }
                 else {
 
@@ -106,7 +340,7 @@ global class BGE_HandsOnGridController {
                         String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
 
                         // If the actual type is EMAIL
-                        if (type == 'EMAIL' && !validateEmail( (String) cellData.get('newValue') )){
+                        if (type == 'EMAIL' && !isEmailValid( (String) cellData.get('newValue') )){
 
                             String emailErrorMessage = 'invalid email format';
 
@@ -119,7 +353,7 @@ global class BGE_HandsOnGridController {
 
                             cellData.put('errors', emailErrorMessagesList);
                         }
-                        else {
+                        else if ((String) cellData.get('newValue') != (String) cellData.get('oldValue')) {
                             // If we are receiving just text or the email is valid.
                             dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
@@ -128,7 +362,7 @@ global class BGE_HandsOnGridController {
                             dataImports.put(cellKey, (DataImport__c) dataImport);
                         }
                     }
-                    else {
+                    else if (cellData.get('newValue') != cellData.get('oldValue')) {
                         // If type from the frontend is number or boolean.
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
 
@@ -147,7 +381,22 @@ global class BGE_HandsOnGridController {
 
                 Object[] exceptionErrors = new Object[] {};
                 exceptionErrors.add((Object) exceptionError);
-                cellData.put('errors', exceptionErrors);
+
+                if (cellData.containsKey('errors')) {
+
+                    Object[] existingExceptionErrors = (Object[]) cellData.get('errors');
+
+                    if (existingExceptionErrors != null && existingExceptionErrors.size() > 0) {
+                        existingExceptionErrors.addAll(exceptionErrors);
+                        cellData.put('errors', (Object) existingExceptionErrors);
+                    }
+                    else {
+                        cellData.put('errors', (Object) existingExceptionErrors);
+                    }
+                }
+                else {
+                    cellData.put('errors', (Object) exceptionErrors);
+                }
             }
         }
 
@@ -210,9 +459,14 @@ global class BGE_HandsOnGridController {
                     cellData.put('sfdcid', (Object) upsertResult.getId());
                 }
             }
+
+            return result.values();
+        }
+        else {
+            return exceptionResult;
         }
 
-        return result.values();
+        return null;
     }
 
     @RemoteAction
@@ -244,7 +498,7 @@ global class BGE_HandsOnGridController {
 
                     if (diSetting != null && dataImport != null) {
 
-                        BDI_DataImport_API.processDataImportRecords(diSetting, new DataImport__c[] {dataImport}, true);
+                        // BDI_DataImport_API.processDataImportRecords(diSetting, new DataImport__c[] {dataImport}, true);
                         result.put('status', 'OK');
                         result.put('data', JSON.serialize(dataImport));
                     }
@@ -314,12 +568,10 @@ global class BGE_HandsOnGridController {
 
         DataImportBatch__c batch = selector.getBatchById(batchId);
 
-        Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
-
         String[] fieldNames = new String[] {};
-        for (Batch_Template_Field__c templateField :templateFields.values()) {
-            fieldNames.add(templateField.Name);
-        }
+        String templateFields = (String) parameters.get('templateFields');
+
+        fieldNames = templateFields.split(';');
 
         if (!fieldNames.isEmpty()) {
             SObject[] records = selector.getDataImportsByBatchId(batchId, fieldNames, offset.intValue() * 50);
@@ -329,17 +581,20 @@ global class BGE_HandsOnGridController {
         return result;
     }
 
-    private static Boolean validateEmail(String email) {
+    private static Boolean isEmailValid(String email) {
 
         Boolean isValid = true;
 
-        String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
-        Pattern MyPattern = Pattern.compile(emailRegex);
-        Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
+        if (!String.isEmpty(email) ) {
 
-        if (!MyMatcher.matches()) {
+            String emailRegex = '^[a-zA-Z0-9._|\\\\%#~`=?&/$^*!}{+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$';
+            Pattern MyPattern = Pattern.compile(emailRegex);
+            Matcher MyMatcher = MyPattern.matcher(email.toUpperCase());
 
-            isValid = false;
+            if (!MyMatcher.matches()) {
+
+                isValid = false;
+            }
         }
 
         return isValid;
