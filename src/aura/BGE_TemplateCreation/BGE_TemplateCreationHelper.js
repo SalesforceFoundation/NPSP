@@ -92,7 +92,6 @@
 					duration: 5
 				});
 
-				//toastEvent.fire();
 				existsInvalidValues = true;
 			}
 		}

@@ -6,6 +6,7 @@
         actionLoad.setCallback(this, function (response) {
             //store state of response
             var state = response.getState();
+
             if (state === "SUCCESS") {
 
                 var templateFields = response.getReturnValue();
@@ -17,7 +18,9 @@
 
                 component.set('v.listOptions', options);
 
-            } else {
+            }
+            else {
+                
                 console.log('Failed with state: ' + state);
             }
         });
@@ -49,50 +52,17 @@
 
                     var loadedTemplate = response.getReturnValue();
 
-                //    template.Name = loadedTemplate.Name;
-                //    template.Description__c = loadedTemplate.Description__c;
-                                        
                     component.set("v.templateNameAttribute", loadedTemplate.Name);
                     component.set("v.templateDescriptionAttribute", loadedTemplate.Description__c);
-
-                //    component.find("templateName").set("v.value",component.get("v.templateNameAttribute"));
-                //    component.find("templateDescription").set("v.value",component.get("v.templateDescriptionAttribute"));
                 }
                 else {
 
                     console.log('Failed with state: ' + state);
                 }
-
-
-                /*
-                // store state of response
-                var state = response.getState();
-
-                if (state === "SUCCESS") {
-
-                    var loadedTemplate = response.getReturnValue();
-
-                    template.Name = loadedTemplate.Name;
-                    template.Description__c = loadedTemplate.Description__c;
-
-                    var name = '';
-                    var description = '';
-
-                    name = template.Name ? "'" + template.Name + "'" : '';
-                    description = template.Description__c ? "'" + template.Description__c + "'" : '';
-
-                    component.find("templateName").set("v.value",name);
-                    component.find("templateDescription").set("v.value",description);
-                }
-                else {
-
-                    console.log('Failed with state: ' + state);
-                }
-                */
 
             });
-            $A.enqueueAction(loadTemplateName);
 
+            $A.enqueueAction(loadTemplateName);
         }
 
         if (template.Id != null) {
@@ -126,8 +96,6 @@
                         component.set('v.templateFields', response.getReturnValue());
                         component.set('v.defaultOptions', defaultOptions);
 
-                        //Removing required template fields setting
-                        //component.set('v.requiredOptions', requiredOptions);
                     }
                 }
             });
@@ -154,16 +122,14 @@
         helper.validateList(component, event);
 
         if (!component.get('v.validationErrorFound')) {
-            
-            console.log('SAVE IN JS CONTROLLER');
+
             var template = component.get('v.template');
             var recordId = component.get("v.recordId");
 
             if (recordId) {
 
                 template.Id = recordId;
-                //component.set("v.template.Name", component.get("v.templateNameAttribute"));
-                //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
+
             }
 
             template.Name = component.get("v.templateNameAttribute");
@@ -238,7 +204,6 @@
 
         // Get the list of the "value" attribute on all the selected options
         var selectedOptionsList = event.getParam("value");
-        //var selectedOptionsLabels = event.getParam("label");
         var rowItemList = component.get("v.templateFields");
         var index = rowItemList.length;
 
@@ -265,8 +230,6 @@
             if (!existsToDelete) {
 
                 var index = rowItemList.indexOf(existingTemplateField);
-
-                console.log('DELETE ' + rowItemList[index]);
 
                 if (index > -1) {
                     rowItemList.splice(index, 1);
@@ -336,7 +299,6 @@
 
             if (templateField['Name'] === templateFieldSelected.Name) {
 
-                console.log('HERE RADIO');
                 templateField = templateFieldSelected;
                 var requiredOptions = component.get('v.requiredOptions');
 
@@ -356,13 +318,4 @@
             }
         });
     }
-
-    //Removing required template fields setting
-    // display: function (component, event, helper) {
-    //     helper.toggleHelper(component, event);
-    // },
-
-    // displayOut: function (component, event, helper) {
-    //     helper.toggleHelper(component, event);
-    // }
 })
