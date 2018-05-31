@@ -66,8 +66,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         	if (strRefreshSetting == null || strRefreshSetting == 'none')
         	   return null;
         	boolean isOpenOnly = (strRefreshSetting == 'Open Opportunities');
-        	   
-        	string strSoql = 'select Id, AccountId from Opportunity where Account.npe01__SYSTEM_AccountType__c = \'' + 
+
+            string strSoql = 'SELECT Id, AccountId, Primary_Contact__c FROM Opportunity WHERE Account.npe01__SYSTEM_AccountType__c = \'' +
         	   CAO_Constants.HH_ACCOUNT_TYPE + '\' and ';
         	if (isOpenOnly)
         	   strSoql += ' IsClosed = false and ';
@@ -80,7 +80,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
 
             // see if we have any Opps who have changed Household Accounts.
             for (integer i = 0; i < opportunities.size(); i++) {
-                if (opportunities[i].AccountId != oldOpportunities[i].AccountId) {
+                if (opportunities[i].AccountId != oldOpportunities[i].AccountId ||
+                    opportunities[i].Primary_Contact__c != oldOpportunities[i].Primary_Contact__c) {
 
                     // delay our soql until we know we need it.
                     if (mapIdToOpp == null) {
@@ -94,8 +95,9 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 }
             }
             // bail out if the hh accounts did not change.
-            if (listOppToProcess.size() == 0)
+            if (listOppToProcess.size() == 0) {
                 return null;
+            }
 
             // delete the old household soft credits.
             delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
@@ -104,7 +106,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             // now continue with our processing to create the new household soft credits
             opportunities = listOppToProcess;
         }
-   
+
         DmlWrapper dmlWrapper = new DmlWrapper();
                              
         set<id> conRecordTypesToExclude = new set<id>();
@@ -121,8 +123,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
         map<Id, Opportunity> oppsForContactRoles = new map<Id,Opportunity>([select Id, Primary_Contact__c, AccountId, account.npe01__One2OneContact__c,
             account.npe01__SYSTEMIsIndividual__c, account.npe01__SYSTEM_AccountType__c from Opportunity 
             where Id IN :opportunities AND account.npe01__SYSTEMIsIndividual__c = true]);
-        //UTIL_Debug.debug('DJH***** oppsForContactRoles: ' + oppsForContactRoles);
-        
+
         if (oppsForContactRoles.size() > 0) {
             // set of contact Ids on Accounts for Opps in the trigger set
             Set<Id> contactIds = new Set<Id>();         
@@ -145,8 +146,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             map<String,Id> contactOppToContactRole = new map<String,Id>();
             OpportunityContactRole[] conRoles = [select Id, OpportunityId, ContactId, Role, isPrimary From OpportunityContactRole 
                 WHERE OpportunityId IN :oppsForContactRoles.values() ];
-            //UTIL_Debug.debug('DJH***** existing conRoles: ' + conRoles);
-            
+
             String uniqueConRole = '';
             // now loop through the results and build the map
             for (OpportunityContactRole thisCR : conRoles) {
@@ -208,8 +208,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 householdContacts = database.query('select id, npo02__Household__c, RecordTypeId, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
             else
                 householdContacts = database.query('select id, npo02__Household__c, AccountId, Deceased__c, Account.npe01__SYSTEM_AccountType__c from Contact where (npo02__Household__c IN :c2HId or AccountId in :c2HId)');
-            //UTIL_Debug.debug('DJH***** householdContacts: ' + householdContacts);
-                                 
+
             // create a map of Household Id to list of member contacts
             for (Contact myContact : householdContacts) {
                 ID hhId;
@@ -260,8 +259,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                    // backwards, but prevents having to query for a RecordTypeId that may or may not be there...
                                                                                             
                                 //only create contact role if we don't have one for this contact/opportunity
-                                } else if (!contactOppToContactRole.containsKey(uniqueConRole)
-                                            || !OPP_AutomatedSoftCreditsService.isDuplicateOCR(conRoles, thisContactId, currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c)) {
+                                } else if (!contactOppToContactRole.containsKey(uniqueConRole)) {
                                     OpportunityContactRole thisRole = new OpportunityContactRole();
                                     thisRole.OpportunityId = thisOpp.Id;
                                     thisRole.ContactId = householdMember.Id;
@@ -275,15 +273,11 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             }
             
             if (contactrolesforCreation != null) {
-            	dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
-            	//UTIL_Debug.debug('DJH***** contractrolesforCreation: ' + contactrolesforCreation);
-                //insert contactrolesforCreation;   
+                dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
             }
             
             if (contactRolesForUpdate != null) {
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactRolesForUpdate);
-                //UTIL_Debug.debug('DJH***** contractrolesForUpdate: ' + contactrolesForUpdate);
-                //update contactRolesForUpdate;   
             }   
         }
     
