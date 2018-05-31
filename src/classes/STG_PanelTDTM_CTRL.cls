@@ -106,9 +106,6 @@ public with sharing class STG_PanelTDTM_CTRL extends STG_Panel {
     * @return PageReference The page that it redirects to. Same page user was in, in this case.
     */
     public PageReference addPageMessages() {
-        // Display standard warning message
-        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.stgHelpTriggerHandlers));
-
         // Display message if any async classes
         boolean hasAsync = false;
         List<Trigger_Handler__c> listTHDefault = TDTM_DefaultConfig.getDefaultRecords();

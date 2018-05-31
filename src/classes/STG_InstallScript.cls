@@ -39,7 +39,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     private enum InstallAction { 
         POPULATE_RD_INSTALLMENT_NUMBER, RUN_NEW_ORG_SCRIPT, 
         INSERT_TDTM_DEFAULTS, ABORT_OLD_SCHEDULED_JOBS, 
-        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT 
+        CLEANUP_RECORD_TYPE_SETTINGS, UPDATE_CAMPAIGN_LIST_REPORT,
+        CREATE_DEFAULT_SETTINGS
     }
 
     /*******************************************************************************************************
@@ -59,6 +60,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
             executeAction(InstallAction.RUN_NEW_ORG_SCRIPT, logger);
 
         } else if (context.isUpgrade() || context.isPush()) {
+            executeAction(InstallAction.CREATE_DEFAULT_SETTINGS, logger);
+
             executeAction(InstallAction.INSERT_TDTM_DEFAULTS, logger);
         }
 
@@ -97,6 +100,10 @@ global without sharing class STG_InstallScript implements InstallHandler {
 
             } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
                 updateCampaignListReport();
+
+            } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS) {
+                createNewDefaultCustomSettingRecords();
+
             }
 
         } catch(Exception e) {
@@ -107,7 +114,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
     }
 
     /*******************************************************************************************************
-    * @description Sets up TDTM in new orgs.
+    * @description Sets up TDTM in new orgs. Also called by the NPSP Settings page on page load (i.e., this method
+    * runs every single time the NPSP Settings page is loaded).
     * @return void
     */
     global void runNewOrgScript() {      
@@ -139,6 +147,12 @@ global without sharing class STG_InstallScript implements InstallHandler {
         }
     }
 
+    /*******************************************************************************************************
+     * @description Called only during a new install of v3 by runNewOrgScript() to configure the default NPSP TDTM
+     * Trigger Configuration. This could involve removing legacy TDTM entries as well.
+     * @param npspToCumulusMap
+     * @return
+     */
     private Map<String, Boolean> getExistingNpspTriggerConfig(Map<String, String> npspToCumulusMap) {
         
         Map<String, Boolean> npspExistingSettings = new Map<String, Boolean>();
@@ -214,7 +228,7 @@ global without sharing class STG_InstallScript implements InstallHandler {
     
     /*******************************************************************************************************
     * @description Inserts the default TDTM records, if necessary. Updates those that need to be updated, since the last package
-    * upgradade. Public just for testing purposes (it should otherwise be private).
+    * upgrade. Public just for testing purposes (it should otherwise be private).
     * @return void
     */
     public static void insertTdtmDefaults(List<Trigger_Handler__c> defaultHandlers) {
@@ -280,6 +294,13 @@ global without sharing class STG_InstallScript implements InstallHandler {
         if(handlersToUpdate.size() > 0) update handlersToUpdate; 
     }
 
+    /*******************************************************************************************************
+     * @description Ensure that any default Custom Settings Records are created for "new" custom settings objects
+     * added
+     */
+    private static void createNewDefaultCustomSettingRecords() {
+        UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+    }
 
     /*******************************************************************************************************
     * @description Collects exceptions. Logs exceptions by sending an email and processing error via ERR_Handler.
