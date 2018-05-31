@@ -152,222 +152,222 @@ private class UTIL_Finder_TEST {
 
     /*******************************************************************************************************
     * @description Verifies find() when query having empty
-	* WHERE and ORDER BY clauses returns no record.
+    * WHERE and ORDER BY clauses returns no record.
     */
-	@isTest static private void findSucceedsWhenQueryReturnsEmptyList() {
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType);
+    @isTest static private void findSucceedsWhenQueryReturnsEmptyList() {
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType);
 
-		List<sObject> actual = finder.find();
-		System.assertEquals(0, actual.size());
+        List<sObject> actual = finder.find();
+        System.assertEquals(0, actual.size());
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE clause is empty');
-	}
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE clause is empty');
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when query having WHERE, ORDER BY and LIMIT clauses returns no record.
     */
-	@isTest static private void findSucceedsWhenCompleteQueryReturnsEmptyList() {
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
-			.withOrderBy(Contact.Department)
-			.withLimit(100);
+    @isTest static private void findSucceedsWhenCompleteQueryReturnsEmptyList() {
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
+            .withOrderBy(Contact.Department)
+            .withLimit(100);
 
-		List<sObject> actual = finder.find();
-		System.assertEquals(0, actual.size());
+        List<sObject> actual = finder.find();
+        System.assertEquals(0, actual.size());
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
-	}
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when query applies post sorting on empty record list.
     */
-	@isTest static private void findSucceedsWhenQueryReturnsEmptyListForPostSorting() {
-		UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
-		orderByField.isSortable = false;
+    @isTest static private void findSucceedsWhenQueryReturnsEmptyListForPostSorting() {
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
-			.withOrderBy(orderByField)
-			.withLimit(100);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
+            .withOrderBy(orderByField)
+            .withLimit(100);
 
-		List<sObject> actual = finder.find();
-		System.assertEquals(0, actual.size());
+        List<sObject> actual = finder.find();
+        System.assertEquals(0, actual.size());
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
-		System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
-	}
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() returns minimum of LIMIT and returned records size.
     */
-	@isTest static private void findReturnsMinLimitAndRecordSizeRecords() {
-		List<sObject> records = getTestContacts();
-		Integer limitRows = records.size() + 1;
+    @isTest static private void findReturnsMinLimitAndRecordSizeRecords() {
+        List<sObject> records = getTestContacts();
+        Integer limitRows = records.size() + 1;
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withLimit(limitRows);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withLimit(limitRows);
 
-		finder.returnQueryRecords(records);
-		List<sObject> actual = finder.find();
+        finder.returnQueryRecords(records);
+        List<sObject> actual = finder.find();
 
-		System.assertEquals(records.size(), actual.size());
-	}
+        System.assertEquals(records.size(), actual.size());
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when query having empty
-	* WHERE and ORDER BY clauses returns list of records.
+    * WHERE and ORDER BY clauses returns list of records.
     */
-	@isTest static private void findSucceedsWhenCriteriaAndOrderByClausesAreEmpty() {
-		List<sObject> records = getTestContacts();
+    @isTest static private void findSucceedsWhenCriteriaAndOrderByClausesAreEmpty() {
+        List<sObject> records = getTestContacts();
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS);
 
-		finder.returnQueryRecords(records);
-		List<sObject> actual = finder.find();
+        finder.returnQueryRecords(records);
+        List<sObject> actual = finder.find();
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE clause is empty');
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE clause is empty');
 
-		System.assertEquals(records.size(), actual.size());
-		for (Integer i = 0; i < records.size(); i++) {
-			System.assertEquals((String) records[i].get('LastName'), (String) actual[i].get('LastName'));
-			System.assertEquals((String) records[i].get('FirstName'), (String) actual[i].get('FirstName'));
-			System.assertEquals((String) records[i].get('Title'), (String) actual[i].get('Title'));
-		}
-	}
+        System.assertEquals(records.size(), actual.size());
+        for (Integer i = 0; i < records.size(); i++) {
+            System.assertEquals((String) records[i].get('LastName'), (String) actual[i].get('LastName'));
+            System.assertEquals((String) records[i].get('FirstName'), (String) actual[i].get('FirstName'));
+            System.assertEquals((String) records[i].get('Title'), (String) actual[i].get('Title'));
+        }
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when query applies post sorting on returned records.
     */
-	@isTest static private void findQueryIntegrationTestWithPostSorting() {
-		List<sObject> records = getTestContacts();
-		insert records;
+    @isTest static private void findQueryIntegrationTestWithPostSorting() {
+        List<sObject> records = getTestContacts();
+        insert records;
 
-		UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
-		orderByField.isSortable = false;
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
 
-		UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
-			.withOrderBy(orderByField)
-			.withLimit(100);
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
+            .withOrderBy(orderByField)
+            .withLimit(100);
 
-		List<sObject> actual = finder.find();
+        List<sObject> actual = finder.find();
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
-		System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
 
         List<sObject> expectedRecords = new List<sObject>{
             records[1], records[5], records[4]
         };
-		System.assertEquals(expectedRecords.size(), actual.size());
+        System.assertEquals(expectedRecords.size(), actual.size());
 
-		for (Integer i = 0; i < actual.size(); i++) {
-			System.assertEquals('Sales', (String) actual[i].get('Department'));
-			System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
-		}
-	}
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals('Sales', (String) actual[i].get('Department'));
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when query does not post sort returned records.
     */
-	@isTest static private void findQueryIntegrationTest() {
-		List<sObject> records = getTestContacts();
-		insert records;
+    @isTest static private void findQueryIntegrationTest() {
+        List<sObject> records = getTestContacts();
+        insert records;
 
-		UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
-			.withOrderBy(Contact.Department)
-			.withLimit(100);
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Department).equals('Sales'))
+            .withOrderBy(Contact.Department)
+            .withLimit(100);
 
-		List<sObject> actual = finder.find();
+        List<sObject> actual = finder.find();
 
-		System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
-		System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
+        System.assert(finder.isSoql(), 'SOQL should be executed since WHERE does not contain an encrypted field');
+        System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
 
         List<sObject> expectedRecords = new List<sObject>{
             records[1], records[5], records[4]
         };
-		System.assertEquals(expectedRecords.size(), actual.size());
+        System.assertEquals(expectedRecords.size(), actual.size());
 
-		for (Integer i = 0; i < actual.size(); i++) {
-			System.assertEquals('Sales', (String) actual[i].get('Department'));
-		}
-	}
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals('Sales', (String) actual[i].get('Department'));
+        }
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when search returns no record.
     */
-	@isTest static private void findSucceedsWhenSearchReturnsEmptyList() {
-		UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.Department).equals('Sales');
-		whereExp.isFilterable = false;
+    @isTest static private void findSucceedsWhenSearchReturnsEmptyList() {
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.Department).equals('Sales');
+        whereExp.isFilterable = false;
 
-		UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
-		orderByField.isSortable = false;
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(whereExp)
-			.withOrderBy(orderByField)
-			.withLimit(100);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp)
+            .withOrderBy(orderByField)
+            .withLimit(100);
 
-		List<sObject> actual = finder.find();
-		System.assertEquals(0, actual.size());
+        List<sObject> actual = finder.find();
+        System.assertEquals(0, actual.size());
 
-		System.assert(!finder.isSoql(), 'SOSL should be executed');
-		System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
-		System.assertEquals('FIND \'Sales*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department)', finder.sosl);
-	}	
+        System.assert(!finder.isSoql(), 'SOSL should be executed');
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+        System.assertEquals('FIND \'Sales*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department)', finder.sosl);
+    }    
 
     /*******************************************************************************************************
     * @description Verifies find() when search returns records and then applies post filtering and sorting.
     */
-	@isTest static private void findSucceedsWhenSearchReturnsRecordsForPostFilteringAndSorting() {
-		UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.Department).equals('Sales');
-		whereExp.isFilterable = false;
+    @isTest static private void findSucceedsWhenSearchReturnsRecordsForPostFilteringAndSorting() {
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.Department).equals('Sales');
+        whereExp.isFilterable = false;
 
-		UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
-		orderByField.isSortable = false;
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
 
-		List<sObject> records = getTestContacts();
+        List<sObject> records = getTestContacts();
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(whereExp)
-			.withOrderBy(orderByField)
-			.withLimit(100);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp)
+            .withOrderBy(orderByField)
+            .withLimit(100);
 
-		finder.returnSearchRecords(records);
-		List<sObject> actual = finder.find();
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.find();
 
-		System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
-		System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
 
         List<sObject> expectedRecords = new List<sObject>{
             records[1], records[5], records[4]
         };
-		System.assertEquals(expectedRecords.size(), actual.size());
+        System.assertEquals(expectedRecords.size(), actual.size());
 
-		for (Integer i = 0; i < actual.size(); i++) {
-			System.assertEquals('Sales', (String) actual[i].get('Department'));
-			System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
-		}
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals('Sales', (String) actual[i].get('Department'));
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
 
-		System.assertEquals('FIND \'Sales*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department)', finder.sosl);
-	}
+        System.assertEquals('FIND \'Sales*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department)', finder.sosl);
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when search returns sorted records and then applies post filtering.
     */
-	@isTest static private void findSucceedsWhenSearchReturnsRecordsForPostFiltering() {
-		UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName).equals('Clark');
-		whereExp.isFilterable = false;
+    @isTest static private void findSucceedsWhenSearchReturnsRecordsForPostFiltering() {
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName).equals('Clark');
+        whereExp.isFilterable = false;
 
-		List<sObject> recordsSortedByDept = new List<sObject>{
+        List<sObject> recordsSortedByDept = new List<sObject>{
             new Contact(LastName = 'Clark', FirstName = 'Abby', Title = 'Executive'),
             new Contact(LastName = 'Smith', FirstName = 'Jane', Title = 'Business Manager', Department = 'Business'),
             new Contact(LastName = 'Smith', FirstName = 'John', Title = 'Administrator', Department = 'IT'),
@@ -377,55 +377,55 @@ private class UTIL_Finder_TEST {
             new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Administrator', Department = 'Support')
         };
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(whereExp)
-			.withOrderBy(new UTIL_OrderBy.FieldExpression(Contact.Department))
-			.withLimit(100);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp)
+            .withOrderBy(new UTIL_OrderBy.FieldExpression(Contact.Department))
+            .withLimit(100);
 
-		finder.returnSearchRecords(recordsSortedByDept);
-		List<sObject> actual = finder.find();
+        finder.returnSearchRecords(recordsSortedByDept);
+        List<sObject> actual = finder.find();
 
-		System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
-		System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+        System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
 
         List<sObject> expectedRecords = new List<sObject>{
             recordsSortedByDept[0], recordsSortedByDept[3], recordsSortedByDept[6]
         };
-		System.assertEquals(expectedRecords.size(), actual.size());
+        System.assertEquals(expectedRecords.size(), actual.size());
 
-		for (Integer i = 0; i < actual.size(); i++) {
-			System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
-		}
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
 
-		System.assertEquals('FIND \'Clark*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department ORDER BY Department)', finder.sosl);
-	}
+        System.assertEquals('FIND \'Clark*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department ORDER BY Department)', finder.sosl);
+    }
 
     /*******************************************************************************************************
     * @description Verifies find() when search returns LIMIT number of records
     */
-	@isTest static private void findSucceedsWhenSearchReturnsLimitNumberOfRecords() {
-		UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName).equals('Clark');
-		whereExp.isFilterable = false;
+    @isTest static private void findSucceedsWhenSearchReturnsLimitNumberOfRecords() {
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName).equals('Clark');
+        whereExp.isFilterable = false;
 
-		List<sObject> recordsSortedByDept = getTestContacts();
+        List<sObject> recordsSortedByDept = getTestContacts();
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
-			.withSelectFields(SOBJECT_FIELDS)
-			.withWhere(whereExp)
-			.withOrderBy(new UTIL_OrderBy.FieldExpression(Contact.Department))
-			.withLimit(1);
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp)
+            .withOrderBy(new UTIL_OrderBy.FieldExpression(Contact.Department))
+            .withLimit(1);
 
-		finder.returnSearchRecords(recordsSortedByDept);
-		List<sObject> actual = finder.find();
+        finder.returnSearchRecords(recordsSortedByDept);
+        List<sObject> actual = finder.find();
 
-		System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
 
-		System.assertEquals(1, actual.size());
-		System.assertEquals('Clark', (String) actual[0].get('LastName'));
-	}
+        System.assertEquals(1, actual.size());
+        System.assertEquals('Clark', (String) actual[0].get('LastName'));
+    }
 
-	
+    
 
     // Helpers
     ////////////
@@ -458,8 +458,8 @@ private class UTIL_Finder_TEST {
     * @description Returns Contact records that do not exist in DB
     * @return List<sObject>
     */
-	private static List<sObject> getTestContacts() {
-		return new List<sObject>{
+    private static List<sObject> getTestContacts() {
+        return new List<sObject>{
             new Contact(LastName = 'Smith', FirstName = 'John', Title = 'Administrator', Department = 'IT'),
             new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Business Manager', Department = 'Sales'),
             new Contact(LastName = 'Smith', FirstName = 'Jane', Title = 'Business Manager', Department = 'Business'),
@@ -468,40 +468,40 @@ private class UTIL_Finder_TEST {
             new Contact(LastName = 'Jackson', FirstName = 'Ben', Department = 'Sales'),
             new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Administrator', Department = 'Support')
         };
-	}
+    }
 
     /*********************************************************************************************************
     * @description Mock Finder class used to mock query and search returned records
     */
-	public class MockFinder extends UTIL_Finder {
-		public String soql;
-		public String sosl;
-		private List<sObject> queryRecords = new List<sObject>();
-		private List<sObject> searchRecords = new List<sObject>();
+    public class MockFinder extends UTIL_Finder {
+        public String soql;
+        public String sosl;
+        private List<sObject> queryRecords = new List<sObject>();
+        private List<sObject> searchRecords = new List<sObject>();
 
-		public MockFinder(sObjectType sObjType) {
-			super(sObjType);
-		}
+        public MockFinder(sObjectType sObjType) {
+            super(sObjType);
+        }
 
-		public MockFinder returnQueryRecords(List<sObject> records) {
-			this.queryRecords = records;
-			return this;
-		}
+        public MockFinder returnQueryRecords(List<sObject> records) {
+            this.queryRecords = records;
+            return this;
+        }
 
-		public MockFinder returnSearchRecords(List<sObject> records) {
-			this.searchRecords = records;
-			return this;
-		}
+        public MockFinder returnSearchRecords(List<sObject> records) {
+            this.searchRecords = records;
+            return this;
+        }
 
-		public override List<sObject> queryRecords(String soql) {
-			this.soql = soql;
-			return queryRecords;
-		}
+        public override List<sObject> queryRecords(String soql) {
+            this.soql = soql;
+            return queryRecords;
+        }
 
-		public override List<sObject> searchRecords(String sosl) {
-			this.sosl = sosl;
-			return searchRecords;
-		}
-	}
+        public override List<sObject> searchRecords(String sosl) {
+            this.sosl = sosl;
+            return searchRecords;
+        }
+    }
     
 }
