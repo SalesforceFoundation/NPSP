@@ -151,31 +151,36 @@
 
     save: function (component, event, helper) {
 
-        console.log('SAVE IN JS CONTROLLER');
-        var template = component.get('v.template');
-        var recordId = component.get("v.recordId");
+        helper.validateList(component, event);
 
-        if (recordId) {
+        if (!component.get('v.validationErrorFound')) {
+            
+            console.log('SAVE IN JS CONTROLLER');
+            var template = component.get('v.template');
+            var recordId = component.get("v.recordId");
 
-            template.Id = recordId;
-            //component.set("v.template.Name", component.get("v.templateNameAttribute"));
-            //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
+            if (recordId) {
+
+                template.Id = recordId;
+                //component.set("v.template.Name", component.get("v.templateNameAttribute"));
+                //component.set("v.template.Description__c", component.get("v.templateDescriptionAttribute"));
+            }
+
+            template.Name = component.get("v.templateNameAttribute");
+            template.Description__c = component.get("v.templateDescriptionAttribute");
+
+            var batchTemplateFields = component.get('v.templateFields');
+            var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
+
+            helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
+
+            var url = window.location.href;
+            var value = url.substr(0,url.lastIndexOf('/') + 1);
+
+            window.history.back();
+
+            return false;
         }
-
-        template.Name = component.get("v.templateNameAttribute");
-        template.Description__c = component.get("v.templateDescriptionAttribute");
-
-        var batchTemplateFields = component.get('v.templateFields');
-        var batchTemplateFieldsToDelete = component.get('v.templateFieldsToDelete');
-
-        helper.saveTemplate(component, template, batchTemplateFields, batchTemplateFieldsToDelete);
-
-        var url = window.location.href;
-        var value = url.substr(0,url.lastIndexOf('/') + 1);
-
-        window.history.back();
-
-        return false;
     },
 
     cancel : function (component, event, helper) {
@@ -350,7 +355,7 @@
                 }
             }
         });
-    },
+    }
 
     //Removing required template fields setting
     // display: function (component, event, helper) {
