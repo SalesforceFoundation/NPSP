@@ -411,6 +411,13 @@
         } else {
             cmp.set("v.filterRuleFieldType", 'text');
         }
+
+        // Allow for null values ONLY on Equals and Not Equals operators
+        if (operator === 'Equals' || operator === 'Not_Equals') {
+            cmp.set("v.isValueRequired", false);
+        } else {
+            cmp.set("v.isValueRequired", true);
+        }
     },
 
     /**
@@ -424,12 +431,13 @@
     },
 
     /**
-     * @description: resets the list of filter rules based on the
+     * @description: resets the list of filter rule fields based on the selected object
      * @param object - selected object API name
      */
     resetFilterRuleFields: function(cmp, object) {
         var objectDetails = cmp.get("v.objectDetails");
-        cmp.set("v.filteredFields", objectDetails[object]);
+        var sortedFields = this.sortFields(objectDetails[object]);
+        cmp.set("v.filteredFields", sortedFields);
     },
 
     /**
@@ -535,6 +543,23 @@
             'message': message
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description Sort provided fields by the field labels
+     * @param fields - list of fields to sort
+     */
+    sortFields: function(fields){
+        fields.sort(function (a, b) {
+            if (a.label < b.label) {
+                return -1;
+            }
+            if (a.label > b.label) {
+                return 1;
+            }
+            return 0;
+        });
+        return fields;
     },
 
     /**
