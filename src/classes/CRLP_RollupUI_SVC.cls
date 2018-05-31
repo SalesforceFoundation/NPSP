@@ -887,7 +887,8 @@ public with sharing class CRLP_RollupUI_SVC {
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
             if ((dfr.isUpdateable() && dfr.isCustom() && isValidType && !isRolledUp && !dfr.name.toLowerCase().contains('__system')
-                    && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s'))
+                    && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s')
+                    && !(objectName == 'npe03__Recurring_Donation__c' && dfr.name.contains('npe03__')))
                     || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
