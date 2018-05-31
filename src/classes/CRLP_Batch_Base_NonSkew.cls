@@ -48,9 +48,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     protected List<String> fieldsToCheckForNonZero {
         get {
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
                     ) {
                 return new List<String>{
                         'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
@@ -206,10 +204,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                     query += ' WHERE ' + String.join(whereClauses, ' AND ');
                 }
 
-                // Note that the ORDER BY here doesn't gaurantee that the records will actually be in this order
+                // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
                 query += ' ORDER BY ' + this.keyField;
 
-                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    query += ', Opportunity__r.CreatedDate ASC ';
+                } else {
                     query += ', Opportunity.CreatedDate ASC ';
                 }
 

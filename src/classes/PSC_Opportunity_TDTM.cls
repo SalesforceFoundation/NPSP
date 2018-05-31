@@ -49,8 +49,9 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
 
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && userInfo.isMultiCurrencyOrganization()) {
             DMLWrapper dmlWrapper = new DmlWrapper();
-            
-            dmlWrapper.objectsToUpdate.addAll((list<sObject>)updatePartialSoftCreditCurrencyFromParent(listNew, listOld));
+
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Partial_Soft_Credit__c.SObjectType));
+            dmlWrapper.objectsToUpdate.addAll((list<sObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Account_Soft_Credit__c.SObjectType));
 
             //set flag to allow changing PSC currency
             PSC_PartialSoftCredit_TDTM.blockCurrencyChange = false;
@@ -65,8 +66,8 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     * @param listOld The list of opportunities from trigger old. 
     * @return list<Partial_Soft_Credit__c> Partial soft credits with modified currency that need updating via DML.
     ********************************************************************************************************/
-    public static list<Partial_Soft_Credit__c> updatePartialSoftCreditCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist) {
-        list<Partial_Soft_Credit__c> results = new list<Partial_Soft_Credit__c>();
+    public static list<sObject> updateSoftCreditCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist, SObjectType objType) {
+        list<sObject> results = new list<sObject>();
         //map holds object id to currency iso code
         map<id,string> mapOppIdToISO = new map<id,string>();
 
@@ -80,12 +81,22 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
         //can't put mapOppIdToISO.keySet() in dynamic soql query, so creating new set to hold the IDs
         set<id> oppIds = mapOppIdToISO.keySet();
 
-        //query all PSCs associated with these opps, update their ISO code
-        for (Partial_Soft_Credit__c psc : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
-            string oppCurrency = mapOppIdToISO.get(psc.Opportunity__c);
+        if (objType == Partial_Soft_Credit__c.SObjectType) {
+            //query all PSCs associated with these opps, update their ISO code
+            for (Partial_Soft_Credit__c psc : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
+                string oppCurrency = mapOppIdToISO.get(psc.Opportunity__c);
 
-            psc.put('CurrencyIsoCode', oppCurrency);
-            results.add(psc);
+                psc.put('CurrencyIsoCode', oppCurrency);
+                results.add(psc);
+            }
+        } else if (objType == Account_Soft_Credit__c.SObjectType) {
+            //query all AccSCs associated with these opps, update their ISO code
+            for (Partial_Soft_Credit__c accountSC : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Account_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
+                string oppCurrency = mapOppIdToISO.get(accountSC.Opportunity__c);
+
+                accountSC.put('CurrencyIsoCode', oppCurrency);
+                results.add(accountSC);
+            }
         }
 
         return results;
