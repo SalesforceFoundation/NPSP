@@ -82,6 +82,7 @@
                 afterInit: afterInitHandler,
                 beforeRemoveRow: beforeRemoveRowHandler,
                 afterRemoveRow: afterRemoveRowHandler,
+                beforeChange: beforeChangeHandler,
                 afterChange: afterChangeHandler,
                 afterSelection: afterSelectionHandler,
                 afterSelectionEnd: afterSelectionEndHandler,
@@ -254,6 +255,10 @@
             updateSummaryData();
         }
 
+        function beforeChangeHandler(changes, source) {
+
+        }
+
         function afterChangeHandler(changes, source) {
 
             // console.warn('HOT - afterChangeHandler', source);
@@ -276,12 +281,27 @@
                     }
                     else {
 
-                        var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
+                        var newCell = hot.getCellMeta(changes[i][0], hot.propToCol(changes[i][1]));
+                        var newCellId = hot.getDataAtCell(changes[i][0], hot.propToCol('Id'));
 
-                        if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
+                        if (newCell.hasError == true && (newCellId.toString().length < 18) && (!newValue || newValue == null || newValue == '')) {
+
+                            for (var index = 0; index < $scope.rowErrors[newCellId].length; index ++) {
+
+                                var element = $scope.rowErrors[newCellId][index];
+
+                                if (element.field === changes[i][1]) {
+                                    $scope.rowErrors[newCellId].splice(index, 1);
+                                }
+                            }
+
+                            newCell.valid = true;
+                            newCell.hasError = false;
+                        }
+                        else if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
 
                             var col = this.propToCol(changes[i][1])
-                            var cellType = this.getDataType(changes[i][0], col);
+                            var cellType = this.getDataType(changes[i][0], hot.propToCol('Id'));
 
 
                             var cellRecord = {
@@ -321,10 +341,6 @@
                                         $scope.rowErrors[cellRecord.recordId].push({field: cellRecord.field, messages: 'Illegal assignment from String to Date'});
                                     }
                                 }
-
-                                $timeout(function() {
-                                    hot.render();
-                                }, 500);
                             }
 
                         }
@@ -333,7 +349,6 @@
                         }
                     }
                 }
-
                 if (cellRecords.length > 0) {
 
                     var requestData = {
@@ -342,6 +357,13 @@
                     };
 
                     BGE_HandsOnGridController.dmlCellsRowGrid(requestData, onDmlGridHandler);
+                }
+                else {
+
+                    $timeout(function() {
+                        hot.render();
+                    }, 500);
+
                 }
 
                 function onDmlGridHandler(result, event) {
