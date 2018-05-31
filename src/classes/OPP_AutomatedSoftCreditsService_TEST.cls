@@ -44,7 +44,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static final String RELATIONSHIP_STATUS_CURRENT = 'Current';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR = 'Solicitor';
-    private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
+    //private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_MATCHING_GIFT= 'Matching Gift';
 
 
@@ -131,7 +131,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
                                        npe5__Contact__c = testContacts[3].Id,
                                        npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
                                        npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
-                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE);
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT);
 
         npe5__Affiliation__c testCon6AccountToTestCon2
             = new npe5__Affiliation__c(npe5__Organization__c = testContacts[6].AccountId,
@@ -483,7 +483,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
 
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = OPP_AutomatedSoftCreditsService.retrieveRelationships(new Set<Id>{ testCon.Id });
         npe4__Relationship__c currentRelationship = relationshipRecords.get(testCon.Id)[0];
-        currentRelationship.Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE;
+        currentRelationship.Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
         update currentRelationship;
 
         isDuplicate = OPP_AutomatedSoftCreditsService.isDuplicateOCR(retrievedOCRs,
