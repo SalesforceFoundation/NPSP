@@ -393,7 +393,13 @@
             var field = cmp.get("v.activeFilterRule.fieldName");
             //record type is a special case where we want to exactly match options and provide picklists
             if (field !== 'RecordTypeId') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                //check if text field is offered but a user can enter a list of semi-colon separated values
+                if (operator === 'In_List' || operator === 'Not_In_List'
+                    || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                    cmp.set("v.filterRuleFieldType", 'text-picklist');
+                } else {
+                    cmp.set("v.filterRuleFieldType", 'text');
+                }
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.activeFilterRule.value", value);
@@ -409,7 +415,13 @@
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
         } else {
-            cmp.set("v.filterRuleFieldType", 'text');
+            //same check for semi-colon separated values
+            if (operator === 'In_List' || operator === 'Not_In_List'
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                cmp.set("v.filterRuleFieldType", 'text-picklist');
+            } else {
+                cmp.set("v.filterRuleFieldType", 'text');
+            }
         }
 
         // Allow for null values ONLY on Equals and Not Equals operators
@@ -421,7 +433,7 @@
     },
 
     /**
-     * @description: opens a modal popup so user can add or edit a filter rule
+     * @description: resets active filter rule values
      */
     resetActiveFilterRule: function(cmp) {
         var defaultFilterRule = {objectName: '', fieldName: '', operationName: '', value: ''};
@@ -645,16 +657,14 @@
                     && filterRuleList[i].fieldName === filterRule.fieldName
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                    cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleDuplicate"));
                     return false;
                 }
             }
         }
 
-        if (canSave) {
-            cmp.set("v.filterRuleError", "");
-        } else {
-            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        if (!canSave) {
+            cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleFieldMissing"));
         }
 
         return canSave;

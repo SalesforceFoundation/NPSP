@@ -99,10 +99,9 @@
             cmp.set("v.mode", 'view');
         } else {
             helper.resetActiveFilterRule(cmp);
-            cmp.set("v.filterRuleMode", "");
-            cmp.set("v.filterRuleError", "");
         }
         helper.toggleFilterRuleModal(cmp);
+        cmp.set("v.filterRuleMode", "");
     },
 
     /**
@@ -119,7 +118,7 @@
         var cleanRow = helper.restructureResponse(row);
         cmp.set("v.activeFilterRule", cleanRow);
 
-        if(action.name !== 'delete'){
+        if (action.name !== 'delete') {
             //handle modal popup
             cmp.set("v.filterRuleMode", 'edit');
             helper.toggleFilterRuleModal(cmp);
@@ -222,7 +221,6 @@
      * Only flags the row record for saving
      */
     onQueueFilterRuleSave: function(cmp, event, helper){
-        //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
         var filterRuleList = cmp.get("v.filterRuleList");
         var mode = cmp.get("v.filterRuleMode");
@@ -254,8 +252,10 @@
                 }
                 cmp.set("v.filterRuleList", filterRuleList);
 
+                //only closes if there are no errors
                 helper.toggleFilterRuleModal(cmp);
                 helper.resetActiveFilterRule(cmp);
+                cmp.set("v.filterRuleMode", "");
             }
         } else {
             if (filterRule.recordId) {
@@ -267,6 +267,7 @@
             cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);
             helper.resetActiveFilterRule(cmp);
+            cmp.set("v.filterRuleMode", "");
         }
     },
 
