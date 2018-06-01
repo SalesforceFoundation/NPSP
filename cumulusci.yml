@@ -168,135 +168,47 @@ tasks:
                 - Campaign
 
 flows:
-    browsertests:
-        description: Runs the browser tests locally against a managed package in Firefox
-        tasks:
-            1:
-                task: browsertests
-
-    ci_browsertests:
-        description: Runs the browser tests on Saucelabs in Chrome
-        tasks:
-            1:
-                task: browsertests
-                options:
-                    use_saucelabs: True
-
-    config_npsp_settings:
-        description:  NPSP settings object must be initialized for tests
-
-    dev_org:
-        tasks:
-            8:
+    config_dev:
+        steps:
+            3:
                 task: deploy_dev_config_delete
-            9:
+            4:
                 task: deploy_dev_config
 
-    qa_org:
-        description: Deploys the unmanaged package metadata with additional fields for qa and all dependencies to the target org
-        tasks:
-            0.5:
-                task: unschedule_apex
-            1:
-                task: create_package
+    config_qa:
+        steps:
             2:
-                task: update_dependencies
+                task: None
             3:
-                task: deploy_pre
-            4:
-                task: deploy
-            5:
-                task: uninstall_packaged_incremental
-            6:
-                task: deploy_post
-            7:
                 task: deploy_dev_config_delete
-            8:
+            4:
                 task: deploy_dev_config
-            9:
-                task: deploy_qa_config
-            10:
-                task: update_admin_profile
-            11:
-                task: test_data_relationships
-
-    qa_org_beta:
-        description: Installs the latest beta version with additional fields for qa and all dependencies.  Does not attempt to uninstall a previous beta.
-        tasks:
-            1:
-                task: update_dependencies
-            2:
-                task: deploy_pre
-            3:
-                task: install_managed_beta
-            4:
-                task: deploy_post_managed
             5:
-                task: deploy_dev_config_delete
-            6:
-                task: deploy_dev_config_managed
-            7:
                 task: deploy_qa_config
-            8:
-                task: update_admin_profile
-            9:
-                task: test_data_relationships
-
-    qa_org_prod:
-        description: Installs the latest production version with additional fields for qa and all dependencies.
-        tasks:
-            1:
-                task: update_dependencies
-            2:
-                task: deploy_pre
-            3:
-                task: install_managed
-            4:
-                task: deploy_post_managed
-            5:
-                task: deploy_dev_config_delete
             6:
-                task: deploy_dev_config_managed
-            7:
-                task: deploy_qa_config
-            8:
                 task: update_admin_profile
-            9:
+            7:
                 task: test_data_relationships
 
     release_beta:
-        tasks:
+        steps:
             5:
                 task: mrbelvedere_publish
                 options:
                     tag: ^^github_release.tag_name
 
-    install_beta:
-        tasks:
-            6:
+    config_managed:
+        steps:
+            3:
                 task: deploy_dev_config_delete
-            7:
+            4:
                 task: deploy_dev_config_managed
-
-    install_prod:
-        tasks:
-            6:
-                task: deploy_dev_config_delete
-            7:
-                task: deploy_dev_config_managed
-
-    update_prod:
-        description: 'Updates to latest managed release version of every package'
-        tasks:
-            1: 
-                task: update_dependencies
-            2:
-                task: install_managed
-
+            5:
+                task: test_data_relationships
 
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete
             2:
@@ -304,7 +216,7 @@ flows:
 
     test_data_dev_org_managed:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete_managed
             2:
@@ -314,7 +226,7 @@ flows:
 
     test_data_1k:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 1,024 Contacts into the target org.'
-        tasks:
+        steps:
             1:
                 task: test_data_delete
             2:
@@ -322,7 +234,7 @@ flows:
 
     ldv_tests:
         description: 'Deploys and runs LDV tests'
-        tasks:
+        steps:
             1:
                 task: download_ldv_tests
             2:
