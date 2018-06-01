@@ -543,7 +543,6 @@ public class UTIL_Where {
             }
 
             values = new Set<String>();
-            System.debug('value: ' + value);
             for (String val : (Set<String>) value) {
                 if (String.isNotBlank(val)) {
                     values.add(val.toLowerCase());
@@ -551,7 +550,6 @@ public class UTIL_Where {
             }
             operant = Operator.IN_SET;
             this.value = value;
-            System.debug('values: ' + values);
             return this;
         }
 

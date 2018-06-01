@@ -61,6 +61,8 @@ public with sharing class BDI_Donations_TEST {
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         insert listConT;
 
+        Test.setFixedSearchResults(new List<Id>{ listConT[0].Id, listConT[1].Id });
+
         listOppT = UTIL_UnitTestData_TEST.OppsForContactList(listConT, null, 
             UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
         insert listOppT;
@@ -1711,6 +1713,7 @@ public with sharing class BDI_Donations_TEST {
         // create opps to match against
         Contact con = new Contact(firstname='c0', lastname='c0', email='c0@c0.com');
         insert con;
+        Test.setFixedSearchResults(new List<Id>{ con.Id });
         list<Opportunity> listOpp = new list<Opportunity>();
         
         // Opps 0-5 will get their default single Payment record
