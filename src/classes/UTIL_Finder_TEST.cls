@@ -435,9 +435,9 @@ private class UTIL_Finder_TEST {
         UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
         orderByField.isSortable = false;
 
-		String searchText = 'foo';
+        String searchText = 'foo';
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
             .withSelectFields(new List<String>(SELECT_FIELDS))
             .withSearchQuery(searchText)
             .withWildcard()
@@ -467,9 +467,9 @@ private class UTIL_Finder_TEST {
     @isTest static private void executeSearchDoesNotApplyPostSortingsWhenOrderByFieldIsSortable() {
         List<sObject> records = getTestContacts();
 
-		String searchText = 'O\'Foo';
+        String searchText = 'O\'Foo';
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
             .withSelectFields(new List<String>(SELECT_FIELDS))
             .withSearchQuery(searchText)
             .withWildcard()
@@ -491,10 +491,10 @@ private class UTIL_Finder_TEST {
     @isTest static private void executeSearchReturnsLimitNumberOfRecords() {
         List<sObject> records = getTestContacts();
 
-		String searchText = 'foo';
-		Integer limitRows = records.size() - 1;
+        String searchText = 'foo';
+        Integer limitRows = records.size() - 1;
 
-		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
             .withSelectFields(new List<String>(SELECT_FIELDS))
             .withSearchQuery(searchText)
             .withWildcard()
