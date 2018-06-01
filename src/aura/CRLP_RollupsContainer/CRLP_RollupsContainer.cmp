@@ -269,7 +269,7 @@
         <!--BEGIN FILTER GROUPS GRID -->
         <aura:if isTrue="{!v.isFilterGroupsGrid}">
             <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
-                <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container">
+                <div class="slds-p-horizontal_large slds-p-bottom_large">
                     <lightning:datatable data="{!v.filterGroupList}"
                                          columns="{!v.filterGroupColumns}"
                                          class="lightningTable"
@@ -293,23 +293,19 @@
 
         <!--BEGIN ROLLUP DETAIL-->
         <aura:if isTrue="{!v.isRollupDetail}">
-            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-                <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}"
-                               activeRollupId="{#v.activeRecordId}"
-                               mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
-                               summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
-            </div>
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}"
+                           activeRollupId="{#v.activeRecordId}"
+                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
+                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </aura:if>
         <!--END ROLLUP DETAIL-->
 
         <!--BEGIN FILTER GROUP DETAIL-->
         <aura:if isTrue="{!v.isFilterGroupDetail}">
-            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-                <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}"
-                                    activeFilterGroupId="{#v.activeRecordId}"
-                                    mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
-                                    summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
-            </div>
+            <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}"
+                                activeFilterGroupId="{#v.activeRecordId}"
+                                mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
+                                summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </aura:if>
         <!--END FILTER GROUP DETAIL-->
 
