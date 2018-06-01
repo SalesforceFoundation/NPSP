@@ -2279,6 +2279,7 @@
         <members>IsEnabled_DefaultGAU</members>
         <members>IsEnabled_AddressVerification</members>
         <members>HasUserManagedTDTM</members>
+        <members>Org_IsAdminUserInLightning</members>
         <members>Org_IsEnabled_MultiCurrency</members>
         <members>Org_IsEnabled_AdvancedMultiCurrency</members>
         <members>Org_HasNonEnglishUsers</members>

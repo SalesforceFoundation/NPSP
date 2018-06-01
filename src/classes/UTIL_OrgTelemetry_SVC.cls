@@ -69,6 +69,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_MultiCurrency', UTIL_Currency.getInstance().isMultiCurrencyOrganization());
         System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', UTIL_Currency.getInstance().isAdvancedCurrencyManagementEnabled());
         System.FeatureManagement.setPackageBooleanValue('Org_HasNonEnglishUsers', getHasNonEnglishUsers());
+        System.FeatureManagement.setPackageBooleanValue('Org_IsAdminUserInLightning', USER_UserService.isUserRunningLightning());
 
         Date oldestDate = getOldestCloseDate();
         if (oldestDate != null) {
