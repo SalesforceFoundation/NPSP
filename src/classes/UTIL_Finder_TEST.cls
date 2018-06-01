@@ -109,7 +109,7 @@ private class UTIL_Finder_TEST {
         }
 
         System.assertNotEquals(null, actual, 'An exception should be thrown');
-        System.assertEquals(UTIL_Finder.SEARCH_CRITERIA_REQUIRED, actual.getMessage());
+        System.assertEquals(UTIL_Finder.SEARCH_QUERY_REQUIRED, actual.getMessage());
     }
 
     /*******************************************************************************************************
@@ -424,6 +424,88 @@ private class UTIL_Finder_TEST {
         System.assertEquals(1, actual.size());
         System.assertEquals('Clark', (String) actual[0].get('LastName'));
     }
+
+    /*******************************************************************************************************
+    * @description Verifies search returns records and applies post sort when 
+	* the ORDER BY field is not sortable (the field is encrypted).
+    */
+    @isTest static private void executeSearchAppliesPostSortingWhenOrderByFieldIsNotSortable() {
+        List<sObject> records = getTestContacts();
+
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
+
+		String searchText = 'foo';
+
+		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchText)
+            .withWildcard()
+            .withOrderBy(orderByField)
+            .withLimit(records.size());
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[1], records[3], records[6], records[5], records[4], records[0], records[2]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+        System.assertEquals('FIND \'foo*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.sosl);
+	}
+
+    /*******************************************************************************************************
+    * @description Verifies search returns records and does not apply post sort when 
+	* the ORDER BY field is sortable (the field is not encrypted).
+    */
+    @isTest static private void executeSearchDoesNotApplyPostSortingsWhenOrderByFieldIsSortable() {
+        List<sObject> records = getTestContacts();
+
+		String searchText = 'O\'Foo';
+
+		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchText)
+            .withWildcard()
+            .withOrderBy(Contact.Department)
+            .withLimit(records.size());
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        System.assertEquals(records.size(), actual.size());
+
+        System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
+        System.assertEquals('FIND \'O\\\'Foo*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department ORDER BY Department)', finder.sosl);
+	}
+
+    /*******************************************************************************************************
+    * @description Verifies search returns LIMIT number of records
+    */
+    @isTest static private void executeSearchReturnsLimitNumberOfRecords() {
+        List<sObject> records = getTestContacts();
+
+		String searchText = 'foo';
+		Integer limitRows = records.size() - 1;
+
+		MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchText)
+            .withWildcard()
+            .withOrderBy(Contact.Department)
+            .withLimit(limitRows);
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        System.assertEquals(limitRows, actual.size());
+	}
 
     
 

@@ -40,7 +40,7 @@ public virtual class UTIL_Finder {
     /** @description Message to indicate the Search is constructed incorrectly when sObjectType is not provided */
     @TestVIsible private static final String SOBJECT_TYPE_REQUIRED = 'sObjectType is required for the search';
     /** @description Message to indicate the Search is constructed incorrectly when no value is specified in FIND clause */
-    @TestVIsible private static final String SEARCH_CRITERIA_REQUIRED = 'Search criteria is required for the search';
+    @TestVIsible private static final String SEARCH_QUERY_REQUIRED = 'Search query is required for the search';
     /** @description Message to indicate the Search is constructed incorrectly when no sObject field is specified */
     @TestVIsible private static final String FIELDS_REQUIRED = 'At least one field required to be returned from the search';
 
@@ -62,6 +62,10 @@ public virtual class UTIL_Finder {
     @TestVisible private UTIL_OrderBy orderBy;
     /** @description The LIMIT segment */
     private Integer limitRows;
+    /** @description The search query applicable only when executeSearch() is to be applied */
+    private String searchQuery;
+    /** @description If true, the wildcard is added to searchQuery when executeSearch() is executed */
+    private Boolean isWildcardSearch = false;
 
     /*******************************************************************************************************************
     * @description The constructor for the provided sObjectType
@@ -80,6 +84,19 @@ public virtual class UTIL_Finder {
     public UTIL_Finder withSelectFields(Set<Schema.sObjectField> sObjFields) {
         for (Schema.sObjectField sObjField : sObjFields) {
             selectFields.add(String.valueOf(sObjField));
+        }
+
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Sets SELECT fields in the SOQL or RETURNING fields in the SOSL
+    * @param fieldNames Field names (include reference field names)
+    * @return UTIL_Finder The object instance
+    */
+    public UTIL_Finder withSelectFields(List<String> fieldNames) {
+        for (String fieldName : fieldNames) {
+            selectFields.add(fieldName);
         }
 
         return this;
@@ -154,12 +171,34 @@ public virtual class UTIL_Finder {
     }
 
     /*********************************************************************************************************
-    * @description Sets how many records should be returned
-    * @param limitRows The number of records to return
+    * @description Sets max number of records to be returned
+    * @param limitRows The max number of records to return
     * @return UTIL_Finder The object instance
     */
     public UTIL_Finder withLimit(Integer limitRows) {
         this.limitRows = limitRows;
+
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Sets search query applicable only when executeSearch() is being called
+    * @param searchQuery The search query
+    * @return UTIL_Finder The object instance
+    */
+    public UTIL_Finder withSearchQuery(String searchQuery) {
+        this.searchQuery = searchQuery;
+
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Specifies if the wildcard should be added at the end of the search query.
+    * It is applicable only when executeSearch() is being called.
+    * @return UTIL_Finder The object instance
+    */
+    public UTIL_Finder withWildcard() {
+        isWildcardSearch = true;
 
         return this;
     }
@@ -177,8 +216,7 @@ public virtual class UTIL_Finder {
     * @return List<sObject>
     */
     public List<sObject> find() {
-        selectFields.addAll(criteria.getFields());
-        selectFields.addAll(orderBy.getFields());
+        prepSelectFields();
 
         if (isSoql()) {
             String soql = queryBuilder().build();
@@ -186,28 +224,17 @@ public virtual class UTIL_Finder {
 
         } else {
             String sosl = searchBuilder().build();
-            List<sObject> records = criteria.filter(searchRecords(sosl));
-            records = orderBy.sort(records);
-            return getLimitRows(records);
+            return executeSearch(sosl);
         }
     }
 
     /*********************************************************************************************************
-    * @description Queries database based on the provided SOQL string
-    * @param soql The query string
-    * @return List<sObject>
+    * @description Adds WHERE and ORDER BY fields into SELECT fields for potential post filtering and sorting
+    * @return void
     */
-    public virtual List<sObject> queryRecords(String soql) {
-        return Database.query(soql);
-    }
-
-    /*********************************************************************************************************
-    * @description Searches database based on the provided SOSL string
-    * @param sosl The search string
-    * @return List<sObject>
-    */
-    public virtual List<sObject> searchRecords(String sosl) {
-        return Search.query(sosl)[0];
+    private void prepSelectFields() {
+        selectFields.addAll(criteria.getFields());
+        selectFields.addAll(orderBy.getFields());
     }
 
     /*********************************************************************************************************
@@ -228,14 +255,61 @@ public virtual class UTIL_Finder {
     * @return SearchBuilder
     */
     @TestVisible private SearchBuilder searchBuilder() {
-        selectFields.addAll(criteria.getFields());
-
         return new SearchBuilder()
             .withFind(criteria.build())
             .withSearchGroup(criteria.isNameField() ? 'NAME' : 'ALL')
             .withReturning(sObjType)
             .withFields(selectFields)
             .withOrderBy(orderBy.build());
+    }
+
+    /*********************************************************************************************************
+    * @description Searches for records based on the specified searchQuery
+    * @return List<sObject>
+    */
+    public List<sObject> executeSearch() {
+        String searchText = String.escapeSingleQuotes(searchQuery) + (isWildcardSearch ? '*' : '');
+
+        prepSelectFields();
+
+        String sosl = new SearchBuilder()
+            .withFind(searchText)
+            .withSearchGroup('ALL')
+            .withReturning(sObjType)
+            .withFields(selectFields)
+            .withOrderBy(orderBy.build())
+            .build();
+
+        return executeSearch(sosl);
+    }
+
+    /*********************************************************************************************************
+    * @description Executes the SOSL, filters, sorts and limit number of returned records
+    * @param sosl The SOSL
+    * @return List<sObject>
+    */
+    private List<sObject> executeSearch(String sosl) {
+        List<sObject> records = criteria.filter(searchRecords(sosl));
+        records = orderBy.sort(records);
+        return getLimitRows(records);
+    }
+
+    /*********************************************************************************************************
+    * @description Queries database based on the provided SOQL string
+    * @param soql The query string
+    * @return List<sObject>
+    */
+    public virtual List<sObject> queryRecords(String soql) {
+        return Database.query(soql);
+    }
+
+    /*********************************************************************************************************
+    * @description Searches database based on the provided SOSL string
+    * @param sosl The search string
+    * @return List<sObject>
+    */
+    public virtual List<sObject> searchRecords(String sosl) {
+        return Search.query(sosl)[0];
     }
 
     /*********************************************************************************************************
@@ -261,8 +335,8 @@ public virtual class UTIL_Finder {
 
     /** @description The search (SOSL) builder class */
     @TestVisible private class SearchBuilder {
-        /** @description The search criteria used in FIND clause */
-        private String searchCriteria;
+        /** @description The search query used in FIND clause */
+        private String searchQuery;
         /** @description The search group: search in all fields or just Name fields */
         private String searchGroup;
         /** @description The sObjectType to search on */
@@ -281,12 +355,12 @@ public virtual class UTIL_Finder {
         }
 
         /*********************************************************************************************************
-        * @description Sets the search criteria to the SOSL
-        * @param searchCriteria The search criteria to be used in the FIND clause
+        * @description Sets the search query to the SOSL
+        * @param searchQuery The search query to be used in the FIND clause
         * @return SearchBuilder The object instance
         */
-        @TestVisible private SearchBuilder withFind(String searchCriteria) {
-            this.searchCriteria = searchCriteria;
+        @TestVisible private SearchBuilder withFind(String searchQuery) {
+            this.searchQuery = searchQuery;
             return this;
         }
 
@@ -340,7 +414,7 @@ public virtual class UTIL_Finder {
             return String.format(
                 'FIND \'\'{0}\'\' IN {1} FIELDS RETURNING {2}({3}{4})',
                 new String[] { 
-                    searchCriteria,
+                    searchQuery,
                     searchGroup,
                     String.valueOf(sObjType), 
                     String.join(new List<String>(fields), ', '), 
@@ -357,8 +431,8 @@ public virtual class UTIL_Finder {
             if (sObjType == null) {
                 throw new SoslException(SOBJECT_TYPE_REQUIRED);
             }
-            if (String.isBlank(searchCriteria)) {
-                throw new SoslException(SEARCH_CRITERIA_REQUIRED);
+            if (String.isBlank(searchQuery)) {
+                throw new SoslException(SEARCH_QUERY_REQUIRED);
             }
             if (fields == null || fields.isEmpty()) {
                 throw new SoslException(FIELDS_REQUIRED);
