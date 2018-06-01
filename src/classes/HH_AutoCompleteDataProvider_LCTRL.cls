@@ -58,14 +58,14 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
 
             Set<Id> contactIds = new Set<Id>();
-            if (UTIL_Describe.isMiddleNameEnabled() && queryValue.length() > 1) {
-                // When the Middlename field is enabled, there is a known issue (as of 6/15/2017) that
-                // prevents a query on the Name field from working properly if the record has a
-                // middlename or suffix value. To work around this, use SOSL to search by name
-                // and then run a second query for the returned set of contacts.
-                // This should be considered a temporary work-around until such time as Salesforce
-                // fixes the known issue:
-                // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+            // Use SOSL search when middle name is enabled or when encryption is enabled on the contact name field
+            // See known issue / limitation for soql with middle name enabled:
+            // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
+            Boolean useSearch = 
+                (UTIL_Describe.isMiddleNameEnabled() && queryValue.length() > 1) ||
+                !Schema.sObjectType.Contact.fields.Name.isFilterable();
+
+            if (useSearch) {
                 List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
                 for (SObject s : searchResults[0]) {
                     contactIds.add((Id) s.get('Id'));

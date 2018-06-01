@@ -65,8 +65,17 @@ private class UTIL_Where_TEST {
         String fieldExp = ACCOUNT_NAME_FIELD_EXP.notEquals('foo').toString();
 
         System.assertEquals('Name != \'foo\'', fieldExp);
-    }    
-    
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies inSet() sets the operator and the value in the field expression
+    */
+    @isTest static void fieldExpInSetSetsCorrectOperatorAndValue() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', 'bar'}).toString();
+
+        System.assertEquals('Name IN (\'foo\', \'bar\')', fieldExp);
+    }
+
     /*******************************************************************************************************
     * @description Verifies single quotes are escaped in the field expression's value
     */
@@ -118,6 +127,15 @@ private class UTIL_Where_TEST {
         String fieldExp = ACCOUNT_NAME_FIELD_EXP.equals('foo').getSearchValue();
 
         System.assertEquals('foo', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() returns correct criteria for the provided set
+    */
+    @isTest static void fieldExpInSetGetSearchValueReturnsValuesConnectedWithOR() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', 'bar'}).getSearchValue();
+
+        System.assertEquals('(foo OR bar)', fieldExp);
     }
 
     /*******************************************************************************************************

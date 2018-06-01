@@ -253,6 +253,8 @@ public with sharing class BDI_DryRun_TEST {
         listAccExisting.add(new Account(Name='A4'));
         insert listAccExisting;
 
+        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id, listAccExisting[2].Id, listAccExisting[3].Id });
+
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
         listDI.add(new DataImport__c(Account1_Name__c='A3', Account2_Name__c='A4'));

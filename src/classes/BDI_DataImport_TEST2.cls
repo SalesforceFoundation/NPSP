@@ -713,7 +713,9 @@ private with sharing class BDI_DataImport_TEST2 {
         listAccExisting.add(new Account(Name='foo', website='a1.com'));
         listAccExisting.add(new Account(Name='a1', website='nota1.com'));
         insert listAccExisting;
- 
+
+        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id });
+
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Website__c='a1.com'));
         listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
@@ -768,7 +770,7 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Account> listAcc = getAccounts();
+        List<Account> listAcc = getAccounts();
         System.assertEquals(2, listAcc.size());
         
         listDI = getDIs();
@@ -793,6 +795,8 @@ private with sharing class BDI_DataImport_TEST2 {
         listAccExisting.add(new Account(Name='a1', website=null));
         listAccExisting.add(new Account(Name='a2', website='id4.com'));
         insert listAccExisting;
+
+        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id, listAccExisting[2].Id, listAccExisting[3].Id });
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id1.com'));

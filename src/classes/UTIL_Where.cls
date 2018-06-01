@@ -40,7 +40,8 @@ public class UTIL_Where {
     /** @description Filter operator options */
     public Enum Operator {
         EQUALS,
-        NOT_EQUALS
+        NOT_EQUALS,
+        IN_SET
     }
     
     /*********************************************************************************************************
@@ -51,8 +52,9 @@ public class UTIL_Where {
     private static String operatorToString(Operator operant) {
         String result = null;
 
-        if (operant == Operator.EQUALS) { result = '='; }       
-        else if (operant == Operator.NOT_EQUALS) { result = '!='; }   
+        if (operant == Operator.EQUALS) { result = '='; }
+        else if (operant == Operator.NOT_EQUALS) { result = '!='; }
+        else if (operant == Operator.IN_SET) { result = 'IN'; }
 
         return result;
     }
@@ -449,6 +451,8 @@ public class UTIL_Where {
         private Operator operant;
         /** @description Value to compare the field to */
         private Object value;
+        /** @description Values set of lower case values to filter records on */
+        Set<String> values;
 
         /** @description Specifies if the field is filterable (the field is not encrypted) */
         @TestVisible private Boolean isFilterable {
@@ -529,6 +533,29 @@ public class UTIL_Where {
         }
 
         /*********************************************************************************************************
+        * @description Sets the field expression to use IN_SET operator on the value
+        * @param value The values to filter the records on
+        * @return FieldExpression The object instance
+        */
+        public FieldExpression inSet(Object value) {
+            if (!(value instanceof Set<String> || value instanceof Set<Id>)) {
+                return this;
+            }
+
+            values = new Set<String>();
+            System.debug('value: ' + value);
+            for (String val : (Set<String>) value) {
+                if (String.isNotBlank(val)) {
+                    values.add(val.toLowerCase());
+                }
+            }
+            operant = Operator.IN_SET;
+            this.value = value;
+            System.debug('values: ' + values);
+            return this;
+        }
+
+        /*********************************************************************************************************
         * @description Indicates if the field is a relationship field (Lookup/M-D)
         * @return Boolean
         */
@@ -561,7 +588,7 @@ public class UTIL_Where {
 
             if (value == null) {
                 return skipSearchValue;
-            }         
+            }
 
             if (value instanceof String || value instanceof Id) {
                 if (String.isBlank(String.valueOf(value))) {
@@ -573,6 +600,14 @@ public class UTIL_Where {
                 }
                
                 return String.escapeSingleQuotes((String) value);
+            }
+
+            if (value instanceof Set<String> || value instanceof Set<Id>) {
+                if (values.isEmpty()) {
+                    return skipSearchValue;
+                }
+
+                return '(' + String.escapeSingleQuotes(String.join(new List<String>(values), ' OR ')) + ')';
             }
 
             throw new CriteriaException('Invalid data type for: ' + value);
@@ -599,13 +634,34 @@ public class UTIL_Where {
                 return 'null';
             }
 
+            if (value instanceof Set<String> || value instanceof Set<Id>) {
+                if (values.isEmpty()) {
+                    return 'null';
+                }
+
+                List<String> escapedValues = new List<String>();
+                for (String val : values) {
+                    escapedValues.add(escape(val));
+                }
+
+                return '(' + String.join(escapedValues, ', ') + ')';
+            }
+
             if (value instanceof String || value instanceof Id) {
                 return String.isBlank(String.valueOf(value)) 
                     ? 'null' 
-                    : '\'' + String.escapeSingleQuotes((String) value) + '\'';
+                    : escape(String.valueOf(value));
             }
 
             throw new CriteriaException('Invalid data type for: ' + value);
+        }
+
+        /*********************************************************************************************************
+        * @description Returns the escaped String value
+        * @return String
+        */
+        private String escape(String value) {
+            return '\'' + String.escapeSingleQuotes((String) value) + '\'';
         }
 
         /*********************************************************************************************************
@@ -621,7 +677,7 @@ public class UTIL_Where {
                     ? false
                     : isMatching(referenceSObject.get(String.valueOf(sObjField)));
 
-            } 
+            }
             
             return isMatching(record.get(String.valueOf(sObjField)));
         }
@@ -642,11 +698,13 @@ public class UTIL_Where {
                     ? String.isNotBlank(String.valueOf(fieldValue))
                     : !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
                 
-            } else {
+            } else if (operant == Operator.IN_SET) {
+                return values.contains(String.valueOf(fieldValue).toLowerCase());
+            }
+            else {
                 throw new CriteriaException('Invalid operator: ' + operant.name());
             }
         }
-
     }
 
 }
