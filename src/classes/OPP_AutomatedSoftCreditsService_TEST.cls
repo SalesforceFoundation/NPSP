@@ -532,7 +532,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     *   Relationship records are unique based on Contac.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testRemoveDuplicateRelationships() {
+    private static testMethod void testRemoveDuplicateAssociatedRecordsForRelationships() {
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
 
         Contact testCon0 = returnContact('Primary0');
@@ -570,7 +570,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     *   Affiliation records are unique based on Contac.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testRemoveDuplicateAffiliations() {
+    private static testMethod void testRemoveDuplicateAssociatedRecordsForAffiliations() {
         Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
 
         Contact testCon0 = returnContact('Affiliation5');

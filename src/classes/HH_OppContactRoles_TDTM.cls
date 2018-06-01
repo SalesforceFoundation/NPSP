@@ -101,8 +101,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
 
             // delete the old household soft credits.
             delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
-                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c and isPrimary = false];
-            
+                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
+
             // now continue with our processing to create the new household soft credits
             opportunities = listOppToProcess;
         }
