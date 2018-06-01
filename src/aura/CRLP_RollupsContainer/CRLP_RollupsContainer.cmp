@@ -59,7 +59,7 @@
     <aura:attribute name="lastActiveRecordId" type="Id" description="ID of the previous record to save for return."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container width."/>
     <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
-    <aura:attribute name="sortedDirection" type="String" access="private" description="Sorted direction, either asc or desc."/>
+    <aura:attribute name="sortedDirection" type="String" default="asc" access="private" description="Sorted direction, either asc or desc."/>
     <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
                     access="private" default="slds-hide"/>
     <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
