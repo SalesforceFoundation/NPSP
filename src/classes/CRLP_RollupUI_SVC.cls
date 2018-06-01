@@ -844,6 +844,7 @@ public with sharing class CRLP_RollupUI_SVC {
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
+        // TODO: consider putting this into a map instead of a set
         Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'Fiscal', 'FiscalQuarter', 'FiscalYear', 'SyncedQuoteID'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
@@ -883,12 +884,12 @@ public with sharing class CRLP_RollupUI_SVC {
             String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
             Boolean isValidType = validTypeSet.contains(fieldType);
 
-            //check that summary field isn't being used on another rollup
+            //check that target field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if ((dfr.isUpdateable() && dfr.isCustom() && isValidType && !isRolledUp && !dfr.name.toLowerCase().contains('__system')
-                    && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s')
-                    && !fieldIsBanned(objectName,dfr.name))
+            if (( isValidType
+                    && !isRolledUp
+                     && isTargetFieldAllowed(objectName,dfr))
                     || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
@@ -908,13 +909,20 @@ public with sharing class CRLP_RollupUI_SVC {
     }
 
     /*******************************************************************************************************
-    * @description Finds writable, custom, unused target fields of specific types to provide field lists for Rollup definitions.
-    *              Includes an exception for a set summary field on the rollup detail.
-    * @param objectName the name of the object to look up
-    * @param selectedField the name of a summary field already in use
-    * @return List<Map<String, String>> an object with field api names, labels and data type.
+    * @description Checks that a given field is allowed as a target field
+    * @param objectName the name of the object
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
     */
-    private static Boolean fieldIsBanned(String objectName, String fieldName) {
+    public static Boolean isTargetFieldAllowed(String objectName, Schema.DescribeFieldResult dfr) {
+
+        if(!dfr.isUpdateable()
+                || !dfr.isCustom()
+                || dfr.name.toLowerCase().contains('__system')
+                || dfr.name.contains('Latitude__s')
+                || dfr.name.contains('Longitude__s')) {
+            return false;
+        }
 
         Map<String,Set<String>> bannedFieldsByObject = new Map<String,Set<String>>();
 
@@ -935,7 +943,11 @@ public with sharing class CRLP_RollupUI_SVC {
 
         // add more objects here as needed with their banned fields
 
-        return bannedFieldsByObject.containsKey(objectName) && bannedFieldsByObject.get(objectName).contains(fieldName);
+        if (bannedFieldsByObject.containsKey(objectName) && bannedFieldsByObject.get(objectName).contains(dfr.name)) {
+            return false;
+        }
+
+        return true;
 
     }
 
