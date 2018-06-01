@@ -2518,7 +2518,7 @@
         <members>Allocation__c.Manage_Allocations</members>
         <members>Batch_Template__c.Edit_Processing_Settings</members>
         <members>Contact.Merge_Contacts</members>
-    	<members>Contact.Recalculate_Rollups</members>
+        <members>Contact.Recalculate_Rollups</members>
         <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
