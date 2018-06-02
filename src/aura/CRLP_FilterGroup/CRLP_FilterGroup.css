@@ -20,7 +20,7 @@
     height: 100%;
 }
 /*stops save button from jumping by fixing the size of the error height*/
-.THIS .slds-has-error {
+.THIS .slds-has-error + .filterGroupField {
     max-height: 60px;
 }
 .THIS .nameField {

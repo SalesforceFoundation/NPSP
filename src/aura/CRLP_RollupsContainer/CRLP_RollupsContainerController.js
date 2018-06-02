@@ -38,11 +38,12 @@
                         , {label: labels.labelRD, name: labels.objectRD}];
                     cmp.set("v.summaryObjects", summaryObjects);
 
-                    var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
-                        , {label: labels.labelContactSoftCredit, name: labels.objectPartialSoftCredit}
+                    var unsortedDetailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+                        , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
                         , {label: labels.labelPayment, name: labels.objectPayment}
                         , {label: labels.labelAccountSoftCredit, name: labels.objectAccountSoftCredit}
                         , {label: labels.labelAllocation, name: labels.objectAllocation}];
+                    var detailObjects = helper.sortData(cmp, 'label', 'asc', unsortedDetailObjects);
                     cmp.set("v.detailObjects", detailObjects);
 
                     var rollupColumns = [{
