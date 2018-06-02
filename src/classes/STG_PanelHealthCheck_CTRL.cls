@@ -111,22 +111,10 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
     * @description Used to report back the results of each Health Check test
     */
     public class DetectResult {
-        public string strName { 
-            get; 
-            set {strName = (value == null) ? '' : value.escapeEcmaScript();} 
-        }
-        public string strStatus {
-            get; 
-            set {strStatus = (value == null) ? '' : value.escapeEcmaScript();} 
-        }
-        public string strDetails {
-            get; 
-            set {strDetails = (value == null) ? '' : value.escapeEcmaScript();} 
-        }
-        public string strSolution {
-            get; 
-            set {strSolution = (value == null) ? '' : value.escapeEcmaScript();} 
-        }
+        public string strName { get; set; }
+        public string strStatus { get; set; }
+        public string strDetails { get; set; }
+        public string strSolution { get; set; }
     }
     
     /*******************************************************************************************************
@@ -332,7 +320,7 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
                     createDR(
                         System.Label.healthLabelAccountDefaultRT, 
                         statusError, 
-                        String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName()}),
+                        String.format(System.Label.healthDetailsAccountDefaultRTIssue, new List<String>{accountRecordTypeInfo.getName().escapeEcmaScript()}),
                         System.Label.healthSolutionAccountDefaultRTIssue
                     );
                     return;
@@ -546,13 +534,13 @@ public without sharing class STG_PanelHealthCheck_CTRL extends STG_Panel {
         
         if (String.isNotBlank(recordType) && String.isBlank(recordTypeName)) {
             createDR(fieldLabel, statusError, 
-                String.format(label.healthDetailsInvalidRecordtypeId, new String[]{ recordType }),        
+                String.format(label.healthDetailsInvalidRecordtypeId, new String[]{ recordType.escapeEcmaScript() }),        
                 String.format(label.healthSolutionEditSetting, new String[]{ fieldLabel, parentTab, settingsTab }));
         } else {
             if (String.isBlank(recordType)) {
                 recordTypeName = Label.healthLabelNone;
             }
-            createDR(fieldLabel, statusSuccess, null, recordTypeName);               
+            createDR(fieldLabel, statusSuccess, null, recordTypeName.escapeEcmaScript());               
         }           
     }
 
