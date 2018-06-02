@@ -4,9 +4,10 @@
 .THIS .slds-input[readonly] {
     padding-left: .5rem;
 }
-/*removes the extra required asterisk for tooltip workaround*/
-.THIS .slds-form-element__label > [title='required'] {
-    display: none; visibility: hidden;
+/*removes the extra required asterisk and any assistive-text for tooltip workaround*/
+.THIS .hasTooltip .slds-form-element__label {
+    display: none;
+    visibility: hidden;
 }
 /*elongates filter group fields*/
 .THIS .filterGroupField > .slds-form-element__control {
@@ -15,11 +16,11 @@
 .THIS .datatableContainer {
     height: 175px;
 }
-.THIS .datatableContainer .slds-scrollable_y{
+.THIS .datatableContainer .slds-scrollable_y {
     height: 100%;
 }
 /*stops save button from jumping by fixing the size of the error height*/
-.THIS .slds-has-error {
+.THIS .slds-has-error + .filterGroupField {
     max-height: 60px;
 }
 .THIS .nameField {

@@ -393,7 +393,13 @@
             var field = cmp.get("v.activeFilterRule.fieldName");
             //record type is a special case where we want to exactly match options and provide picklists
             if (field !== 'RecordTypeId') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                //check if text field is offered but a user can enter a list of semi-colon separated values
+                if (operator === 'In_List' || operator === 'Not_In_List'
+                    || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                    cmp.set("v.filterRuleFieldType", 'text-picklist');
+                } else {
+                    cmp.set("v.filterRuleFieldType", 'text');
+                }
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.activeFilterRule.value", value);
@@ -409,12 +415,25 @@
             || type === 'currency' || type === 'percent') {
             cmp.set("v.filterRuleFieldType", 'number');
         } else {
-            cmp.set("v.filterRuleFieldType", 'text');
+            //same check for semi-colon separated values
+            if (operator === 'In_List' || operator === 'Not_In_List'
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                cmp.set("v.filterRuleFieldType", 'text-picklist');
+            } else {
+                cmp.set("v.filterRuleFieldType", 'text');
+            }
+        }
+
+        // Allow for null values ONLY on Equals and Not Equals operators
+        if (operator === 'Equals' || operator === 'Not_Equals') {
+            cmp.set("v.isValueRequired", false);
+        } else {
+            cmp.set("v.isValueRequired", true);
         }
     },
 
     /**
-     * @description: opens a modal popup so user can add or edit a filter rule
+     * @description: resets active filter rule values
      */
     resetActiveFilterRule: function(cmp) {
         var defaultFilterRule = {objectName: '', fieldName: '', operationName: '', value: ''};
@@ -424,12 +443,13 @@
     },
 
     /**
-     * @description: resets the list of filter rules based on the
+     * @description: resets the list of filter rule fields based on the selected object
      * @param object - selected object API name
      */
     resetFilterRuleFields: function(cmp, object) {
         var objectDetails = cmp.get("v.objectDetails");
-        cmp.set("v.filteredFields", objectDetails[object]);
+        var sortedFields = this.sortFields(objectDetails[object]);
+        cmp.set("v.filteredFields", sortedFields);
     },
 
     /**
@@ -538,6 +558,23 @@
     },
 
     /**
+     * @description Sort provided fields by the field labels
+     * @param fields - list of fields to sort
+     */
+    sortFields: function(fields){
+        fields.sort(function (a, b) {
+            if (a.label < b.label) {
+                return -1;
+            }
+            if (a.label > b.label) {
+                return 1;
+            }
+            return 0;
+        });
+        return fields;
+    },
+
+    /**
      * @description Show a message on the screen in the parent cmp
      * @param type - error, success, info
      * @param title - message title
@@ -620,16 +657,14 @@
                     && filterRuleList[i].fieldName === filterRule.fieldName
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                    cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleDuplicate"));
                     return false;
                 }
             }
         }
 
-        if (canSave) {
-            cmp.set("v.filterRuleError", "");
-        } else {
-            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        if (!canSave) {
+            cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleFieldMissing"));
         }
 
         return canSave;
