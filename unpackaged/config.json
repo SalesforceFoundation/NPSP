@@ -4,10 +4,6 @@
       'description': 'Creates the Household Account and Organization record types and the Household Account list view on Account',
       'path': 'pre/account_record_types'
     },
-    { 'bundle': 'OpportunityContactRoles',
-      'description': 'Creates the default OCR Roles',
-      'path': 'pre/opportunity_contact_roles'
-    },
     { 'bundle': 'opportunity_record_types',
       'description': 'If no record types exist on Opportunity, creates the NPSP_Default sales process and NPSP_Default record type',
       'path': 'pre/opportunity_record_types',
