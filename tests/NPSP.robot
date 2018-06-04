@@ -16,7 +16,6 @@ API Create Contact
 Create Contact
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    Go To Setup Home
     Go To Object Home         Contact
     Click Object Button       New
     Populate Form
@@ -31,7 +30,6 @@ Create Contact
 Create Contact with Email
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    Go To Setup Home
     Go To Object Home         Contact
     Click Object Button       New
     Populate Form
@@ -48,7 +46,6 @@ Create Contact with Email
 Create Contact with Address
     ${first_name} =           Generate Random String
     ${last_name} =            Generate Random String
-    Go To Setup Home
     Go To Object Home         Contact
     Click Object Button       New
     Populate Form
@@ -96,7 +93,6 @@ New Contact for HouseHold
         
 Create Organization Foundation   
     ${account_name} =          Generate Random String
-    Go To Setup Home
     Go To Object Home          Account
     Click Object Button        New
     Select Record Type         Organization
