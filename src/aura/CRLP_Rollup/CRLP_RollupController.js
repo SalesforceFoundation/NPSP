@@ -5,7 +5,6 @@
      *   sets operations and object details
      */
     doInit: function(cmp, event, helper) {
-        console.log("In Rollup doInit");
         helper.toggleSpinner(cmp, true);
         var labels = cmp.get("v.labels");
         var detailObjects = cmp.get("v.detailObjects");
@@ -140,8 +139,6 @@
             var fieldName = message[0];
             var value = message[1];
             var label = message[2];
-            console.log("field name is " + fieldName);
-            console.log("value is " + value);
 
             if(fieldName === 'summaryObject'){
                 helper.onChangeSummaryObject(cmp, value, label);

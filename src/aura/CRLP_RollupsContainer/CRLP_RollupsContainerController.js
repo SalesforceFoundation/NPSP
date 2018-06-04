@@ -4,7 +4,6 @@
     */
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.setupRollupGrid");
-        console.log("in the init function");
 
         //setup rollup records, filter group records, and labels
         //also sets the rollups grid to display on page load
@@ -240,9 +239,6 @@
     handleMessage: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");
-
-        console.log("handleMessage: " + channel);
-        console.log(JSON.stringify(message));
 
         //ordered by frequency
         if (channel === 'cancelEvent') {
