@@ -8,7 +8,7 @@
         //setup rollup records, filter group records, and labels
         //also sets the rollups grid to display on page load
         action.setCallback(this, function(response) {
-            var state = "ERROR";
+            var state = response.getState();
             if (state === "SUCCESS") {
                 var modelString = response.getReturnValue();
                 var model = JSON.parse(modelString);
