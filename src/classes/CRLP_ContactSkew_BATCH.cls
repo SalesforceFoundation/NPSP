@@ -67,9 +67,7 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                         CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
             } else {
-                BatchException ex = new BatchException();
-                ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
-                ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+                logDuplicateBatchError(className);
             }
         }
     }

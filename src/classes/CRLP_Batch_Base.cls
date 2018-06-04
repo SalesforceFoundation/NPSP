@@ -314,4 +314,12 @@ public abstract class CRLP_Batch_Base {
 
     public class BatchException extends Exception {}
 
+    public void logDuplicateBatchError(String className) {
+
+        BatchException ex = new BatchException();
+        ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
+        ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+
+    }
+
 }
