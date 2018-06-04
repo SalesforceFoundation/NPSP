@@ -143,7 +143,7 @@
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                helper.showToast(cmp, 'error', cmp.get("v.labels.rollupLoadError"), msg);
+                helper.showToast(cmp, 'error', "Error displaying Customizable Rollups", msg);
             }
             helper.toggleSpinner(cmp, false);
         });

@@ -29,10 +29,11 @@
 
         action.setCallback(this, function (response) {
             var state = response.getState();
+            var labels = cmp.get("v.labels");
+
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
-                var labels = cmp.get("v.labels");
                 if (activeRollupId) {
                     // detail, amount, and date fields need to be held on client side
                     // with their object name to support multiple object selection
@@ -67,11 +68,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                var msg = "Unknown error";
+                var msg = labels.unknownError;
                 if (errors && errors[0] && errors[0].message) {
                     msg = errors[0].message;
                 }
-                helper.showToast(cmp, 'error', cmp.get("v.labels.rollupLoadError"), msg);
+                helper.showToast(cmp, 'error', labels.rollupDisplayError, msg);
             }
             helper.toggleSpinner(cmp, false);
         });
