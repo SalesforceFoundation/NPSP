@@ -26,6 +26,9 @@
         <fullName>Notification Contact</fullName>
     </standardValue>
     <standardValue>
+        <fullName>Solicitor</fullName>
+    </standardValue>
+    <standardValue>
         <fullName>Other</fullName>
     </standardValue>
 </StandardValueSet>
