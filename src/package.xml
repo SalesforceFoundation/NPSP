@@ -1133,6 +1133,7 @@
         <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_DisabledTitle</members>
         <members>CRLP_HardCredit</members>
+        <members>CRLP_LoadError</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>
         <members>CRLP_NoFilterGroupSelected</members>

@@ -933,6 +933,14 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_LoadError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error loading Customizable Rollup data</shortDescription>
+        <value>Error loading the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_NoAvailableDetailFieldsMessage</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1009,7 +1017,7 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error Deploying Customizable Rollup data</shortDescription>
+        <shortDescription>Error deploying Customizable Rollup data</shortDescription>
         <value>Error saving the {0}</value>
     </labels>
     <labels>
