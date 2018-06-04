@@ -311,4 +311,7 @@ public abstract class CRLP_Batch_Base {
 
         return pscDetailRecords;
     }
+
+    public class BatchException extends Exception {}
+
 }

@@ -66,7 +66,7 @@ public class CRLP_Account_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
                 CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                         CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
-                Exception ex;
+                BatchException ex = new BatchException();
                 ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
                 ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
             }

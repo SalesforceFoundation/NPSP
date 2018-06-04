@@ -729,7 +729,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Error logged when a scheduled batch is skipped b/c yesterday&apos;s still running.</shortDescription>
-        <value>Today&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</value>
+        <value>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>

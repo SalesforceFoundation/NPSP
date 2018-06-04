@@ -192,6 +192,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return Boolean
     */
     public static Boolean hasRunningJob(String className) {
+        className = (className.contains('__') ? className.split('__')[1] : className);
         Integer jobCount = [SELECT COUNT()
             FROM AsyncApexJob
             WHERE ApexClass.Name = :className

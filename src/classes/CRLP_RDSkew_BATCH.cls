@@ -66,7 +66,7 @@
                 if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
                     Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.RecurringDonations), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
                 } else {
-                    Exception ex;
+                    BatchException ex = new BatchException();
                     ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
                     ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
                 }
