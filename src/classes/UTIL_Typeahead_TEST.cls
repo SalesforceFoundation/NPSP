@@ -45,8 +45,7 @@ public with sharing class UTIL_Typeahead_TEST {
 	    insert aa;
 	    
 	      // crazy, but you have to fake this
-	      list<Id> fixedSearchResults= new list<Id>{aa[0].id, aa[1].id};
-	      Test.setFixedSearchResults(fixedSearchResults);
+	      UTIL_UnitTestData_TEST.setFixedSearchResults(aa);
 	
 	    Test.startTest();
 	    list<sObject> accts = UTIL_Typeahead.searchRecords( 'test', 'Account', null, null, null, 'Id', null );

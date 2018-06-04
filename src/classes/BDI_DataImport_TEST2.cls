@@ -194,7 +194,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c4', Lastname='C4', npe01__AlternateEmail__c='c4@C4.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id, listConExisting[2].Id, listConExisting[3].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Alternate_Email__c='c1@C1.com'));
@@ -245,7 +245,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com'));
@@ -297,7 +297,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Phone='123-456-7890'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
@@ -353,7 +353,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='c1PrimeTitle'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='c1Title'));
@@ -400,7 +400,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
@@ -447,7 +447,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
@@ -501,7 +501,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
@@ -551,7 +551,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@c2.com', Title='t2'));
         insert listConExisting;
         
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         listConExisting = getContacts();
         
@@ -593,7 +593,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID2'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID3'));
@@ -678,7 +678,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com', Title='id4'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id, listConExisting[2].Id, listConExisting[3].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c='id1'));
@@ -734,7 +734,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listAccExisting.add(new Account(Name='a1', website='nota1.com'));
         insert listAccExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Website__c='a1.com'));
@@ -816,7 +816,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listAccExisting.add(new Account(Name='a2', website='id4.com'));
         insert listAccExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id, listAccExisting[2].Id, listAccExisting[3].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id1.com'));
@@ -1399,7 +1399,7 @@ private with sharing class BDI_DataImport_TEST2 {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', AccountId=hh.Id));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         // data import records
         List<DataImport__c> listDI = new List<DataImport__c>();

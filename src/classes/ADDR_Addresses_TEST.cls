@@ -1895,7 +1895,7 @@ public with sharing class ADDR_Addresses_TEST {
         Integer contactSize = 2;
         createHHTestData(hhSize, contactSize);
 
-        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(extractIds(listAccT));
+        ADDR_Addresses_TDTM.ContactRepository contactRepo = new ADDR_Addresses_TDTM.ContactRepository(UTIL_UnitTestData_TEST.extractIds(listAccT));
 
         testAndAssertContactRepositoryGetContacts(contactRepo, listAccT, listConT);
     }
@@ -1940,7 +1940,7 @@ public with sharing class ADDR_Addresses_TEST {
             Contact[] actualContacts = contactRepo.getContacts(account.Id);
 
             System.assertEquals(expectedContacts.size(), actualContacts.size());
-            System.assert(extractIds(expectedContacts).containsAll(extractIds(actualContacts)));
+            System.assert(UTIL_UnitTestData_TEST.extractIds(expectedContacts).containsAll(UTIL_UnitTestData_TEST.extractIds(actualContacts)));
         }
     }
 

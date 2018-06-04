@@ -167,7 +167,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c4', Lastname='C4', Email='c4@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id, listConExisting[2].Id, listConExisting[3].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(
@@ -255,7 +255,7 @@ public with sharing class BDI_DryRun_TEST {
         listAccExisting.add(new Account(Name='A4'));
         insert listAccExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listAccExisting[0].Id, listAccExisting[1].Id, listAccExisting[2].Id, listAccExisting[3].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1', Account2_Name__c='A2'));
@@ -301,7 +301,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(
@@ -353,7 +353,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@foo.com', MailingCity='Seattle', MailingState='Washington', MailingCountry='United States'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(
@@ -498,7 +498,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',
@@ -560,7 +560,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         // existing opps
         List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
@@ -628,7 +628,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         // existing opps
         List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
@@ -696,7 +696,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         // existing opps
         List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
@@ -767,7 +767,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         // existing opps
         List<Opportunity> listOppExisting = UTIL_UnitTestData_TEST.OppsForContactList(listConExisting, null,
@@ -838,7 +838,7 @@ public with sharing class BDI_DryRun_TEST {
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com'));
         insert listConExisting;
 
-        Test.setFixedSearchResults(new List<Id>{ listConExisting[0].Id, listConExisting[1].Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',

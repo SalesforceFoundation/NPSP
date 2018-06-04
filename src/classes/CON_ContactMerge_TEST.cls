@@ -73,7 +73,8 @@ public class CON_ContactMerge_TEST {
         Contact con3 = UTIL_UnitTestData_TEST.getContact();
         con3.LastName = '3Contact_forTests_Merge';
         
-        insert new Contact[]{con, con2, con3};
+        List<Contact> contacts = new Contact[]{con, con2, con3};
+        insert contacts;
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));  
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
@@ -84,13 +85,8 @@ public class CON_ContactMerge_TEST {
         
         //Since we didn't index the results yet, search results should be empty and should not be displayed
         system.assert(controller.searchResults.isEmpty());
-
-        Id[] fixedSearchResults=new Id[3]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        fixedSearchResults[2]=con3.Id; 
         
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         
         //call the search method, which will return the bogus SOSL results
         controller.search();
@@ -170,17 +166,14 @@ public class CON_ContactMerge_TEST {
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
  
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge')); 
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));
         controller.searchText = 'test';
         
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         
         Test.startTest();
         //call the search method, which will return the bogus SOSL results
@@ -225,7 +218,8 @@ public class CON_ContactMerge_TEST {
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         Test.startTest();
         
@@ -239,7 +233,7 @@ public class CON_ContactMerge_TEST {
         fixedSearchResults[0]=con.Id; 
         fixedSearchResults[1]=con2.Id; 
         
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         
         //call the search method, which will return the bogus SOSL results
         
@@ -287,10 +281,7 @@ public class CON_ContactMerge_TEST {
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));     
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value      
-        Id[] fixedSearchResults=new Id[1]; 
-        fixedSearchResults[0]=con.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ con });
         //call the search method, which will return the bogus SOSL results
         controller.search();
         
@@ -328,20 +319,16 @@ public class CON_ContactMerge_TEST {
         
         Contact con4 = UTIL_UnitTestData_TEST.getContact();
         con4.LastName = '4Contact_forTests_Merge';
+
+        List<Contact> contacts = new Contact[]{con, con2, con3, con4};
         
-        insert new Contact[]{con, con2, con3, con4};
+        insert contacts;
         
         Test.setCurrentPageReference(new PageReference('Page.CON_ContactMerge'));     
         CON_ContactMerge_CTRL controller = new CON_ContactMerge_CTRL(new ApexPages.Standardsetcontroller(new list<Contact>()));     
         controller.searchText = 'test';
         
-        Id[] fixedSearchResults=new Id[4]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        fixedSearchResults[2]=con3.Id; 
-        fixedSearchResults[3]=con4.Id;
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //call the search method, which will return the bogus SOSL results
         controller.search();
         
@@ -380,10 +367,11 @@ public class CON_ContactMerge_TEST {
 
         Contact con = UTIL_UnitTestData_TEST.getContact();
         
-		Contact con2 = UTIL_UnitTestData_TEST.getContact();
-		con2.LastName = '2Contact_forTests_Merge';
-		
-        insert new Contact[]{con, con2};
+        Contact con2 = UTIL_UnitTestData_TEST.getContact();
+        con2.LastName = '2Contact_forTests_Merge';
+        
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
@@ -394,11 +382,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts); 
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -451,7 +435,8 @@ public class CON_ContactMerge_TEST {
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];     
@@ -462,11 +447,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -535,7 +516,8 @@ public class CON_ContactMerge_TEST {
         con2.LastName = '2Contact_forTests_Merge';
         con2.AccountId = acc2.Id;
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
@@ -546,11 +528,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -601,7 +579,8 @@ public class CON_ContactMerge_TEST {
         con2.LastName = '2Contact_forTests_Merge';
         con2.npe01__Private__c = true;
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
@@ -612,11 +591,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -662,7 +637,8 @@ public class CON_ContactMerge_TEST {
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
         
-        insert new Contact[]{con, con2};
+        List<Contact> contacts = new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
@@ -673,11 +649,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
@@ -833,8 +805,10 @@ public class CON_ContactMerge_TEST {
         
         Contact con2 = UTIL_UnitTestData_TEST.getContact();
         con2.LastName = '2Contact_forTests_Merge';
+
+        List<Contact> contacts = new Contact[]{con, con2};
         
-        insert new Contact[]{con, con2};
+        insert contacts;
         
         con = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con.id];
         con2 = [Select id, accountId, FirstName, LastName, MailingStreet from Contact where Id = :con2.id];
@@ -845,11 +819,7 @@ public class CON_ContactMerge_TEST {
         
         controller.searchText = 'test';
         //SOSL always returns nothing in tests, unless you use the setFixedSearchResults value
-        Id[] fixedSearchResults=new Id[2]; 
-        fixedSearchResults[0]=con.Id; 
-        fixedSearchResults[1]=con2.Id; 
-        
-        Test.setFixedSearchResults(fixedSearchResults); 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
         //search for contacts
         controller.search();
         //select the two contacts and grab them
