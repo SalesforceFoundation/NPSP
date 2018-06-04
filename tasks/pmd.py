@@ -70,7 +70,9 @@ class PMDTask(BaseTask):
 
         _, stderr = process.communicate()
         returncode = process.returncode
-        os.remove('filteredFiles.txt')
+
+        if os.path.isfile('filteredFiles.txt'):
+            os.remove('filteredFiles.txt')
 
         if returncode:
             message = 'Return code: {}\nstderr: {}'.format(returncode, stderr)
