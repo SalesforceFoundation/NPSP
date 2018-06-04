@@ -844,7 +844,6 @@ public with sharing class CRLP_RollupUI_SVC {
         List<Map<String, String>> fieldObjectList = new List<Map<String, String>>();
 
         Map<String, Schema.DescribeFieldResult> objectFields = UTIL_Describe.getAllFieldsDescribe(objectName);
-        // TODO: consider putting this into a map instead of a set
         Set<String> excludedFields = new Set<String>{'ConnectionReceivedId', 'ConnectionSentId', 'IsDeleted', 'IsSplit', 'Fiscal', 'FiscalQuarter', 'FiscalYear', 'SyncedQuoteID'};
 
         for (Schema.DescribeFieldResult dfr : objectFields.values()) {
@@ -939,7 +938,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 ,'npe03__Organization__c'
                 ,'npe03__Schedule_Type__c'
                 ,'npe03__Total__c'
-                ,'Always_Use_Last_Day_Of_Month__c'});
+                ,UTIL_Namespace.StrAllNSPrefix('Always_Use_Last_Day_Of_Month__c')});
 
         // add more objects here as needed with their banned fields
 

@@ -45,8 +45,7 @@ public class CRLP_Rollup_SEL {
     public static List<Rollup__mdt> cachedRollups {
         get {
             if (cachedRollups == null) {
-                cachedRollups = new List<Rollup__mdt>();
-                List<Rollup__mdt> stagedRollups = [
+                cachedRollups = [
                         SELECT Id, DeveloperName, MasterLabel, Active__c, Use_Fiscal_Year__c, Filter_Group__r.DeveloperName,
                                 Description__c, Filter_Group__c, Filter_Group__r.MasterLabel, Operation__c, Integer__c,
                                 Time_Bound_Operation_Type__c
@@ -63,15 +62,6 @@ public class CRLP_Rollup_SEL {
                         WHERE Is_Deleted__c = false
                         ORDER BY Summary_Object__c, MasterLabel
                 ];
-
-                // Never return Rollups with banned Target Fields
-                // You can't create them in the CRLP UI, but they may have snuck in via native CMDT UI
-                for (Rollup__mdt rollup : stagedRollups) {
-                    if (CRLP_RollupUI_SVC.isTargetFieldAllowed(rollup.Summary_Object__r.QualifiedApiName,
-                            UTIL_Describe.getFieldDescribe(rollup.Summary_Object__r.QualifiedApiName, rollup.Summary_Field__r.QualifiedApiName))) {
-                        cachedRollups.add(rollup);
-                    }
-                }
 
             }
             return cachedRollups;
