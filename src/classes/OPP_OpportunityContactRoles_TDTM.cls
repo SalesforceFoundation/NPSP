@@ -368,7 +368,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         //find changed opportunities and instantiate a map entry to hold OCRs
         for (integer i=0; i<listOpps.size(); i++) {
             if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
-                listOpps[i].AccountId != listOldOpps[i].AccountId && !oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c ||
+                ((listOpps[i].AccountId != listOldOpps[i].AccountId)
+                    && (!oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c || !oppAccountDetails.containsKey(listOldOpps[i].Id))) ||
                 needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_HONOREE_CONTACT) ||
                 needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
 
@@ -376,7 +377,9 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             }
 
             if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
-                listOpps[i].AccountId != listOldOpps[i].AccountId && !oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c) {
+                ((listOpps[i].AccountId != listOldOpps[i].AccountId)
+                    && (!oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c || !oppAccountDetails.containsKey(listOldOpps[i].Id)))) {
+
                 primaryContactAccountChangeOpptys.add(listOpps[i]);
             }
         }
@@ -527,7 +530,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
                     //our new contact already has an OCR, delete the old one
                     } else {
-                        dmlWrapper.objectsToDelete.add(ocrOldCon);
+                        delete ocrOldCon;
                     }
                 //new contact doesn't have an OCR yet, create one with the appropriate role
                 } else if (ocrNewCon == null) {
