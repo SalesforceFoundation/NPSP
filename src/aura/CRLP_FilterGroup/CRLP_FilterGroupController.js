@@ -20,6 +20,8 @@
 
         action.setCallback(this, function (response) {
             var state = response.getState();
+            var labels = cmp.get("v.labels");
+
             if (state === "SUCCESS") {
                 var data = helper.restructureResponse(response.getReturnValue());
                 var model = JSON.parse(data);
@@ -29,8 +31,6 @@
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
                 cmp.set("v.operatorMap", model.operators);
-
-                var labels = cmp.get("v.labels");
 
                 var actions = [{label: labels.edit, name: 'edit'}
                     , {label: labels.delete, name: 'delete'}
@@ -68,14 +68,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                var msg = labels.unknownError;
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
                 }
+                helper.showToast(cmp, 'error', labels.filtersDisplayError, msg);
             }
             helper.toggleSpinner(cmp, false);
         });
