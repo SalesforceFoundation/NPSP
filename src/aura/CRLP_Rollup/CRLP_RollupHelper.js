@@ -4,9 +4,7 @@
      * this is run when the page is first loaded or when a cancel event resets the page
      */
     setObjectAndFieldDependencies: function (cmp) {
-        console.log("In setObjectAndFieldDependencies");
-
-        //need to reset fields to populate the selected objects -- refactor to see if necessary
+        //TODO: need to reset fields to populate the selected objects -- refactor to see if necessary
         //fields can be lazy loaded if user is creating a new rollup
         if (cmp.get("v.mode") !== 'create') {
             this.fieldSetup(cmp);
@@ -32,8 +30,6 @@
         var tempList = [{"name": "", "label": cmp.get("v.labels.noFilterGroupSelect")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
-
-        console.log('Called reset details');
     },
 
     /**
@@ -44,9 +40,6 @@
         var mode = cmp.get("v.mode");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
-            console.log("Mode is " + mode);
-            console.log("In changeMode");
-
             //View is the only readOnly mode. Clone removes the activeRollupId for save.
             //Create hides all fields and sets isIncomplete to disable the save button.
             if (mode === "view") {
@@ -96,7 +89,6 @@
      */
     filterFieldsByType: function (cmp, typeList, allFields, summaryFieldReferenceTo) {
         //if type is null, no detail field is selected
-        console.log("filter fields by type function");
         var newFields = [];
 
         if (typeList && allFields) {
@@ -212,8 +204,6 @@
      * @param label: summaryObject API label
      */
     onChangeSummaryObject: function (cmp, summaryObject, label) {
-        console.log("hitting onChangeSummaryObjectHelper");
-
         this.resetFields(cmp, summaryObject, 'summary');
         cmp.set("v.activeRollup.summaryField", null);
         cmp.set("v.activeRollup.summaryObjectLabel", label);
@@ -261,7 +251,6 @@
      * @param label: filter group label
      */
     onChangeFilterGroup: function (cmp, label) {
-        console.log('in helper on change filter group');
         cmp.set("v.activeRollup.filterGroupLabel", label);
     },
 
@@ -286,7 +275,6 @@
      * @param operation: operation API name
      */
     onChangeOperation: function (cmp, operation) {
-        console.log("in helper onChangeOperation");
         var renderMap = cmp.get("v.renderMap");
         var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
 
@@ -342,7 +330,6 @@
      * @param rollupTypeLabel: rollup type label
      */
     onChangeRollupType: function (cmp, rollupTypeObject, rollupTypeLabel) {
-        console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
@@ -429,7 +416,6 @@
      * @param label: summary field label
      */
     onChangeSummaryField: function (cmp, value, label) {
-        console.log('in helper on change summary');
         //toggle rendering for create flow
         if (cmp.get("v.mode") === 'create' || cmp.get("v.mode") === 'clone') {
             var renderMap = cmp.get("v.renderMap");
@@ -454,7 +440,6 @@
         }
 
         if (cmp.get("v.activeRollup.amountObject")) {
-            console.log("amount object: "+cmp.get("v.activeRollup.amountObject"));
             var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
             this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
         }
@@ -469,7 +454,6 @@
      * @param label: time bound operations label
      */
     onChangeTimeBoundOperationsOptions: function (cmp, isOnChange, label) {
-        console.log("in helper changeTimeBoundOperationsOptions");
         var operation = cmp.get("v.activeRollup.timeBoundOperationType");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
@@ -551,7 +535,6 @@
      * @return: updated render map
      */
     renderAmountField: function (cmp, operation, rollupLabel, renderMap) {
-
         if ((operation === 'Largest'
             || operation === 'Smallest'
             || operation === 'Best_Year'
@@ -666,8 +649,6 @@
      * @param context: which fields to reset. values are: detail, summary, date, and amount
      */
     resetFields: function (cmp, object, context) {
-
-        console.log("Fired field reset for context [" + context + "] and object [" + object + "]");
         var newFields = cmp.get("v.objectDetails")[object];
 
         if (newFields === undefined || newFields.length === 0) {
@@ -881,7 +862,6 @@
         action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('STATE=' + state);
 
             if (state === "SUCCESS") {
                 // Response value will be in the format of "JobId-RecordDeveloperName"
@@ -889,16 +869,11 @@
                 var jobId = responseText.split("-")[0];
                 var recordName = responseText.split("-")[1];
 
-                console.log('Response = ' + response.getReturnValue());
-                console.log('Returned jobId = ' + jobId);
-                console.log('Returned RecordName = ' + recordName);
-
                 cmp.set("v.activeRollup.recordName", recordName);
                 if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
                     cmp.set("v.cachedRollup.recordName", recordName);
                 }
 
-                console.log('Calling pollForDeploymentStatus');
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
 
             } else if (state === "ERROR") {
@@ -931,7 +906,6 @@
      * @description: sets the selected rollup type based on detail and summary objects when a record is loaded
      */
     setRollupType: function (cmp) {
-        console.log('IN SET ROLLUP TYPE FUNCTION.');
         var summaryObject = cmp.get("v.activeRollup.summaryObject");
         var detailObject = cmp.get("v.activeRollup.detailObject");
         var amountObject = cmp.get("v.activeRollup.amountObject");
@@ -1178,7 +1152,6 @@
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
-                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
                 action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup', mode: mode});
                 action.setCallback(this, function (response) {
@@ -1186,7 +1159,7 @@
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + JSON.stringify(deployResult));
+
                         // if there is a record id response
                         var mode = cmp.get("v.mode");
                         if (deployResult && deployResult.completed === true && (deployResult.rollupItem || mode === 'delete')) {

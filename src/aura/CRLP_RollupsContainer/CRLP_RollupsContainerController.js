@@ -4,7 +4,6 @@
     */
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.setupRollupGrid");
-        console.log("in the init function");
 
         //setup rollup records, filter group records, and labels
         //also sets the rollups grid to display on page load
@@ -141,14 +140,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                var msg = "Unknown error. Please try again.";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
                 }
+                helper.showToast(cmp, 'error', "Error displaying Customizable Rollups", msg);
             }
             helper.toggleSpinner(cmp, false);
         });
@@ -241,9 +237,6 @@
     handleMessage: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");
-
-        console.log("handleMessage: " + channel);
-        console.log(JSON.stringify(message));
 
         //ordered by frequency
         if (channel === 'cancelEvent') {
