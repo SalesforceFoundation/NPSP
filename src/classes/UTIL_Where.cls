@@ -752,8 +752,8 @@ public class UTIL_Where {
                     : !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
                 
             } else if (operant == Operator.IN_SET) {
-                return fieldValue == null 
-                    ? values.contains(null)
+                return fieldValue == null || fieldValue instanceof Id
+                    ? values.contains(fieldValue)
                     : values.contains(String.valueOf(fieldValue).toLowerCase());
             }
             else {
