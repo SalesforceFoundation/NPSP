@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StandardValueSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ContactRole</fullName>
+    <standardValue>
+        <fullName>Influencer</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Decision Maker</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Donor</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Soft Credit</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Household Member</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Matched Donor</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Honoree Contact</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Notification Contact</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Solicitor</fullName>
+    </standardValue>
+    <standardValue>
+        <fullName>Other</fullName>
+    </standardValue>
+</StandardValueSet>
