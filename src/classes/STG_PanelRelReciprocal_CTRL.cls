@@ -166,8 +166,11 @@ public with sharing class STG_PanelRelReciprocal_CTRL extends STG_Panel {
             
             if (rl.npe4__Active__c && rl.npe4__Male__c == null && rl.npe4__Female__c == null && rl.npe4__Neutral__c == null) {
                 isValid = false;
+                String relationshipName = rl.Name;
+                if (String.isNotBlank(rl.Name))
+                    relationshipName = rl.Name.escapeEcmaScript();
                 ctrl.createDR(Label.stgNavRelReciprocal, STG_PanelHealthCheck_CTRL.statusError, 
-                    string.format(label.healthDetailsRelReciprocalInvalid, new string[]{rl.Name}), 
+                    string.format(label.healthDetailsRelReciprocalInvalid, new string[]{relationshipName}), 
                     string.format(label.healthSolutionRelReciprocalInvalid, new string[]{label.stgNavConnections, Label.stgNavRelReciprocal}));    
             }               
             
