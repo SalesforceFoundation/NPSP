@@ -451,8 +451,8 @@ public class UTIL_Where {
         private Operator operant;
         /** @description Value to compare the field to */
         private Object value;
-        /** @description Values set of lower case values to filter records on */
-        Set<String> values;
+        /** @description Set of values for the IN operator */
+        private Set<String> values;
 
         /** @description Specifies if the field is filterable (the field is not encrypted) */
         @TestVisible private Boolean isFilterable {
@@ -538,19 +538,45 @@ public class UTIL_Where {
         * @return FieldExpression The object instance
         */
         public FieldExpression inSet(Object value) {
-            if (!(value instanceof Set<String> || value instanceof Set<Id>)) {
-                return this;
+            if (!isCollection(value)) {
+                throw new CriteriaException('Set<String> or Set<Id> must be passed for the IN operator');
             }
 
-            values = new Set<String>();
-            for (String val : (Set<String>) value) {
-                if (String.isNotBlank(val)) {
-                    values.add(val.toLowerCase());
-                }
-            }
             operant = Operator.IN_SET;
             this.value = value;
+            this.values = getValues(value);
             return this;
+        }
+
+        /*********************************************************************************************************
+        * @description Creates the Set<String> to be used for the IN operator
+        * @param value The value object
+        * @return String
+        */
+        private Set<String> getValues(Object value) {
+            Set<String> values = new Set<String>();
+
+            for (String val : (Set<String>) value) {
+                values.add(val == null ? null : val.toLowerCase());
+            }
+
+            return values;
+        }
+
+        /*********************************************************************************************************
+        * @description Indicates if the value is a Set of String or Ids
+        * @return Boolean
+        */
+        private Boolean isCollection(Object value) {
+            return value != null && (value instanceof Set<String> || value instanceof Set<Id>);
+        }
+
+        /*********************************************************************************************************
+        * @description Indicates if the value is a String or an Id
+        * @return Boolean
+        */
+        private Boolean isStringOrId(Object value) {
+            return value instanceof String || value instanceof Id;
         }
 
         /*********************************************************************************************************
@@ -582,33 +608,26 @@ public class UTIL_Where {
         * @return String
         */
         public String getSearchValue() {
-            String skipSearchValue = '';
+            String searchValue = '';
 
-            if (value == null) {
-                return skipSearchValue;
-            }
-
-            if (value instanceof String || value instanceof Id) {
-                if (String.isBlank(String.valueOf(value))) {
-                    return skipSearchValue;
+            if (operant == Operator.IN_SET) {
+                if (values.isEmpty()) {
+                    throw new CriteriaException('The IN set must have values');
                 }
 
+                searchValue = values.size() == 1
+                    ? new List<String>(values)[0]
+                    : '(' + String.join(new List<String>(values), ' OR ') + ')';
+
+            } else {
                 if (operant == Operator.NOT_EQUALS) {
                     throw new CriteriaException('Search cannot be done for != operator');
                 }
                
-                return String.escapeSingleQuotes((String) value);
-            }
+                searchValue = value == null ? '' : String.valueOf(value);
+            } 
 
-            if (value instanceof Set<String> || value instanceof Set<Id>) {
-                if (values.isEmpty()) {
-                    return skipSearchValue;
-                }
-
-                return '(' + String.escapeSingleQuotes(String.join(new List<String>(values), ' OR ')) + ')';
-            }
-
-            throw new CriteriaException('Invalid data type for: ' + value);
+            return String.escapeSingleQuotes(searchValue);
         }
 
         /*********************************************************************************************************
@@ -628,38 +647,31 @@ public class UTIL_Where {
         * @return String
         */
         private String toLiteral(Object value) {
-            if (value == null) {
-                return 'null';
-            }
-
-            if (value instanceof Set<String> || value instanceof Set<Id>) {
+            if (operant == Operator.IN_SET) {
                 if (values.isEmpty()) {
-                    return 'null';
+                    throw new CriteriaException('The IN set must have values');
                 }
 
-                List<String> escapedValues = new List<String>();
+                List<String> result = new List<String>();
                 for (String val : values) {
-                    escapedValues.add(escape(val));
+                    result.add(toLiteral(val));
                 }
 
-                return '(' + String.join(escapedValues, ', ') + ')';
-            }
+                return '(' + String.join(result, ', ') + ')';
 
-            if (value instanceof String || value instanceof Id) {
-                return String.isBlank(String.valueOf(value)) 
-                    ? 'null' 
-                    : escape(String.valueOf(value));
+            } else {
+                return toLiteral((String) value);
             }
-
-            throw new CriteriaException('Invalid data type for: ' + value);
         }
 
         /*********************************************************************************************************
-        * @description Returns the escaped String value
+        * @description Returns the String with escaped single quotes
         * @return String
         */
-        private String escape(String value) {
-            return '\'' + String.escapeSingleQuotes((String) value) + '\'';
+        private String toLiteral(String value) {
+            return String.isBlank(value)
+                ? 'null'
+                : '\'' + String.escapeSingleQuotes(value) + '\'';
         }
 
         /*********************************************************************************************************
@@ -697,7 +709,9 @@ public class UTIL_Where {
                     : !String.valueOf(value).equalsIgnoreCase(String.valueOf(fieldValue));
                 
             } else if (operant == Operator.IN_SET) {
-                return values.contains(String.valueOf(fieldValue).toLowerCase());
+                return fieldValue == null 
+                    ? values.contains(null)
+                    : values.contains(String.valueOf(fieldValue).toLowerCase());
             }
             else {
                 throw new CriteriaException('Invalid operator: ' + operant.name());

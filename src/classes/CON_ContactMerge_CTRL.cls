@@ -600,7 +600,7 @@ public with sharing class CON_ContactMerge_CTRL {
     
     /*******************************************************************************************************
     * @description Runs SOSL query to find contacts according to the search text entered by the user.
-    * @return PageReference The page that it redirects to. Same page user is in.
+    * @return List<SObject> The list of sObjects returned by the search
     */
     public List<SObject> searchRecords() {
         searchResults.clear();    

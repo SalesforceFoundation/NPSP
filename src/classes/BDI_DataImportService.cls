@@ -1201,19 +1201,20 @@ global with sharing class BDI_DataImportService {
             }
         }
 
-
         String strSoql = getSoqlSelectForAccount();
-        strSoql += ' WHERE ';
-        UTIL_Finder finder = new UTIL_Finder(Account.SObjectType)
-            .withWhere(new UTIL_Where.FieldExpression(Account.Name).inSet(setName));
+        strSoql += ' WHERE (Id IN :setSFId)';
 
-        strSoql += '(Id IN :setSFId)';
+        if (!setName.isEmpty()) {
+            UTIL_Finder finder = new UTIL_Finder(Account.SObjectType)
+                .withWhere(new UTIL_Where.FieldExpression(Account.Name).inSet(setName));
 
-        if (finder.isSoql()) {
-            strSoql += ' OR Name IN :setName';
-        } else if (!setName.isEmpty()) {
-            setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+            if (finder.isSoql()) {
+                strSoql += ' OR Name IN :setName';
+            } else {
+                setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+            }
         }
+
         if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString)
             strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDString';
         else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)
