@@ -1134,6 +1134,7 @@
         <members>CRLP_DisabledTitle</members>
         <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
+        <members>CRLP_DisplayError</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>
         <members>CRLP_NoFilterGroupSelected</members>
@@ -1927,6 +1928,7 @@
         <members>stgPowerOfUsHub</members>
         <members>stgSelectOne</members>
         <members>stgTools</members>
+        <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
     </types>
