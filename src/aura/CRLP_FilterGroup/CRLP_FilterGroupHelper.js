@@ -8,9 +8,6 @@
         var labels = cmp.get("v.labels");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
-            console.log("Mode is " + mode);
-            console.log("In changeMode");
-
             //View is the only readOnly mode. Clone removes the activeRollupId for save.
             //Create hides all fields
             if (mode === "view") {
@@ -212,18 +209,15 @@
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
-                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
                 var mode = cmp.get("v.mode");
                 action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter', mode: mode});
                 action.setCallback(this, function (response) {
-                    console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     var mode = cmp.get("v.mode");
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + JSON.stringify(deployResult));
                         // if there is a record id response
                         if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
@@ -365,8 +359,6 @@
      */
     rerenderValue: function(cmp, operator, value) {
         var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
-        console.log('type is ' + type);
-        console.log('operator is ' + operator);
         if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
             cmp.set("v.filterRuleFieldType", 'picklist');
@@ -515,18 +507,12 @@
         action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('STATE=' + state);
 
             if (state === "SUCCESS") {
                 // Response value will be in the format of "JobId-RecordDeveloperName"
                 var responseText = response.getReturnValue();
                 var jobId = responseText.split("-")[0];
                 var recordName = responseText.split("-")[1];
-
-                console.log('Response = ' + response.getReturnValue());
-                console.log('Returned jobId = ' + jobId);
-                console.log('Returned RecordName = ' + recordName);
-
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
 
             } else if (state === "ERROR") {
