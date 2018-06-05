@@ -581,6 +581,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'filtersDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
+                'filtersDisplayError' => String.format(System.Label.CRLP_DisplayError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
                 'filtersSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Filter_Group__mdt.getLabel()}),
@@ -636,6 +637,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'rollupDeleteSuccess' => String.format(System.Label.CRLP_DeleteSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteFail' => String.format(System.Label.CRLP_DeleteError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupDeleteTimeout' => String.format(System.Label.CRLP_DeleteTimeout, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
+                'rollupDisplayError' => String.format(System.Label.CRLP_DisplayError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveProgress' => String.format(System.Label.CRLP_SaveProgress, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveSuccess' => String.format(System.Label.CRLP_SaveSuccess, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
                 'rollupSaveFail' => String.format(System.Label.CRLP_SaveError, new List<String>{Schema.SObjectType.Rollup__mdt.getLabel()}),
@@ -651,6 +653,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'timeBoundOperationType' => Schema.Rollup__mdt.Time_Bound_Operation_Type__c.getDescribe().getLabel(),
                 'useFiscalYear' => Schema.Rollup__mdt.Use_Fiscal_Year__c.getDescribe().getLabel(),
                 'urlNamespacePrefix' => settingsPage.getUrl(),
+                'unknownError' => Label.stgUnknownError,
                 'view' => Label.stgLabelView,
                 'warning' => Label.PageMessagesWarning
             };
