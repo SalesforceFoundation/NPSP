@@ -404,6 +404,7 @@ public class UTIL_Where {
         * @return String
         */
         public String getSearchValue() {
+            Boolean isCollection = false;
             List<String> result = new List<String>();
 
             for (FieldExpression fieldExp : fieldExpressions) {
@@ -411,6 +412,9 @@ public class UTIL_Where {
 
                 if (String.isNotBlank(searchValue)) {
                     result.add(searchValue);
+                    if (fieldExp.isCollection()) {
+                        isCollection = true;
+                    }
                 }
             }
 
@@ -419,7 +423,7 @@ public class UTIL_Where {
             }
 
             return result.size() == 1
-                ? result[0] + '*'
+                ? result[0] + (isCollection ? '' : '*')
                 : '(' + String.join(result, ' ' + logicOperator + ' ') + ')';
         }
 
@@ -452,7 +456,7 @@ public class UTIL_Where {
         /** @description Value to compare the field to */
         private Object value;
         /** @description Set of values for the IN operator */
-        private Set<String> values;
+        private Set<Object> values;
 
         /** @description Specifies if the field is filterable (the field is not encrypted) */
         @TestVisible private Boolean isFilterable {
@@ -553,14 +557,28 @@ public class UTIL_Where {
         * @param value The value object
         * @return String
         */
-        private Set<String> getValues(Object value) {
-            Set<String> values = new Set<String>();
+        private Set<Object> getValues(Object value) {
+            Set<Object> values = new Set<Object>();
 
-            for (String val : (Set<String>) value) {
-                values.add(val == null ? null : val.toLowerCase());
+            if (value instanceof Set<Id>) {
+                for (Id val : (Set<Id>) value) {
+                    values.add(val);
+                }
+            } else if (value instanceof Set<String>) {
+                for (String val : (Set<String>) value) {
+                    values.add(val == null ? null : val.toLowerCase());
+                }
             }
 
             return values;
+        }
+
+        /*********************************************************************************************************
+        * @description Indicates if the value is a Set of String or Ids
+        * @return Boolean
+        */
+        public Boolean isCollection() {
+            return isCollection(value);
         }
 
         /*********************************************************************************************************
@@ -576,7 +594,7 @@ public class UTIL_Where {
         * @return Boolean
         */
         private Boolean isStringOrId(Object value) {
-            return value instanceof String || value instanceof Id;
+            return value == null || value instanceof String || value instanceof Id;
         }
 
         /*********************************************************************************************************
@@ -612,16 +630,31 @@ public class UTIL_Where {
 
             if (operant == Operator.IN_SET) {
                 if (values.isEmpty()) {
-                    throw new CriteriaException('The IN set must have values');
+                    throw new CriteriaException('The search requires the IN set to contain values');
                 }
 
-                searchValue = values.size() == 1
-                    ? new List<String>(values)[0]
-                    : '(' + String.join(new List<String>(values), ' OR ') + ')';
+                List<String> searchValues = new List<String>();
+                for (Object value : values) {
+                    if (value instanceOf Id) {
+                        searchValues.add(String.valueOf(value));
+                    } else if (String.isNotBlank((String) value)) {
+                        searchValues.add((String) value);
+                    }
+                }
+
+                searchValue = searchValues.isEmpty() 
+                    ? ''
+                    : (searchValues.size() == 1
+                        ? searchValues[0]
+                        : '(' + String.join(searchValues, ' OR ') + ')');
 
             } else {
                 if (operant == Operator.NOT_EQUALS) {
                     throw new CriteriaException('Search cannot be done for != operator');
+                }
+
+                if (!isStringOrId(value)) {
+                    throw new CriteriaException('Invalid data type: ' + value);
                 }
                
                 searchValue = value == null ? '' : String.valueOf(value);
@@ -653,13 +686,17 @@ public class UTIL_Where {
                 }
 
                 List<String> result = new List<String>();
-                for (String val : values) {
-                    result.add(toLiteral(val));
+                for (Object val : values) {
+                    result.add(toLiteral(String.valueOf(val)));
                 }
 
                 return '(' + String.join(result, ', ') + ')';
 
             } else {
+                if (!isStringOrId(value)) {
+                    throw new CriteriaException('Invalid data type: ' + value);
+                }
+
                 return toLiteral((String) value);
             }
         }
@@ -669,9 +706,15 @@ public class UTIL_Where {
         * @return String
         */
         private String toLiteral(String value) {
-            return String.isBlank(value)
-                ? 'null'
-                : '\'' + String.escapeSingleQuotes(value) + '\'';
+            if (operant == Operator.IN_SET) {
+                return value == null
+                    ? 'null'
+                    : '\'' + String.escapeSingleQuotes(value) + '\'';
+            } else {
+                return String.isBlank(value)
+                    ? 'null'
+                    : '\'' + String.escapeSingleQuotes(value) + '\'';
+            }
         }
 
         /*********************************************************************************************************

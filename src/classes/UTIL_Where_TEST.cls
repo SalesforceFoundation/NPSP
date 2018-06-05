@@ -112,6 +112,58 @@ private class UTIL_Where_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Verifies toString() returns correct criteria for the provided set
+    */
+    @isTest static void fieldExpInSetToStringReturnsCommaSeparatedElementsInQuotes() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', 'bar'}).toString();
+
+        System.assertEquals('Name IN (\'foo\', \'bar\')', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies toString() returns correct criteria for the provided set having one element
+    */
+    @isTest static void fieldExpInSetToStringReturnsValueWhenSetHasOneElement() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo'}).toString();
+
+        System.assertEquals('Name IN (\'foo\')', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies toString() includes null and empty String in the Set
+    */
+    @isTest static void fieldExpInSetToStringIncludesNullsAndEmptyStrings() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', null, '', 'bar'}).toString();
+
+        System.assertEquals('Name IN (\'foo\', null, \'\', \'bar\')', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies toString() returns search query on the Id values
+    */
+    @isTest static void fieldExpInSetToStringReturnsIdValues() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<Id>{ MOCK_ACCOUNT_ID }).toString();
+
+        System.assertEquals('Name IN (\'' + MOCK_ACCOUNT_ID + '\')', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies toString() throws an exception when IN Set is empty
+    */
+    @isTest static void fieldExpInSetToStringThrowsExceptionWhenSetIsEmpty() {
+        UTIL_Where.FieldExpression fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>());
+
+        Exception actual;
+        try {
+            String whereClause = fieldExp.toString();
+        } catch (Exception e) {
+            actual = e;
+        }
+
+        System.assertNotEquals(null, actual, 'An exception should have been thrown for the empty Set');
+    }
+
+    /*******************************************************************************************************
     * @description Verifies getSearchValue() returns an empty string when value is null
     */
     @isTest static void fieldExpGetSearchValueReturnsEmptyStringWhenValueIsNull() {
@@ -127,15 +179,6 @@ private class UTIL_Where_TEST {
         String fieldExp = ACCOUNT_NAME_FIELD_EXP.equals('foo').getSearchValue();
 
         System.assertEquals('foo', fieldExp);
-    }
-
-    /*******************************************************************************************************
-    * @description Verifies getSearchValue() returns correct criteria for the provided set
-    */
-    @isTest static void fieldExpInSetGetSearchValueReturnsValuesConnectedWithOR() {
-        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', 'bar'}).getSearchValue();
-
-        System.assertEquals('(foo OR bar)', fieldExp);
     }
 
     /*******************************************************************************************************
@@ -161,6 +204,59 @@ private class UTIL_Where_TEST {
         }
         System.assertNotEquals(null, actual, 'An exception should be thrown');
     }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() returns correct criteria for the provided set
+    */
+    @isTest static void fieldExpInSetGetSearchValueReturnsValuesConnectedWithOR() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', 'bar'}).getSearchValue();
+
+        System.assertEquals('(foo OR bar)', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() returns correct criteria for the provided set having one element
+    */
+    @isTest static void fieldExpInSetGetSearchValueReturnsValueWhenSetHasOneElement() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo'}).getSearchValue();
+
+        System.assertEquals('foo', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() does not include null and empty String in the Set
+    */
+    @isTest static void fieldExpInSetGetSearchValueExcludesNullsAndEmptyStrings() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>{'foo', null, '', 'bar'}).getSearchValue();
+
+        System.assertEquals('(foo OR bar)', fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() returns search query on the Id values
+    */
+    @isTest static void fieldExpInSetGetSearchValueReturnsIdValues() {
+        String fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<Id>{ MOCK_ACCOUNT_ID }).getSearchValue();
+
+        System.assertEquals(MOCK_ACCOUNT_ID, fieldExp);
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies getSearchValue() throws an exception when IN Set is empty
+    */
+    @isTest static void fieldExpInSetGetSearchValueThrowsExceptionWhenSetIsEmpty() {
+        UTIL_Where.FieldExpression fieldExp = ACCOUNT_NAME_FIELD_EXP.inSet(new Set<String>());
+
+        Exception actual;
+        try {
+            String searchQuery = fieldExp.getSearchValue();
+        } catch (Exception e) {
+            actual = e;
+        }
+
+        System.assertNotEquals(null, actual, 'An exception should have been thrown for the empty Set');
+    }
+
 
     /*******************************************************************************************************
     * @description Verifies group expression isFilterable() is true when all fields are filterable

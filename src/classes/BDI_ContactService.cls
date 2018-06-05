@@ -468,34 +468,32 @@ public with sharing class BDI_ContactService {
         }
 
         String strSoql = getSoqlSelectForContact();
-        strSoql += ' WHERE ';
-        UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
-            .withWhere(new UTIL_Where()
-                .add(UTIL_Where.AndGroup()
-                    .add(new UTIL_Where.FieldExpression(Contact.Name).inSet(setName))
-                )
-            );
-
-        strSoql += '(Id IN :setSFId)';
+        strSoql += ' WHERE (Id IN :setSFId) ';
 
         if (isCustomIDInContactMatchRules && isCustomIdInContactDatatypeString) {
-            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDString)';
+            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDString) ';
         } else if (isCustomIDInContactMatchRules && !isCustomIdInContactDatatypeString) {
-            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDNumber)';
+            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDNumber) ';
         }
 
+        UTIL_Finder finderByName = new UTIL_Finder(Contact.SObjectType)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Name).inSet(setName));
+
         if (filterOnlyByName) {
-            if (finder.isSoql()) {
-                strSoql += ' OR (Name IN :setName)';
+
+            if (finderByName.isSoql()) {
+                strSoql += ' OR (Name IN :setName) ';
             } else if (!setName.isEmpty()) {
-                setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+                setSFId.addAll(new Map<Id, SObject>(finderByName.find()).keySet());
             }
-        } else if ((isFirstnameInContactMatchRules && setFName.isEmpty()) || (isLastNameInContactMatchRules && setLName.isEmpty())) {
-                // do nothing because we will not return any results for this section
+
         } else {
+            String soqlConnector = ' OR (';
             String strAnd = '';
-            if (finder.isSoql()) {
-                strAnd = ' OR (';
+
+            if (finderByName.isSoql()) {
+                strAnd = soqlConnector;
+
                 if (isFirstnameInContactMatchRules) {
                     strSoql += strAnd + 'Firstname IN :setFName ';
                     strAnd = ' AND ';
@@ -504,53 +502,54 @@ public with sharing class BDI_ContactService {
                     strSoql += strAnd + 'Lastname IN :setLName ';
                     strAnd = ' AND ';
                 }
+
             } else {
-                UTIL_Where.GroupExpression groupExp = new UTIL_Where.GroupExpression();
-
-                if (isFirstnameInContactMatchRules) {
-                    groupExp.add(new UTIL_Where.FieldExpression(Contact.FirstName).inSet(setFName));
+                UTIL_Where.GroupExpression criteria = UTIL_Where.AndGroup();
+                if (isFirstnameInContactMatchRules && !setFName.isEmpty()) {
+                    criteria.add(new UTIL_Where.FieldExpression(Contact.FirstName).inSet(setFName));
                 }
-                if (isLastnameInContactMatchRules) {
-                    groupExp.add(new UTIL_Where.FieldExpression(Contact.LastName).inSet(setLName));
+                if (isLastnameInContactMatchRules && !setLName.isEmpty()) {
+                    criteria.add(new UTIL_Where.FieldExpression(Contact.LastName).inSet(setLName));
                 }
 
-                finder.withWhere(new UTIL_Where().add(groupExp));
-                setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+                if (!criteria.getFields().isEmpty()) {
+                    UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+                        .withWhere(new UTIL_Where().add(criteria));
 
-                if (isEmailInContactMatchRules || isPhoneInContactMatchRules) {
-                    strAnd = ' OR (';
+                    setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
                 }
             }
+
             if (isEmailInContactMatchRules) {
-                strSoql += strAnd + getSoqlWhereForEmail();
+                strAnd = String.isBlank(strAnd) ? soqlConnector : strAnd;
+
+                strSoql += strAnd + '(' +
+                    'Email IN :setEmail OR ' +
+                    'npe01__AlternateEmail__c IN :setEmail OR ' +
+                    'npe01__HomeEmail__c IN :setEmail OR ' +
+                    'npe01__WorkEmail__c IN :setEmail) ';
                 strAnd = ' AND ';
             }
+
             if (isPhoneInContactMatchRules) {
-                strSoql += strAnd + getSoqlWhereForPhone();
+                strAnd = String.isBlank(strAnd) ? soqlConnector : strAnd;
+
+                strSoql += strAnd + '(' +
+                    'Phone IN :setPhone OR ' +
+                    'HomePhone IN :setPhone OR ' +
+                    'MobilePhone IN :setPhone OR ' +
+                    'OtherPhone IN :setPhone OR ' +
+                    'npo02__Formula_HouseholdPhone__c IN :setPhone OR ' +
+                    'npe01__WorkPhone__c IN :setPhone)';
             }
-            if (isEmailInContactMatchRules || isPhoneInContactMatchRules || finder.isSoql()) {
-                strSoql += ')';
-            }
+
+            strSoql += String.isBlank(strAnd) ? '' : ')';
         }
 
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Contacts', BDI_PerfLogger.QUERY);
         List<Contact> listCon = database.query(strSoql);
         pl.stop();
         return listCon;
-    }
-    private String getSoqlWhereForEmail() {
-        return '(Email IN :setEmail OR ' +
-                'npe01__AlternateEmail__c IN :setEmail OR ' +
-                'npe01__HomeEmail__c IN :setEmail OR ' +
-                'npe01__WorkEmail__c IN :setEmail) ';
-    }
-    private String getSoqlWhereForPhone() {
-        return '(Phone IN :setPhone OR ' +
-                'HomePhone IN :setPhone OR ' +
-                'MobilePhone IN :setPhone OR ' +
-                'OtherPhone IN :setPhone OR ' +
-                'npo02__Formula_HouseholdPhone__c IN :setPhone OR ' +
-                'npe01__WorkPhone__c IN :setPhone)';
     }
 
     /*******************************************************************************************************

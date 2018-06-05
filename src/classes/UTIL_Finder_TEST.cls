@@ -402,6 +402,75 @@ private class UTIL_Finder_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Verifies find() when search is applied on the Set values
+    */
+    @isTest static private void findSucceedsWhenSearchingForValuesInTheSet() {        
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName)
+            .inSet(new Set<String>{ 'Smith', 'CLARK' });
+        whereExp.isFilterable = false;
+
+        List<sObject> records = getTestContacts();
+        insert records;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp);
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[0], records[1], records[2], records[3], records[6]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+
+        System.assertEquals('FIND \'(smith OR clark)\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.searchBuilder().build());
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies find() when complex post filtering is applied on the Set values
+    */
+    @isTest static private void findSucceedsWhenPostFilteringIsAppliedOnOnTheInSetSearch() { 
+        List<sObject> records = getTestContacts();
+        insert records;
+
+        UTIL_Where.FieldExpression lastNameExp = new UTIL_Where.FieldExpression(Contact.LastName)
+            .inSet(new Set<String>{ 'Smith', 'CLARK', 'Roberston' });
+        lastNameExp.isFilterable = false;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where().add(UTIL_Where.AndGroup()
+                .add(lastNameExp)
+                .add(new UTIL_Where.FieldExpression(Contact.FirstName).inSet(new Set<String>{ 'Jane', null }))
+            ));
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[2], records[4]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+            System.assertEquals((String) expectedRecords[i].get('FirstName'), (String) actual[i].get('FirstName'));
+        }
+
+        System.assertEquals('FIND \'((smith OR clark OR roberston) AND jane)\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.searchBuilder().build());
+    }
+
+
+    /*******************************************************************************************************
     * @description Verifies find() when search returns LIMIT number of records
     */
     @isTest static private void findSucceedsWhenSearchReturnsLimitNumberOfRecords() {
