@@ -185,6 +185,7 @@
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
+        cmp.set("v.activeFilterRule.value", "");
         helper.rerenderValue(cmp, operator, "");
     },
 
