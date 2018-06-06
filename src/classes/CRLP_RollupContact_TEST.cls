@@ -85,6 +85,11 @@ private class CRLP_RollupContact_TEST {
 
         // Create a single Rollup that uses the above Filter Group
         String rollupsJSON = '[' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Count Donations', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, null, 'Fair_Market_Value__c') + ',' +
+
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations All Time', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
@@ -103,10 +108,6 @@ private class CRLP_RollupContact_TEST {
                         'npo02__OppAmountLastNDays__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.DAYS_BACK, 365) + ',' +
 
-                CMT_UnitTestData_TEST.createRollupRecord('Count Donations', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__NumberOfClosedOpps__c', CRLP_Operation.RollupType.COUNT, null) + ',' +
-
                 CMT_UnitTestData_TEST.createRollupRecord('Count Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppsClosedLastNDays__c', CRLP_Operation.RollupType.COUNT, 'Amount',
@@ -118,15 +119,15 @@ private class CRLP_RollupContact_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Years Donated', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'Description', CRLP_Operation.RollupType.YEARS_DONATED, '') + ',' +
+                        'Description', CRLP_Operation.RollupType.YEARS_DONATED, null, 'Amount') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Current Donation Streak', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, '') + ',' +
+                        'npo02__NumberOfMembershipOpps__c', CRLP_Operation.RollupType.Donor_Streak, 'Amount') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Best Year', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
-                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, '') + ',' +
+                        'npo02__Best_Gift_Year__c', CRLP_Operation.RollupType.BEST_YEAR, 'Amount') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Custom Result Field Test', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -155,7 +156,6 @@ private class CRLP_RollupContact_TEST {
 
         // Deserialize the rollups to use for testing
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
-
     }
 
     static testMethod void test_Rollups_Queueable() {
@@ -356,6 +356,7 @@ private class CRLP_RollupContact_TEST {
         }
 
         // Basic rollup asserts using existing NPSP rollup fields.
+        System.assertEquals(cnt, c.npo02__NumberOfClosedOpps__c);
         System.assertEquals(totalDonations, c.npo02__TotalOppAmount__c);
         System.assertEquals(maxAmt, c.npo02__LargestAmount__c);
         System.assertEquals(closeDate, c.npo02__FirstCloseDate__c);
