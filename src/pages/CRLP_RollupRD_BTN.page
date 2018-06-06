@@ -6,7 +6,7 @@
                                parentEntityLabel="{! $ObjectType.npe03__Recurring_Donation__c.labelPlural }" parentAction="/{!$ObjectType.npe03__Recurring_Donation__c.keyPrefix}"
                                parentRecordName="{!npe03__Recurring_Donation__c.Name }" parentRecordAction="/{!npe03__Recurring_Donation__c.Id}"
                                header="{!$Label.CRLP_RecalculatingRollups}"
-                               icon="custom87_120" iconCategory="custom"
+                               icon="custom40_120" iconCategory="custom"
                                showSaveBtn="false" showCancelBtn="true"
                                cancelLabel="Return" cancelAction="/{!npe03__Recurring_Donation__c.Id}"
                                rendered="true" />
