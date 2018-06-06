@@ -155,7 +155,7 @@
      * @description: closes the toast notification window
      */
     closeNotificationWindow: function (cmp, event, helper) {
-        cmp.set("v.notificationClasses", "slds-hide");
+        cmp.set("v.toastHideClass", "slds-hide");
     },
 
     /**
