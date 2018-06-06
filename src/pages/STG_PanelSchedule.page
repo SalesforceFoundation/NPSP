@@ -90,6 +90,9 @@
                     <div class="slds-form-element__control">
                         <apex:outputField value="{!stgService.stgCRLP.Rollups_Skew_Dispatcher_Batch_Size__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
                         <apex:inputField value="{!stgService.stgCRLP.Rollups_Skew_Dispatcher_Batch_Size__c}" type="number" rendered="{!isEditMode}" id="tbxSkewDis" html-aria-describedby="{!$Component.tbxSkewDisHelp}" styleClass="slds-input" />
+                        <apex:outputPanel id="tbxSkewDisHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$ObjectType.Customizable_Rollup_Settings__c.fields.Rollups_Skew_Dispatcher_Batch_Size__c.inlineHelpText}"/>
+                        </apex:outputPanel>
                     </div>
                 </div>
             </div>
