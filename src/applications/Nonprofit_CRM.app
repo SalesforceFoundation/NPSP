@@ -15,4 +15,5 @@
     <tab>Contact_Merge</tab>
     <tab>NPSP_Settings</tab>
     <tab>NPSP_Resources</tab>
+    <formFactors>Large</formFactors>
 </CustomApplication>
