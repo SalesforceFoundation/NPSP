@@ -724,6 +724,14 @@
         <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
     </labels>
     <labels>
+        <fullName>CRLP_BatchCalculating</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displays on page when "Recalculate Rollups" button is hit on Acc/Con/GAU/RD.</shortDescription>
+        <value>The rollups batch job is calculating and may take a few moments to complete. Go back to the {0} and refresh to see updated rollup values.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -971,6 +979,14 @@
         <protected>true</protected>
         <shortDescription>Message to indicate in-progress operation for metadata deployments</shortDescription>
         <value>Please wait a moment</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_RecalculatingRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for interstitial page on rollup recalc buttons</shortDescription>
+        <value>Recalculating Rollups</value>
     </labels>
     <labels>
         <fullName>CRLP_Return</fullName>

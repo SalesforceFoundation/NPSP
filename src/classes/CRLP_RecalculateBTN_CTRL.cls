@@ -128,6 +128,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 rollup.runRollups();
             }
         }
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, String.format(System.Label.CRLP_BatchCalculating, new List<String>{this.objType.getDescribe().label})));
         return null;
     }
 

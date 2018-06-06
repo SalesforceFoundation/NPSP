@@ -3,15 +3,15 @@
     <apex:slds />
     <div class="slds-scope">
         <apex:form id="pgHeader">
-            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.Account.Label }"
-                               parentAction="/A01" parentRecordName="{!$ObjectType.Account.Name }"
-                               parentRecordAction="/{!Account.Id}" header="Recalculate Roll-Ups"
+            <c:UTIL_PageHeader showBreadcrumb="true"
+                               parentEntityLabel="{! $ObjectType.Account.labelPlural }" parentAction="/A01"
+                               parentRecordName="{!Account.Name }" parentRecordAction="/{!Account.Id}"
+                               header="{!$Label.CRLP_RecalculatingRollups}"
                                icon="account_120" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="true"
                                cancelLabel="Return" cancelAction="/{!Account.Id}"
-                               rendered="{!hasError == true}" />
+                               rendered="true" />
         </apex:form>
-        <c:UTIL_PageMessages />
+        <c:UTIL_PageMessages allowClose="false"/>
     </div>
-    <c:UTIL_NavigateBack recordId="{!Account.Id}" redirect="true" rendered="{!hasError == false}"/>
 </apex:page>
