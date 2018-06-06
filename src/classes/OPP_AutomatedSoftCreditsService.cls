@@ -38,10 +38,10 @@
 public class OPP_AutomatedSoftCreditsService {
 
     private static final String RELATED_OPPORTUNITY_CONTACT_ROLE_NONE = '--None--';
-    private static final String OBJECT_TYPE_RELATIONSHIP = 'npe4__Relationship__c';
-    private static final String OBJECT_TYPE_AFFILIATION = 'npe5__Affiliation__c';
-    private static final String FILED_NAME_RELATED_CONTACT = 'npe4__RelatedContact__c';
-    private static final String FILED_NAME_CONTACT = 'npe5__Contact__c';
+    private static final sObjectType OBJECT_TYPE_RELATIONSHIP = npe4__Relationship__c.SObjectType;
+    private static final sObjectType OBJECT_TYPE_AFFILIATION = npe5__Affiliation__c.SObjectType;
+    private static final sObjectField FIELD_NAME_RELATIONSHIP_RELATED_CONTACT = npe4__Relationship__c.npe4__RelatedContact__c;
+    private static final sObjectField FIELD_NAME_AFFILIATION_CONTACT = npe5__Affiliation__c.npe5__Contact__c;
 
 
     /*********************************************************************************************************
@@ -103,7 +103,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateAssociatedRecords(primaryContactToRelationships, OBJECT_TYPE_RELATIONSHIP, FILED_NAME_RELATED_CONTACT);
+        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateAssociatedRecords(primaryContactToRelationships, OBJECT_TYPE_RELATIONSHIP, FIELD_NAME_RELATIONSHIP_RELATED_CONTACT);
 
         return uniquePrimaryContactToRelationships;
     }
@@ -196,7 +196,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAssociatedRecords(accountToAffiliations, OBJECT_TYPE_AFFILIATION, FILED_NAME_CONTACT);
+        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAssociatedRecords(accountToAffiliations, OBJECT_TYPE_AFFILIATION, FIELD_NAME_AFFILIATION_CONTACT);
 
         return uniqueAccountToAffiliations;
     }
@@ -247,7 +247,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @return Map<Id, List<sObject>> Map of unique Relationship records based on Contact Id.
     **********************************************************************************************************/
     @testVisible
-    private static Map<Id, List<sObject>> removeDuplicateAssociatedRecords(Map<Id, List<sObject>> sourceIdToAssociatedRecords, String objectType, String fieldName) {
+    private static Map<Id, List<sObject>> removeDuplicateAssociatedRecords(Map<Id, List<sObject>> sourceIdToAssociatedRecords, sObjectType objectType, sObjectField fieldName) {
         Map<Id, List<sObject>> sourceIdToUniqueAssociatedRecords = new Map<Id, List<sObject>>();
 
         for (Id sourceId : sourceIdToAssociatedRecords.keySet()) {
@@ -257,11 +257,7 @@ public class OPP_AutomatedSoftCreditsService {
             for (sObject eachAssociatedRecord : relatedRecords) {
                 if (!cleanedRelatedRecords.containsKey((Id)eachAssociatedRecord.get(fieldName))) {
                     cleanedRelatedRecords.put((Id)eachAssociatedRecord.get(fieldName), eachAssociatedRecord);
-                    if (OBJECT_TYPE_RELATIONSHIP.equals(objectType)) {
-                        uniqueAssociatedRecords.add((npe4__Relationship__c)eachAssociatedRecord);
-                    } else if (OBJECT_TYPE_AFFILIATION.equals(objectType)) {
-                        uniqueAssociatedRecords.add((npe5__Affiliation__c)eachAssociatedRecord);
-                    }
+                    uniqueAssociatedRecords.add(eachAssociatedRecord);
                 }
             }
 

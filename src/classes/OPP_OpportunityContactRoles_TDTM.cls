@@ -770,12 +770,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (Opportunity eachOppty : primaryContactAccountChangeOpptys) {
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
                 if (!eachOldOCR.isPrimary
-                    || ((honoreeRole != null && !honoreeRole.equals(eachOldOCR.Role))
-                        || (notificationRole != null && !notificationRole.equals(eachOldOCR.Role)))) {
-                     ocrsToDelete.add(eachOldOCR);
+                    && (honoreeRole != null && !honoreeRole.equals(eachOldOCR.Role))
+                    && (notificationRole != null && !notificationRole.equals(eachOldOCR.Role))) {
+                    ocrsToDelete.add(eachOldOCR);
                 }
             }
         }
+
         if (!ocrsToDelete.isEmpty()) {
             delete ocrsToDelete;
         }
