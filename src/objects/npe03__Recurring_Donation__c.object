@@ -17,4 +17,16 @@
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
+    <webLinks>
+        <fullName>Recalculate_Rollups</fullName>
+        <availability>online</availability>
+        <description>Recalculate Rollups</description>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Recalculate Rollups</masterLabel>
+        <openType>sidebar</openType>
+        <page>CRLP_RollupRD_BTN</page>
+        <protected>false</protected>
+    </webLinks>
 </CustomObject>
