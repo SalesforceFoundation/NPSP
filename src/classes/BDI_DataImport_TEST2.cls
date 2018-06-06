@@ -1516,16 +1516,16 @@ private with sharing class BDI_DataImport_TEST2 {
         System.assertEquals(listDI[2].HomeAddressImported__c, listAddr[1].Id);
 
         System.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
-        System.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
-        System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
+        System.assert(listDI[1].HomeAddressImportStatus__c.contains('Billing City'));
+        System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);
 
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
-        System.assertEquals(null, listDI[0].FailureInformation__c);        
-        System.assert(listDI[1].FailureInformation__c.contains('invalid city'));        
-        System.assertEquals(null, listDI[2].FailureInformation__c);        
+        System.assertEquals(null, listDI[0].FailureInformation__c);
+        System.assert(listDI[1].FailureInformation__c.contains('Billing City'));
+        System.assertEquals(null, listDI[2].FailureInformation__c);
 
         List<Account> listAcc = getAccounts();
         System.assertEquals(3, listAcc.size());
