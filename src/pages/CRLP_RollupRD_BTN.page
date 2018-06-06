@@ -1,0 +1,15 @@
+<apex:page standardController="npe03__Recurring_Donation__c" extensions="CRLP_RecalculateBTN_CTRL" action="{!buttonClick}" >
+    <apex:slds />
+    <div class="slds-scope">
+        <apex:form id="pgHeader">
+            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.npe03__Recurring_Donation__c.Label }"
+                               parentRecordName="{!$ObjectType.npe03__Recurring_Donation__c.Name }"
+                               parentRecordAction="/{!npe03__Recurring_Donation__c.Id}" header="Recalculate Roll-Ups"
+                               showSaveBtn="false" showCancelBtn="true"
+                               cancelLabel="Return" cancelAction="/{!npe03__Recurring_Donation__c.Id}"
+                               rendered="{!hasError == true}" />
+        </apex:form>
+        <c:UTIL_PageMessages />
+    </div>
+    <c:UTIL_NavigateBack recordId="{!npe03__Recurring_Donation__c.Id}" redirect="true" rendered="{!hasError == false}"/>
+</apex:page>

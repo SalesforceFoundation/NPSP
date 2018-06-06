@@ -450,6 +450,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_RollupRD_BTN</members>
         <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
@@ -2438,6 +2439,7 @@
         <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
+        <members>npe03__Recurring_Donation__c.Recalculate_Rollups</members>
         <name>WebLink</name>
     </types>
     <types>
