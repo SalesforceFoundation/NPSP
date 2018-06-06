@@ -131,8 +131,8 @@ public class CRLP_Rollup {
             this.dateFieldType = dateField.getSoapType();
             this.dateFieldName = rlp.Date_Field__r.QualifiedApiName;
         }
-        if (this.amountFieldName == null && rlp.Amount_Field__c != null) {
-            DescribeFieldResult amtField = CRLP_Rollup_SVC.getSObjectFieldDescribe(amountObject, rlp.Amount_Field__r.QualifiedApiName);
+        // Don't get the amount field if the operation is a Count
+        if (this.amountFieldName == null && rlp.Amount_Field__c != null && rlp.Operation__c != CRLP_Operation.RollupType.COUNT.name()) {
             this.amountFieldName = rlp.Amount_Field__r.QualifiedApiName;
         }
         this.rollupsMdt.add(new Rollupmdt(rlp));
