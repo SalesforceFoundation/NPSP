@@ -36,7 +36,7 @@
 */
 public without sharing class UTIL_CustomSettingsFacade {
     private static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_DONOR = 'Donor';
-    private static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
+    public static final String DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
 
     //storing user-level custom settings in-memory to avoid trying to isert/update them 
     //twice and thus trigger the "duplicate OwnerId" error
