@@ -814,6 +814,7 @@ private class OPP_OpportunityContactRoles_TEST {
     static testMethod void testClearOCRs() {
         List<OpportunityContactRole> ocrsToDelete = new List<OpportunityContactRole>();
         List<OpportunityContactRole> testOCRs = new List<OpportunityContactRole>();
+        List<OpportunityContactRole> ocrsToDeleteImmediately = new List<OpportunityContactRole>();
 
         Map<Id, Map<Id, OpportunityContactRole>> opportunityToContactToOCR = new Map<Id, Map<Id, OpportunityContactRole>>();
         Map<Id, OpportunityContactRole> contactToOCR0 = new Map<Id, OpportunityContactRole>();
@@ -866,7 +867,7 @@ private class OPP_OpportunityContactRoles_TEST {
         testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
         System.assertEquals(3, testOCRs.size());
 
-        OPP_OpportunityContactRoles_TDTM.clearOCRs(opportunityToContactToOCR, changedOpptys);
+        OPP_OpportunityContactRoles_TDTM.clearOCRs(opportunityToContactToOCR, changedOpptys, ocrsToDeleteImmediately);
         testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
         System.assertEquals(1, testOCRs.size());
 

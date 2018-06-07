@@ -166,7 +166,7 @@ public with sharing class OPP_PrimaryContact_TEST {
         insert secondaryOCR;
 
         list<OpportunityContactRole> queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
-        system.assertEquals(2,queryOCR.size(), 'Two OCRs should exist.');
+        system.assertEquals(2, queryOCR.size(), 'Two OCRs should exist.');
         system.assertEquals(conList[0].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
 
         opp.Primary_Contact__c = conList[1].id;
@@ -175,7 +175,7 @@ public with sharing class OPP_PrimaryContact_TEST {
         Test.stopTest();
 
         queryOCR = [SELECT Id, ContactId, IsPrimary FROM OpportunityContactRole WHERE OpportunityId = :opp.id ORDER BY IsPrimary DESC];
-        system.assertEquals(1,queryOCR.size(), 'Two OCRs should exist.');
+        system.assertEquals(1, queryOCR.size(), 'One OCR should exist.');
         system.assertEquals(conList[1].id, queryOCR[0].ContactId, 'Contact 0 should be primary.');
 
     }

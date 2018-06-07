@@ -353,6 +353,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         // Holds the OCRs that will be evaluated to ensure compliance with the OCR hierarchy
         Map<Id, List<OpportunityContactRole>> transactionOCRs = new Map<Id, List<OpportunityContactRole>>();
 
+        // Holds the OCRs that need to be updated immediately to ensure compliance with the OCR hierarchy
+        List<OpportunityContactRole> ocrsToUpdateImmediately = new List<OpportunityContactRole>();
+
+        // Holds the OCRs that need to be deleted immediately to ensure compliance with the OCR hierarchy
+        List<OpportunityContactRole> ocrsToDeleteImmediately  = new List<OpportunityContactRole>();
+
         // Holds the Opportunities that have had a Primary Contact or Account change
         List<Opportunity> primaryContactAccountChangeOpptys = new List<Opportunity>();
 
@@ -401,20 +407,22 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
                 //first, manage primary contact role if the primary contact has changed
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_PRIMARY_CONTACT)) {
-                    managePrimaryOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), isIndividualAccount);
+                    managePrimaryOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), isIndividualAccount, ocrsToUpdateImmediately);
                 }
                 //then manage honoree, if it has changed and it's not the same as the primary contact
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT)) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_HONOREE_CONTACT);
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_HONOREE_CONTACT, ocrsToDeleteImmediately);
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT);
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, ocrsToDeleteImmediately);
                 }
             }
 
+            update ocrsToUpdateImmediately;
+
             // Delete OCRs that are associated with Opportunities whose Primary Contact or Account has changed
-            clearOCRs(mapOppIdMapConIdOCR, primaryContactAccountChangeOpptys);
+            clearOCRs(mapOppIdMapConIdOCR, primaryContactAccountChangeOpptys, ocrsToDeleteImmediately);
 
             // Create Relationship Soft Credits accordingly
             if (!primaryContactsToOpportunities.isEmpty()) {
@@ -438,9 +446,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param opp The current opportunity from trigger.new
     * @param oldOpp The old opportunity from trigger.old
     * @param mapConIdOCR A map of contact id to Opportunity Contact Role records for this opportunity.
+    * @param ocrsToUpdateImmediately Holds Opportunity Contact Roles that need to be updated immediately.
     * @return void This method adds records to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private void managePrimaryOCR(Opportunity opp, Opportunity oldOpp, Map<id,OpportunityContactRole> mapConIdOCR, Boolean isIndividualAccount) {
+    private void managePrimaryOCR(Opportunity opp, Opportunity oldOpp, Map<id,OpportunityContactRole> mapConIdOCR,
+                                  Boolean isIndividualAccount, List<OpportunityContactRole> ocrsToUpdateImmediately) {
         Id idNewPrimaryCon = opp.Primary_Contact__c;
         Id idOldCon = oldOpp.Primary_Contact__c;
 
@@ -473,7 +483,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     }
                     // In order to ensure the Relationships/Affiliations are set accordingly,
                     // The Primary OCR needs to be updated immediately.
-                    update primaryOCR;
+                    ocrsToUpdateImmediately.add(primaryOCR);
                 }
             }
         }
@@ -487,9 +497,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param oldOpp The old opportunity from trigger.old
     * @param mapConIdOCR A map of contact id to Opportunity Contact Role records for this opportunity.
     * @param fieldName The API name of the field to verify
+    * @param ocrsToDeleteImmediately Holds Opportunity Contact Roles that need to be deleted immediately.
     * @return void This method adds records to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private void manageOtherOCR(Opportunity opp, Opportunity oldOpp, map<id,OpportunityContactRole> mapConIdOCR, string fieldName) {
+    private void manageOtherOCR(Opportunity opp, Opportunity oldOpp, Map<Id, OpportunityContactRole> mapConIdOCR,
+                                String fieldName, List<OpportunityContactRole> ocrsToDeleteImmediately) {
         Id idNewCon = (Id)opp.get(fieldName);
         Id idOldCon = (Id)oldOpp.get(fieldName);
         OpportunityContactRole ocrNewCon = mapConIdOCR.get(idNewCon);
@@ -530,7 +542,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
 
                     //our new contact already has an OCR, delete the old one
                     } else {
-                        delete ocrOldCon;
+                        ocrsToDeleteImmediately.add(ocrOldCon);
                     }
                 //new contact doesn't have an OCR yet, create one with the appropriate role
                 } else if (ocrNewCon == null) {
@@ -757,11 +769,17 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     *               Account changed.
     * @param opportunityToContactToOCR Map of Opportunity to a Map of Contact to OpportunityContactRoles.
     * @param primaryContactAccountChangeOpptys List of OpportunityIds whose Primary Contact or Account changed.
+    * @param ocrsToDeleteImmediately List of OpportunityContactRoles that require immediate deletion.
     * @return void
     **********************************************************************************************************/
     @testVisible
-    private static void clearOCRs(Map<Id, Map<Id, OpportunityContactRole>> opportunityToContactToOCR, List<Opportunity> primaryContactAccountChangeOpptys) {
+    private static void clearOCRs(Map<Id, Map<Id, OpportunityContactRole>> opportunityToContactToOCR, List<Opportunity> primaryContactAccountChangeOpptys,
+                                  List<OpportunityContactRole> ocrsToDeleteImmediately) {
         List<OpportunityContactRole> ocrsToDelete = new List<OpportunityContactRole>();
+
+        if (!ocrsToDeleteImmediately.isEmpty()) {
+            ocrsToDelete.addAll(ocrsToDeleteImmediately);
+        }
 
         npe01__Contacts_And_Orgs_Settings__c orgContactSettings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
         String honoreeRole = orgContactSettings.Honoree_Opportunity_Contact_Role__c;
@@ -770,8 +788,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (Opportunity eachOppty : primaryContactAccountChangeOpptys) {
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
                 if (!eachOldOCR.isPrimary
-                    && (honoreeRole != null && !honoreeRole.equals(eachOldOCR.Role))
-                    && (notificationRole != null && !notificationRole.equals(eachOldOCR.Role))) {
+                    && (honoreeRole == null || !honoreeRole.equals(eachOldOCR.Role))
+                    && (notificationRole == null || !notificationRole.equals(eachOldOCR.Role))) {
                     ocrsToDelete.add(eachOldOCR);
                 }
             }
