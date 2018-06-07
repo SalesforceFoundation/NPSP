@@ -35,7 +35,16 @@
 * @description Lightning Component Server Controller for the Manage Household UI page's HH_AutoCompleteDateProvider LC.
 */
 public with sharing class HH_AutoCompleteDataProvider_LCTRL {
-
+    @TestVisible private static Boolean isNameFilterable {
+        get {
+            if (isNameFilterable == null) {
+                isNameFilterable = Schema.sObjectType.Contact.fields.Name.isFilterable();
+            }
+            return isNameFilterable;
+        }
+        set;
+    }
+    
     /*******************************************************************************************************
     * @description returns a list of matching contacts given the queryValue
     * @param queryValue The name to search for
@@ -57,13 +66,19 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
             // note that our helper does FLS, so we don't have to do it here.
             String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
 
+            List<ProviderResult> providerResults = new List<ProviderResult>();
             Set<Id> contactIds = new Set<Id>();
-            // Use SOSL search when middle name is enabled or when encryption is enabled on the contact name field
+            Boolean isValidSearchQuery = isValidSearchQuery(queryValue);
+
+            // Return empty result list if the Contact.Name is encrypted and the queryValue is not SOSL valid
+            if (!isNameFilterable && !isValidSearchQuery) {
+                return providerResults;
+            }
+
             // See known issue / limitation for soql with middle name enabled:
             // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
-            Boolean useSearch = 
-                (UTIL_Describe.isMiddleNameEnabled() && queryValue.length() > 1) ||
-                !Schema.sObjectType.Contact.fields.Name.isFilterable();
+
+            Boolean useSearch = (UTIL_Describe.isMiddleNameEnabled() && isValidSearchQuery) || !isNameFilterable;
 
             if (useSearch) {
                 List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
@@ -71,14 +86,14 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
                     contactIds.add((Id) s.get('Id'));
                 }
                 strSoql += ' Id in :contactIds ';
+
             } else {
                 strSoql += ' Name LIKE :preparedQueryValue ';
             }
+
             strSoql += ' AND Id not in :listCon LIMIT 100';
 
             List<SObject> results = Database.query(strSoql);
-
-            List<ProviderResult> providerResults = new List<ProviderResult>();
 
             for (SObject so : results) {
                 ProviderResult result = new ProviderResult();
@@ -91,6 +106,23 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies if the queryValue is a valid search query for the SOSL
+    * @param queryValue The text to search for
+    * @return Boolean 
+    */
+    @TestVisible private static Boolean isValidSearchQuery(String queryValue) {
+        Integer length = String.isBlank(queryValue) ? 0 : queryValue.length();
+
+        if (length <= 1) {
+            return false;
+        } else if (length == 2) {
+            return queryValue.endsWith('*') ? false : true;
+        }
+
+        return true;
     }
 
     /*******************************************************************************************************
