@@ -6,6 +6,8 @@
  * The first one is an object and the rest are custom settings.
  **/
 delete [select ID from Trigger_Handler__c];
+delete [select ID from Allocations_Settings__c];
+delete [select ID from Customizable_Rollup_Settings__c];
 delete [select ID from Addr_Verification_Settings__c];
 delete [select ID from npe5__Affiliations_Settings__c];
 delete [select ID from Batch_Data_Entry_Settings__c];
