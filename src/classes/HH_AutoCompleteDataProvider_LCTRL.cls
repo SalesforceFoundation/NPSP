@@ -44,7 +44,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
         }
         set;
     }
-    
+
     /*******************************************************************************************************
     * @description returns a list of matching contacts given the queryValue
     * @param queryValue The name to search for
@@ -56,15 +56,7 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
         try {
             if (listCon == null) {
                 listCon = new list<Contact>();
-            }
-
-            // '%', '_', and '\' all are special characters in LIKE syntax.
-            // We escape them here by prepending those characters with a backslash
-            String preparedQueryValue = '%' + queryValue.replaceAll('([%_\\\\])', '\\\\$0') + '%';
-            
-            // use helper to get all contact fields to support custom household naming and greetings.
-            // note that our helper does FLS, so we don't have to do it here.
-            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
+            }            
 
             List<ProviderResult> providerResults = new List<ProviderResult>();
             Set<Id> contactIds = new Set<Id>();
@@ -77,8 +69,11 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
 
             // See known issue / limitation for soql with middle name enabled:
             // https://success.salesforce.com/issues_view?id=a1p30000000eQRxAAM
-
             Boolean useSearch = (UTIL_Describe.isMiddleNameEnabled() && isValidSearchQuery) || !isNameFilterable;
+
+            // use helper to get all contact fields to support custom household naming and greetings.
+            // note that our helper does FLS, so we don't have to do it here.
+            String strSoql = HH_Container_LCTRL.getContactSelectQueryWithFls() + ' WHERE ';
 
             if (useSearch) {
                 List<List<SObject>> searchResults = [FIND :queryValue IN NAME FIELDS RETURNING Contact(Id, Name) LIMIT 100];
@@ -88,6 +83,10 @@ public with sharing class HH_AutoCompleteDataProvider_LCTRL {
                 strSoql += ' Id in :contactIds ';
 
             } else {
+                // '%', '_', and '\' all are special characters in LIKE syntax.
+                // We escape them here by prepending those characters with a backslash
+                String preparedQueryValue = '%' + queryValue.replaceAll('([%_\\\\])', '\\\\$0') + '%';
+                
                 strSoql += ' Name LIKE :preparedQueryValue ';
             }
 
