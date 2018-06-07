@@ -158,6 +158,17 @@ tasks:
                 - npsp__General_Accounting_Unit__c
                 - Campaign
 
+    npsp_default_settings:
+        description: Configure the default NPSP Settings including Membership RecordType
+        class_path: tasks.anon_apex.AnonymousApexFromFileTask
+        options:
+            path: scripts/configure_npsp_default_settings.cls
+            method: initializeNPSPSettings();
+
+    apex_anon:
+        description: Execute the specified apex anonymous script
+        class_path: tasks.anon_apex.AnonymousApexFromFileTask
+
 flows:
     config_dev:
         steps:
@@ -165,6 +176,8 @@ flows:
                 task: deploy_dev_config_delete
             4:
                 task: deploy_dev_config
+            5:
+                task: npsp_default_settings
 
     config_qa:
         steps:
