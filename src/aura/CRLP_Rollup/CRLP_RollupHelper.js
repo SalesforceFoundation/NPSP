@@ -443,6 +443,9 @@
             this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
         }
 
+        //reset amount fields to allow for change between double/currency and percent
+        this.resetFields(cmp,cmp.get("v.activeRollup.amountObject"),'amount');
+
         this.updateRollupName(cmp);
         cmp.set("v.activeRollup.summaryFieldLabel", label);
     },
@@ -665,7 +668,12 @@
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
-            newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY", "PERCENT"], newFields);
+            var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
+            if (summaryFieldType && summaryFieldType === 'PERCENT') {
+                newFields = this.filterFieldsByType(cmp, ["PERCENT"], newFields);
+            } else {
+                newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
+            }
             cmp.set("v.amountFields", newFields);
         }
     },
