@@ -348,25 +348,28 @@
         this.resetFields(cmp, amountObjectName, 'amount');
         cmp.set("v.activeRollup.amountObject", amountObjectName);
         var labels = cmp.get("v.labels");
+        var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
 
         var amountFieldName;
-        // Set the amount field and assumed detail object based on the selected rollup type
-        if (amountObjectName === labels.objectPayment) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
-            amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectPayment);
-        } else if (amountObjectName === labels.objectAllocation) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
-            amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectAllocation);
-        } else if (amountObjectName === labels.objectPartialSoftCredit) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
-            amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
-        } else {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
-            amountFieldName = labels.objectOpportunity + ' Amount';
-            cmp.set("v.activeRollup.detailObject",labels.objectOpportunity);
+        // Set the amount field and assumed detail object based on the selected rollup type for all target fields but percentages
+        if (summaryFieldType !== 'PERCENT') {
+            if (amountObjectName === labels.objectPayment) {
+                cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
+                amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectPayment);
+            } else if (amountObjectName === labels.objectAllocation) {
+                cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
+                amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectAllocation);
+            } else if (amountObjectName === labels.objectPartialSoftCredit) {
+                cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
+                amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
+            } else {
+                cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
+                amountFieldName = labels.objectOpportunity + ' Amount';
+                cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
+            }
         }
 
         this.resetFields(cmp, activeRollup.amountObject, "amount");
@@ -444,7 +447,7 @@
         }
 
         //reset amount fields to allow for change between double/currency and percent
-        this.resetFields(cmp,cmp.get("v.activeRollup.amountObject"),'amount');
+        this.resetFields(cmp, cmp.get("v.activeRollup.amountObject"), 'amount');
 
         this.updateRollupName(cmp);
         cmp.set("v.activeRollup.summaryFieldLabel", label);
@@ -547,6 +550,14 @@
 
             //enable amount field
             renderMap["amountField"] = true;
+
+            //show warning if no fields available and amount field displayed
+            var amountFields = cmp.get("v.amountFields");
+            if (amountFields.length === 0) {
+                var labels = cmp.get("v.labels");
+                cmp.set("v.isIncomplete", true);
+                this.showToast(cmp, 'warning', labels.noFields, '');
+            }
 
         } else {
             //disable amount field
@@ -1248,6 +1259,9 @@
         }
         if (renderMap["timeBoundOperationType"]) {
             requiredSelectFields.push("timeBoundOperationType");
+        }
+        if (renderMap["amountField"]){
+            requiredSelectFields.push("amountField");
         }
         var activeRollup = cmp.get("v.activeRollup");
 

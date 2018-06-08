@@ -309,6 +309,7 @@
                                                 options="{!v.amountFields}"
                                                 mediumDeviceSize="4"
                                                 hasNullOption="false"
+                                                isRequired="true"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
                             />
                         </aura:if>
