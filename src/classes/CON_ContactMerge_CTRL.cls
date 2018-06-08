@@ -590,7 +590,7 @@ public with sharing class CON_ContactMerge_CTRL {
         Try {           
             if(searchText != null && searchText.length()>0){
                 step = 2;
-                this.searchResults = wrapSOSLResults(mySOSL());
+                this.searchResults = wrapSOSLResults(searchRecords());
             }
         } catch (exception ex) {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Error, ex.getMessage()));         
@@ -600,26 +600,20 @@ public with sharing class CON_ContactMerge_CTRL {
     
     /*******************************************************************************************************
     * @description Runs SOSL query to find contacts according to the search text entered by the user.
-    * @return PageReference The page that it redirects to. Same page user is in.
+    * @return List<SObject> The list of sObjects returned by the search
     */
-    public List<List<SObject>> mySOSL() {
+    public List<SObject> searchRecords() {
         searchResults.clear();    
         
         //build the SOSL query and execute - NOTE: * wildcard will only have effect at the middle or end of the search term
-        String searchquery = 'FIND \'' + String.escapeSingleQuotes(searchText) + 
-            '*\' IN ALL FIELDS RETURNING Contact(';
-            
-        string strComma = '';
-        for (string strField : listStrContactField) {
-            searchquery += strComma + strField;
-            strComma = ',';
-        }
-        
-        searchquery += ' ORDER BY LastName LIMIT ' + SOSL_LIMIT + ')';
-        //UTIL_Debug.debug('Search Query: ' + searchquery);
-        
-        return search.query(searchquery);
-        //List<List<SObject>> searchList = new List<List<SObject>>();
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(listStrContactField)
+            .withSearchQuery(searchText)
+            .withWildcard()
+            .withOrderBy(Contact.LastName)
+            .withLimit(SOSL_LIMIT);
+
+        return finder.executeSearch();
     }
     
     /*******************************************************************************************************
@@ -643,29 +637,18 @@ public with sharing class CON_ContactMerge_CTRL {
     
     /*******************************************************************************************************
     * @description Wraps the SOSL results.
-    * @param mySearchList The list of SObjects to wrap. It contains a list per Sobject type.
+    * @param searchResults The list of SObjects to wrap. 
     * @return List<ContactWrapper> Those records from the passed parameter that are of type Contact are returned
     * in this list, inside wrappers.
     */
-    public List<ContactWrapper> wrapSOSLResults(List<List<SObject>> mySearchList){
-        
+    public List<ContactWrapper> wrapSOSLResults(List<SObject> searchResults) {        
         List<ContactWrapper> res = new List<ContactWrapper>();
-        //loop through the contacts putting them in an array of wrappers
-        if(mySearchList.size()>0){
-            for (List<SObject> returnedObjects : mySearchList) {
-                //UTIL_Debug.debug('List size' + returnedObjects.size());
-                for (SObject returnedObject : returnedObjects){
-                    //if the returned object is a contact, add it to the Contact list
-                    if(returnedObject.getSObjectType() == Contact.sObjectType){
-                        contactWrapper thisResult = new contactWrapper((Contact) returnedObject);   
-                        //UTIL_Debug.debug('Contact Id: ' + returnedObject.id);
-                        //UTIL_Debug.debug('Contact: ' + returnedObject);         
-                        res.add(thisResult);   
-                    }
-                }
-            }
+
+        for (SObject returnedObject : searchResults) {
+            ContactWrapper thisResult = new ContactWrapper((Contact) returnedObject);  
+            res.add(thisResult);  
         }
-        //UTIL_Debug.debug('Search Results Map Size: ' + res.size());
+
         return res;       
     }
     

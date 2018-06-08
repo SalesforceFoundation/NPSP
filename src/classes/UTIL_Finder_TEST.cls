@@ -109,7 +109,7 @@ private class UTIL_Finder_TEST {
         }
 
         System.assertNotEquals(null, actual, 'An exception should be thrown');
-        System.assertEquals(UTIL_Finder.SEARCH_CRITERIA_REQUIRED, actual.getMessage());
+        System.assertEquals(UTIL_Finder.SEARCH_QUERY_REQUIRED, actual.getMessage());
     }
 
     /*******************************************************************************************************
@@ -402,6 +402,117 @@ private class UTIL_Finder_TEST {
     }
 
     /*******************************************************************************************************
+    * @description Verifies find() when search is applied on the Set values
+    */
+    @isTest static private void findSucceedsWhenSearchingForValuesInTheSet() {        
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName)
+            .inSet(new Set<String>{ 'Smith', 'CLARK' });
+        whereExp.isFilterable = false;
+
+        List<sObject> records = getTestContacts();
+        insert records;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(whereExp);
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[0], records[1], records[2], records[3], records[6]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+
+        System.assertEquals('FIND \'(smith OR clark)\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.searchBuilder().build());
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies find() when complex post filtering is applied on the Set values
+    */
+    @isTest static private void findSucceedsWhenPostFilteringIsAppliedOnOnTheInSetSearch() { 
+        List<sObject> records = getTestContacts();
+        insert records;
+
+        UTIL_Where.FieldExpression lastNameExp = new UTIL_Where.FieldExpression(Contact.LastName)
+            .inSet(new Set<String>{ 'Smith', 'CLARK', 'Roberston' });
+        lastNameExp.isFilterable = false;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(new UTIL_Where().add(UTIL_Where.AndGroup()
+                .add(lastNameExp)
+                .add(new UTIL_Where.FieldExpression(Contact.FirstName).inSet(new Set<String>{ 'Jane', null }))
+            ));
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[2], records[4]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+            System.assertEquals((String) expectedRecords[i].get('FirstName'), (String) actual[i].get('FirstName'));
+        }
+
+        System.assertEquals('FIND \'((smith OR clark OR roberston) AND jane)\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.searchBuilder().build());
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies find() when search query contains special characters
+    */
+    @isTest static private void findSucceedsWhenSearchQueryContainsSpecialCharacters() { 
+        List<sObject> records = new List<sObject>{
+            new Contact(LastName = 'Smith\\ Clark* &Garcia', FirstName = 'John', Title = 'Administrator', Department = 'IT'),
+            new Contact(LastName = 'Clark? J{}nes [] (Jackson!)', FirstName = 'Kent', Title = 'Business Manager', Department = 'Sales'),
+            new Contact(LastName = 'Smith | Clark?', FirstName = 'Jane', Title = 'Business Manager', Department = 'Business'),
+            new Contact(LastName = '^Clark~Richards: "Johnson"', FirstName = 'Abby', Title = 'Executive'),
+            new Contact(LastName = 'Roberston+Williams', Title = 'Director', Department = 'Sales'),
+            new Contact(LastName = 'Jackson-Clark', FirstName = 'Ben', Department = 'Sales'),
+            new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Administrator', Department = 'Support')
+        };
+        insert records;
+
+        Set<String> lastNames = new Set<String>();
+        List<sObject> expectedRecords = new List<sObject>();
+
+        for (Integer i = 0; i < records.size() -1; i++) {
+            lastNames.add((String) records[i].get('LastName'));
+            expectedRecords.add(records[i]);
+        }
+
+        UTIL_Where.FieldExpression lastNameExp = new UTIL_Where.FieldExpression(Contact.LastName).inSet(lastNames);
+        lastNameExp.isFilterable = false;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+            .withSelectFields(SOBJECT_FIELDS)
+            .withWhere(lastNameExp);
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since WHERE contains an encrypted field');
+
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+    }
+
+
+    /*******************************************************************************************************
     * @description Verifies find() when search returns LIMIT number of records
     */
     @isTest static private void findSucceedsWhenSearchReturnsLimitNumberOfRecords() {
@@ -423,6 +534,107 @@ private class UTIL_Finder_TEST {
 
         System.assertEquals(1, actual.size());
         System.assertEquals('Clark', (String) actual[0].get('LastName'));
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies search returns records and applies post sort when 
+	* the ORDER BY field is not sortable (the field is encrypted).
+    */
+    @isTest static private void executeSearchAppliesPostSortingWhenOrderByFieldIsNotSortable() {
+        List<sObject> records = getTestContacts();
+
+        UTIL_OrderBy.FieldExpression orderByField = new UTIL_OrderBy.FieldExpression(Contact.LastName);
+        orderByField.isSortable = false;
+
+        String searchQuery = 'foo';
+
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchQuery)
+            .withWildcard()
+            .withOrderBy(orderByField)
+            .withLimit(records.size());
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        List<sObject> expectedRecords = new List<sObject>{
+            records[1], records[3], records[6], records[5], records[4], records[0], records[2]
+        };
+        System.assertEquals(expectedRecords.size(), actual.size());
+
+        for (Integer i = 0; i < actual.size(); i++) {
+            System.assertEquals((String) expectedRecords[i].get('LastName'), (String) actual[i].get('LastName'));
+        }
+
+        System.assert(finder.orderBy.isPostSort(), 'Post sort should be applied');
+        System.assertEquals('FIND \'foo*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title)', finder.sosl);
+	}
+
+    /*******************************************************************************************************
+    * @description Verifies search returns records and does not apply post sort when 
+	* the ORDER BY field is sortable (the field is not encrypted).
+    */
+    @isTest static private void executeSearchDoesNotApplyPostSortingsWhenOrderByFieldIsSortable() {
+        List<sObject> records = getTestContacts();
+
+        String searchQuery = 'O\'Foo';
+
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchQuery)
+            .withWildcard()
+            .withOrderBy(Contact.Department)
+            .withLimit(records.size());
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        System.assertEquals(records.size(), actual.size());
+
+        System.assert(!finder.orderBy.isPostSort(), 'Post sort should not be applied');
+        System.assertEquals('FIND \'O\\\'Foo*\' IN ALL FIELDS RETURNING Contact(Id, FirstName, LastName, Title, Department ORDER BY Department)', finder.sosl);
+	}
+
+    /*******************************************************************************************************
+    * @description Verifies search returns LIMIT number of records
+    */
+    @isTest static private void executeSearchReturnsLimitNumberOfRecords() {
+        List<sObject> records = getTestContacts();
+
+        String searchQuery = 'foo';
+        Integer limitRows = records.size() - 1;
+
+        MockFinder finder = (MockFinder) new MockFinder(Contact.sObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchQuery)
+            .withWildcard()
+            .withOrderBy(Contact.Department)
+            .withLimit(limitRows);
+
+        finder.returnSearchRecords(records);
+        List<sObject> actual = finder.executeSearch();
+
+        System.assertEquals(limitRows, actual.size());
+	}
+
+    /*******************************************************************************************************
+    * @description Verifies search runs successfully when the search query contains special characters
+    */
+    @isTest static private void executeSearchWhenSearchQueryContainsSpecialCharacters() { 
+        List<sObject> records = getTestContacts();
+        insert records;
+
+        String searchQuery = '^Smith\\ Clark* &Garcia : | ~Clark? J{}nes [] - (Jackson!) + "Johnson"';
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+            .withSelectFields(new List<String>(SELECT_FIELDS))
+            .withSearchQuery(searchQuery);
+        
+        UTIL_UnitTestData_TEST.setFixedSearchResults(records);
+        List<sObject> actual = finder.executeSearch();
+
+        System.assertEquals(records.size(), actual.size());
     }
 
     

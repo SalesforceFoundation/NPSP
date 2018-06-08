@@ -276,6 +276,8 @@ public with sharing class BDI_DataImport_TEST {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
@@ -318,6 +320,8 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals('TestFirstname00 TestLastname00', listConExisting[0].Name);
         listConExisting[0].email = 'foo@bar.com';
         update listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('TestFirstname00', 'TestLastname00', 'c2', 'C2'));
@@ -439,7 +443,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(listDI[1].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);
     }
 
     /*********************************************************************************************************
@@ -447,15 +451,17 @@ public with sharing class BDI_DataImport_TEST {
     *        import existing accounts  
     * verify: 
     *        no accounts created, just matched
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIExistingAccounts() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDIExistingAccounts') return;
             
         List<Account> listAcc = new List<Account>();
         listAcc.add(new Account(name='A1', BillingCity='Seattle'));
         listAcc.add(new Account(name='A2'));
-        insert listAcc;    
-                    
+        insert listAcc;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAcc);
+
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='A1', Account1_City__c='Seattle'));
         listDI.add(new DataImport__c(Account1_Name__c='A2'));
@@ -476,7 +482,7 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(listDI[1].Account1Imported__c, listAcc[1].Id);
         System.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[1].Account1ImportStatus__c);
     }
 
     /*********************************************************************************************************
@@ -484,7 +490,7 @@ public with sharing class BDI_DataImport_TEST {
     *        import existing accounts, matched by Salesforce Id  
     * verify: 
     *        no accounts created, just matched
-    **********************************************************************************************************/            
+    **********************************************************************************************************/
     static testMethod void TwoDIExistingAccountsSalesforceId() {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
@@ -494,8 +500,10 @@ public with sharing class BDI_DataImport_TEST {
         List<Account> listAcc = new List<Account>();
         listAcc.add(new Account(name='A1'));
         listAcc.add(new Account(name='A2'));
-        insert listAcc;    
-                    
+        insert listAcc;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAcc);
+
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', 
             Account1Imported__c=listAcc[0].Id));
@@ -697,6 +705,8 @@ public with sharing class BDI_DataImport_TEST {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
         listConExisting.add(new Contact(Firstname='c3', Lastname='C3', Email='c3@C3.com', MailingCity='Seattle'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1', 'c2', 'C2'));
@@ -905,6 +915,8 @@ public with sharing class BDI_DataImport_TEST {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', MailingCity='Portland'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
@@ -969,6 +981,8 @@ public with sharing class BDI_DataImport_TEST {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', MailingCity='Seattle'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', MailingCity='Portland'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(newDI('c1', 'C1'));
@@ -1358,6 +1372,8 @@ public with sharing class BDI_DataImport_TEST {
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
         // get their households
         listConExisting = getContacts();
@@ -1406,6 +1422,8 @@ public with sharing class BDI_DataImport_TEST {
         ID hhId = getContacts()[0].AccountId;
         listConExisting.add(new Contact(Firstname='c2', Lastname='C1', Email='c2@C2.com', Salutation='Mrs', AccountId=hhId));
         upsert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com', Contact1_Salutation__c='Dr',
