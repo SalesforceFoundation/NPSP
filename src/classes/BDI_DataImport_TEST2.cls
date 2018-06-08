@@ -348,7 +348,7 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
 
         //Since Data Import API does not have other non-encryptable fields to test matching on,
-        //we need to exist the test if the matching is done on the encrypted field. 
+        //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
@@ -592,7 +592,7 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
 
         //Since Data Import API does not have other non-encryptable fields to test matching on,
-        //we need to exist the test if the matching is done on the encrypted field. 
+        //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
@@ -640,7 +640,7 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewContacts') return;
 
         //Since Data Import API does not have other non-encryptable fields to test matching on,
-        //we need to exist the test if the matching is done on the encrypted field. 
+        //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
         List<DataImport__c> listDI = new List<DataImport__c>();
@@ -683,7 +683,7 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
 
         //Since Data Import API does not have other non-encryptable fields to test matching on,
-        //we need to exist the test if the matching is done on the encrypted field. 
+        //we need to exit the test if the matching is done on the encrypted field. 
         if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
