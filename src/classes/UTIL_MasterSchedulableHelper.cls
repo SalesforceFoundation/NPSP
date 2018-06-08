@@ -193,10 +193,13 @@ public without sharing class UTIL_MasterSchedulableHelper {
     */
     public static Boolean hasRunningJob(String className) {
         className = (className.contains('__') ? className.split('__')[1] : className);
+        // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
+        Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
         Integer jobCount = [SELECT COUNT()
             FROM AsyncApexJob
             WHERE ApexClass.Name = :className
             AND Status NOT IN ('Queued','Aborted','Completed','Failed')
+            AND CreatedDate < :tenMinutesAgo
             LIMIT 1];
         if (jobCount == 0) {
             return false;
