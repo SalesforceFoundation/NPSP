@@ -672,7 +672,8 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert testOpptys;
 
-        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
+        accountDetails = oppOCRInstance.populateAccountDetails(testOpptys);
         Test.stopTest();
 
         System.assertEquals(5, accountDetails.size());
@@ -701,9 +702,10 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert testOpptys;
 
-        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
+        accountDetails = oppOCRInstance.populateAccountDetails(testOpptys);
 
-        primaryContactToOpportunities = OPP_OpportunityContactRoles_TDTM.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
+        primaryContactToOpportunities = oppOCRInstance.populatePrimaryContactToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
         System.assertEquals(5, primaryContactToOpportunities.size());
@@ -733,14 +735,15 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.startTest();
         insert testOpptys;
 
-        accountDetails = OPP_OpportunityContactRoles_TDTM.populateAccountDetails(testOpptys);
+        OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
+        accountDetails = oppOCRInstance.populateAccountDetails(testOpptys);
         for (Account eachAccount : accountDetails.values()) {
             eachAccount.npe01__SYSTEMIsIndividual__c = false;
             testAccounts.add(eachAccount);
         }
         update testAccounts;
 
-        accountToOpportunities = OPP_OpportunityContactRoles_TDTM.populateAccountToOpportunities(testOpptys, accountDetails);
+        accountToOpportunities = oppOCRInstance.populateAccountToOpportunities(testOpptys, accountDetails);
         Test.stopTest();
 
         System.assertEquals(5, accountToOpportunities.size());
@@ -791,9 +794,10 @@ private class OPP_OpportunityContactRoles_TEST {
 
         Test.startTest();
 
-        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr0);
-        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr1);
-        OPP_OpportunityContactRoles_TDTM.populateTransactionOCRs(transactionOCRs, ocr2);
+        OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
+        oppOCRInstance.populateTransactionOCRs(transactionOCRs, ocr0);
+        oppOCRInstance.populateTransactionOCRs(transactionOCRs, ocr1);
+        oppOCRInstance.populateTransactionOCRs(transactionOCRs, ocr2);
 
         Test.stopTest();
 
@@ -867,7 +871,8 @@ private class OPP_OpportunityContactRoles_TEST {
         testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
         System.assertEquals(3, testOCRs.size());
 
-        OPP_OpportunityContactRoles_TDTM.clearOCRs(opportunityToContactToOCR, changedOpptys, ocrsToDeleteImmediately);
+        OPP_OpportunityContactRoles_TDTM oppOCRInstance = new OPP_OpportunityContactRoles_TDTM();
+        oppOCRInstance.clearOCRs(opportunityToContactToOCR, changedOpptys, ocrsToDeleteImmediately);
         testOCRs = [SELECT Id, OpportunityId, ContactId, Role, isPrimary FROM OpportunityContactRole];
         System.assertEquals(1, testOCRs.size());
 

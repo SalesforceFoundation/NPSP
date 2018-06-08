@@ -38,8 +38,6 @@
 public class OPP_AutomatedSoftCreditsService {
 
     private static final String RELATED_OPPORTUNITY_CONTACT_ROLE_NONE = '--None--';
-    private static final sObjectType OBJECT_TYPE_RELATIONSHIP = npe4__Relationship__c.SObjectType;
-    private static final sObjectType OBJECT_TYPE_AFFILIATION = npe5__Affiliation__c.SObjectType;
     private static final sObjectField FIELD_NAME_RELATIONSHIP_RELATED_CONTACT = npe4__Relationship__c.npe4__RelatedContact__c;
     private static final sObjectField FIELD_NAME_AFFILIATION_CONTACT = npe5__Affiliation__c.npe5__Contact__c;
 
@@ -58,6 +56,7 @@ public class OPP_AutomatedSoftCreditsService {
     /*********************************************************************************************************
     * @description Calls the methods that handle creating Opportunity Contact Roles for Relationship records.
     * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> The newly created Opportunity Contact Role records.
     **********************************************************************************************************/
     public static List<OpportunityContactRole>  createRelationshipOCRs(Map<Id, List<Id>> primaryContactIdToOpportunityIds, Map<Id, List<OpportunityContactRole>> transactionOCRs) {
@@ -103,7 +102,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateAssociatedRecords(primaryContactToRelationships, OBJECT_TYPE_RELATIONSHIP, FIELD_NAME_RELATIONSHIP_RELATED_CONTACT);
+        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateAssociatedRecords(primaryContactToRelationships, FIELD_NAME_RELATIONSHIP_RELATED_CONTACT);
 
         return uniquePrimaryContactToRelationships;
     }
@@ -113,6 +112,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @description Builds Opportunity Contact Role records for the Primary Contact's Relationships.
     * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
     * @param primaryContactToRelatedContacts Map of Primary Contact to Relationship records.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
     **********************************************************************************************************/
     @testVisible
@@ -196,7 +196,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAssociatedRecords(accountToAffiliations, OBJECT_TYPE_AFFILIATION, FIELD_NAME_AFFILIATION_CONTACT);
+        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAssociatedRecords(accountToAffiliations, FIELD_NAME_AFFILIATION_CONTACT);
 
         return uniqueAccountToAffiliations;
     }
@@ -206,6 +206,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @description Builds Opportunity Contact Role records for the Account's Affiliations.
     * @param accountIdToOpportunityIds Map of Account to List of Opportunities.
     * @param accountToRelatedContacts Map of Account to Affiliation records.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
     **********************************************************************************************************/
     @testVisible
@@ -247,7 +248,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @return Map<Id, List<sObject>> Map of unique Relationship records based on Contact Id.
     **********************************************************************************************************/
     @testVisible
-    private static Map<Id, List<sObject>> removeDuplicateAssociatedRecords(Map<Id, List<sObject>> sourceIdToAssociatedRecords, sObjectType objectType, sObjectField fieldName) {
+    private static Map<Id, List<sObject>> removeDuplicateAssociatedRecords(Map<Id, List<sObject>> sourceIdToAssociatedRecords, sObjectField fieldName) {
         Map<Id, List<sObject>> sourceIdToUniqueAssociatedRecords = new Map<Id, List<sObject>>();
 
         for (Id sourceId : sourceIdToAssociatedRecords.keySet()) {
