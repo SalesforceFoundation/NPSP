@@ -2,6 +2,7 @@ import logging
 import re
 import time
 
+
 from robot.libraries.BuiltIn import BuiltIn
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import StaleElementReferenceException
@@ -11,6 +12,11 @@ from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from locator import npsp_lex_locators
+#import os
+#import sys
+#sys.path.append(os.path.abspath(os.path.join('..',
+#sys.path.append("/Users/skristem/Documents/GitHub/CumulusCI/cumulusci/robotframework/tests")
+#import Salesforce
 
 
 class NPSP(object):
@@ -51,5 +57,20 @@ class NPSP(object):
         xpath = npsp_lex_locators["iframe"].format(title)
         field = self.selenium.get_webelement(xpath).click()
         
+#     def frame(self):
+#         self.selenium.SelectFrame("relative=Parent")
         
+    def click_record_button(self, title):
+        locator = npsp_lex_locators['record']['button'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        button = self.selenium.get_webelement(locator)
+        button.click()
+        time.sleep(5)
+        
+    def select_tab(self, title):
+        locator = npsp_lex_locators['tab'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        button = self.selenium.get_webelement(locator)
+        button.click()
+        time.sleep(5)    
         
