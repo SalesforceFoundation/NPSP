@@ -455,7 +455,7 @@ public class CRLP_Rollup {
         // ================================================================
         if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
-            if (fldType == SoapType.DOUBLE && this.isYearsAgoSingleResult) {
+            if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
             } else if (fldType == SoapType.ID) {
                 resultValue = idValue[arrayPosition];

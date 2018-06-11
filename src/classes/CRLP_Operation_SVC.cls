@@ -288,7 +288,7 @@ public class CRLP_Operation_SVC {
             rollup.idValue[arrayPosition] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
             rollup.numValue[arrayPosition] = (Decimal)resultVal;
-        } else {
+        } else if (resultFieldType == SoapType.STRING) {
             rollup.textValue[arrayPosition] = String.valueOf(resultVal);
         }
     }
