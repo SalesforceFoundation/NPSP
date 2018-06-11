@@ -347,30 +347,7 @@
         //reset amount fields
         this.resetFields(cmp, amountObjectName, 'amount');
         cmp.set("v.activeRollup.amountObject", amountObjectName);
-        var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
-
-        var amountFieldName;
-        var amountFields = cmp.get("v.amountFields");
-
-        // Set the amount field and assumed detail object based on the selected rollup type for all target fields but percentages
-        if (summaryFieldType !== 'PERCENT') {
-            if (amountObjectName === labels.objectPayment) {
-                amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
-                cmp.set("v.activeRollup.detailObject", labels.objectPayment);
-            } else if (amountObjectName === labels.objectAllocation) {
-                amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
-                cmp.set("v.activeRollup.detailObject", labels.objectAllocation);
-            } else if (amountObjectName === labels.objectPartialSoftCredit) {
-                amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
-                cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
-            } else {
-                amountFieldName = labels.objectOpportunity + ' Amount';
-                cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
-            }
-        }
-
-        cmp.set("v.activeRollup.amountField", amountFieldName);
-        cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+        this.setDefaultAmount(cmp, labels, amountObjectName);
 
         var detailObjects = cmp.get("v.detailObjects");
         cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObjectName, detailObjects));
@@ -436,13 +413,28 @@
             this.onChangeOperation(cmp, '');
         }
 
-        if (cmp.get("v.activeRollup.amountObject")) {
-            var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
+        var amountObject = cmp.get("v.activeRollup.amountObject");
+        if (amountObject) {
+            var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObject);
             this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
-        }
 
-        //reset amount fields to allow for change between double/currency and percent
-        this.resetFields(cmp, cmp.get("v.activeRollup.amountObject"), 'amount');
+            //reset detail and amount fields if not in the new lists
+            var detailFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.detailField"), cmp.get("v.detailFields"));
+            if (!detailFieldLabel) {
+                cmp.set("v.activeRollup.detailField", null);
+                cmp.set("v.activeRollup.detailFieldLabel", '');
+            }
+
+            //reset amount fields for change between double/currency and percent, then reset amount field if not in the new list
+            this.resetFields(cmp, amountObject, 'amount');
+            var amountFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.amountField"), cmp.get("v.amountFields"));
+            if (!amountFieldLabel) {
+                cmp.set("v.activeRollup.amountField", null);
+                cmp.set("v.activeRollup.amountFieldLabel", '');
+                //set intelligent default if previously selected amount is unavailable
+                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject)
+            }
+        }
 
         this.updateRollupName(cmp);
         cmp.set("v.activeRollup.summaryFieldLabel", label);
@@ -887,6 +879,35 @@
             this.showToast(cmp, 'info', cmp.get("v.labels.rollupSaveProgress"), cmp.get("v.labels.pleaseWait"));
         }
         $A.enqueueAction(action);
+    },
+
+    /**
+     * @description: Set the default amount field and detail object based on the selected rollup type for all target fields but percentages
+     */
+    setDefaultAmount: function(cmp, labels, amountObjectName) {
+        var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
+
+        if (summaryFieldType !== 'PERCENT') {
+
+            var amountFieldName;
+            var amountFields = cmp.get("v.amountFields");
+
+            if (amountObjectName === labels.objectPayment) {
+                amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectPayment);
+            } else if (amountObjectName === labels.objectAllocation) {
+                amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectAllocation);
+            } else if (amountObjectName === labels.objectPartialSoftCredit) {
+                amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
+                cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
+            } else {
+                amountFieldName = labels.objectOpportunity + ' Amount';
+                cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
+            }
+            cmp.set("v.activeRollup.amountField", amountFieldName);
+            cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+        }
     },
 
     /**
