@@ -373,7 +373,6 @@ public class CRLP_Rollup {
         } else if (fldType == SoapType.DOUBLE && operation == CRLP_Operation.RollupType.SMALLEST) {
             if (useYearsAgoValue == false) {
                 resultValue = minValue;
-                System.debug('++XXX first setting result to: '+resultValue);
             } else {
                 resultValue = minForSpecifiedYear;
             }
@@ -456,16 +455,15 @@ public class CRLP_Rollup {
         // ================================================================
         if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
-            if (fldType == SoapType.DOUBLE) {
+            if (fldType == SoapType.DOUBLE && this.isYearsAgoSingleResult) {
                 resultValue = numValue[arrayPosition];
-                System.debug('++XXX rewrite result to '+resultValue);
             } else if (fldType == SoapType.ID) {
                 resultValue = idValue[arrayPosition];
             } else if (fldType == SoapType.DATE) {
                 resultValue = dateValue[arrayPosition];
             } else if (fldType == SoapType.DATETIME) {
                 resultValue = dateTimeValue[arrayPosition];
-            } else {
+            } else if (fldType == SoapType.STRING) {
                 resultValue = textValue[arrayPosition];
             }
         }
