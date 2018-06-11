@@ -350,6 +350,8 @@
         var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
 
         var amountFieldName;
+        var amountFields = cmp.get("v.amountFields");
+
         // Set the amount field and assumed detail object based on the selected rollup type for all target fields but percentages
         if (summaryFieldType !== 'PERCENT') {
             if (amountObjectName === labels.objectPayment) {
@@ -364,10 +366,6 @@
             } else {
                 amountFieldName = labels.objectOpportunity + ' Amount';
                 cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
-            }
-        } else {
-            if (amountFields[0] && amountFields[0].name) {
-                amountFieldName = amountFields[0].name;
             }
         }
 
