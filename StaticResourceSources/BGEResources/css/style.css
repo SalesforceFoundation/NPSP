@@ -52,6 +52,8 @@
 }
 
 .handsontable th {
+    padding-left: 7px;
+    padding-right: 7px;
     color: #758696 !important;
     border-bottom: 1px solid #cccccc !important;
     height: 40px;
@@ -60,7 +62,7 @@
 
 .handsontable td {
     color: #536787 !important;
-    padding: 1px 5px !important;
+    padding: 1px 7px !important;
 }
 
 .fixed-horizontal {
