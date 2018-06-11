@@ -64,7 +64,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                currentRowClassName: 'current-row',
                 stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
