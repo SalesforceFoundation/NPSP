@@ -716,7 +716,7 @@
 
         function getColumnTitle(templateField) {
 
-            var result = templateField.label.toUpperCase();;
+            var result = templateField.label.toUpperCase();
 
             if (result === 'RECORD TYPE ID') {
 
