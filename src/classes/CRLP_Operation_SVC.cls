@@ -68,6 +68,8 @@ public class CRLP_Operation_SVC {
         Date dateValue;
         DateTime dateTimeValue;
         Decimal amountValue = null;
+        String theYear;
+        Integer yearNum;
 
         // Get the Date value from the appropriate object. There should always be a date!
         // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
@@ -82,6 +84,19 @@ public class CRLP_Operation_SVC {
             } else if (rollup.dateFieldType == SoapType.DATETIME) {
                 dateTimeValue = (DateTime) dateSObject.get(dateField);
                 dateValue = dateTimeValue.date();
+            }
+        }
+
+        if (dateValue != null) {
+            yearNum = fiscalYrs.getYear(dateValue);
+            theYear = yearNum.format().replace(',', '');
+        }
+
+        //in the case of a years-ago-single-result group, only proceed if the detail record is in the right year
+        if (rollup.isYearsAgoSingleResult) {
+            Integer thisYear = (rollup.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - rollup.yearsAgo;
+            if (yearNum != thisYear) {
+                return;
             }
         }
 
@@ -217,11 +232,8 @@ public class CRLP_Operation_SVC {
             }
         }
 
-        String theYear;
-
         // Set the First/Last Date values; excluding Opportunities with a null Date or a null Amount
         if (dateValue != null) {
-            theYear = fiscalYrs.getYear(dateValue).format().replace(',', '');
             if (rollup.minDate == null || rollup.minDate > dateValue) {
                 rollup.minDate = dateValue;
             }
