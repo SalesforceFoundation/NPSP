@@ -327,6 +327,7 @@ global with sharing class BDI_DataImportService {
                         dt == Schema.Displaytype.TextArea ||
                         dt == Schema.Displaytype.Id ||
                         dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Phone ||
                         dt == Schema.Displaytype.Reference)
                         isCustomIdInAccountDatatypeString = true;
                 }

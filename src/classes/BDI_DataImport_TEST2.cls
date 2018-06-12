@@ -346,6 +346,10 @@ private with sharing class BDI_DataImport_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -586,6 +590,10 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -630,6 +638,10 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
         List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID1'));
@@ -669,6 +681,10 @@ private with sharing class BDI_DataImport_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
         List<Contact> listConExisting = new List<Contact>();
@@ -700,11 +716,9 @@ private with sharing class BDI_DataImport_TEST2 {
         // verify expected results
         List<Contact> listCon = getContacts(); // Creation order
         System.assertEquals(6, listCon.size());
-        System.debug('****DJH: listCon ' + listCon);
         
         listDI = getDIs();
         System.assertEquals(4, listDI.size());
-        System.debug('****DJH: listDI ' + listDI);
 
         System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
         System.assertEquals(listDI[0].Contact1ImportStatus__c, label.bdiMatched);
@@ -730,20 +744,20 @@ private with sharing class BDI_DataImport_TEST2 {
             
          // existing Accounts
         List<Account> listAccExisting = new List<Account>();
-        listAccExisting.add(new Account(Name='foo', website='a1.com'));
-        listAccExisting.add(new Account(Name='a1', website='nota1.com'));
+        listAccExisting.add(new Account(Name='foo', Phone='415-111-4567'));
+        listAccExisting.add(new Account(Name='a1', Phone='415-222-2222'));
         insert listAccExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
 
         List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Website__c='a1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-333-3333'));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -775,13 +789,13 @@ private with sharing class BDI_DataImport_TEST2 {
             
  
         List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='a1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-222-4567'));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -810,24 +824,24 @@ private with sharing class BDI_DataImport_TEST2 {
             
          // existing Accounts
         List<Account> listAccExisting = new List<Account>();
-        listAccExisting.add(new Account(Name='a1', website='id1.com'));
-        listAccExisting.add(new Account(Name='a1', website='id2.com'));
-        listAccExisting.add(new Account(Name='a1', website=null));
-        listAccExisting.add(new Account(Name='a2', website='id4.com'));
+        listAccExisting.add(new Account(Name='a1', Phone='415-111-4567'));
+        listAccExisting.add(new Account(Name='a1', Phone='415-222-2222'));
+        listAccExisting.add(new Account(Name='a1', Phone=null));
+        listAccExisting.add(new Account(Name='a2', Phone='415-444-4444'));
         insert listAccExisting;
 
         UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
  
         List<DataImport__c> listDI = new List<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id3.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c=null));
-        listDI.add(new DataImport__c(Account1_Name__c='a2', Account1_Website__c=null));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-333-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c=null));
+        listDI.add(new DataImport__c(Account1_Name__c='a2', Account1_Phone__c=null));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -837,11 +851,9 @@ private with sharing class BDI_DataImport_TEST2 {
     
         // verify expected results
         List<Account> listAcc = getAccounts(); // Creation order
-        System.debug('****DJH: listAcc ' + listAcc);
         System.assertEquals(6, listAcc.size());
         
         listDI = getDIs();
-        System.debug('****DJH: listDI ' + listDI);
         System.assertEquals(4, listDI.size());
         
         System.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
@@ -1516,16 +1528,16 @@ private with sharing class BDI_DataImport_TEST2 {
         System.assertEquals(listDI[2].HomeAddressImported__c, listAddr[1].Id);
 
         System.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
-        System.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
-        System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
+        System.assert(listDI[1].HomeAddressImportStatus__c.contains('Billing City'));
+        System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);
 
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
         System.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
-        System.assertEquals(null, listDI[0].FailureInformation__c);        
-        System.assert(listDI[1].FailureInformation__c.contains('invalid city'));        
-        System.assertEquals(null, listDI[2].FailureInformation__c);        
+        System.assertEquals(null, listDI[0].FailureInformation__c);
+        System.assert(listDI[1].FailureInformation__c.contains('Billing City'));
+        System.assertEquals(null, listDI[2].FailureInformation__c);
 
         List<Account> listAcc = getAccounts();
         System.assertEquals(3, listAcc.size());
