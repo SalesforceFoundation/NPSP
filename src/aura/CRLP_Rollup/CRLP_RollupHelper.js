@@ -662,7 +662,7 @@
             newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
         } else if (context === 'date') {
-            newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
+            newFields = this.filterFieldsByType(cmp, ["DATE", "DATETIME"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
             newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY", "PERCENT"], newFields);
