@@ -223,6 +223,11 @@
         var mode = cmp.get("v.filterRuleMode");
 
         if (mode !== 'delete') {
+            //explicit null setting to match saved values
+            if (filterRule.value === '') {
+                filterRule.value = null;
+            }
+
             var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
 
             if (canSave) {
