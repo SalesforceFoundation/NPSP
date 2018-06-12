@@ -38,6 +38,8 @@
 public class OPP_AutomatedSoftCreditsService {
 
     private static final String RELATED_OPPORTUNITY_CONTACT_ROLE_NONE = '--None--';
+    private static final sObjectField FIELD_NAME_RELATIONSHIP_RELATED_CONTACT = npe4__Relationship__c.npe4__RelatedContact__c;
+    private static final sObjectField FIELD_NAME_AFFILIATION_CONTACT = npe5__Affiliation__c.npe5__Contact__c;
 
 
     /*********************************************************************************************************
@@ -54,6 +56,7 @@ public class OPP_AutomatedSoftCreditsService {
     /*********************************************************************************************************
     * @description Calls the methods that handle creating Opportunity Contact Roles for Relationship records.
     * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> The newly created Opportunity Contact Role records.
     **********************************************************************************************************/
     public static List<OpportunityContactRole>  createRelationshipOCRs(Map<Id, List<Id>> primaryContactIdToOpportunityIds, Map<Id, List<OpportunityContactRole>> transactionOCRs) {
@@ -99,7 +102,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateRelationships(primaryContactToRelationships);
+        Map<Id, List<npe4__Relationship__c>> uniquePrimaryContactToRelationships = removeDuplicateAssociatedRecords(primaryContactToRelationships, FIELD_NAME_RELATIONSHIP_RELATED_CONTACT);
 
         return uniquePrimaryContactToRelationships;
     }
@@ -109,6 +112,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @description Builds Opportunity Contact Role records for the Primary Contact's Relationships.
     * @param primaryContactIdToOpportunityIds Map of Primary Contact to List of Opportunities.
     * @param primaryContactToRelatedContacts Map of Primary Contact to Relationship records.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
     **********************************************************************************************************/
     @testVisible
@@ -192,7 +196,7 @@ public class OPP_AutomatedSoftCreditsService {
             }
         }
 
-        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAffiliations(accountToAffiliations);
+        Map<Id, List<npe5__Affiliation__c>> uniqueAccountToAffiliations = removeDuplicateAssociatedRecords(accountToAffiliations, FIELD_NAME_AFFILIATION_CONTACT);
 
         return uniqueAccountToAffiliations;
     }
@@ -202,6 +206,7 @@ public class OPP_AutomatedSoftCreditsService {
     * @description Builds Opportunity Contact Role records for the Account's Affiliations.
     * @param accountIdToOpportunityIds Map of Account to List of Opportunities.
     * @param accountToRelatedContacts Map of Account to Affiliation records.
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @return List<OpportunityContactRole> List of the Opportunity Contact Role records for Related Contacts.
     **********************************************************************************************************/
     @testVisible
@@ -238,56 +243,29 @@ public class OPP_AutomatedSoftCreditsService {
 
 
     /*********************************************************************************************************
-    * @description Removes duplicate Relationship records based on the Contact Id.
-    * @param primaryContactToRelationships Map of Primary Contact to its Relationship records.
-    * @return Map<Id, List<npe4__Relationship__c>> Map of unique Relationship records based on Contact Id.
+    * @description Removes duplicate Relationship/Affiliation records based on the Contact Id.
+    * @param sourceIdToAssociatedRecords Map of Primary Contact/Account to its related records.
+    * @return Map<Id, List<sObject>> Map of unique Relationship records based on Contact Id.
     **********************************************************************************************************/
     @testVisible
-    private static Map<Id, List<npe4__Relationship__c>> removeDuplicateRelationships(Map<Id, List<npe4__Relationship__c>> primaryContactToRelationships) {
-        Map<Id, List<npe4__Relationship__c>> primaryContactToUniqueRelationships = new Map<Id, List<npe4__Relationship__c>>();
+    private static Map<Id, List<sObject>> removeDuplicateAssociatedRecords(Map<Id, List<sObject>> sourceIdToAssociatedRecords, sObjectField fieldName) {
+        Map<Id, List<sObject>> sourceIdToUniqueAssociatedRecords = new Map<Id, List<sObject>>();
 
-        for (Id primaryContactId: primaryContactToRelationships.keySet()) {
-            Map<Id, npe4__Relationship__c> cleanedRelationships = new Map<Id, npe4__Relationship__c>();
-            List<npe4__Relationship__c> uniqueRelationships = new List<npe4__Relationship__c>();
-            List<npe4__Relationship__c> relationships = primaryContactToRelationships.get(primaryContactId);
-            for (npe4__Relationship__c eachRelationship : relationships) {
-                if (!cleanedRelationships.containsKey(eachRelationship.npe4__RelatedContact__c)) {
-                    cleanedRelationships.put(eachRelationship.npe4__RelatedContact__c, eachRelationship);
-                    uniqueRelationships.add(eachRelationship);
+        for (Id sourceId : sourceIdToAssociatedRecords.keySet()) {
+            Map<Id, sObject> cleanedRelatedRecords = new Map<Id, sObject>();
+            List<sObject> uniqueAssociatedRecords = new List<sObject>();
+            List<sObject> relatedRecords = sourceIdToAssociatedRecords.get(sourceId);
+            for (sObject eachAssociatedRecord : relatedRecords) {
+                if (!cleanedRelatedRecords.containsKey((Id)eachAssociatedRecord.get(fieldName))) {
+                    cleanedRelatedRecords.put((Id)eachAssociatedRecord.get(fieldName), eachAssociatedRecord);
+                    uniqueAssociatedRecords.add(eachAssociatedRecord);
                 }
             }
 
-            primaryContactToUniqueRelationships.put(primaryContactId, uniqueRelationships);
+            sourceIdToUniqueAssociatedRecords.put(sourceId, uniqueAssociatedRecords);
         }
 
-        return primaryContactToUniqueRelationships;
-    }
-
-
-    /*********************************************************************************************************
-    * @description Removes duplicate Affiliation records based on the Contact Id.
-    * @param accountToAffiliations Map of Account to Affiliation records.
-    * @return Map<Id, List<npe5__Affiliation__c>> Map of unique Affiliation records based on Contact Id.
-    **********************************************************************************************************/
-    @testVisible
-    private static Map<Id, List<npe5__Affiliation__c>> removeDuplicateAffiliations(Map<Id, List<npe5__Affiliation__c>> accountToAffiliations) {
-        Map<Id, List<npe5__Affiliation__c>> accountToUniqueAffiliations = new Map<Id, List<npe5__Affiliation__c>>();
-
-        for (Id accountId: accountToAffiliations.keySet()) {
-            Map<Id, npe5__Affiliation__c> cleanedAffiliations = new Map<Id, npe5__Affiliation__c>();
-            List<npe5__Affiliation__c> uniqueAffiliations = new List<npe5__Affiliation__c>();
-            List<npe5__Affiliation__c> affiliations = accountToAffiliations.get(accountId);
-            for (npe5__Affiliation__c eachAffiliation : affiliations) {
-                if (!cleanedAffiliations.containsKey(eachAffiliation.npe5__Contact__c)) {
-                    cleanedAffiliations.put(eachAffiliation.npe5__Contact__c, eachAffiliation);
-                    uniqueAffiliations.add(eachAffiliation);
-                }
-            }
-
-            accountToUniqueAffiliations.put(accountId, uniqueAffiliations);
-        }
-
-        return accountToUniqueAffiliations;
+        return sourceIdToUniqueAssociatedRecords;
     }
 
 

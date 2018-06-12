@@ -44,8 +44,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     private static final String RELATIONSHIP_STATUS_CURRENT = 'Current';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT = 'Soft Credit';
     private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOLICITOR = 'Solicitor';
-    //private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
-    private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_MATCHING_GIFT= 'Matching Gift';
+    private static final String RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_TRIBUTE = 'Tribute';
 
 
     /*********************************************************************************************************
@@ -124,7 +123,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
                                        npe5__Contact__c = testContacts[4].Id,
                                        npe5__Role__c = RELATIONSHIP_TYPE_PARTNER,
                                        npe5__Status__c = RELATIONSHIP_STATUS_CURRENT,
-                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_MATCHING_GIFT);
+                                       Related_Opportunity_Contact_Role__c = RELATIONSHIP_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT);
 
         npe5__Affiliation__c testCon6AccountToTestCon3
             = new npe5__Affiliation__c(npe5__Organization__c = testContacts[6].AccountId,
@@ -532,7 +531,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     *   Relationship records are unique based on Contac.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testRemoveDuplicateRelationships() {
+    private static testMethod void testRemoveDuplicateAssociatedRecordsForRelationships() {
         Map<Id, List<npe4__Relationship__c>> relationshipRecords = new Map<Id, List<npe4__Relationship__c>>();
 
         Contact testCon0 = returnContact('Primary0');
@@ -570,7 +569,7 @@ private class OPP_AutomatedSoftCreditsService_TEST {
     *   Affiliation records are unique based on Contac.
     * @return void
     **********************************************************************************************************/
-    private static testMethod void testRemoveDuplicateAffiliations() {
+    private static testMethod void testRemoveDuplicateAssociatedRecordsForAffiliations() {
         Map<Id, List<npe5__Affiliation__c>> affiliationRecords = new Map<Id, List<npe5__Affiliation__c>>();
 
         Contact testCon0 = returnContact('Affiliation5');

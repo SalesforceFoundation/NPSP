@@ -101,8 +101,8 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
 
             // delete the old household soft credits.
             delete [select Id from OpportunityContactRole where OpportunityId in :listOppToProcess and 
-                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c and isPrimary = false];
-            
+                Role = :currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c];
+
             // now continue with our processing to create the new household soft credits
             opportunities = listOppToProcess;
         }
@@ -199,7 +199,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                     contactIdToHouseholdId.put(myContact.Id, myContact.AccountId);                          
                 } else if (myContact.npo02__household__c!=null) {
                     contactIdToHouseholdId.put(myContact.Id, myContact.npo02__household__c);        
-                }       
+                }
             }
             
             list<id> c2HId = contactIdToHouseholdId.values();
@@ -222,12 +222,11 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                 }
                 householdIdToContact.get(hhId).add(myContact);
             }
-            
-            
+
             // list to hold new contact roles
             List<OpportunityContactRole> contactRolesForCreation = new List<OpportunityContactRole>();
             List<OpportunityContactRole> contactRolesForUpdate = new List<OpportunityContactRole>();
-            
+
             // loop through all contacts that have opps
             for (Id thisContactId : contactIdToOpps.keySet()) {
                 // loop through all opps
@@ -235,7 +234,6 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                     if (contactIdToHouseholdId.get(thisContactId) != null && householdIdToContact.get(contactIdToHouseholdId.get(thisContactId)) != null) {
                         // loop through all households members
                         for (Contact householdMember : householdIdToContact.get(contactIdToHouseholdId.get(thisContactId))) {
-
                             uniqueConRole = string.valueOf(thisOpp.Id) + string.valueOf(householdMember.Id);
 
                             // different role for primary donor
@@ -257,7 +255,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                 // exclude any Contacts with an excluded record type
                                 if (recordTypesOnCons && conRecordTypesToExclude.contains((id)householdMember.get('RecordTypeId'))) {
                                    // backwards, but prevents having to query for a RecordTypeId that may or may not be there...
-                                                                                            
+
                                 //only create contact role if we don't have one for this contact/opportunity
                                 } else if (!contactOppToContactRole.containsKey(uniqueConRole)) {
                                     OpportunityContactRole thisRole = new OpportunityContactRole();
@@ -266,7 +264,7 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
                                     thisRole.Role = currentHouseholdsSettings.npo02__Household_Member_Contact_Role__c;
                                     contactRolesForCreation.add(thisRole);
                                 }
-                            }                            
+                            }
                         }
                     }                   
                 }
@@ -275,13 +273,13 @@ public class HH_OppContactRoles_TDTM extends TDTM_Runnable {
             if (contactrolesforCreation != null) {
                 dmlWrapper.objectsToInsert.addAll((list<SObject>)contactrolesforCreation);
             }
-            
+
             if (contactRolesForUpdate != null) {
                 dmlWrapper.objectsToUpdate.addAll((List<SObject>)contactRolesForUpdate);
             }   
         }
-    
-    return dmlWrapper;
+
+        return dmlWrapper;
     }
     
     /*******************************************************************************************************
