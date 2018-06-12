@@ -62,6 +62,10 @@
     padding: 1px 7px !important;
 }
 
+.handsontable thead th .relative {
+    padding: 2px 7px;
+}
+
 .fixed-horizontal {
     z-index: 999;
     width: 100%;
