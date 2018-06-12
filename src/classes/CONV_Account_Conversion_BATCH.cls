@@ -97,9 +97,11 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
 
             List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
 
-            consForUpdate = [select AccountId, Account.RecordTypeId, Account.Type, Account.npe01__SYSTEM_AccountType__c, Account.npe01__SYSTEMIsIndividual__c, Name, 
-                            npo02__Household__c, npo02__TotalOppAmount__c, npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry, 
-                            MailingPostalCode, Primary_Affiliation__c from Contact where npo02__Household__c IN :hhscope ORDER BY CreatedDate];
+            consForUpdate = [SELECT AccountId, Name, OwnerId, Account.RecordTypeId, Account.Type,
+                                Account.npe01__SYSTEM_AccountType__c,Account.npe01__SYSTEMIsIndividual__c, npo02__Household__c, npo02__TotalOppAmount__c,
+                                npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry,
+                                MailingPostalCode, Primary_Affiliation__c
+                            FROM Contact WHERE npo02__Household__c IN :hhscope ORDER BY CreatedDate];
 
             /********************************************************************/
             /** Generating a new Household Account for each Household in scope **/
@@ -112,23 +114,25 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
 
             for (npo02__Household__c hh : hhscope){
                 Account a = new Account(
-                Name = hh.Name, npo02__TotalOppAmount__c = hh.npo02__TotalOppAmount__c,
-                npo02__TotalMembershipOppAmount__c = hh.npo02__TotalMembershipOppAmount__c,
-                npo02__SmallestAmount__c = hh.npo02__SmallestAmount__c, npo02__SYSTEM_CUSTOM_NAMING__c = hh.npo02__SYSTEM_CUSTOM_NAMING__c,
-                npo02__OppsClosedThisYear__c = hh.npo02__OppsClosedThisYear__c, npo02__OppsClosedLastYear__c = hh.npo02__OppsClosedLastYear__c,
-                npo02__OppsClosedLastNDays__c = hh.npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c = hh.npo02__OppsClosed2YearsAgo__c,
-                npo02__OppAmountThisYear__c = hh.npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c = hh.npo02__OppAmountLastYear__c,
-                npo02__OppAmountLastNDays__c = hh.npo02__OppAmountLastNDays__c, npo02__OppAmount2YearsAgo__c = hh.npo02__OppAmount2YearsAgo__c,
-                npo02__NumberOfMembershipOpps__c = hh.npo02__NumberOfMembershipOpps__c, npo02__NumberOfClosedOpps__c = hh.npo02__NumberOfClosedOpps__c,
-                npo02__MembershipJoinDate__c = hh.npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c = hh.npo02__MembershipEndDate__c,
-                npo02__LastOppAmount__c = hh.npo02__LastOppAmount__c, npo02__LastMembershipOrigin__c = hh.npo02__LastMembershipOrigin__c,
-                npo02__LastMembershipLevel__c = hh.npo02__LastMembershipLevel__c, npo02__LastMembershipDate__c = hh.npo02__LastMembershipDate__c,
-                npo02__LastMembershipAmount__c = hh.npo02__LastMembershipAmount__c, npo02__LastCloseDate__c = hh.npo02__LastCloseDate__c,
-                npo02__LargestAmount__c = hh.npo02__LargestAmount__c, npo02__Informal_Greeting__c = hh.npo02__Informal_Greeting__c,
-                npo02__HouseholdPhone__c = hh.npo02__HouseholdPhone__c, npo02__Formal_Greeting__c = hh.npo02__Formal_Greeting__c,
-                npo02__FirstCloseDate__c = hh.npo02__FirstCloseDate__c, npo02__Best_Gift_Year__c = hh.npo02__Best_Gift_Year__c,
-                npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c, Type = 'Household', npe01__SYSTEM_AccountType__c = 'Household Account',
-                npe01__SYSTEMIsIndividual__c = true);
+                    Name = hh.Name, OwnerId = (hh.Owner.IsActive == true ? hh.OwnerId : UserInfo.getUserId()),
+                    npo02__TotalOppAmount__c = hh.npo02__TotalOppAmount__c,
+                    npo02__TotalMembershipOppAmount__c = hh.npo02__TotalMembershipOppAmount__c,
+                    npo02__SmallestAmount__c = hh.npo02__SmallestAmount__c, npo02__SYSTEM_CUSTOM_NAMING__c = hh.npo02__SYSTEM_CUSTOM_NAMING__c,
+                    npo02__OppsClosedThisYear__c = hh.npo02__OppsClosedThisYear__c, npo02__OppsClosedLastYear__c = hh.npo02__OppsClosedLastYear__c,
+                    npo02__OppsClosedLastNDays__c = hh.npo02__OppsClosedLastNDays__c, npo02__OppsClosed2YearsAgo__c = hh.npo02__OppsClosed2YearsAgo__c,
+                    npo02__OppAmountThisYear__c = hh.npo02__OppAmountThisYear__c, npo02__OppAmountLastYear__c = hh.npo02__OppAmountLastYear__c,
+                    npo02__OppAmountLastNDays__c = hh.npo02__OppAmountLastNDays__c, npo02__OppAmount2YearsAgo__c = hh.npo02__OppAmount2YearsAgo__c,
+                    npo02__NumberOfMembershipOpps__c = hh.npo02__NumberOfMembershipOpps__c, npo02__NumberOfClosedOpps__c = hh.npo02__NumberOfClosedOpps__c,
+                    npo02__MembershipJoinDate__c = hh.npo02__MembershipJoinDate__c, npo02__MembershipEndDate__c = hh.npo02__MembershipEndDate__c,
+                    npo02__LastOppAmount__c = hh.npo02__LastOppAmount__c, npo02__LastMembershipOrigin__c = hh.npo02__LastMembershipOrigin__c,
+                    npo02__LastMembershipLevel__c = hh.npo02__LastMembershipLevel__c, npo02__LastMembershipDate__c = hh.npo02__LastMembershipDate__c,
+                    npo02__LastMembershipAmount__c = hh.npo02__LastMembershipAmount__c, npo02__LastCloseDate__c = hh.npo02__LastCloseDate__c,
+                    npo02__LargestAmount__c = hh.npo02__LargestAmount__c, npo02__Informal_Greeting__c = hh.npo02__Informal_Greeting__c,
+                    npo02__HouseholdPhone__c = hh.npo02__HouseholdPhone__c, npo02__Formal_Greeting__c = hh.npo02__Formal_Greeting__c,
+                    npo02__FirstCloseDate__c = hh.npo02__FirstCloseDate__c, npo02__Best_Gift_Year__c = hh.npo02__Best_Gift_Year__c,
+                    npo02__Best_Gift_Year_Total__c = hh.npo02__Best_Gift_Year_Total__c, Type = 'Household', npe01__SYSTEM_AccountType__c = 'Household Account',
+                    npe01__SYSTEMIsIndividual__c = true
+                );
 
                 if (UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c != null)
                     a.RecordTypeId = UTIL_CustomSettingsFacade.getContactsSettings().npe01__HH_Account_RecordTypeID__c;
@@ -219,6 +223,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 c.AccountId = a.Id;
                 if (!conGiving.containsKey(a.Id) || (conGiving.containsKey(a.Id) && c.npo02__TotalOppAmount__c > conGiving.get(a.Id))){
                     a.npe01__One2OneContact__c = c.Id;
+                    a.OwnerId = c.OwnerId;
                     conGiving.put(a.Id, c.npo02__TotalOppAmount__c);
                 }
                 con2account.put(c.Id, a);

@@ -49,11 +49,28 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
+
+        // Create a single new User
+        Id sysAdminProfileId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
+        User tempUser = new User(LastName = 'TestSysAdminUserA', Email = 'test_insertAsOtherUser@email.npsp',
+                ProfileId = sysAdminProfileId, isActive = true, UserName = 'test_insertAsOtherUser@email.npsp',
+                Alias = 'tu08534', TimeZoneSidKey = 'America/Los_Angeles',
+                LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US', EmailEncodingKey = 'ISO-8859-1');
+        insert tempUser;
+
+
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
+        // Insert 150 test Contacts with a different owner than the Current User
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(150);
+        for (Contact c : cons) {
+            c.OwnerId = tempUser.Id;
+        }
         insert cons;
+        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
+        system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
+
         system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
 
         String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
@@ -61,7 +78,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(150, hhlist.size());
 
         //add a second contact to a random household
-        Contact c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
+        c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
         insert c;
 
         //add opptys to the Contacts as well
@@ -106,7 +123,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //Using the API class just to give it test coverage.
         system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+
+        system.assertEquals(150, [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+            AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
+                'There should be 150 Accounts owned by the TempUser');
     }
+
     /*******************************************************************************************************
     * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
     */
