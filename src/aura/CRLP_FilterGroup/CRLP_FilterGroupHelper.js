@@ -359,27 +359,29 @@
      */
     rerenderValue: function(cmp, operator, value) {
         var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
+        var filterRuleFieldType;
+
         if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
-            cmp.set("v.filterRuleFieldType", 'picklist');
+            filterRuleFieldType = 'picklist';
             var options = [{value: 'true', label: 'True'}, {value: 'false', label: 'False'}];
             cmp.set("v.filterRuleConstantPicklist", options);
         } else if (type === 'date') {
-            cmp.set("v.filterRuleFieldType", 'date');
+            filterRuleFieldType = 'date';
         } else if (type === 'datetime') {
-            cmp.set("v.filterRuleFieldType", 'datetime-local');
+            filterRuleFieldType = 'datetime-local';
         } else if (type === 'picklist' || type === 'multipicklist') {
             if (operator === 'Equals' || operator === 'Not_Equals') {
                 cmp.set("v.activeFilterRule.value", value);
-                cmp.set("v.filterRuleFieldType", 'picklist');
+                filterRuleFieldType = 'picklist';
             } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                filterRuleFieldType = 'text';
             } else if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
                 //clear array or reformat values into an array
                 var values = (value === "") ? [] : value.split(";");
                 cmp.set("v.activeFilterRule.value", values);
-                cmp.set("v.filterRuleFieldType", 'multipicklist');
+                filterRuleFieldType = 'multipicklist';
             }
         } else if (type === 'reference') {
             var field = cmp.get("v.activeFilterRule.fieldName");
@@ -388,37 +390,42 @@
                 //check if text field is offered but a user can enter a list of semi-colon separated values
                 if (operator === 'In_List' || operator === 'Not_In_List'
                     || operator === 'Is_Included' || operator === 'Is_Not_Included') {
-                    cmp.set("v.filterRuleFieldType", 'text-picklist');
+                    filterRuleFieldType = 'text-picklist';
                 } else {
-                    cmp.set("v.filterRuleFieldType", 'text');
+                    filterRuleFieldType = 'text';
                 }
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.activeFilterRule.value", value);
-                    cmp.set("v.filterRuleFieldType", 'picklist');
+                    filterRuleFieldType = 'picklist';
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
                     //clear array or reformat values into an array
                     var values = (value === "") ? [] : value.split(";");
                     cmp.set("v.activeFilterRule.value", values);
-                    cmp.set("v.filterRuleFieldType", 'multipicklist');
+                    filterRuleFieldType = 'multipicklist';
                 }
             }
         } else if (type === 'double' || type === 'integer'
             || type === 'currency' || type === 'percent') {
-            cmp.set("v.filterRuleFieldType", 'number');
+            filterRuleFieldType = 'number';
         } else {
             //same check for semi-colon separated values
             if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
-                cmp.set("v.filterRuleFieldType", 'text-picklist');
+                filterRuleFieldType = 'text-picklist';
             } else {
-                cmp.set("v.filterRuleFieldType", 'text');
+                filterRuleFieldType = 'text';
             }
         }
 
-        // Allow for null values ONLY on Equals and Not Equals operators
+        //rerender filterRuleFieldType to clear any existing errors
+        cmp.set("v.filterRuleFieldType", '');
+        cmp.set("v.filterRuleFieldType", filterRuleFieldType);
+
+        // Allow for null values ONLY on Equals and Not Equals operators; also clear potential required value errors
         if (operator === 'Equals' || operator === 'Not_Equals') {
             cmp.set("v.isValueRequired", false);
+            cmp.find("filterRuleErrorText").set("v.value", '');
         } else {
             cmp.set("v.isValueRequired", true);
         }
