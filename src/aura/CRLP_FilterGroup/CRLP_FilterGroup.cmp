@@ -303,8 +303,7 @@
                             </aura:if>
                         </lightning:layout>
                         <lightning:layout>
-                            <aura:if
-                                    isTrue="{!and((v.filterRuleMode != 'delete'), equals(v.filterRuleFieldType, 'multipicklist'))}">
+                            <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), equals(v.filterRuleFieldType, 'multipicklist'))}">
                                 <lightning:dualListbox aura:id="filterRuleFieldPicklist" label="" variant="label-hidden"
                                                        class="slds-p-around_small"
                                                        sourceLabel="{!'Available ' + v.labels.constant}"
