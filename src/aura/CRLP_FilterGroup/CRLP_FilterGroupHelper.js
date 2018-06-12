@@ -337,7 +337,7 @@
             updatedLabel = valueApiName.join(";\n");
             var newValueApiName = valueApiName.join(";");
             cmp.set("v.activeFilterRule.value", newValueApiName);
-        } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
+        } else if (filterRuleFieldType === "text-picklist" && valueApiName.indexOf(";") > 0 && valueApiName) {
             var valueList = valueApiName.split(';');
             var cleanList = valueList.map(function(value){
                return value.replace('\n', '').trim();
