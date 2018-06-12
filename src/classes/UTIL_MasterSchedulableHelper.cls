@@ -92,6 +92,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_SoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSkew_SoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<String>{'0 20 23 ? * *', 'CRLP_GAU_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06A - Customizable Rollups - Recurring Donations', new List<String>{'0 25 23 ? * *', 'CRLP_RD_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06B - Customizable Rollups - Recurring Donations Skew', new List<String>{'0 30 23 ? * *', 'CRLP_RDSkew_BATCH'});
+
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
                     jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
@@ -118,6 +121,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     jobsToAbort.add('NPSP 03B - Customizable Rollups - Account Soft Credit Skew');
                     jobsToAbort.add('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew');
                     jobsToAbort.add('NPSP 05 - Customizable Rollups - General Accounting Units');
+                    jobsToAbort.add('NPSP 06A - Customizable Rollups - Recurring Donations');
+                    jobsToAbort.add('NPSP 06B - Customizable Rollups - Recurring Donations Skew');
                 }
             }
             return defaultScheduledJobs;
