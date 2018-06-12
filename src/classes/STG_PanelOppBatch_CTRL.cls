@@ -95,7 +95,7 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                 Boolean executeSkewMode = (database.countQuery(query) != 0);
                 if (executeSkewMode) {
                     Database.executeBatch(new CRLP_SkewDispatcher_BATCH(jobType), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
-                    this.numJobSubmitted++;
+                    // do not increment numJobSubmitted because we do not display skew dispatcher jobs
                 }
             }
         }
