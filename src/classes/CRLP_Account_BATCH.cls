@@ -38,6 +38,18 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Account_BATCH() { }
 
+    public override String getIncrementalWhereClause() {
+        CRLP_IncrementalBatch.AccountHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.AccountHardCreditSettings();
+        if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
+            return '';
+        }
+
+        return String.format(
+            'Id IN (SELECT AccountId FROM Opportunity WHERE SystemModStamp = LAST_N_DAYS:{0} OR CloseDate = LAST_N_DAYS:{0} ALL ROWS)',
+            new List<String>{String.valueOf(incrementalBatchSettings.getMaxDaysBack())}
+        );
+    }
+
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Accounts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
@@ -64,5 +76,12 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
         }
+    }
+
+    public override void finish(Database.BatchableContext bc) {
+        super.finish(bc);
+        
+        CRLP_IncrementalBatch.AccountHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.AccountHardCreditSettings();
+        incrementalBatchSettings.finishBatch();
     }
 }

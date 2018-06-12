@@ -36,6 +36,10 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
+    protected virtual String getIncrementalWhereClause() {
+        return '';
+    }
+
     protected CRLP_Batch_Base_NonSkew() { }
 
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
@@ -112,24 +116,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType, CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
                 if (!String.isEmpty(skewClause)) {
                     whereClauses.add(skewClause);
-                }
-
-                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
-
-                if (!Test.isRunningTest() || customizableRollupSettings.Disable_Related_Records_Filter__c == true) {
-                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                        whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                        String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-                        whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                        whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-                        // It's not possible to do an inner query on this due to the following Salesforce error:
-                        // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                        whereClauses.add('Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)');
-                    }
                 }
             }
 
@@ -277,7 +263,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    public void finish(Database.BatchableContext bc) {
+    public virtual void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
             Error__c logEntry = new Error__c(

@@ -35,8 +35,20 @@
 * @description Contact Hard Credit Rollup Batch Job
 */
 public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
+    
+    public CRLP_Contact_SoftCredit_BATCH() { }
 
-    public CRLP_Contact_SoftCredit_BATCH() {}
+    public override String getIncrementalWhereClause() {
+        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
+        if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
+            return '';
+        }
+
+        return String.format(
+            'Id IN (SELECT ContactId FROM OpportunityContactRole WHERE Opportunity.SystemModStamp = LAST_N_DAYS:{0} OR Opportunity.CloseDate = LAST_N_DAYS:{0} ALL ROWS)',
+            new List<String>{String.valueOf(incrementalBatchSettings.getMaxDaysBack())}
+        );
+    }
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
@@ -64,5 +76,12 @@ public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
         }
+    }
+
+    public override void finish(Database.BatchableContext bc) {
+        super.finish(bc);
+        
+        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
+        incrementalBatchSettings.finishBatch();
     }
 }

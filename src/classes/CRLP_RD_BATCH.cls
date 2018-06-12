@@ -38,6 +38,18 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
 
     public CRLP_RD_BATCH() { }
 
+    public override String getIncrementalWhereClause() {
+        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
+        if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
+            return '';
+        }
+
+        return String.format(
+            'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity WHERE SystemModStamp = LAST_N_DAYS:{0} OR CloseDate = LAST_N_DAYS:{0} ALL ROWS)',
+            new List<String>{String.valueOf(incrementalBatchSettings.getMaxDaysBack())}
+        );
+    }
+
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Recurring Donations that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
@@ -62,5 +74,12 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
     public void execute(SchedulableContext context) {
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+    }
+
+    public override void finish(Database.BatchableContext bc) {
+        super.finish(bc);
+
+        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
+        incrementalBatchSettings.finishBatch();
     }
 }
