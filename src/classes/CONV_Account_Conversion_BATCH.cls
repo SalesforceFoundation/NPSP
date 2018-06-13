@@ -97,7 +97,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
 
             List<npo02__Household__c> hhscope = (List<npo02__Household__c>)result;
 
-            consForUpdate = [SELECT AccountId, Name, OwnerId, Account.RecordTypeId, Account.Type,
+            consForUpdate = [SELECT AccountId, Name, OwnerId, Owner.IsActive, Account.RecordTypeId, Account.Type,
                                 Account.npe01__SYSTEM_AccountType__c,Account.npe01__SYSTEMIsIndividual__c, npo02__Household__c, npo02__TotalOppAmount__c,
                                 npe01__Primary_Address_Type__c, MailingStreet, MailingCity, MailingState, MailingCountry,
                                 MailingPostalCode, Primary_Affiliation__c
@@ -223,7 +223,9 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 c.AccountId = a.Id;
                 if (!conGiving.containsKey(a.Id) || (conGiving.containsKey(a.Id) && c.npo02__TotalOppAmount__c > conGiving.get(a.Id))){
                     a.npe01__One2OneContact__c = c.Id;
-                    a.OwnerId = c.OwnerId;
+                    if (c.Owner.IsActive == true) {
+                        a.OwnerId = c.OwnerId;
+                    }
                     conGiving.put(a.Id, c.npo02__TotalOppAmount__c);
                 }
                 con2account.put(c.Id, a);

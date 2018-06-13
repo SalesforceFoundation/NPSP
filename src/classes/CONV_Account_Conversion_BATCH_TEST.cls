@@ -51,13 +51,11 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
 
         // Create a single new User
-        Id sysAdminProfileId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
-        User tempUser = new User(LastName = 'TestSysAdminUserA', Email = 'test_insertAsOtherUser@email.npsp',
-                ProfileId = sysAdminProfileId, isActive = true, UserName = 'test_insertAsOtherUser@email.npsp',
-                Alias = 'tu08534', TimeZoneSidKey = 'America/Los_Angeles',
-                LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US', EmailEncodingKey = 'ISO-8859-1');
-        insert tempUser;
-
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
+        User inactiveUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        inactiveUser.IsActive = false;
+        insert new List<User>{tempUser, inactiveUser};
 
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
@@ -67,8 +65,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         for (Contact c : cons) {
             c.OwnerId = tempUser.Id;
         }
+        cons[0].OwnerId = inactiveUser.Id;  // set only the first one to be owned by an Inactive User
         insert cons;
-        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
+        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons AND Id != :cons[0].Id LIMIT 1];
         system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
 
         system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
@@ -102,6 +101,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
 
+        Contact inactiveOwnedContact = [SELECT Id, Owner.IsActive, AccountId, Account.OwnerId, Account.Owner.IsActive
+            FROM Contact WHERE Id = :cons[0].Id LIMIT 1];
+        system.assertEquals(false, inactiveOwnedContact.Owner.IsActive, 'Contact owner should still be inactive');
+        system.assertEquals(true, inactiveOwnedContact.Account.Owner.IsActive, 'Created household account owner should be active');
+        system.assertEquals(UserInfo.getUserId(), inactiveOwnedContact.Account.OwnerId, 'Created household account owner should be the current User');
+
         //get the newly created Households
         List<Account> newHHAccounts = [select npo02__TotalOppAmount__c, Id from Account where Name = :HHName];
         //should be total HH count from above
@@ -109,9 +114,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //total gifts should be the same for any of the 149
         system.assertEquals(newHHAccounts[64].npo02__TotalOppAmount__c, 100.00);
         //our two-person household was also successfully converted and set the correct primary contact
-        Contact c2 = [select AccountId, Account.npe01__One2OneContact__c from Contact where Id = :c.Id];
+        Contact c2 = [SELECT Account.npe01__One2OneContact__c FROM Contact WHERE Id = :c.Id LIMIT 1];
         //the primary was set
-        system.assertNotEquals(null, Account.npe01__One2OneContact__c);
+        system.assertNotEquals(null, c2.Account.npe01__One2OneContact__c);
         //the primary is the contact w/ a total opp amount
         system.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
@@ -124,9 +129,10 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
 
-        system.assertEquals(150, [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+        // One of the Contact owners was set to inactive, so only 149 of the original 150 will be owned by the TempUser
+        system.assertEquals(cons.size()-1, [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
             AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
-                'There should be 150 Accounts owned by the TempUser');
+                'There should be 149 Accounts owned by the TempUser');
     }
 
     /*******************************************************************************************************

@@ -1475,11 +1475,8 @@ private class ACCT_IndividualAccounts_TEST {
     private static testMethod void test_insertAsOtherUser() {
 
         // Create a single new User
-        Id sysAdminProfileId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
-        User tempUser = new User(LastName = 'TestSysAdminUserA', Email = 'test_insertAsOtherUser@email.npsp',
-                ProfileId = sysAdminProfileId, isActive = true, UserName = 'test_insertAsOtherUser@email.npsp',
-                Alias = 'tu08534', TimeZoneSidKey = 'America/Los_Angeles',
-                LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US', EmailEncodingKey = 'ISO-8859-1');
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
         insert tempUser;
 
         Id currUserId = UserInfo.getUserId();
