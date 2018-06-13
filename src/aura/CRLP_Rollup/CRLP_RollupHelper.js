@@ -298,7 +298,7 @@
             }
             renderMap["rollupType"] = true;
             this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
-            cmp.set("v.selectedOperationName", operation);
+            //cmp.set("v.selectedOperationName", operation);
         } else {
             if (cmp.get("v.mode") === 'create'){
                 renderMap["timeBoundOperationType"] = false;
@@ -670,8 +670,10 @@
             newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
-            var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
-            var operation = cmp.get("v.selectedOperationName");
+            var activeRollup = cmp.get("v.activeRollup");
+            var summaryFieldType = this.retrieveFieldType(cmp, activeRollup.summaryField, cmp.get("v.summaryFields"));
+            //var operation = cmp.get("v.selectedOperationName");
+            var operation = Boolean(activeRollup.operation) ? activeRollup.operation : null;
             if (operation && operation === 'Average' || operation === 'Sum' || operation === 'Best_Year_Total' || operation === 'Best_Year') {
                 // these operations must be type-matched to the amount field more precisely
                 // note that only average applies to percent
@@ -682,7 +684,7 @@
                 }
             } else {
                 // operation here is by definition smallest/largest, which can be percent/double/currency
-                // (first/last/sum/avg/count don't have amount context)
+                // (first/last/count don't have amount context)
                 newFields = this.filterFieldsByType(cmp, ["PERCENT", "DOUBLE", "CURRENCY"], newFields);
             }
 

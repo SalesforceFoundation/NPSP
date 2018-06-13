@@ -60,7 +60,7 @@
     <aura:attribute name="integerList" type="List" description="List of available integer options" access="public"/>
     <aura:attribute name="filterGroups" type="List" description="List of available filter groups" access="public"/>
     <aura:attribute name="selectedOperationLabel" type="String"/>
-    <aura:attribute name="selectedOperationName" type="String"/>
+    <!--<aura:attribute name="selectedOperationName" type="String"/>-->
     <aura:attribute name="selectedTimeBoundOperationLabel" type="String"/>
     <aura:attribute name="selectedIntegerLabel" type="String"/>
     <aura:attribute name="rollupTypes" type="List"/>
