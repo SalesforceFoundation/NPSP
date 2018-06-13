@@ -298,6 +298,7 @@
             }
             renderMap["rollupType"] = true;
             this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
+            cmp.set("v.selectedOperationName", operation);
         } else {
             if (cmp.get("v.mode") === 'create'){
                 renderMap["timeBoundOperationType"] = false;
@@ -321,6 +322,9 @@
         var operations = cmp.get("v.operations");
         var label = operations[operation];
         cmp.set("v.selectedOperationLabel", label);
+
+        //reset allowed amount fields because percents and num/curr are tricky based on operation
+        this.resetFields(cmp, cmp.get("v.activeRollup.amountObject"), 'amount');
 
         //check that detail field and rollup type have been populated before saving
         this.verifyRollupSaveActive(cmp, cmp.get("v.activeRollup.detailField"));
@@ -669,11 +673,22 @@
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
             var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
-            if (summaryFieldType && summaryFieldType === 'PERCENT') {
-                newFields = this.filterFieldsByType(cmp, ["PERCENT"], newFields);
+            var operation = cmp.get("v.selectedOperationName");
+            console.log(operation);
+            if (operation && operation === 'Average' || operation === 'Sum' || operation === 'Best_Year_Total' || operation === 'Best_Year') {
+                // these operations must be type-matched to the amount field more precisely
+                // note that only average applies to percent
+                if (summaryFieldType && summaryFieldType === 'PERCENT') {
+                    newFields = this.filterFieldsByType(cmp, ["PERCENT"], newFields);
+                } else {
+                    newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
+                }
             } else {
-                newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
+                // operation here is by definition smallest/largest, which can be percent/double/currency
+                // (first/last/sum/avg/count don't have amount context)
+                newFields = this.filterFieldsByType(cmp, ["PERCENT", "DOUBLE", "CURRENCY"], newFields);
             }
+
             cmp.set("v.amountFields", newFields);
         }
     },
