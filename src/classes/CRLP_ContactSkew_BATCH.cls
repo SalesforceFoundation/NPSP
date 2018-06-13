@@ -61,9 +61,14 @@ public class CRLP_ContactSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
+        String className = CRLP_ContactSkew_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+            } else {
+                logDuplicateBatchError(className);
+            }
         }
     }
 }
