@@ -298,7 +298,6 @@
             }
             renderMap["rollupType"] = true;
             this.renderAndResetFilterGroup(cmp, rollupTypeLabel);
-            //cmp.set("v.selectedOperationName", operation);
         } else {
             if (cmp.get("v.mode") === 'create'){
                 renderMap["timeBoundOperationType"] = false;
@@ -672,7 +671,6 @@
         } else if (context === 'amount') {
             var activeRollup = cmp.get("v.activeRollup");
             var summaryFieldType = this.retrieveFieldType(cmp, activeRollup.summaryField, cmp.get("v.summaryFields"));
-            //var operation = cmp.get("v.selectedOperationName");
             var operation = Boolean(activeRollup.operation) ? activeRollup.operation : null;
             if (operation && operation === 'Average' || operation === 'Sum' || operation === 'Best_Year_Total' || operation === 'Best_Year') {
                 // these operations must be type-matched to the amount field more precisely
