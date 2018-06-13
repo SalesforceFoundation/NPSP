@@ -188,9 +188,7 @@
         var operator = event.getSource().get("v.value");
         var previousOperator = cmp.get("v.previousOperator");
         var isCompatibleOperation = helper.isCompatibleOperation(operator, previousOperator);
-        if(isCompatibleOperation) {
-            helper.rerenderValue((cmp, operator, cmp.get("v.activeFilterRule.value")));
-        } else {
+        if(!isCompatibleOperation) {
             cmp.set("v.activeFilterRule.value", "");
             helper.rerenderValue(cmp, operator, "");
         }
