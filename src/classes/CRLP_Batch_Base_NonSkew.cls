@@ -36,6 +36,11 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
+    /*******************************************************************************************************
+    * @description Gets the Incremental Mode where clause. This methods should be overridden, if the Incremental
+    * mode is enabled for the child Batch.
+    * @return String.
+    ********************************************************************************************************/
     protected virtual String getIncrementalWhereClause() {
         return '';
     }
@@ -117,6 +122,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 if (!String.isEmpty(skewClause)) {
                     whereClauses.add(skewClause);
                 }
+            }
+
+            // Add the Incremental Mode where clause.
+            String incrementalWhereClause = this.getIncrementalWhereClause();
+            if (String.isNotBlank(incrementalWhereClause)) {
+                whereClauses.add(incrementalWhereClause);
             }
 
             // TODO DO we need to exclude Organization Donations??

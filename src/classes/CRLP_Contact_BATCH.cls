@@ -38,6 +38,10 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Contact_BATCH() { }
 
+    /*******************************************************************************************************
+    * @description Gets the Where Clause of the Contact Hard Credit Batch Incremental Mode.
+    * @return String.
+    ********************************************************************************************************/
     public override String getIncrementalWhereClause() {
         CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
         if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
@@ -81,6 +85,10 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         }
     }
 
+    /*******************************************************************************************************
+    * @description Runs when the batch finishes.
+    * @return void.
+    ********************************************************************************************************/
     public override void finish(Database.BatchableContext bc) {
         super.finish(bc);
 

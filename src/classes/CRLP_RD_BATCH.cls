@@ -38,6 +38,10 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
 
     public CRLP_RD_BATCH() { }
 
+    /*******************************************************************************************************
+    * @description Gets the Where Clause of the Recurring Donations Batch Incremental Mode.
+    * @return String.
+    ********************************************************************************************************/
     public override String getIncrementalWhereClause() {
         CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
         if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
@@ -76,6 +80,10 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
     }
 
+    /*******************************************************************************************************
+    * @description Runs when the batch finishes.
+    * @return void.
+    ********************************************************************************************************/
     public override void finish(Database.BatchableContext bc) {
         super.finish(bc);
 

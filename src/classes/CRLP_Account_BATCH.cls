@@ -38,6 +38,10 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
 
     public CRLP_Account_BATCH() { }
 
+    /*******************************************************************************************************
+    * @description Gets the Where Clause of the Account Hard Credit Batch Incremental Mode.
+    * @return String.
+    ********************************************************************************************************/
     public override String getIncrementalWhereClause() {
         CRLP_IncrementalBatch.AccountHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.AccountHardCreditSettings();
         if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
@@ -78,6 +82,10 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         }
     }
 
+    /*******************************************************************************************************
+    * @description Runs when the batch finishes.
+    * @return void.
+    ********************************************************************************************************/
     public override void finish(Database.BatchableContext bc) {
         super.finish(bc);
         

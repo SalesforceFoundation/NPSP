@@ -32,7 +32,7 @@
 * @date 2018
 * @group Rollups
 * @group-content ../../ApexDocContent/Rollups2.htm
-* @description Contains the Classes that manage the Incremental Rollups Batch
+* @description Contains the Classes that manage the Incremental Rollups Batches.
 */
 public class CRLP_IncrementalBatch {
 
@@ -43,15 +43,26 @@ public class CRLP_IncrementalBatch {
         private Customizable_Rollup_Settings__c customizableRollupSettings;
         private Integer rollupsMaxDaysBack;
 
+        /******************************************************************************************************
+        * @description The Constructor of Settings Base Class.
+        */
         public Settings() {
             customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             rollupsMaxDaysBack = getRollupsMaxDaysBack();
         }
 
+        /*******************************************************************************************************
+        * @description Checks if the Incremental Mode is enabled.
+        * @return Boolean.
+        ********************************************************************************************************/
         public Boolean isEnabled() {
             return customizableRollupSettings.Enable_Incremental_Rollups_Mode__c;
         }
 
+        /*******************************************************************************************************
+        * @description Gets the maximum Days Back to include in the WHERE Clause Query.
+        * @return Integer.
+        ********************************************************************************************************/
         public Integer getMaxDaysBack() {
             Date lastBatch = getLastBatch(customizableRollupSettings);
             if (lastBatch == null) {
@@ -65,14 +76,34 @@ public class CRLP_IncrementalBatch {
             }
         }
 
+        /*******************************************************************************************************
+        * @description Updates the settings Last Successful Run field.
+        * @return void.
+        ********************************************************************************************************/
         public void finishBatch() {
-            upsert getUpdatedLastBatch(customizableRollupSettings);
+            upsert updateLastBatch(customizableRollupSettings);
         }
 
+        /*******************************************************************************************************
+        * @description Gets the last time the Batch runs successfully. This method needs to be overridden to return
+        * the related settings last run date.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Date.
+        ********************************************************************************************************/
         protected abstract Date getLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings);
         
-        protected abstract Customizable_Rollup_Settings__c getUpdatedLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings);
+        /*******************************************************************************************************
+        * @description Updates the Last Batch Run settings field. This method needs to be overridden to update the
+        * the related settings last run date field. 
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Customizable_Rollup_Settings__c.
+        ********************************************************************************************************/
+        protected abstract Customizable_Rollup_Settings__c updateLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings);
 
+        /*******************************************************************************************************
+        * @description Gets the maximum Days Back from the Rollups definition.
+        * @return Integer.
+        ********************************************************************************************************/
         private Integer getRollupsMaxDaysBack() {
             Integer result = 0;
 
@@ -91,49 +122,101 @@ public class CRLP_IncrementalBatch {
         }
     }
 
+    /*******************************************************************************************************
+    * @description Account Hard Credit Incremental Rollups Settings.
+    ********************************************************************************************************/
     public class AccountHardCreditSettings extends Settings {
 
+        /*******************************************************************************************************
+        * @description Gets the last time the Account Hard Credit Batch runs successfully.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Date.
+        ********************************************************************************************************/
         protected override Date getLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             return customizableRollupSettings.Account_Hard_Credit_Last_Batch__c;
         }
 
-        protected override Customizable_Rollup_Settings__c getUpdatedLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
+        /*******************************************************************************************************
+        * @description Updates the Account Hard Credit Last Batch Run settings field.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Customizable_Rollup_Settings__c.
+        ********************************************************************************************************/
+        protected override Customizable_Rollup_Settings__c updateLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             customizableRollupSettings.Account_Hard_Credit_Last_Batch__c = Date.today();
             return customizableRollupSettings;
         }
     }
 
+    /*******************************************************************************************************
+    * @description Contact Hard Credit Incremental Rollups Settings.
+    ********************************************************************************************************/
     public class ContactHardCreditSettings extends Settings {
 
+        /*******************************************************************************************************
+        * @description Gets the last time the Contact Hard Credit Batch runs successfully.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Date.
+        ********************************************************************************************************/
         protected override Date getLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             return customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c;
         }
 
-        protected override Customizable_Rollup_Settings__c getUpdatedLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
+        /*******************************************************************************************************
+        * @description Updates the Contact Hard Credit Last Batch Run settings field.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Customizable_Rollup_Settings__c.
+        ********************************************************************************************************/
+        protected override Customizable_Rollup_Settings__c updateLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c = Date.today();
             return customizableRollupSettings;
         }
     }
 
+    /*******************************************************************************************************
+    * @description Contact Soft Credit Incremental Rollups Settings.
+    ********************************************************************************************************/
     public class ContactSoftCreditSettings extends Settings {
 
+        /*******************************************************************************************************
+        * @description Gets the last time the Contact Soft Credit Batch runs successfully.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Date.
+        ********************************************************************************************************/
         protected override Date getLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             return customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c;
         }
 
-        protected override Customizable_Rollup_Settings__c getUpdatedLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
+        /*******************************************************************************************************
+        * @description Updates the Contact Soft Credit Last Batch Run settings field.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Customizable_Rollup_Settings__c.
+        ********************************************************************************************************/
+        protected override Customizable_Rollup_Settings__c updateLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c = Date.today();
             return customizableRollupSettings;
         }
     }
 
+    /*******************************************************************************************************
+    * @description Recurring Donations Incremental Rollups Settings.
+    ********************************************************************************************************/
     public class RecurringDonationsSettings extends Settings {
 
+        /*******************************************************************************************************
+        * @description Gets the last time the Recurring Donations Batch runs successfully.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Date.
+        ********************************************************************************************************/
         protected override Date getLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             return customizableRollupSettings.Recurring_Donations_Last_Batch__c;
         }
 
-        protected override Customizable_Rollup_Settings__c getUpdatedLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
+        /*******************************************************************************************************
+        * @description Updates the Recurring Donations Last Batch Run settings field.
+        * @param customizableRollupSettings The Customizable Rollups Settings.
+        * @return Customizable_Rollup_Settings__c.
+        ********************************************************************************************************/
+        protected override Customizable_Rollup_Settings__c updateLastBatch(Customizable_Rollup_Settings__c customizableRollupSettings) {
             customizableRollupSettings.Recurring_Donations_Last_Batch__c = Date.today();
             return customizableRollupSettings;
         }
