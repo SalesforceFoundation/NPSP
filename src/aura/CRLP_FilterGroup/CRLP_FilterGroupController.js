@@ -118,6 +118,7 @@
         if (action.name !== 'delete') {
             //handle modal popup
             cmp.set("v.filterRuleMode", 'edit');
+            cmp.set("v.previousOperator", cleanRow.operationName);
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
@@ -185,8 +186,15 @@
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
-        cmp.set("v.activeFilterRule.value", "");
-        helper.rerenderValue(cmp, operator, "");
+        var previousOperator = cmp.get("v.previousOperator");
+        var isCompatibleOperation = helper.isCompatibleOperation(operator, previousOperator);
+        if(isCompatibleOperation) {
+            helper.rerenderValue((cmp, operator, cmp.get("v.activeFilterRule.value")));
+        } else {
+            cmp.set("v.activeFilterRule.value", "");
+            helper.rerenderValue(cmp, operator, "");
+        }
+        cmp.set("v.previousOperator", operator);
     },
 
     /**

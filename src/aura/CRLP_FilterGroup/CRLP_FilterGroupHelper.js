@@ -151,6 +151,24 @@
     },
 
     /**
+     * @description: determines whether filter rule operators are compatible
+     * @param operator
+     * @param previous operator
+     * @return boolean
+     */
+    isCompatibleOperation: function(operator, previousOperator) {
+
+        var arrayOps = ['In_List','Not_In_List','Is_Included','Is_Not_Included'];
+
+        if ((arrayOps.includes(previousOperator) && arrayOps.includes(operator))
+        || (!arrayOps.includes(previousOperator) && !arrayOps.includes(operator))) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+     /**
      * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */

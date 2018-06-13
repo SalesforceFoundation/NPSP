@@ -70,6 +70,7 @@
     <aura:attribute name="filterRuleMode" type="String" access="private" default=""
                     description="The current mode of the filter rule modal. Options are: create, edit, or delete."/>
     <aura:attribute name="isValueRequired" type="Boolean" default="true" access="private" description="Conditional requirement for Value on a Filter Rule."/>
+    <aura:attribute name="previousOperator" type="String" default="true" access="private" description="Value of the previous operator, used to determine if Value needs to be cleared out on op change."/>
 
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
