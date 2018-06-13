@@ -674,7 +674,6 @@
         } else if (context === 'amount') {
             var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
             var operation = cmp.get("v.selectedOperationName");
-            console.log(operation);
             if (operation && operation === 'Average' || operation === 'Sum' || operation === 'Best_Year_Total' || operation === 'Best_Year') {
                 // these operations must be type-matched to the amount field more precisely
                 // note that only average applies to percent
