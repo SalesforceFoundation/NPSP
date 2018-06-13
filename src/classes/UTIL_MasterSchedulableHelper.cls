@@ -94,6 +94,9 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     defaultScheduledJobs.put('NPSP 03D - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_AccSoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSkew_SoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<String>{'0 20 23 ? * *', 'CRLP_GAU_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06A - Customizable Rollups - Recurring Donations', new List<String>{'0 25 23 ? * *', 'CRLP_RD_BATCH'});
+                    defaultScheduledJobs.put('NPSP 06B - Customizable Rollups - Recurring Donations Skew', new List<String>{'0 30 23 ? * *', 'CRLP_RDSkew_BATCH'});
+
 
                     // The following jobs should be aborted if the Customizable Rollups jobs are being enabled
                     jobsToAbort.add('NPSP 01 - Opportunity Account Rollups');
@@ -122,6 +125,8 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     jobsToAbort.add('NPSP 03D - Customizable Rollups - Account Soft Credit Skew');
                     jobsToAbort.add('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew');
                     jobsToAbort.add('NPSP 05 - Customizable Rollups - General Accounting Units');
+                    jobsToAbort.add('NPSP 06A - Customizable Rollups - Recurring Donations');
+                    jobsToAbort.add('NPSP 06B - Customizable Rollups - Recurring Donations Skew');
                 }
             }
             return defaultScheduledJobs;
@@ -187,6 +192,28 @@ public without sharing class UTIL_MasterSchedulableHelper {
             System.schedule(jobName, cronExpression, classInstance);
         } catch (Exception ex) {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Checks for presently running jobs of a particular method
+    * @param methodName The name of the method to check for running jobs on
+    * @return Boolean
+    */
+    public static Boolean hasRunningJob(String className) {
+        className = (className.contains('__') ? className.split('__')[1] : className);
+        // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
+        Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
+        Integer jobCount = [SELECT COUNT()
+            FROM AsyncApexJob
+            WHERE ApexClass.Name = :className
+            AND Status NOT IN ('Queued','Aborted','Completed','Failed')
+            AND CreatedDate < :tenMinutesAgo
+            LIMIT 1];
+        if (jobCount == 0) {
+            return false;
+        } else {
+            return true;
         }
     }
 }

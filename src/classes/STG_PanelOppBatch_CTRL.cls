@@ -77,6 +77,7 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                     CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations
             };
 
             this.numJobSubmitted = 0;
@@ -86,9 +87,7 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
 
                 // Determine if the SkewMode job is needed based on a simple count of the number of records
                 // that meet the skew mode criteria.
-                String objName = (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
-                        jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ? 'Account' : 'Contact');
+                String objName = CRLP_RollupBatch_SVC.getSummaryObjectType(jobType).getDescribe().getName();
 
                 String query = 'SELECT Count() FROM ' + objName + ' WHERE ' +
                         CRLP_RollupBatch_SVC.getSkewWhereClause(jobType, CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) +

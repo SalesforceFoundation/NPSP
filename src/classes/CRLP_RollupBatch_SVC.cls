@@ -125,6 +125,15 @@ public class CRLP_RollupBatch_SVC {
         } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             // no extra filter on this type since we're always processing all GAU's using the skew method
 
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+
+            String rdInstallmentCountField = 'npe03__Total_Paid_Installments__c';
+            if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode) {
+                queryFilter = '(' + rdInstallmentCountField + ' = null OR ' + rdInstallmentCountField + ' < ' + maxRelatedOppsForNonLDVMode + ')';
+            } else {
+                queryFilter = '(' + rdInstallmentCountField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
+            }
+
         }
 
         return queryFilter;

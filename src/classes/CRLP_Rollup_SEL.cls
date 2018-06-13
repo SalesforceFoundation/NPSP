@@ -62,6 +62,7 @@ public class CRLP_Rollup_SEL {
                         WHERE Is_Deleted__c = false
                         ORDER BY Summary_Object__c, MasterLabel
                 ];
+
             }
             return cachedRollups;
         }
