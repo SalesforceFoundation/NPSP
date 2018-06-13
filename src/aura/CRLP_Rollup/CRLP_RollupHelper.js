@@ -322,8 +322,19 @@
         var label = operations[operation];
         cmp.set("v.selectedOperationLabel", label);
 
-        //reset allowed amount fields because percents and num/curr are tricky based on operation
-        this.resetFields(cmp, cmp.get("v.activeRollup.amountObject"), 'amount');
+        var amountObject = cmp.get("v.activeRollup.amountObject");
+        if (amountObject) {
+            //reset allowed amount fields because percents and num/curr are tricky based on operation
+            this.resetFields(cmp, amountObject, 'amount');
+            //clear the amount field if it's no longer available based on new operation
+            var amountFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.amountField"), cmp.get("v.amountFields"));
+            if (!amountFieldLabel) {
+                cmp.set("v.activeRollup.amountField", null);
+                cmp.set("v.activeRollup.amountFieldLabel", '');
+                //set intelligent default if previously selected amount is unavailable
+                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject);
+            }
+        }
 
         //check that detail field and rollup type have been populated before saving
         this.verifyRollupSaveActive(cmp, cmp.get("v.activeRollup.detailField"));
@@ -435,7 +446,7 @@
                 cmp.set("v.activeRollup.amountField", null);
                 cmp.set("v.activeRollup.amountFieldLabel", '');
                 //set intelligent default if previously selected amount is unavailable
-                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject)
+                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject);
             }
         }
 
