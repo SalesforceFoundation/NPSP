@@ -1109,6 +1109,7 @@
         <members>CRLP_AdvancedCustomizationText</members>
         <members>CRLP_AvailableRollupType</members>
         <members>CRLP_BatchCalculating</members>
+        <members>CRLP_BatchSkipped</members>
         <members>CRLP_CreateRollupActiveHelpText</members>
         <members>CRLP_CreateRollupAmountFieldHelpText</members>
         <members>CRLP_CreateRollupDateFieldHelpText</members>
