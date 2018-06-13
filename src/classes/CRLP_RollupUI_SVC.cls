@@ -886,11 +886,12 @@ public with sharing class CRLP_RollupUI_SVC {
             String fieldType = UTIL_Describe.getFieldType(objectName, dfr.name.toLowerCase());
             Boolean isValidType = validTypeSet.contains(fieldType);
 
-            //check that summary field isn't being used on another rollup
+            //check that target field isn't being used on another rollup
             Boolean isRolledUp = referencedFieldSet.contains(dfr);
 
-            if ((dfr.isUpdateable() && dfr.isCustom() && isValidType && !isRolledUp && !dfr.name.toLowerCase().contains('__system')
-                    && !dfr.name.contains('Latitude__s') && !dfr.name.contains('Longitude__s'))
+            if (( isValidType
+                    && !isRolledUp
+                     && isTargetFieldAllowed(objectName,dfr))
                     || selectedField.equals(dfr.name)) {
                 Map<String, String> fieldObject = new Map<String, String>();
                 fieldObject.put('name', dfr.name);
@@ -907,6 +908,49 @@ public with sharing class CRLP_RollupUI_SVC {
         }
 
         return fieldObjectList;
+    }
+
+    /*******************************************************************************************************
+    * @description Checks that a given field is allowed as a target field
+    * @param objectName the name of the object
+    * @param dfr the DescribeFieldResult of the field
+    * @return Boolean
+    */
+    public static Boolean isTargetFieldAllowed(String objectName, Schema.DescribeFieldResult dfr) {
+
+        if(!dfr.isUpdateable()
+                || !dfr.isCustom()
+                || dfr.name.toLowerCase().contains('__system')
+                || dfr.name.contains('Latitude__s')
+                || dfr.name.contains('Longitude__s')) {
+            return false;
+        }
+
+        Map<String,Set<String>> bannedFieldsByObject = new Map<String,Set<String>>();
+
+        // BAN ALL NPSP FIELDS ON RD EXCEPT THE FOUR CORE ROLLUP FIELDS
+        bannedFieldsByObject.put('npe03__Recurring_Donation__c',new Set<String>{'npe03__Amount__c'
+                ,'npe03__Recurring_Donation_Campaign__c'
+                ,'npe03__Contact__c'
+                ,'npe03__Date_Established__c'
+                ,'npe03__Donor_Name__c'
+                ,'npe03__Installment_Amount__c'
+                ,'npe03__Installment_Period__c'
+                ,'npe03__Installments__c'
+                ,'npe03__Open_Ended_Status__c'
+                ,'npe03__Organization__c'
+                ,'npe03__Schedule_Type__c'
+                ,'npe03__Total__c'
+                ,UTIL_Namespace.StrAllNSPrefix('Always_Use_Last_Day_Of_Month__c')});
+
+        // add more objects here as needed with their banned fields
+
+        if (bannedFieldsByObject.containsKey(objectName) && bannedFieldsByObject.get(objectName).contains(dfr.name)) {
+            return false;
+        }
+
+        return true;
+
     }
 
     public class RollupException extends Exception {}
