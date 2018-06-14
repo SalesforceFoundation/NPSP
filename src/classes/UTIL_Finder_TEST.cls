@@ -536,17 +536,39 @@ private class UTIL_Finder_TEST {
         System.assertEquals('Clark', (String) actual[0].get('LastName'));
     }
 
-    /*******************************************************************************************************
-    * @description 
-	* 
+	/*******************************************************************************************************
+    * @description Verifies SOQL is built using unique fields when SELECT method has duplicate passed in
     */
-    @isTest static private void findReturnsUniqueFields() {
+    @isTest static private void findReturnsUniqueFieldsInSoql() {
         List<String> fields = new List<String>{ 'firstname', 'FirstName', 'lastName', 'LastName' };
         UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
             .withSelectFields(fields);
 
-        System.assert(finder.isSoql(), 'SOQL should be executed since we do not have the WHERE clause ');
         List<sObject> actual = finder.find();
+
+        System.assert(finder.isSoql(), 'SOQL should be executed since we do not have the WHERE clause');
+        System.assertEquals(1, actual.size());
+    }
+
+    /*******************************************************************************************************
+    * @description Verifies SOSL is built using unique fields when SELECT method has duplicate passed in
+    */
+    @isTest static private void findReturnsUniqueFieldsInSosl() {
+        List<String> fields = new List<String>{ 'firstname', 'FirstName', 'lastName', 'LastName' };
+
+        List<Contact> contacts = [SELECT Id, Name, FirstName, LastName FROM Contact];
+
+        UTIL_Where.FieldExpression whereExp = new UTIL_Where.FieldExpression(Contact.LastName).equals(contacts[0].LastName);
+        whereExp.isFilterable = false;
+
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(fields)
+            .withWhere(whereExp);
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(contacts);
+        List<sObject> actual = finder.find();
+
+        System.assert(!finder.isSoql(), 'SOSL should be executed since we the WHERE clause is on the encrypted field');
         System.assertEquals(1, actual.size());
     }
 

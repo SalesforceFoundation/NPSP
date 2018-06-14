@@ -390,8 +390,32 @@ public virtual class UTIL_Finder {
         * @return SearchBuilder The object instance
         */
         @TestVisible private SearchBuilder withFields(Set<String> fields) {
-            this.fields = fields;
+            this.fields = buildSelectFields(fields);
             return this;
+        }
+        
+        /*********************************************************************************************************
+        * @description Validates SELECT fields and removes duplicates
+        * @return Set<String> Set of field names.
+        */
+        private Set<String> buildSelectFields(Set<String> fields) {
+            Set<String> result = new Set<String>();    
+            Set<String> uniqueFields = new Set<String>();
+            
+            for (String fieldName : fields) {
+                if (String.isBlank(fieldName)) {
+                    continue;
+                } 
+                
+                if (uniqueFields.contains(fieldName.toLowerCase())) {
+                    continue;
+                }
+    
+                result.add(fieldName);
+                uniqueFields.add(fieldName.toLowerCase());
+            }
+    
+            return result;
         }
 
         /*********************************************************************************************************
