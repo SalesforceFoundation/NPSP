@@ -493,14 +493,29 @@
 
         function beforeKeyDownHandler(event) {
 
+            var selection = hot.getSelected();
+
+            var rowIndex = selection[0];
+            var colIndex = selection[1];
+
+            var numberOfColumns = hot.countCols();
+            var numberOfRows = hot.countRows();
+
+            var lastColumn = numberOfColumns - 1;
+            var lastRow = numberOfRows - 1;
+
+            var isFirstRow = false;
+
+            if (rowIndex === 0) {
+
+                isFirstRow = true;
+            }
+
+
             // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
             if (event.keyCode === 13) {
 
                 event.stopImmediatePropagation();
-
-                var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
 
                 rowIndex ++;
 
@@ -511,11 +526,6 @@
                 // Tab or right arrow was pressed
                 console.log('Tab or right arrow was pressed');
                 try {
-
-                    var selection = hot.getSelected();
-                    var rowIndex = selection[0];
-                    var colIndex = selection[1];
-                    var numerOfColumns = hot.countCols();
 
                     if (colIndex === 0) {
 
@@ -530,20 +540,29 @@
                 }
 
             }
-            else if (event.keyCode === 37) {
+            else if (event.keyCode === 37 || event.shiftKey && event.keyCode == 9) {
 
                 // Left arrow was pressed
-                console.log('Left arrow was pressed');
+                console.log('Left arrow or shift + tab was pressed');
                 try {
-
-                    var selection = hot.getSelected();
-                    var rowIndex = selection[0];
-                    var colIndex = selection[1];
-                    var numerOfColumns = hot.countCols();
 
                     if (colIndex === 2) {
 
                         colIndex = 1;
+                    }
+
+                    if (colIndex === 1) {
+
+                        colIndex = lastColumn;
+
+                        if (isFirstRow) {
+
+                            rowIndex = lastRow;
+                        }
+                        else {
+
+                            row --;
+                        }
                     }
 
                     hot.selectCell(rowIndex, colIndex);
