@@ -458,13 +458,6 @@
                 $scope.lastSelectedColumn = col;
             }
 
-        /*    if (col < 3) {
-                hot.selectCell(row, $scope.lastSelectedColumn);
-            }
-            else {
-                $scope.lastSelectedColumn = col;
-            }*/
-
             $scope.lastSelectedColumn = col;
         }
 
@@ -493,86 +486,81 @@
 
         function beforeKeyDownHandler(event) {
 
-            var selection = hot.getSelected();
+            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39) {
 
-            var rowIndex = selection[0];
-            var colIndex = selection[1];
+                var selection = hot.getSelected();
 
-            var numberOfColumns = hot.countCols();
-            var numberOfRows = hot.countRows();
-
-            var lastColumn = numberOfColumns - 1;
-            var lastRow = numberOfRows - 1;
-
-            var isFirstRow = false;
-
-            if (rowIndex === 0) {
-
-                isFirstRow = true;
-            }
+                var rowIndex = selection[0];
+                var colIndex = selection[1];
+    
+                var numberOfColumns = hot.countCols();
+                var numberOfRows = hot.countRows();
+    
+                var lastColumn = numberOfColumns - 1;
+                var lastRow = numberOfRows - 1;
+    
+                var isFirstRow = (rowIndex === 0) ? true : false;
 
 
-            // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
-            if (event.keyCode === 13) {
+                // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
+                if (event.keyCode === 13) {
 
-                event.stopImmediatePropagation();
+                    event.stopImmediatePropagation();
 
-                rowIndex ++;
-
-                hot.selectCell(rowIndex, colIndex);
-            }
-            if (event.keyCode === 9 || event.keyCode === 39) {
-
-                // Tab or right arrow was pressed
-                console.log('Tab or right arrow was pressed');
-                try {
-
-                    if (colIndex === 0) {
-
-                        colIndex = 1;
-                    }
+                    rowIndex ++;
 
                     hot.selectCell(rowIndex, colIndex);
                 }
-                catch(err) {
+                if (event.keyCode === 9 || event.keyCode === 39) {
 
-                    console.log(err);
+                    // Tab or right arrow was pressed
+                    console.log('Tab or right arrow was pressed');
+                    try {
+
+                        if (colIndex === 0) {
+
+                            colIndex = 1;
+                        }
+
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
+
+                        console.log(err);
+                    }
                 }
+                else if (event.keyCode === 37) {
 
-            }
-            else if (event.keyCode === 37 || event.shiftKey && event.keyCode == 9) {
+                    // Left arrow was pressed
+                    console.log('Left arrow or shift + tab was pressed');
+                    try {
 
-                // Left arrow was pressed
-                console.log('Left arrow or shift + tab was pressed');
-                try {
+                        console.log('COLUMN INDEX ', colIndex);
+                        if (colIndex === 1) {
 
-                    if (colIndex === 2) {
+                            colIndex = lastColumn;
 
-                        colIndex = 1;
+                            if (isFirstRow) {
+
+                                rowIndex = lastRow;
+                            }
+                            else {
+
+                                row --;
+                            }
+                        }
+
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
+
+                        console.log(err);
                     }
 
-                    if (colIndex === 1) {
-
-                        colIndex = lastColumn;
-
-                        if (isFirstRow) {
-
-                            rowIndex = lastRow;
-                        }
-                        else {
-
-                            row --;
-                        }
-                    }
-
-                    hot.selectCell(rowIndex, colIndex);
                 }
-                catch(err) {
-
-                    console.log(err);
-                }
-
             }
+
+
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
@@ -687,25 +675,21 @@
                 col.className = "htLeft htMiddle slds-truncate";
 
                 if (templateField.type === "DATE") {
-                    col.colWidths = 100;
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                 }
                 else if (templateField.type === "CURRENCY") {
-                    col.colWidths = 100;
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "DECIMAL") {
-                    col.colWidths = 100;
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 }
                 else if (templateField.type === "NUMBER") {
-                    col.colWidths = 100;
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
@@ -714,7 +698,6 @@
 
                 }
                 if (templateField.type === "PICKLIST") {
-                    col.colWidths = 250;
                     col.strict = false;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
