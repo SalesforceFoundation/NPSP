@@ -396,7 +396,7 @@ public class CMT_UnitTestData_TEST {
                 detailField = 'Amount__c';
             }
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
-            parms.put('Detail', getDetailObject.get(rollupType));
+            parms.put('Detail', getDetailObject.get(rollupType) + '.' + detailField);
 
         } else if (rollupType == RollupRecordType.ContactSoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
 
