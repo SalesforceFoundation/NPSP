@@ -198,7 +198,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
             // - Currently in a Unit Test with only a couple of summary objects (unit tests do not support chaining)
             // - Called from a Batch Job, @Future or Queueable context
             Integer numTotalSummaryObjects = accountIds.size() + contactIds.size() + rdIds.size();
-            if ((Test.isRunningTest() && numTotalSummaryObjects < 4)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
+            if ((Test.isRunningTest() && numTotalSummaryObjects < 6)  || System.isBatch() || System.isFuture() || System.isQueueable()) {
                 // Immediate execution
                 if (!accountIds.isEmpty()) {
                     CRLP_RollupQueueable.runRollupsForIds(accountIds);

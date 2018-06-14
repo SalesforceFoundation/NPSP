@@ -46,8 +46,9 @@ private class CRLP_RollupContact_TEST {
      */
     @TestSetup
     private static void setupBaseTestData() {
-        Contact c = UTIL_UnitTestData_TEST.getContact();
-        insert c;
+        Contact c1 = UTIL_UnitTestData_TEST.getContact();
+        Contact c2 = UTIL_UnitTestData_TEST.getContact();
+        insert new List<Contact>{c1, c2};
     }
 
     /**
@@ -102,6 +103,40 @@ private class CRLP_RollupContact_TEST {
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'npo02__OppAmount2YearsAgo__c', CRLP_Operation.RollupType.SUM, 'Amount',
                         CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 2) + ',' +
+
+                /* Using nonsense fields to test Smallest with different Detail Field and Years Ago */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from Smallest Opp Last Year', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Number_of_Soft_Credits__c', CRLP_Operation.RollupType.SMALLEST, 'Recurring_Donation_Installment_Number__c',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
+
+                /* Using nonsense fields to test Largest with different Detail Field and Years Ago */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from Largest Opp Last Year', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Number_of_Soft_Credits_Last_N_Days__c', CRLP_Operation.RollupType.LARGEST, 'Recurring_Donation_Installment_Number__c',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
+
+                /* Using nonsense fields to test Smallest with different Detail Field and All Time */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from Smallest Opp All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Number_of_Soft_Credits_Last_Year__c', CRLP_Operation.RollupType.SMALLEST, 'Recurring_Donation_Installment_Number__c') + ',' +
+
+                /* Using nonsense fields to test Largest with different Detail Field and All Time */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from Largest Opp All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Number_of_Soft_Credits_This_Year__c', CRLP_Operation.RollupType.LARGEST, 'Recurring_Donation_Installment_Number__c') + ',' +
+
+                /* Using nonsense fields to test First with different Detail Field and Years Ago */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from First Opp Last Year', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'Number_of_Soft_Credits_Two_Years_Ago__c', CRLP_Operation.RollupType.FIRST, 'Recurring_Donation_Installment_Number__c',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
+
+                /* Using nonsense fields to test Last with different Detail Field and Years Ago */
+                CMT_UnitTestData_TEST.createRollupRecord('Num from Last Opp Last Year', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
+                        'npo02__Household_Naming_Order__c', CRLP_Operation.RollupType.LAST, 'Recurring_Donation_Installment_Number__c',
+                        CRLP_Operation.TimeBoundOperationType.YEARS_AGO, 1) + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Donations Last 365 Days', filterGroupId1,
                         CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
@@ -218,10 +253,14 @@ private class CRLP_RollupContact_TEST {
             UTIL_UnitTestData_TEST.disableCustomizableRollupTriggers();
         }
 
-        // Retrieve the dummy Contact and then insert 100 Opportunity records
-        Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
+        // Retrieve the dummy Contacts and then insert 100 Opportunity records
+        List<Contact> cons = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 2];
+        Contact c = cons[0];
+        Contact c4 = cons[1];
         Id acctId = c.AccountId;
         Id conId = c.Id;
+        Id acct4Id = c4.AccountId;
+        Id con4Id = c4.Id;
 
         // Insert a single test Contact that will have no Opportunities, but should end up getting
         // processed and this field cleared.
@@ -297,6 +336,55 @@ private class CRLP_RollupContact_TEST {
                 npe01__Do_Not_Automatically_Create_Payment__c = true
         ));
 
+        // create 4 opps for con4 to test single result opp edge cases
+        Date earlyLastYear = Date.newInstance(Date.today().year()-1,1,1);
+        Date lateLastYear = Date.newInstance(Date.today().year()-1,12,31);
+        Date earlyThisYear = Date.newInstance(Date.today().year(),1,1);
+        opps.add(new Opportunity (
+                Name = 'Test Opp SRO 1' + c.FirstName + ' ' + c.LastName,
+                AccountId = acct4Id,
+                Amount = 100,
+                CloseDate = earlyLastYear,
+                StageName = closedStage,
+                Primary_Contact__c = con4Id,
+                RecordTypeId = rtId,
+                Recurring_Donation_Installment_Number__c = 4,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+        opps.add(new Opportunity (
+                Name = 'Test Opp SRO 2' + c.FirstName + ' ' + c.LastName,
+                AccountId = acct4Id,
+                Amount = 50,
+                CloseDate = lateLastYear,
+                StageName = closedStage,
+                Primary_Contact__c = con4Id,
+                RecordTypeId = rtId,
+                Recurring_Donation_Installment_Number__c = 42,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+        opps.add(new Opportunity (
+                Name = 'Test Opp SRO 3' + c.FirstName + ' ' + c.LastName,
+                AccountId = acct4Id,
+                Amount = 200,
+                CloseDate = earlyThisYear,
+                StageName = closedStage,
+                Primary_Contact__c = con4Id,
+                RecordTypeId = rtId,
+                Recurring_Donation_Installment_Number__c = 314,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+        opps.add(new Opportunity (
+                Name = 'Test Opp SRO 4' + c.FirstName + ' ' + c.LastName,
+                AccountId = acct4Id,
+                Amount = 25,
+                CloseDate = Date.today(),
+                StageName = closedStage,
+                Primary_Contact__c = con4Id,
+                RecordTypeId = rtId,
+                Recurring_Donation_Installment_Number__c = 56,
+                npe01__Do_Not_Automatically_Create_Payment__c = true
+        ));
+
         insert opps;
 
         // Mark two payments as written off; though only one should be rolled up
@@ -321,10 +409,10 @@ private class CRLP_RollupContact_TEST {
 
         system.assertEquals(cnt, [SELECT Count() FROM npe01__OppPayment__c WHERE npe01__Opportunity__r.IsWon = true],
                 'There should be 100 payment records on closed won opps');
-        system.assertEquals(cnt+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true],
+        system.assertEquals(cnt+1, [SELECT Count() FROM OpportunityContactRole WHERE Opportunity.IsWon = true AND ContactId = :conId],
                 'There should be 101 OCR records on closed won opps');
 
-        // Now test the rollups to the Account from the Opportunity
+        // Now test the rollups to the Contact from the Opportunity
         if (tt == TestType.TestTrigger) {
             // No need to execute anything special here. If the triggers worked as expected, then
             // the data will be rolled up automatically upon the stopTest().
@@ -333,15 +421,17 @@ private class CRLP_RollupContact_TEST {
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{conId}, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{conId, con4Id}, null);
         } else if (tt == TestType.TestQueueuable || tt == TestType.TestWithAlwaysRollupToPrimary) {
-            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{conId}));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{conId, con4Id}));
         }
         Test.stopTest();
 
-        // Query the Account with all the target fields specified in the rollups
+        // Query the Contact with all the target fields specified in the rollups
         String conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :conId LIMIT 1';
         c = database.query(conQuery);
+        conQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Contact.SObjectType) + ' WHERE Id = :con4Id LIMIT 1';
+        c4 = database.query(conQuery);
 
         // If the AlwaysRollupToPrimaryContact field is checked, the totals will include the org donation
         if (tt == TestType.TestWithAlwaysRollupToPrimary) {
@@ -367,12 +457,18 @@ private class CRLP_RollupContact_TEST {
         System.assertEquals(last365Days, c.npo02__OppAmountLastNDays__c);
         System.assertEquals('New', c.Department);
 
-        // These 4 use other fields on the Contact object since there are no NPSP related fields to store the values in
+        // These 10 use other fields on the Contact object since there are no NPSP related fields to store the values in
         System.assertEquals(totalPayments, c.First_Soft_Credit_Amount__c,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
         System.assertEquals(baseAmt, c.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), c.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), c.Description.split(';').size(), 'The list of donated years should match');
+        System.assertEquals(42, c4.Number_of_Soft_Credits__c);
+        System.assertEquals(4, c4.Number_of_Soft_Credits_Last_N_Days__c);
+        System.assertEquals(56, c4.Number_of_Soft_Credits_Last_Year__c);
+        System.assertEquals(314, c4.Number_of_Soft_Credits_This_Year__c);
+        System.assertEquals(4, c4.Number_of_Soft_Credits_Two_Years_Ago__c);
+        System.assertEquals(42, c4.npo02__Household_Naming_Order__c);
 
         // THe batch process will query all Contacts, but these 2 are special circumstances to validate
         if (tt == TestType.TestBatch) {
