@@ -26,3 +26,7 @@
 .THIS .nameField {
     height: 60px;
 }
+.THIS .datepicker{
+    position: fixed;
+    z-index: 9999;
+}

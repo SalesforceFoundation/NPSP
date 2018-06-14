@@ -271,13 +271,13 @@
                                         </div>
                                     </aura:if>
                                     <aura:if isTrue="{!equals(v.filterRuleFieldType, 'date')}">
-                                        <lightning:input aura:id="filterRuleField" class="slds-p-around_small"
+                                        <lightning:input aura:id="filterRuleField" class="slds-p-around_small datepicker"
                                                          value="{!v.activeFilterRule.value}"
                                                          required="{!v.isValueRequired}" label="{!v.labels.constant}"
                                                          type="date"/>
                                     </aura:if>
                                     <aura:if isTrue="{!equals(v.filterRuleFieldType, 'datetime-local')}">
-                                        <lightning:input aura:id="filterRuleField" class="slds-p-around_small"
+                                        <lightning:input aura:id="filterRuleField" class="slds-p-around_small datepicker"
                                                          value="{!v.activeFilterRule.value}"
                                                          required="{!v.isValueRequired}" label="{!v.labels.constant}"
                                                          type="datetime-local"/>
