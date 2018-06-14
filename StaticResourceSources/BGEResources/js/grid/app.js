@@ -83,8 +83,8 @@
                 afterRemoveRow: afterRemoveRowHandler,
                 beforeChange: beforeChangeHandler,
                 afterChange: afterChangeHandler,
-            //    afterSelection: afterSelectionHandler,
-            //    afterSelectionEnd: afterSelectionEndHandler,
+                afterSelection: afterSelectionHandler,
+                afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler
