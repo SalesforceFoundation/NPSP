@@ -402,11 +402,11 @@ private class UTIL_OrderBy_TEST {
     */
     @isTest static void sortOrdersRecordsTheSameAsSoqlWithMultipleFields() {
         List<Contact> records = new List<Contact>{
-            new Contact(LastName = 'Smith', FirstName = 'John', Title = 'Administrator'),
-            new Contact(LastName = 'Smith', FirstName = 'Jane', Title = 'Business Manager'),
-            new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Business Manager'),
-            new Contact(LastName = 'Clark', FirstName = 'Kent', Title = 'Administrator'),
-            new Contact(LastName = 'Clark', FirstName = 'Abby', Title = 'Executive')
+            new Contact(LastName = 'xyz', FirstName = 'John', Title = 'Administrator'),
+            new Contact(LastName = 'xyz', FirstName = 'Jane', Title = 'Business Manager'),
+            new Contact(LastName = 'abc', FirstName = 'Kent', Title = 'Business Manager'),
+            new Contact(LastName = 'abc', FirstName = 'Kent', Title = 'Administrator'),
+            new Contact(LastName = 'abc', FirstName = 'Abby', Title = 'Executive')
         };
         insert records;
 
@@ -440,11 +440,11 @@ private class UTIL_OrderBy_TEST {
         insert accounts;
 
         List<Contact> records = new List<Contact>{
-            new Contact(AccountId = accounts[0].Id, LastName = 'Smith', FirstName = 'John', Title = 'Administrator'),
-            new Contact(AccountId = accounts[1].Id, LastName = 'Smith', FirstName = 'Jane', Title = 'Business Manager'),
-            new Contact(AccountId = accounts[2].Id, LastName = 'Clark', FirstName = 'Kent', Title = 'Business Manager'),
-            new Contact(AccountId = accounts[0].Id, LastName = 'Clark', FirstName = 'Kent', Title = 'Administrator'),
-            new Contact(AccountId = accounts[1].Id, LastName = 'Clark', FirstName = 'Abby', Title = 'Executive')
+            new Contact(AccountId = accounts[0].Id, LastName = 'Foo', FirstName = 'John', Title = 'Administrator'),
+            new Contact(AccountId = accounts[1].Id, LastName = 'Foo', FirstName = 'Jane', Title = 'Business Manager'),
+            new Contact(AccountId = accounts[2].Id, LastName = 'Bar', FirstName = 'Kent', Title = 'Business Manager'),
+            new Contact(AccountId = accounts[0].Id, LastName = 'Bar', FirstName = 'Kent', Title = 'Administrator'),
+            new Contact(AccountId = accounts[1].Id, LastName = 'Bar', FirstName = 'Abby', Title = 'Executive')
         };
         insert records;
         records = [

@@ -106,9 +106,9 @@ private class UTIL_Query_TEST {
     **********************************************************************************************************/   
     private static testMethod void testSoqlIsCorrectWhenWhereClauseIsProvided() {
         Account[] accounts = new Account[]{ 
-            new Account(Name = 'Test1'),
-            new Account(Name = 'Test2'),
-            new Account(Name = 'Test3')
+            new Account(Name = 'Test1 Where'),
+            new Account(Name = 'Test2 Where'),
+            new Account(Name = 'Test3 Where')
         };
         insert accounts;
 
@@ -143,9 +143,9 @@ private class UTIL_Query_TEST {
     **********************************************************************************************************/
     private static testMethod void testSoqlIsCorrectWhenMultipleWhereClausesAreProvided() {
         Account[] accounts = new Account[]{ 
-            new Account(Name = 'Test1'),
-            new Account(Name = 'Test2'),
-            new Account(Name = 'Test3')
+            new Account(Name = 'Test1 Multi Where'),
+            new Account(Name = 'Test2 Multi Where'),
+            new Account(Name = 'Test3 Multi Where')
         };
         insert accounts;
 
@@ -177,9 +177,9 @@ private class UTIL_Query_TEST {
     **********************************************************************************************************/
     private static testMethod void testSoqlIsCorrectWhenOrderByClauseIsProvided() {
         Account[] accounts = new Account[]{ 
-            new Account(Name = 'Test1'),
-            new Account(Name = 'Test2'),
-            new Account(Name = 'Test3')
+            new Account(Name = 'Test1 Order By'),
+            new Account(Name = 'Test2 Order By'),
+            new Account(Name = 'Test3 Order By')
         };
         insert accounts;
 
@@ -206,9 +206,9 @@ private class UTIL_Query_TEST {
     **********************************************************************************************************/
     private static testMethod void testSoqlIsCorrectWhenLimitClauseIsProvided() {
         Account[] accounts = new Account[]{ 
-            new Account(Name = 'Test1'),
-            new Account(Name = 'Test2'),
-            new Account(Name = 'Test3')
+            new Account(Name = 'Test1 Limit'),
+            new Account(Name = 'Test2 Limit'),
+            new Account(Name = 'Test3 Limit')
         };
         insert accounts;
 

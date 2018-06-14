@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit tests for UTIL_Where class
 */
-@isTest
+@isTest(isParallel=true)
 private class UTIL_Where_TEST {
     private static final String MOCK_ACCOUNT_ID = UTIL_UnitTestData_TEST.MOCK_ACCOUNT_ID;
     private static UTIL_Where.FieldExpression ACCOUNT_NAME_FIELD_EXP = new UTIL_Where.FieldExpression(Account.Name);

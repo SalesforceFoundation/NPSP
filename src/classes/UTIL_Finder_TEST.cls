@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Unit tests for UTIL_Finder class
 */
-@isTest
+@isTest(isParallel=true)
 private class UTIL_Finder_TEST {
     /** @description Fields that should be used in the SOQL SELECT clause */
     private static final Set<String> SELECT_FIELDS = new Set<String>{ 'FirstName', 'LastName', 'Title' };
@@ -534,6 +534,20 @@ private class UTIL_Finder_TEST {
 
         System.assertEquals(1, actual.size());
         System.assertEquals('Clark', (String) actual[0].get('LastName'));
+    }
+
+    /*******************************************************************************************************
+    * @description 
+	* 
+    */
+    @isTest static private void findReturnsUniqueFields() {
+        List<String> fields = new List<String>{ 'firstname', 'FirstName', 'lastName', 'LastName' };
+        UTIL_Finder finder = new UTIL_Finder(Contact.sObjectType)
+            .withSelectFields(fields);
+
+        System.assert(finder.isSoql(), 'SOQL should be executed since we do not have the WHERE clause ');
+        List<sObject> actual = finder.find();
+        System.assertEquals(1, actual.size());
     }
 
     /*******************************************************************************************************
