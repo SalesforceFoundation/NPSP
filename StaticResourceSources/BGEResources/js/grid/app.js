@@ -678,21 +678,25 @@
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
+                    col.colWidths = 100;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 100;
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 100;
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 100;
                 }
                 else if (templateField.type === "EMAIL") {
 
