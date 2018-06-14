@@ -183,8 +183,8 @@ public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandl
     }
 
     /**
-     * @description Either add the passed Rollup__mdt defintion to the collection of RLLP_Rollup or if it's in the
-     * same 'group' as existing Rollups, just add the mdt to the collection of rollups rollupsMdt the RLLP_Rollup
+     * @description Either add the passed Rollup__mdt defintion to the collection of CRLP_Rollup or if it's in the
+     * same 'group' as existing Rollups, just add the mdt to the collection of rollups rollupsMdt the CRLP_Rollup
      * @param Rollup__mdt
      */
     public void addRollupDefinition(Rollup__mdt rlp) {
