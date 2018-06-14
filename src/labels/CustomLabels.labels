@@ -724,14 +724,6 @@
         <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
     </labels>
     <labels>
-        <fullName>CRLP_BatchSkipped</fullName>
-        <categories>Settings</categories>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Error logged when a scheduled batch is skipped b/c yesterday&apos;s still running.</shortDescription>
-        <value>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</value>
-    </labels>
-    <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
