@@ -190,26 +190,4 @@ public without sharing class UTIL_MasterSchedulableHelper {
             ERR_Handler.processError(ex, ERR_Handler_API.Context.STTG);
         }
     }
-
-    /*******************************************************************************************************
-    * @description Checks for presently running jobs of a particular method
-    * @param methodName The name of the method to check for running jobs on
-    * @return Boolean
-    */
-    public static Boolean hasRunningJob(String className) {
-        className = (className.contains('__') ? className.split('__')[1] : className);
-        // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
-        Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
-        Integer jobCount = [SELECT COUNT()
-            FROM AsyncApexJob
-            WHERE ApexClass.Name = :className
-            AND Status NOT IN ('Queued','Aborted','Completed','Failed')
-            AND CreatedDate < :tenMinutesAgo
-            LIMIT 1];
-        if (jobCount == 0) {
-            return false;
-        } else {
-            return true;
-        }
-    }
 }

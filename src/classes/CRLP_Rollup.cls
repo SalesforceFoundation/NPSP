@@ -57,6 +57,8 @@ public class CRLP_Rollup {
     public String currCode;     // The currency code of the target (summary) object
     public String timeBoundOperation;
     public Integer daysBack;
+    public Integer yearsAgo;
+    public Boolean isYearsAgoSingleResult;
 
     // Basic counter vars
     public Integer theCount;        // count, average
@@ -103,6 +105,17 @@ public class CRLP_Rollup {
             this.timeBoundOperation = rlp.Time_Bound_Operation_Type__c;
             if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.DAYS_BACK.name()) {
                 this.daysBack = Integer.valueOf(rlp.Integer__c);
+            }
+
+            this.isYearsAgoSingleResult = false;
+            if (this.timeBoundOperation == CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name()) {
+                this.yearsAgo = Integer.valueOf(rlp.Integer__c);
+                if (rlp.Operation__c == CRLP_Operation.RollupType.Largest.name()
+                        || rlp.Operation__c == CRLP_Operation.RollupType.Smallest.name()
+                        || rlp.Operation__c == CRLP_Operation.RollupType.First.name()
+                        || rlp.Operation__c == CRLP_Operation.RollupType.Last.name()) {
+                    this.isYearsAgoSingleResult = true;
+                }
             }
 
             // Clear all the counter values
@@ -200,6 +213,22 @@ public class CRLP_Rollup {
                 this.daysBack != otherMdtRollup.Integer__c)) ||
                 (otherMdtTimeBoundOperationType == daysBackOperation && this.timeBoundOperation != daysBackOperation)
                 ) {
+            isSameRollupGroup = false;
+        }
+
+        // YearsAgo operations have to be grouped together by year for Single Result Operations,
+        // so if the op group + value don't match exactly don't consider them in the same group
+        String yearsAgoOperation = CRLP_Operation.TimeBoundOperationType.YEARS_AGO.name();
+        Boolean isSingleResult = otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Largest.name() || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Smallest.name()
+                ||   otherMdtRollup.Operation__c == CRLP_Operation.RollupType.First.name() || otherMdtRollup.Operation__c == CRLP_Operation.RollupType.Last.name();
+        if ((this.isYearsAgoSingleResult == true
+                && (otherMdtTimeBoundOperationType != yearsAgoOperation
+                || otherMdtRollup.Integer__c != this.yearsAgo
+                || !isSingleResult))
+                ||
+                (this.isYearsAgoSingleResult != true
+                && otherMdtTimeBoundOperationType == yearsAgoOperation
+                && isSingleResult)) {
             isSameRollupGroup = false;
         }
 
@@ -419,11 +448,12 @@ public class CRLP_Rollup {
                 }
             }
             resultValue = streakLength;
+        }
 
         // ================================================================
         // Largest/Smallest for other types
         // ================================================================
-        } else if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
+        if (operation == CRLP_Operation.RollupType.LARGEST || operation == CRLP_Operation.RollupType.SMALLEST) {
             Integer arrayPosition = CRLP_Operation.operationTypeToArrayPosition(operation);
             if (fldType == SoapType.DOUBLE) {
                 resultValue = numValue[arrayPosition];
@@ -433,7 +463,7 @@ public class CRLP_Rollup {
                 resultValue = dateValue[arrayPosition];
             } else if (fldType == SoapType.DATETIME) {
                 resultValue = dateTimeValue[arrayPosition];
-            } else {
+            } else if (fldType == SoapType.STRING) {
                 resultValue = textValue[arrayPosition];
             }
         }
