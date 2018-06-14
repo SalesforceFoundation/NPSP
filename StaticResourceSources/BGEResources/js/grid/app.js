@@ -83,8 +83,8 @@
                 afterRemoveRow: afterRemoveRowHandler,
                 beforeChange: beforeChangeHandler,
                 afterChange: afterChangeHandler,
-                afterSelection: afterSelectionHandler,
-                afterSelectionEnd: afterSelectionEndHandler,
+            //    afterSelection: afterSelectionHandler,
+            //    afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler
@@ -458,12 +458,14 @@
                 $scope.lastSelectedColumn = col;
             }
 
-            if (col < 3) {
+        /*    if (col < 3) {
                 hot.selectCell(row, $scope.lastSelectedColumn);
             }
             else {
                 $scope.lastSelectedColumn = col;
-            }
+            }*/
+
+            $scope.lastSelectedColumn = col;
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
@@ -507,36 +509,50 @@
             if (event.keyCode === 9 || event.keyCode === 39) {
 
                 // Tab or right arrow was pressed
-                movedSideWays = true;
+                console.log('Tab or right arrow was pressed');
+                try {
 
-                var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
-                var numerOfColumns = hot.countCols();
+                    var selection = hot.getSelected();
+                    var rowIndex = selection[0];
+                    var colIndex = selection[1];
+                    var numerOfColumns = hot.countCols();
 
-                if (colIndex === 0) {
+                    if (colIndex === 0) {
 
-                    colIndex = 1;
+                        colIndex = 1;
+                    }
+
+                    hot.selectCell(rowIndex, colIndex);
+                }
+                catch(err) {
+
+                    console.log(err);
                 }
 
-                hot.selectCell(rowIndex, colIndex);
             }
             else if (event.keyCode === 37) {
 
                 // Left arrow was pressed
-                movedSideWays = true;
+                console.log('Left arrow was pressed');
+                try {
 
-                var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
-                var numerOfColumns = hot.countCols();
+                    var selection = hot.getSelected();
+                    var rowIndex = selection[0];
+                    var colIndex = selection[1];
+                    var numerOfColumns = hot.countCols();
 
-                if (colIndex === 2) {
+                    if (colIndex === 2) {
 
-                    colIndex = 1;
+                        colIndex = 1;
+                    }
+
+                    hot.selectCell(rowIndex, colIndex);
+                }
+                catch(err) {
+
+                    console.log(err);
                 }
 
-                hot.selectCell(rowIndex, colIndex);
             }
         }
 
