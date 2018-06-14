@@ -397,7 +397,12 @@
             } else if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
                 //clear array or reformat values into an array
-                var values = (value === "") ? [] : value.split(";");
+                var values;
+                if (Array.isArray(value)) {
+                    values = value;
+                } else {
+                    values = (value === "") ? [] : value.split(";");
+                }
                 cmp.set("v.activeFilterRule.value", values);
                 filterRuleFieldType = 'multipicklist';
             }
@@ -418,7 +423,12 @@
                     filterRuleFieldType = 'picklist';
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
                     //clear array or reformat values into an array
-                    var values = (value === "") ? [] : value.split(";");
+                    var values;
+                    if (Array.isArray(value)) {
+                        values = value;
+                    } else {
+                        values = (value === "") ? [] : value.split(";");
+                    }
                     cmp.set("v.activeFilterRule.value", values);
                     filterRuleFieldType = 'multipicklist';
                 }
