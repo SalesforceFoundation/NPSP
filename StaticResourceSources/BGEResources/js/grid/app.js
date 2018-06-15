@@ -670,7 +670,7 @@
                 col.type = getCellDataType(templateField.type);
                 col.allowInvalid = true;
                 col.wordWrap = false;
-                col.colWidths = 200;
+                col.colWidths = 210;
 
                 col.className = "htLeft htMiddle slds-truncate";
 
