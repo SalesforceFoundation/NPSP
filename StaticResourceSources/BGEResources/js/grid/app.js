@@ -12,8 +12,6 @@
 
         function onInitHandler(result, event) {
 
-            console.log(result);
-
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
@@ -371,8 +369,6 @@
 
                         result.forEach(function(cellResponse) {
 
-                            // console.log(cellResponse);
-
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
                             if (cellResponse.errors) {
@@ -514,7 +510,6 @@
                 if (event.keyCode === 9 || event.keyCode === 39) {
 
                     // Tab or right arrow was pressed
-                    console.log('Tab or right arrow was pressed');
                     try {
 
                         if (colIndex === 0) {
@@ -532,10 +527,8 @@
                 else if (event.keyCode === 37) {
 
                     // Left arrow was pressed
-                    console.log('Left arrow or shift + tab was pressed');
                     try {
 
-                        console.log('COLUMN INDEX ', colIndex);
                         if (colIndex === 1) {
 
                             colIndex = lastColumn;
