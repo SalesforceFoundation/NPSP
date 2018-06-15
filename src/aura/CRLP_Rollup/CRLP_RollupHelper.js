@@ -912,36 +912,29 @@
     setDefaultAmount: function(cmp, labels, amountObjectName) {
         var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
 
-        // only assume the amount field if the summary field is a number or currency.
-        // if the summary field is a percent, the admin has to explicitly select an amount field
-        var setAmountField = (summaryFieldType !== 'PERCENT');
-
         var amountFieldName;
         var amountFields = cmp.get("v.amountFields");
 
         if (amountObjectName === labels.objectPayment) {
-            if(setAmountField) {
-                amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
-            }
+            amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
             cmp.set("v.activeRollup.detailObject", labels.objectPayment);
         } else if (amountObjectName === labels.objectAllocation) {
-            if(setAmountField) {
-                amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
-            }
+            amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
             cmp.set("v.activeRollup.detailObject", labels.objectAllocation);
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
-            if(setAmountField) {
-                amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
-            }
+            amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
             cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
         } else {
-            if(setAmountField) {
-                amountFieldName = labels.objectOpportunity + ' Amount';
-            }
+            amountFieldName = labels.objectOpportunity + ' Amount';
             cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
         }
-        cmp.set("v.activeRollup.amountField", amountFieldName);
-        cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+
+        // only assume the amount field if the summary field is a number or currency.
+        // if the summary field is a percent, the admin has to explicitly select an amount field
+        if(summaryFieldType !== 'PERCENT') {
+            cmp.set("v.activeRollup.amountField", amountFieldName);
+            cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+        }
 
     },
 
