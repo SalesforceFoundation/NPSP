@@ -52,12 +52,18 @@ public class CRLP_DefaultConfigBuilder_SVC {
 
         List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
+        List<CRLP_RollupCMT.FilterRule> filterRulesToSoftDelete = softDeleteExtraFilterRules(filterGroups);
+
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
         rollups.addAll(buildDefaultRollups());
         rollups.addAll(buildUserDefinedRollups());
 
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+
+        if(!filterRulesToSoftDelete.isEmpty()){
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterRulesToSoftDelete);
+        }
 
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
         return jobId;
@@ -626,9 +632,38 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groups.add(groupPaymentsWrittenOffContacts);
         }
 
-
         return groups;
     }
+
+    /*************************************************************************************************************
+     * @description Soft deletes all extra Filter Rules in the NPSP Filter Groups upon CRLP Reset
+     * @param List<FilterGroup> the default Filter Groups (wrapper classes) with their lists of default Filter Rules
+     * @return List<FilterRule> defined Filter Rule wrapper classes
+     */
+    private static List<CRLP_RollupCMT.FilterRule> softDeleteExtraFilterRules(List<CRLP_RollupCMT.FilterGroup> groups) {
+
+        Set<String> defaultRuleNames = new Set<String>();
+        for (CRLP_RollupCMT.FilterGroup grp : groups) {
+            for (CRLP_RollupCMT.FilterRule rule : grp.rules) {
+                defaultRuleNames.add(rule.recordName);
+            }
+        }
+
+        List<Filter_Rule__mdt> allExistingRules = CMT_FilterRule_SEL.getFilterRules();
+
+        List<CRLP_RollupCMT.FilterRule> rulesToSoftDelete = new List<CRLP_RollupCMT.FilterRule>();
+
+        for (Filter_Rule__mdt rule : allExistingRules) {
+            if (!defaultRuleNames.contains(rule.DeveloperName) && rule.Filter_Group__r.DeveloperName.left(5) == 'NPSP_') {
+                CRLP_RollupCMT.FilterRule ruleToDelete = new CRLP_RollupCMT.FilterRule(rule);
+                ruleToDelete.isDeleted = true;
+                rulesToSoftDelete.add(ruleToDelete);
+            }
+        }
+
+        return rulesToSoftDelete;
+    }
+
 
     /*************************************************************************************************************
      * @description Create the default Customizable Rollups for all standard NPSP rollup fields using the

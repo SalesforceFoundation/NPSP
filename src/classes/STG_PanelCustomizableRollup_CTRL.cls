@@ -101,7 +101,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     * @description Action Method to simply redeploy/reset all CMDTs, only offered when CRLPs are enabled
     * @return void
     */
-/*
+
     public PageReference resetRollupsToDefaultConfig() {
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
@@ -119,7 +119,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
         }
         return null;
     }
-*/
 
     /*******************************************************************************************************
     * @description Overridden Action Method to kick off CMDT deployment, save custom setting,
