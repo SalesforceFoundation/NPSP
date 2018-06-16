@@ -61,6 +61,8 @@ public with sharing class BDI_Donations_TEST {
         listConT = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(2);
         insert listConT;
 
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConT);
+
         listOppT = UTIL_UnitTestData_TEST.OppsForContactList(listConT, null, 
             UTIL_unitTestData_TEST.getOpenStage(), system.Today(), 100, null, null);
         insert listOppT;
@@ -110,29 +112,29 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
         
-        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
         system.assertEquals(2, listAcc.size());
         system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
         
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(2, listOpp.size());
         system.assertEquals(true, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
         
-        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
         system.assertEquals(2, listPmt.size());
         system.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
         system.assertEquals('Visa', listPmt[1].npe01__Payment_Method__c);
         system.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
         system.assertEquals('1234', listPmt[1].npe01__Check_Reference_Number__c);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -177,27 +179,27 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
 
-        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
         system.assertEquals(2, listAcc.size());
         system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
 
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(2, listOpp.size());
         system.assertEquals(true, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
 
-        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Paid__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Paid__c from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
         system.assertEquals(2, listPmt.size());
         system.assertEquals(true, listPmt[0].npe01__Paid__c);
         system.assertEquals(true, listPmt[1].npe01__Paid__c);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id);
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -252,29 +254,29 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
 
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
 
-        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
         system.assertEquals(2, listAcc.size());
         system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
 
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(2, listOpp.size());
         system.assertEquals(true, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
 
-        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Paid__c, npe01__Payment_Date__c, npe01__Opportunity__r.CloseDate from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Paid__c, npe01__Payment_Date__c, npe01__Opportunity__r.CloseDate from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
         system.assertEquals(2, listPmt.size());
         system.assertEquals(true, listPmt[0].npe01__Paid__c);
         system.assertEquals(true, listPmt[1].npe01__Paid__c);
         system.assertEquals(listPmt[0].npe01__Opportunity__r.CloseDate, listPmt[0].npe01__Payment_Date__c);
         system.assertEquals(listPmt[1].npe01__Opportunity__r.CloseDate, listPmt[1].npe01__Payment_Date__c);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id);
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -333,29 +335,29 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
         
-        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Name];
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by Id];
         system.assertEquals(2, listAcc.size());
         system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listAcc[1].npo02__TotalOppAmount__c);
         
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(2, listOpp.size());
         system.assertEquals(true, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
         
-        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
         system.assertEquals(2, listPmt.size());
         system.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
         system.assertEquals('Visa', listPmt[1].npe01__Payment_Method__c);
         system.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
         system.assertEquals('1234', listPmt[1].npe01__Check_Reference_Number__c);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -425,12 +427,12 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(2, listOpp.size());
         system.assertEquals(false, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
         
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(0, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount, listCon[1].npo02__TotalOppAmount__c);
@@ -451,7 +453,7 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals('1234', pmt1.npe01__Check_Reference_Number__c);
 
         listDI = [select Id, DonationImported__c, DonationImportStatus__c, PaymentImported__c, PaymentImportStatus__c 
-            from DataImport__c order by Contact1_Lastname__c];
+            from DataImport__c order by Id];
         system.assertEquals(2, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -517,23 +519,23 @@ public with sharing class BDI_Donations_TEST {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Firstname];
+        list<Contact> listCon = [select Id, Name, AccountId, npo02__TotalOppAmount__c from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals(listOppT[0].Amount, listCon[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount * 2, listCon[1].npo02__TotalOppAmount__c);
         
-        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by npe01__One2OneContact__r.Firstname];
+        list<Account> listAcc = [select Id, Name, npo02__TotalOppAmount__c from Account order by npe01__One2OneContact__r.Id];
         system.assertEquals(2, listAcc.size());
         system.assertEquals(listOppT[0].Amount, listAcc[0].npo02__TotalOppAmount__c);
         system.assertEquals(listOppT[1].Amount * 2, listAcc[1].npo02__TotalOppAmount__c);
         
-        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Name];
+        list<Opportunity> listOpp = [select Id, Name, Amount, StageName, isWon, isClosed, AccountId from Opportunity order by Id];
         system.assertEquals(3, listOpp.size());
         system.assertEquals(true, listOpp[0].isWon);
         system.assertEquals(true, listOpp[1].isWon);
         system.assertEquals(true, listOpp[2].isWon);
         
-        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Name];
+        list<npe01__OppPayment__c> listPmt = [select Id, npe01__Payment_Amount__c, npe01__Payment_Method__c, npe01__Check_Reference_Number__c from npe01__OppPayment__c order by npe01__Opportunity__r.Id];
         system.assertEquals(3, listPmt.size());
         system.assertEquals('Check', listPmt[0].npe01__Payment_Method__c);
         system.assertEquals('abc', listPmt[0].npe01__Check_Reference_Number__c);
@@ -542,7 +544,7 @@ public with sharing class BDI_Donations_TEST {
         system.assertEquals('Mastercard', listPmt[2].npe01__Payment_Method__c);
         system.assertEquals('5678', listPmt[2].npe01__Check_Reference_Number__c);
 
-        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, DonationImported__c, DonationImportStatus__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         system.assertEquals(listDI[0].DonationImported__c, listOpp[0].Id); 
         system.assertEquals(listDI[1].DonationImported__c, listOpp[1].Id);
@@ -1711,6 +1713,7 @@ public with sharing class BDI_Donations_TEST {
         // create opps to match against
         Contact con = new Contact(firstname='c0', lastname='c0', email='c0@c0.com');
         insert con;
+        UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ con });
         list<Opportunity> listOpp = new list<Opportunity>();
         
         // Opps 0-5 will get their default single Payment record

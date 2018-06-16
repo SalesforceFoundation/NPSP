@@ -154,7 +154,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(conSrc.Id, listCon[0].Id);
@@ -336,7 +336,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(conSrc.Id, listCon[0].Id);
@@ -424,7 +424,7 @@ public with sharing class CON_ChangeAccount_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(ADDR_Addresses_TEST.listConT[0].Id, listCon[0].Id);

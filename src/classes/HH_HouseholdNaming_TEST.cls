@@ -146,7 +146,10 @@ public class HH_HouseholdNaming_TEST {
         HH_HouseholdNaming.FutureUpdateNames(householdids);
         test.stoptest();
         //test a single member household, lastname, firstname, householdname:
-        Contact con = [select npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c from Contact where FirstName = 'FirstName0'];
+        Contact con = [
+            SELECT npo02__Household__r.Name, npo02__Household__r.npo02__Informal_Greeting__c, npo02__Household__r.npo02__Formal_Greeting__c
+            FROM Contact
+            WHERE Id = :insertlist[0].Id];
         system.assertEquals('LastName0 ' +  system.label.npo02.DefaultHouseholdName, con.npo02__household__r.Name);  
         system.assertEquals('FirstName0',con.npo02__household__r.npo02__Informal_Greeting__c);
         system.assertEquals('Mr. FirstName0 LastName0', con.npo02__household__r.npo02__Formal_Greeting__c);
@@ -381,7 +384,7 @@ public class HH_HouseholdNaming_TEST {
         insert contacts;
         Test.stopTest();
 
-        List<Contact> actualContacts = getContactsOrderByFirstName();
+        List<Contact> actualContacts = getContactsOrderById();
 
         Contact actual = actualContacts[0];
         System.assertEquals(accounts[0].Name, actual.Account.Name, 'Account Name should be unchanged: ' + actual);
@@ -400,7 +403,7 @@ public class HH_HouseholdNaming_TEST {
 
         hhNaming.updateNames(hhIds);
 
-        actualContacts = getContactsOrderByFirstName();
+        actualContacts = getContactsOrderById();
 
         // Verify Account names are changed for Accounts specified to the updateNames()
         actual = actualContacts[0];
@@ -694,7 +697,7 @@ public class HH_HouseholdNaming_TEST {
         insert contacts;
         Test.stopTest();
         
-        List<Contact> actualContacts = getContactsOrderByFirstName();
+        List<Contact> actualContacts = getContactsOrderById();
         for (Integer i = 0; i < contacts.size(); i++) {
             Contact actual = actualContacts[i];
             System.assertEquals(contacts[i].npo02__Household__c, actual.npo02__Household__c, 'Household should be unchanged: ' + actual);
@@ -768,13 +771,13 @@ public class HH_HouseholdNaming_TEST {
     * @description Retrieves Contacts ordered by First Name
     * @return List<Contact>
     **********************************************************************************************************/
-    private static List<Contact> getContactsOrderByFirstName() {
+    private static List<Contact> getContactsOrderById() {
         return [
             SELECT FirstName, LastName, AccountId, 
                 Account.Name, npo02__Household__c, npo02__Household__r.Id, npo02__Household__r.Name, 
                 npo02__Household__r.npo02__Formal_Greeting__c, npo02__Household__r.npo02__Informal_Greeting__c
             FROM Contact
-            ORDER BY FirstName
+            ORDER BY Id
         ];
     }
 
