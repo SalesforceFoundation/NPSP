@@ -51,7 +51,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
         insert c;
-        system.assertEquals(1, [select count() from Account where Name = 'Test Contact' and npe01__One2OneContact__c = :c.id]);
+        system.assertEquals(1, [select count() from Account where npe01__One2OneContact__c = :c.id]);
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 

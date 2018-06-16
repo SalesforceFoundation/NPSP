@@ -705,6 +705,23 @@ public class UTIL_UnitTestData_TEST {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
     }
 
+    /*********************************************************************************************************
+    * @description Extracts Ids of sObjects
+    * @param sObjects List of sObjects
+    * @return Set<Id> Set of sObjects' Ids
+    **********************************************************************************************************/
+    public static Set<Id> extractIds(List<sObject> sObjects) {
+        return (new Map<Id, sObject>(sObjects)).keySet();
+    }
+
+    /*********************************************************************************************************
+    * @description Sets the Fixed Search Results to the Ids of the sObjects
+    * @param sObjects List of sObjects
+    **********************************************************************************************************/
+    public static void setFixedSearchResults(List<sObject> sObjects) {
+        Test.setFixedSearchResults(new List<Id>(extractIds(sObjects)));
+    }
+
     /**
      * @description Create the default trigger handler records if they haven't already been created
      */
