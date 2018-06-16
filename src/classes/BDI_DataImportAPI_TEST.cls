@@ -99,7 +99,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(1, listCon.size());
         system.assertEquals('c3 C3', listCon[0].Name);
 
-        listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
+        listDI = [select Status__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
@@ -147,7 +147,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertEquals(1, listCon.size());
         system.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
+        listDI = [select Status__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
@@ -198,12 +198,12 @@ public with sharing class BDI_DataImportAPI_TEST {
         system.assertNotEquals(null, listResult[0].apexJobId);
         system.assertNotEquals(null, listResult[1].apexJobId);
 
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
+        list<Contact> listCon = [select Id, Name from Contact order by Id];
         system.assertEquals(2, listCon.size());
         system.assertEquals('c1 C1', listCon[0].Name);
         system.assertEquals('c2 C2', listCon[1].Name);
 
-        listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
+        listDI = [select Status__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
         system.assertEquals(BDI_DataImport_API.bdiImported, listDI[1].Status__c);
@@ -253,7 +253,7 @@ public with sharing class BDI_DataImportAPI_TEST {
         list<Contact> listCon = [select Id, Name from Contact];
         system.assertEquals(0, listCon.size());
 
-        listDI = [select Status__c from DataImport__c order by Contact1_Firstname__c];
+        listDI = [select Status__c from DataImport__c order by Id];
         system.assertEquals(3, listDI.size());
         system.assertEquals(null, listDI[0].Status__c);
         system.assertEquals(null, listDI[1].Status__c);
