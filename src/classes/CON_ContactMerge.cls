@@ -126,15 +126,22 @@ public class CON_ContactMerge {
         
         //get loser contact Accounts that should be merged out.  This includes
         // One2One accounts and Solo Household Accounts
-        loserAccountsToBeMerged = [Select Id,npe01__SYSTEMIsIndividual__c,npe01__SYSTEM_AccountType__c,Name from Account a
-            where Id IN :loserAccountIds and 
-            (npe01__SYSTEM_AccountType__c=:CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE or
-                (npe01__SYSTEM_AccountType__c=:CAO_Constants.HH_ACCOUNT_TYPE and Number_of_Household_Members__c = 1))
-            and Name<>:CAO_Constants.BUCKET_ACCOUNT_NAME];        
-        
+        loserAccountsToBeMerged = [
+            SELECT Id, npe01__SYSTEMIsIndividual__c, npe01__SYSTEM_AccountType__c, Name
+            FROM Account a
+            WHERE
+                Id IN :loserAccountIds
+                AND (
+                    npe01__SYSTEM_AccountType__c = :CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE
+                    OR (
+                        npe01__SYSTEM_AccountType__c = :CAO_Constants.HH_ACCOUNT_TYPE
+                        AND Number_of_Household_Members__c = 1
+                    )
+                )
+        ];
         //one-to-one contacts each have an Account, so when merging Contacts we have to merge Accounts as well
         //we merge the Accounts first, if there are any one-to-one Accounts or Solo Household Accounts in the mix
-        if(loserAccountsToBeMerged.size()>0){                      
+        if (loserAccountsToBeMerged.size() > 0) {
             merge winnerAccount[0] loserAccountsToBeMerged;
         }
         
