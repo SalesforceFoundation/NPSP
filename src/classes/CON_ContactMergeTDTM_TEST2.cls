@@ -92,7 +92,7 @@ public with sharing class CON_ContactMergeTDTM_TEST2 {
         list<Contact> listCon = [select Id, Firstname, AccountId, npo02__NumberOfClosedOpps__c,
             is_Address_Override__c, Current_Address__c, Current_Address__r.Household_Account__c,
             MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
         system.assertEquals(conWinner.Id, listCon[1].Id);
         conWinner = listCon[1];            
             
