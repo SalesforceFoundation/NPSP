@@ -68,7 +68,7 @@ public with sharing class BDI_PostProcess_TEST {
         Test.stopTest();
 
         // verify expected results
-        list<Contact> listCon = [SELECT Id, Name, AccountId FROM Contact ORDER BY Lastname, Firstname];
+        list<Contact> listCon = [SELECT Id, Name, AccountId FROM Contact];
         system.assertEquals(8, listCon.size());
 
         List<npe4__Relationship__c> listRel = [SELECT npe4__Contact__c, npe4__RelatedContact__c, npe4__Type__c, npe4__Status__c
@@ -79,7 +79,7 @@ public with sharing class BDI_PostProcess_TEST {
             system.assertEquals('Current', listRel[i].npe4__Status__c);
         }
 
-        listDI = [select Id, Status__c from DataImport__c order by Contact1_Lastname__c];
+        listDI = [select Id, Status__c from DataImport__c];
         system.assertEquals(6, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
             system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
