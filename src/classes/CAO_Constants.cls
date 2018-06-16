@@ -142,32 +142,27 @@ public with sharing class CAO_Constants {
     /*******************************************************************************************************
     * @description The Salesforce Id of the Individual Bucket Account
     */ 
-    public static Id IndividualAccountId;
-
-    /*******************************************************************************************************
-    * @description The name of the Individual Bucket Account
-    */ 
-    private static String IndividualAccountName = CAO_Constants.BUCKET_ACCOUNT_NAME;
+    public static Id individualAccountId;
 
     /*******************************************************************************************************
     * @description returns the Salesforce Id of the Individual Bucket Account
     * @return  Id
     */ 
-    public static id getIndividualAccountId () {
+    public static id getIndividualAccountId() {
     
         // look up the ID if we haven't already done it
-        if ( IndividualAccountId == null ) {
-            List<Account> acct = [select id,npe01__SYSTEMISINDIVIDUAL__c,npe01__SYSTEM_AccountType__c from account where Name =:IndividualAccountName LIMIT 1];
-            if(acct.size()>0){
-                if(acct[0].npe01__SYSTEMISINDIVIDUAL__c==false || acct[0].npe01__SYSTEM_AccountType__c<>CAO_Constants.BUCKET_ORGANIZATION_TYPE){
-                    acct[0].npe01__SYSTEMISINDIVIDUAL__c = true;
-                    acct[0].npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
-                    update acct[0];
-                }
-                IndividualAccountId = acct[0].id;
+        if (individualAccountId == null) {
+            List<Account> acct = [
+                SELECT Id, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c
+                FROM Account
+                WHERE npe01__SYSTEMISINDIVIDUAL__c = true
+                    AND npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE
+                LIMIT 1];
+            if (acct.size() > 0) {
+                individualAccountId = acct[0].id;
             }
         }
-        return IndividualAccountId;
+        return individualAccountId;
     }
 
     /*******************************************************************************************************
@@ -178,7 +173,7 @@ public with sharing class CAO_Constants {
         //create a fake Individual Account for tests
 
         Account individualAccountForTests = new Account(
-            Name=accountName,
+            Name = accountName,
             npe01__SYSTEMISINDIVIDUAL__c = true,
             npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE
         );
@@ -186,8 +181,7 @@ public with sharing class CAO_Constants {
         insert individualAccountForTests;
 
         CAO_Constants.BUCKET_ACCOUNT_NAME = accountName;
-        IndividualAccountName = accountName;
 
-        return individualAccountForTests.id;
+        return individualAccountForTests.Id;
     }
 }
