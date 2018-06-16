@@ -468,31 +468,61 @@ public with sharing class BDI_ContactService {
         }
 
         String strSoql = getSoqlSelectForContact();
-        strSoql += ' WHERE ';
-
-        if (setSFId.size() > 0) {
-            strSoql += '(Id IN :setSFId) OR ';
-        }
+        strSoql += ' WHERE (Id IN :setSFId) ';
 
         if (isCustomIDInContactMatchRules && isCustomIdInContactDatatypeString) {
-            strSoql += '(' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDString) OR ';
+            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDString) ';
         } else if (isCustomIDInContactMatchRules && !isCustomIdInContactDatatypeString) {
-            strSoql += '(' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDNumber) OR ';
+            strSoql += ' OR (' + bdi.diSettings.Contact_Custom_Unique_ID__c + ' IN :setCustomIDNumber) ';
         }
 
+        UTIL_Finder finderByName = new UTIL_Finder(Contact.SObjectType)
+            .withWhere(new UTIL_Where.FieldExpression(Contact.Name).inSet(setName));
+
         if (filterOnlyByName) {
-            strSoql += '(Name IN :setName) ';
+
+            if (finderByName.isSoql()) {
+                strSoql += ' OR (Name IN :setName) ';
+            } else if (!setName.isEmpty()) {
+                setSFId.addAll(new Map<Id, SObject>(finderByName.find()).keySet());
+            }
+
         } else {
-            String strAnd = '(';
-            if (isFirstnameInContactMatchRules) {
-                strSoql += strAnd + 'Firstname IN :setFName ';
-                strAnd = ' AND ';
+            String soqlConnector = ' OR (';
+            String strAnd = '';
+
+            if (finderByName.isSoql()) {
+                strAnd = soqlConnector;
+
+                if (isFirstnameInContactMatchRules) {
+                    strSoql += strAnd + 'Firstname IN :setFName ';
+                    strAnd = ' AND ';
+                }
+                if (isLastnameInContactMatchRules) {
+                    strSoql += strAnd + 'Lastname IN :setLName ';
+                    strAnd = ' AND ';
+                }
+
+            } else {
+                UTIL_Where.GroupExpression criteria = UTIL_Where.AndGroup();
+                if (isFirstnameInContactMatchRules && !setFName.isEmpty()) {
+                    criteria.add(new UTIL_Where.FieldExpression(Contact.FirstName).inSet(setFName));
+                }
+                if (isLastnameInContactMatchRules && !setLName.isEmpty()) {
+                    criteria.add(new UTIL_Where.FieldExpression(Contact.LastName).inSet(setLName));
+                }
+
+                if (!criteria.getFields().isEmpty()) {
+                    UTIL_Finder finder = new UTIL_Finder(Contact.SObjectType)
+                        .withWhere(new UTIL_Where().add(criteria));
+
+                    setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+                }
             }
-            if (isLastnameInContactMatchRules) {
-                strSoql += strAnd + 'Lastname IN :setLName ';
-                strAnd = ' AND ';
-            }
+
             if (isEmailInContactMatchRules) {
+                strAnd = String.isBlank(strAnd) ? soqlConnector : strAnd;
+
                 strSoql += strAnd + '(' +
                     'Email IN :setEmail OR ' +
                     'npe01__AlternateEmail__c IN :setEmail OR ' +
@@ -500,7 +530,10 @@ public with sharing class BDI_ContactService {
                     'npe01__WorkEmail__c IN :setEmail) ';
                 strAnd = ' AND ';
             }
+
             if (isPhoneInContactMatchRules) {
+                strAnd = String.isBlank(strAnd) ? soqlConnector : strAnd;
+
                 strSoql += strAnd + '(' +
                     'Phone IN :setPhone OR ' +
                     'HomePhone IN :setPhone OR ' +
@@ -509,7 +542,8 @@ public with sharing class BDI_ContactService {
                     'npo02__Formula_HouseholdPhone__c IN :setPhone OR ' +
                     'npe01__WorkPhone__c IN :setPhone)';
             }
-            strSoql += ')';
+
+            strSoql += String.isBlank(strAnd) ? '' : ')';
         }
 
         BDI_PerfLogger.PerfLog pl = BDI_DataImportService.perfLogger.newPerfLog('SOQL existing Contacts', BDI_PerfLogger.QUERY);
@@ -566,7 +600,7 @@ public with sharing class BDI_ContactService {
     * @return void
     */
     private void addStringToSet(String str, Set<String> setStr) {
-        if (str != null) {
+        if (String.isNotBlank(str)) {
             setStr.add(str);
         }
     }
