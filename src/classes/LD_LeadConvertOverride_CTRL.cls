@@ -167,24 +167,40 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     /*******************************************************************************************************
     * @description Display the selection list for matching Contacts
     */
-    private map<id, contact> conMap {
+    @TestVisible private Map<id, contact> conMap {
         get {
             if (conMap == null) {
-                String lLastName = l.LastName;
-                String lFirstName = l.FirstName;
-                String lEmail = l.Email;
-
-                Set<String> fieldSet = new Set<String>{'Id', 'Name', 'FirstName', 'LastName'};
-                String queryStr = 'SELECT ';
-                for (FieldSetMember cfs : conFieldSet)
-                   fieldSet.add(cfs.getFieldPath());
-                queryStr += String.join(new List<String>(fieldSet), ',');
-                queryStr += ' FROM Contact WHERE (LastName = :lLastName AND FirstName = :lFirstName) OR (Email = :lEmail AND Email != null) LIMIT 50';
-
-                // find contact matches
-                conMap = new map<id, contact>((List<Contact>)Database.query(queryStr));
+                conMap = new Map<Id, Contact>((List<Contact>) contactFinder.find());
             }
             return conMap;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Finder used to search Contact using either SOQl or SOSL
+    */
+    @TestVisible private UTIL_Finder contactFinder {
+        get {
+            if (contactFinder == null) {
+                UTIL_Where whereClause = new UTIL_Where().withOr()
+                    .add(UTIL_Where.AndGroup()
+                        .add(new UTIL_Where.FieldExpression(Contact.LastName).equals(l.LastName))
+                        .add(new UTIL_Where.FieldExpression(Contact.FirstName).equals(l.FirstName))
+                    );
+                if (String.isNotBlank(l.Email)) {
+                    whereClause.add(UTIL_Where.AndGroup()
+                        .add(new UTIL_Where.FieldExpression(Contact.Email).equals(l.Email))
+                    );
+                }
+
+                contactFinder = new UTIL_Finder(Contact.sObjectType)
+                    .withSelectFields(new Set<Schema.SObjectField>{ Contact.Id, Contact.Name, Contact.FirstName, Contact.LastName, Contact.Email })
+                    .withSelectFields(conFieldSet)
+                    .withWhere(whereClause)
+                    .withLimit(50);
+            }
+            return contactFinder;
         }
         set;
     }
@@ -274,9 +290,25 @@ public with sharing class LD_LeadConvertOverride_CTRL {
     public map<Id, Account> mapIdAccountMatches {
         get {
             if (mapIdAccountMatches == null) {
-                mapIdAccountMatches = new map<Id, Account>([select Id, Name, BillingCity from Account where name = :l.company limit 50]);
+                mapIdAccountMatches = new Map<Id, Account>((List<Account>) accountFinder.find());
             }
             return mapIdAccountMatches;
+        }
+        set;
+    }
+
+    /*******************************************************************************************************
+    * @description Finder used to search Accounts using either SOQl or SOSL (the Account.Name is encryted)
+    */
+    @TestVisible private UTIL_Finder accountFinder {
+        get {
+            if (accountFinder == null) {
+                accountFinder = new UTIL_Finder(Account.sObjectType)
+                    .withSelectFields(new Set<Schema.SObjectField>{ Account.Id, Account.Name, Account.BillingCity })
+                    .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(l.Company))
+                    .withLimit(50);
+            }
+            return accountFinder;
         }
         set;
     }
