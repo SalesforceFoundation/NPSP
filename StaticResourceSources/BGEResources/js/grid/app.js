@@ -495,11 +495,13 @@
     
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
-    
+
                 var lastColumn = numberOfColumns - 1;
                 var lastRow = numberOfRows - 1;
-    
+
                 var isFirstRow = (rowIndex === 0) ? true : false;
+
+                var shifKeyIsPressed = event.shiftKey;
 
 
                 // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
@@ -511,31 +513,40 @@
 
                     hot.selectCell(rowIndex, colIndex);
                 }
-                if (event.keyCode === 9 || event.keyCode === 39) {
+                if (!shifKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
                     // Tab or right arrow was pressed
-                    console.log('Tab or right arrow was pressed');
+
                     try {
 
                         if (colIndex === 0) {
 
                             colIndex = 1;
+
+                            if(hot.getDataAtCell(rowIndex, 1)) {
+
+                                colIndex = 1;
+                            }
+                            else {
+
+                                colIndex = 2;
+                            }
                         }
 
                         hot.selectCell(rowIndex, colIndex);
+
                     }
                     catch(err) {
 
                         console.log(err);
                     }
                 }
-                else if (event.keyCode === 37) {
+                else if (event.keyCode === 37 || (shifKeyIsPressed && event.keyCode === 9) ) {
 
-                    // Left arrow was pressed
-                    console.log('Left arrow or shift + tab was pressed');
+                    // Left arrow or shift + tab was pressed
+
                     try {
 
-                        console.log('COLUMN INDEX ', colIndex);
                         if (colIndex === 1) {
 
                             colIndex = lastColumn;
@@ -634,7 +645,7 @@
             idCol.colWidths = 5;
             idCol.readOnly = true;
             idCol.manualColumnResize = false;
-            idCol.disableVisualSelection = true;
+        //    idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
             var errorCol = new Object();
@@ -645,7 +656,7 @@
             errorCol.wordWrap = true;
             errorCol.manualColumnResize = false;
             errorCol.colWidths = 30;
-            errorCol.disableVisualSelection = true;
+        //    errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -653,7 +664,7 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.disableVisualSelection = true;
+        //    actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
