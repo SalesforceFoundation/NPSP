@@ -195,6 +195,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                         string oldName;
                         if (oldOpp.get(field)!=null)
                             oldName = mapConIdContact.get((id)oldOpp.get(field)).Name;
+
                         //only overwrite the name field if it's blank, or if we've switched contacts and it contained the old name
                         if (newOpp.get(nameField) == null || newOpp.get(nameField) == oldName) {
                             id newContactId = (id)newOpp.get(field);
@@ -557,9 +558,17 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 } else if (ocrNewCon == null) {
                     dmlWrapper.objectsToInsert.add(getOCR(opp, fieldName));
                 } else if (ocrNewCon.Role != getRole(fieldName)) {
-                    dmlWrapper.objectsToInsert.add(getOCR(opp, fieldName));
+                    ocrNewCon.Role = getRole(fieldName);
+                    dmlWrapper.objectsToUpdate.add(ocrNewCon);
                 }
             }
+        }
+
+        // When a Contact is removed from the Honoree field and added to the Notification field and vice-versa
+        // in the same transaction do not immediately delete the OCR.
+        if (ocrsToDeleteImmediately.contains(ocrNewCon)) {
+            Integer ocrIndex = ocrsToDeleteImmediately.indexOf(ocrNewCon);
+            ocrsToDeleteImmediately.remove(ocrIndex);
         }
     }
 
@@ -665,7 +674,8 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         //the notification recipient contact is the same as the honoree contact, thus the OCR is already managed
-        else if (fieldName == FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Honoree_Contact__c) {
+        else if (fieldName == FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT && opp.Notification_Recipient_Contact__c == opp.Honoree_Contact__c
+                 && (opp.Notification_Recipient_Contact__c != null && opp.Honoree_Contact__c != null)) {
             return false;
         }
 
@@ -806,9 +816,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (Opportunity eachOppty : primaryContactAccountChangeOpptys) {
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
                  if (!eachOldOCR.isPrimary
-                    && (honoreeRole == null || !honoreeRole.equals(eachOldOCR.Role) || (honoreeRole.equals(eachOldOCR.Role) && eachOppty.Primary_Contact__c == eachOldOCR.ContactId))
-                    && (notificationRole == null || !notificationRole.equals(eachOldOCR.Role) || (notificationRole.equals(eachOldOCR.Role) && eachOppty.Primary_Contact__c == eachOldOCR.ContactId))) {
-                    ocrsToDelete.add(eachOldOCR);
+                    && (honoreeRole == null || !honoreeRole.equals(eachOldOCR.Role) || (honoreeRole.equals(eachOldOCR.Role) && (eachOppty.Primary_Contact__c == eachOldOCR.ContactId || eachOppty.Honoree_Contact__c != eachOldOCR.ContactId)))
+                    && (notificationRole == null || !notificationRole.equals(eachOldOCR.Role) || (notificationRole.equals(eachOldOCR.Role) && (eachOppty.Primary_Contact__c == eachOldOCR.ContactId || eachOppty.Notification_Recipient_Contact__c != eachOldOCR.ContactId)))) {
+                    if (!ocrsToDelete.contains(eachOldOCR)) {
+                        ocrsToDelete.add(eachOldOCR);
+                    }
                 }
             }
         }
@@ -837,7 +849,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             Id notificationContactId = eachOppty.Notification_Recipient_Contact__c;
 
             for (OpportunityContactRole eachOldOCR : opportunityToContactToOCR.get(eachOppty.Id).values()) {
-                 ocrs.add(eachOldOCR.ContactId);
+                ocrs.add(eachOldOCR.ContactId);
             }
 
             if (honoreeContactId != null && !ocrs.contains(honoreeContactId)) {
