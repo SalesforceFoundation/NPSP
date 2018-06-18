@@ -10,9 +10,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Clone</actionName>
-        <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
+        <type>Default</type>
     </actionOverrides>
     <actionOverrides>
         <actionName>Delete</actionName>
