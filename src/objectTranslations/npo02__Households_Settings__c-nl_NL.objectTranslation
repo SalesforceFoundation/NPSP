@@ -9,7 +9,7 @@
         <value><!-- Households Settings --></value>
     </caseValues>
     <fields>
-        <help>De Rol die gegeven wordt aan de contactpersonen die soft credit moeten ontvangen voor een gematchte gift</help>
+        <help>De Contactpersoon Rol die gegeven wordt aan gematchte donateurs.</help>
         <label>Gematchte Donateur Rol</label>
         <name>Matched_Donor_Role__c</name>
     </fields>

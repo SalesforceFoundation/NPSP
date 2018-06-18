@@ -3730,7 +3730,7 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>Contact_Merge</name>
     </customTabs>
     <customTabs>
-        <label>Ermee Beginnen</label>
+        <label>Introductie</label>
         <name>NPSP_Resources</name>
     </customTabs>
     <customTabs>
@@ -3771,7 +3771,7 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
     </quickActions>
     <reportTypes>
         <description>Contactpersonen zonder connectie met een ander object</description>
-        <label>Alleen Contacten</label>
+        <label>Alleen Contactpersonen</label>
         <name>Contacts_Only</name>
         <sections>
             <label>Contactpersonen</label>

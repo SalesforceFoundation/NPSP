@@ -14,7 +14,7 @@
         <name>Async_Error_Check_Last_Run__c</name>
     </fields>
     <fields>
-        <help>Indien aangevinkt, NPSP&apos;s foutafhandeling framework is uitgeschakeld</help>
+        <help>Indien aangevinkt, NPSP&apos;s foutafhandeling framework is uitgeschakeld.</help>
         <label>Uitschakelen Foutafhandeling</label>
         <name>Disable_Error_Handling__c</name>
     </fields>
@@ -24,7 +24,7 @@
         <name>Don_t_Auto_Schedule_Default_NPSP_Jobs__c</name>
     </fields>
     <fields>
-        <help>Vink dit aan om debug statements in gemanagede pakket code in te schakelen.</help>
+        <help>Vink dit aan om debug statements in code van een beheerd pakket in te schakelen.</help>
         <label>Inschakelen Debug</label>
         <name>Enable_Debug__c</name>
     </fields>
