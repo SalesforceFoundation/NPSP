@@ -671,7 +671,7 @@
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
-                    col.colWidths = 100;
+                    col.colWidths = 120;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -689,13 +689,14 @@
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
-                    col.colWidths = 100;
+                    col.colWidths = 80;
                 }
                 else if (templateField.type === "EMAIL") {
 
                 }
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
+                    col.colWidths = 150;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
