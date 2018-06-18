@@ -207,7 +207,7 @@
                             <lightning:formattedText aura:id="filterRuleErrorText"
                                                      class="slds-text-color_error slds-p-horizontal_small" value=""/>
                         </lightning:layout>
-                        <lightning:layout>
+                        <lightning:layout multipleRows="true">
                             <aura:if isTrue="{!and((v.filterRuleMode != 'delete'),(v.mode != 'delete'))}">
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                     <lightning:select aura:id="filterRuleField" class="slds-p-around_small"
@@ -237,7 +237,7 @@
                                 </lightning:layoutItem>
                             </aura:if>
                         </lightning:layout>
-                        <lightning:layout>
+                        <lightning:layout multipleRows="true">
                             <aura:if isTrue="{!and((v.filterRuleMode != 'delete'), (v.mode != 'delete'))}">
                                 <lightning:layoutItem size="12" mediumDeviceSize="6" smallDeviceSize="12">
                                     <lightning:select aura:id="filterRuleField" class="slds-p-around_small"
