@@ -136,6 +136,7 @@
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_GAU_BATCH</members>
         <members>CRLP_IncrementalBatch</members>
+        <members>CRLP_IncrementalBatch_TEST</members>
         <members>CRLP_Operation</members>
         <members>CRLP_Operation_SVC</members>
         <members>CRLP_Operation_TEST</members>
