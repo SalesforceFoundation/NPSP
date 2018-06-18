@@ -18,12 +18,6 @@
         <actionName>Delete</actionName>
         <type>Default</type>
     </actionOverrides>
-    <!--<actionOverrides>
-        <actionName>Edit</actionName>
-        <content>BDI_BatchOverride</content>
-        <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>Visualforce</type>
-    </actionOverrides>-->
     <actionOverrides>
         <actionName>Edit</actionName>
         <type>Default</type>
