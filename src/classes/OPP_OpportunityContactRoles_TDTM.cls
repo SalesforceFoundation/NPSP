@@ -165,40 +165,43 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param listOldOpps List of opportunities from trigger.old
     ********************************************************************************************************/
     private static void updateHonoreeNotificationFields(list<Opportunity> listOpps, list<Opportunity> listOldOpps) {
-        map<id,Contact> mapConIdContact = new map<id,Contact>();
-        list<String> listFields = new list<string>{FIELD_NAME_HONOREE_CONTACT, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT};
+        Map<Id, Contact> mapConIdContact = new Map<Id, Contact>();
+        List<String> listFields = new List<String>{FIELD_NAME_HONOREE_CONTACT, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT};
 
-        for (integer i=0; i<listOpps.size(); i++) {
+        for (Integer i = 0; i < listOpps.size(); i++) {
             Opportunity newOpp = listOpps[i];
-            Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
-            for (string field : listFields) {
+            Opportunity oldOpp = listOldOpps != null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+            for (String field : listFields) {
                 if (newOpp.get(field) != oldOpp.get(field)) {
-                    if (newOpp.get(field)!=null)
-                        mapConIdContact.put((id)newOpp.get(field), null);
-                    if (oldOpp.get(field)!=null)
-                        mapConIdContact.put((id)oldOpp.get(field), null);
+                    if (newOpp.get(field) != null) {
+                        mapConIdContact.put((Id)newOpp.get(field), null);
+                    }
+                    if (oldOpp.get(field) != null) {
+                        mapConIdContact.put((Id)oldOpp.get(field), null);
+                    }
                 }
             }
         }
 
         if (!mapConIdContact.isEmpty()) {
             mapConIdContact = new map<id,Contact>([SELECT Id, Name FROM Contact WHERE Id IN :mapConIdContact.keySet()]);
-            for (integer i=0; i<listOpps.size(); i++) {
+            for (Integer i = 0; i < listOpps.size(); i++) {
                 Opportunity newOpp = listOpps[i];
-                Opportunity oldOpp = listOldOpps!=null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
+                Opportunity oldOpp = listOldOpps != null && !listOldOpps.IsEmpty() ? listOldOpps[i] : new Opportunity();
 
-                for (string field : listFields) {
+                for (String field : listFields) {
                     if (newOpp.get(field) != oldOpp.get(field)) {
                         //get the text name field
-                        string nameField = field.replace('Contact','Name');
-                        
-                        string oldName;
-                        if (oldOpp.get(field)!=null)
-                            oldName = mapConIdContact.get((id)oldOpp.get(field)).Name;
+                        String nameField = field.replace('Contact','Name');
+
+                        String oldName;
+                        if (oldOpp.get(field) != null) {
+                            oldName = mapConIdContact.get((Id)oldOpp.get(field)).Name;
+                        }
 
                         //only overwrite the name field if it's blank, or if we've switched contacts and it contained the old name
                         if (newOpp.get(nameField) == null || newOpp.get(nameField) == oldName) {
-                            id newContactId = (id)newOpp.get(field);
+                            Id newContactId = (Id)newOpp.get(field);
                             if (newContactId != null) {
                                 newOpp.put(nameField, mapConIdContact.get(newContactId).Name);
                             } else {
@@ -328,7 +331,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         for (sObject dmlObj : dmlWrapper.objectsToUpdate) {
             Id objId = (Id) dmlObj.get('id');
             if (mapOppNaming.containsKey(objId)) {
-                dmlObj.put('Name',mapOppNaming.get(objId).Name);
+                dmlObj.put('Name', mapOppNaming.get(objId).Name);
                 mapOppNaming.remove(objId);
             }
         }
@@ -412,11 +415,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 }
                 //then manage honoree, if it has changed and it's not the same as the primary contact
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT)) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_HONOREE_CONTACT, ocrsToDeleteImmediately);
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_HONOREE_CONTACT, transactionOCRs, ocrsToDeleteImmediately);
                 }
                 //finally, manage the notification, if it has changed and it's not the same as either contact already dealt with
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
-                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, ocrsToDeleteImmediately);
+                    manageOtherOCR(newOpp, oldOpp, mapOppIdMapConIdOCR.get(newOpp.id), FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT, transactionOCRs, ocrsToDeleteImmediately);
                 }
             }
 
@@ -507,11 +510,12 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
     * @param oldOpp The old opportunity from trigger.old
     * @param mapConIdOCR A map of contact id to Opportunity Contact Role records for this opportunity.
     * @param fieldName The API name of the field to verify
+    * @param transactionOCRs Contains the OCRs that will be evaluated to ensure compliance with the OCR hierarchy.
     * @param ocrsToDeleteImmediately Holds Opportunity Contact Roles that need to be deleted immediately.
     * @return void This method adds records to dmlWrapper and returns nothing.
     ********************************************************************************************************/
-    private void manageOtherOCR(Opportunity opp, Opportunity oldOpp, Map<Id, OpportunityContactRole> mapConIdOCR,
-                                String fieldName, List<OpportunityContactRole> ocrsToDeleteImmediately) {
+    private void manageOtherOCR(Opportunity opp, Opportunity oldOpp, Map<Id, OpportunityContactRole> mapConIdOCR, String fieldName,
+                                Map<Id, List<OpportunityContactRole>> transactionOCRs, List<OpportunityContactRole> ocrsToDeleteImmediately) {
         Id idNewCon = (Id)opp.get(fieldName);
         Id idOldCon = (Id)oldOpp.get(fieldName);
         OpportunityContactRole ocrNewCon = mapConIdOCR.get(idNewCon);
@@ -545,6 +549,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                     if (ocrNewCon == null || (ocrNewCon != null && ocrNewCon.Role != getRole(fieldName))) {
                         ocrOldCon.ContactId = idNewCon;
                         dmlWrapper.objectsToUpdate.add(ocrOldCon);
+                        transactionOCRs = populateTransactionOCRs(transactionOCRs, ocrOldCon);
 
                         if (ocrNewCon != null) {
                            dmlWrapper.objectsToDelete.add(ocrNewCon);
