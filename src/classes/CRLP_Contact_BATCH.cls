@@ -39,25 +39,6 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
     public CRLP_Contact_BATCH() { }
 
     /*******************************************************************************************************
-    * @description Gets the Where Clause of the Contact Hard Credit Batch Incremental Mode.
-    * @return String.
-    ********************************************************************************************************/
-    public override String getIncrementalWhereClause() {
-        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
-        if (incrementalBatchSettings.isEnabled() == false || incrementalBatchSettings.getMaxDaysBack() == null) {
-            return '';
-        }
-
-        return String.format(
-            'Id IN (SELECT {0} FROM Opportunity WHERE SystemModStamp = LAST_N_DAYS:{1} OR CloseDate = LAST_N_DAYS:{1} ALL ROWS)',
-            new List<String>{
-              SObjectType.Opportunity.fields.Primary_Contact__c.getName(), 
-              String.valueOf(incrementalBatchSettings.getMaxDaysBack())
-            }
-        );
-    }
-
-    /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
      * @param jobType Defines the type of rollup job
      * @param jobFilter Allows for filtering the rollups on N-Day, Memberships, etc.
@@ -83,16 +64,5 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
         }
-    }
-
-    /*******************************************************************************************************
-    * @description Runs when the batch finishes.
-    * @return void.
-    ********************************************************************************************************/
-    public override void finish(Database.BatchableContext bc) {
-        super.finish(bc);
-
-        CRLP_IncrementalBatch.ContactHardCreditSettings incrementalBatchSettings = new CRLP_IncrementalBatch.ContactHardCreditSettings();
-        incrementalBatchSettings.finishBatch();
     }
 }
