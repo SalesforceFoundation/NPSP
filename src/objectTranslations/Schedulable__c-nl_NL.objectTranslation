@@ -24,23 +24,23 @@
         <name>Frequency__c</name>
         <picklistValues>
             <masterLabel>Daily</masterLabel>
-            <translation>Dagelijks</translation>
+            <translation><!-- Daily --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Hourly</masterLabel>
-            <translation>Ieder Uur</translation>
+            <translation><!-- Hourly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Monthly</masterLabel>
-            <translation>Maandelijks</translation>
+            <translation><!-- Monthly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Quarterly</masterLabel>
-            <translation>Per Kwartaal</translation>
+            <translation><!-- Quarterly --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Weekly</masterLabel>
-            <translation>Wekelijks</translation>
+            <translation><!-- Weekly --></translation>
         </picklistValues>
     </fields>
     <fields>

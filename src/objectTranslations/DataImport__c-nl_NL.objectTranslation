@@ -18,32 +18,32 @@
         <relationshipLabel>NPSP Data Import (Account1 Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
-        <help>Account1.FactuurPlaats</help>
+        <help><!-- Account1.BillingCity --></help>
         <label>Account1 Stad</label>
         <name>Account1_City__c</name>
     </fields>
     <fields>
-        <help>Account1.FactuurLand</help>
+        <help><!-- Account1.BillingCountry --></help>
         <label>Account1 Land</label>
         <name>Account1_Country__c</name>
     </fields>
     <fields>
-        <help>Account1.Naam</help>
+        <help><!-- Account1.Name --></help>
         <label>Account1 Naam</label>
         <name>Account1_Name__c</name>
     </fields>
     <fields>
-        <help>Account1.Telefoon</help>
+        <help><!-- Account1.Phone --></help>
         <label>Account1 Telefoon</label>
         <name>Account1_Phone__c</name>
     </fields>
     <fields>
-        <help>Account1.FactuurProvincie</help>
+        <help><!-- Account1.BillingState --></help>
         <label>Account1 Provincie</label>
         <name>Account1_State_Province__c</name>
     </fields>
     <fields>
-        <help>Account1.FactuurStraat</help>
+        <help><!-- Account1.BillingStreet --></help>
         <label>Account1 Straat</label>
         <name>Account1_Street__c</name>
     </fields>
@@ -53,7 +53,7 @@
         <name>Account1_Website__c</name>
     </fields>
     <fields>
-        <help>Account1.FactuurPostcode</help>
+        <help><!-- Account1.BillingPostalCode --></help>
         <label>Account1 Postcode</label>
         <name>Account1_Zip_Postal_Code__c</name>
     </fields>
@@ -67,32 +67,32 @@
         <relationshipLabel>NPSP Data Import (Account2 Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
-        <help>Account2.FactuurPlaats</help>
+        <help><!-- Account2.BillingCity --></help>
         <label>Account2 Stad</label>
         <name>Account2_City__c</name>
     </fields>
     <fields>
-        <help>Account2.FactuurLand</help>
+        <help><!-- Account2.BillingCountry --></help>
         <label>Account2 Land</label>
         <name>Account2_Country__c</name>
     </fields>
     <fields>
-        <help>Account2.Naam</help>
+        <help><!-- Account2.Name --></help>
         <label>Account2 Naam</label>
         <name>Account2_Name__c</name>
     </fields>
     <fields>
-        <help>Account2.Telefoon</help>
+        <help><!-- Account2.Phone --></help>
         <label>Account2 Telefoon</label>
         <name>Account2_Phone__c</name>
     </fields>
     <fields>
-        <help>Account2.FactuurProvincie</help>
+        <help><!-- Account2.BillingState --></help>
         <label>Account2 Provincie</label>
         <name>Account2_State_Province__c</name>
     </fields>
     <fields>
-        <help>Account2.FactuurStraat</help>
+        <help><!-- Account2.BillingStreet --></help>
         <label>Account2 Straat</label>
         <name>Account2_Street__c</name>
     </fields>
@@ -102,7 +102,7 @@
         <name>Account2_Website__c</name>
     </fields>
     <fields>
-        <help>Account2.FactuurPostcode</help>
+        <help><!-- Account2.BillingPostalCode --></help>
         <label>Account2 Postcode</label>
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
@@ -125,47 +125,47 @@
         <relationshipLabel>NPSP Data Import (Contact1 Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__AlternatiefEmail__c</help>
+        <help><!-- Contact1.npe01__AlternateEmail__c --></help>
         <label>Contact1 Alternatieve E-mail</label>
         <name>Contact1_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.Geboortedatum</help>
+        <help><!-- Contact1.Birthdate --></help>
         <label>Contact1 Geboortedatum</label>
         <name>Contact1_Birthdate__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.Voornaam</help>
+        <help><!-- Contact1.Firstname --></help>
         <label>Contact1 Voornaam</label>
         <name>Contact1_Firstname__c</name>
     </fields>
     <fields>
-        <help>Contacpersoont1.HuisTelefoonnummer</help>
+        <help><!-- Contact1.HomePhone --></help>
         <label>Contact1 Thuis Telefoon</label>
         <name>Contact1_Home_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.Achternaam</help>
+        <help><!-- Contact1.Lastname --></help>
         <label>Contact1 Achternaam</label>
         <name>Contact1_Lastname__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.Mobiel</help>
+        <help><!-- Contact1.MobilePhone --></help>
         <label>Contact1 Mobiel</label>
         <name>Contact1_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.AnderTelefoonnummer</help>
+        <help><!-- Contact1.OtherPhone --></help>
         <label>Contact1 Telefoon Anders</label>
         <name>Contact1_Other_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__HuisEmail__c</help>
+        <help><!-- Contact1.npe01__HomeEmail__c --></help>
         <label>Contact1 Persoonlijke E-mail</label>
         <name>Contact1_Personal_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__Voorkeur_Email__c</help>
+        <help><!-- Contact1.npe01__Preferred_Email__c --></help>
         <label>Contact1 Voorkeur E-mail</label>
         <name>Contact1_Preferred_Email__c</name>
         <picklistValues>
@@ -182,7 +182,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__VoorkeurTelefoon__c</help>
+        <help><!-- Contact1.npe01__PreferredPhone__c --></help>
         <label>Contact1 Voorkeur Telefoon</label>
         <name>Contact1_Preferred_Phone__c</name>
         <picklistValues>
@@ -203,22 +203,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contactpersoon1.Begroeting</help>
+        <help><!-- Contact1.Salutation --></help>
         <label>Contact1 Aanhef</label>
         <name>Contact1_Salutation__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.Functie</help>
+        <help><!-- Contact1.Title --></help>
         <label>Contact1 Titel</label>
         <name>Contact1_Title__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__WerkEmail__c</help>
+        <help><!-- Contact1.npe01__WorkEmail__c --></help>
         <label>Contact1 Werk E-mail</label>
         <name>Contact1_Work_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon1.npe01__WerkTelefoon__c</help>
+        <help><!-- Contact1.npe01__WorkPhone__c --></help>
         <label>Contact1 Werk Telefoon</label>
         <name>Contact1_Work_Phone__c</name>
     </fields>
@@ -232,47 +232,47 @@
         <relationshipLabel>NPSP Data Import (Contact2 Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__AlternatiefEmail__c</help>
+        <help><!-- Contact2.npe01__AlternateEmail__c --></help>
         <label>Contact2 Alternatieve E-Mail</label>
         <name>Contact2_Alternate_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.Geboortedatum</help>
+        <help><!-- Contact2.Birthdate --></help>
         <label>Contact2 Geboortedatum</label>
         <name>Contact2_Birthdate__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.Voornaam</help>
+        <help><!-- Contact2.Firstname --></help>
         <label>Contact2 Voornaam</label>
         <name>Contact2_Firstname__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.HuisTelefoonnummer</help>
+        <help><!-- Contact2.HomePhone --></help>
         <label>Contact2 Thuis Telefoon</label>
         <name>Contact2_Home_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.Achternaam</help>
+        <help><!-- Contact2.Lastname --></help>
         <label>Contact2 Achternaam</label>
         <name>Contact2_Lastname__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.Mobiel</help>
+        <help><!-- Contact2.MobilePhone --></help>
         <label>Contact2 Mobiel</label>
         <name>Contact2_Mobile_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.AnderTelefoonnummer</help>
+        <help><!-- Contact2.OtherPhone --></help>
         <label>Contact2 Telefoon Anders</label>
         <name>Contact2_Other_Phone__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__HuisEmail__c</help>
+        <help><!-- Contact2.npe01__HomeEmail__c --></help>
         <label>Contact2 Persoonlijke E-mail</label>
         <name>Contact2_Personal_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__Voorkeur_Email__c</help>
+        <help><!-- Contact2.npe01__Preferred_Email__c --></help>
         <label>Contact2 Voorkeur E-mail</label>
         <name>Contact2_Preferred_Email__c</name>
         <picklistValues>
@@ -289,7 +289,7 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__VoorkeurTelefoon__c</help>
+        <help><!-- Contact2.npe01__PreferredPhone__c --></help>
         <label>Contact2 Voorkeur Telefoon</label>
         <name>Contact2_Preferred_Phone__c</name>
         <picklistValues>
@@ -310,22 +310,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Contactpersoon2.Begroeting</help>
+        <help><!-- Contact2.Salutation --></help>
         <label>Contact2 Aanhef</label>
         <name>Contact2_Salutation__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.Functie</help>
+        <help><!-- Contact2.Title --></help>
         <label>Contact2 Titel</label>
         <name>Contact2_Title__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__WerkEmail__c</help>
+        <help><!-- Contact2.npe01__WorkEmail__c --></help>
         <label>Contact2 Werk E-mail</label>
         <name>Contact2_Work_Email__c</name>
     </fields>
     <fields>
-        <help>Contactpersoon2.npe01__WerkTelefoon__c</help>
+        <help><!-- Contact2.npe01__WorkPhone__c --></help>
         <label>Contact2 Werk Telefoon</label>
         <name>Contact2_Work_Phone__c</name>
     </fields>
@@ -339,7 +339,7 @@
         <relationshipLabel>NPSP Data Import</relationshipLabel>
     </fields>
     <fields>
-        <help>Opportunity.Bedrag</help>
+        <help><!-- Opportunity.Amount --></help>
         <label>Donatie Bedrag</label>
         <name>Donation_Amount__c</name>
     </fields>
@@ -348,12 +348,12 @@
         <name>Donation_Campaign_Name__c</name>
     </fields>
     <fields>
-        <help>Opportunity.Sluitingsdatum</help>
+        <help><!-- Opportunity.CloseDate --></help>
         <label>Donatie Datum</label>
         <name>Donation_Date__c</name>
     </fields>
     <fields>
-        <help>Opportunity.Omschrijving</help>
+        <help><!-- Opportunity.Description --></help>
         <label>Donatie Beschrijving</label>
         <name>Donation_Description__c</name>
     </fields>
@@ -371,22 +371,22 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Lidmaatschap_Niveau__c</help>
+        <help><!-- Opportunity.npe01__Member_Level__c --></help>
         <label>Donatie Lidmaatschap Niveau</label>
         <name>Donation_Member_Level__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Lidmaatschap_Einddatum__c</help>
+        <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
         <label>Donatie Lidmaatschap Einddatum</label>
         <name>Donation_Membership_End_Date__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Lidmaatschap_Herkomst__c</help>
+        <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
         <label>Donatie Lidmaatschap Herkomst</label>
         <name>Donation_Membership_Origin__c</name>
     </fields>
     <fields>
-        <help>Opportunity.npe01__Lidmaatschap_Startdatum__c</help>
+        <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
         <label>Donatie Lidmaatschap Startdatum</label>
         <name>Donation_Membership_Start_Date__c</name>
     </fields>
@@ -406,7 +406,7 @@
         <name>Donation_Record_Type_Name__c</name>
     </fields>
     <fields>
-        <help>Opportunity.FaseNaam</help>
+        <help><!-- Opportunity.StageName --></help>
         <label>Donatie Fase</label>
         <name>Donation_Stage__c</name>
     </fields>
@@ -430,27 +430,27 @@
         <relationshipLabel>NPSP Data Import</relationshipLabel>
     </fields>
     <fields>
-        <help>Adres.npsp__PostPlaats__c</help>
+        <help><!-- Address.npsp__MailingCity__c --></help>
         <label>Thuis Stad</label>
         <name>Home_City__c</name>
     </fields>
     <fields>
-        <help>Adres.npsp__PostLand__c</help>
+        <help><!-- Address.npsp__MailingCountry__c --></help>
         <label>Thuis Land</label>
         <name>Home_Country__c</name>
     </fields>
     <fields>
-        <help>Adres.npsp__PostProvincie__c</help>
+        <help><!-- Address.npsp__MailingState__c --></help>
         <label>Thuis Provincie</label>
         <name>Home_State_Province__c</name>
     </fields>
     <fields>
-        <help>Adres.npsp__PostStraat__c</help>
+        <help><!-- Address.npsp__MailingStreet__c --></help>
         <label>Thuis Straat</label>
         <name>Home_Street__c</name>
     </fields>
     <fields>
-        <help>Adres.npsp__PostPostcode__c</help>
+        <help><!-- Address.npsp__MailingPostalCode__c --></help>
         <label>Thuis Postcode</label>
         <name>Home_Zip_Postal_Code__c</name>
     </fields>
@@ -460,7 +460,7 @@
         <relationshipLabel>NPSP Data Import (Huishouden Account Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
-        <help>Huishouden.Telefoon</help>
+        <help><!-- Household.Phone --></help>
         <label>Huishouden Telefoon</label>
         <name>Household_Phone__c</name>
     </fields>
@@ -485,12 +485,12 @@
         <relationshipLabel><!-- NPSP Data Imports --></relationshipLabel>
     </fields>
     <fields>
-        <help>Betaling.npe01__Cheque_Referentie_Nummer__c</help>
+        <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
         <label>Betaling Cheque/ Referentie Nummer</label>
         <name>Payment_Check_Reference_Number__c</name>
     </fields>
     <fields>
-        <help>Betaling.npe01__Betalingsmethode__c</help>
+        <help><!-- Payment.npe01__Payment_Method__c --></help>
         <label>Betalingsmethode</label>
         <name>Payment_Method__c</name>
     </fields>
