@@ -208,4 +208,8 @@
         <label>世帯の管理</label>
         <name>Manage_Household</name>
     </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
 </CustomObjectTranslation>

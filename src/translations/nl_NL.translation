@@ -151,6 +151,54 @@
         <name>Address_Verification_Limit</name>
     </customLabels>
     <customLabels>
+        <label><!-- Confirmation message when a user wants to delete something. --></label>
+        <name>CMT_DeleteConfirm</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the active rollups tree --></label>
+        <name>CMT_FilterGroupActiveRollupsHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message when a user wants to delete a filter group with rollups. --></label>
+        <name>CMT_FilterGroupDeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group description --></label>
+        <name>CMT_FilterGroupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter group name --></label>
+        <name>CMT_FilterGroupNameHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterGroupNameLimitError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- New filter group button --></label>
+        <name>CMT_FilterNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user wants to delete a filter rule. --></label>
+        <name>CMT_FilterRuleDeleteWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Warning message when a user creates a duplicate filter rule. --></label>
+        <name>CMT_FilterRuleDuplicateError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error message preventing a user from saving a filter rule with fields missing. --></label>
+        <name>CMT_FilterRuleFieldsMissing</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rules --></label>
+        <name>CMT_FilterRulesHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for the filter rule value field --></label>
+        <name>CMT_FilterRulesValueHelpText</name>
+    </customLabels>
+    <customLabels>
         <label>Ik accepteer het risico op dataverlies of inconsistentie door het gebruik van deze functionaliteit.</label>
         <name>CONV_Accept_Risk</name>
     </customLabels>
@@ -323,6 +371,174 @@
         <name>CONV_What_This_Tool_Does</name>
     </customLabels>
     <customLabels>
+        <label><!-- Label for the advanced customization section on a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationHeader</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Context for when to add a date, amount, or detail field to a Rollup__mdt record. --></label>
+        <name>CRLP_AdvancedCustomizationText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label to be used for table describing rollup types. --></label>
+        <name>CRLP_AvailableRollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for the active flag. --></label>
+        <name>CRLP_CreateRollupActiveHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for amount field picklist. --></label>
+        <name>CRLP_CreateRollupAmountFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for date field picklist. --></label>
+        <name>CRLP_CreateRollupDateFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for days back integer. --></label>
+        <name>CRLP_CreateRollupDaysBackHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for description. --></label>
+        <name>CRLP_CreateRollupDescriptionHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for detail field picklist. --></label>
+        <name>CRLP_CreateRollupDetailFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for filter group. --></label>
+        <name>CRLP_CreateRollupFilterGroupHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for fiscal year. --></label>
+        <name>CRLP_CreateRollupFiscalYearHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Help text for user adding a summary object, field, and a description. --></label>
+        <name>CRLP_CreateRollupIntroHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for operation. --></label>
+        <name>CRLP_CreateRollupOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target field. --></label>
+        <name>CRLP_CreateRollupTargetFieldHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for target object. --></label>
+        <name>CRLP_CreateRollupTargetObjectHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for time bound operation. --></label>
+        <name>CRLP_CreateRollupTimeBoundOperationHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for rollup type. --></label>
+        <name>CRLP_CreateRollupTypeHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Tooltip help text for years ago picklist. --></label>
+        <name>CRLP_CreateRollupYearsAgoHelpText</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Credit Type --></label>
+        <name>CRLP_CreditType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Days back error message for integers with any characters other than numbers. --></label>
+        <name>CRLP_DaysBack</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Delete Progress Message --></label>
+        <name>CRLP_DeleteProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Deleted --></label>
+        <name>CRLP_DeleteSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_DeleteTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Title for CRLP Disabled Toast --></label>
+        <name>CRLP_DisabledTitle</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error when user tries to save a Rollup with a duplicate Target Field. --></label>
+        <name>CRLP_DuplicateTargetField</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Hard Credit --></label>
+        <name>CRLP_HardCredit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message when user doesn&apos;t have available detail fields on a custom rollup. --></label>
+        <name>CRLP_NoAvailableDetailFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t have available summary fields on a custom rollup --></label>
+        <name>CRLP_NoAvailableTargetFieldsMessage</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label when user doesn&apos;t select a filter group. --></label>
+        <name>CRLP_NoFilterGroupSelected</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Message to indicate in-progress operation for metadata deployments --></label>
+        <name>CRLP_PleaseWait</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Breadcrumb text to return to the specified location. --></label>
+        <name>CRLP_Return</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Create new rollup button --></label>
+        <name>CRLP_RollupNew</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Rollup Summary Page Title --></label>
+        <name>CRLP_RollupSummary</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Type of custom rollup --></label>
+        <name>CRLP_RollupType</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Shows rollups using a specific filter group. --></label>
+        <name>CRLP_RollupsByFilterGroup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Error Deploying Customizable Rollup data --></label>
+        <name>CRLP_SaveError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Saving Progress Message --></label>
+        <name>CRLP_SaveProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Successfully Saved --></label>
+        <name>CRLP_SaveSuccess</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Timeout error message --></label>
+        <name>CRLP_SaveTimeout</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Soft Credit --></label>
+        <name>CRLP_SoftCredit</name>
+    </customLabels>
+    <customLabels>
         <label>weglaten</label>
         <name>CampaignMemberStatusOmit</name>
     </customLabels>
@@ -399,6 +615,10 @@
         <name>NameRequired</name>
     </customLabels>
     <customLabels>
+        <label><!-- OCR Remove Primary Duplicate Batch Error Text --></label>
+        <name>OCRRemovePrimaryDuplicateBatchErrorText</name>
+    </customLabels>
+    <customLabels>
         <label>Organisatie Opportunities</label>
         <name>OrganizationalOpportunities</name>
     </customLabels>
@@ -415,8 +635,20 @@
         <name>PageMessagesFatal</name>
     </customLabels>
     <customLabels>
+        <label><!-- Info --></label>
+        <name>PageMessagesInfo</name>
+    </customLabels>
+    <customLabels>
         <label>Waarschuwing</label>
         <name>PageMessagesWarning</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- More ClosedWon donations than Installments --></label>
+        <name>RD_ErrorMoreClosedWonOpportunitiesThanInstallments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- The total Amount of all Closed Won Opps is not equal to the RD Amount. --></label>
+        <name>RD_ErrorNotEnoughClosedValueForFixedLength</name>
     </customLabels>
     <customLabels>
         <label>Creëer Nieuwe Relatie</label>
@@ -557,6 +789,10 @@
     <customLabels>
         <label>U kunt niet meer dan 100 postcodes tegelijkertijd controleren.</label>
         <name>Zipcode_Verification_Limit</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Throw exception to external call --></label>
+        <name>adapterException</name>
     </customLabels>
     <customLabels>
         <label>De Cicero API Key moet ingesteld worden in de Auth Token instellingen in de Adresverificatie Instellingen.</label>
@@ -821,6 +1057,38 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
         <name>bdiDonationMatchingRuleEmpty</name>
     </customLabels>
     <customLabels>
+        <label><!-- button label for begin Dry Run --></label>
+        <name>bdiDryRunBeginButton</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was matched in Dry Run --></label>
+        <name>bdiDryRunMatched</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- status on a bdi object to specify it was matched from an ambiguous set in Dry Rn --></label>
+        <name>bdiDryRunMatchedBest</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- BDI status when matching an object by its Salesforce ID in Dry Run --></label>
+        <name>bdiDryRunMatchedId</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- DI Object Status that it was not matched in Dry Run --></label>
+        <name>bdiDryRunNoMatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- progress field label --></label>
+        <name>bdiDryRunRecordsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- label on progress widget during Dry Run --></label>
+        <name>bdiDryRunRecordsValidated</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- title on the progress indicator during dry run mode --></label>
+        <name>bdiDryRunTitle</name>
+    </customLabels>
+    <customLabels>
         <label>Batch Naam is een verplicht veld.</label>
         <name>bdiErrorBatchNameRequired</name>
     </customLabels>
@@ -1033,6 +1301,10 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
         <name>engagementPlanTwoLookups</name>
     </customLabels>
     <customLabels>
+        <label><!-- exceptionDeletePermission --></label>
+        <name>exceptionDeletePermission</name>
+    </customLabels>
+    <customLabels>
         <label>Verplichte velden ontbreken:</label>
         <name>exceptionRequiredField</name>
     </customLabels>
@@ -1043,6 +1315,14 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
     <customLabels>
         <label>U heeft geen recht {0} aan te passen.</label>
         <name>flsError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Processing account model error --></label>
+        <name>giftProcessingAccountException</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Gift Processing configuration error --></label>
+        <name>giftProcessingConfigException</name>
     </customLabels>
     <customLabels>
         <label>Voer Gezondheidscontrole uit</label>
@@ -1179,10 +1459,6 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
     <customLabels>
         <label>Recordtype Id {0} is niet geldig.</label>
         <name>healthDetailsInvalidRecordtypeId</name>
-    </customLabels>
-    <customLabels>
-        <label>Recordtype Naam {0} is niet geldig.</label>
-        <name>healthDetailsInvalidRecordtypeName</name>
     </customLabels>
     <customLabels>
         <label>Het record {0} in de Schedulable__c object is niet geldig.</label>
@@ -2169,6 +2445,10 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
         <name>statusNotStarted</name>
     </customLabels>
     <customLabels>
+        <label><!-- To add to a list --></label>
+        <name>stgAdd</name>
+    </customLabels>
+    <customLabels>
         <label>Huishouden en Organisatie Account Beheer laat u meerdere adressen toevoegen aan een Account en stelt standaard adressen en seizoensadressen in.</label>
         <name>stgAddrGeneralSettingsIntro</name>
     </customLabels>
@@ -2183,6 +2463,10 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
     <customLabels>
         <label>Leeg Foutmeldingslogboek</label>
         <name>stgBtnClearErrorLog</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgBtnClone --></label>
+        <name>stgBtnClone</name>
     </customLabels>
     <customLabels>
         <label>Creëer Automatische Relatie</label>
@@ -2267,6 +2551,46 @@ Om de Bestemming Toewijzingen instellingen te controleren, ga naar Donaties | Be
     <customLabels>
         <label>Opslaan</label>
         <name>stgBtnSave</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPGoToSetup --></label>
+        <name>stgCRLPGoToSetup</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPHouseholdAccountError --></label>
+        <name>stgCRLPHouseholdAccountError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRBody --></label>
+        <name>stgCRLPInfoOnUDRBody</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPInfoOnUDRHeading --></label>
+        <name>stgCRLPInfoOnUDRHeading</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCRLPNonAdminError --></label>
+        <name>stgCRLPNonAdminError</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is not selected. --></label>
+        <name>stgCheckboxFalse</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- For alternative text when a boolean is selected. --></label>
+        <name>stgCheckboxTrue</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgCountOf --></label>
+        <name>stgCountOf</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentInProgress --></label>
+        <name>stgDeploymentInProgress</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgDeploymentTryAgain --></label>
+        <name>stgDeploymentTryAgain</name>
     </customLabels>
     <customLabels>
         <label>Documentatie</label>
@@ -2418,6 +2742,18 @@ Voor het starten van dit proces, wordt aangeraden het volgende uit te schakelen:
 &lt;br/&gt;
 Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpCreateMissingPayments</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable1</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable2</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpCustomizableRollupsEnable --></label>
+        <name>stgHelpCustomizableRollupsEnable3</name>
     </customLabels>
     <customLabels>
         <label>Schakelt het automatisch creëeren en beheren in van Bestemming Toewijzing records aan de standaard Bestemming. Deze functionaliteit zorgt voor een betere rapportage op de Bestemming, maar gebruikt meer data.</label>
@@ -2650,6 +2986,10 @@ Wanneer het proces 100% is voltooid, is het veilig de pagina te sluiten.</label>
         <name>stgHelpPrimaryContactBatch</name>
     </customLabels>
     <customLabels>
+        <label><!-- Content of the &quot;Bulk Data Processes - Remove Duplicate Primary OCRs&quot; page --></label>
+        <name>stgHelpPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>Wanneer geselecteerd, voeg de Campagne toe die is ingesteld voor de Terugkerende Donatie aan alle gerelateerde Opportunities. Als deze optie niet is geselecteerd, verschijnt de Campagne alleen op de eerste Opportunity van de Terugkerende Donatie.</label>
         <name>stgHelpRDAddCampaign</name>
     </customLabels>
@@ -2662,6 +3002,10 @@ Werkt het aantal Termijnen en Betaald Bedrag bij&lt;br/&gt;
 &lt;br/&gt;
 Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het proces zal verder gaan op de achtergrond.</label>
         <name>stgHelpRDBatch</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- RD Batch Size Settings Help Text --></label>
+        <name>stgHelpRDBatchSize</name>
     </customLabels>
     <customLabels>
         <label>Schakelt de planning uit van de Terugkerende Donaties gedurende de nacht.</label>
@@ -2768,10 +3112,6 @@ Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het pro
         <name>stgHelpReviewErrorLog</name>
     </customLabels>
     <customLabels>
-        <label>Het aantal records dat per keer verwerkt zal worden bij het berekenen van donateur statistieken. De standaard grootte is 200. Verminder dit aantal als Opportunity Rollups mislukken door systeem limieten.</label>
-        <name>stgHelpRollupBatchSize</name>
-    </customLabels>
-    <customLabels>
         <label>Opportunities met de geselecteerde Recordtypen worden niet ingesloten in rollups naar het Account. Klik Control of Command om meerdere Recordtypen te selecteren.</label>
         <name>stgHelpRollupExcludeAccountOppRT</name>
     </customLabels>
@@ -2802,6 +3142,10 @@ Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het pro
     <customLabels>
         <label>Wanneer deze optie is geselecteerd, wordt donateur data altijd opgerold naar de Primaire Contactpersoon van de Opportunity, en de bijbehorende Huishouden Account record, ook als de Opportunity niet van een individu (Bijv. een bedrijf, stichting etc.) komt. Wanneer niet geselecteerd, en het Account van de Opportunity is een organisatie, zal alleen de organisatie de data ontvangen.</label>
         <name>stgHelpRollupPrimaryContact</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgHelpRollupSkewLimit --></label>
+        <name>stgHelpRollupSkewLimit</name>
     </customLabels>
     <customLabels>
         <label>Wilt u de pagina layout, velden of gebruikers aanpassen? Probeer de &lt;a href=&quot;/setup/forcecomHomepage.apexp?setupid=ForceCom&quot; target=&quot;_blank&quot;&gt;Salesforce Setup&lt;/a&gt; pagina&apos;s.</label>
@@ -2868,6 +3212,10 @@ Dit proces kan enige tijd duren, maar deze pagina kan gesloten worden en het pro
         <name>stgHelpUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgHelpUseDatedConvRates --></label>
+        <name>stgHelpUseDatedConvRates</name>
+    </customLabels>
+    <customLabels>
         <label>Uw installatie was succesvol, maar er is een klein probleem geconstateerd. Om het probleem op te lossen, ga naar de NPSP Instellingen pagina. 
 
 Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack applicatie. Als deze tab niet te zien is, selecteer het Nonprofit Success Pack van de appstarter.</label>
@@ -2912,6 +3260,18 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
     <customLabels>
         <label>Batch Data Invoer Instellingen</label>
         <name>stgLabelBDESettings</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobRollupSkewSizes --></label>
+        <name>stgLabelBatchJobRollupSkewSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchJobSizes --></label>
+        <name>stgLabelBatchJobSizes</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelBatchProcessingOptions --></label>
+        <name>stgLabelBatchProcessingOptions</name>
     </customLabels>
     <customLabels>
         <label><!-- stgLabelBatchStatus --></label>
@@ -2990,6 +3350,10 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>stgLabelMembershipSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Intended for the name of a metadata record and not a person. --></label>
+        <name>stgLabelName</name>
+    </customLabels>
+    <customLabels>
         <label>Nieuwe Automatische Relatie</label>
         <name>stgLabelNewAutoRel</name>
     </customLabels>
@@ -3016,6 +3380,10 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
     <customLabels>
         <label>--Geen--</label>
         <name>stgLabelNone</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgLabelOK --></label>
+        <name>stgLabelOK</name>
     </customLabels>
     <customLabels>
         <label>Opportunity Naam Instellingen</label>
@@ -3086,6 +3454,10 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>stgLabelPaymentSettings</name>
     </customLabels>
     <customLabels>
+        <label><!-- Menu title for the Duplicate Primary OCRs in NPSP Settings --></label>
+        <name>stgLabelPrimaryContactRoleMergeBatch</name>
+    </customLabels>
+    <customLabels>
         <label>Aangepaste Veld Mapping</label>
         <name>stgLabelRDFieldMap</name>
     </customLabels>
@@ -3154,6 +3526,22 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>stgLabelUDRTargetObject</name>
     </customLabels>
     <customLabels>
+        <label><!-- stgLabelView --></label>
+        <name>stgLabelView</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for previous year --></label>
+        <name>stgLabelYearPicklistLastYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for current year --></label>
+        <name>stgLabelYearPicklistThisYear</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- Label for dynamic number of years ago --></label>
+        <name>stgLabelYearPicklistYearsAgo</name>
+    </customLabels>
+    <customLabels>
         <label>Verw</label>
         <name>stgLinkDelete</name>
     </customLabels>
@@ -3192,6 +3580,10 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
     <customLabels>
         <label>Batch Data Invoer</label>
         <name>stgNavBDE</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNavBatchProcessSettings --></label>
+        <name>stgNavBatchProcessSettings</name>
     </customLabels>
     <customLabels>
         <label>Bulk Data Processen</label>
@@ -3290,10 +3682,6 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>stgNavRollupBatch</name>
     </customLabels>
     <customLabels>
-        <label>Proces Planner</label>
-        <name>stgNavSchedule</name>
-    </customLabels>
-    <customLabels>
         <label>Systeem Functies</label>
         <name>stgNavSystem</name>
     </customLabels>
@@ -3306,12 +3694,24 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>stgNavUserDefinedRollups</name>
     </customLabels>
     <customLabels>
+        <label><!-- No records of an object found. Pass in the object&apos;s plural label. --></label>
+        <name>stgNoObjectsFound</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgNotApplicable --></label>
+        <name>stgNotApplicable</name>
+    </customLabels>
+    <customLabels>
         <label>Bij het maken van een Opportunity, wordt de Naam automatisch gevuld door de standaard naamgeving. Deze kan aangepast worden door het maken van aangepaste Opportunity Namen.</label>
         <name>stgOppNamingDescription</name>
     </customLabels>
     <customLabels>
         <label><!-- stgPowerOfUsHub --></label>
         <name>stgPowerOfUsHub</name>
+    </customLabels>
+    <customLabels>
+        <label><!-- stgSelectOne --></label>
+        <name>stgSelectOne</name>
     </customLabels>
     <customLabels>
         <label>Functies</label>
@@ -3338,11 +3738,11 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>NPSP_Settings</name>
     </customTabs>
     <quickActions>
-        <label><!-- Log a Call --></label>
+        <label><!-- LogACall --></label>
         <name>LogACall</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Account --></label>
+        <label><!-- NewAccount --></label>
         <name>NewAccount</name>
     </quickActions>
     <quickActions>
@@ -3350,7 +3750,7 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>NewContact</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Note --></label>
+        <label><!-- NewNote --></label>
         <name>NewNote</name>
     </quickActions>
     <quickActions>
@@ -3358,7 +3758,7 @@ Opmerking: De NPSP Instellingen tab is zichtbaar in de Nonprofit Success Pack ap
         <name>NewOpportunity</name>
     </quickActions>
     <quickActions>
-        <label><!-- New Task --></label>
+        <label><!-- NewTask --></label>
         <name>NewTask</name>
     </quickActions>
     <quickActions>
