@@ -26,7 +26,12 @@
 .THIS .nameField {
     height: 60px;
 }
-.THIS .datepicker{
+/*allows for visibility of date/datetime pickers*/
+.THIS lightning-calendar {
+    position: fixed;
+    z-index: 9998;
+}
+.THIS lightning-base-combobox {
     position: fixed;
     z-index: 9999;
 }
