@@ -36,16 +36,18 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
-    /*******************************************************************************************************
-    * @description Gets the Incremental Mode where clause. This methods should be overridden, if the Incremental
-    * mode is enabled for the child Batch.
-    * @return String.
-    ********************************************************************************************************/
-    protected virtual String getIncrementalWhereClause() {
-        return '';
-    }
+    private CRLP_IncrementalBatch.Rollup incrementalRollup;
 
     protected CRLP_Batch_Base_NonSkew() { }
+
+    /*******************************************************************************************************
+    * @description Sets the Incremental Rollup.
+    * @param incrementalRollup. The Incremental Rollup Mode.
+    * @return void.
+    ********************************************************************************************************/
+    public void setIncrementalRollup(CRLP_IncrementalBatch.Rollup incrementalRollup) {
+        this.incrementalRollup = incrementalRollup;
+    }
 
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
     // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
@@ -125,9 +127,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             }
 
             // Add the Incremental Mode where clause.
-            String incrementalWhereClause = this.getIncrementalWhereClause();
-            if (String.isNotBlank(incrementalWhereClause)) {
-                whereClauses.add(incrementalWhereClause);
+            if (incrementalRollup != null && String.isNotBlank(incrementalRollup.getWereClause())) {
+                whereClauses.add(incrementalRollup.getWereClause());
             }
 
             // TODO DO we need to exclude Organization Donations??
@@ -274,7 +275,17 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    public virtual void finish(Database.BatchableContext bc) {
+    /*******************************************************************************************************
+    * @description This method is called when the batch is completed.
+    * @param batchContext. The Batch Context.
+    * @return void.
+    ********************************************************************************************************/
+    public virtual void finish(Database.BatchableContext batchContext) {
+
+        if (this.incrementalRollup != null && batchHasErrors(batchContext) == false) {
+            incrementalRollup.refreshLastBatchRun();
+        }
+
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
             Error__c logEntry = new Error__c(
@@ -289,9 +300,25 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    /**
-     * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.
-     */
+    /*******************************************************************************************************
+    * @description Checks if the Batch has errors.
+    * @param batchContext. The Batch Context.
+    * @return Boolean.
+    ********************************************************************************************************/
+    private Boolean batchHasErrors(Database.BatchableContext batchContext) {
+        List<AsyncApexJob> currentBatch = [
+            SELECT NumberOfErrors 
+            FROM AsyncApexJob 
+            WHERE Id = :batchContext.getJobId()
+        ];
+        
+        return (currentBatch.isEmpty() == false && currentBatch[0].NumberOfErrors > 0);
+    }
+
+    /*******************************************************************************************************
+    * @description Instantiates the ProcessingOptions class for Non-Skew Mode batch operations.
+    * @return CRLP_RollupProcessingOptions.ProcessingOptions.
+    ********************************************************************************************************/
     private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;
