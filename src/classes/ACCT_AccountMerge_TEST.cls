@@ -105,7 +105,7 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -197,7 +197,7 @@ private with sharing class ACCT_AccountMerge_TEST {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -264,7 +264,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         // reload our contacts and accounts
         listAcc = new list<Account>([select Id, Name, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, 
             npo02__NumberOfClosedOpps__c, npe01__One2OneContact__c from Account order by Id]);
-        listCon = [select Id, Firstname, AccountId from Contact order by Firstname];
+        listCon = [select Id, Firstname, AccountId from Contact order by Id];
             
         // verify the accounts and contacts
         system.assertEquals(1, listAcc.size());
@@ -447,7 +447,7 @@ private with sharing class ACCT_AccountMerge_TEST {
         accWinner = listAcc[0];
         list<Contact> listCon = [select Id, Firstname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         system.assertEquals(listCon[0].AccountId, accWinner.Id);
