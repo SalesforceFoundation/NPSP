@@ -185,7 +185,7 @@
 
     <!--START MODAL-->
     <div>
-        <aura:if isTrue="{!v.filterRuleMode != ''}">
+        <aura:if isTrue="{!or(v.filterRuleMode != '', v.mode == 'delete')}">
             <section aura:id="modaldialog" role="dialog" tabindex="-1" aria-labelledby="modal-heading" aria-modal="true"
                      aria-describedby="modal-content" class="slds-modal">
                 <div class="slds-modal__container">
