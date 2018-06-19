@@ -933,6 +933,14 @@
         <value>Hard Credit</value>
     </labels>
     <labels>
+        <fullName>CRLP_DisplayError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error loading Customizable Rollup data</shortDescription>
+        <value>Error displaying the {0}</value>
+    </labels>
+    <labels>
         <fullName>CRLP_NoAvailableDetailFieldsMessage</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -1009,7 +1017,7 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Error Deploying Customizable Rollup data</shortDescription>
+        <shortDescription>Error deploying Customizable Rollup data</shortDescription>
         <value>Error saving the {0}</value>
     </labels>
     <labels>
@@ -7344,6 +7352,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgTools</shortDescription>
         <value>Tools</value>
+    </labels>
+    <labels>
+        <fullName>stgUnknownError</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgUnknownError</shortDescription>
+        <value>Unknown error. Please try again.</value>
     </labels>
     <labels>
         <fullName>stgValidationHHAccountHHRules</fullName>

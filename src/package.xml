@@ -458,6 +458,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_RollupRD_BTN</members>
         <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
@@ -1142,6 +1143,7 @@
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DisplayError</members>
         <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
@@ -1938,6 +1940,7 @@
         <members>stgPowerOfUsHub</members>
         <members>stgSelectOne</members>
         <members>stgTools</members>
+        <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
     </types>
@@ -2460,6 +2463,7 @@
         <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
+        <members>npe03__Recurring_Donation__c.Recalculate_Rollups</members>
         <name>WebLink</name>
     </types>
     <types>
