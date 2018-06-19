@@ -458,18 +458,9 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     */ 
     private void attachToBucketAccount(Contact[] contacts)
     {
-        //grab the first Account that is named Individual
-        List<Account> individuals = [
-            SELECT Id 
-            FROM Account
-            WHERE npe01__SYSTEMISINDIVIDUAL__c = true
-                AND npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE
-            ORDER BY CreatedDate Desc Limit 1
-        ];
-        
         Id individualAccountId = CAO_Constants.getIndividualAccountId();
         
-        if (individuals.size() > 0) {
+        if (individualAccountId != null) {
             for (Contact c : contacts) {
                 //connect all Contacts to the bucket Account
                 c.AccountId = individualAccountId;
