@@ -5697,7 +5697,15 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOCRDefaultRole</shortDescription>
-        <value>The default Contact Role automatically assigned to the Primary Contact for the Opportunity.</value>
+        <value>The default Contact Role automatically assigned to the Primary Contact when the Opportunity Account is a Household, One-to-One, or Individual Account.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpOrgOCRDefaultRole</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Help text for Contact Role for Organizational Opps</shortDescription>
+        <value>The default Contact Role automatically assigned to the Opportunity&apos;s Primary Contact when the Opportunity&apos;s Account is NOT a Household, One-to-One, or Individual Account.</value>
     </labels>
     <labels>
         <fullName>stgHelpOCRRoleForHH</fullName>
