@@ -300,6 +300,19 @@ global without sharing class STG_InstallScript implements InstallHandler {
      */
     private static void createNewDefaultCustomSettingRecords() {
         UTIL_CustomSettingsFacade.getOrgCustomizableRollupSettings();
+        updateDefaultOrgContactsSettings();
+    }
+
+    /*******************************************************************************************************
+     * @description Ensure that any default Org Contacts Settings Records are updated for custom settings
+     * objects accordingly.
+     */
+     public static void updateDefaultOrgContactsSettings() {
+        npe01__Contacts_And_Orgs_Settings__c npe01Settings = UTIL_CustomSettingsFacade.getOrgContactsSettings();
+        if (npe01Settings.Contact_Role_for_Organizational_Opps__c == null) {
+            npe01Settings.Contact_Role_for_Organizational_Opps__c = UTIL_CustomSettingsFacade.DEFAULT_OPPORTUNITY_CONTACT_ROLE_SOFT_CREDIT;
+            update npe01Settings;
+        }
     }
 
     /*******************************************************************************************************
