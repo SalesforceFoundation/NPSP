@@ -7,4 +7,36 @@
         <fields>npe4__RelatedContact__c</fields>
         <label>NPSP Relationship Compact Layout</label>
     </compactLayouts>
+    <fields>
+        <fullName>Related_Opportunity_Contact_Role__c</fullName>
+        <description>When you create an Opportunity for the Contact in this Relationship, NPSP assigns this Opportunity Contact Role to the Related Contact.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When you create an Opportunity for the Contact in this Relationship, NPSP assigns this Opportunity Contact Role to the Related Contact.</inlineHelpText>
+        <label>Related Opportunity Contact Role</label>
+        <required>false</required>
+        <trackHistory>false</trackHistory>
+        <trackTrending>false</trackTrending>
+        <type>Picklist</type>
+        <valueSet>
+            <restricted>true</restricted>
+            <valueSetDefinition>
+                <sorted>false</sorted>
+                <value>
+                    <fullName>Soft Credit</fullName>
+                    <default>false</default>
+                    <label>Soft Credit</label>
+                </value>
+                <value>
+                    <fullName>Solicitor</fullName>
+                    <default>false</default>
+                    <label>Solicitor</label>
+                </value>
+                <value>
+                    <fullName>Tribute</fullName>
+                    <default>false</default>
+                    <label>Tribute</label>
+                </value>
+            </valueSetDefinition>
+        </valueSet>
+    </fields>
 </CustomObject>
