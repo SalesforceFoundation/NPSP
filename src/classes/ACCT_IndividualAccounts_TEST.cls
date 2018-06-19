@@ -586,7 +586,6 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-        //Individual Account Model is not supported in an encrypted org
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;

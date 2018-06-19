@@ -735,7 +735,7 @@ public class UTIL_UnitTestData_TEST {
     }
 
     /**
-     * @description The individual account tests should not be ran when Account Name is encrypted
+     * @description Returns true if the Account.Name is encrypted
      */
     public static Boolean isAccountNameEncrypted() {
         return !Schema.sObjectType.Account.fields.Name.isFilterable();

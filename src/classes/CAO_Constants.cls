@@ -156,10 +156,10 @@ public with sharing class CAO_Constants {
                 .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(CAO_Constants.BUCKET_ACCOUNT_NAME))
                 .withLimit(1);
 
-            // Individual account model is not supported in an encrypted org, null will be returned.
+            // Individual account model is supported when Account.Name is not encrypted
             if (finder.isSoql()) {
                 List<sObject> acct = finder.find();
-                if (acct.size() > 0) {
+                if (!acct.isEmpty()) {
                     individualAccountId = acct[0].id;
                 }
             }

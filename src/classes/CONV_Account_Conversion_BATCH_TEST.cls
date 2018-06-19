@@ -118,7 +118,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
 
-        //Individual Account Model is not supported in an encrypted org
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup bucket model and test account creation
@@ -180,7 +179,6 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         
         if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
 
-        //Individual Account Model is not supported in an encrypted org
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup individual model and test account creation
