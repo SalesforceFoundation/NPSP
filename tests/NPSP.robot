@@ -109,3 +109,24 @@ Create HouseHold
     ${account_id} =           Get Current Record Id
     Store Session Record      Account  ${account_id}
     [return]                  ${account_id}
+
+Create Primary Affiliation
+    # Create Organization Account
+    ${account_id} =  Create Organization Foundation
+    &{account} =  Salesforce Get  Account  ${account_id}
+    
+    # Create Contact
+    ${contact_id} =  Create Contact with Email
+    &{contact} =  Salesforce Get  Contact  ${contact_id}   
+    Select Tab    Details
+    Execute JavaScript    window.scrollTo(100,300)
+    Click Element    //*[@title='Edit Primary Affiliation']
+    Populate Lookup Field    Primary Affiliation    &{account}[Name]
+    Click Record Button    Save 
+    [Return]         ${account_id}    ${contact_id}   
+
+    
+Choose Frame
+    [Arguments]    ${frame}
+    Select Frame    //iframe[contains(@title,'${frame}')]
+        

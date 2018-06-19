@@ -51,14 +51,6 @@ class NPSP(object):
         field = self.selenium.get_webelement(xpath)
         field.send_keys(value)
         
-    def choose_frame(self, title):
-        """ Selects a NPSP Frame using a title.
-        """
-        xpath = npsp_lex_locators["iframe"].format(title)
-        field = self.selenium.get_webelement(xpath).click()
-        
-#     def frame(self):
-#         self.selenium.SelectFrame("relative=Parent")
         
     def click_record_button(self, title):
         locator = npsp_lex_locators['record']['button'].format(title)
@@ -74,3 +66,31 @@ class NPSP(object):
         button.click()
         time.sleep(5)    
         
+    def click_special_related_list_button(self, heading, button_title):
+        locator = npsp_lex_locators['record']['related']['button'].format(heading, button_title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        
+    def click_dropdown(self, title):
+        locator = npsp_lex_locators['record']['list'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()     
+    
+    def pick_date(self, value):
+        locator = npsp_lex_locators['record']['datepicker'].format(value)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click() 
+        
+    def select_row(self, value ):
+        locators = npsp_lex_locators['name']
+        list_ele = self.selenium.get_webelements(locators)
+        index= 1
+        for locator in list_ele:
+            global index
+            if locator.text != value:
+                index = index+1
+            else:
+                drop_down = npsp_lex_locators['locate_dropdown'].format(index)
+                self.selenium.get_webelement(drop_down).click()
+            
+           
