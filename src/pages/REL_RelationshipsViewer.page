@@ -175,7 +175,7 @@
                                     var relIds = new Array();
                                     particleSystem.eachEdge(function(edge, pt1, pt2){relIds.push(edge.data.relId);})
                                     
-                                    Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}',currNode.data.id, false, relIds,function(result, event){
+                                    Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}', currNode.data.id, false, relIds, function(result, event){
                                                                                   
                                         if (event.status){
                                             
@@ -263,7 +263,7 @@
  
             j$(document).ready(function(){
                 //The initial call to the controller
-                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}','{!id}', true, null, function(result, event){
+                Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.REL_RelationshipsViewer_CTRL.getRelationships}', JSENCODE('{!id}'), true, null, function(result, event){
                     if (event.status){
                         RelationshipInfo = getRelationshipInfo();
                         sys = arbor.ParticleSystem(1000, 200, 0.2) // create the system with sensible repulsion/stiffness/friction

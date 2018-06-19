@@ -1137,8 +1137,8 @@
         <members>CRLP_DeleteSuccess</members>
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
-        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
         <members>CRLP_NoAvailableTargetFieldsMessage</members>
