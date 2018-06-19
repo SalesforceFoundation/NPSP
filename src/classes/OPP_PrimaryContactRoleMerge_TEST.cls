@@ -41,17 +41,84 @@ private class OPP_PrimaryContactRoleMerge_TEST {
     private final static String NON_NPSP_ROLE = 'NON_NPSP_ROLE';
 
     /*********************************************************************************************************
-    * @description Given an Opportunity with duplicate primary OCRs, AND all the primary OCRs Role != NPSP Settings Role
-    * when the batch runs, then an error log is created, with a link to the Opportunity.
+    * @description Given a Non Organizational Opportunity with duplicate primary OCRs, AND all the primary OCRs 
+    * Role != NPSP Settings Role when the batch runs, then an error log is created, with a link to the Opportunity.
     */
-    @isTest static void test_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
+    @isTest static void test_NonOrganizational_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
             npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
         ));
 
-        deactivateTriggers();
+        Account account = new Account(
+            Name = 'TEST_ACCOUNT',
+            npe01__SYSTEMIsIndividual__c = true
+        );
 
-        Account account = new Account(Name = 'TEST_ACCOUNT');
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
+    }
+
+    /*********************************************************************************************************
+    * @description Given an Organizational Opportunity with duplicate primary OCRs, AND all the primary OCRs 
+    * Role != NPSP Settings Role when the batch runs, then an error log is created, with a link to the Opportunity.
+    */
+    @isTest static void test_Organization_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
+        ));
+
+        Account account = new Account(
+            Name = 'TEST_ACCOUNT',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+
+        executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(account);
+    }
+
+    /*********************************************************************************************************
+    * @description Given a Non Organizational Opportunity with duplicate primary OCRs, and the primary OCRs 
+    * have Role equals to (NPSP Settings Role, blank, NOT “NPSP Settings Role”) when the Batch runs, then 
+    * the primary OCRs with blank role AND role not defined in NPSP Settings should be deleted. The Opportunity 
+    * should have only 1 primary OCR with role equals to the NPSP Settings Role.
+    */
+    @isTest static void test_NonOrganizational_DeleteBlankAndNonNPSPRole() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
+        ));
+
+        Account account = new Account(
+            Name = 'TEST_ACCOUNT',
+            npe01__SYSTEMIsIndividual__c = true
+        );
+
+        executeTest_DeleteBlankAndNonNPSPRole(account);        
+    }
+
+    /*********************************************************************************************************
+    * @description Given a Non Organizational Opportunity with duplicate primary OCRs, and the primary OCRs 
+    * have Role equals to (NPSP Settings Role, blank, NOT “NPSP Settings Role”) when the Batch runs, then 
+    * the primary OCRs with blank role AND role not defined in NPSP Settings should be deleted. The Opportunity 
+    * should have only 1 primary OCR with role equals to the NPSP Settings Role.
+    */
+    @isTest static void test_Organizational_DeleteBlankAndNonNPSPRole() {
+        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
+            Contact_Role_for_Organizational_Opps__c = NPSP_ROLE
+        ));
+
+        Account account = new Account(
+            Name = 'TEST_ACCOUNT',
+            npe01__SYSTEMIsIndividual__c = false
+        );
+
+        executeTest_DeleteBlankAndNonNPSPRole(account); 
+    }
+
+    /*******************************************************************************************************
+    * @description Executes the Log Error test scenario.
+    * @return void.
+    ********************************************************************************************************/
+    private static void executeTest_LogErrorIf_NoPrimaryOCRsWithRoleDefinedInNPSPSettings(Account account) {
+        deactivateTriggers();
+        
         insert account;
 
         Contact contact = new Contact(LastName = 'TEST_CONTACT');
@@ -120,20 +187,13 @@ private class OPP_PrimaryContactRoleMerge_TEST {
         System.assertEquals(URL.getSalesforceBaseUrl().toExternalForm() + '/' + expectedOpportunity.Id, errors[0].Record_URL__c);
     }
 
-    /*********************************************************************************************************
-    * @description Given an Opportunity with duplicate primary OCRs, and the primary OCRs have Role equals to
-    * (NPSP Settings Role, blank, NOT “NPSP Settings Role”) when the Batch runs, then the primary OCRs with 
-    * blank role AND role not defined in NPSP Settings should be deleted. The Opportunity should have only 1 
-    * primary OCR with role equals to the NPSP Settings Role.
-    */
-    @isTest static void test_DeleteBlankAndNonNPSPRole() {
-        npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(new npe01__Contacts_and_Orgs_Settings__c (
-            npe01__Opportunity_Contact_Role_Default_role__c = NPSP_ROLE
-        ));
-
+    /*******************************************************************************************************
+    * @description Executes the Remove Duplicates (delete blank and non NPSP Roles) test scenario.
+    * @return void.
+    ********************************************************************************************************/
+    private static void executeTest_DeleteBlankAndNonNPSPRole(Account account) {
         deactivateTriggers();
 
-        Account account = new Account(Name = 'TEST_ACCOUNT');
         insert account;
 
         Contact contact = new Contact(LastName = 'TEST_CONTACT');
