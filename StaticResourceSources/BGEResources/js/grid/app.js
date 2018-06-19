@@ -318,6 +318,14 @@
                             }
 
                             if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
+
+                                var regex = /\d{1,2}\/\d{1,2}\/\d{4}/g;
+
+                                if (cellRecord.newValue && !cellRecord.newValue.match(regex)) {
+
+                                    cellRecord.newValue = sanitizeDateFormat(newValue);
+                                }
+
                                 cellRecords.push(cellRecord);
                             }
                             else if ((newValue == 'NaN') && (cellType == 'date')) {
@@ -363,6 +371,13 @@
                         hot.render();
                     }, 500);
 
+                }
+
+                function sanitizeDateFormat(value) {
+
+                    var result = value.replace(/-/g, '/');
+
+                    return result;
                 }
 
                 function onDmlGridHandler(result, event) {
