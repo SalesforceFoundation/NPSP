@@ -1,6 +1,8 @@
 <apex:page controller="STG_PanelCustomizableRollup_CTRL" >
 
     <apex:slds/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
+
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around--x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
@@ -94,19 +96,62 @@
                             </apex:outputPanel>
                         </div>
                     </div>
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <apex:outputPanel rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}">
+                                <apex:commandLink id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" action="{!navigate}" /><br/><br/><br/>
+                                <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="conversionBTN">
+                                    {!$Label.stgCRLPReset}
+                                </button>
+                            </apex:outputPanel>
+                        </div>
+                    </div>
                 </div>
+
 
                 <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
                     <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
                     <apex:commandButton id="cancelCRLPs" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-                    <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
-                </div>
-                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="resetCRLPs" value="{!$Label.stgCRLPReset}" action="{!resetRollupsToDefaultConfig}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button&#45;&#45;small slds-button&#45;&#45;neutral" />
                 </div>
 
             </div>
+            <apex:actionFunction name="reset" action="{!resetRollupsToDefaultConfig}" reRender="form" status="statusLoad" />
 
         </apex:form>
+
+        <!--start modal-->
+        <div class="slds-scope">
+            <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <h2 id="warning_modal_heading" class="slds-text-heading_medium">{!$Label.CONV_Warning}</h2>
+                        <button class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
+                                <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p>
+                            {!$Label.CRLP_ResetRollupsWarning}
+                        </p>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <div class="slds-x-small-buttons_horizontal">
+                            <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
+                            <button id="warning_modal_proceed_button" class="slds-button slds-button_destructive" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Proceed}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-backdrop" tabindex="-1"></div>
+        </div>
+
+        <script type="text/javascript">
+            document.getElementById('warning_modal_proceed_button').addEventListener('click', reset);
+        </script>
+
     </div>
+
 </apex:page>

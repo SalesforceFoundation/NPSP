@@ -643,7 +643,9 @@ public class CRLP_DefaultConfigBuilder_SVC {
     private static List<CRLP_RollupCMT.FilterRule> softDeleteExtraFilterRules(List<CRLP_RollupCMT.FilterGroup> groups) {
 
         Set<String> defaultRuleNames = new Set<String>();
+        Set<String> defaultGroupNames = new Set<String>();
         for (CRLP_RollupCMT.FilterGroup grp : groups) {
+            defaultGroupNames.add(grp.recordName);
             for (CRLP_RollupCMT.FilterRule rule : grp.rules) {
                 defaultRuleNames.add(rule.recordName);
             }
@@ -654,7 +656,7 @@ public class CRLP_DefaultConfigBuilder_SVC {
         List<CRLP_RollupCMT.FilterRule> rulesToSoftDelete = new List<CRLP_RollupCMT.FilterRule>();
 
         for (Filter_Rule__mdt rule : allExistingRules) {
-            if (!defaultRuleNames.contains(rule.DeveloperName) && rule.Filter_Group__r.DeveloperName.left(5) == 'NPSP_') {
+            if (!defaultRuleNames.contains(rule.DeveloperName) && defaultGroupNames.contains(rule.Filter_Group__r.DeveloperName)) {
                 CRLP_RollupCMT.FilterRule ruleToDelete = new CRLP_RollupCMT.FilterRule(rule);
                 ruleToDelete.isDeleted = true;
                 rulesToSoftDelete.add(ruleToDelete);

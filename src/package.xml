@@ -1139,6 +1139,7 @@
         <members>CRLP_NoAvailableTargetFieldsMessage</members>
         <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
+        <members>CRLP_ResetRollupsWarning</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>

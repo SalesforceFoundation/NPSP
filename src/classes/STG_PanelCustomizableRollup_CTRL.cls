@@ -103,10 +103,10 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     */
 
     public PageReference resetRollupsToDefaultConfig() {
+        isPolling = true;
         STG_SettingsManager_CTRL.idPanelCurrent = idPanel();
         Savepoint sp = Database.setSavepoint();
         try {
-            isPolling = true;
             jobId = CRLP_DefaultConfigBuilder_SVC.convertLegacyRollupsIntoCustomizableRollups();
             if (Test.isRunningTest()) {
                 jobId = '123';

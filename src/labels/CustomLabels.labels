@@ -973,6 +973,14 @@
         <value>Please wait a moment</value>
     </labels>
     <labels>
+        <fullName>CRLP_ResetRollupsWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning before complete reset of Customizable Rollups</shortDescription>
+        <value>Are you sure you want to reset Customizable Rollups to NPSP default settings? If you reset, you will lose all changes you made to rollups and new rollups you created while using Customizable Rollups.</value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5419,7 +5427,9 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
+            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups. If you enable and use this feature, then decide to disable it, any new rollups you created or changes made to rollup settings are preserved in case you decide to enable Customizable Rollups again.
+            &lt;br/&gt;&lt;br/&gt;
+            Use the Reset button if you want to completely reset Customizable Rollups to original NPSP Settings. Resetting Customizable Rollups overwrites any changes you made to Customizable Rollup settings and deletes any new rollups or filter groups you created.
         </value>
     </labels>
     <labels>
