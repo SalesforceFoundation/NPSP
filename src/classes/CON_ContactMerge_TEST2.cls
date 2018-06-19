@@ -623,6 +623,10 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeBucketToHH() {
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -632,6 +636,10 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeHHToBucket() {
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
     }
 
@@ -644,6 +652,10 @@ private class CON_ContactMerge_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
+
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -656,6 +668,10 @@ private class CON_ContactMerge_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
     }
 

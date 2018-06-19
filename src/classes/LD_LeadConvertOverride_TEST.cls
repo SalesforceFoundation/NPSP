@@ -65,6 +65,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Individual account model
     */
     static testMethod void newLeadConversion_TestBucketAccount(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversion_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -146,6 +149,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionMerge_Test with the Individual account model
     */
     static testMethod void newLeadConversionMerge_TestBucketAccount(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversionMerge_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -225,6 +231,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionNewNameCompany with the Individual account model
     */
     static testMethod void newLeadConversionNewNamedCompany_TestBucketAccount(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversionNewNamedCompany_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -296,6 +305,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionExistingNamedCompany with the Individual account model
     */
     static testMethod void newLeadConversionExistingNamedCompany_TestBucketAccount(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversionExistingNamedCompany_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -373,6 +385,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionExistingNamedCompany with the Individual account model
     */
     static testMethod void newLeadConversionExistingNamedCompanyAffl_TestBucketAccount(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversionExistingNamedCompanyAffl_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -449,6 +464,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversionHHObj with the Individual account model
     */
     static testMethod void newLeadConversionHHObjBucket(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversionHHObj(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -543,6 +561,9 @@ private class LD_LeadConvertOverride_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'newNativeLeadConversion_TestBucketAccount') return;
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newNativeLeadConversion_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -715,6 +736,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLead_Conversion_Test with the Individual account model and verify Opp OCRs and Primary Contact are correct.
     */
     static testMethod void newLeadConversion_TestBucketAccountOppOCR(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
@@ -815,6 +839,9 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void mergeLeadConversion_TestBucketAccountOppOCR(){
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         mergeLeadConversion_TestOppOCR(CAO_Constants.BUCKET_PROCESSOR);
     }
@@ -926,6 +953,9 @@ private class LD_LeadConvertOverride_TEST {
     * @description Runs newLeadConversion_TestOppAFF with the Individual account model and verify Opp created for affiliation.
     */
     static testMethod void newLeadConversion_TestBucketAccountOppAFF(){
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         newLeadConversion_TestOppAFF(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************

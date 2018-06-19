@@ -586,8 +586,12 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
-    	detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
+        //Individual Account Model is not supported in an encrypted org
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
+        if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
+
+        detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void detachHHAccount2() {
         //skip the test if Advancement is installed

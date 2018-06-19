@@ -733,4 +733,11 @@ public class UTIL_UnitTestData_TEST {
             haveTriggerRecordsBeenCreated = true;
         }
     }
+
+    /**
+     * @description The individual account tests should not be ran when Account Name is encrypted
+     */
+    public static Boolean isAccountNameEncrypted() {
+        return !Schema.sObjectType.Account.fields.Name.isFilterable();
+    }
 }

@@ -152,14 +152,16 @@ public with sharing class CAO_Constants {
     
         // look up the ID if we haven't already done it
         if (individualAccountId == null) {
-            List<Account> acct = [
-                SELECT Id, npe01__SYSTEMISINDIVIDUAL__c, npe01__SYSTEM_AccountType__c
-                FROM Account
-                WHERE npe01__SYSTEMISINDIVIDUAL__c = true
-                    AND npe01__SYSTEM_AccountType__c = :CAO_Constants.BUCKET_ORGANIZATION_TYPE
-                LIMIT 1];
-            if (acct.size() > 0) {
-                individualAccountId = acct[0].id;
+            UTIL_Finder finder = new UTIL_Finder(Account.SObjectType)
+                .withWhere(new UTIL_Where.FieldExpression(Account.Name).equals(CAO_Constants.BUCKET_ACCOUNT_NAME))
+                .withLimit(1);
+
+            // Individual account model is not supported in an encrypted org, null will be returned.
+            if (finder.isSoql()) {
+                List<sObject> acct = finder.find();
+                if (acct.size() > 0) {
+                    individualAccountId = acct[0].id;
+                }
             }
         }
         return individualAccountId;
