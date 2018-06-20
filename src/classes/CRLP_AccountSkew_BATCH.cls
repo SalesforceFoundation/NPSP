@@ -61,6 +61,8 @@ public class CRLP_AccountSkew_BATCH extends CRLP_Batch_Base_Skew implements Data
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            Database.executeBatch(new CRLP_SkewDispatcher_BATCH(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit), CRLP_SkewDispatcher_BATCH.BATCH_SIZE);
+        }
     }
 }
