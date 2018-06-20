@@ -232,6 +232,8 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>OPP_AutomatedSoftCreditsService</members>
+        <members>OPP_AutomatedSoftCreditsService_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
@@ -456,6 +458,7 @@
         <members>CON_DeleteContactOverride</members>
         <members>CRLP_RollupAccount_BTN</members>
         <members>CRLP_RollupContact_BTN</members>
+        <members>CRLP_RollupRD_BTN</members>
         <members>CRLP_RollupSetup</members>
         <members>EP_ManageEPTemplate</members>
         <members>HH_CampaignDedupeBTN</members>
@@ -1000,6 +1003,7 @@
         <members>npe01__Contacts_And_Orgs_Settings__c.Automatic_Campaign_Member_Management__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Non_Responded_Status__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Campaign_Member_Responded_Status__c</members>
+        <members>npe01__Contacts_And_Orgs_Settings__c.Contact_Role_for_Organizational_Opps__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Honoree_Opportunity_Contact_Role__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Household_Account_Addresses_Disabled__c</members>
         <members>npe01__Contacts_And_Orgs_Settings__c.Max_Payments__c</members>
@@ -1013,7 +1017,9 @@
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
+        <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
+        <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
         <members>npo02__Households_Settings__c.Use_Dated_Conversion_Rates__c</members>
@@ -1137,6 +1143,7 @@
         <members>CRLP_DeleteTimeout</members>
         <members>CRLP_DisabledMessage</members>
         <members>CRLP_DisabledTitle</members>
+        <members>CRLP_DisplayError</members>
         <members>CRLP_DuplicateTargetField</members>
         <members>CRLP_HardCredit</members>
         <members>CRLP_NoAvailableDetailFieldsMessage</members>
@@ -1740,6 +1747,7 @@
         <members>stgHelpOppRecTypesNoPayments</members>
         <members>stgHelpOppTypesNoPayments</members>
         <members>stgHelpOrgAccountAddressMgmt</members>
+        <members>stgHelpOrgOCRDefaultRole</members>
         <members>stgHelpOverrunCount</members>
         <members>stgHelpPaymentMapOppField</members>
         <members>stgHelpPaymentMapPaymentField</members>
@@ -1932,6 +1940,7 @@
         <members>stgPowerOfUsHub</members>
         <members>stgSelectOne</members>
         <members>stgTools</members>
+        <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
         <name>CustomLabel</name>
     </types>
@@ -2235,6 +2244,18 @@
         <members>npe4__Relationship_Settings__c-iw</members>
         <members>npe4__Relationship_Settings__c-ja</members>
         <members>npe4__Relationship_Settings__c-nl_NL</members>
+        <members>npe4__Relationship__c-de</members>
+        <members>npe4__Relationship__c-es</members>
+        <members>npe4__Relationship__c-fr</members>
+        <members>npe4__Relationship__c-iw</members>
+        <members>npe4__Relationship__c-ja</members>
+        <members>npe4__Relationship__c-nl_NL</members>
+        <members>npe5__Affiliation__c-de</members>
+        <members>npe5__Affiliation__c-es</members>
+        <members>npe5__Affiliation__c-fr</members>
+        <members>npe5__Affiliation__c-iw</members>
+        <members>npe5__Affiliation__c-ja</members>
+        <members>npe5__Affiliation__c-nl_NL</members>
         <members>npo02__Household__c-de</members>
         <members>npo02__Household__c-es</members>
         <members>npo02__Household__c-fr</members>
@@ -2442,6 +2463,7 @@
         <members>Opportunity.Manage_Soft_Credits</members>
         <members>Opportunity.Refresh_Name</members>
         <members>Partial_Soft_Credit__c.Manage_Soft_Credits</members>
+        <members>npe03__Recurring_Donation__c.Recalculate_Rollups</members>
         <name>WebLink</name>
     </types>
     <types>
