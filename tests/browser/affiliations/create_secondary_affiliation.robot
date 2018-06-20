@@ -6,7 +6,7 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Create Primary Affiliation for Contact
+Create Secondary Affiliation for Contact
     # Create Organization Account
     ${account_id} =  Create Organization Foundation
     &{account} =  Salesforce Get  Account  ${account_id}
@@ -14,12 +14,10 @@ Create Primary Affiliation for Contact
     # Create Contact
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}   
-    Select Tab    Details
-    Execute JavaScript    window.scrollTo(100,300)
-    Click Element    //*[@title='Edit Primary Affiliation']
-    Populate Lookup Field    Primary Affiliation    &{account}[Name]
-    Click Record Button    Save
-    Go To Object Home          Account
-    Click Link    link=&{account}[Name]
+    Execute JavaScript    window.scrollTo(50,300)
+    Click Related List Button   Organization Affiliations    New
+    Populate Lookup Field    Organization    &{account}[Name]
+    Click Modal Button    Save
     Page Should Contain    &{contact}[LastName]
+    Page Should Contain    &{account}[Name]
     

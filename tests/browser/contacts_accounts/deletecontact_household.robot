@@ -20,5 +20,6 @@ Delete Contact from Household
     Click Element     //span/span/label/span
     Click Link    link=Show More
     Click Link    link=Delete
+    Sleep    5
     Go To Object Home    Account
     Page Should Contain Link   link=&{contact1}[LastName] Household
