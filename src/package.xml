@@ -2246,6 +2246,18 @@
         <members>npe4__Relationship_Settings__c-iw</members>
         <members>npe4__Relationship_Settings__c-ja</members>
         <members>npe4__Relationship_Settings__c-nl_NL</members>
+        <members>npe4__Relationship__c-de</members>
+        <members>npe4__Relationship__c-es</members>
+        <members>npe4__Relationship__c-fr</members>
+        <members>npe4__Relationship__c-iw</members>
+        <members>npe4__Relationship__c-ja</members>
+        <members>npe4__Relationship__c-nl_NL</members>
+        <members>npe5__Affiliation__c-de</members>
+        <members>npe5__Affiliation__c-es</members>
+        <members>npe5__Affiliation__c-fr</members>
+        <members>npe5__Affiliation__c-iw</members>
+        <members>npe5__Affiliation__c-ja</members>
+        <members>npe5__Affiliation__c-nl_NL</members>
         <members>npo02__Household__c-de</members>
         <members>npo02__Household__c-es</members>
         <members>npo02__Household__c-fr</members>
