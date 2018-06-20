@@ -431,7 +431,7 @@ private class HH_OppContactRoles_TEST {
             new npo02__Households_Settings__c (
                 npo02__Household_Rules__c = HH_Households.ALL_PROCESSOR,
                 npo02__Household_Contact_Roles_On__c = true,
-                npo02__Household_Member_Contact_Role__c='Household Member'));
+                npo02__Household_Member_Contact_Role__c = 'Household Member'));
         HH_OppContactRoles_TDTM.strRefreshSetting = strRefresh;
                 
         list<Contact> listCon = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(5);
@@ -459,73 +459,35 @@ private class HH_OppContactRoles_TEST {
         //check for contact roles
         List<OpportunityContactRole> listOCR = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
         system.assertEquals(18, listOCR.size());
-        
+
+        List<Contact> acctSrcContacts = new List<Contact>{ listCon[0], listCon[1] };
+        List<OpportunityContactRole> acctSrcOCRs = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole where ContactId in :acctSrcContacts];
+        system.assertEquals(8, acctSrcOCRs.size());
+
+        List<Contact> acctDestContacts = new List<Contact>{ listCon[2], listCon[3] };
+        List<OpportunityContactRole> acctDestOCRs = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole where ContactId in :acctDestContacts];
+        system.assertEquals(8, acctDestOCRs.size());
+
         // now let's move a contact to a different household
         listCon[0].AccountId = listAcc[1].Id;
         Test.startTest();
         update listCon[0];
         Test.stopTest();
         
-        List<OpportunityContactRole> listOCR2 = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole];
-        list<integer> listPrimary = new integer[5];
-        list<integer> listSoft = new integer[5];
-        for (integer i = 0; i < 5; i++) {
-        	listPrimary[i] = 0;
-        	listSoft[i] = 0;
-        }        
+        List<OpportunityContactRole> acctSrcOCRsUpdated = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole where ContactId = :listCon[0].Id];
+        system.assertEquals(4, acctSrcOCRsUpdated.size());
+
+        system.assertEquals(listAcc[1].Id, listCon[0].AccountId);
         
-        for (OpportunityContactRole ocr : listOCR2) {
-        	integer i = 0;
-            if (ocr.ContactId == listCon[1].Id)
-                i = 1;
-            else if (ocr.ContactId == listCon[2].Id)
-                i = 2;
-            else if (ocr.ContactId == listCon[3].Id)
-                i = 3;
-            else if (ocr.ContactId == listCon[4].Id)
-                i = 4;
-            if (ocr.IsPrimary)
-                listPrimary[i]++;
-            else
-                listSoft[i]++;                   
-        }
-        
-        if (strRefresh == 'none') {
-            system.assertEquals(18, listOCR2.size());
-            system.assertEquals(2, listPrimary[0]);
-            system.assertEquals(2, listSoft[0]);
-            system.assertEquals(2, listPrimary[1]);
-            system.assertEquals(2, listSoft[1]);
-            system.assertEquals(2, listPrimary[2]);
-            system.assertEquals(2, listSoft[2]);
-            system.assertEquals(2, listPrimary[3]);
-            system.assertEquals(2, listSoft[3]);
-            system.assertEquals(2, listPrimary[4]);
-            system.assertEquals(0, listSoft[4]);
-        } else if (strRefresh == 'Open Opportunities') {        
-            system.assertEquals(19, listOCR2.size());
-            system.assertEquals(2, listPrimary[0]);
-            system.assertEquals(2, listSoft[0]);
-            system.assertEquals(2, listPrimary[1]);
-            system.assertEquals(1, listSoft[1]);
-            system.assertEquals(2, listPrimary[2]);
-            system.assertEquals(3, listSoft[2]);
-            system.assertEquals(2, listPrimary[3]);
-            system.assertEquals(3, listSoft[3]);
-            system.assertEquals(2, listPrimary[4]);
-            system.assertEquals(0, listSoft[4]);
-        } else {
-            system.assertEquals(20, listOCR2.size());
-            system.assertEquals(2, listPrimary[0]);
-            system.assertEquals(2, listSoft[0]);
-            system.assertEquals(2, listPrimary[1]);
-            system.assertEquals(0, listSoft[1]);
-            system.assertEquals(2, listPrimary[2]);
-            system.assertEquals(4, listSoft[2]);
-            system.assertEquals(2, listPrimary[3]);
-            system.assertEquals(4, listSoft[3]);
-            system.assertEquals(2, listPrimary[4]);
-            system.assertEquals(0, listSoft[4]);
+        List<Contact> acctDestContactsUpdated = new List<Contact>{ listCon[0], listCon[2], listCon[3] };
+        List<OpportunityContactRole> acctDestOCRsUpdated = [select OpportunityId, Role, ContactId, IsPrimary from OpportunityContactRole where ContactId in :acctDestContactsUpdated];
+
+        if (strRefresh.equalsIgnoreCase('none')) {
+            system.assertEquals(12, acctDestOCRsUpdated.size());
+        } else if (strRefresh.equalsIgnoreCase('Open Opportunities')) {
+            system.assertEquals(14, acctDestOCRsUpdated.size());
+        } else if (strRefresh.equalsIgnoreCase('Open and Closed Opportunities')) {
+            system.assertEquals(16, acctDestOCRsUpdated.size());
         }
     }
 
@@ -630,7 +592,7 @@ private class HH_OppContactRoles_TEST {
         npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
             new npo02__Households_Settings__c (
                 npo02__Household_Contact_Roles_On__c = true,
-                npo02__Household_Member_Contact_Role__c='Donor'));
+                npo02__Household_Member_Contact_Role__c = 'Household Member'));
 
         // create our source account and contacts
         UTIL_UnitTestData_TEST.createAccountContactTestData(accTypeSrc, 1, 2, 1);
@@ -654,16 +616,16 @@ private class HH_OppContactRoles_TEST {
         Opportunity opp = listOpp[0];
 
         List<OpportunityContactRole> createdRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole
-            where OpportunityId = :opp.id and isPrimary = true order by ContactId];
-        
+            where OpportunityId = :opp.id and IsPrimary = true order by ContactId];
+
         opp.AccountId = accDst.Id;
         Test.startTest();
         update opp;
         Test.stopTest();
 
         List<OpportunityContactRole> updatedRoles = [select Role, ContactId, IsPrimary from OpportunityContactRole
-            where OpportunityId = :opp.id and isPrimary = true order by ContactId];
-            
+            where OpportunityId = :opp.id and IsPrimary = true order by ContactId];
+
         // verify the primary ocr has not changed.
         System.assertEquals(createdRoles[0].ContactId, updatedRoles[0].ContactId);
     }

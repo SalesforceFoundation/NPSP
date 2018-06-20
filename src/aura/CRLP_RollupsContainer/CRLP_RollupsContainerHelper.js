@@ -247,7 +247,7 @@
     },
 
     /**
-     * @description Show a message on the screen
+     * @description Show a message on the screen. Auto-hides success toasts after 5 seconds.
      * @param type - error, success, info
      * @param title - message title
      * @param message - message to display
@@ -257,7 +257,15 @@
         var altText = cmp.get("v.labels." + type);
         var text = {message: message, title: title, alternativeText: altText};
         cmp.set("v.notificationText", text);
-        cmp.set("v.notificationClasses", "");
+        cmp.set("v.toastHideClass", "");
+
+        if (type === 'success') {
+            window.setTimeout(
+                $A.getCallback(function() {
+                    cmp.set("v.toastHideClass", "slds-hide");
+                }), 5000
+            );
+        }
     },
 
     /**
