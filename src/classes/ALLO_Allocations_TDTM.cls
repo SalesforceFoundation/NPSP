@@ -98,6 +98,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         } else if (objResult.getsObjectType() == Opportunity.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
 
             runOpportunityTriggerHandler(newlist, oldlist, triggerAction, objResult);
+        } else if (objResult.getsObjectType() == npe01__OppPayment__c.sObjectType && !TDTM_ProcessControl.isRecursive(TDTM_ProcessControl.flag.ALLOC)) {
+
+            runPaymentTriggerHandler(newlist, oldlist, triggerAction, objResult);
         }
 
         // Increment the recursion flag, process the DML, and then decrement the recursion flag
@@ -190,6 +193,58 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
+    * @description Allocations trigger handler on Payment. Creates allocations as needed, by copying
+    * from Opportunity, Campaign or Recurring Donation, and creating a default if enabled. Also updates existing
+    * allocations if the payment amount or currency is changed.
+    * @param listNew The list of payments from trigger new. 
+    * @param listOld The list of payments from trigger old. 
+    * @param triggerAction Which action triggered the current context. (Before or After; Insert, Update, 
+    * Delete, or Undelete.)
+    * @param objResult The field describe object for Payment.
+    * @return dmlWrapper Objects that need to be inserted or updated after the processing of the trigger.
+    ********************************************************************************************************/
+    private void runPaymentTriggerHandler(List<SObject> newlist, List<SObject> oldlist, 
+        TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
+
+        Set<Id> oppRecordTypesToExclude = new Set<Id>();
+        Set<String> oppTypesToExclude = new Set<String>();
+
+        List<npe01__OppPayment__c> listPmtsForProcessing = new List<npe01__OppPayment__c>();
+        List<npe01__OppPayment__c> pmtsWithNullOldAmount = new List<npe01__OppPayment__c>();
+
+        for (integer i=0; i<newList.size(); i++) {
+            npe01__OppPayment__c pmt = (npe01__OppPayment__c) newlist[i];
+
+            //UPDATE case: if the payment amount changed, add to the list for processing
+            if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+                Decimal oldAmount = (Decimal) oldlist[i].get('npe01__Payment_Amount__c');
+
+                if (oldAmount == null && pmt.npe01__Payment_Amount__c != null) {
+                     pmtsWithNullOldAmount.add(pmt);
+
+                } else if (pmt.npe01__Payment_Amount__c != oldAmount) {
+                    listPmtsForProcessing.add(pmt);
+                }
+
+                //if currency has changed, reset allocation currencies
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    if (pmt.get('CurrencyIsoCode') != oldlist[i].get('CurrencyIsoCode')) {
+                        listPmtsForProcessing.add(pmt);
+                    }
+                }
+            }
+        }
+        
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate) {
+            List<npe01__OppPayment__c> pmts = new List<npe01__OppPayment__c>(listPmtsForProcessing);
+            pmts.addAll(pmtsWithNullOldAmount);
+            fillMapWrapper(pmts);
+
+            paymentAmountCurrencyChange(listPmtsForProcessing);
+        }
+    }
+
+    /*******************************************************************************************************
     * @description Allocations before trigger handler on GAU Allocation. Validates allocation data per 
     * object and per parent object to avoid badly created allocations, exceeding opportunity amount, 
     * exceeding 100%, negative amounts or percents, etc. 
@@ -205,13 +260,21 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
         
         list<Allocation__c> triggerList = (list<Allocation__c>) newList;
+        Boolean parentErrorDetected = false;
 
         for (integer i=0; i<triggerList.size(); i++) {  
             Allocation__c allo = triggerlist[i];
 
+            //throw error if payment allocations are disabled and Payment__c is not null
+            if (!settings.Payment_Allocations_Enabled__c && allo.Payment__c != null) {
+                allo.addError(Label.alloPaymentNotEnabled);
+                parentErrorDetected = true;
+            }
             //if we don't have a parent, or have more than one parent, exception thrown
-            if (parentError(allo))
+            if (parentError(allo)) {
                 allo.AddError(Label.alloSingleParent);
+                parentErrorDetected = true;
+            }
             //neither an amount nor a percent is defined
             if (allo.Amount__c == null && allo.Percent__c == null)
                 allo.addError(Label.alloAmountOrPercent);
@@ -228,6 +291,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 allo.addError(Label.alloModifyCurrency);
             }
 
+        }
+
+        if (parentErrorDetected) {
+            return;
         }
 
         fillMapWrapper(triggerList);
@@ -517,6 +584,78 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         }
     }
 
+    //Payment amount has changed or currency has changed. retrieve this payment's allocations, adjust amounts and currencies
+    //adjust percentage based allocations, adjust default allocations if enabled, 
+    //enforce that total allocations don't exceed the payment amount
+    /*******************************************************************************************************
+    * @description Updates a payment's allocations when amount or currency changes.
+    * @param listPmts A list of payments whose amount or currency has changed.
+    * @return void This method modifies class variables and doesn't return anything.
+    ********************************************************************************************************/
+    private void paymentAmountCurrencyChange(List<npe01__OppPayment__c> listPmts){
+        
+        for (npe01__OppPayment__c pmt : listPmts) {
+        
+            if (mapWrapper.containsKey(pmt.id)) {
+                alloWrapper pmtWrap = mapWrapper.get(pmt.id);
+
+                //null amount: delete all associated allocations
+                if (pmt.npe01__Payment_Amount__c == null) {
+                    dmlWrapper.objectsToDelete.addAll((list<sObject>)pmtWrap.listAllo);
+                    if (settings.Default_Allocations_Enabled__c && pmtWrap.defaultAllo!=null)
+                        dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
+                } else {
+
+                    for (Allocation__c allo : pmtWrap.listAllo) {
+                        //if the percentage changed, recalculate the amount
+                        if (allo.Percent__c!=null && allo.Percent__c>0 && allo.Amount__c != (pmtWrap.parentAmount * allo.Percent__c * .01).setScale(2)) {
+                            //remove the previous amount, recalculate the amount, and add it back
+                            pmtWrap.totalAmount -= allo.Amount__c;
+                            allo.Amount__c = (pmtWrap.parentAmount * allo.Percent__c * .01).setScale(2);
+                            pmtWrap.totalAmount += allo.Amount__c;
+                            
+                            if (UserInfo.isMultiCurrencyOrganization()) {
+                                allo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
+                            }
+                            dmlWrapper.objectsToUpdate.add(allo);
+                        //if just the currency changed, recalculate the currency
+                        } else if (UserInfo.isMultiCurrencyOrganization() && allo.get('CurrencyIsoCode') != pmt.get('CurrencyIsoCode')) {
+                            allo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
+                            dmlWrapper.objectsToUpdate.add(allo);
+                        }
+                    }
+                    //if the Default allocation handling is enabled, create/update/delete the default allocation to cover 100% of the opportunity
+                    if (settings.Default_Allocations_Enabled__c) {
+                        decimal remainder = pmtWrap.parentAmount - pmtWrap.totalAmount;
+                        if (remainder==0) {
+                            if (pmtWrap.defaultAllo!=null)
+                                dmlWrapper.objectsToDelete.add(pmtWrap.defaultAllo);
+                        } else if (remainder > 0) {
+                            if (pmtWrap.defaultAllo==null) {
+                                pmtWrap.defaultAllo = makeDefaultAllocation(pmt);
+                                pmtWrap.defaultAllo.Amount__c = remainder;
+                                dmlWrapper.objectsToInsert.add(pmtWrap.defaultAllo);
+                            } else if (pmtWrap.defaultAllo.Amount__c != remainder || (UserInfo.isMultiCurrencyOrganization() && pmtWrap.defaultAllo.get('CurrencyIsoCode') != pmt.get('CurrencyIsoCode'))) {
+                                pmtWrap.defaultAllo.Amount__c = remainder;
+                                if (UserInfo.isMultiCurrencyOrganization()) {
+                                    pmtWrap.defaultAllo.put('CurrencyIsoCode', pmt.get('CurrencyIsoCode'));
+                                }
+                                dmlWrapper.objectsToUpdate.add(pmtWrap.defaultAllo);
+                            }
+                        }
+                    }
+                    //if the payment amount has decreased, we run the risk of allocations exceeding the total payment amount
+                    if (pmtWrap.totalAmount > pmtWrap.parentAmount)
+                        //using addError here because we want to block opportunity update, display the error inline, and block the DML of updating all the related allocations
+                        pmt.npe01__Payment_Amount__c.addError(Label.alloExceedsPmtAmount);
+                }
+            //if we have no allocations for this payment, defaults are enabled, and the payment has an amount, make a default allocation
+            } else if (settings.Default_Allocations_Enabled__c && pmt.npe01__Payment_Amount__c != null) {
+                dmlWrapper.objectsToInsert.add(makeDefaultAllocation(pmt));
+            }
+        }
+    }
+
     /*******************************************************************************************************
     * @description Fills the mapWrapper variable based on a list of allocations from the trigger set. 
     * Updates current trigger set amounts to match percentages.
@@ -568,8 +707,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
         //fill wrapper with all allocations for this opportunity
         //getting payment and opportunity info here to avoid excess queries
-        for (Allocation__c allo : [SELECT Id, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c, Recurring_Donation__c, Campaign__c FROM Allocation__c 
-                WHERE (Opportunity__c IN :setParentId or Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId) 
+        for (Allocation__c allo : [SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c, Opportunity__c, Opportunity__r.Amount, Amount__c, Percent__c, General_Accounting_Unit__c, Recurring_Donation__c, Campaign__c FROM Allocation__c 
+                WHERE (Payment__c IN :setParentId OR Opportunity__c IN :setParentId OR Recurring_Donation__c IN :setParentId OR Campaign__c IN :setParentId) 
                 AND Id NOT IN :setExistingAlloId]) {
 
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
@@ -597,13 +736,16 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                 wrap.totalPercent += allo.Percent__c;
         }
 
-        set<id> setOppIds = new set<id>();
+        Set<Id> setOppIds = new Set<Id>();
+        Set<Id> setPmtIds = new Set<Id>();
 
-        //if we arrive here without a parent amount for an opportunity, we need another query for the parent info.
+        //if we arrive here without a parent amount for an opportunity/payment, we need another query for the parent info.
         for (Allocation__c allo : alloList) {
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
             if (wrap.parentAmount == null && allo.Opportunity__c!=null) 
                 setOppIds.add(allo.Opportunity__c);
+            if (wrap.parentAmount == null && allo.Payment__c!=null) 
+                setPmtIds.add(allo.Payment__c);            
         }
 
         //we have opportunities we need to query for a parent amount
@@ -613,6 +755,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             }
         }
 
+        //we have payments we need to query for a parent amount
+        if (!setPmtIds.isEmpty()) {
+            for (npe01__OppPayment__c pmt : [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id IN :setPmtIds]) {
+                mapWrapper.get(pmt.Id).parentAmount = pmt.npe01__Payment_Amount__c;
+            }
+        }
+        
         //verify the current trigger set has correct amounts based on the percentage chosen
         for (Allocation__c allo : alloList) {
             alloWrapper wrap = mapWrapper.get(getParentId(allo));
@@ -638,29 +787,31 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @param listOpps A list of GAU Allocations.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    public void fillMapWrapper (list<Opportunity> oppList) {
-        if (oppList == null || oppList.isEmpty()) {
+    public void fillMapWrapper (list<SObject> parentList) {
+        if (parentList == null || parentList.isEmpty()) {
             return;
         }
 
-        set<id> setParentId = new set<id>();
+        Set<Id> setParentId = new Set<Id>();
         //create set of Campaign IDs, Recurring Donation Ids, and Opp Ids for query
-        for (Opportunity opp : oppList) {
-            if (opp.CampaignId != null)
-                setParentId.add(opp.CampaignId);
-            if (opp.npe03__Recurring_Donation__c != null)
-                setParentId.add(opp.npe03__Recurring_Donation__c);
-            setParentId.add(opp.id);
+        for (SObject parent : parentList) {
+            if (parent instanceof Opportunity && parent.get('CampaignId') != null)
+                setParentId.add((Id)parent.get('CampaignId'));
+            if (parent instanceof Opportunity && parent.get('npe03__Recurring_Donation__c') != null)
+                setParentId.add((Id)parent.get('npe03__Recurring_Donation__c'));
+            if (parent instanceof npe01__OppPayment__c && parent.get('npe01__Opportunity__c') != null)
+                setParentId.add((Id)parent.get('npe01__Opportunity__c'));
+            setParentId.add(parent.id);
         }
             
-        string alloQueryString = 'SELECT Id, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' + 
+        string alloQueryString = 'SELECT Id, Payment__c, Payment__r.npe01__Payment_Amount__c, Opportunity__c, Opportunity__r.Amount, Campaign__c, Recurring_Donation__c, ' + 
             'Amount__c, Percent__c, General_Accounting_Unit__c, General_Accounting_Unit__r.Active__c';
         
         //query for multicurrency string if multicurrency org
         if (UserInfo.isMultiCurrencyOrganization()) {
             alloQueryString += ', CurrencyIsoCode';
         }
-        alloQueryString += ' FROM Allocation__c WHERE (Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
+        alloQueryString += ' FROM Allocation__c WHERE (Payment__c IN :setParentId OR Opportunity__c IN :setParentId OR Campaign__c IN :setParentId OR Recurring_Donation__c IN :setParentId)';
         //alloQueryString += ' AND General_Accounting_Unit__r.Active__c = TRUE';
 
         for (Allocation__c allo : database.query(alloQueryString)) {
@@ -674,6 +825,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             //add opportunity amount and allocation totals
             if (allo.Opportunity__c != null) {
                 wrap.parentAmount = allo.Opportunity__r.Amount;
+            }
+            
+            //add payment amount and allocation totals
+            if (allo.Payment__c != null) {
+                wrap.parentAmount = allo.Payment__r.npe01__Payment_Amount__c;
             }
             
             //save the default allocation.
@@ -703,6 +859,8 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @return id The id of this allocation's parent object.
     ********************************************************************************************************/
     public static id getParentId (Allocation__c allo) {
+        if (allo.Payment__c!=null) 
+            return allo.Payment__c;
         if (allo.Opportunity__c!=null) 
             return allo.Opportunity__c;
         if (allo.Recurring_Donation__c!=null)
@@ -719,6 +877,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     ********************************************************************************************************/
     public boolean parentError (Allocation__c allo) {
         integer cParts=0;
+
+        if (allo.Payment__c!=null) 
+            cParts++;
         if (allo.Opportunity__c!=null) 
             cParts++;
         if (allo.Recurring_Donation__c!=null)
@@ -736,14 +897,24 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @param opp An opportunity.
     * @return Allocation__c A default allocation for the amount of the opportunity.
     ********************************************************************************************************/
-    public static Allocation__c makeDefaultAllocation(Opportunity opp) {
-        Allocation__c defaultAllo = new Allocation__c(
-            Opportunity__c = opp.id,
-            Amount__c = opp.Amount,
+    public static Allocation__c makeDefaultAllocation(SObject parentSObj) {
+        
+        Allocation__c defaultAllo = new Allocation__c(           
             General_Accounting_Unit__c = idDefaultGAU
         );
+        
+        if (parentSObj instanceof npe01__OppPayment__c) {
+            defaultAllo.Payment__c = parentSObj.id;
+            defaultAllo.Amount__c = (Decimal)parentSObj.get('npe01__Payment_Amount__c');
+        }
+
+        if (parentSObj instanceof Opportunity) {
+            defaultAllo.Opportunity__c = parentSObj.id;
+            defaultAllo.Amount__c = (Decimal)parentSObj.get('Amount');
+        }
+        
         if (UserInfo.isMultiCurrencyOrganization()) {
-            defaultAllo.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+            defaultAllo.put('CurrencyIsoCode', parentSObj.get('CurrencyIsoCode'));
         }
 
         return defaultAllo;

@@ -117,6 +117,20 @@
         <type>Lookup</type>
     </fields>
     <fields>
+        <fullName>Payment__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <description>Attributes allocations to a payment. All settled payments will be rolled up to this allocation&apos;s general accounting unit.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>Attributes allocations to a payment. All settled payments will be rolled up to this allocation&apos;s general accounting unit.</inlineHelpText>
+        <label>Payment</label>
+        <referenceTo>npe01__OppPayment__c</referenceTo>
+        <relationshipLabel>GAU Allocations</relationshipLabel>
+        <relationshipName>Allocations</relationshipName>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Percent__c</fullName>
         <description>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</description>
         <externalId>false</externalId>

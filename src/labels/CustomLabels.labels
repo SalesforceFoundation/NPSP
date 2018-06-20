@@ -1674,6 +1674,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You need to update your allocations before you can reduce the amount of an opportunity. The allocations for this opportunity are currently greater than the opportunity amount.</value>
     </labels>
     <labels>
+        <fullName>alloExceedsPmtAmount</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>The allocations for this payment are greater than the amount of the payment</shortDescription>
+        <value>The allocations for this payment are currently greater than the payment amount. You need to update your allocations before you can reduce the amount of the payment.</value>
+    </labels>
+    <labels>
         <fullName>alloManageCampaignAllocations</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
@@ -1730,6 +1738,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentNotEnabled</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Payment level allocations are not enabled.</shortDescription>
+        <value>Payment level allocations are not enabled.</value>
+    </labels>
+    <labels>
         <fullName>alloPercentExceed100</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -1750,16 +1766,16 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
-        <value>Each allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
+        <shortDescription>Each Allocation must have a single parent object: Pmt, Opp, Rec Donation, Camp.</shortDescription>
+        <value>Each allocation must have a single parent object: Payment, Opportunity, Recurring Donation, or Campaign.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
-        <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
+        <shortDescription>Sum of allocations cannot exceed the amount of the related payment or opportunity.</shortDescription>
+        <value>Sum of allocations cannot exceed the amount of the related payment or opportunity.</value>
     </labels>
     <labels>
         <fullName>alloTotals</fullName>
