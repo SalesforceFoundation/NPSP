@@ -85,6 +85,8 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
+            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType) {
+                jobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
             }
 
             // Is skew mode needed?
@@ -126,7 +128,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
                 rollup.runRollups();
+            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType) {
+                RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
             }
+
         }
         return null;
     }
