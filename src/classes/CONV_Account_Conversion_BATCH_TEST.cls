@@ -50,11 +50,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
 
-        // Create a single new User
+        // Create one temp and one inactive User
         User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
         tempUser.IsActive = true;
+
         User inactiveUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
-        inactiveUser.IsActive = false;
+        inactiveUser.IsActive = true;
         insert new List<User>{tempUser, inactiveUser};
 
         //setup 1x1 model and test account creation
@@ -65,12 +66,22 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         for (Contact c : cons) {
             c.OwnerId = tempUser.Id;
         }
-        cons[0].OwnerId = inactiveUser.Id;  // set only the first one to be owned by an Inactive User
         insert cons;
-        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons AND Id != :cons[0].Id LIMIT 1];
+        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
         system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
 
         system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
+
+        c = [SELECT Id, npo02__Household__r.OwnerId FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        npo02__Household__c h = c.npo02__Household__r;
+        h.OwnerId = inactiveUser.Id;
+        update h;
+
+        // Set the Owner of the last household to inactive
+        System.runAs(tempUser) {
+            inactiveUser.IsActive = false;
+            update inactiveUser;
+        }
 
         String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
         List<npo02__Household__c> hhlist = [select id from npo02__Household__c where Name = :HHName];
@@ -104,11 +115,13 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
 
-        Contact inactiveOwnedContact = [SELECT Id, Owner.IsActive, AccountId, Account.OwnerId, Account.Owner.IsActive
-            FROM Contact WHERE Id = :cons[0].Id LIMIT 1];
-        system.assertEquals(false, inactiveOwnedContact.Owner.IsActive, 'Contact owner should still be inactive');
-        system.assertEquals(true, inactiveOwnedContact.Account.Owner.IsActive, 'Created household account owner should be active');
-        system.assertEquals(UserInfo.getUserId(), inactiveOwnedContact.Account.OwnerId, 'Created household account owner should be the current User');
+        // Validate that the one Contact whose Household record was owned by an inactive User
+        // is now owned by the same owner as the Contact.
+        Contact inactiveOwnedContact = [SELECT Id, OwnerId, Account.OwnerId, Owner.IsActive, npo02__Household__r.Owner.IsActive
+            FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        system.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
+        system.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
+        system.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
 
         //get the newly created Households
         List<Account> newHHAccounts = [SELECT Name, npo02__TotalOppAmount__c, Id FROM Account WHERE Id NOT IN :accounts];
@@ -132,10 +145,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
 
-        // One of the Contact owners was set to inactive, so only 149 of the original 150 will be owned by the TempUser
-        system.assertEquals(cons.size()-1, [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+        system.assertEquals(cons.size(), [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
             AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
-                'There should be 149 Accounts owned by the TempUser');
+                'There should be 150 Accounts owned by the TempUser');
     }
 
     /*******************************************************************************************************
@@ -481,6 +493,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         else
             system.assert(CAO_Constants.isBucketModel());
     }
+
     /*******************************************************************************************************
     * @description Sets up Household Account Model settings configurations
     */

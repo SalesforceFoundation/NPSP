@@ -224,6 +224,7 @@ global class CONV_Account_Conversion_BATCH implements Database.Batchable<SObject
                 if (!conGiving.containsKey(a.Id) || (conGiving.containsKey(a.Id) && c.npo02__TotalOppAmount__c > conGiving.get(a.Id))){
                     a.npe01__One2OneContact__c = c.Id;
                     if (c.Owner.IsActive == true) {
+                        // If the owner of the "Primary Contact" is active, set that as the owner of the Household Account
                         a.OwnerId = c.OwnerId;
                     }
                     conGiving.put(a.Id, c.npo02__TotalOppAmount__c);
