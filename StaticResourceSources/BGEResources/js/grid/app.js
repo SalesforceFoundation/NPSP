@@ -21,7 +21,7 @@
             this.TEXTAREA.className = 'handsontableInput';
             this.TEXTAREA.placeholder = 'MM/DD/YYYY';
 
-            // Replace textarea with password input
+            // Replace textarea with datepicker input
             Handsontable.dom.empty(this.TEXTAREA_PARENT);
             this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
         };
