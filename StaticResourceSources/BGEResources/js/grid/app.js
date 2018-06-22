@@ -10,6 +10,22 @@
 
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
+        var DateEditor = Handsontable.editors.DateEditor.prototype.extend();
+
+        DateEditor.prototype.createElements = function () {
+        // Call the original createElements method
+        Handsontable.editors.DateEditor.prototype.createElements.apply(this, arguments);
+
+            // Create datepicker input and update relevant properties
+            this.TEXTAREA.setAttribute('maxlength', '10');
+            this.TEXTAREA.className = 'handsontableInput';
+            this.TEXTAREA.placeholder = 'MM/DD/YYYY';
+
+            // Replace textarea with password input
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
         function onInitHandler(result, event) {
 
             console.log(result);
@@ -299,12 +315,12 @@
                         }
                         else if (changes[i][1] !== 'Id' && changes[i][1] !== 'Actions') {
 
-                            var col = this.propToCol(changes[i][1])
+                            var col = this.propToCol(changes[i][1]);
                             var cellType = this.getDataType(changes[i][0], hot.propToCol('Id'));
-
 
                             var cellRecord = {
                                 row: changes[i][0],
+                                col: col,
                                 field: changes[i][1],
                                 oldValue: changes[i][2],
                                 newValue: newValue,
@@ -375,7 +391,35 @@
 
                 function sanitizeDateFormat(value) {
 
-                    var result = value.replace(/-/g, '/');
+                    var regexOnlyNum = /^[0-9]*$/g;
+                    var result = value;
+
+                    if (!value.match(regexOnlyNum)) {
+
+                        result = result.replace(/-/g, '/');
+                        result = result.replace(/\./g, '/');
+                        result = result.replace(/ /g, '/');
+                        result = result.replace(/\\/g, '/');
+                    }
+                    else {
+                        var twoDigitMonths = ['10', '11', '12'];
+
+                        if (value.length == 8) {
+                            result = value.substring(0,2) + '/' + value.substring(2,4) + '/' + value.substring(4);
+                        }
+                        else if (value.length == 7 && twoDigitMonths.includes(value.substring(0,2))) {
+
+                            result = value.substring(0,2) + '/' + value.substring(2,3) + '/' + value.substring(3);
+                        }
+                        else if (value.length == 7 && !twoDigitMonths.includes(value.substring(0,2))) {
+
+                            result = value.substring(0,1) + '/' + value.substring(1,3) + '/' + value.substring(3);
+                        }
+                        else {
+                            result = value.substring(0,1) + '/' + value.substring(1,2) + '/' + value.substring(2);
+                        }
+
+                    }
 
                     return result;
                 }
@@ -385,8 +429,6 @@
                     if (result && result.length > 0) {
 
                         result.forEach(function(cellResponse) {
-
-                            // console.log(cellResponse);
 
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
@@ -435,7 +477,8 @@
 
                             if (cellResponse.sfdcid) {
                                 // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
-                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
+                                hot.setDataAtCell([[cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid],
+                                                   [cellResponse.row, cellResponse.col, cellResponse.newValue]], 'manual');
 
                                 if (cellResponse.sfdcid !== cellResponse.recordId) {
 
@@ -693,6 +736,7 @@
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
+                    col.editor = DateEditor;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
