@@ -492,7 +492,7 @@
 
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
-    
+
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
 
@@ -521,20 +521,26 @@
 
                         if (colIndex === 0) {
 
+                            var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
+
                             colIndex = 1;
 
-                            if(hot.getDataAtCell(rowIndex, 1)) {
+                            if(tooltipIconStyle.display === "none") {
+                                console.log('DISPLAY NONE');
+                                // tooltip icon is not being displayed, so skip the cell.
+                                colIndex = 2;
 
-                                colIndex = 1;
+                                hot.selectCell(rowIndex, 1);
                             }
                             else {
 
-                                colIndex = 2;
+                                hot.selectCell(rowIndex, 0);
                             }
+
                         }
-
-                        hot.selectCell(rowIndex, colIndex);
-
+                        console.log('COLUMN INDEX: ', colIndex);
+                    //    hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
 
@@ -644,8 +650,7 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
-        //    idCol.disableVisualSelection = true;
+            idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
             var errorCol = new Object();
