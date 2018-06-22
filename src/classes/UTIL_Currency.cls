@@ -33,7 +33,7 @@
 * @group Utilities
 * @description Utilities for working with currencies
 */
-public with sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
+public without sharing class UTIL_Currency implements UTIL_Currency.Interface_x {
 
     /**
      * @description public Interface to enable mocking of this class functionality for unit tests in orgs

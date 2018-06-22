@@ -13,6 +13,7 @@
         <div class="slds-section-title--divider">{!$Label.stgLabelAutoContactRoles}</div>
         <div class="slds-form--horizontal slds-m-around--large">
             <div class="slds-form-element">
+                <!-- Individual Default OCR -->
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Opportunity_Contact_Role_Default_role__c.Label}" for="slOCRDR" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputField value="{!stgService.stgCon.npe01__Opportunity_Contact_Role_Default_role__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
@@ -23,7 +24,24 @@
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOCRDefaultRole}" />
                     </apex:outputPanel>
                 </div>
+
+                <br /><br />
+
+                <!-- Organizational Default OCR -->
+                <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Contact_Role_for_Organizational_Opps__c.Label}" for="slOrgOCRDR" styleClass="slds-form-element__label" />
+                <div class="slds-form-element__control">
+                    <apex:outputField value="{!stgService.stgCon.Contact_Role_for_Organizational_Opps__c}" rendered="{!isReadOnlyMode}" styleClass="slds-form-element__static" />
+                    <apex:selectList value="{!stgService.stgCon.Contact_Role_for_Organizational_Opps__c}" multiselect="false" size="1" rendered="{!isEditMode}" id="slOrgOCRDR" html-aria-describedby="{!$Component.slOrgOCRDRHelp}" styleClass="slds-select" >
+                        <apex:selectOptions value="{!listSOContactRoles}"/>
+                    </apex:selectList>
+                    <apex:outputPanel id="slOrgOCRDRHelp" layout="block">
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpOrgOCRDefaultRole}" />
+                    </apex:outputPanel>
+                </div>
             </div>
+
+            <br />
+
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Always_Rollup_to_Primary_Contact__c.Label}" for="cbxARPC" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">

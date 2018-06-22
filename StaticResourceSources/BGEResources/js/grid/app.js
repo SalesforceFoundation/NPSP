@@ -458,12 +458,7 @@
                 $scope.lastSelectedColumn = col;
             }
 
-            if (col < 3) {
-                hot.selectCell(row, $scope.lastSelectedColumn);
-            }
-            else {
-                $scope.lastSelectedColumn = col;
-            }
+            $scope.lastSelectedColumn = col;
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
@@ -491,53 +486,81 @@
 
         function beforeKeyDownHandler(event) {
 
-            // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
-            if (event.keyCode === 13) {
-
-                event.stopImmediatePropagation();
+            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39) {
 
                 var selection = hot.getSelected();
+
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
+    
+                var numberOfColumns = hot.countCols();
+                var numberOfRows = hot.countRows();
+    
+                var lastColumn = numberOfColumns - 1;
+                var lastRow = numberOfRows - 1;
+    
+                var isFirstRow = (rowIndex === 0) ? true : false;
 
-                rowIndex ++;
 
-                hot.selectCell(rowIndex, colIndex);
-            }
-            if (event.keyCode === 9 || event.keyCode === 39) {
+                // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
+                if (event.keyCode === 13) {
 
-                // Tab or right arrow was pressed
-                movedSideWays = true;
+                    event.stopImmediatePropagation();
 
-                var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
-                var numerOfColumns = hot.countCols();
+                    rowIndex ++;
 
-                if (colIndex === 0) {
-
-                    colIndex = 1;
+                    hot.selectCell(rowIndex, colIndex);
                 }
+                if (event.keyCode === 9 || event.keyCode === 39) {
 
-                hot.selectCell(rowIndex, colIndex);
-            }
-            else if (event.keyCode === 37) {
+                    // Tab or right arrow was pressed
+                    console.log('Tab or right arrow was pressed');
+                    try {
 
-                // Left arrow was pressed
-                movedSideWays = true;
+                        if (colIndex === 0) {
 
-                var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
-                var numerOfColumns = hot.countCols();
+                            colIndex = 1;
+                        }
 
-                if (colIndex === 2) {
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
 
-                    colIndex = 1;
+                        console.log(err);
+                    }
                 }
+                else if (event.keyCode === 37) {
 
-                hot.selectCell(rowIndex, colIndex);
+                    // Left arrow was pressed
+                    console.log('Left arrow or shift + tab was pressed');
+                    try {
+
+                        console.log('COLUMN INDEX ', colIndex);
+                        if (colIndex === 1) {
+
+                            colIndex = lastColumn;
+
+                            if (isFirstRow) {
+
+                                rowIndex = lastRow;
+                            }
+                            else {
+
+                                row --;
+                            }
+                        }
+
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
+
+                        console.log(err);
+                    }
+
+                }
             }
+
+
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
@@ -643,11 +666,11 @@
                 var col = new Object();
                 col.data = templateField.apiName;
                 col.required = templateField.required;
-                col.title = templateField.label.toUpperCase();
+                col.title = getColumnTitle(templateField);
                 col.type = getCellDataType(templateField.type);
                 col.allowInvalid = true;
                 col.wordWrap = false;
-                col.colWidths = 200;
+                col.colWidths = 210;
 
                 col.className = "htLeft htMiddle slds-truncate";
 
@@ -675,7 +698,6 @@
 
                 }
                 if (templateField.type === "PICKLIST") {
-
                     col.strict = false;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
@@ -711,6 +733,18 @@
                 }
             }
             return -1;
+        }
+
+        function getColumnTitle(templateField) {
+
+            var result = templateField.label.toUpperCase();
+
+            if (result === 'RECORD TYPE ID') {
+
+                result = 'RECORD TYPE';
+            }
+
+            return result;
         }
 
         function addMessage(cell, errors) {
