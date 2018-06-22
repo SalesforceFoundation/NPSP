@@ -524,10 +524,8 @@
                             var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
                             var tooltipIconStyle = tooltipIcon.style;
 
-                            colIndex = 1;
-
                             if(tooltipIconStyle.display === "none") {
-                                console.log('DISPLAY NONE');
+
                                 // tooltip icon is not being displayed, so skip the cell.
                                 colIndex = 2;
 
@@ -539,8 +537,6 @@
                             }
 
                         }
-                        console.log('COLUMN INDEX: ', colIndex);
-                    //    hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
 
@@ -661,7 +657,6 @@
             errorCol.wordWrap = true;
             errorCol.manualColumnResize = false;
             errorCol.colWidths = 30;
-        //    errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -669,7 +664,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-        //    actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
