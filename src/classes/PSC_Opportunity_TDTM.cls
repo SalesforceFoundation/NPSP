@@ -36,7 +36,7 @@
 public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
 
     /*******************************************************************************************************
-    * @description Trigger Handler on Opportunity that handles updating PSC currency when opportunity 
+    * @description Trigger Handler on Opportunity that handles updating PSC and Account Soft Credit currency when opportunity
     * currency changes.
     * @param listNew the list of opportunity from trigger new. 
     * @param listOld the list of opportunity from trigger old. 
@@ -64,7 +64,7 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     * @description For any given list of opportunities, makes child PSCs match the opportunity's currency.
     * @param listNew The list of opportunities from trigger new. 
     * @param listOld The list of opportunities from trigger old. 
-    * @return list<Partial_Soft_Credit__c> Partial soft credits with modified currency that need updating via DML.
+    * @return list<sObject> Partial Soft Credits or Account Soft Credits with modified currency that need updating via DML.
     ********************************************************************************************************/
     public static list<sObject> updateSoftCreditCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist, SObjectType objType) {
         list<sObject> results = new list<sObject>();

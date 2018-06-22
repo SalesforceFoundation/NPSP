@@ -76,7 +76,7 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
                     CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
-                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit
+                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.RecurringDonations
             };
 

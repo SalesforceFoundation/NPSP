@@ -4592,7 +4592,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsCantChangeCurrency</shortDescription>
-        <value>You can&apos;t modify partial soft credit currencies directly. A partial soft credit&apos;s currency is updated when the parent opportunity&apos;s currency is modified.</value>
+        <value>You can&apos;t modify soft credit currencies directly. A soft credit&apos;s currency is updated when the parent opportunity&apos;s currency is modified.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsFull</fullName>

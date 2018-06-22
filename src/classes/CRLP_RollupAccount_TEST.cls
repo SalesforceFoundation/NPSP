@@ -344,9 +344,7 @@ private class CRLP_RollupAccount_TEST {
                     hardCreditAccId
             }));
 
-            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{
-                    softCreditAccId
-            }));
+            // no account soft credit rollups in queueable mode
 
         }
         Test.stopTest();
@@ -373,6 +371,9 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
 
         // Account Soft Credit rollup assert uses nonsense NPSP field not otherwise used in these tests
-        System.assertEquals(scAmount * ascCount, softCreditAcc.npo02__Best_Gift_Year_Total__c, 'The total of Account Soft Credits is incorrect.');
+        // Account Soft Credit rollups run in batch mode only
+        if (tt == TestType.TestBatch || tt == TestType.testSkewBatch) {
+            System.assertEquals(scAmount * ascCount, softCreditAcc.npo02__Best_Gift_Year_Total__c, 'The total of Account Soft Credits is incorrect.');
+        }
     }
 }

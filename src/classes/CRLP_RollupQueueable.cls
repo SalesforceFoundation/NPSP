@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2018, Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -92,31 +89,20 @@ public class CRLP_RollupQueueable implements System.Queueable {
      */
     public static void runRollupsForIds(List<Id> summaryRecordIds) {
         SObjectType objType = summaryRecordIds[0].getSobjectType();
-        List<CRLP_RollupProcessingOptions.RollupType> jobTypesToRun = new List<CRLP_RollupProcessingOptions.RollupType>();
 
         CRLP_RollupProcessingOptions.ProcessingOptions options = new CRLP_RollupProcessingOptions.ProcessingOptions();
         options.mode = CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode;
         options.parentObjType = objType;
         options.detailObjType = Opportunity.SObjectType;
         if (objType == Account.SObjectType) {
-            jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit);
-            if (CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(objType)){
-                jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit);
-            }
-            if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(objType)) {
-                jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit);
-            }
-            //options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
+            options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.AccountHardCredit;
         } else if (objType == Contact.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
-            jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit);
-            if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(objType)) {
-                jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit);
-            }
-            //options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
         } else if (objType == npe03__Recurring_Donation__c.SObjectType) {
             options.parentKeyField = SObjectType.Opportunity.fields.npe03__Recurring_Donation__c.getName();
-            jobTypesToRun.add(CRLP_RollupProcessingOptions.RollupType.RecurringDonations);
+            options.rollupJobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
         }
 
         // Query the parent records
@@ -151,43 +137,31 @@ public class CRLP_RollupQueueable implements System.Queueable {
 
         // Are there actually summary records to process?
         if (!summaryRecords.isEmpty()) {
+            // Get the detail records for the current set of Summary Records
+            List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
 
-            for (CRLP_RollupProcessingOptions.RollupType jobType : jobTypesToRun) {
-                options.rollupJobType = jobType;
-                if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                    options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
-                } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    options.parentKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
-                }
+            Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
+            if (includeChildPayments && (objType == Account.SObjectType || objType == Contact.SObjectType)) {
+                paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
+            }
 
-                // Get the detail records for the current set of Summary Records
-                List<SObject> detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, includeChildPayments, options);
+            // Call the method to do the actual rollups. This returns only records that require updating
+            List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
 
-                Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-                if (options.rollupJobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit &&
-                        includeChildPayments &&
-                        (objType == Account.SObjectType || objType == Contact.SObjectType)) {
-                    paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
-                }
+            // DML and capture any returned DML errors into a Map by Summary Record Id
+            CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);
 
-                // Call the method to do the actual rollups. This returns only records that require updating
-                List<SObject> updatedRecords = CRLP_RollupProcessor_SVC.startRollupProcess(summaryRecords, detailRecords, paymentsByOpp, options);
-
-                // DML and capture any returned DML errors into a Map by Summary Record Id
-                CRLP_RollupProcessor_SVC.updateChangedRecordsWithLogging(updatedRecords, options.rollupJobType);
-
-                // In debug mode, write a summary of the job to the error log
-                if (CRLP_Debug_UTIL.isDebuggingEnabled) {
-                    Error__c logEntry = new Error__c(
-                            Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + options.rollupJobType.name() + ' ' + options.mode.name(),
-                            Error_Type__c = 'DEBUG LOG',
-                            Full_Message__c = ('CRLP_RollupQueueable\n' +
-                                    'detailRecords Count: ' + detailRecords.size() + '\n' +
-                                    'updatedRecords Count: ' + (updatedRecords != null ? updatedRecords.size() : 0) + '\n' +
-                                    'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
-                    );
-                    insert logEntry;
-                }
+            // In debug mode, write a summary of the job to the error log
+            if (CRLP_Debug_UTIL.isDebuggingEnabled) {
+                Error__c logEntry = new Error__c(
+                        Context_Type__c = ERR_Handler_API.Context.CRLP.name() + ': ' + options.rollupJobType.name() + ' ' + options.mode.name(),
+                        Error_Type__c = 'DEBUG LOG',
+                        Full_Message__c = ('CRLP_RollupQueueable\n' +
+                                'detailRecords Count: ' + detailRecords.size() + '\n' +
+                                'updatedRecords Count: ' + (updatedRecords != null ? updatedRecords.size() : 0) + '\n' +
+                                'Rollups State:\n' + CRLP_Debug_UTIL.getCurrentRollupState()).left(32768)
+                );
+                insert logEntry;
             }
         }
     }
