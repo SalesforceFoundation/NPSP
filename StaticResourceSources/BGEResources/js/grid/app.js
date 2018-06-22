@@ -501,7 +501,7 @@
 
                 var isFirstRow = (rowIndex === 0) ? true : false;
 
-                var shifKeyIsPressed = event.shiftKey;
+                var shiftKeyIsPressed = event.shiftKey;
 
 
                 // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
@@ -513,7 +513,7 @@
 
                     hot.selectCell(rowIndex, colIndex);
                 }
-                if (!shifKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
+                if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
                     // Tab or right arrow was pressed
 
@@ -543,7 +543,7 @@
                         console.log(err);
                     }
                 }
-                else if (event.keyCode === 37 || (shifKeyIsPressed && event.keyCode === 9) ) {
+                else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
 
                     // Left arrow or shift + tab was pressed
 
