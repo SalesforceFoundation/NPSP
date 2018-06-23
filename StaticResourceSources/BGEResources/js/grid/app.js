@@ -76,6 +76,7 @@
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
                 contextMenu: ['remove_row'],
+                manualColumnResize: true,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -87,7 +88,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                beforeColumnResize: beforeColumnResizeHandler
             });
 
             $scope.$apply();
@@ -583,6 +585,14 @@
             }
         }
 
+        function beforeColumnResizeHandler(currentColumn, newSize, isDoubleClick) {
+
+            if(currentColumn === 0 || currentColumn === 1 || currentColumn === 2) {
+
+                return false;
+            }
+        }
+
         /// Auxiliary Methods
 
         function getCellDataType(sfdcDatatype) {
@@ -633,7 +643,6 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
             idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
@@ -643,7 +652,6 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.manualColumnResize = false;
             errorCol.colWidths = 30;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
@@ -654,7 +662,6 @@
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
-            actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
