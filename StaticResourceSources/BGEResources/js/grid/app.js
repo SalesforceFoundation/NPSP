@@ -587,7 +587,7 @@
 
         function beforeColumnResizeHandler(currentColumn, newSize, isDoubleClick) {
 
-            if(currentColumn === 0 || currentColumn === 1 || currentColumn === 2) {
+            if(currentColumn < 3) {
 
                 return false;
             }
