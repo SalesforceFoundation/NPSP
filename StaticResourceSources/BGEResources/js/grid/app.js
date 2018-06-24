@@ -672,7 +672,7 @@
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
-                    col.colWidths = 120;
+                    col.colWidths = 170;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -695,9 +695,32 @@
                 else if (templateField.type === "EMAIL") {
 
                 }
+                else if (templateField.type === "BOOLEAN") {
+
+                    col.type = "checkbox";
+                    col.colWidths = 50;
+                }
+                else if (templateField.type === 'PHONE') {
+
+                    col.colWidths = 50;
+                }
+                else if (templateField.type === 'PERCENT') {
+                    col.type = "numeric";
+                    col.format = '0.000%';
+                    col.colWidths = 60;
+                }
+                else if (templateField.type === 'GEOLOCATION') {
+                    col.type = "text";
+                    col.colWidths = 170;
+                }
+                else if (templateField.type === 'TIME') {
+                    col.type = 'time';
+                    col.timeFormat= 'h:mm:ss a';
+                    col.correctFormat= true;
+                    col.colWidths = 80;
+                }
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-                    col.colWidths = 150;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
