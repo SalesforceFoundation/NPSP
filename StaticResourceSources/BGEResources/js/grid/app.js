@@ -527,8 +527,6 @@
                             if(tooltipIconStyle.display === "none") {
 
                                 // tooltip icon is not being displayed, so skip the cell.
-                                colIndex = 2;
-
                                 hot.selectCell(rowIndex, 1);
                             }
                             else {
@@ -549,17 +547,39 @@
 
                     try {
 
-                        if (colIndex === 1) {
+                        var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                        var tooltipIconStyle = tooltipIcon.style;
 
-                            colIndex = lastColumn;
+                        if(tooltipIconStyle.display === "none") {
+                            console.log('COLUMN INDEX: ', colIndex);
+                            if (colIndex === 3) {
 
-                            if (isFirstRow) {
+                                colIndex = lastColumn;
 
-                                rowIndex = lastRow;
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
                             }
-                            else {
+                        }
+                        else {
 
-                                row --;
+                            if (colIndex === 2) {
+
+                                colIndex = lastColumn;
+
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
                             }
                         }
 
