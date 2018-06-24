@@ -89,7 +89,7 @@
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler,
-                beforeColumnResize: beforeColumnResizeHandler
+                modifyColWidthHandler: modifyColWidthHandler
             });
 
             $scope.$apply();
@@ -221,6 +221,26 @@
 
             // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 30;
+            }
+            else if (col === 2) {
+
+                return 80;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -582,14 +602,6 @@
                         this.setDataAtCell(row, col, value);
                     }
                 }
-            }
-        }
-
-        function beforeColumnResizeHandler(currentColumn, newSize, isDoubleClick) {
-
-            if(currentColumn < 3) {
-
-                return false;
             }
         }
 
