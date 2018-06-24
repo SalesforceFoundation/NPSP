@@ -89,7 +89,7 @@
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler,
-                modifyColWidthHandler: modifyColWidthHandler
+                modifyColWidth: modifyColWidthHandler
             });
 
             $scope.$apply();
