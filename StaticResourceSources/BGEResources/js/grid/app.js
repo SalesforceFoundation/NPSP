@@ -528,6 +528,15 @@
 
                                 // tooltip icon is not being displayed, so skip the cell.
                                 hot.selectCell(rowIndex, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
                             }
                             else {
 
