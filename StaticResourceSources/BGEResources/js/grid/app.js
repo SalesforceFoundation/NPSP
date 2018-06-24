@@ -64,7 +64,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -224,7 +223,7 @@
         }
 
         function modifyColWidthHandler(width, col) {
-
+            console.log('COLUMN ', col);
             if(col === 0){
 
                 return 5;
