@@ -61,7 +61,9 @@ public class CRLP_GAU_BATCH extends CRLP_Batch_Base_Skew implements Database.Bat
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
-                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.GAU,
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode);
+        }
     }
 }

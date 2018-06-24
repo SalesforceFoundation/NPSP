@@ -109,13 +109,13 @@ public with sharing class CON_ContactMergeTDTM_TEST {
         system.assertEquals(2, listCon[0].npo02__NumberOfClosedOpps__c);          
 
         // verify Soft Credits recalculated
-        system.assertEquals(2, [select count() from OpportunityContactRole where ContactId = :listCon[0].Id]);        
-        system.assertEquals(2, [select count() from OpportunityContactRole where isPrimary = true]);        
-        system.assertEquals(2, [select count() from OpportunityContactRole]);  
+        system.assertEquals(2, [select count() from OpportunityContactRole where ContactId = :listCon[0].Id]);
+        system.assertEquals(2, [select count() from OpportunityContactRole where isPrimary = true]);
+        system.assertEquals(2, [select count() from OpportunityContactRole]);
         
         // verify no duplicate Affiliations and one primary Affiliation
-        system.assertEquals(1, [select count() from npe5__Affiliation__c where npe5__Primary__c = true]);              
-        system.assertEquals(1, [select count() from npe5__Affiliation__c]);              
+        system.assertEquals(1, [select count() from npe5__Affiliation__c where npe5__Primary__c = true]);
+        system.assertEquals(1, [select count() from npe5__Affiliation__c]);
     }
 
     /*******************************************************************************************************
