@@ -223,7 +223,7 @@
         }
 
         function modifyColWidthHandler(width, col) {
-            console.log('COLUMN ', col);
+
             if(col === 0){
 
                 return 5;
