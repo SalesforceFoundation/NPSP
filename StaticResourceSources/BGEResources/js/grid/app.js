@@ -12,8 +12,6 @@
 
         function onInitHandler(result, event) {
 
-            console.log(result);
-
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
@@ -87,7 +85,9 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                afterBeginEditing: afterBeginEditingHandler,
+                afterOnCellMouseDown : afterOnCellMouseDownHandler
             });
 
             $scope.$apply();
@@ -193,7 +193,6 @@
         }
 
         function afterInitHandler() {
-
             // console.warn('HOT - afterInitHandler');
 
             $scope.isTableLoaded = true;
@@ -259,8 +258,6 @@
         }
 
         function afterChangeHandler(changes, source) {
-
-            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
@@ -486,81 +483,85 @@
 
         function beforeKeyDownHandler(event) {
 
-            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39) {
+            var selection = hot.getSelected();
+            var rowIndex = selection[0];
+            var colIndex = selection[1];
 
-                var selection = hot.getSelected();
+            var selectedColType = hot.getDataType(rowIndex, colIndex);
 
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
-    
+            if (selectedColType == "dropdown" || selectedColType == "date") {
+                afterBeginEditingHandler(rowIndex, colIndex);
+            }
+            else if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39 || event.keyCode === 38 || event.keyCode === 40) {
+
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
-    
+
                 var lastColumn = numberOfColumns - 1;
                 var lastRow = numberOfRows - 1;
-    
+
                 var isFirstRow = (rowIndex === 0) ? true : false;
 
-
-                // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
-                if (event.keyCode === 13) {
-
-                    event.stopImmediatePropagation();
-
-                    rowIndex ++;
-
-                    hot.selectCell(rowIndex, colIndex);
-                }
                 if (event.keyCode === 9 || event.keyCode === 39) {
-
                     // Tab or right arrow was pressed
-                    console.log('Tab or right arrow was pressed');
+                    //console.log('Tab or right arrow was pressed');
                     try {
-
                         if (colIndex === 0) {
-
                             colIndex = 1;
                         }
-
                         hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
-
                         console.log(err);
                     }
                 }
                 else if (event.keyCode === 37) {
-
                     // Left arrow was pressed
-                    console.log('Left arrow or shift + tab was pressed');
+                    // console.log('Left arrow or shift + tab was pressed');
                     try {
-
-                        console.log('COLUMN INDEX ', colIndex);
+                        // console.log('COLUMN INDEX ', colIndex);
                         if (colIndex === 1) {
-
                             colIndex = lastColumn;
-
                             if (isFirstRow) {
-
                                 rowIndex = lastRow;
                             }
                             else {
-
                                 row --;
                             }
                         }
-
                         hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
-
                         console.log(err);
                     }
-
+                }
+                else if (event.keyCode === 38) {
+                    //Up arrow pressed
+                    try {
+                        // console.log('COLUMN INDEX ', colIndex);
+                        if (colIndex === 1) {
+                            colIndex = lastColumn;
+                            if (isFirstRow) {
+                                rowIndex = lastRow;
+                            }
+                            else {
+                                row --;
+                            }
+                        }
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                 }
             }
+            else if (event.keyCode === 13) {
+                event.stopImmediatePropagation();
 
+                rowIndex ++;
 
+                hot.selectCell(rowIndex, colIndex);
+            }
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
@@ -580,6 +581,31 @@
                         this.setDataAtCell(row, col, value);
                     }
                 }
+            }
+        }
+
+        function afterBeginEditingHandler(row, col) {
+
+            var colType = hot.getDataType(row, col);
+            var editor =  hot.getActiveEditor();
+
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
+        }
+
+        function afterOnCellMouseDownHandler(event, coords, td) {
+            var now = new Date().getTime();
+            // check if dbl-clicked within 1/5th of a second. change 200 (milliseconds) to other value if you want
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return; // no double-click detected
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
             }
         }
 
@@ -678,7 +704,6 @@
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
-                    col.datePickerConfig = { 'yearRange': [1000, 3000] }
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -700,12 +725,11 @@
                 }
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                         // In this case, the ENTER key is ignored and the editor field remains open.
                         col.source = Object.keys(templateField.picklistValues);
 
                         if (templateField.isRecordType) {
@@ -897,6 +921,11 @@
             return td;
         }
 
+        function dateFiledCellRenderer(instance, td, row, col, prop, value, cellProperties) {
+            //debugger;
+            console.log('date field renderer');
+        }
+
         // Validation Errors
 
         function emailValidator(value, callback) {
@@ -909,6 +938,8 @@
             }, 1000);
         };
 
+
+        //ACTION picklist
         function getLightningPicklist() {
 
             var divControl = document.createElement('div');
@@ -951,7 +982,6 @@
 
             return liElement;
         }
-
     });
 
 })();
