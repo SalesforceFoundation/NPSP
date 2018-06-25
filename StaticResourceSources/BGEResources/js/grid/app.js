@@ -76,6 +76,7 @@
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
                 contextMenu: ['remove_row'],
+                renderAllRows: true,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -518,7 +519,8 @@
                     // Tab or right arrow was pressed
 
                     try {
-
+                        console.log('ROW INDEX ',rowIndex);
+                        console.log('COLUMN INDEX ',colIndex);
                         if (colIndex === 0) {
 
                             var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
@@ -541,6 +543,30 @@
                             else {
 
                                 hot.selectCell(rowIndex, 0);
+                            }
+                        }
+                        else if (rowIndex === lastRow && colIndex === lastColumn) {
+
+                            var tooltipIcon = hot.getCell(0, 0).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if(!tooltipIconStyle || tooltipIconStyle.display === "none") {
+
+                                // tooltip icon is not being displayed, so skip the cell.
+                                hot.selectCell(0, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
+                            }
+                            else {
+
+                                hot.selectCell(0, 0);
                             }
 
                         }
