@@ -20,6 +20,8 @@
 
         action.setCallback(this, function (response) {
             var state = response.getState();
+            var labels = cmp.get("v.labels");
+
             if (state === "SUCCESS") {
                 var data = helper.restructureResponse(response.getReturnValue());
                 var model = JSON.parse(data);
@@ -29,8 +31,6 @@
                     cmp.set("v.cachedFilterGroup", helper.restructureResponse(model.filterGroup));
                 }
                 cmp.set("v.operatorMap", model.operators);
-
-                var labels = cmp.get("v.labels");
 
                 var actions = [{label: labels.edit, name: 'edit'}
                     , {label: labels.delete, name: 'delete'}
@@ -68,14 +68,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                var msg = labels.unknownError;
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
                 }
+                helper.showToast(cmp, 'error', labels.filtersDisplayError, msg);
             }
             helper.toggleSpinner(cmp, false);
         });
@@ -99,10 +96,9 @@
             cmp.set("v.mode", 'view');
         } else {
             helper.resetActiveFilterRule(cmp);
-            cmp.set("v.filterRuleMode", "");
-            cmp.set("v.filterRuleError", "");
         }
         helper.toggleFilterRuleModal(cmp);
+        cmp.set("v.filterRuleMode", "");
     },
 
     /**
@@ -119,9 +115,10 @@
         var cleanRow = helper.restructureResponse(row);
         cmp.set("v.activeFilterRule", cleanRow);
 
-        if(action.name !== 'delete'){
+        if (action.name !== 'delete') {
             //handle modal popup
             cmp.set("v.filterRuleMode", 'edit');
+            cmp.set("v.previousOperator", cleanRow.operationName);
             helper.toggleFilterRuleModal(cmp);
             helper.resetFilterRuleFields(cmp, cleanRow.objectName);
             helper.resetFilterRuleOperators(cmp, cleanRow.fieldName);
@@ -181,6 +178,7 @@
         helper.resetFilterRuleOperators(cmp, field);
         cmp.set("v.activeFilterRule.operationName", "");
         cmp.set("v.activeFilterRule.value", "");
+        cmp.set("v.isValueRequired", true);
     },
 
     /**
@@ -188,14 +186,22 @@
      */
     onChangeFilterRuleOperator: function(cmp, event, helper){
         var operator = event.getSource().get("v.value");
-        helper.rerenderValue(cmp, operator, "");
+        var previousOperator = cmp.get("v.previousOperator");
+        var isCompatibleOperation = helper.isCompatibleOperation(operator, previousOperator);
+        if(isCompatibleOperation) {
+            helper.rerenderValue(cmp, operator, cmp.get("v.activeFilterRule.value"));
+        } else {
+            cmp.set("v.activeFilterRule.value", "");
+            helper.rerenderValue(cmp, operator, "");
+        }
+        cmp.set("v.previousOperator", operator);
     },
 
     /**
      * @description: saves a new filter group and associated filter rules
      */
     onSaveFilterGroupAndRules: function(cmp, event, helper){
-        if(cmp.get("v.mode") == 'delete') {
+        if (cmp.get("v.mode") === 'delete') {
             cmp.set("v.activeFilterGroup.isDeleted", true);
             helper.toggleFilterRuleModal(cmp);
         }
@@ -221,12 +227,16 @@
      * Only flags the row record for saving
      */
     onQueueFilterRuleSave: function(cmp, event, helper){
-        //set field labels first
         var filterRule = cmp.get("v.activeFilterRule");
         var filterRuleList = cmp.get("v.filterRuleList");
         var mode = cmp.get("v.filterRuleMode");
 
         if (mode !== 'delete') {
+            //explicit null setting to match saved values
+            if (filterRule.value === '') {
+                filterRule.value = null;
+            }
+
             var canSave = helper.validateFilterRuleFields(cmp, filterRule, filterRuleList);
 
             if (canSave) {
@@ -253,8 +263,10 @@
                 }
                 cmp.set("v.filterRuleList", filterRuleList);
 
+                //only closes if there are no errors
                 helper.toggleFilterRuleModal(cmp);
                 helper.resetActiveFilterRule(cmp);
+                cmp.set("v.filterRuleMode", "");
             }
         } else {
             if (filterRule.recordId) {
@@ -266,6 +278,7 @@
             cmp.set("v.filterRuleList", filterRuleList);
             helper.toggleFilterRuleModal(cmp);
             helper.resetActiveFilterRule(cmp);
+            cmp.set("v.filterRuleMode", "");
         }
     },
 

@@ -446,7 +446,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         insert listCon;
         
         // refresh our contacts to get their accounts
-        listCon = [select Name, FirstName, LastName, AccountId from Contact order by FirstName];
+        listCon = [select Name, FirstName, LastName, AccountId from Contact order by Id];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);        
         
@@ -474,7 +474,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         test.stopTest();    // to flush any future calls.
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
-            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account order by Name];
+            npe01__One2OneContact__c, npo02__Formal_Greeting__c, npo02__Informal_Greeting__c, Number_of_Household_Members__c from Account order by Id];
         system.assertEquals(3, listAcc.size());
         
         for (Account acc : listAcc) {
@@ -616,7 +616,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         insert listCon;
         
         // refresh our contacts to get their accounts
-        listCon = [select Name, FirstName, LastName, AccountId from Contact order by Name];
+        listCon = [select Name, FirstName, LastName, AccountId from Contact order by Id];
         system.assertEquals(5, listCon.size());
         system.assertNotEquals(null, listCon[0].AccountId);        
         
@@ -634,7 +634,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         
         Test.startTest();      
         delete listConDel;
-        list<Contact> listCon2 = [select Id, Name from Contact order by Name];
+        list<Contact> listCon2 = [select Id, Name from Contact order by Id];
         system.assertEquals(1, listCon2.size());
         list<Account> listAcc2 = [select Id, Name from Account where id = :listAcc[0].Id];
         system.assertEquals(1, listAcc2.size());
@@ -648,7 +648,7 @@ private with sharing class ACCT_HHAccounts_TEST {
         undelete listCon[1];
         test.stopTest();    // to flush any future calls.
        
-        listCon = [select Id, FirstName, LastName, AccountId from Contact order by Name];
+        listCon = [select Id, FirstName, LastName, AccountId from Contact order by Id];
         system.assertEquals(2, listCon.size());
         
         listAcc = [select Name, npe01__SYSTEM_AccountType__c, npo02__SYSTEM_CUSTOM_NAMING__c, npe01__SYSTEMIsIndividual__c, 
