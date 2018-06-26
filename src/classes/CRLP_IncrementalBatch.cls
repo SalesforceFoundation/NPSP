@@ -142,7 +142,7 @@ public class CRLP_IncrementalBatch {
         * @return String.
         ********************************************************************************************************/
         public override String getWereClause() {
-            if (super.isEnabled() == false && super.customizableRollupSettings.Account_Hard_Credit_Last_Batch__c == null) {
+            if (super.isEnabled() == false || super.customizableRollupSettings.Account_Hard_Credit_Last_Batch__c == null) {
                 return '';
             }
 
@@ -162,6 +162,9 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
+            if (super.isEnabled() == false) {
+                return;
+            }
             super.customizableRollupSettings.Account_Hard_Credit_Last_Batch__c = Date.today();
             upsert super.customizableRollupSettings;
         }
@@ -177,7 +180,7 @@ public class CRLP_IncrementalBatch {
         * @return String.
         ********************************************************************************************************/
         public override String getWereClause() {
-            if (super.isEnabled() == false && super.customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c == null) {
+            if (super.isEnabled() == false || super.customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c == null) {
                 return '';
             }
 
@@ -197,6 +200,9 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
+            if (super.isEnabled() == false) {
+                return;
+            }
             super.customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c = Date.today();
             upsert super.customizableRollupSettings;
         }
@@ -212,7 +218,7 @@ public class CRLP_IncrementalBatch {
         * @return String.
         ********************************************************************************************************/
         public override String getWereClause() {
-            if (super.isEnabled() == false && super.customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c == null) {
+            if (super.isEnabled() == false || super.customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c == null) {
                 return '';
             }
 
@@ -234,6 +240,9 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
+            if (super.isEnabled() == false) {
+                return;
+            }
             super.customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c = Date.today();
             upsert super.customizableRollupSettings;
         }
@@ -249,7 +258,7 @@ public class CRLP_IncrementalBatch {
         * @return String.
         ********************************************************************************************************/
         public override String getWereClause() {
-            if (super.isEnabled() == false && super.customizableRollupSettings.Recurring_Donations_Last_Batch__c == null) {
+            if (super.isEnabled() == false || super.customizableRollupSettings.Recurring_Donations_Last_Batch__c == null) {
                 return '';
             }
 
@@ -266,6 +275,9 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
+            if (super.isEnabled() == false) {
+                return;
+            }
             super.customizableRollupSettings.Recurring_Donations_Last_Batch__c = Date.today();
             upsert super.customizableRollupSettings;
         }
