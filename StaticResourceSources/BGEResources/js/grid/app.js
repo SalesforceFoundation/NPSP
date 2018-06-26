@@ -534,11 +534,6 @@
 
                 var shiftKeyIsPressed = event.shiftKey;
 
-
-                var isFirstRow = (rowIndex === 0) ? true : false;
-
-                    hot.selectCell(rowIndex, colIndex);
-                }
                 if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
                     // Tab or right arrow was pressed
