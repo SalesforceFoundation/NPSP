@@ -518,7 +518,8 @@
                     cancelActiveEditor(editor);
                 }
             }
-            else if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
+
+            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
 
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
