@@ -76,6 +76,7 @@
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
                 contextMenu: ['remove_row'],
+                renderAllRows: true,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -492,14 +493,16 @@
 
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
-    
+
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
-    
+
                 var lastColumn = numberOfColumns - 1;
                 var lastRow = numberOfRows - 1;
-    
+
                 var isFirstRow = (rowIndex === 0) ? true : false;
+
+                var shiftKeyIsPressed = event.shiftKey;
 
 
                 // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
@@ -511,42 +514,107 @@
 
                     hot.selectCell(rowIndex, colIndex);
                 }
-                if (event.keyCode === 9 || event.keyCode === 39) {
+                if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
                     // Tab or right arrow was pressed
-                    console.log('Tab or right arrow was pressed');
-                    try {
 
+                    try {
+                        console.log('ROW INDEX ',rowIndex);
+                        console.log('COLUMN INDEX ',colIndex);
                         if (colIndex === 0) {
 
-                            colIndex = 1;
-                        }
+                            var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
 
-                        hot.selectCell(rowIndex, colIndex);
+                            if(tooltipIconStyle.display === "none") {
+
+                                // tooltip icon is not being displayed, so skip the cell.
+                                hot.selectCell(rowIndex, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
+                            }
+                            else {
+
+                                hot.selectCell(rowIndex, 0);
+                            }
+                        }
+                        else if (rowIndex === lastRow && colIndex === lastColumn) {
+
+                            var tooltipIcon = hot.getCell(0, 0).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if(!tooltipIconStyle || tooltipIconStyle.display === "none") {
+
+                                // tooltip icon is not being displayed, so skip the cell.
+                                hot.selectCell(0, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
+                            }
+                            else {
+
+                                hot.selectCell(0, 0);
+                            }
+
+                        }
                     }
                     catch(err) {
 
                         console.log(err);
                     }
                 }
-                else if (event.keyCode === 37) {
+                else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
 
-                    // Left arrow was pressed
-                    console.log('Left arrow or shift + tab was pressed');
+                    // Left arrow or shift + tab was pressed
+
                     try {
 
-                        console.log('COLUMN INDEX ', colIndex);
-                        if (colIndex === 1) {
+                        var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                        var tooltipIconStyle = tooltipIcon.style;
 
-                            colIndex = lastColumn;
+                        if(tooltipIconStyle.display === "none") {
+                            console.log('COLUMN INDEX: ', colIndex);
+                            if (colIndex === 3) {
 
-                            if (isFirstRow) {
+                                colIndex = lastColumn;
 
-                                rowIndex = lastRow;
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
                             }
-                            else {
+                        }
+                        else {
 
-                                row --;
+                            if (colIndex === 2) {
+
+                                colIndex = lastColumn;
+
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
                             }
                         }
 
@@ -633,7 +701,6 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
             idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
@@ -645,7 +712,6 @@
             errorCol.wordWrap = true;
             errorCol.manualColumnResize = false;
             errorCol.colWidths = 30;
-            errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -653,7 +719,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
