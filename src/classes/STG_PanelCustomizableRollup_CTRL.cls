@@ -81,11 +81,6 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
     public String jobId { get; private set; }
 
     /*******************************************************************************************************
-    * @description the existing value of the CRLP enablement setting, cached upon entering edit mode
-    */
-    private Boolean isCRLPenabledPrevious;
-
-    /*******************************************************************************************************
     * @description Overridden Action Method to put the current page into Edit mode and cache the existing setting
     * @return null
     */

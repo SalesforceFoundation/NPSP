@@ -6,22 +6,7 @@
     <div class="slds-scope">
         <apex:form id="form" styleClass="slds-m-around--x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
-            <div class="slds-grid {!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                    <p class="slds-text-body--small slds-m-top--x-small">
-                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
-                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
-                    </p>
-                </div>
-            </div>
-            <div class="slds-grid {!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                    <p class="slds-text-body--small slds-m-top--x-small">
-                        <apex:outputText escape="false" value="You can find the Customizable Rollups documentation here. <br/> <br/>
-                        Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings."/>
-                    </p>
-                </div>
-            </div>
+
             <c:UTIL_PageMessages allowClose="false" id="messages"/>
 
             <apex:outputPanel rendered="{! !isHHAccount }">
@@ -72,8 +57,73 @@
                 </div>
             </apex:outputPanel>
 
+            <div class="slds-grid {!IF(isHHAccount, '', 'slds-hide')}">
+
+                        <apex:outputPanel rendered="{! !isPolling }">
+                            <div class="slds-m-vertical_medium">
+                                <apex:outputText escape="false" styleClass="slds-text-body_small" value="You can find complete Customizable Rollups documentation here."/>
+                            </div>
+
+<!--
+                            <div class="slds-form-element">
+-->
+                                <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                                    <span class="slds-form-element__label slds-m-bottom_none">Customizable Rollups</span>
+                                    <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" html-aria-describedby="checkbox-toggle-2" />
+                                    <span class="slds-checkbox_faux_container" aria-live="assertive">
+                                        <span class="slds-checkbox_faux"></span>
+                                        <span class="slds-checkbox_on">Enabled</span>
+                                        <span class="slds-checkbox_off">Disabled</span>
+                                    </span>
+                                </label>
+<!--
+                            </div>
+-->
+
+<!--
+                            <apex:outputText escape="false" styleClass="slds-form-element__help" value="{!$Label.stgHelpCustomizableRollupsEnable3}" rendered="{! !isPolling }" />
+-->
+                        </apex:outputPanel>
+
+            </div>
+
+            <!-- BEGIN HELP TEXT -->
+            <div class="slds-grid {!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
+                    <p class="slds-text-body--small slds-m-top--x-small">
+                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
+<!--
+                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
+-->
+                    </p>
+            </div>
+            <div class="slds-grid {!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
+<!--
+                <div class="slds-col slds-size&#45;&#45;1-of-1 slds-m-around&#45;&#45;medium">
+                    <p class="slds-text-body&#45;&#45;small slds-m-top&#45;&#45;x-small">
+                        <apex:outputText escape="false" value="You can find the Customizable Rollups documentation here."/>
+                    </p>
+                </div>
+-->
+            </div>
+            <!-- END HELP TEXT -->
+
+            <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
+
+                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-bottom_large slds-button slds-button_brand" action="{!navigate}" /><br/>
+
+                <div class="slds-section-title--divider" >Reset Customizable Rollups</div>
+
+                <div class="slds-m-vertical_medium">
+                    <apex:outputText escape="false" styleClass="slds-text-body_small" value="Resetting Customizable Rollups will remove any new Rollups, Filter Groups, and Filter Rules you created, and reset all NPSP Rollups to their default behavior." />
+                </div>
+                <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
+                    Reset
+                </button>
+
+            </apex:outputPanel>
+
             <div class="slds-card {!IF(isPolling,'','slds-hide')}">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
+                <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
                     <p class="slds-text-body--small slds-m-top--x-small">
                         <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
                     </p>
@@ -87,44 +137,9 @@
                                status="deploymentStatus"
                                />
 
-            <div class="slds-grid {!IF(isHHAccount, '', 'slds-hide')}">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-
-                    <div>
-
-                        <!-- DISABLED MODE -->
-                        <apex:outputPanel rendered="{! !stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
-                            <apex:commandButton id="enableCRLPs" value="Enable Customizable Rollups" styleClass="slds-m-vertical_small slds-button slds-button_neutral" action="{!enableCRLPs}" status="statusLoad" immediate="false" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" /><br/>
-                            <apex:outputText escape="false" styleClass="slds-form-element__help" value="{!$Label.stgHelpCustomizableRollupsEnable3}" rendered="{! !isPolling }" />
-                        </apex:outputPanel>
-
-                        <!-- ENABLED MODE -->
-                        <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
-
-                            <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-bottom_large slds-button slds-button_neutral" action="{!navigate}" /><br/>
-
-                            <div class="slds-section-title--divider" >Advanced Options</div>
-
-                            <apex:outputText escape="false" styleClass="slds-m-vertical_small slds-form-element__help" value="Disabling this feature will not remove any changes you've made unless you reset to the NPSP defaults." />
-                            <apex:commandButton styleClass="slds-m-vertical_small slds-button slds-button_neutral" id="disableCRLPs" value="Disable Customizable Rollups" action="{!disableCRLPs}" status="statusLoad" immediate="false" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem"/><br/>
-                            <button type="button" class="slds-m-vertical_small slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
-                                {!$Label.stgCRLPReset}
-                            </button>
-
-                        </apex:outputPanel>
-
-                    </div>
-                </div>
-
-<!--
-                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
-                    <apex:commandButton id="cancelCRLPs" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-                </div>
--->
-
-            </div>
             <apex:actionFunction name="reset" action="{!resetRollupsToDefaultConfig}" reRender="form" status="statusLoad" />
+            <apex:actionFunction name="enableCRLPs" action="{!enableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
+            <apex:actionFunction name="disableCRLPs" action="{!disableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
 
         </apex:form>
 
@@ -159,6 +174,13 @@
 
         <script type="text/javascript">
             document.getElementById('warning_modal_reset_button').addEventListener('click', reset);
+            function onToggle() {
+                if (document.getElementById('{!$Component.form.enableCRLPToggle}').checked) {
+                    enableCRLPs();
+                } else {
+                    disableCRLPs();
+                }
+            }
         </script>
 
     </div>
