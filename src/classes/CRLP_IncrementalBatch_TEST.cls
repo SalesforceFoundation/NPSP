@@ -41,25 +41,58 @@ private class CRLP_IncrementalBatch_TEST {
     private static final Integer ROLLUP_DAYS_BACK = 5;
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Account Hard Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then defines an Account Rollup. Runs the Incremental Rollups, 
-    * and confirms the Where Clause and the Last Batch Run are corrects.
+    * @description Creates the Incremental Account Hard Credit Settings, disable the Incremental Rollup Mode and 
+    * Runs the Incremental Rollups Batch. Confirms the Where Clause and the Last Batch Run are blank.
     */
-    static testMethod void testIncrementalAccountHardCredit() {
-        // Create the Account Hard Credit incremental Rollups settings.
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
-            Enable_Incremental_Rollups_Mode__c = true,
-            Account_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-        ));
-        // Override the cached Rollups.
-        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>{
-            createRollup('Account', ROLLUP_DAYS_BACK)
-        };
+    static testMethod void testIncrementalAccountHardCredit_IncrementalModeNotEnabled() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = false,
+                Account_Hard_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Account', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.AccountHardCredit()
+        );
 
-        CRLP_IncrementalBatch.AccountHardCredit incrementalRollup = new CRLP_IncrementalBatch.AccountHardCredit();
-        String incrementalWhereClause = incrementalRollup.getWereClause();
-        incrementalRollup.refreshLastBatchRun();
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assert(UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Account_Hard_Credit_Last_Batch__c == null);
+    }
 
+    /*********************************************************************************************************
+    * @description Creates the Incremental Account Hard Credit Settings, enable the Incremental Rollup Mode and 
+    * Then configures the Incremental Account Rollup. Runs the Incremental Rollups, and confirms the Where Clause
+    * is blank and the Last Batch Run is set to Today.
+    */
+    static testMethod void testIncrementalAccountHardCredit_WithoutLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Account_Hard_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Account', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.AccountHardCredit()
+        );
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assertEquals(
+            Date.today(), 
+            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Account_Hard_Credit_Last_Batch__c
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Creates the Incremental Account Hard Credit Settings, enable the Incremental Rollup and 
+    * sets the Last Batch Run set to not null. Then configures the Incremental Account Rollup. Runs the  
+    * Incremental Rollups Batch and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalAccountHardCredit_WithLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Account_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
+            ),
+            new List<Rollup__mdt>{createRollup('Account', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.AccountHardCredit()
+        );
         System.assertEquals(
             String.format(
                 CRLP_IncrementalBatch.ACCOUNT_HARD_CREDIT_WHERE_CLAUSE_TEMPLATE, 
@@ -74,25 +107,58 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Hard Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then defines a Contact Rollup. Runs the Incremental Rollups, 
-    * and confirms the Where Clause and the Last Batch Run are corrects.
+    * @description Creates the Incremental Contact Hard Credit Settings, disable the Incremental Rollup and 
+    * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
-    static testMethod void testIncrementalContactHardCredit() {
-        // Create the Contact Hard Credit incremental Rollups settings.
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
-            Enable_Incremental_Rollups_Mode__c = true,
-            Contact_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-        ));
-        // Override the cached Rollups.
-        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>{
-            createRollup('Contact', ROLLUP_DAYS_BACK)
-        };
+    static testMethod void testIncrementalContactHardCredit_IncrementalModeNotEnabled() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = false,
+                Contact_Hard_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactHardCredit()
+        );
 
-        CRLP_IncrementalBatch.ContactHardCredit incrementalRollup = new CRLP_IncrementalBatch.ContactHardCredit();
-        String incrementalWhereClause = incrementalRollup.getWereClause();
-        incrementalRollup.refreshLastBatchRun();
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assert(UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Contact_Hard_Credit_Last_Batch__c == null);
+    }
 
+    /*********************************************************************************************************
+    * @description Creates the Incremental Contact Hard Credit Settings, enable the Incremental Rollup and 
+    * Then defines an Contact Rollup. Runs the Incremental Rollups, and confirms the Where Clause is blank
+    * and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalContactHardCredit_WithoutLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Contact_Hard_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactHardCredit()
+        );
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assertEquals(
+            Date.today(), 
+            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Contact_Hard_Credit_Last_Batch__c
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Creates the Incremental Contact Hard Credit Settings, enable the Incremental Rollup and 
+    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalContactHardCredit_WithLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Contact_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactHardCredit()
+        );
         System.assertEquals(
             String.format(
                 CRLP_IncrementalBatch.CONTACT_HARD_CREDIT_WHERE_CLAUSE_TEMPLATE, 
@@ -107,27 +173,62 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Runs the Incremental Rollups, and confirms the Where Clause
-    * and the Last Batch Run are corrects.
+    * @description Creates the Incremental Contact Soft Credit Settings, disable the Incremental Rollup and 
+    * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
-    static testMethod void testIncrementalContactSoftCredit() {
-        // Create the Contact Soft Credit incremental Rollups settings.
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
-            Enable_Incremental_Rollups_Mode__c = true,
-            Contact_Soft_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-        ));
-        // Override the cached Rollups.
-        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
+    static testMethod void testIncrementalContactSoftCredit_IncrementalModeNotEnabled() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = false,
+                Contact_Soft_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactSoftCredit()
+        );
 
-        CRLP_IncrementalBatch.ContactSoftCredit incrementalRollup = new CRLP_IncrementalBatch.ContactSoftCredit();
-        String incrementalWhereClause = incrementalRollup.getWereClause();
-        incrementalRollup.refreshLastBatchRun();
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assert(UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Contact_Soft_Credit_Last_Batch__c == null);
+    }
 
+    /*********************************************************************************************************
+    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
+    * Then defines an Contact Rollup. Runs the Incremental Rollups, and confirms the Where Clause is blank
+    * and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalContactSoftCredit_WithoutLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Contact_Soft_Credit_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactSoftCredit()
+        );
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assertEquals(
+            Date.today(), 
+            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Contact_Soft_Credit_Last_Batch__c
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
+    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalContactSoftCredit_WithLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Contact_Soft_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
+            ),
+            new List<Rollup__mdt>{createRollup('Contact', ROLLUP_DAYS_BACK)},
+            new CRLP_IncrementalBatch.ContactSoftCredit()
+        );
         System.assertEquals(
             String.format(
                 CRLP_IncrementalBatch.CONTACT_SOFT_CREDIT_WHERE_CLAUSE_TEMPLATE, 
-                new List<String>{String.valueOf(LAST_BATCH_RUN_DAYS_BACK + 1)}
+                new List<String>{String.valueOf(LAST_BATCH_RUN_DAYS_BACK + ROLLUP_DAYS_BACK + 1)}
             ),
             incrementalWhereClause
         );
@@ -138,23 +239,58 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Recurring Donations Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Runs the Incremental Rollups, and confirms the Where Clause
-    * and the Last Batch Run are corrects.
+    * @description Creates the Incremental Contact Soft Credit Settings, disable the Incremental Rollup and 
+    * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
-    static testMethod void testIncrementalRecurringDonations() {
-        // Create the Recurring Donations incremental Rollups settings.
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c(
-            Enable_Incremental_Rollups_Mode__c = true,
-            Recurring_Donations_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-        ));
-        // Override the cached Rollups.
-        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
+    static testMethod void testIncrementalRecurringDonation_IncrementalModeNotEnabled() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = false,
+                Recurring_Donations_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>(),
+            new CRLP_IncrementalBatch.RecurringDonations()
+        );
 
-        CRLP_IncrementalBatch.RecurringDonations incrementalRollup = new CRLP_IncrementalBatch.RecurringDonations();
-        String incrementalWhereClause = incrementalRollup.getWereClause();
-        incrementalRollup.refreshLastBatchRun();
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assert(UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Recurring_Donations_Last_Batch__c == null);
+    }
 
+    /*********************************************************************************************************
+    * @description Creates the Incremental Recurring Donations Settings, disable the Incremental Rollup
+    * Runs the Incremental Rollups, and confirms the Where Clause is blank and the Last Batch Run is set 
+    * to Today's date.
+    */
+    static testMethod void testIncrementalRecurringDonation_WithoutLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Recurring_Donations_Last_Batch__c = null
+            ),
+            new List<Rollup__mdt>(),
+            new CRLP_IncrementalBatch.RecurringDonations()
+        );
+        System.assert(String.isBlank(incrementalWhereClause));
+        System.assertEquals(
+            Date.today(), 
+            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Recurring_Donations_Last_Batch__c
+        );
+    }
+
+    /*********************************************************************************************************
+    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
+    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
+    */
+    static testMethod void testIncrementalRecurringDonation_WithLastBatchRun() {
+        String incrementalWhereClause = runIncrementalRollup(
+            new Customizable_Rollup_Settings__c(
+                Enable_Incremental_Rollups_Mode__c = true,
+                Recurring_Donations_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
+            ),
+            new List<Rollup__mdt>(),
+            new CRLP_IncrementalBatch.RecurringDonations()
+        );
         System.assertEquals(
             String.format(
                 CRLP_IncrementalBatch.RECURRING_DONATIONS_WHERE_CLAUSE_TEMPLATE, 
@@ -166,6 +302,25 @@ private class CRLP_IncrementalBatch_TEST {
             Date.today(), 
             UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Recurring_Donations_Last_Batch__c
         );
+    }
+
+    /*********************************************************************************************************
+    * @description Runs the Incremental Rollups.
+    * @param settings. The Customizable Rollup Settings.
+    * @param cachedRollups. The Rollups to cached.
+    * @param incrementalRollup. The Incremental Rollup configuration.
+    * @return Incremental Rollup Where Clause.
+    */
+    private static String runIncrementalRollup(Customizable_Rollup_Settings__c settings, List<Rollup__mdt> cachedRollups, CRLP_IncrementalBatch.Rollup incrementalRollup) {
+        // Create the Account Hard Credit incremental Rollups settings.
+        UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
+        // Override the cached Rollups.
+        CRLP_Rollup_SEL.cachedRollups = cachedRollups;
+        
+        String incrementalWhereClause = incrementalRollup.getWereClause();
+        incrementalRollup.refreshLastBatchRun();
+
+        return incrementalWhereClause;
     }
 
     /*******************************************************************************************************
