@@ -12,8 +12,6 @@
 
         function onInitHandler(result, event) {
 
-            console.log(result);
-
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
             $scope.isIndexLoading = false;
@@ -64,7 +62,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -76,6 +73,7 @@
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
                 contextMenu: ['remove_row'],
+                manualColumnResize: true,
                 renderAllRows: true,
 
                 cells: cellsHandler,
@@ -88,7 +86,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                modifyColWidth: modifyColWidthHandler
             });
 
             $scope.$apply();
@@ -220,6 +219,26 @@
 
             // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 30;
+            }
+            else if (col === 2) {
+
+                return 80;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -372,8 +391,6 @@
 
                         result.forEach(function(cellResponse) {
 
-                            // console.log(cellResponse);
-
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
                             if (cellResponse.errors) {
@@ -519,8 +536,7 @@
                     // Tab or right arrow was pressed
 
                     try {
-                        console.log('ROW INDEX ',rowIndex);
-                        console.log('COLUMN INDEX ',colIndex);
+
                         if (colIndex === 0) {
 
                             var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
@@ -586,7 +602,7 @@
                         var tooltipIconStyle = tooltipIcon.style;
 
                         if(tooltipIconStyle.display === "none") {
-                            console.log('COLUMN INDEX: ', colIndex);
+
                             if (colIndex === 3) {
 
                                 colIndex = lastColumn;
@@ -710,7 +726,6 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.manualColumnResize = false;
             errorCol.colWidths = 30;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
@@ -719,7 +734,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
