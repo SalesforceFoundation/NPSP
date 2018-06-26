@@ -89,11 +89,12 @@ public with sharing class UTIL_JobProgress_CTRL {
         Integer completedCount = 0;
         //Query the Batch apex jobs, excluding skew dispatcher jobs
         String skewDispatcherClassName =  CRLP_SkewDispatcher_BATCH.class.getName();
+        skewDispatcherClassName = (skewDispatcherClassName.contains('__') ? skewDispatcherClassName.split('__')[1] : skewDispatcherClassName);
         for(AsyncApexJob a : [SELECT TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id,
                                     CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name, CreatedBy.Name
                                     FROM AsyncApexJob
                                     WHERE JobType='BatchApex'
-                                    AND ApexClass.Name != :skewDispatcherClassName
+                                    AND (ApexClass.Name != :skewDispatcherClassName OR (ApexClass.Name = :skewDispatcherClassName AND Status = 'Holding'))
                                     ORDER BY CreatedDate DESC, Id LIMIT :numberOfJobs]) {
             Double itemsProcessed = a.JobItemsProcessed;
             Double totalItems = a.TotalJobItems;
@@ -156,6 +157,7 @@ public with sharing class UTIL_JobProgress_CTRL {
         List<BatchJobStatus> jobsStatus = new List<BatchJobStatus>();
 
         String skewDispatcherClassName =  CRLP_SkewDispatcher_BATCH.class.getName();
+        skewDispatcherClassName = (skewDispatcherClassName.contains('__') ? skewDispatcherClassName.split('__')[1] : skewDispatcherClassName);
         jobs = [
             SELECT
             ApexClass.Name,
