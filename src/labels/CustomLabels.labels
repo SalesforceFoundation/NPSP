@@ -5401,9 +5401,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
-            &lt;br/>&lt;br/&gt;
-            Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
+            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won't be applied to your legacy rollup settings.
         </value>
     </labels>
     <labels>
@@ -5413,10 +5411,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            &lt;br/&gt;&lt;br/&gt;Enabling Customizable Rollups for the first time makes some changes to your org that are important to review and understand before turning this feature on.
-            For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
-            &lt;br/>&lt;br/&gt;
-            Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
+            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
         </value>
     </labels>
     <labels>

@@ -83,17 +83,24 @@
             <!-- END INTRO TEXT AND TOGGLE -->
 
             <!-- BEGIN HELP TEXT -->
+<!--
             <div class="slds-grid {!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
+-->
                 <p class="slds-text-body--small slds-m-top--x-small">
                     <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
+                    <br/><br/>
+                    <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
                 </p>
+<!--
             </div>
+-->
+
             <!-- END HELP TEXT -->
 
             <!-- BEGIN ENABLED OPTIONS -->
             <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
 
-                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-bottom_large slds-button slds-button_brand" action="{!navigate}" /><br/>
+                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-vertical_large slds-button slds-button_brand" action="{!navigate}" /><br/>
 
                 <div class="slds-section-title--divider" >Reset Customizable Rollups</div>
 
@@ -101,7 +108,7 @@
                     <apex:outputText escape="false" styleClass="slds-text-body_small" value="Resetting Customizable Rollups will remove any new Rollups, Filter Groups, and Filter Rules you created, and reset all NPSP Rollups to their default behavior." />
                 </div>
                 <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
-                    Reset
+                    Reset to Defaults
                 </button>
 
             </apex:outputPanel>
