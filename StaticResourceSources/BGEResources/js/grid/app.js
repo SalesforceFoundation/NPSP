@@ -85,9 +85,7 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler,
-                afterBeginEditing: afterBeginEditingHandler,
-                afterOnCellMouseDown : afterOnCellMouseDownHandler
+                beforeKeyDown: beforeKeyDownHandler
             });
 
             $scope.$apply();
@@ -167,9 +165,7 @@
             }
         }
 
-
         function cellsHandler(row, col, prop) {
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -185,16 +181,26 @@
          * @param {*} event
          * @param {*} coords
          */
-        function afterOnCellMouseDownHandler(event, coords) {
+        function afterOnCellMouseDownHandler(event, coords, td) {
 
             if (coords.row < 0) {
                 hot.deselectCell();
             }
+
+            var now = new Date().getTime();
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return;
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
         }
 
         function afterInitHandler() {
-            // console.warn('HOT - afterInitHandler');
-
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
 
@@ -215,8 +221,6 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-
-            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
         }
 
@@ -247,9 +251,6 @@
         }
 
         function afterRemoveRowHandler(index, amount) {
-
-            // console.warn('HOT - afterRemoveRowHandler');
-
             updateSummaryData();
         }
 
@@ -367,8 +368,6 @@
                     if (result && result.length > 0) {
 
                         result.forEach(function(cellResponse) {
-
-                            // console.log(cellResponse);
 
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
@@ -489,10 +488,14 @@
 
             var selectedColType = hot.getDataType(rowIndex, colIndex);
 
-            if (selectedColType == "dropdown" || selectedColType == "date") {
-                afterBeginEditingHandler(rowIndex, colIndex);
+            var editor =  hot.getActiveEditor();
+
+            if (selectedColType == "dropdown") {
+                if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
+                    cancelActiveEditor(editor);
+                }
             }
-            else if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39 || event.keyCode === 38 || event.keyCode === 40) {
+            else if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
 
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
@@ -503,8 +506,6 @@
                 var isFirstRow = (rowIndex === 0) ? true : false;
 
                 if (event.keyCode === 9 || event.keyCode === 39) {
-                    // Tab or right arrow was pressed
-                    //console.log('Tab or right arrow was pressed');
                     try {
                         if (colIndex === 0) {
                             colIndex = 1;
@@ -516,10 +517,7 @@
                     }
                 }
                 else if (event.keyCode === 37) {
-                    // Left arrow was pressed
-                    // console.log('Left arrow or shift + tab was pressed');
                     try {
-                        // console.log('COLUMN INDEX ', colIndex);
                         if (colIndex === 1) {
                             colIndex = lastColumn;
                             if (isFirstRow) {
@@ -536,9 +534,7 @@
                     }
                 }
                 else if (event.keyCode === 38) {
-                    //Up arrow pressed
                     try {
-                        // console.log('COLUMN INDEX ', colIndex);
                         if (colIndex === 1) {
                             colIndex = lastColumn;
                             if (isFirstRow) {
@@ -584,29 +580,8 @@
             }
         }
 
-        function afterBeginEditingHandler(row, col) {
-
-            var colType = hot.getDataType(row, col);
-            var editor =  hot.getActiveEditor();
-
-            if (colType == "dropdown") {
-                editor.TEXTAREA.setAttribute("disabled", "true");
-            }
-        }
-
-        function afterOnCellMouseDownHandler(event, coords, td) {
-            var now = new Date().getTime();
-            // check if dbl-clicked within 1/5th of a second. change 200 (milliseconds) to other value if you want
-            if(!(td.lastClick && now - td.lastClick < 200)) {
-                td.lastClick = now;
-                return; // no double-click detected
-            }
-
-            var editor =  hot.getActiveEditor();
-            var colType = hot.getDataType(coords.row, coords.col);
-            if (colType == "dropdown") {
-                editor.TEXTAREA.setAttribute("disabled", "true");
-            }
+        function cancelActiveEditor(editor) {
+            editor.TEXTAREA.setAttribute("disabled", "true");
         }
 
         /// Auxiliary Methods
@@ -921,11 +896,6 @@
             return td;
         }
 
-        function dateFiledCellRenderer(instance, td, row, col, prop, value, cellProperties) {
-            //debugger;
-            console.log('date field renderer');
-        }
-
         // Validation Errors
 
         function emailValidator(value, callback) {
@@ -937,7 +907,6 @@
                 }
             }, 1000);
         };
-
 
         //ACTION picklist
         function getLightningPicklist() {
@@ -983,6 +952,5 @@
             return liElement;
         }
     });
-
 })();
 
