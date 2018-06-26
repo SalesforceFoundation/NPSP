@@ -248,9 +248,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             //cloned opportunity is necessary in order to modify the Primary Contact lookup and update the record in the trigger set
             Opportunity clonedOpp = opp.clone(true,true,false,true);
 
-            Boolean isIndividualAccount = (oppAccountDetails.containsKey(opp.AccountId))
-                                            ? oppAccountDetails.get(opp.AccountId).npe01__SYSTEMIsIndividual__c
-                                            : null;
+            Boolean isIndividualAccount = isIndividualAccount(oppAccountDetails, opp.AccountId);
 
             //process opportunities that already have a primary OCR
             if (mapOppIdPrimaryOCR.containsKey(opp.id)) {
@@ -375,22 +373,25 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         // Retrieve the Account Ids for the Organizational Opportunities
         Map<Id, List<Id>> accountsToOpportunities = populateAccountToOpportunities(listOpps, oppAccountDetails);
 
-        //find changed opportunities and instantiate a map entry to hold OCRs
-        for (integer i=0; i<listOpps.size(); i++) {
-            if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
-                ((listOpps[i].AccountId != listOldOpps[i].AccountId)
-                    && (!oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c || !oppAccountDetails.containsKey(listOldOpps[i].Id))) ||
-                needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_HONOREE_CONTACT) ||
-                needsManageOCR(listOpps[i], listOldOpps[i], FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+        // find changed opportunities and instantiate a map entry to hold OCRs
+        for (Integer i=0; i<listOpps.size(); i++) {
+            Opportunity newOpp = listOpps[i];
+            Opportunity oldOpp = listOldOpps[i];
 
-                mapOppIdMapConIdOCR.put(listOpps[i].Id, new Map<Id, OpportunityContactRole>());
+            // 06/26/2018
+            // Updating this to run whenever the AccountId is changed regardless of whether the new or old
+            // Account is a Household or Organization
+            if (newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
+                    newOpp.AccountId != oldOpp.AccountId ||
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT) ||
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+
+                mapOppIdMapConIdOCR.put(newOpp.Id, new Map<Id, OpportunityContactRole>());
             }
 
-            if (listOpps[i].Primary_Contact__c != listOldOpps[i].Primary_Contact__c ||
-                ((listOpps[i].AccountId != listOldOpps[i].AccountId)
-                    && (!oppAccountDetails.get(listOpps[i].AccountId).npe01__SYSTEMIsIndividual__c || !oppAccountDetails.containsKey(listOldOpps[i].Id)))) {
-
-                primaryContactAccountChangeOpptys.add(listOpps[i]);
+            if (newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
+                    newOpp.AccountId != oldOpp.AccountId) {
+                primaryContactAccountChangeOpptys.add(newOpp);
             }
         }
 
@@ -401,13 +402,11 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
                 mapOppIdMapConIdOCR.get(ocr.OpportunityId).put(ocr.ContactId, ocr);
             }
 
-            for (integer i=0; i<listOpps.size(); i++) {
+            for (Integer i=0; i<listOpps.size(); i++) {
                 Opportunity newOpp = listOpps[i];
                 Opportunity oldOpp = listOldOpps[i];
 
-                Boolean isIndividualAccount = (oppAccountDetails.containsKey(newOpp.AccountId))
-                                            ? oppAccountDetails.get(newOpp.AccountId).npe01__SYSTEMIsIndividual__c
-                                            : null;
+                Boolean isIndividualAccount = isIndividualAccount(oppAccountDetails, newOpp.AccountId);
 
                 //first, manage primary contact role if the primary contact has changed
                 if (needsManageOCR(newOpp, oldOpp, FIELD_NAME_PRIMARY_CONTACT)) {
@@ -731,7 +730,7 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
 
         for (Opportunity eachOppty : currentOpportunities) {
-            if (eachOppty.Primary_Contact__c != null
+            if (eachOppty.Primary_Contact__c != null && eachOppty.AccountId != null
                 && oppAccountDetails.get(eachOppty.AccountId) != null
                 && !OPP_AutomatedSoftCreditsService.isOrganizationalAccount(oppAccountDetails.get(eachOppty.AccountId).npe01__SYSTEMIsIndividual__c)) {
                 if (primaryContactToOpportunities.containsKey(eachOppty.Primary_Contact__c)) {
@@ -871,5 +870,13 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
         }
     }
 
-
+    /**
+     * @description Returns the value Account.npe01__SYSTEMIsIndividual__c or null if the AccountId is null
+     * @param accountMap Map of Accounts by Id
+     * @param accountId AccountId
+     * @return True or null
+     */
+    private static Boolean isIndividualAccount(Map<Id, Account> accountMap, Id accountId) {
+        return (accountId != null && accountMap.containsKey(accountId) ? accountMap.get(accountId).npe01__SYSTEMIsIndividual__c  : null);
+    }
 }
