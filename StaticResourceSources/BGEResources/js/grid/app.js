@@ -734,7 +734,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.disableVisualSelection = true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
