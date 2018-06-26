@@ -288,7 +288,7 @@ private class OPP_OpportunityContactRoles_TEST {
         System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
         System.assertEquals(true, result[0].isPrimary);
     }
-    
+
     /*******************************************************************************************************
     * @description Tests contact role creation for 1:1 model, using contact attribution.
     */
@@ -879,5 +879,67 @@ private class OPP_OpportunityContactRoles_TEST {
         Test.stopTest();
     }
 
+    /*******************************************************************************************************
+    * @description Validates that changing the Opp.AccountId to a null value or to a different Account does not
+    * cause an error and that the related OCR's are valid
+    */
+    static testMethod void testOppAccountIdChanges() {
+        //skip the test if Advancement is installed
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
+        Account orgAcct = new Account(Name = 'OrgTest567890', npe01__SYSTEMIsIndividual__c = false);
+        insert orgAcct;
+
+        npe01__Contacts_and_Orgs_Settings__c testSettings = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
+                new npe01__Contacts_and_Orgs_Settings__c(
+                        npe01__Account_Processor__c = CAO_Constants.HH_ACCOUNT_PROCESSOR,
+                        npe01__Opportunity_Contact_Role_Default_role__c = OPPORTUNITY_CONTACT_ROLE_DONOR,
+                        Honoree_Opportunity_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_HONOREE,
+                        Notification_Recipient_Opp_Contact_Role__c = OPPORTUNITY_CONTACT_ROLE_NOTIFICATION_RECIPIENT
+                )
+        );
+
+        npo02__Households_Settings__c householdSettingsForTests = UTIL_CustomSettingsFacade.getHouseholdsSettingsForTests(
+                new npo02__Households_Settings__c (
+                        npo02__Household_Rules__c = HH_Households.NO_HOUSEHOLDS_PROCESSOR,
+                        npo02__Household_Contact_Roles_On__c = true,
+                        npo02__Household_Member_Contact_Role__c='Household Member'
+                )
+        );
+
+        Contact con = UTIL_UnitTestData_TEST.getContact();
+        insert con;
+
+        Contact c = [SELECT AccountId FROM Contact WHERE Id = :con.id LIMIT 1];
+
+        Opportunity opp1 = new Opportunity(
+                Name = 'Apex Test Opp 3',
+                Primary_Contact__c = c.Id,
+                CloseDate = date.today(),
+                StageName = UTIL_UnitTestData_TEST.getClosedWonStage()
+        );
+        insert opp1;
+
+        opp1 = [SELECT Id, AccountId FROM Opportunity WHERE Id = :opp1.Id LIMIT 1];
+        System.assertNotEquals(null, opp1.AccountId);
+
+        Test.startTest();
+        opp1.AccountId = null;
+        update opp1;
+        OpportunityContactRole[] result = [SELECT OpportunityId, Opportunity.AccountId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        //should be a contact role
+        System.assertEquals(1, result.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
+
+        opp1.AccountId = orgAcct.Id;
+        update opp1;
+        result = [SELECT OpportunityId, Opportunity.AccountId, ContactId, isPrimary, Role FROM OpportunityContactRole WHERE OpportunityId = :opp1.Id];
+        //should be a contact role
+        System.assertEquals(1, result.size());
+        System.assertEquals(OPPORTUNITY_CONTACT_ROLE_DONOR, result[0].Role);
+        System.assertEquals(true, result[0].isPrimary);
+        System.assertNotEquals(null, result[0].Opportunity.AccountId);
+    }
 
 }
