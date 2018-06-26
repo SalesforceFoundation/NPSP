@@ -378,21 +378,19 @@ public without sharing class OPP_OpportunityContactRoles_TDTM extends TDTM_Runna
             Opportunity newOpp = listOpps[i];
             Opportunity oldOpp = listOldOpps[i];
 
-            Boolean isIndividualAccount = isIndividualAccount(oppAccountDetails, newOpp.AccountId);
-
+            // 06/26/2018
+            // Updating this to run whenever the AccountId is changed regardless of whether the new or old
+            // Account is a Household or Organization
             if (newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
-                    ((newOpp.AccountId != oldOpp.AccountId) && (isIndividualAccount == false ||
-                        !oppAccountDetails.containsKey(oldOpp.Id))) ||
-                        needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT) ||
-                        needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
+                    newOpp.AccountId != oldOpp.AccountId ||
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_HONOREE_CONTACT) ||
+                    needsManageOCR(newOpp, oldOpp, FIELD_NAME_NOTIFICATION_RECIPIENT_CONTACT)) {
 
                 mapOppIdMapConIdOCR.put(newOpp.Id, new Map<Id, OpportunityContactRole>());
             }
 
             if (newOpp.Primary_Contact__c != oldOpp.Primary_Contact__c ||
-                    ((newOpp.AccountId != oldOpp.AccountId) && (isIndividualAccount == false ||
-                        !oppAccountDetails.containsKey(oldOpp.Id)))) {
-
+                    newOpp.AccountId != oldOpp.AccountId) {
                 primaryContactAccountChangeOpptys.add(newOpp);
             }
         }
