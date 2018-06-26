@@ -391,7 +391,7 @@ private class TDTM_DMLgt200_TEST {
 
         Test.stopTest();
 
-        for (Contact c : [SELECT Id, FirstName, LastName, Account.Name FROM Contact WHERE Id IN :contacts ORDER BY LastName]) {
+        for (Contact c : [SELECT Id, FirstName, LastName, Account.Name FROM Contact WHERE Id IN :contacts]) {
             System.assert(c.Account.Name.contains(c.LastName), 'The Account Name should contain the Contacts last name');
         }
     }
@@ -439,8 +439,9 @@ private class TDTM_DMLgt200_TEST {
                 'There should be exactly ' + insertCnt.format() + ' Validated Address records');
 
         // validate that all contact addresses were fixed
-        system.AssertEquals(insertCnt, [SELECT Count() FROM Contact WHERE MailingPostalCode = '95014-2083'],
-                'There should be exactly ' + insertCnt.format() + ' Updated Contact Addresses');
+        for (Contact record : [SELECT MailingPostalCode FROM Contact WHERE Id IN :contacts]) {
+            System.assertEquals('95014-2083', record.MailingPostalCode, 'Each contact\'s address should be updated');
+        }
     }
 
     /**

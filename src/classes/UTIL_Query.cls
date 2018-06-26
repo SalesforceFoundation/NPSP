@@ -43,8 +43,6 @@ public with sharing class UTIL_Query {
     private static final String SELECT_FIELD_CANNOT_BE_EMPTY = 'SELECT field cannot be empty or null.';
     /** @description Error message when FROM value is not provided */
     private static final String FROM_ENTITY_REQUIRED = 'The FROM value is required.';
-    /** @description Error message when provided WHERE clause is empty or null */
-    private static final String WHERE_CLAUSE_CANNOT_BE_EMPTY = 'WHERE clause cannot be empty or null.';
 
     /** @description Operator AND used in the WHERE clause */
     private static final String AND_OPERATOR = ' AND ';
@@ -55,6 +53,10 @@ public with sharing class UTIL_Query {
     private String entity = null;
     /** @description WHERE clauses used in the SOQL's WHERE segment */ 
     private String[] whereClauses = new String[0];
+    /** @description ORDER BY clauses used in the SOQL's ORDER BY segment */ 
+    private String orderBy;
+    /** @description LIMIT statement used in the SOQL's LIMIT segment */ 
+    private Integer limitRows;
     /** @description Indicates if toLabel() should be used on the Salutation field  */ 
     private Boolean isToLabelSalutation = false;
 
@@ -81,7 +83,27 @@ public with sharing class UTIL_Query {
     public UTIL_Query withSelectFields(String[] fieldNames) {
         selectFields.addAll(fieldNames);            
         return this;
-    }  
+    }
+
+    /*********************************************************************************************************
+    * @description Registers ORDER BY Field
+    * @param orderBy the field expression to order by
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+        return this;
+    }
+
+    /*********************************************************************************************************
+    * @description Registers LIMIT rows
+    * @param limitRows The maximum number of rows to return
+    * @return UTIL_Query The instance of the Query builder
+    */
+    public UTIL_Query withLimit(Integer limitRows) {
+        this.limitRows = limitRows;
+        return this;
+    }
 
     /*********************************************************************************************************
     * @description Indicates to use toLabel() on the Salutation field
@@ -97,8 +119,8 @@ public with sharing class UTIL_Query {
     * @param sobjectType Type of the Sobject
     * @return UTIL_Query The instance of the Query builder
     */
-    public UTIL_Query withFrom(Schema.SObjectType sobjectType) {           
-        return withFrom(sobjectType.getDescribe().getName());
+    public UTIL_Query withFrom(Schema.SObjectType sObjectType) {           
+        return withFrom(String.valueOf(sObjectType));
     }
     
     /*********************************************************************************************************
@@ -117,7 +139,10 @@ public with sharing class UTIL_Query {
     * @return UTIL_Query The instance of the Query builder
     */
     public UTIL_Query withWhere(String whereClause) {
-        return withWhere(new String[]{ whereClause });  
+        if (String.isNotEmpty(whereClause)) {
+            whereClauses.add(whereClause);
+        }
+        return this;
     }
     
     /*********************************************************************************************************
@@ -147,8 +172,14 @@ public with sharing class UTIL_Query {
         }
 
         return String.format(
-            'SELECT {0} FROM {1} {2}',
-            new String[] { String.join(uniqueSelectFields, ', '), entity, buildWhereClause() }
+            'SELECT {0} FROM {1}{2}{3}{4}',
+            new String[] {
+                String.join(uniqueSelectFields, ', '),
+                entity, 
+                buildWhereClause(),
+                buildOrderByClause(),
+                buildLimitClause()
+            }
         ).trim();
     }
 
@@ -201,14 +232,34 @@ public with sharing class UTIL_Query {
         String soqlWhere = ''; 
         
         for (String clause : whereClauses) {
-            if (String.isBlank(clause)) {
-                throw new UTIL_QueryException(WHERE_CLAUSE_CANNOT_BE_EMPTY);
-            }
-
             soqlWhere += String.isBlank(soqlWhere) ? '' : AND_OPERATOR;
             soqlWhere += clause;
         }
         
-        return String.isBlank(soqlWhere) ? '' : 'WHERE ' + soqlWhere;
-    }  
+        return String.isBlank(soqlWhere) ? '' : ' WHERE ' + soqlWhere;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds the ORDER BY
+    * @return String The ORDER BY
+    */
+    private String buildOrderByClause() {
+        if (String.isEmpty(orderBy)) {
+            return '';
+        }
+
+        return ' ORDER BY ' + orderBy;
+    }
+
+    /*********************************************************************************************************
+    * @description Builds the LIMIT clause
+    * @return String The LIMIT clause
+    */
+    private String buildLimitClause() {
+        if (limitRows == null || limitRows <= 0) {
+            return '';
+        }
+
+        return ' LIMIT ' + limitRows;
+    }
 }

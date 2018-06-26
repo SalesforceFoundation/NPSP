@@ -240,7 +240,7 @@ private class HH_Container_TEST {
         Test.startTest();
                     
         HH_Container_LCTRL.upsertContacts(listCon);
-        listCon = [select FirstName from Contact order by FirstName desc];
+        listCon = [select FirstName from Contact order by CreatedDate];
         system.assertEquals(3, listCon.size());
         system.assertEquals('upserted', listCon[0].FirstName);
         system.assertEquals('upserted', listCon[1].FirstName);
@@ -591,7 +591,7 @@ private class HH_Container_TEST {
         initTestData();
 
         Test.startTest();
-        Test.setFixedSearchResults(new List<Id>{ conA.Id, conO.Id });
+        UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
         
         list<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> listPR = HH_AutoCompleteDataProvider_LCTRL.queryObjects('con', null);
         system.assertEquals(2, listPR.size());
@@ -603,6 +603,47 @@ private class HH_Container_TEST {
         system.assertEquals(0, listPR.size());
         
         Test.stopTest();
+    }
+
+    /*********************************************************************************************************
+    * @description Test if the queryValue is valid for the SOSL
+    */
+    public static testMethod void testAutoCompleteIsValidSearchQuery() { 
+        System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery(null), 'Search is invalid for null query');
+        System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery(''), 'Search is invalid for empty query');
+        System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('c'), 'Search is invalid for one character query');
+        System.assertEquals(false, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('c*'), 'Search is invalid for one character + wildcard query');
+        System.assertEquals(true, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('co'), 'Search is valid for two characters query');
+        System.assertEquals(true, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('co*'), 'Search is valid for two characters + wildcard query');
+        System.assertEquals(true, HH_AutoCompleteDataProvider_LCTRL.isValidSearchQuery('con'), 'Search is valid for two+ characters query');
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies auto complete does not return records when Contact.Name is encrypted and
+    * the search query is not at least two characters long
+    */
+    public static testMethod void testAutoCompleteReturnsEmptyListForEncryptedContactNameAndInvalidSearchQuery() { 
+        initTestData();
+        UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
+
+        HH_AutoCompleteDataProvider_LCTRL.isNameFilterable = false;
+        List<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> records = HH_AutoCompleteDataProvider_LCTRL.queryObjects('c*', null);
+        
+        System.assert(records.isEmpty(), 'No record should be returned when Contact.Name is encrypted and the search query is invalid: ' + records);
+    }
+
+    /*********************************************************************************************************
+    * @description Verifies auto complete returns records when Contact.Name is encrypted and
+    * the search query is valid
+    */
+    public static testMethod void testAutoCompleteReturnsRecordsForEncryptedContactNameAndValidSearchQuery() { 
+        initTestData();
+        UTIL_UnitTestData_TEST.setFixedSearchResults(new List<Contact>{ conA, conO });
+
+        HH_AutoCompleteDataProvider_LCTRL.isNameFilterable = false;
+        List<HH_AutoCompleteDataProvider_LCTRL.ProviderResult> records = HH_AutoCompleteDataProvider_LCTRL.queryObjects('co*', null);
+        
+        System.assertEquals(2, records.size(), 'Expected records when Contact.Name is encrypted and the search query is valid: ' + records);
     }
     
 
