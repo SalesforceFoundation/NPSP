@@ -168,9 +168,7 @@
             }
         }
 
-
         function cellsHandler(row, col, prop) {
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -186,17 +184,26 @@
          * @param {*} event
          * @param {*} coords
          */
-        function afterOnCellMouseDownHandler(event, coords) {
+        function afterOnCellMouseDownHandler(event, coords, td) {
 
             if (coords.row < 0) {
                 hot.deselectCell();
             }
+
+            var now = new Date().getTime();
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return;
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
         }
 
         function afterInitHandler() {
-
-            // console.warn('HOT - afterInitHandler');
-
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
 
@@ -217,8 +224,6 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-
-            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
         }
 
@@ -269,9 +274,6 @@
         }
 
         function afterRemoveRowHandler(index, amount) {
-
-            // console.warn('HOT - afterRemoveRowHandler');
-
             updateSummaryData();
         }
 
@@ -280,8 +282,6 @@
         }
 
         function afterChangeHandler(changes, source) {
-
-            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
@@ -505,9 +505,21 @@
 
         function beforeKeyDownHandler(event) {
 
-            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39) {
+            var selection = hot.getSelected();
+            var rowIndex = selection[0];
+            var colIndex = selection[1];
 
-                var selection = hot.getSelected();
+            var selectedColType = hot.getDataType(rowIndex, colIndex);
+
+            var editor =  hot.getActiveEditor();
+
+            if (selectedColType == "dropdown") {
+                if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
+                    cancelActiveEditor(editor);
+                }
+            }
+
+            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
 
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
@@ -523,12 +535,7 @@
                 var shiftKeyIsPressed = event.shiftKey;
 
 
-                // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
-                if (event.keyCode === 13) {
-
-                    event.stopImmediatePropagation();
-
-                    rowIndex ++;
+                var isFirstRow = (rowIndex === 0) ? true : false;
 
                     hot.selectCell(rowIndex, colIndex);
                 }
@@ -537,7 +544,6 @@
                     // Tab or right arrow was pressed
 
                     try {
-
                         if (colIndex === 0) {
 
                             var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
@@ -589,7 +595,6 @@
                         }
                     }
                     catch(err) {
-
                         console.log(err);
                     }
                 }
@@ -634,18 +639,37 @@
                                 }
                             }
                         }
-
                         hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
-
                         console.log(err);
                     }
-
+                }
+                else if (event.keyCode === 38) {
+                    try {
+                        if (colIndex === 1) {
+                            colIndex = lastColumn;
+                            if (isFirstRow) {
+                                rowIndex = lastRow;
+                            }
+                            else {
+                                row --;
+                            }
+                        }
+                        hot.selectCell(rowIndex, colIndex);
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                 }
             }
+            else if (event.keyCode === 13) {
+                event.stopImmediatePropagation();
 
+                rowIndex ++;
 
+                hot.selectCell(rowIndex, colIndex);
+            }
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
@@ -666,6 +690,10 @@
                     }
                 }
             }
+        }
+
+        function cancelActiveEditor(editor) {
+            editor.TEXTAREA.setAttribute("disabled", "true");
         }
 
         /// Auxiliary Methods
@@ -808,12 +836,11 @@
                 }
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                         // In this case, the ENTER key is ignored and the editor field remains open.
                         col.source = Object.keys(templateField.picklistValues);
 
                         if (templateField.isRecordType) {
@@ -1017,6 +1044,7 @@
             }, 1000);
         };
 
+        //ACTION picklist
         function getLightningPicklist() {
 
             var divControl = document.createElement('div');
@@ -1059,8 +1087,6 @@
 
             return liElement;
         }
-
     });
-
 })();
 
