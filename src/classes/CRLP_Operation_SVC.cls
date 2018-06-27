@@ -195,13 +195,16 @@ public class CRLP_Operation_SVC {
                     // result value from whatever record makes up the 'last' record' by date
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                }
+
+                // only allow datevalue to drive first and last values if datetimevalue wasn't already used
+                else if (dateTimeValue == null && dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     // Only want to use < as the operator for the date comparison so it only retrieves the first
                     // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
+                } else if (dateTimeValue == null && dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
                     // Operation = LAST (always based on a date)
                     // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
                     // result value from whatever record makes up the 'last' record' by date
