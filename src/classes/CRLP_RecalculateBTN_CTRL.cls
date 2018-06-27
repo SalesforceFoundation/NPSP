@@ -39,6 +39,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
 
     private Id recordId;
     private SObjectType objType;
+    public String returnLabel { get; private set; }
 
     /** @description Used by the VF page for the button to render an apex pages message if there is one */
     public Boolean hasError { get; set; }
@@ -49,8 +50,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
     public CRLP_RecalculateBTN_CTRL(ApexPages.StandardController sc) {
         this.hasError = false;
         this.recordId = sc.getId();
+        this.returnLabel = '';
         if (this.recordId != null) {
             this.objType = this.recordId.getSobjectType();
+            this.returnLabel = String.format(Label.CRLP_Return, new List<String> {this.objType.getDescribe().getLabel()});
         }
 
         // if the current User does not have permissions to modify the object (though not checking specific fields)

@@ -9,7 +9,7 @@
                                header="{!$Label.CRLP_RecalculatingRollups}"
                                icon="account_120" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="true"
-                               cancelLabel="Return" cancelAction="/{!Account.Id}"
+                               cancelLabel="{!returnLabel}" cancelAction="/{!Account.Id}"
                                rendered="true" />
         </apex:form>
         <c:UTIL_PageMessages allowClose="false"/>
