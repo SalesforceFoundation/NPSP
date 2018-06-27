@@ -28,8 +28,8 @@
         <categories>address, settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>DEPRECATED - Addr Settings API Title</shortDescription>
-        <value>DEPRECATED - API Account Settings</value>
+        <shortDescription>Addr Settings API Title</shortDescription>
+        <value>API Account Settings</value>
     </labels>
     <labels>
         <fullName>Addr_Settings_API_Title</fullName>
