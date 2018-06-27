@@ -228,9 +228,7 @@ public class CRLP_IncrementalBatch {
             );
 
             return String.format(
-                'Id IN (SELECT ContactId FROM OpportunityContactRole ' +
-                'WHERE Opportunity.SystemModStamp = LAST_N_DAYS:{0} ' +
-                'OR Opportunity.CloseDate = LAST_N_DAYS:{0} ALL ROWS)',
+                CONTACT_SOFT_CREDIT_WHERE_CLAUSE_TEMPLATE,
                 new List<String>{String.valueOf(maxDaysBack)}
             );
         }
