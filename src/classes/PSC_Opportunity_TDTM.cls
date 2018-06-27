@@ -55,6 +55,7 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
 
             //set flag to allow changing PSC currency
             PSC_PartialSoftCredit_TDTM.blockCurrencyChange = false;
+            OPP_AccountSoftCredit_TDTM.blockCurrencyChange = false;
             return dmlWrapper;
         }
         return null;
@@ -91,7 +92,7 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
             }
         } else if (objType == Account_Soft_Credit__c.SObjectType) {
             //query all AccSCs associated with these opps, update their ISO code
-            for (Partial_Soft_Credit__c accountSC : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Account_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
+            for (Account_Soft_Credit__c accountSC : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Account_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
                 string oppCurrency = mapOppIdToISO.get(accountSC.Opportunity__c);
 
                 accountSC.put('CurrencyIsoCode', oppCurrency);

@@ -426,6 +426,7 @@
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
         <members>OPP_AccountSoftCredit_TDTM</members>
+        <members>OPP_CurrencySync_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
