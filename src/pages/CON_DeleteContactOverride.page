@@ -49,8 +49,8 @@
                     if (sforceNav === 'back') {
                         sforce.one.back(true);
                     } else {
-                        sforce.one.navigateToURL('one.app#/sObject/Contact/home', true);
-                    } 
+                        sforce.one.navigateToURL('{!URLFOR($Action.Contact.Tab, $ObjectType.Contact)}', true);
+                    }
                 })();
             </script>
         </apex:outputPanel>
