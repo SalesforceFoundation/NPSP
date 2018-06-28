@@ -195,21 +195,11 @@ public with sharing class USER_UserService_TEST {
         List<User> newUsers = new List<User>();
 
         // Create new Users with SysAdmin Profile
-        Id sysAdminProfileId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
-        User newUserA = new User(LastName = 'TestSysAdminUserA', Email = 'test.sysAdminA@email.com', ProfileId = sysAdminProfileId,
-                                    isActive = true, UserName = 'test.sysAdminA@email.com',
-                                    Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
-                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                                    EmailEncodingKey = 'ISO-8859-1');
+        newUsers.add(UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR));
+        newUsers[0].IsActive = true;
+        newUsers.add(UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR));
+        newUsers[1].IsActive = false;
 
-        User newUserB = new User(LastName = 'TestSysAdminUserB', Email = 'test.sysAdminB@email.com', ProfileId = sysAdminProfileId,
-                                    isActive = false, UserName = 'test.sysAdminB@email.com',
-                                    Alias = 'tu093522', TimeZoneSidKey = 'America/Los_Angeles',
-                                    LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                                    EmailEncodingKey = 'ISO-8859-1');
-
-        newUsers.add(newUserA);
-        newUsers.add(newUserB);
         insert newUsers;
 
         return newUsers;
