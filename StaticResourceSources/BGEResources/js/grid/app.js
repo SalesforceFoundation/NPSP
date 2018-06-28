@@ -817,6 +817,8 @@
 
                 col.className = "htLeft htMiddle slds-truncate";
 
+                col.editor = TextEditorCustom;
+
                 if (templateField.type === "DATE") {
                     col.dateFormat = 'M/D/YYYY';
                     col.className = "htLeft htMiddle slds-truncate custom-date";
@@ -849,7 +851,6 @@
                 else if (templateField.type === "EMAIL" || templateField.type === "STRING" ||
                          templateField.type === "TEXTAREA" || templateField.type === "URL") {
 
-                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === "BOOLEAN") {
 
@@ -859,7 +860,6 @@
                 else if (templateField.type === 'PHONE') {
 
                     col.colWidths = 50;
-                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
                     col.type = "numeric";
@@ -876,7 +876,6 @@
                     col.timeFormat= 'h:mm:ss a';
                     col.correctFormat= true;
                     col.colWidths = 80;
-                    col.editor = TextEditorCustom;
                 }
 
                 if (templateField.type === "PICKLIST") {
