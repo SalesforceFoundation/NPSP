@@ -578,25 +578,22 @@
 
                 if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
-                    // Tab or right arrow was pressed
-
                     try {
-                        if (colIndex === 0) {
 
-                            var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
-                            var tooltipIconStyle = tooltipIcon.style;
+                        rowIndex++;
 
-                            if(tooltipIconStyle.display === "none") {
+                        var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                        var tooltipIconStyle = tooltipIcon.style;
+                        var tooltipDisplayed = tooltipIconStyle && tooltipIconStyle.display !== "none";
+
+                        if (colIndex === lastColumn) {
+
+                            if(!tooltipDisplayed) {
 
                                 // tooltip icon is not being displayed, so skip the cell.
                                 hot.selectCell(rowIndex, 1);
 
-                                var selectedCell = hot.getSelected();
-
-                                var rowIndexSelectedCell = selectedCell[0];
-                                var colIndexSelectedCell = selectedCell[1];
-
-                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+                                var actionIcon = hot.getCell(rowIndex, 2).childNodes["0"];
 
                                 actionIcon.focus();
                             }
@@ -607,20 +604,12 @@
                         }
                         else if (rowIndex === lastRow && colIndex === lastColumn) {
 
-                            var tooltipIcon = hot.getCell(0, 0).childNodes["0"];
-                            var tooltipIconStyle = tooltipIcon.style;
-
-                            if(!tooltipIconStyle || tooltipIconStyle.display === "none") {
+                            if(!tooltipDisplayed) {
 
                                 // tooltip icon is not being displayed, so skip the cell.
                                 hot.selectCell(0, 1);
 
-                                var selectedCell = hot.getSelected();
-
-                                var rowIndexSelectedCell = selectedCell[0];
-                                var colIndexSelectedCell = selectedCell[1];
-
-                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+                                var actionIcon = hot.getCell(rowIndex, colIndex).childNodes["0"];
 
                                 actionIcon.focus();
                             }
@@ -628,7 +617,6 @@
 
                                 hot.selectCell(0, 0);
                             }
-
                         }
                     }
                     catch(err) {
@@ -777,7 +765,7 @@
             errorCol.colWidths = 30;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
-            errorCol.disableVisualSelection = true;
+            errorCol.disableVisualSelection = false;
             frozenColumns.push(errorCol);
 
             var actionCol = new Object();
