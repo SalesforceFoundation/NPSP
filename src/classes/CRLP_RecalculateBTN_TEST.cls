@@ -48,6 +48,17 @@ private class CRLP_RecalculateBTN_TEST {
 
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name = 'UNITTEST');
         insert gau;
+
+        npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c();
+        rd.Name = 'test';
+        rd.npe03__Installments__c = 2;
+        rd.npe03__Contact__c = c.Id;
+        rd.npe03__Amount__c = 1;
+        rd.npe03__Installment_Period__c = system.label.npe03.RecurringDonationInstallmentPeriodYearly;
+        rd.npe03__Date_Established__c = date.newinstance(1970,6,12);
+        rd.npe03__Schedule_Type__c = system.label.npe03.RecurringDonationMultiplyValue;
+        rd.npe03__Open_Ended_Status__c = 'None'; 
+        insert rd;
     }
 
     /**
@@ -97,6 +108,19 @@ private class CRLP_RecalculateBTN_TEST {
         
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
 
+        npe03__Recurring_Donation__c rd = [SELECT npe03__Paid_Amount__c, (SELECT StageName FROM npe03__Donations__r) FROM npe03__Recurring_Donation__c LIMIT 1];
+        rd.npe03__Paid_Amount__c = null;
+        rd.npe03__Donations__r[0].StageName = UTIL_UnitTestData_TEST.getClosedWonStage();
+
+        TDTM_TriggerHandler.disableTDTM = true;
+        update rd.npe03__Donations__r[0];
+        update rd;
+        TDTM_TriggerHandler.disableTDTM = false;
+
+        // Confirm that the initial value of the next payment is null.
+        rd = [SELECT npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c LIMIT 1];
+        System.assert(rd.npe03__Paid_Amount__c == null);
+
         Test.startTest();
 
         CRLP_RecalculateBTN_CTRL ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(c));
@@ -107,13 +131,22 @@ private class CRLP_RecalculateBTN_TEST {
         System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
         ctlr.buttonClick();
 
+        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(rd));
+        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+        ctlr.buttonClick();
+
         Test.stopTest();
 
-        // Confirm that the legacy rollup logic resets the value of the Total Gift and
-        // Soft Credit to 0;
+        // Confirm that the legacy rollup logic updates the value of the Total Gift and
+        // Soft Credit to a value different than the original value (100);
         c = [SELECT npo02__TotalOppAmount__c, npo02__Soft_Credit_Total__c FROM Contact LIMIT 1];
-        System.assert(c.npo02__TotalOppAmount__c == 0);
-        System.assert(c.npo02__Soft_Credit_Total__c == 0);
+        System.assert(c.npo02__TotalOppAmount__c != 100);
+        System.assert(c.npo02__Soft_Credit_Total__c != 100);
+
+        // Confirm that the legacy rollup logic updates the value of the RD rollup field Paid Amount.
+        // to a value different than the original value (null).
+        rd = [SELECT npe03__Paid_Amount__c FROM npe03__Recurring_Donation__c LIMIT 1];
+        System.assert(rd.npe03__Paid_Amount__c != null);
     }
 
     /**
@@ -138,6 +171,7 @@ private class CRLP_RecalculateBTN_TEST {
         Contact c = [SELECT Id, FirstName, LastName, AccountId, Account.Id FROM Contact LIMIT 1];
         Account a = c.Account;
         General_Accounting_Unit__c gau = [SELECT Id FROM General_Accounting_Unit__c LIMIT 1];
+        npe03__Recurring_Donation__c rd = [SELECT Id FROM npe03__Recurring_Donation__c LIMIT 1];
 
         System.assertEquals(0, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
                 'Zero jobs should be currently scheduled');
@@ -174,7 +208,12 @@ private class CRLP_RecalculateBTN_TEST {
         ctlr.buttonClick();
         expectedJobCount++;
 
-        // validate that both the standard and the partial soft credit jobs were submitted
+        ctlr = new CRLP_RecalculateBTN_CTRL(new ApexPages.StandardController(rd));
+        System.assertEquals(false, ctlr.hasError, 'The controller constructor should have not generated an error');
+        ctlr.buttonClick();
+        expectedJobCount++;
+
+        // validate that the jobs were submitted
         System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
                 expectedJobCount + ' jobs should been queued');
 
