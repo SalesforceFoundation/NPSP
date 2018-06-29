@@ -561,7 +561,7 @@
 
             if (selectedColType == "dropdown") {
                 if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
-                    cancelActiveEditor(editor);
+                    disableEdit(editor);
                 }
             }
 
@@ -694,7 +694,7 @@
                                 rowIndex = lastRow;
                             }
                             else {
-                                row --;
+                                rowIndex --;
                             }
                         }
                         hot.selectCell(rowIndex, colIndex);
@@ -704,7 +704,7 @@
                     }
                 }
             }
-            else if (event.keyCode === 13) {
+            else if (event.keyCode === 13 && selectedColType != "dropdown") {
                 event.stopImmediatePropagation();
 
                 rowIndex ++;
@@ -733,7 +733,7 @@
             }
         }
 
-        function cancelActiveEditor(editor) {
+        function disableEdit(editor) {
             editor.TEXTAREA.setAttribute("disabled", "true");
         }
 
