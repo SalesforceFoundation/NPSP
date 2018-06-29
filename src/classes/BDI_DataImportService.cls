@@ -752,7 +752,7 @@ global with sharing class BDI_DataImportService {
         if (!diSettings.Run_Opportunity_Rollups_while_Processing__c) {
             List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
             for (Trigger_Handler__c th : handlers) {
-                if (th.Object__c == 'Opportunity' && th.Class__c == 'RLLP_OppRollup_TDTM') {
+                if (th.Object__c == 'Opportunity' && (th.Class__c == 'RLLP_OppRollup_TDTM' || th.Class__c == 'CRLP_Rollup_TDTM')) {
                     th.Active__c = false;
                 }
             }
