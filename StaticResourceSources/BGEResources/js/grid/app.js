@@ -10,6 +10,44 @@
 
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
+        var NumberEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var TextEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var DateEditorCustom = Handsontable.editors.DateEditor.prototype.extend();
+
+        NumberEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htRight handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        TextEditorCustom.prototype.createElements = function () {
+
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        DateEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.DateEditor.prototype.createElements.apply(this, arguments);
+
+            // Create datepicker input and update relevant properties
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            // Replace textarea with datepicker input
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+
         function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
@@ -72,7 +110,17 @@
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
-                contextMenu: ['remove_row'],
+                contextMenu: {
+					items: {
+						remove_row: {
+							disabled: function (){
+								return false
+							}
+						}
+					}
+				},
+                manualColumnResize: true,
+                renderAllRows: true,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -84,7 +132,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                modifyColWidth: modifyColWidthHandler
             });
 
             $scope.$apply();
@@ -164,9 +213,7 @@
             }
         }
 
-
         function cellsHandler(row, col, prop) {
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -182,17 +229,26 @@
          * @param {*} event
          * @param {*} coords
          */
-        function afterOnCellMouseDownHandler(event, coords) {
+        function afterOnCellMouseDownHandler(event, coords, td) {
 
             if (coords.row < 0) {
                 hot.deselectCell();
             }
+
+            var now = new Date().getTime();
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return;
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
         }
 
         function afterInitHandler() {
-
-            // console.warn('HOT - afterInitHandler');
-
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
 
@@ -213,9 +269,27 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-
-            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 30;
+            }
+            else if (col === 2) {
+
+                return 80;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -245,9 +319,6 @@
         }
 
         function afterRemoveRowHandler(index, amount) {
-
-            // console.warn('HOT - afterRemoveRowHandler');
-
             updateSummaryData();
         }
 
@@ -256,8 +327,6 @@
         }
 
         function afterChangeHandler(changes, source) {
-
-            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
@@ -481,78 +550,165 @@
 
         function beforeKeyDownHandler(event) {
 
-            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 39) {
+            var selection = hot.getSelected();
+            var rowIndex = selection[0];
+            var colIndex = selection[1];
 
-                var selection = hot.getSelected();
+            var selectedColType = hot.getDataType(rowIndex, colIndex);
+
+            var editor =  hot.getActiveEditor();
+
+            if (selectedColType == "dropdown") {
+                if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
+                    disableEdit(editor);
+                }
+            }
+
+            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
 
                 var rowIndex = selection[0];
                 var colIndex = selection[1];
-    
+
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
-    
+
                 var lastColumn = numberOfColumns - 1;
                 var lastRow = numberOfRows - 1;
-    
+
                 var isFirstRow = (rowIndex === 0) ? true : false;
 
+                var shiftKeyIsPressed = event.shiftKey;
 
-                // Enter shouldn't go into Edit mode on a cell, instead it should move to the next row.
-                if (event.keyCode === 13) {
+                if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
 
-                    event.stopImmediatePropagation();
+                    // Tab or right arrow was pressed
 
-                    rowIndex ++;
+                    try {
+                        if (colIndex === 0) {
 
-                    hot.selectCell(rowIndex, colIndex);
+                            var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if(tooltipIconStyle.display === "none") {
+
+                                // tooltip icon is not being displayed, so skip the cell.
+                                hot.selectCell(rowIndex, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
+                            }
+                            else {
+
+                                hot.selectCell(rowIndex, 0);
+                            }
+                        }
+                        else if (rowIndex === lastRow && colIndex === lastColumn) {
+
+                            var tooltipIcon = hot.getCell(0, 0).childNodes["0"];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if(!tooltipIconStyle || tooltipIconStyle.display === "none") {
+
+                                // tooltip icon is not being displayed, so skip the cell.
+                                hot.selectCell(0, 1);
+
+                                var selectedCell = hot.getSelected();
+
+                                var rowIndexSelectedCell = selectedCell[0];
+                                var colIndexSelectedCell = selectedCell[1];
+
+                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
+
+                                actionIcon.focus();
+                            }
+                            else {
+
+                                hot.selectCell(0, 0);
+                            }
+
+                        }
+                    }
+                    catch(err) {
+                        console.log(err);
+                    }
                 }
-                if (event.keyCode === 9 || event.keyCode === 39) {
+                else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
 
                     // Tab or right arrow was pressed
                     try {
 
-                        if (colIndex === 0) {
+                        var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
+                        var tooltipIconStyle = tooltipIcon.style;
 
-                            colIndex = 1;
+                        if(tooltipIconStyle.display === "none") {
+
+                            if (colIndex === 3) {
+
+                                colIndex = lastColumn;
+
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
+                            }
                         }
+                        else {
 
+                            if (colIndex === 2) {
+
+                                colIndex = lastColumn;
+
+                                if (isFirstRow) {
+
+                                    rowIndex = lastRow;
+                                }
+                                else {
+
+                                    row --;
+                                }
+                            }
+                        }
                         hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
-
                         console.log(err);
                     }
                 }
-                else if (event.keyCode === 37) {
-
-                    // Left arrow was pressed
+                else if (event.keyCode === 38) {
                     try {
-
                         if (colIndex === 1) {
-
                             colIndex = lastColumn;
-
                             if (isFirstRow) {
-
                                 rowIndex = lastRow;
                             }
                             else {
-
-                                row --;
+                                rowIndex --;
                             }
                         }
-
                         hot.selectCell(rowIndex, colIndex);
                     }
                     catch(err) {
-
                         console.log(err);
                     }
-
                 }
             }
+            else if (event.keyCode === 13 && selectedColType != "dropdown") {
+                event.stopImmediatePropagation();
 
+                rowIndex ++;
 
+                hot.selectCell(rowIndex, colIndex);
+            }
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
@@ -575,6 +731,10 @@
             }
         }
 
+        function disableEdit(editor) {
+            editor.TEXTAREA.setAttribute("disabled", "true");
+        }
+
         /// Auxiliary Methods
 
         function getCellDataType(sfdcDatatype) {
@@ -594,6 +754,8 @@
                 case 'STRING':
                 case 'EMAIL':
                 case 'ID':
+                case 'TEXTAREA':
+                case 'URL':
                     result = 'text';
                     break;
 
@@ -625,7 +787,6 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
             idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
@@ -645,8 +806,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.disableVisualSelection = true;
-            actionCol.manualColumnResize =  true;
             actionCol.colWidths = 80;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
@@ -672,27 +831,33 @@
                     col.correctFormat = true;
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
                     col.colWidths = 170;
+                    col.editor = DateEditorCustom;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 80;
+                    col.editor = NumberEditorCustom;
                 }
-                else if (templateField.type === "EMAIL") {
+                else if (templateField.type === "EMAIL" || templateField.type === "STRING" ||
+                         templateField.type === "TEXTAREA" || templateField.type === "URL") {
 
+                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === "BOOLEAN") {
 
@@ -701,12 +866,14 @@
                 }
                 else if (templateField.type === 'PHONE') {
 
-                    col.colWidths = 150;
+                    col.colWidths = 50;
+                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
                     col.type = "numeric";
                     col.format = '0.000%';
                     col.colWidths = 60;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === 'GEOLOCATION') {
                     col.type = "text";
@@ -717,15 +884,16 @@
                     col.timeFormat= 'h:mm:ss a';
                     col.correctFormat= true;
                     col.colWidths = 80;
+                    col.editor = TextEditorCustom;
                 }
+
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                         // In this case, the ENTER key is ignored and the editor field remains open.
                         col.source = Object.keys(templateField.picklistValues);
 
                         if (templateField.isRecordType) {
@@ -772,19 +940,21 @@
 
             removeMessage();
             var messageSection = document.createElement('section');
-            messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-            messageSection.role = 'dialog'
+            messageSection.className = 'slds-popover slds-nubbin_bottom-left slds-theme_error tooltip-error';
+            messageSection.role = 'dialog';
 
             var messageSectionDiv = document.createElement('div');
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
-            messageSectionDivList.style.listStyleType = 'disc';
+            messageSectionDivList.style.listStyleType = 'none';
 
             errors.forEach(function(errorElement) {
 
                 var messageSectionDivListElement = document.createElement('li');
-                messageSectionDivListElement.innerHTML = errorElement.field + " : " + errorElement.messages;
+                messageSectionDivListElement.className += "slds-p-around_small";
+
+                messageSectionDivListElement.innerHTML = setErrorMessage(errorElement.field, errorElement.messages);
                 messageSectionDivList.appendChild(messageSectionDivListElement);
             })
 
@@ -908,10 +1078,6 @@
             Handsontable.dom.empty(td);
             td.appendChild(iconContainer);
 
-            td.style.borderBottom = 'none';
-            td.style.borderTop = 'none';
-            td.style.borderLeft = 'none';
-            td.style.background = 'white !important';
             td.className = 'tooltip-cell';
 
             return td;
@@ -929,6 +1095,7 @@
             }, 1000);
         };
 
+        //ACTION picklist
         function getLightningPicklist() {
 
             var divControl = document.createElement('div');
@@ -972,7 +1139,19 @@
             return liElement;
         }
 
+        function setErrorMessage(apiName, errorMsg) {
+
+            var message = apiName.split("_c").join("");
+            
+            var message = message.split("_").join(" ").trim();
+            for (var i = 0; i < message.length; i++) {
+                if (!isNaN(message[i]) && message[i] != " ") {
+                    message = message.split(message[i]).join("");
+                    break;
+                }
+            }
+            message = message + " : " + errorMsg;
+            return message;
+        }
     });
-
 })();
-
