@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>Datum van erkenning</help>
-        <label>Erkenning Datum</label>
+        <help>Datum van Ontvangstbevestiging</help>
+        <label>Ontvangstbevestiging Datum</label>
         <name>Acknowledgment_Date__c</name>
     </fields>
     <fields>
-        <help>Status van Erkenning van deze gift.</help>
-        <label>Erkenning Status</label>
+        <help>Status van Ontvangstbevestiging van deze gift.</help>
+        <label>Ontvangstbevestiging Status</label>
         <name>Acknowledgment_Status__c</name>
         <picklistValues>
             <masterLabel>Acknowledged</masterLabel>
-            <translation>Erkend</translation>
+            <translation>Ontvangst Bevestigd</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Do Not Acknowledge</masterLabel>
-            <translation>Niet Erkend</translation>
+            <translation>Ontvangst Niet Bevestigen</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Email Acknowledgment Not Sent</masterLabel>
-            <translation>E-mail Erkenning Niet Verzonden</translation>
+            <translation>E-mail Ontvangstbevestiging Niet Verzonden</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Email Acknowledgment Now</masterLabel>
-            <translation>E-mail Erkenning Nu</translation>
+            <translation>E-mail Ontvangstbevestiging Nu</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>To Be Acknowledged</masterLabel>
-            <translation>Te Worden Erkend</translation>
+            <translation>Ontvangst Nog Te Bevestigen</translation>
         </picklistValues>
     </fields>
     <fields>
         <help>De datum waarop de donateur specifiek is gevraagd naar de donatie, in tegenstelling tot de Opportunity sluitingsdatum die de organisatie instelt wanneer de Opportunity voor het eerst gemaakt is, of wanneer de Opportunity is gewonnen.</help>
-        <label>Vraag Datum</label>
+        <label>Vraagdatum</label>
         <name>Ask_Date__c</name>
     </fields>
     <fields>
@@ -42,16 +42,16 @@
     </fields>
     <fields>
         <help>Notities over waarom de donatie vraag niet succesvol was.</help>
-        <label>Reden Gesloten Verloren</label>
+        <label>Gesloten/Verloren Reden</label>
         <name>Closed_Lost_Reason__c</name>
     </fields>
     <fields>
-        <help>De Eerlijke Markt Waarde van een in natura gift.</help>
-        <label>Eerlijke Markt Waarde</label>
+        <help>De Eerlijke Marktwaarde van een gift in natura.</help>
+        <label>Eerlijke Marktwaarde</label>
         <name>Fair_Market_Value__c</name>
     </fields>
     <fields>
-        <help>Categoriseert het type vragen voor deze opportunity.</help>
+        <help>Categoriseert het type vragen voor deze Opportunity.</help>
         <label>Gift Strategie</label>
         <name>Gift_Strategy__c</name>
         <picklistValues>
@@ -68,42 +68,42 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>De datum van de schenking&apos;s ontstaan, volgens het doucment of contract verzonden door de organisatie die de schenking geeft.</help>
-        <label>Schenking Contract Datum</label>
+        <help>De datum van het ontstaan van het Fonds, volgens het document of contract gestuurd door de Fondsenschenkende Organisatie.</help>
+        <label>Fonds Contract Datum</label>
         <name>Grant_Contract_Date__c</name>
     </fields>
     <fields>
-        <help>Volgt unieke nummers die soms toegewezen zijn door organisaties die schenkingen geven.</help>
-        <label>Schenking Contract Nummer</label>
+        <help>Volgt unieke nummers die soms toegewezen zijn door organisaties die fondsen schenken.</help>
+        <label>Fonds Contract Nummer</label>
         <name>Grant_Contract_Number__c</name>
     </fields>
     <fields>
-        <label>Schenking Periode Eind Datum</label>
+        <label>Fonds Periode Einddatum</label>
         <name>Grant_Period_End_Date__c</name>
     </fields>
     <fields>
-        <label>Schenking Periode Start  Datum</label>
+        <label>Fonds Periode Startdatum</label>
         <name>Grant_Period_Start_Date__c</name>
     </fields>
     <fields>
-        <help>Beschrijf de financiering gebieden voor de schenking. Je kan alles invullen wat je wilt. Bijvoorbeeld, je kunt de naam van het programma waar de schenking bij hoort invullen.</help>
-        <label>Programma Gebieden</label>
+        <help>Beschrijft de financieringsgebieden voor het fonds. Dit veld kan bijvoorbeeld gebruikt worden voor de naam van het programma waar het fonds bij hoort.</help>
+        <label>Programmagebieden</label>
         <name>Grant_Program_Area_s__c</name>
     </fields>
     <fields>
-        <help>Een URL die wijst naar de vereisten op een schenking-maker zijn website.</help>
-        <label>Schenking Vereisten Website</label>
+        <help>Een URL die wijst naar de vereisten voor een fonds op de website van de Fondsenschenkende Organisatie.</help>
+        <label>Fonds Vereisten Website</label>
         <name>Grant_Requirements_Website__c</name>
     </fields>
     <fields>
-        <help>Het bestaande contact record van de geëerde persoon voor deze donatie.</help>
-        <label>Geëerd Contactpersoon</label>
+        <help>Het bestaande Contactpersoon record voor de Gehonoreerde Contactpersoon voor deze Donatie.</help>
+        <label>Gehonoreerde Contactpersoon</label>
         <name>Honoree_Contact__c</name>
-        <relationshipLabel>Opportunties (Geëerde Contactpersoon)</relationshipLabel>
+        <relationshipLabel>Opportunities (Gehonoreerde Contactpersoon)</relationshipLabel>
     </fields>
     <fields>
-        <help>De geëerde persoon zijn naam verschaft door de donateur. Indien dit veld leeg is, en de Eerbetoon contact veld bevat een waarde, zal Salesforce automatisch deze waarde invullen.</help>
-        <label>Geëerd Naam</label>
+        <help>De Gehonoreerde Naam gegeven door de donateur. Als dit veld leeg is en de Gehonoreerde Contactpersoon heeft een waarde, wordt dit veld automatisch daarmee gevuld.</help>
+        <label>Gehonoreerde Naam</label>
         <name>Honoree_Name__c</name>
     </fields>
     <fields>
@@ -112,8 +112,8 @@
         <name>In_Kind_Description__c</name>
     </fields>
     <fields>
-        <help>Aangevinkt als de donateur de Eerlijke Markt Waarde verschaft heeft voor deze in natura gift.</help>
-        <label>In Natura Donateur Verklaarde Waarde</label>
+        <help>Aangevinkt als de donateur heeft voldaan aan de Eerlijke Marktwaarde voor de gift in natura.</help>
+        <label>In Natura Aangegeven Waarde</label>
         <name>In_Kind_Donor_Declared_Value__c</name>
     </fields>
     <fields>
@@ -130,13 +130,13 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Indien geselecteerd, impliceert dat de schenking een vernieuwing is van een vorige schenking.</help>
-        <label>Is Nieuwe Schenking</label>
+        <help>Indien geselecteerd, geeft aan dat het om een vernieuwde Fonds gaat.</help>
+        <label>Is Vernieuwd Fonds</label>
         <name>Is_Grant_Renewal__c</name>
     </fields>
     <fields>
         <help>Het Account van het bedrijf dat de gift zal matchen.</help>
-        <label>Matching Gift Bedrag</label>
+        <label>Matching Gift Account</label>
         <name>Matching_Gift_Account__c</name>
         <relationshipLabel>Gematchte Giften</relationshipLabel>
     </fields>
@@ -169,7 +169,7 @@
         <relationshipLabel>Gematchte Giften</relationshipLabel>
     </fields>
     <fields>
-        <help>De NPSP werkt dit veld automatisch bij op basis van de volgende Grote Deadline record.</help>
+        <help>NPSP werkt dit veld automatisch bij op basis van de volgende Leverbare record.</help>
         <label>Volgende Leverdatum</label>
         <name>Next_Grant_Deadline_Due_Date__c</name>
     </fields>
@@ -206,49 +206,49 @@
         <relationshipLabel>Opportunties (Notificatie Ontvanger)</relationshipLabel>
     </fields>
     <fields>
-        <help>De contact informatie (verschaft door de donateur) voor de notificatie ontvanger.</help>
+        <help>De contactinformatie (verschaft door de donateur) voor de notificatie ontvanger.</help>
         <label>Notificatie Ontvanger Informatie</label>
         <name>Notification_Recipient_Information__c</name>
     </fields>
     <fields>
-        <help>De naam (verschaft door de donateur) van de persoon die moet gewaarschuwd worden voor deze gift. Als dit veld leeg is, en de Notificatie Ontvanger Contact veld bevat een waarde, zal Salesforce dit veld automatisch vullen met deze waarde.</help>
+        <help>De naam (voorzien door de donateur) van de persoon die geïnformeerd moet worden voor deze gift. Als dit veld leeg is, en het Notificatie Ontvanger Contactpersoon veld bevat een waarde, zal Salesforce dit veld automatisch vullen met deze waarde.</help>
         <label>Notificatie Ontvanger Naam</label>
         <name>Notification_Recipient_Name__c</name>
     </fields>
     <fields>
-        <help>Als deze schenking een vernieuwing is van een vorige schenking, gebruik dit veld om dit record te relateren aan het vorige record.</help>
-        <label>Vorige Schenking/Gift Opportunity</label>
+        <help>Als dit Fonds een vernieuwing is van een vorif Fonds, wordt dit veld gebruikt om deze te koppelen aan het vorige record.</help>
+        <label>Vorige Fonds/Gift Opportunity</label>
         <name>Previous_Grant_Opportunity__c</name>
-        <relationshipLabel>Gerelateerde Schenkingen/Giften</relationshipLabel>
+        <relationshipLabel>Gerelateerde Fondsen/Giften</relationshipLabel>
     </fields>
     <fields>
-        <help>De status die gebruikt moet worden bij het maken van een campagnelid voor deze opportunity&apos;s primaire contact en primaire campagne bron. Laat standaard leeg met een reactiestatus voor gesloten/gewonnen opp, en een non-responded status voor andere opp.</help>
+        <help>De status die gebruikt moet worden bij het maken van een Campagnelid voor deze Opp&apos;s Primaire contact en Primaire Campagne Bron. Laat standaard leeg met een Gereageerd Status voor Gesloten/Gewonnen Opps, en een Niet Gereageerd Status voor andere Opps.</help>
         <label>Primair Contact Campagnelid Status</label>
         <name>Primary_Contact_Campaign_Member_Status__c</name>
     </fields>
     <fields>
-        <help>De primaire contactpersoon voor deze opportunity. De primaire contactpersoon rol wordt gesynchroniseerd met dit veld. Voor individuele donaties, dit geeft attributie voor deze opportunity.</help>
+        <help>De Primaire Contactpersoon voor deze Opportunity. De Primaire Contactpersoon Rol wordt gesynchroniseerd met dit veld. Voor individuele donaties, duidt dit op de bijdrage aan deze Opportunity.</help>
         <label>Primair Contactpersoon</label>
         <name>Primary_Contact__c</name>
-        <relationshipLabel>Opportunties</relationshipLabel>
+        <relationshipLabel>Opportunities</relationshipLabel>
     </fields>
     <fields>
         <help>De datum waarop de donateur is gekwalificeerd voor deze donatie.</help>
-        <label>Gekwalificeerde Datum</label>
+        <label>Datum Kwalificatie</label>
         <name>Qualified_Date__c</name>
     </fields>
     <fields>
-        <help>Termijn naam voor inclusie in Opportunity Naamgeving. Laat de betalingstermijn nummer tussen haakjes voor openstaande terugkerende donaties.</help>
+        <help>Termijn Naam voor insluiting in Opportunity Naamgeving. Laat het Termijn Nummer voor doorlopende donaties tussen haakjes zien, of laat het Termijn Nummer zien van de al binnengekomen termijnen.</help>
         <label>Terugkerende Donatie Termijn Naam</label>
         <name>Recurring_Donation_Installment_Name__c</name>
     </fields>
     <fields>
-        <help>De betalingstermijn nummer van deze opportunity&apos;s terugkerende donatie schema.</help>
+        <help>Het Termijn Nummer van deze opportunity&apos;s terugkerende donatie schema.</help>
         <label>Terugkerende Donatie Termijn Nummer</label>
         <name>Recurring_Donation_Installment_Number__c</name>
     </fields>
     <fields>
-        <help>Het bedrag dat je verzoekt. Dit nummer kan anders zijn dan het uiteindelijke prijs bedrag.</help>
+        <help>Het bedrag dat je verzoekt. Dit nummer kan anders zijn dan het uiteindelijke binnengekomen bedrag.</help>
         <label>Aangevraagd Bedrag</label>
         <name>Requested_Amount__c</name>
     </fields>
@@ -291,7 +291,7 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Schenking Informatie</label>
+            <label>Fonds Informatie</label>
             <section>Grant Information</section>
         </sections>
         <sections>
@@ -325,7 +325,7 @@
             <section>Major Gift Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label>Matching Gift Informatie</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
@@ -333,7 +333,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- Tribute Information --></label>
+            <label>Eerbetoon Informatie</label>
             <section>Tribute Information</section>
         </sections>
     </layouts>
@@ -351,7 +351,7 @@
     <layouts>
         <layout>Membership Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -367,7 +367,7 @@
             <section>Payment Information</section>
         </sections>
         <sections>
-            <label><!-- System Information --></label>
+            <label>Systeem Informatie</label>
             <section>System Information</section>
         </sections>
     </layouts>
@@ -380,11 +380,11 @@
         <name>Quick_Update</name>
     </quickActions>
     <webLinks>
-        <label>Email Bevestiging</label>
+        <label>E-mail Ontvangstbevestiging</label>
         <name>Email_Acknowledgment</name>
     </webLinks>
     <webLinks>
-        <label>Email Bevestigingen</label>
+        <label>E-mail Ontvangstbevestigingen</label>
         <name>Email_Acknowledgments</name>
     </webLinks>
     <webLinks>
@@ -392,7 +392,7 @@
         <name>Find_Matched_Gifts</name>
     </webLinks>
     <webLinks>
-        <label>Soft Credits Beheren</label>
+        <label>Beheer Soft Credits</label>
         <name>Manage_Soft_Credits</name>
     </webLinks>
     <webLinks>
