@@ -932,19 +932,21 @@
 
             removeMessage();
             var messageSection = document.createElement('section');
-            messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-            messageSection.role = 'dialog'
+            messageSection.className = 'slds-popover slds-nubbin_bottom-left slds-theme_error tooltip-error';
+            messageSection.role = 'dialog';
 
             var messageSectionDiv = document.createElement('div');
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
-            messageSectionDivList.style.listStyleType = 'disc';
+            messageSectionDivList.style.listStyleType = 'none';
 
             errors.forEach(function(errorElement) {
 
                 var messageSectionDivListElement = document.createElement('li');
-                messageSectionDivListElement.innerHTML = errorElement.field + " : " + errorElement.messages;
+                messageSectionDivListElement.className += "slds-p-around_small";
+
+                messageSectionDivListElement.innerHTML = setErrorMessage(errorElement.field, errorElement.messages);
                 messageSectionDivList.appendChild(messageSectionDivListElement);
             })
 
@@ -1068,10 +1070,6 @@
             Handsontable.dom.empty(td);
             td.appendChild(iconContainer);
 
-            td.style.borderBottom = 'none';
-            td.style.borderTop = 'none';
-            td.style.borderLeft = 'none';
-            td.style.background = 'white !important';
             td.className = 'tooltip-cell';
 
             return td;
@@ -1132,6 +1130,20 @@
 
             return liElement;
         }
+
+        function setErrorMessage(apiName, errorMsg) {
+
+            var message = apiName.split("_c").join("");
+            
+            var message = message.split("_").join(" ").trim();
+            for (var i = 0; i < message.length; i++) {
+                if (!isNaN(message[i]) && message[i] != " ") {
+                    message = message.split(message[i]).join("");
+                    break;
+                }
+            }
+            message = message + " : " + errorMsg;
+            return message;
+        }
     });
 })();
-
