@@ -208,4 +208,8 @@
         <label>Haushalt verwalten</label>
         <name>Manage_Household</name>
     </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
 </CustomObjectTranslation>
