@@ -8,9 +8,6 @@
         var labels = cmp.get("v.labels");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
-            console.log("Mode is " + mode);
-            console.log("In changeMode");
-
             //View is the only readOnly mode. Clone removes the activeRollupId for save.
             //Create hides all fields
             if (mode === "view") {
@@ -154,6 +151,24 @@
     },
 
     /**
+     * @description: determines whether filter rule operators are compatible
+     * @param operator
+     * @param previous operator
+     * @return boolean
+     */
+    isCompatibleOperation: function(operator, previousOperator) {
+
+        var arrayOps = ['In_List','Not_In_List','Is_Included','Is_Not_Included'];
+
+        if ((arrayOps.includes(previousOperator) && arrayOps.includes(operator))
+        || (!arrayOps.includes(previousOperator) && !arrayOps.includes(operator))) {
+            return true;
+        } else {
+            return false;
+        }
+    },
+
+     /**
      * @description: opens a modal popup so user can add or edit a filter rule
      * @param field - field name
      */
@@ -212,18 +227,15 @@
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
-                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
                 var mode = cmp.get("v.mode");
                 action.setParams({jobId: jobId, recordName: recordName, objectType: 'Filter', mode: mode});
                 action.setCallback(this, function (response) {
-                    console.log('getDeploymentStatus.callback');
                     var state = response.getState();
                     var mode = cmp.get("v.mode");
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + JSON.stringify(deployResult));
                         // if there is a record id response
                         if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
@@ -343,7 +355,7 @@
             updatedLabel = valueApiName.join(";\n");
             var newValueApiName = valueApiName.join(";");
             cmp.set("v.activeFilterRule.value", newValueApiName);
-        } else if (filterRuleFieldType === "text" && valueApiName.indexOf(";") > 0 && valueApiName) {
+        } else if (filterRuleFieldType === "text-picklist" && valueApiName && valueApiName.indexOf(";") > 0) {
             var valueList = valueApiName.split(';');
             var cleanList = valueList.map(function(value){
                return value.replace('\n', '').trim();
@@ -365,56 +377,90 @@
      */
     rerenderValue: function(cmp, operator, value) {
         var type = this.retrieveFieldType(cmp, cmp.get("v.activeFilterRule.fieldName"));
-        console.log('type is ' + type);
-        console.log('operator is ' + operator);
+        var filterRuleFieldType;
+
         if (type === 'boolean') {
             //boolean fields don't have official translations (confirmed in process builder)
-            cmp.set("v.filterRuleFieldType", 'picklist');
+            filterRuleFieldType = 'picklist';
             var options = [{value: 'true', label: 'True'}, {value: 'false', label: 'False'}];
             cmp.set("v.filterRuleConstantPicklist", options);
         } else if (type === 'date') {
-            cmp.set("v.filterRuleFieldType", 'date');
+            filterRuleFieldType = 'date';
         } else if (type === 'datetime') {
-            cmp.set("v.filterRuleFieldType", 'datetime-local');
+            filterRuleFieldType = 'datetime-local';
         } else if (type === 'picklist' || type === 'multipicklist') {
             if (operator === 'Equals' || operator === 'Not_Equals') {
                 cmp.set("v.activeFilterRule.value", value);
-                cmp.set("v.filterRuleFieldType", 'picklist');
+                filterRuleFieldType = 'picklist';
             } else if (operator === 'Starts_With' || operator === 'Contains' ||  operator === 'Does_Not_Contain') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                filterRuleFieldType = 'text';
             } else if (operator === 'In_List' || operator === 'Not_In_List'
                 || operator === 'Is_Included' || operator === 'Is_Not_Included') {
                 //clear array or reformat values into an array
-                var values = (value === "") ? [] : value.split(";");
+                var values;
+                if (Array.isArray(value)) {
+                    values = value;
+                } else {
+                    values = (value === "") ? [] : value.split(";");
+                }
                 cmp.set("v.activeFilterRule.value", values);
-                cmp.set("v.filterRuleFieldType", 'multipicklist');
+                filterRuleFieldType = 'multipicklist';
             }
         } else if (type === 'reference') {
             var field = cmp.get("v.activeFilterRule.fieldName");
             //record type is a special case where we want to exactly match options and provide picklists
             if (field !== 'RecordTypeId') {
-                cmp.set("v.filterRuleFieldType", 'text');
+                //check if text field is offered but a user can enter a list of semi-colon separated values
+                if (operator === 'In_List' || operator === 'Not_In_List'
+                    || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                    filterRuleFieldType = 'text-picklist';
+                } else {
+                    filterRuleFieldType = 'text';
+                }
             } else {
                 if (operator === 'Equals' || operator === 'Not_Equals') {
                     cmp.set("v.activeFilterRule.value", value);
-                    cmp.set("v.filterRuleFieldType", 'picklist');
+                    filterRuleFieldType = 'picklist';
                 } else if (operator === 'In_List' || operator === 'Not_In_List') {
                     //clear array or reformat values into an array
-                    var values = (value === "") ? [] : value.split(";");
+                    var values;
+                    if (Array.isArray(value)) {
+                        values = value;
+                    } else {
+                        values = (value === "") ? [] : value.split(";");
+                    }
                     cmp.set("v.activeFilterRule.value", values);
-                    cmp.set("v.filterRuleFieldType", 'multipicklist');
+                    filterRuleFieldType = 'multipicklist';
                 }
             }
         } else if (type === 'double' || type === 'integer'
             || type === 'currency' || type === 'percent') {
-            cmp.set("v.filterRuleFieldType", 'number');
+            filterRuleFieldType = 'number';
         } else {
-            cmp.set("v.filterRuleFieldType", 'text');
+            //same check for semi-colon separated values
+            if (operator === 'In_List' || operator === 'Not_In_List'
+                || operator === 'Is_Included' || operator === 'Is_Not_Included') {
+                filterRuleFieldType = 'text-picklist';
+            } else {
+                filterRuleFieldType = 'text';
+            }
+        }
+
+        //rerender filterRuleFieldType to clear any existing errors
+        cmp.set("v.filterRuleFieldType", '');
+        cmp.set("v.filterRuleFieldType", filterRuleFieldType);
+
+        // Allow for null values ONLY on Equals and Not Equals operators; also clear potential required value errors
+        if (operator === 'Equals' || operator === 'Not_Equals') {
+            cmp.set("v.isValueRequired", false);
+            cmp.find("filterRuleErrorText").set("v.value", '');
+        } else {
+            cmp.set("v.isValueRequired", true);
         }
     },
 
     /**
-     * @description: opens a modal popup so user can add or edit a filter rule
+     * @description: resets active filter rule values
      */
     resetActiveFilterRule: function(cmp) {
         var defaultFilterRule = {objectName: '', fieldName: '', operationName: '', value: ''};
@@ -424,12 +470,13 @@
     },
 
     /**
-     * @description: resets the list of filter rules based on the
+     * @description: resets the list of filter rule fields based on the selected object
      * @param object - selected object API name
      */
     resetFilterRuleFields: function(cmp, object) {
         var objectDetails = cmp.get("v.objectDetails");
-        cmp.set("v.filteredFields", objectDetails[object]);
+        var sortedFields = this.sortFields(objectDetails[object]);
+        cmp.set("v.filteredFields", sortedFields);
     },
 
     /**
@@ -495,18 +542,12 @@
         action.setParams({filterGroupCMT: JSON.stringify(filterGroupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('STATE=' + state);
 
             if (state === "SUCCESS") {
                 // Response value will be in the format of "JobId-RecordDeveloperName"
                 var responseText = response.getReturnValue();
                 var jobId = responseText.split("-")[0];
                 var recordName = responseText.split("-")[1];
-
-                console.log('Response = ' + response.getReturnValue());
-                console.log('Returned jobId = ' + jobId);
-                console.log('Returned RecordName = ' + recordName);
-
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
 
             } else if (state === "ERROR") {
@@ -535,6 +576,23 @@
             'message': message
         });
         sendMessage.fire();
+    },
+
+    /**
+     * @description Sort provided fields by the field labels
+     * @param fields - list of fields to sort
+     */
+    sortFields: function(fields){
+        fields.sort(function (a, b) {
+            if (a.label < b.label) {
+                return -1;
+            }
+            if (a.label > b.label) {
+                return 1;
+            }
+            return 0;
+        });
+        return fields;
     },
 
     /**
@@ -620,16 +678,14 @@
                     && filterRuleList[i].fieldName === filterRule.fieldName
                     && filterRuleList[i].operationName === filterRule.operationName
                     && filterRuleList[i].value === filterRule.value) {
-                    cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleDuplicate"));
+                    cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleDuplicate"));
                     return false;
                 }
             }
         }
 
-        if (canSave) {
-            cmp.set("v.filterRuleError", "");
-        } else {
-            cmp.set("v.filterRuleError", cmp.get("v.labels.filterRuleFieldMissing"));
+        if (!canSave) {
+            cmp.find("filterRuleErrorText").set("v.value", cmp.get("v.labels.filterRuleFieldMissing"));
         }
 
         return canSave;
