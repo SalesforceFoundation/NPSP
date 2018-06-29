@@ -10,7 +10,7 @@
     </caseValues>
     <fields>
         <help>Een optioneel Uniek Id veld dat wordt gebruikt voor Account matching</help>
-        <label>Account aangepast Uniek ID</label>
+        <label>Account Aangepast Uniek ID</label>
         <name>Account_Custom_Unique_ID__c</name>
     </fields>
     <fields>
@@ -19,18 +19,18 @@
         <name>Account_Matching_Rule__c</name>
     </fields>
     <fields>
-        <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch</help>
-        <label>Batchgrootte</label>
+        <help>Het aantal NPSP data records dat kan worden geïmporteerd in elke batch.</help>
+        <label>Batch Verwerkingsgrootte</label>
         <name>Batch_Size__c</name>
     </fields>
     <fields>
         <help>een optioneel Uniek Id veld dat wordt gebruikt voor Contactpersoon matching</help>
-        <label>Contact Aangepast uniek ID</label>
+        <label>Contactpersoon Aangepast Uniek ID</label>
         <name>Contact_Custom_Unique_ID__c</name>
     </fields>
     <fields>
         <help>Geeft aan welke regel gevolgd moet worden wanneer er geprobeerd wordt Contactpersonen met een Data import te matchen tegen bestaande Contactpersonen.</help>
-        <label>Contact Matching Regel</label>
+        <label>Contactpersoon Matching Regel</label>
         <name>Contact_Matching_Rule__c</name>
     </fields>
     <fields>

@@ -9,7 +9,7 @@
         <value><!-- Address Verification Settings --></value>
     </caseValues>
     <fields>
-        <help>URL die wordt gebruikt voor adres verificatie</help>
+        <help>URL die wordt gebruikt voor adresverificatie.</help>
         <label>Adresverificatie URL</label>
         <name>Address_Verification_Endpoint__c</name>
     </fields>
@@ -24,12 +24,12 @@
         <name>Auth_Token__c</name>
     </fields>
     <fields>
-        <help>De Salesforce class die verantwoordelijke is voor het koppelen met de SmartyStreets API en verifiëren van adressen</help>
+        <help>De Salesforce klasse die verantwoordelijke is voor het koppelen met de SmartyStreets API en verifiëren van adressen.</help>
         <label>Verificatieservice</label>
         <name>Class__c</name>
     </fields>
     <fields>
-        <help>Automatische adresverificatie voor nieuwe adressen inschakelen</help>
+        <help>Inschakelen automatische adresverificatie voor nieuwe adressen.</help>
         <label>Schakel Automatische Verificatie in</label>
         <name>Enable_Automatic_Verification__c</name>
     </fields>
@@ -50,7 +50,7 @@
     </fields>
     <fields>
         <help>Geeft aan of u gebruik maakt van de SmartyStreets adresverificatie service</help>
-        <label>AFGEKEURD - door gebruik SmartyStreets</label>
+        <label>VEROUDERD - Using SmartyStreets</label>
         <name>Using_SmartyStreets__c</name>
     </fields>
     <fields>
