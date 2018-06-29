@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomObjectTranslation xmlns="http://soap.sforce.com/2006/04/metadata">
     <fields>
-        <help>De batch waar deze Account is gemaakt.</help>
+        <help>De Batch waar dit Account in is gemaakt.</help>
         <label>Bactch</label>
         <name>Batch__c</name>
         <relationshipLabel><!-- Accounts --></relationshipLabel>
     </fields>
     <fields>
-        <help>De standaard programma gebieden die deze organisatie financiert.</help>
-        <label>Financiering Focus</label>
+        <help>De Programmagebieden die deze organisatie financieert.</help>
+        <label>Financieringsfocus</label>
         <name>Funding_Focus__c</name>
         <picklistValues>
             <masterLabel>Animal Welfare</masterLabel>
@@ -20,7 +20,7 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Capacity Building</masterLabel>
-            <translation>Capaciteit Opbouwen</translation>
+            <translation>Capaciteitsopbouw</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Education</masterLabel>
@@ -36,17 +36,17 @@
         </picklistValues>
         <picklistValues>
             <masterLabel>Human Services</masterLabel>
-            <translation>Menselijke Diensten</translation>
+            <translation>Sociale Dienstverlening</translation>
         </picklistValues>
     </fields>
     <fields>
-        <help>Geeft aan dat deze organisatie een schenking donateur  is. Is toepasbaar op instellingen, overheidsinstanties, corporaties, etc.</help>
-        <label>Schenking donateur</label>
+        <help>Geeft aan dat deze organisatie fondsen kan schenken. Is toepasbaar op stichtingen, overheidsinstanties, corporaties, etc.</help>
+        <label>Schenker Fondsen</label>
         <name>Grantmaker__c</name>
     </fields>
     <fields>
-        <help>De naam van het bedrijf&apos;s matching gift adminstrator</help>
-        <label>Matching Gift Naam Administrator</label>
+        <help>De naam van de administrateur van de Matching Gift van het bedrijf.</help>
+        <label>Matching Gift Naam Administrateur</label>
         <name>Matching_Gift_Administrator_Name__c</name>
     </fields>
     <fields>
@@ -55,17 +55,17 @@
         <name>Matching_Gift_Amount_Max__c</name>
     </fields>
     <fields>
-        <help>De kleinste gift een bedrijf wil matchen.</help>
+        <help>De kleinste gift dat een bedrijf wil matchen.</help>
         <label>Minimaal Matching Gift Bedrag</label>
         <name>Matching_Gift_Amount_Min__c</name>
     </fields>
     <fields>
-        <help>Het maximum bedrag dat het bedrijf elk jaar voor een werknemer zal matchen.</help>
+        <help>Het maximale bedrag dat het bedrijf elk jaar voor een werknemer zal matchen.</help>
         <label>Matching Gift Jaarlijks Medewerker Max</label>
         <name>Matching_Gift_Annual_Employee_Max__c</name>
     </fields>
     <fields>
-        <help>Extra notities over het bedrijf zijn matching gift programma.</help>
+        <help>Extra notities over het Matching Gift programma van het bedrijf.</help>
         <label>Matching Gift Opmerkingen</label>
         <name>Matching_Gift_Comments__c</name>
     </fields>
@@ -75,22 +75,22 @@
         <name>Matching_Gift_Company__c</name>
     </fields>
     <fields>
-        <help>E-mail van de matching gift adminstrator van het bedrijf.</help>
+        <help>E-mail van de Matching Gift adminstrateur van het bedrijf.</help>
         <label>Matching Gift E-mail</label>
         <name>Matching_Gift_Email__c</name>
     </fields>
     <fields>
-        <help>De datum wanneer de matching gift informatie voor het laatst is geüpdatet</help>
+        <help>De datum wanneer de Matching Gift informatie voor het laatst is bijgewerkt.</help>
         <label>Matching Gift Info Bijgewerkt</label>
         <name>Matching_Gift_Info_Updated__c</name>
     </fields>
     <fields>
-        <help>Het deel van een gift die het bedrijf wil matchen.</help>
+        <help>Het deel van een gift dat het bedrijf wil matchen.</help>
         <label>Matching Gift Percentage</label>
         <name>Matching_Gift_Percent__c</name>
     </fields>
     <fields>
-        <help>Telefoon voor matching gift administratie kantoor.</help>
+        <help>Telefoon voor het Matching Gift administratiekantoor.</help>
         <label>Matching Gift Telefoon</label>
         <name>Matching_Gift_Phone__c</name>
     </fields>
@@ -100,40 +100,40 @@
         <name>Matching_Gift_Request_Deadline__c</name>
     </fields>
     <fields>
-        <help>Formule: Het aantal jaar hoe lang dit Huishouden al een Lid heeft.</help>
+        <help>Formule: Het aantal jaar hoe lang dit Huishouden een Lid heeft.</help>
         <label>Lidmaatschapsduur</label>
         <name>Membership_Span__c</name>
     </fields>
     <fields>
-        <help>Formule: Huidig, verlopen, of bedenk periode. Standaard bedenk periode wordt ingesteld in Huishoud Instellingen.</help>
+        <help>Formule: Huidig, verlopen, of respijtperiode. Standaard respijtperiode wordt ingesteld in Huishouden Instellingen.</help>
         <label>Lidmaatschap Status</label>
         <name>Membership_Status__c</name>
     </fields>
     <fields>
-        <help>Voor Huishoud Accounts, het aantal Contacten in het Huishouden</help>
+        <help>Voor Huishouden Accounts, het aantal Contactpersonen in het Huishouden.</help>
         <label>Aantal Leden van het Huishouden</label>
         <name>Number_of_Household_Members__c</name>
     </fields>
     <layouts>
         <layout>Household Layout</layout>
         <sections>
-            <label><!-- Address --></label>
+            <label>Adres</label>
             <section>Address</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Description --></label>
+            <label>Omschrijving</label>
             <section>Description</section>
         </sections>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>Donatie Informatie</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Donation Totals --></label>
+            <label>Donatie Totalen</label>
             <section>Donation Totals</section>
         </sections>
         <sections>
@@ -141,7 +141,7 @@
             <section>Fields</section>
         </sections>
         <sections>
-            <label><!-- Membership Information --></label>
+            <label>Lidmaatschap Informatie</label>
             <section>Membership Information</section>
         </sections>
     </layouts>
@@ -152,19 +152,19 @@
             <section>Address</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Description --></label>
+            <label>Omschrijving</label>
             <section>Description</section>
         </sections>
         <sections>
-            <label><!-- Donation Information --></label>
+            <label>Donatie Informatie</label>
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label><!-- Donation Totals --></label>
+            <label>Donatie Totalen</label>
             <section>Donation Totals</section>
         </sections>
         <sections>
@@ -172,19 +172,19 @@
             <section>Fields</section>
         </sections>
         <sections>
-            <label><!-- Grantmaking Information --></label>
+            <label>Fondsenschenking Informatie</label>
             <section>Grantmaking Information</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Comments --></label>
+            <label>Matching Gift Opmerkingen</label>
             <section>Matching Gift Comments</section>
         </sections>
         <sections>
-            <label><!-- Matching Gift Information --></label>
+            <label>Matching Gift Informatie</label>
             <section>Matching Gift Information</section>
         </sections>
         <sections>
-            <label><!-- Membership Information --></label>
+            <label>Lidmaatschap Informatie</label>
             <section>Membership Information</section>
         </sections>
     </layouts>
@@ -193,7 +193,7 @@
         <name>New_Address</name>
     </quickActions>
     <quickActions>
-        <label>Nieuwe Connectie</label>
+        <label>Nieuwe Verwante Organisatie</label>
         <name>New_Affiliation</name>
     </quickActions>
     <quickActions>
@@ -207,5 +207,9 @@
     <webLinks>
         <label>Beheer Huishouden</label>
         <name>Manage_Household</name>
+    </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>
