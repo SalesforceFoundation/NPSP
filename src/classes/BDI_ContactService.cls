@@ -44,6 +44,7 @@ public with sharing class BDI_ContactService {
         mapDIIdToC1 = new Map<Id, Contact>();
         mapDIIdToC2 = new Map<Id, Contact>();
         mapDIKeyToContact = new Map<String, Contact>();
+        mapDIKeyToContactList = new Map<String, List<Contact>>();
     }
 
     /*******************************************************************************************************
@@ -60,6 +61,11 @@ public with sharing class BDI_ContactService {
     * @description map that holds multiple DIKeys for each Contact
     */
     private Map<String, Contact> mapDIKeyToContact;
+
+    /*******************************************************************************************************
+    * @description map that holds multiple DIKeys for each Contact
+    */
+    private Map<String, List<Contact>> mapDIKeyToContactList;
 
     /*******************************************************************************************************
     * @description the data import service we are invoked from
@@ -312,19 +318,28 @@ public with sharing class BDI_ContactService {
 
         for (DataImport__c di : bdi.listDI) {
             // skip di's that already have an error
-            if (di.Status__c == BDI_DataImport_API.bdiFailed)
+            if (di.Status__c == BDI_DataImport_API.bdiFailed){
                 continue;
+            }
             List<String> listDiKey = listDIKeyCx(di, strCx);
-            Contact con = ContactFromDiKeys(listDiKey);
-            if (con != null) {
+            List<Contact> contacts = ContactsFromDiKeys(listDiKey);
+            Contact con;
+
+            // matched at least 1 contact; write the last one in the list to the lookup field.
+            // this is maintaining legacy behavior.
+            if (!contacts.isEmpty()) {
+                con = contacts[contacts.size() - 1];
                 if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                     bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, strCx + 'ImportStatus__c');
                     continue;
                 }
-                di.put(strCx + 'Imported__c', con.id);
-                di.put(strCx + 'ImportStatus__c', con.id != null ? bdi.statusMatchedExisting() : bdi.statusMatchedNew());
-                if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
+                String matchStatus = (String) di.get(strCx + 'ImportStatus__c');
+                if (matchStatus != bdi.statusMatchedExisting() && matchStatus != bdi.statusMatchedNew()) {
+                    di.put(strCx + 'Imported__c', con.id);
+                    di.put(strCx + 'ImportStatus__c', con.id != null ? bdi.statusMatchedExisting() : bdi.statusMatchedNew());
+                    if (con.AccountId != null && di.HouseholdAccountImported__c == null) {
                         di.HouseholdAccountImported__c = con.AccountId;
+                    }
                 }
             } else if (listDiKey.size() > 0) {
                 con = new Contact();
@@ -338,6 +353,21 @@ public with sharing class BDI_ContactService {
                     di.Contact2_Lastname__c = con1.Lastname;
                 }
             }
+
+            // found multiple contacts; write their IDs to the Possible Matches field.
+            if (contacts.size() > 1) {
+                List<Id> contactIds = new List<Id>();
+                for (Contact c : contacts) {
+                    if (!contactIds.contains(c.Id)) {
+                        contactIds.add(c.Id);
+                    }
+                }
+                String possibleMatches = String.join(contactIds,';');
+                // TODO: create the two Possible_Matches__c fields on DI object!
+                di.put(strCx + 'Possible_Matches__c', possibleMatches);
+            }
+
+
 
             // associate the Contact and its dikeys with the di
             setContactForDi(con, di, listDiKey, iCx);
@@ -382,7 +412,13 @@ public with sharing class BDI_ContactService {
         // put all candidate contacts into our map by each dikey
         for (Contact con : listCon) {
             for (String diKey : listDiKeyContact(con)) {
+
                 mapDIKeyToContact.put(diKey, con);
+
+                if (mapDIKeyToContactList.get(diKey) == null) {
+                    mapDIKeyToContactList.put(diKey,new List<Contact>());
+                }
+                mapDIKeyToContactList.get(diKey).add(con);
             }
         }
     }
@@ -903,6 +939,21 @@ public with sharing class BDI_ContactService {
     }
 
     /*******************************************************************************************************
+    * @description finds a contact in our map, by matching against all the contact dikeys
+    * @param listDiKey list of dikey's to try to match against
+    * @return Contact the found Contact
+    */
+    private List<Contact> ContactsFromDiKeys(List<String> listDiKey) {
+        for (String diKey : listDiKey) {
+            List<Contact> contacts = mapDIKeyToContactList.get(diKey);
+            if (!contacts.isEmpty()) {
+                return contacts;
+            }
+        }
+        return null;
+    }
+
+    /*******************************************************************************************************
     * @description returns a contact from our cached map (so lookup is efficient)
     * @param di the Data Import record
     * @param iCon 1 specifies Contact1 otherwise use Contact2
@@ -927,6 +978,11 @@ public with sharing class BDI_ContactService {
     * @return void
     */
     private void setContactForDi(Contact con, DataImport__c di, List<String> listDiKey, integer iCon) {
+
+        // TODO: make sure this is the method that gets called from the grid
+        // when a match (from the pop up list of possible matches) is selected,
+        // replacing the empty placeholder contact,
+        // and that that's adequate
 
         // put the Contact in our caching map
         if (iCon == 1) {
