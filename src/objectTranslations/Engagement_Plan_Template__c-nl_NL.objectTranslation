@@ -9,21 +9,21 @@
         <value><!-- Engagement Plan Template --></value>
     </caseValues>
     <fields>
-        <help>Herberekent een onderliggende taak zijn vervaldatum gebaseerd om wanneer de bovenliggende taak wordt voltooid.</help>
-        <label>Automatisch Update childtaak vervaldatum</label>
+        <help>Herberekent een onderliggende taak zijn vervaldatum wanneer de bovenliggende taak wordt voltooid.</help>
+        <label>Wijziging vervaldatum onderliggende Taak</label>
         <name>Automatically_Update_Child_Task_Due_Date__c</name>
     </fields>
     <fields>
-        <help>Wanneer het Betrokkenheid Plan &quot;Taak toegewezen aan&quot; veld is leeg gelaten, aan wie zou de taak moeten worden toegewezen?</help>
-        <label>Standaard Toegewezen persoon</label>
+        <help>Wanneer het Activiteitenplan Taakveld &quot;Toegewezen aan&quot; leeg is gelaten,  aan wie moet de Taak dan worden toegewezen?</help>
+        <label>Standaard Toegewezen Persoon</label>
         <name>Default_Assignee__c</name>
         <picklistValues>
             <masterLabel>Owner of Object for Engagement Plan</masterLabel>
-            <translation>Eigenaar van Object voor Betrokkenheidsplan</translation>
+            <translation>Eigenaar van Object voor Activiteitenplan</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>User Creating Engagement Plan</masterLabel>
-            <translation>Gebruiker Maakt Betrokkenheidsplan</translation>
+            <translation>Gebruiker maakt Activiteitenplan</translation>
         </picklistValues>
     </fields>
     <fields>
@@ -31,8 +31,8 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>Als taken met een Verloopdatum in het weekend staan gepland moeten ze dan gepland worden vrijdag voor of maandag na het weekend? Dit geld alleen als overslaan weekend staat geselecteerd.</help>
-        <label>Opnieuw plannen om</label>
+        <help>Moeten taken met een vervaldatum in het weekend worden verschoven naar de vrijdag voor of de maandag na het weekend?</help>
+        <label>Herplan naar</label>
         <name>Reschedule_To__c</name>
         <picklistValues>
             <masterLabel>Friday</masterLabel>
@@ -44,16 +44,16 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Indien geselecteerd, Taken die gecreëerd zijn in dit betrokkenheidsplan hebben geen vervaldatum die op een zaterdag of zondag vallen.</help>
+        <help>Indien ingeschakeled hebben Taken in dit Activiteitenplan geen vervaldatum op een zaterdag of zondag.</help>
         <label>Sla weekenden over</label>
         <name>Skip_Weekends__c</name>
     </fields>
     <fields>
-        <label>Totaal aantal betrokkenheid plannen</label>
+        <label>Totaal Aantal Activiteitenplannen</label>
         <name>Total_Engagement_Plans__c</name>
     </fields>
     <fields>
-        <label>Totaal aantal Taken</label>
+        <label>Totaal Aantal Taken</label>
         <name>Total_Tasks__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
