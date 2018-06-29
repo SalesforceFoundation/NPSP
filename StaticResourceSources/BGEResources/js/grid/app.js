@@ -62,7 +62,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -637,7 +636,7 @@
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
             errorCol.manualColumnResize = false;
-            errorCol.colWidths = 30;
+            errorCol.colWidths = 40;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
@@ -702,7 +701,7 @@
                 }
                 else if (templateField.type === 'PHONE') {
 
-                    col.colWidths = 50;
+                    col.colWidths = 150;
                 }
                 else if (templateField.type === 'PERCENT') {
                     col.type = "numeric";
