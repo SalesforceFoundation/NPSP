@@ -9,13 +9,13 @@
         <value><!-- Batch Data Entry Settings --></value>
     </caseValues>
     <fields>
-        <help>Indien aangevinkt, zal Batch Data Invoer nooit Opportunities benoemen, zelfs niet als deze blanco zijn (niet inbegrepen op de BDE pagina).</help>
+        <help>Indien aangevinkt, zal Batch Data Invoer nooit Opportunities een naam geven, zelfs niet als deze blanco zijn (niet inbegrepen op de BDE pagina).</help>
         <label>Toestaan van Blanco Opportunity Namen</label>
         <name>Allow_Blank_Opportunity_Names__c</name>
     </fields>
     <fields>
         <help>Deze instelling genereert automatisch de record naam voor batch ingevoerde Opportunity records op basis van de waardes van de ingevoerde velden.</help>
-        <label>Benoemen Opportuniy</label>
+        <label>Opportunity Naamgeving</label>
         <name>Opportunity_Naming__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
