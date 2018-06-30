@@ -311,4 +311,23 @@ public abstract class CRLP_Batch_Base {
 
         return pscDetailRecords;
     }
+
+    /*******************************************************************************************************
+     * @description CRLP Batch Job custom exception
+     */
+    public class CRLPBatchException extends Exception {}
+
+    /*******************************************************************************************************
+     * @description Shared method to log an Error record when a CRLP Batch is skipped because
+     * the previous job hadn't yet completed
+     * @param className The name of the skipped batch class to be used in the error message
+     */
+    public void logDuplicateBatchError(String className) {
+
+        CRLPBatchException ex = new CRLPBatchException();
+        ex.setMessage(String.format(Label.CRLP_BatchSkipped, new List<String>{className}));
+        ERR_Handler.processError(ex, ERR_Handler_API.Context.CRLP);
+
+    }
+
 }
