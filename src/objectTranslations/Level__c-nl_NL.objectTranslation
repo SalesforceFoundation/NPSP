@@ -19,38 +19,38 @@
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>Het Betrokkenheid Plan Sjabloon die wordt toegepast op het Doel Object wanneer dit Niveau is bereikt.</help>
-        <label>Betrokkenheid Plan Sjabloon</label>
+        <help>Het Activiteitenplan Ontwerp dat wordt toegepast op het Doelobject wanneer dit Niveau is bereikt.</help>
+        <label>Activiteitenplan Ontwerp</label>
         <name>Engagement_Plan_Template__c</name>
         <relationshipLabel>Niveaus</relationshipLabel>
     </fields>
     <fields>
-        <help>Het veld (developer naam) op het Doel Object om de lookup op te slaan op het huidige Niveau. Let op dat dit veld impliciet de &quot;Ladder&quot; definieert waar de Niveau bijhoort.</help>
+        <help>Het veld (developer naam) op het Doelobject om de opzoekwaarde op te slaan op het huidige Niveau. Let op dat dit veld impliciet de &quot;Ladder&quot; definieert waar de Niveau bijhoort.</help>
         <label>Niveau Veld</label>
         <name>Level_Field__c</name>
     </fields>
     <fields>
-        <help>Het maximale bedrag waar de waarde onder moet zitten om te horen bij dit Niveau. Indien leeg, dan elk bedrag groter dan of gelijk aan dit Niveau zijn minimum bedrag zal toegewezen worden aan dit Niveau.</help>
-        <label>Maximum Bedrag</label>
+        <help>Het maximale bedrag waar de waarde onder moet zitten om aan dit Niveau te worden toegewezen. Indien leeg, dan zal elk bedrag groter dan of gelijk aan dit Niveau&apos;s minimum bedrag toegewezen worden aan dit Niveau.</help>
+        <label>Maximum Bedrag (&lt;)</label>
         <name>Maximum_Amount__c</name>
     </fields>
     <fields>
-        <help>Het minimum bedrag wat wordt toegewezen aan dit Niveau. Indien leeg, dan elk bedrag wat minder is dan het Niveau zijn maximum bedrag zal worden toegewezen aan dit Niveau.</help>
-        <label>Minimum Bedrag</label>
+        <help>Het minimum bedrag wat wordt toegewezen aan dit Niveau. Indien leeg, dan zal elk bedrag wat minder is dan het Niveau&apos;s maximum bedrag worden toegewezen aan dit Niveau.</help>
+        <label>Minimum Bedrag (&gt;=)</label>
         <name>Minimum_Amount__c</name>
     </fields>
     <fields>
-        <help>Het veld (developer naam) op het Doel object om de lokup op te slaan van het vorige niveau. Optioneel.</help>
+        <help>Het veld (developer naam) op het Doelobject om de opzoekwaarde op te slaan van het vorige Niveau. Optioneel.</help>
         <label>Vorig Niveau Veld</label>
         <name>Previous_Level_Field__c</name>
     </fields>
     <fields>
-        <help>Het doel object veld (developer naam) die het bedrag en tijdspanne waar dit Niveau op gebaseerd is definieert</help>
+        <help>Het veld van het Doelobject (developer naam) waar het bedrag en de tijdsspanne van dit Niveau op gebaseerd zijn.</help>
         <label>Bron Veld</label>
         <name>Source_Field__c</name>
     </fields>
     <fields>
-        <help>Het object waar dit Niveau bijhoort</help>
+        <help>Het object waar dit Niveau bijhoort.</help>
         <label>Doel</label>
         <name>Target__c</name>
         <picklistValues>
@@ -76,7 +76,7 @@
     </layouts>
     <nameFieldLabel><!-- Level Name --></nameFieldLabel>
     <validationRules>
-        <errorMessage>Doel is een verplicht veld op Niveau. Specificeer het Doel object voor dit Niveau.</errorMessage>
+        <errorMessage>Doel is een verplicht veld op Niveau. Specificeer het Doelobject voor dit Niveau.</errorMessage>
         <name>Target_Required</name>
     </validationRules>
 </CustomObjectTranslation>
