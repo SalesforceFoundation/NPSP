@@ -100,7 +100,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -281,11 +280,11 @@
             }
             else if (col === 1) {
 
-                return 30;
+                return 40;
             }
             else if (col === 2) {
 
-                return 80;
+                return 70;
             }
             else {
 
@@ -641,8 +640,7 @@
                 }
                 else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
 
-                    // Left arrow or shift + tab was pressed
-
+                    // Tab or right arrow was pressed
                     try {
 
                         var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
@@ -798,7 +796,8 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.colWidths = 30;
+            errorCol.colWidths = 40;
+            errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -806,7 +805,7 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.colWidths = 80;
+            actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
@@ -866,7 +865,7 @@
                 }
                 else if (templateField.type === 'PHONE') {
 
-                    col.colWidths = 50;
+                    col.colWidths = 150;
                     col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
