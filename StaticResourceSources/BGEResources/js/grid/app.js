@@ -280,7 +280,7 @@
             }
             else if (col === 1) {
 
-                return 30;
+                return 40;
             }
             else if (col === 2) {
 
@@ -866,7 +866,7 @@
                 }
                 else if (templateField.type === 'PHONE') {
 
-                    col.colWidths = 50;
+                    col.colWidths = 150;
                     col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
