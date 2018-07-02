@@ -284,7 +284,7 @@
             }
             else if (col === 2) {
 
-                return 80;
+                return 70;
             }
             else {
 
@@ -806,7 +806,7 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.colWidths = 80;
+            actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
