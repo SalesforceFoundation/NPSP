@@ -796,7 +796,6 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.manualColumnResize = false;
             errorCol.colWidths = 40;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
