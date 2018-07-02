@@ -643,11 +643,11 @@
                 var col = new Object();
                 col.data = templateField.apiName;
                 col.required = templateField.required;
-                col.title = templateField.label.toUpperCase();
+                col.title = getColumnTitle(templateField);
                 col.type = getCellDataType(templateField.type);
                 col.allowInvalid = true;
                 col.wordWrap = false;
-                col.colWidths = 200;
+                col.colWidths = 210;
 
                 col.className = "htLeft htMiddle slds-truncate";
 
@@ -711,6 +711,18 @@
                 }
             }
             return -1;
+        }
+
+        function getColumnTitle(templateField) {
+
+            var result = templateField.label.toUpperCase();
+
+            if (result === 'RECORD TYPE ID') {
+
+                result = 'RECORD TYPE';
+            }
+
+            return result;
         }
 
         function addMessage(cell, errors) {

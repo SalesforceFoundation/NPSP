@@ -53,11 +53,17 @@
     border-bottom: 1px solid #cccccc !important;
     height: 40px;
     vertical-align: middle !important;
+    padding-left: 7px;
+    padding-right: 7px;
 }
 
 .handsontable td {
     color: #536787 !important;
-    padding: 1px 5px !important;
+    padding: 1px 7px !important;
+}
+
+.handsontable thead th .relative {
+    padding: 2px 7px;
 }
 
 .fixed-horizontal {
