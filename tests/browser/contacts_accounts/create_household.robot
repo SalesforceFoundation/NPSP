@@ -17,10 +17,13 @@ Create Household With Name and Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Page Should Contain  &{contact}[LastName] Household
     Header Field Should Have Link  Account Name
+    Page Should Contain    skristem@salesforce.com
     
 Create Household with Name and Address
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Page Should Contain  &{contact}[LastName] Household
-    Header Field Should Have Link  Account Name   
+    Header Field Should Have Link  Account Name
+    Select Tab    Details 
+    Page Should Contain    50 Fremont Street  
          

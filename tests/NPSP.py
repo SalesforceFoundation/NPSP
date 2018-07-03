@@ -93,4 +93,50 @@ class NPSP(object):
                 drop_down = npsp_lex_locators['locate_dropdown'].format(index)
                 self.selenium.get_webelement(drop_down).click()
             
-           
+    def select_related_row(self, value ):
+        locators = npsp_lex_locators['related_name']
+        list_ele = self.selenium.get_webelements(locators)
+        index= 1
+        for locator in list_ele:
+            global index
+            if locator.text != value:
+                index = index+1
+            else:
+                drop_down = npsp_lex_locators['rel_loc_dd'].format(index)
+                self.selenium.get_webelement(drop_down).click()      
+                
+    def delete_icon(self, field_name,value):  
+        locator=npsp_lex_locators['delete_icon'].format(field_name,value)
+        self.selenium.get_webelement(locator).click() 
+        
+    def click_edit_button(self, title):  
+        locator=npsp_lex_locators['record']['edit_button'].format(title)
+        self.selenium.get_webelement(locator).click()   
+        
+    def click_id(self, title):  
+        locator=npsp_lex_locators['aff_id'].format(title)
+        self.selenium.get_webelement(locator).click()     
+         
+        
+        
+    def check_status(self, acc_name):
+        aff_list = npsp_lex_locators['aff_status'].format(acc_name)
+        aff_list_text=self.selenium.get_webelement(aff_list).text 
+        self.aff_id=npsp_lex_locators['aff_id'].format(acc_name)
+        self.aff_id_text=self.selenium.get_webelement(self.aff_id).text
+        #self.aff_id_text=aff_id.text
+#         if aff_list== passed:
+#             print "test case passed"
+        return self.aff_id_text,aff_list_text     
+            
+            
+    def get_id(self):
+        locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
+        self.selenium.get_webelement(locator).click()   
+        
+    def confirm_status(self, field,status):
+        locator=npsp_lex_locators['check_former'].format(field,status)
+        verify_former=self.selenium.get_webelement(locator).text
+        return verify_former
+                  
+                  
