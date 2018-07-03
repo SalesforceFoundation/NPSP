@@ -120,7 +120,7 @@
 					}
 				},
                 manualColumnResize: true,
-                renderAllRows: true,
+                renderAllRows: false,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
