@@ -148,3 +148,12 @@ td.tooltip-cell {
     text-align: center !important;
     vertical-align: middle !important;
 }
+
+.handsontable .manualColumnResizer {
+    position: fixed;
+    top: 0;
+    cursor: col-resize;
+    z-index: 110;
+    width: 5px;
+    height: 40px !important;
+}
