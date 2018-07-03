@@ -9,8 +9,8 @@
         <value><!-- Household Naming Settings --></value>
     </caseValues>
     <fields>
-        <help>Specificeert het aantal contactpersonen die expliciet opgenomen worden in een naam. Na dat bedrag, de Naam Overrun wordt gebruikt.</help>
-        <label>Contactpersoon Overrun Count</label>
+        <help>Het aantal Contactpersonen dat opgenomen wordt in een naam. Na dit aantal zal de Naamsoverschrijding worden gebruikt.</help>
+        <label>Contactpersoon Overschrijdingstelling</label>
         <name>Contact_Overrun_Count__c</name>
     </fields>
     <fields>
@@ -24,7 +24,7 @@
         <name>Household_Name_Format__c</name>
     </fields>
     <fields>
-        <help>De naam van de klasse die HH_INaming interface implementeert voor het benoemen van Huishoudens.</help>
+        <help>De naam van de klasse die HH_INaming interface implementeert voor de naamgeving van Huishoudens.</help>
         <label>Klasse implementeren</label>
         <name>Implementing_Class__c</name>
     </fields>
@@ -34,13 +34,13 @@
         <name>Informal_Greeting_Format__c</name>
     </fields>
     <fields>
-        <help>De string die paren verbindt in een naam. Bijvoorbeeld, John &amp; Jane, of John en Jane.</help>
-        <label>Naam connector</label>
+        <help>De tekst die paren verbindt in een naam. Bijvoorbeeld, Jan &amp; Jannie, of Jan en Jannie.</help>
+        <label>Verbinder Namen</label>
         <name>Name_Connector__c</name>
     </fields>
     <fields>
-        <help>De string die gebruikt wordt bij vervangen van lange lijsten met namen.</help>
-        <label>Naam Overrun</label>
+        <help>De tekst die gebruikt wordt bij vervangen van lange lijsten met namen.</help>
+        <label>Overschrijvingsnaam</label>
         <name>Name_Overrun__c</name>
     </fields>
     <gender><!-- Neuter --></gender>

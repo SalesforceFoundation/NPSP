@@ -146,6 +146,14 @@ public class CMT_FilterRule {
     }
 
     /**
+     * @description Returns a "unique" string that can be used to retrieve a cached version of this result
+     * object+field+operation+constant
+     */
+    public String getCacheKeyPrefix() {
+        return (this.objectName + '.' + this.field + '.' + this.operation.name() + '.' + this.constant).toLowerCase();
+    }
+
+    /**
      * @description Evaluate the passed SObject record against the current FilterRule instance
      * @param record to evaluate
      * @return True if the record matches and will be included in the roll-up, false otherwise

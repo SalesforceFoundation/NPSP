@@ -14,12 +14,12 @@
         <name>Amount__c</name>
     </fields>
     <fields>
-        <help>De contactpersoon zijn of haar volledige naam.</help>
+        <help>De contactpersoon&apos;s volledige naam.</help>
         <label>Contactpersoon Naam</label>
         <name>Contact_Name__c</name>
     </fields>
     <fields>
-        <help>De OpportunityContactRol waar deze soft credit bijhoort.</help>
+        <help>De Opportunity Contactpersoon Rol waar deze Soft Credit betrekking op heeft.</help>
         <label>Contactpersoon Rol ID</label>
         <name>Contact_Role_ID__c</name>
     </fields>
@@ -30,13 +30,13 @@
         <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>De Opportunity waar deze soft credit bijhoort.</help>
+        <help>De Opportunity waar deze Soft Credit betrekking op heeft.</help>
         <label><!-- Opportunity --></label>
         <name>Opportunity__c</name>
         <relationshipLabel>Gedeeltelijke Soft Credits</relationshipLabel>
     </fields>
     <fields>
-        <help>De Rol van deze soft credit.</help>
+        <help>De Rol van deze Soft Credit.</help>
         <label>Rol Naam</label>
         <name>Role_Name__c</name>
     </fields>
@@ -44,7 +44,7 @@
     <layouts>
         <layout>Partial Soft Credit Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>

@@ -49,18 +49,46 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversion1to1') return;
+
+        // Create one temp and one inactive User
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
+
+        User inactiveUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        inactiveUser.IsActive = true;
+        insert new List<User>{tempUser, inactiveUser};
+
         //setup 1x1 model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
 
+        // Insert 150 test Contacts with a different owner than the Current User
         List<Contact> cons = UTIL_UnitTestData_TEST.CreateMultipleTestContacts(150);
+        for (Contact c : cons) {
+            c.OwnerId = tempUser.Id;
+        }
         insert cons;
+        Contact c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id IN :cons LIMIT 1];
+        system.assertEquals(c.OwnerId, tempUser.Id, 'The Contact owner should be temp user');
+
+        system.assertEquals(150, [select count() from Account where npe01__One2OneContact__c IN :cons]);
+
+        c = [SELECT Id, npo02__Household__r.OwnerId FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        npo02__Household__c h = c.npo02__Household__r;
+        h.OwnerId = inactiveUser.Id;
+        update h;
+
+        // Set the Owner of the last household to inactive
+        System.runAs(tempUser) {
+            inactiveUser.IsActive = false;
+            update inactiveUser;
+        }
 
         String HHName = CAO_Constants.CONTACT_LASTNAME_FOR_TESTS + ' ' + system.label.npo02.DefaultHouseholdName;
         List<npo02__Household__c> hhlist = [select id from npo02__Household__c where Name = :HHName];
         system.assertEquals(150, hhlist.size());
 
         //add a second contact to a random household
-        Contact c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
+        c = new Contact(FirstName = 'Second', LastName = 'HouseholdMember', npo02__Household__c = hhlist[14].Id);
         insert c;
 
         List<Account> accounts = [SELECT Id FROM Account WHERE npe01__One2OneContact__c IN :cons OR npe01__One2OneContact__c = :c.Id];
@@ -87,6 +115,14 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         ID batchprocessid = Database.executeBatch(cacv);
         Test.StopTest();
 
+        // Validate that the one Contact whose Household record was owned by an inactive User
+        // is now owned by the same owner as the Contact.
+        Contact inactiveOwnedContact = [SELECT Id, OwnerId, Account.OwnerId, Owner.IsActive, npo02__Household__r.Owner.IsActive
+            FROM Contact WHERE Id = :cons[149].Id LIMIT 1];
+        system.assertEquals(false, inactiveOwnedContact.npo02__Household__r.Owner.IsActive, 'Household owner should be inactive');
+        system.assertEquals(true, inactiveOwnedContact.Owner.IsActive, 'Contact owner should be active');
+        system.assertEquals(inactiveOwnedContact.OwnerId, inactiveOwnedContact.Account.OwnerId, 'Household Account Owner should match the Contact owner');
+
         //get the newly created Households
         List<Account> newHHAccounts = [SELECT Name, npo02__TotalOppAmount__c, Id FROM Account WHERE Id NOT IN :accounts];
         //should be total HH count from above
@@ -94,9 +130,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //total gifts should be the same for any of the 149
         system.assertEquals(newHHAccounts[64].npo02__TotalOppAmount__c, 100.00);
         //our two-person household was also successfully converted and set the correct primary contact
-        Contact c2 = [select AccountId, Account.npe01__One2OneContact__c from Contact where Id = :c.Id];
+        Contact c2 = [SELECT Account.npe01__One2OneContact__c FROM Contact WHERE Id = :c.Id LIMIT 1];
         //the primary was set
-        system.assertNotEquals(null, Account.npe01__One2OneContact__c);
+        system.assertNotEquals(null, c2.Account.npe01__One2OneContact__c);
         //the primary is the contact w/ a total opp amount
         system.assertNotEquals(c2.Id, c2.Account.npe01__One2OneContact__c);
         system.assertEquals(2, [select count() from Contact where AccountId = :c2.AccountId]);
@@ -108,7 +144,12 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         //Using the API class just to give it test coverage.
         system.assertEquals(UTIL_CustomSettings_API.getHouseholdsSettings().npo02__Household_Rules__c, HH_Households.NO_HOUSEHOLDS_PROCESSOR);
         system.assertEquals(0, [select count() from npe5__Affiliation__c]);
+
+        system.assertEquals(cons.size(), [SELECT count() FROM Account WHERE OwnerId = :tempUser.Id
+            AND npe01__One2OneContact__c IN :cons AND npe01__SYSTEM_AccountType__c = 'Household Account'],
+                'There should be 150 Accounts owned by the TempUser');
     }
+
     /*******************************************************************************************************
     * @description Tests the conversion process for Bucket Contacts & Households to Household Contacts and Household Accounts
     */
@@ -117,6 +158,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testAccountConversionBucket') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup bucket model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -176,6 +219,8 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testSingleContactAddress') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
@@ -448,6 +493,7 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
         else
             system.assert(CAO_Constants.isBucketModel());
     }
+
     /*******************************************************************************************************
     * @description Sets up Household Account Model settings configurations
     */
