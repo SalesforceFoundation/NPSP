@@ -75,7 +75,15 @@
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
-                contextMenu: ['remove_row'],
+                contextMenu: {
+					items: {
+						remove_row: {
+							disabled: function (){
+								return false
+							}
+						}
+					}
+				},
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
