@@ -100,7 +100,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -111,9 +110,17 @@
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
-                contextMenu: ['remove_row'],
+                contextMenu: {
+					items: {
+						remove_row: {
+							disabled: function (){
+								return false
+							}
+						}
+					}
+				},
                 manualColumnResize: true,
-                renderAllRows: true,
+                renderAllRows: false,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -273,11 +280,11 @@
             }
             else if (col === 1) {
 
-                return 30;
+                return 40;
             }
             else if (col === 2) {
 
-                return 80;
+                return 70;
             }
             else {
 
@@ -553,7 +560,7 @@
 
             if (selectedColType == "dropdown") {
                 if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
-                    cancelActiveEditor(editor);
+                    disableEdit(editor);
                 }
             }
 
@@ -633,8 +640,7 @@
                 }
                 else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
 
-                    // Left arrow or shift + tab was pressed
-
+                    // Tab or right arrow was pressed
                     try {
 
                         var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
@@ -686,7 +692,7 @@
                                 rowIndex = lastRow;
                             }
                             else {
-                                row --;
+                                rowIndex --;
                             }
                         }
                         hot.selectCell(rowIndex, colIndex);
@@ -696,7 +702,7 @@
                     }
                 }
             }
-            else if (event.keyCode === 13) {
+            else if (event.keyCode === 13 && selectedColType != "dropdown") {
                 event.stopImmediatePropagation();
 
                 rowIndex ++;
@@ -725,7 +731,7 @@
             }
         }
 
-        function cancelActiveEditor(editor) {
+        function disableEdit(editor) {
             editor.TEXTAREA.setAttribute("disabled", "true");
         }
 
@@ -790,7 +796,8 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.colWidths = 30;
+            errorCol.colWidths = 40;
+            errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -798,7 +805,7 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.colWidths = 80;
+            actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
@@ -858,7 +865,7 @@
                 }
                 else if (templateField.type === 'PHONE') {
 
-                    col.colWidths = 50;
+                    col.colWidths = 150;
                     col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
