@@ -41,7 +41,7 @@
         <value><!-- Filter Rule --></value>
     </caseValues>
     <fields>
-        <label><!-- Constant --></label>
+        <label><!-- Value --></label>
         <name>Constant__c</name>
     </fields>
     <fields>
@@ -77,8 +77,8 @@
             <translation><!-- Equals --></translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Greater</masterLabel>
-            <translation><!-- Greater --></translation>
+            <masterLabel>Greater Than</masterLabel>
+            <translation><!-- Greater Than --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Greater or Equal</masterLabel>
@@ -97,8 +97,8 @@
             <translation><!-- Is Not Included --></translation>
         </picklistValues>
         <picklistValues>
-            <masterLabel>Less</masterLabel>
-            <translation><!-- Less --></translation>
+            <masterLabel>Less Than</masterLabel>
+            <translation><!-- Less Than --></translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Less or Equal</masterLabel>
