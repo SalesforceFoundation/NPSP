@@ -104,7 +104,7 @@ public class CRLP_IncrementalBatch {
         ********************************************************************************************************/
         protected Integer getLastRunMaxDaysBack(Date lastBatch) {
             if (lastBatch.year() != Date.today().year()) {
-                return lastBatch.daysBetween(Date.today()) + 366;
+                return lastBatch.daysBetween(Date.today()) + DAYS_IN_A_YEAR + 1;
             }
             else {
                 return lastBatch.daysBetween(Date.today()) + 1;
