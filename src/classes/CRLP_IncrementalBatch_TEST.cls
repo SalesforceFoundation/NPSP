@@ -41,8 +41,8 @@ private class CRLP_IncrementalBatch_TEST {
     private static final Integer ROLLUP_DAYS_BACK = 5;
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Account Hard Credit Settings, disable the Incremental Rollup Mode and 
-    * Runs the Incremental Rollups Batch. Confirms the Where Clause and the Last Batch Run are blank.
+    * @description Creates the Incremental Account Hard Credit Rollup Settings, disables the Incremental Rollup Mode and 
+    * runs the Incremental Rollups Batch. Confirms the Where Clause and the Last Batch Run are blank.
     */
     static testMethod void testIncrementalAccountHardCredit_IncrementalModeNotEnabled() {
         String incrementalWhereClause = getIncrementalWhereClause(
@@ -59,9 +59,9 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Account Hard Credit Settings, enable the Incremental Rollup Mode and 
-    * Then configures the Incremental Account Rollup. Runs the Incremental Rollups, and confirms the Where Clause
-    * is blank and the Last Batch Run is set to Today.
+    * @description Creates the Incremental Account Hard Credit Rollup Settings, enables the Incremental Rollup Mode and 
+    * then configures the Incremental Account Rollup. Runs the Incremental Rollups, and confirms the Where Clause
+    * is blank and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalAccountHardCredit_WithoutLastBatchRun() {
         String incrementalWhereClause = getIncrementalWhereClause(
@@ -80,8 +80,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Account Hard Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then configures the Incremental Account Rollup. Runs the  
+    * @description Creates the Incremental Account Hard Credit Rollup Settings, enables the Incremental Rollup and 
+    * sets the Last Batch Run to not null. Then configures the Incremental Account Rollup. Runs the  
     * Incremental Rollups Batch and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalAccountHardCredit_WithLastBatchRun() {
@@ -107,7 +107,7 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Hard Credit Settings, disable the Incremental Rollup and 
+    * @description Creates the Incremental Contact Hard Credit Rollup Settings, disables the Incremental Rollup and 
     * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalContactHardCredit_IncrementalModeNotEnabled() {
@@ -125,7 +125,7 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Hard Credit Settings, enable the Incremental Rollup and 
+    * @description Creates the Incremental Contact Hard Credit Rollup Settings, enable the Incremental Rollup and 
     * Then defines an Contact Rollup. Runs the Incremental Rollups, and confirms the Where Clause is blank
     * and the Last Batch Run is set to Today's date.
     */
@@ -146,8 +146,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Hard Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * @description Creates the Incremental Contact Hard Credit Rollup Settings, enables the Incremental Rollup and 
+    * sets the Last Batch Run to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactHardCredit_WithLastBatchRun() {
@@ -173,8 +173,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, disable the Incremental Rollup and 
-    * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
+    * @description Creates the Incremental Contact Soft Credit Rollup Settings, disables the Incremental Rollup and 
+    * runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalContactSoftCredit_IncrementalModeNotEnabled() {
         String incrementalWhereClause = getIncrementalWhereClause(
@@ -191,8 +191,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
-    * Then defines an Contact Rollup. Runs the Incremental Rollups, and confirms the Where Clause is blank
+    * @description Creates the Incremental Contact Soft Credit Rollup Settings, enables the Incremental Rollup and 
+    * then defines an Contact Rollup. Runs the Incremental Rollups, and confirms the Where Clause is blank
     * and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactSoftCredit_WithoutLastBatchRun() {
@@ -212,8 +212,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * @description Creates the Incremental Contact Soft Credit Rollup Settings, enables the Incremental Rollup and 
+    * sets the Last Batch Run to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactSoftCredit_WithLastBatchRun() {
@@ -239,8 +239,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, disable the Incremental Rollup and 
-    * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
+    * @description Creates the Incremental Contact Soft Credit Rollup Settings, disables the Incremental Rollup and 
+    * runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalRecurringDonation_IncrementalModeNotEnabled() {
         String incrementalWhereClause = getIncrementalWhereClause(
@@ -257,8 +257,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Recurring Donations Settings, disable the Incremental Rollup
-    * Runs the Incremental Rollups, and confirms the Where Clause is blank and the Last Batch Run is set 
+    * @description Creates the Incremental Recurring Donations Rollup Settings, disables the Incremental Rollup
+    * runs the Incremental Rollups, and confirms the Where Clause is blank and the Last Batch Run is set 
     * to Today's date.
     */
     static testMethod void testIncrementalRecurringDonation_WithoutLastBatchRun() {
@@ -278,8 +278,8 @@ private class CRLP_IncrementalBatch_TEST {
     }
 
     /*********************************************************************************************************
-    * @description Creates the Incremental Contact Soft Credit Settings, enable the Incremental Rollup and 
-    * sets the Last Batch Run set to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
+    * @description Creates the Incremental Contact Soft Credit Rollup Settings, enable the Incremental Rollup and 
+    * sets the Last Batch Run to not null. Then defines an Contact Rollup. Runs the Incremental Rollups, 
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalRecurringDonation_WithLastBatchRun() {
