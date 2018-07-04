@@ -164,11 +164,10 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
-            if (super.isEnabled() == false) {
-                return;
+            if (super.isEnabled()) {
+                super.customizableRollupSettings.Account_Hard_Credit_Last_Batch__c = Date.today();
+                upsert super.customizableRollupSettings;
             }
-            super.customizableRollupSettings.Account_Hard_Credit_Last_Batch__c = Date.today();
-            upsert super.customizableRollupSettings;
         }
     }
 
@@ -202,11 +201,10 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
-            if (super.isEnabled() == false) {
-                return;
-            }
-            super.customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c = Date.today();
-            upsert super.customizableRollupSettings;
+            if (super.isEnabled()) {
+                super.customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c = Date.today();
+                upsert super.customizableRollupSettings;
+            } 
         }
     }
 
@@ -240,11 +238,10 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
-            if (super.isEnabled() == false) {
-                return;
-            }
-            super.customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c = Date.today();
-            upsert super.customizableRollupSettings;
+            if (super.isEnabled()) {
+                super.customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c = Date.today();
+                upsert super.customizableRollupSettings;
+            } 
         }
     }
 
@@ -275,11 +272,10 @@ public class CRLP_IncrementalBatch {
         * @return void.
         ********************************************************************************************************/
         public override void refreshLastBatchRun() {
-            if (super.isEnabled() == false) {
-                return;
-            }
-            super.customizableRollupSettings.Recurring_Donations_Last_Batch__c = Date.today();
-            upsert super.customizableRollupSettings;
+            if (super.isEnabled()) {
+                super.customizableRollupSettings.Recurring_Donations_Last_Batch__c = Date.today();
+                upsert super.customizableRollupSettings;
+            } 
         }
     }
 }
