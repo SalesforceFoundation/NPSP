@@ -45,7 +45,7 @@ private class CRLP_IncrementalBatch_TEST {
     * Runs the Incremental Rollups Batch. Confirms the Where Clause and the Last Batch Run are blank.
     */
     static testMethod void testIncrementalAccountHardCredit_IncrementalModeNotEnabled() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = false,
                 Account_Hard_Credit_Last_Batch__c = null
@@ -64,7 +64,7 @@ private class CRLP_IncrementalBatch_TEST {
     * is blank and the Last Batch Run is set to Today.
     */
     static testMethod void testIncrementalAccountHardCredit_WithoutLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Account_Hard_Credit_Last_Batch__c = null
@@ -85,7 +85,7 @@ private class CRLP_IncrementalBatch_TEST {
     * Incremental Rollups Batch and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalAccountHardCredit_WithLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Account_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
@@ -111,7 +111,7 @@ private class CRLP_IncrementalBatch_TEST {
     * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalContactHardCredit_IncrementalModeNotEnabled() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = false,
                 Contact_Hard_Credit_Last_Batch__c = null
@@ -130,7 +130,7 @@ private class CRLP_IncrementalBatch_TEST {
     * and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactHardCredit_WithoutLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Contact_Hard_Credit_Last_Batch__c = null
@@ -151,7 +151,7 @@ private class CRLP_IncrementalBatch_TEST {
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactHardCredit_WithLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Contact_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
@@ -177,7 +177,7 @@ private class CRLP_IncrementalBatch_TEST {
     * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalContactSoftCredit_IncrementalModeNotEnabled() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = false,
                 Contact_Soft_Credit_Last_Batch__c = null
@@ -196,7 +196,7 @@ private class CRLP_IncrementalBatch_TEST {
     * and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactSoftCredit_WithoutLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Contact_Soft_Credit_Last_Batch__c = null
@@ -217,7 +217,7 @@ private class CRLP_IncrementalBatch_TEST {
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalContactSoftCredit_WithLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Contact_Soft_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
@@ -243,7 +243,7 @@ private class CRLP_IncrementalBatch_TEST {
     * Runs the Incremental Rollups, and confirms the Where Clause and the Last Batch Run are blank
     */
     static testMethod void testIncrementalRecurringDonation_IncrementalModeNotEnabled() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = false,
                 Recurring_Donations_Last_Batch__c = null
@@ -262,7 +262,7 @@ private class CRLP_IncrementalBatch_TEST {
     * to Today's date.
     */
     static testMethod void testIncrementalRecurringDonation_WithoutLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Recurring_Donations_Last_Batch__c = null
@@ -283,7 +283,7 @@ private class CRLP_IncrementalBatch_TEST {
     * and confirms the Where Clause is correct and the Last Batch Run is set to Today's date.
     */
     static testMethod void testIncrementalRecurringDonation_WithLastBatchRun() {
-        String incrementalWhereClause = runIncrementalRollup(
+        String incrementalWhereClause = getIncrementalWhereClause(
             new Customizable_Rollup_Settings__c(
                 Enable_Incremental_Rollups_Mode__c = true,
                 Recurring_Donations_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
@@ -311,7 +311,7 @@ private class CRLP_IncrementalBatch_TEST {
     * @param incrementalRollup. The Incremental Rollup configuration.
     * @return Incremental Rollup Where Clause.
     */
-    private static String runIncrementalRollup(Customizable_Rollup_Settings__c settings, List<Rollup__mdt> cachedRollups, CRLP_IncrementalBatch.Rollup incrementalRollup) {
+    private static String getIncrementalWhereClause(Customizable_Rollup_Settings__c settings, List<Rollup__mdt> cachedRollups, CRLP_IncrementalBatch.Rollup incrementalRollup) {
         // Create the Account Hard Credit incremental Rollups settings.
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(settings);
         // Override the cached Rollups.
