@@ -39,26 +39,28 @@ public class CRLP_IncrementalBatch {
     @TestVisible private static final String ACCOUNT_HARD_CREDIT_WHERE_CLAUSE_TEMPLATE = (
         'Id IN (SELECT AccountId FROM Opportunity ' +
         'WHERE SystemModStamp = LAST_N_DAYS:{0} ' +
-        'OR CloseDate = LAST_N_DAYS:{0} ALL ROWS)'
+        'OR CloseDate = LAST_N_DAYS:{0})'
     );
 
     @TestVisible private static final String CONTACT_HARD_CREDIT_WHERE_CLAUSE_TEMPLATE = (
         'Id IN (SELECT ' + SObjectType.Opportunity.fields.Primary_Contact__c.getName() + ' ' +
         ' FROM Opportunity WHERE SystemModStamp = LAST_N_DAYS:{0} ' +
-        'OR CloseDate = LAST_N_DAYS:{0} ALL ROWS)'
+        'OR CloseDate = LAST_N_DAYS:{0})'
     );
 
     @TestVisible private static final String CONTACT_SOFT_CREDIT_WHERE_CLAUSE_TEMPLATE = (
         'Id IN (SELECT ContactId FROM OpportunityContactRole ' +
         'WHERE Opportunity.SystemModStamp = LAST_N_DAYS:{0} ' +
-        'OR Opportunity.CloseDate = LAST_N_DAYS:{0} ALL ROWS)'
+        'OR Opportunity.CloseDate = LAST_N_DAYS:{0})'
     );
 
     @TestVisible private static final String RECURRING_DONATIONS_WHERE_CLAUSE_TEMPLATE = (
         'Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ' +
         'WHERE SystemModStamp = LAST_N_DAYS:{0} ' +
-        'OR CloseDate = LAST_N_DAYS:{0} ALL ROWS)'
+        'OR CloseDate = LAST_N_DAYS:{0})'
     );
+
+    private static final Integer DAYS_IN_A_YEAR;
 
     /*******************************************************************************************************
     * @description Incremental Rollups Settings Base class.
