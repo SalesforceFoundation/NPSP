@@ -194,38 +194,18 @@ public class CRLP_RollupBatch_SVC {
             }
         } else {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
-                CRLP_Account_BATCH accountHardCreditBatch = new CRLP_Account_BATCH(recordIds);
-                CRLP_IncrementalBatch.AccountHardCredit incrementalRollup = new CRLP_IncrementalBatch.AccountHardCredit();
-                if (recordIds == null && incrementalRollup.isEnabled()) {
-                    accountHardCreditBatch.setIncrementalRollup(incrementalRollup);
-                }
-                database.executeBatch(accountHardCreditBatch, batchSize);
+                database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-                CRLP_Contact_BATCH contactHardCreditBatch = new CRLP_Contact_BATCH(recordIds);
-                CRLP_IncrementalBatch.ContactHardCredit incrementalRollup = new CRLP_IncrementalBatch.ContactHardCredit();
-                if (recordIds == null && incrementalRollup.isEnabled()) {
-                    contactHardCreditBatch.setIncrementalRollup(incrementalRollup);
-                }
-                database.executeBatch(contactHardCreditBatch, batchSize);
+                database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 database.executeBatch(new CRLP_Account_SoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                CRLP_Contact_SoftCredit_BATCH contactSoftCreditBatch = new CRLP_Contact_SoftCredit_BATCH(recordIds);
-                CRLP_IncrementalBatch.ContactSoftCredit incrementalRollup = new CRLP_IncrementalBatch.ContactSoftCredit();
-                if (recordIds == null && incrementalRollup.isEnabled()) {
-                    contactSoftCreditBatch.setIncrementalRollup(incrementalRollup);
-                }
-                database.executeBatch(contactSoftCreditBatch, batchSize);
+                database.executeBatch(new CRLP_Contact_SoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                 // Technically this job is always processed in "skew" mode
                 database.executeBatch(new CRLP_GAU_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
-                CRLP_RD_BATCH recurringDonationBatch = new CRLP_RD_BATCH(recordIds);
-                CRLP_IncrementalBatch.RecurringDonations incrementalRollup = new CRLP_IncrementalBatch.RecurringDonations();
-                if (recordIds == null && incrementalRollup.isEnabled()) {
-                    recurringDonationBatch.setIncrementalRollup(incrementalRollup);
-                }
-                database.executeBatch(recurringDonationBatch, batchSize);
+                database.executeBatch(new CRLP_RD_BATCH(recordIds), batchSize);
             }
         }
     }
