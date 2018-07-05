@@ -5,7 +5,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Id Error</shortDescription>
-        <value>Auth ID cannot be blank.</value>
+        <value>You must provide an Auth ID.</value>
     </labels>
     <labels>
         <fullName>Addr_No_Batch</fullName>
@@ -13,7 +13,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Batch Address Verification Not Supported</shortDescription>
-        <value>The specified service does not support batch address verification.</value>
+        <value>The specified service does not support Batch Address Verification.</value>
     </labels>
     <labels>
         <fullName>Addr_Pending_Verification</fullName>
@@ -120,14 +120,14 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Token Error</shortDescription>
-        <value>Auth Token cannot be blank.</value>
+        <value>You must provide an Auth Token.</value>
     </labels>
     <labels>
         <fullName>Addr_Unauthorized_Endpoint</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Addr Unauthorized Endpoint</shortDescription>
-        <value>Unauthorized endpoint. Please add endpoint URL to your list of authorized Remote Sites, under Setup &gt; Security &gt; Remote Site.</value>
+        <value>The Remote Site URL for the SmartyStreetsZip endpoint is invalid. Verify the correct URL with Smarty Streets, and update the SmartyStreetsZip endpoint in Setup &gt; Security &gt; Remote Site Settings.</value>
     </labels>
     <labels>
         <fullName>Addr_Valid_Key_Pair</fullName>
@@ -297,63 +297,63 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Account Field For Old HH ID</shortDescription>
-        <value>Account Field for Old Household Id</value>
+        <value>Select a field to store the original Household object Id.</value>
     </labels>
     <labels>
         <fullName>CONV_Activities_Reparented</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Activites Reparented</shortDescription>
-        <value>Activities and tasks associated with 1x1 or Individual Accounts are transferred to the new Household Account</value>
+        <value>Transfers Activities and Tasks associated with One-to-One or Individual Accounts to new Household Accounts.</value>
     </labels>
     <labels>
         <fullName>CONV_Address_Overrides_Set</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Address Overrides</shortDescription>
-        <value>Address overrides are set for any Contact whose address is different from the Household Address</value>
+        <value>Selects Address Override for any Contact whose address is different from the Household Address.</value>
     </labels>
     <labels>
         <fullName>CONV_Addresses_Mapped</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Addresses Mapped</shortDescription>
-        <value>Addresses mapped from existing Household and Contacts to new Address objects, then attached to the Contact and Household Account</value>
+        <value>Creates Address records based on existing Household and Contact addresses, and associates the new Address records with the new Household Accounts.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Backed_Up</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All Data Backed Up</shortDescription>
-        <value>My data has been backed-up by going to Setup | Data Management | Export Data</value>
+        <value>I've backed up my data using the Export Data tool in Setup | Data Management.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Dup_Rules_Disabled</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>CONV_All_Dup_Rules_Disabled</shortDescription>
-        <value>All Data.com Duplication Management Rules have been disabled.</value>
+        <value>I have disabled all Data.com Duplication Management Rules.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Households_Selected</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All Households Selected</shortDescription>
-        <value>All existing Households are selected, along with their Contacts</value>
+        <value>Runs the conversion process for all existing Household objects and related Contacts. (Does not run conversion for Contacts not currently associated with a Household.)</value>
     </labels>
     <labels>
         <fullName>CONV_All_Required_Removed</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All Required Removed</shortDescription>
-        <value>All required field restrictions for custom fields have been removed.</value>
+        <value>I have removed required field restrictions for all custom fields.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Triggers_Disabled</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All Triggers disabled</shortDescription>
-        <value>All NPSP triggers are disabled (Your custom triggers are not disabled by the utility. For safety&apos;s sake, you should disable those too)</value>
+        <value>Disables all NPSP triggers. NOTE: The tool does not disable your custom triggers. You should manually disable any custom triggers before proceeding.</value>
     </labels>
     <labels>
         <fullName>CONV_All_Users_Logged_Out</fullName>
@@ -367,14 +367,14 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>All WFR and VR Disabled</shortDescription>
-        <value>All workflows and any custom validation rules have been disabled.</value>
+        <value>I have disabled all workflows and custom validation rules.</value>
     </labels>
     <labels>
         <fullName>CONV_Batching_Explanation</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Batching Explanation</shortDescription>
-        <value>This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts. Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed.  This could leave your data in an inconsistent state.  If this occurs, you will need to immediately resolve the issue and re-run the conversion utility. The following actions are taken by the batch job associated with this tool:</value>
+        <value>This tool will process your existing Contacts with Households in batches of 200 Households at a time, attempting to convert them to Household Accounts. Any errors during the conversion will result in one or more failed batches of Contacts while other batches may succeed. This could leave your data in an inconsistent state. If this occurs, you will need to immediately resolve the issue and re-run the conversion utility. This tool takes the following actions in converting your data:</value>
     </labels>
     <labels>
         <fullName>CONV_Begin</fullName>
@@ -402,7 +402,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Contacts Attached to Household</shortDescription>
-        <value>Contacts are disconnected from their 1x1 or Individual Account, and attached to the newly created Household Account</value>
+        <value>Disconnects Contacts from their One-to-One or Individual Account, and attaches them to their newly created Household Account.</value>
     </labels>
     <labels>
         <fullName>CONV_Conversion_Process</fullName>
@@ -437,35 +437,35 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Master Address Set</shortDescription>
-        <value>Master Household Address set or defined if none exists based on address frequency and Contact giving</value>
+        <value>Sets the Household Account address. Uses the current Household address if it exists, or one of the Contact addresses based on frequency of use or highest Contact giving.</value>
     </labels>
     <labels>
         <fullName>CONV_New_Affiliations</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>New Affiliations Created</shortDescription>
-        <value>Non-1x1 Accounts associations to Contacts are removed, new Affiliations created, and Contact Primary Affiliation field is set</value>
+        <value>Restructures Contact and org Account associations by creating Affiliation records, and sets the Primary Affiliation field on Contact.</value>
     </labels>
     <labels>
         <fullName>CONV_New_Households_Created</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>New Households Created</shortDescription>
-        <value>New Household Accounts are created for each existing Household</value>
+        <value>Creates a new Household Account for each Household object record.</value>
     </labels>
     <labels>
         <fullName>CONV_Non_NPSP_Apps</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Non-NPSP Apps</shortDescription>
-        <value>All non-NPSP apps have been temporarily uninstalled or disabled.</value>
+        <value>I have disabled or temporarily uninstalled all non-NPSP apps.</value>
     </labels>
     <labels>
         <fullName>CONV_Old_Household_Objects</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Old Household Objects</shortDescription>
-        <value>Previous Household objects are left in place, and should be deleted manually after verifying the results of the conversion process.</value>
+        <value>Does NOT delete Household objects after conversion is complete. You should manually delete these after you've verified the conversion.</value>
     </labels>
     <labels>
         <fullName>CONV_Only_Household_Contacts</fullName>
@@ -479,21 +479,21 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Opportunities Reparented</shortDescription>
-        <value>Opportunities are moved from the 1x1 or Individual Account and attached to the new Household Accounts and Contacts</value>
+        <value>Removes Opportunities from One-to-One or Individual Accounts and associates them with the new Household Accounts.</value>
     </labels>
     <labels>
         <fullName>CONV_Original_HH_Id</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Original HH Id</shortDescription>
-        <value>You can optionally select a custom field on your new Household Account to store the original Household object Id.  This can be useful for later reparenting of any lookups or child objects originally on the Household to the new Household Account.  Only unused custom fields that hold text are eligible to be selected.</value>
+        <value>You can optionally select a custom field on Account to store the original Household object Id. Storing this Id can be useful if you later want to reparent any lookups or child objects originally on the Household object to the new Household Account. Account Field selections are limited to unused custom text or text area fields.</value>
     </labels>
     <labels>
         <fullName>CONV_Page_Description</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Page Description</shortDescription>
-        <value>This page is designed to help you convert your organization from an existing 1x1 or Individual Account model to the new Household Account Model.</value>
+        <value>This page is designed to help you convert your organization from an existing One-to-One or Individual Account Model to the Household Account Model.</value>
     </labels>
     <labels>
         <fullName>CONV_Page_Title</fullName>
@@ -507,14 +507,14 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Permanent Change Info</shortDescription>
-        <value>This is a permanent change.  Please make sure to consult with your local expert before proceeding.  While the conversion is completing, your database functionality will be temporarily disabled to avoid accidentally modifying existing data.  Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. Before beginning this process, you&apos;ll need to confirm the following steps have been taken:</value>
+        <value>Account Model Conversion is a permanent change. Please consider this action carefully before proceeding. While the conversion is in process, your database functionality will be temporarily disabled. Salesforce.com and Salesforce.org are not responsible for any data loss, modifications, or corruption that occur as a result of this operation. Please proceed at YOUR OWN RISK. You'll need to confirm that you've taken the following steps before beginning the conversion:</value>
     </labels>
     <labels>
         <fullName>CONV_Primary_Contacts_Set</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Primary Contacts Set</shortDescription>
-        <value>Primary Contact values are set for all Households</value>
+        <value>Sets Primary Contact values for all Household Accounts.</value>
     </labels>
     <labels>
         <fullName>CONV_Proceed</fullName>
@@ -528,7 +528,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Record Ownership Transferred</shortDescription>
-        <value>All record ownership has been transferred from any inactive users.</value>
+        <value>I have transferred any records owned by inactive users to active users.</value>
     </labels>
     <labels>
         <fullName>CONV_Reload</fullName>
@@ -542,28 +542,28 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Selected Field Not Able to Hold ID</shortDescription>
-        <value>The selected field is not able to hold the Household Id information as required.  Please select a different Account field.</value>
+        <value>The field you selected to store the Household Id is of the wrong datatype or invalid in some way. Please select a different Account field.</value>
     </labels>
     <labels>
         <fullName>CONV_Selected_Field_Verification_Failure</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Selected Field Not Verified for Id</shortDescription>
-        <value>An error has occurred in attempting to verify the validity of the selected Account field.  The field selected was unable to be accurately verified.  Without this verification, it cannot be determined if your field mapping, and therefore your conversion will be successful.  You may proceed at your own risk, or may select a different field to hold the Household Id.</value>
+        <value>The conversion tool encountered an error when attempting to verify the validity of your selected Account field. Without this verification, the conversion tool can't determine if your field mapping, and therefore your conversion, will be successful.  You may proceed at your own risk, or select a different field to hold the Household Id.</value>
     </labels>
     <labels>
         <fullName>CONV_Tested_in_Sandbox</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Tested in Sandbox</shortDescription>
-        <value>The conversion process has been tested in a fresh sandbox.</value>
+        <value>I have tested the conversion process in a fresh sandbox.</value>
     </labels>
     <labels>
         <fullName>CONV_Triggers_Reenabled</fullName>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Triggers ReEnabled</shortDescription>
-        <value>All NPSP triggers are re-enabled (You&apos;ll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you&apos;ll need to manually disable those again too)</value>
+        <value>Re-enables all NPSP triggers. NOTE: You'll need to manually re-enable any custom triggers you disabled for the conversion. Also, the utility re-enables &lt;b&gt;all&lt;/b&gt; NPSP triggers, so if you selectively disabled any of them beforehand, you'll need to manually disable them again.</value>
     </labels>
     <labels>
         <fullName>CONV_Warning</fullName>
