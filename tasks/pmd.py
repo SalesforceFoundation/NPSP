@@ -16,7 +16,7 @@ class PMDTask(BaseTask):
             'description': 'The report type to the output. Available options are text and html. The html report type creates a file in the current working directory. Defaults to text.',
             'required': True
         },
-        'htmlfilename': {
+        'htmlFileName': {
             'description': 'The name of the html file to be written to the directory. This only applies if the output is html. Defaults to pmd.html',
             'required': True
         },
