@@ -25,7 +25,7 @@ Add Existing Contact to Existing Household
     Select Frame   //iframe[@title= 'Manage Household']
     Click Element     //input
     Press Key      //input    &{contact1}[FirstName] &{contact1}[LastName]
-    Click Element      //*[@title= 'Add']
+    Click Edit Button      Add
     Sleep  5  Input-textbox-notloaded-properly
     Click Button       //*[contains(@title, "Save")]
     Sleep  10

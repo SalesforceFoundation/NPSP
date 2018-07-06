@@ -53,8 +53,7 @@ Create Contact with Address
     Populate Form
     ...                       First Name=${first_name}
     ...                       Last Name=${last_name}
-    
-    Click Element             xpath=(//a[contains(text(),'--None--')])[3]
+    Click Dropdown            Primary Address Type
     Click Link                link=Work
     Populate Address          Mailing Street            50 Fremont Street  
     Populate Address          Mailing City              San Francisco
@@ -119,14 +118,31 @@ Create Primary Affiliation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}   
     Select Tab    Details
-    Execute JavaScript    window.scrollTo(100,300)
-    Click Element    //*[@title='Edit Primary Affiliation']
+    Scroll Page To Location    100    300
+    Click Edit Button    Edit Primary Affiliation
     Populate Lookup Field    Primary Affiliation    &{account}[Name]
     Click Record Button    Save 
     [Return]         ${account_id}    ${contact_id}   
 
+Create Secondary Affiliation
+    # Create Organization Account
+    ${account_id} =  Create Organization Foundation
+    &{account} =  Salesforce Get  Account  ${account_id}
+    
+    # Create Contact
+    ${contact_id} =  Create Contact with Email
+    &{contact} =  Salesforce Get  Contact  ${contact_id}   
+    Execute JavaScript    window.scrollTo(50,400)
+    Click Related List Button   Organization Affiliations    New
+    Populate Lookup Field    Organization    &{account}[Name]
+    Click Modal Button    Save
+    [Return]         ${account_id}    ${contact_id}
     
 Choose Frame
     [Arguments]    ${frame}
     Select Frame    //iframe[contains(@title,'${frame}')]
+    
+Scroll Page To Location
+    [Arguments]    ${x_location}    ${y_location}
+    Execute JavaScript    window.scrollTo(${x_location},${y_location})    
         

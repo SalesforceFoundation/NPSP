@@ -8,16 +8,9 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Secondary Affiliation for Contact
     # Create Organization Account
-    ${account_id} =  Create Organization Foundation
-    &{account} =  Salesforce Get  Account  ${account_id}
-    
-    # Create Contact
-    ${contact_id} =  Create Contact with Email
-    &{contact} =  Salesforce Get  Contact  ${contact_id}   
-    Execute JavaScript    window.scrollTo(50,300)
-    Click Related List Button   Organization Affiliations    New
-    Populate Lookup Field    Organization    &{account}[Name]
-    Click Modal Button    Save
+    ${acc}    ${con}    Create Secondary Affiliation
+    &{account} =  Salesforce Get  Account  ${acc}
+    &{contact} =  Salesforce Get  Contact  ${con}
     Page Should Contain    &{contact}[LastName]
     Page Should Contain    &{account}[Name]
     

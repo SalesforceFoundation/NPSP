@@ -10,7 +10,7 @@ Delete Contact with Closed Won Opportunity from Household
     #1 contact HouseHold Validation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Execute JavaScript    window.scrollTo(0,500)
+    Scroll Page To Location    0    500
     Click Special Related List Button   Opportunities    New Contact Donation
     Choose Frame    New Opportunity
     Click Element    //input[@title='Continue']
@@ -29,6 +29,7 @@ Delete Contact with Closed Won Opportunity from Household
     Sleep    5
     Go To Object Home    Contact    
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
+    Scroll Page To Location    150    0
     Click Link    link=Delete
     Sleep    5    
     Select Frame    //iframe[contains(@id, "vfFrameId")]
