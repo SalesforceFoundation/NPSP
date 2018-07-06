@@ -293,6 +293,29 @@ public class CMT_UnitTestData_TEST {
     }
 
     /**
+     * @description Create a Rollup__mdt record. Simplest method passing only the necessary information
+     * @param recordLabel
+     * @param filterGroupId
+     * @param rollupType
+     * @param summField
+     * @param operation
+     * @param detailField
+     * @param amtField
+     * @return JSON String for a Rollup__mdt record
+     */
+    public static String createRollupRecord(String recordLabel, String filterGroupId, RollupRecordType rollupType,
+            String summField, CRLP_Operation.RollupType operation, String detailField, String amtField) {
+
+        return createRollupRecord(recordLabel, filterGroupId, rollupType, new Map<String, Object>{
+                'Operation' => operation,
+                'Summary' => getSummaryObject.get(rollupType) + '.' + summField,
+                'Detail' => getDetailObject.get(rollupType) + (!String.isEmpty(detailField) ? '.' + detailField : ''),
+                'Amount' => getDetailObject.get(rollupType) + (!String.isEmpty(amtField) ? '.' + amtField : '')
+            }
+        );
+    }
+
+    /**
      * @description Create a Rollup__mdt record. Overload to include a Yearly Operation Type
      * @return JSON String for a Rollup__mdt record
      */
@@ -373,7 +396,7 @@ public class CMT_UnitTestData_TEST {
                 detailField = 'Amount__c';
             }
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
-            parms.put('Detail', getDetailObject.get(rollupType));
+            parms.put('Detail', getDetailObject.get(rollupType) + '.' + detailField);
 
         } else if (rollupType == RollupRecordType.ContactSoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
 

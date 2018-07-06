@@ -39,7 +39,7 @@
     </fields>
     <fields>
         <help><!-- Account1.BillingState --></help>
-        <label>Account1 Staat/Provincie</label>
+        <label>Account1 Provincie</label>
         <name>Account1_State_Province__c</name>
     </fields>
     <fields>
@@ -54,7 +54,7 @@
     </fields>
     <fields>
         <help><!-- Account1.BillingPostalCode --></help>
-        <label>Account1 Zip/Postcode</label>
+        <label>Account1 Postcode</label>
         <name>Account1_Zip_Postal_Code__c</name>
     </fields>
     <fields>
@@ -88,7 +88,7 @@
     </fields>
     <fields>
         <help><!-- Account2.BillingState --></help>
-        <label>Account2 Staat/Provincie</label>
+        <label>Account2 Provincie</label>
         <name>Account2_State_Province__c</name>
     </fields>
     <fields>
@@ -103,16 +103,16 @@
     </fields>
     <fields>
         <help><!-- Account2.BillingPostalCode --></help>
-        <label>Account2 Zip/Postcode</label>
+        <label>Account2 Postcode</label>
         <name>Account2_Zip_Postal_Code__c</name>
     </fields>
     <fields>
-        <help>De ApexBaanID van de Batch Banen die verwerkt zijn in het record</help>
-        <label>ApexBaanId</label>
+        <help>De ApexOpdrachtId van de Batch Opdracht die het record heeft verwerkt.</help>
+        <label>ApexOpdrachtId</label>
         <name>ApexJobId__c</name>
     </fields>
     <fields>
-        <label>Campagnelid status</label>
+        <label>Campagnelid Status</label>
         <name>Campaign_Member_Status__c</name>
     </fields>
     <fields>
@@ -187,7 +187,7 @@
         <name>Contact1_Preferred_Phone__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation>Thuis</translation>
+            <translation>Huis</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Mobile</masterLabel>
@@ -294,7 +294,7 @@
         <name>Contact2_Preferred_Phone__c</name>
         <picklistValues>
             <masterLabel>Home</masterLabel>
-            <translation>Thuis</translation>
+            <translation>Huis</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>Mobile</masterLabel>
@@ -377,17 +377,17 @@
     </fields>
     <fields>
         <help><!-- Opportunity.npe01__Membership_End_Date__c --></help>
-        <label>Donatie Lidmaatschap Eind Datum</label>
+        <label>Donatie Lidmaatschap Einddatum</label>
         <name>Donation_Membership_End_Date__c</name>
     </fields>
     <fields>
         <help><!-- Opportunity.npe01__Membership_Origin__c --></help>
-        <label>Donatie Lidmaatschap Oorsprong</label>
+        <label>Donatie Lidmaatschap Herkomst</label>
         <name>Donation_Membership_Origin__c</name>
     </fields>
     <fields>
         <help><!-- Opportunity.npe01__Membership_Start_Date__c --></help>
-        <label>Donatie Lidmaatschap Start Datum</label>
+        <label>Donatie Lidmaatschap Startdatum</label>
         <name>Donation_Membership_Start_Date__c</name>
     </fields>
     <fields>
@@ -401,8 +401,8 @@
         <name>Donation_Possible_Matches__c</name>
     </fields>
     <fields>
-        <help>Opportunity.RecordTypeId</help>
-        <label>Donatie Record Type Naam</label>
+        <help><!-- Opportunity.RecordTypeId --></help>
+        <label>Donatie Recordtype Naam</label>
         <name>Donation_Record_Type_Name__c</name>
     </fields>
     <fields>
@@ -416,8 +416,8 @@
         <name>Donation_Type__c</name>
     </fields>
     <fields>
-        <help>Beschrijving van de reden waarom het Data Import record niet is geïmporteerd.</help>
-        <label>Faal Informatie</label>
+        <help>Beschrijving van de reden waarom het importeren van dit record mislukt is.</help>
+        <label>Mislukking Informatie</label>
         <name>FailureInformation__c</name>
     </fields>
     <fields>
@@ -441,7 +441,7 @@
     </fields>
     <fields>
         <help><!-- Address.npsp__MailingState__c --></help>
-        <label>Thuis Staat/Provincie</label>
+        <label>Thuis Provincie</label>
         <name>Home_State_Province__c</name>
     </fields>
     <fields>
@@ -451,17 +451,17 @@
     </fields>
     <fields>
         <help><!-- Address.npsp__MailingPostalCode__c --></help>
-        <label>Thuis Zip/Post Code</label>
+        <label>Thuis Postcode</label>
         <name>Home_Zip_Postal_Code__c</name>
     </fields>
     <fields>
-        <label>Huishoud Account geïmporteerd</label>
+        <label>Huishouden Account Geïmporteerd</label>
         <name>HouseholdAccountImported__c</name>
-        <relationshipLabel>NPSP Data Import (Huishoud Account Geïmporteerd)</relationshipLabel>
+        <relationshipLabel>NPSP Data Import (Huishouden Account Geïmporteerd)</relationshipLabel>
     </fields>
     <fields>
         <help><!-- Household.Phone --></help>
-        <label>Huishoud Telefoon</label>
+        <label>Huishouden Telefoon</label>
         <name>Household_Phone__c</name>
     </fields>
     <fields>
@@ -486,7 +486,7 @@
     </fields>
     <fields>
         <help><!-- Payment.npe01__Check_Reference_Number__c --></help>
-        <label>Betaling Check/Referentienummer</label>
+        <label>Betaling Cheque/ Referentie Nummer</label>
         <name>Payment_Check_Reference_Number__c</name>
     </fields>
     <fields>
@@ -504,6 +504,14 @@
         <label><!-- Status --></label>
         <name>Status__c</name>
         <picklistValues>
+            <masterLabel>Dry Run - Error</masterLabel>
+            <translation><!-- Dry Run - Error --></translation>
+        </picklistValues>
+        <picklistValues>
+            <masterLabel>Dry Run - Validated</masterLabel>
+            <translation><!-- Dry Run - Validated --></translation>
+        </picklistValues>
+        <picklistValues>
             <masterLabel>Failed</masterLabel>
             <translation>Mislukt</translation>
         </picklistValues>
@@ -516,15 +524,15 @@
     <layouts>
         <layout>Data Import Layout</layout>
         <sections>
-            <label>Account1 Informatie</label>
+            <label>Account1 Organisatie Informatie</label>
             <section>Account1 Organization Information</section>
         </sections>
         <sections>
-            <label>Account2 Informatie</label>
+            <label>Account2 Organisatie Informatie</label>
             <section>Account2 Organization Information</section>
         </sections>
         <sections>
-            <label><!-- Campaign Information --></label>
+            <label>Campagne Informatie</label>
             <section>Campaign Information</section>
         </sections>
         <sections>
@@ -536,7 +544,7 @@
             <section>Contact2 Information</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
@@ -544,11 +552,11 @@
             <section>Donation Information</section>
         </sections>
         <sections>
-            <label>Thuis Adres</label>
+            <label>Huisadres</label>
             <section>Home Address</section>
         </sections>
         <sections>
-            <label>Huishoud Informatie</label>
+            <label>Huishouden Account Informatie</label>
             <section>Household Account Information</section>
         </sections>
     </layouts>

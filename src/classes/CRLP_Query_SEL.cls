@@ -73,22 +73,20 @@
         String contactRelField = UTIL_Namespace.StrAllNSPrefix('Contact__c');
         Set<String> queryFields = new Set<String>{'Id'};
         for (DescribeFieldResult dfr : allFieldsToQuery) {
-            if (dfr.isAccessible()) {
-                queryFields.add(dfr.getName());
-                // Special conditions - these are foreign key fields that are supported in filters for record type and user
-                if (dfr.getName() == 'RecordTypeId') {
-                    queryFields.add('RecordType.DeveloperName');
-                } else if (dfr.getName() == 'OwnerId') {
-                    queryFields.add('Owner.Alias');
-                } else if (dfr.getName() == 'CreatedById') {
-                    queryFields.add('CreatedBy.Alias');
-                } else if (dfr.getName() == 'LastModifiedById') {
-                    queryFields.add('LastModifiedBy.Alias');
-                } else if (dfr.getName() == 'ContactId') {
-                    queryFields.add('Contact.AccountId');
-                } else if (dfr.getName() == contactRelField) {
-                    queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
-                }
+            queryFields.add(dfr.getName());
+            // Special conditions - these are foreign key fields that are supported in filters for record type and user
+            if (dfr.getName() == 'RecordTypeId') {
+                queryFields.add('RecordType.DeveloperName');
+            } else if (dfr.getName() == 'OwnerId') {
+                queryFields.add('Owner.Alias');
+            } else if (dfr.getName() == 'CreatedById') {
+                queryFields.add('CreatedBy.Alias');
+            } else if (dfr.getName() == 'LastModifiedById') {
+                queryFields.add('LastModifiedBy.Alias');
+            } else if (dfr.getName() == 'ContactId') {
+                queryFields.add('Contact.AccountId');
+            } else if (dfr.getName() == contactRelField) {
+                queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
             }
         }
         // Convert the Set to the List to support String.Join()
@@ -232,18 +230,16 @@
         }
 
         for (Schema.DescribeFieldResult fld : allFieldsToQuery) {
-            if (fld.isAccessible()) {
-                addlQuery += ',' + parentKeyField + '.' + fld.getName();
-                // Special conditions - these are foreign key fields that are supported in filters for record type and user
-                if (fld.getName() == 'RecordTypeId') {
-                    addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
-                } else if (fld.getName() == 'OwnerId') {
-                    addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
-                } else if (fld.getName() == 'CreatedById') {
-                    addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
-                } else if (fld.getName() == 'LastModifiedById') {
-                    addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
-                }
+            addlQuery += ',' + parentKeyField + '.' + fld.getName();
+            // Special conditions - these are foreign key fields that are supported in filters for record type and user
+            if (fld.getName() == 'RecordTypeId') {
+                addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
+            } else if (fld.getName() == 'OwnerId') {
+                addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
+            } else if (fld.getName() == 'CreatedById') {
+                addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
+            } else if (fld.getName() == 'LastModifiedById') {
+                addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
             }
         }
 

@@ -733,9 +733,11 @@ public class AFFL_Affiliations_TEST {
         Account acc = new Account(Name='foo', npe01__One2OneContact__c=listCon[0].id, npe01__SYSTEMIsIndividual__c=false);
         insert acc;
         
-        list<npe5__Affiliation__c> queryAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
-            npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
-            where npe5__Organization__c = :acc.id];
+        List<npe5__Affiliation__c> queryAffl = [
+            SELECT Id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c
+            FROM npe5__Affiliation__c
+            WHERE npe5__Organization__c = :acc.id
+        ];
         
         System.assertEquals(1, queryAffl.size(), 'An affiliation should be created.');
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The affiliation\'s status should be set to the default current status.');
@@ -748,7 +750,7 @@ public class AFFL_Affiliations_TEST {
         
         queryAffl = [select id, npe5__Status__c, npe5__StartDate__c, npe5__Role__c, 
             npe5__Organization__c, npe5__EndDate__c, npe5__Contact__c from npe5__Affiliation__c 
-            where npe5__Organization__c = :acc.id ORDER BY npe5__Contact__r.LastName];        
+            where npe5__Organization__c = :acc.id ORDER BY npe5__Contact__c];
         
         System.assertEquals(2, queryAffl.size(), 'Two affiliations should exist.');
         system.assertEquals(system.label.npe5.DefaultCurrentStatus, queryAffl[0].npe5__Status__c, 'The existing affiliation\'s status should be unchanged.');
