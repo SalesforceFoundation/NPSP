@@ -9,9 +9,14 @@
         <value><!-- Households Settings --></value>
     </caseValues>
     <fields>
-        <help>De Rol die gegeven wordt aan de contactpersonen die soft credit moeten ontvangen voor een gematchte gift</help>
+        <help>De Contactpersoon Rol die gegeven wordt aan gematchte donateurs.</help>
         <label>Gematchte Donateur Rol</label>
         <name>Matched_Donor_Role__c</name>
+    </fields>
+    <fields>
+        <help><!-- Check this box to use Dated Conversion Rates when Advanced Currency Management is enabled in this Organization. If unchecked and ACM is enabled, all NPSP roll-ups will use the default exchange rate for by currency. --></help>
+        <label><!-- Use Dated Conversion Rates if available --></label>
+        <name>Use_Dated_Conversion_Rates__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
 </CustomObjectTranslation>

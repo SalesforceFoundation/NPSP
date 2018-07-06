@@ -181,4 +181,8 @@
         <label>Fusionner des contacts</label>
         <name>Merge_Contacts</name>
     </webLinks>
+    <webLinks>
+        <label><!-- Recalculate_Rollups --></label>
+        <name>Recalculate_Rollups</name>
+    </webLinks>
 </CustomObjectTranslation>

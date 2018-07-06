@@ -14,8 +14,8 @@
         <name>Active__c</name>
     </fields>
     <fields>
-        <help>Geeft aan dat deze module asynchroon uitgevoerd moet worden in deze transactie.</help>
-        <label>Asynchroon Na Evenementen</label>
+        <help>Geeft aan dat deze module asynchroon uitgevoerd moet worden in deze transactie voor elke Vervolgactie.</help>
+        <label>Asynchrone Vervolgacties</label>
         <name>Asynchronous__c</name>
     </fields>
     <fields>
@@ -25,7 +25,7 @@
     </fields>
     <fields>
         <help>Volgorde waarin deze module uitgevoerd moet worden, helpt met onderhouden van afhankelijkheden in de modules en data.</help>
-        <label>Laad bevel</label>
+        <label>Volgorde Laden</label>
         <name>Load_Order__c</name>
     </fields>
     <fields>
@@ -39,36 +39,36 @@
         <name>Trigger_Action__c</name>
         <picklistValues>
             <masterLabel>AfterDelete</masterLabel>
-            <translation>NaVerwijderen</translation>
+            <translation>AfterDelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterInsert</masterLabel>
-            <translation>NaInvoegen</translation>
+            <translation>AfterInsert</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterUndelete</masterLabel>
-            <translation>NaHerstellen</translation>
+            <translation>AfterUndelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>AfterUpdate</masterLabel>
-            <translation>NaUpdaten</translation>
+            <translation>AfterUpdate</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeDelete</masterLabel>
-            <translation>VoorVerwijderen</translation>
+            <translation>BeforeDelete</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeInsert</masterLabel>
-            <translation>VoorInvoegen</translation>
+            <translation>BeforeInsert</translation>
         </picklistValues>
         <picklistValues>
             <masterLabel>BeforeUpdate</masterLabel>
-            <translation>VoorUpdaten</translation>
+            <translation>BeforeUpdate</translation>
         </picklistValues>
     </fields>
     <fields>
         <help>Vink aan als je het record zelf wilt beheren. Let op dat updates van het pakket het record niet updaten.</help>
-        <label>Gebruiker Beheren</label>
+        <label>Door Gebruiker Beheerd</label>
         <name>User_Managed__c</name>
     </fields>
     <fields>
@@ -80,11 +80,11 @@
     <layouts>
         <layout>Trigger Handler Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- New Section --></label>
+            <label>Nieuwe Sectie</label>
             <section>New Section</section>
         </sections>
     </layouts>
