@@ -5,7 +5,6 @@
      *   sets operations and object details
      */
     doInit: function(cmp, event, helper) {
-        console.log("In Rollup doInit");
         helper.toggleSpinner(cmp, true);
         var labels = cmp.get("v.labels");
         var detailObjects = cmp.get("v.detailObjects");
@@ -30,10 +29,11 @@
 
         action.setCallback(this, function (response) {
             var state = response.getState();
+            var labels = cmp.get("v.labels");
+
             if (state === "SUCCESS") {
                 var data = response.getReturnValue();
                 var model = JSON.parse(data);
-                var labels = cmp.get("v.labels");
                 if (activeRollupId) {
                     // detail, amount, and date fields need to be held on client side
                     // with their object name to support multiple object selection
@@ -68,14 +68,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                var msg = labels.unknownError;
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
                 }
+                helper.showToast(cmp, 'error', labels.rollupDisplayError, msg);
             }
             helper.toggleSpinner(cmp, false);
         });
@@ -140,8 +137,6 @@
             var fieldName = message[0];
             var value = message[1];
             var label = message[2];
-            console.log("field name is " + fieldName);
-            console.log("value is " + value);
 
             if(fieldName === 'summaryObject'){
                 helper.onChangeSummaryObject(cmp, value, label);

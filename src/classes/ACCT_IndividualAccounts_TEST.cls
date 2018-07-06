@@ -586,8 +586,11 @@ private class ACCT_IndividualAccounts_TEST {
         //skip the test if Advancement is installed
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
-    	if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
-    	detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
+        if (strTestOnly != '*' && strTestOnly != 'detachIndividualAccount') return;
+
+        detachAccountProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }
     private static testMethod void detachHHAccount2() {
         //skip the test if Advancement is installed
@@ -1468,6 +1471,28 @@ private class ACCT_IndividualAccounts_TEST {
         );
     }
 
+    /**
+     * @description Validate that when inserting a new Account for a Contact, it uses the same OwnerId as the
+     * Contact that was inserted (especially if the Contact.OwnerId is set to a value other than the current user).
+     */
+    private static testMethod void test_insertAsOtherUser() {
+
+        // Create a single new User
+        User tempUser = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        tempUser.IsActive = true;
+        insert tempUser;
+
+        Id currUserId = UserInfo.getUserId();
+        Contact c = UTIL_UnitTestData_TEST.getContact();
+        c.OwnerId = currUserId;
+        System.runAs(tempUser) {
+            insert c;
+            c = [SELECT Id, OwnerId, Account.OwnerId FROM Contact WHERE Id = :c.Id LIMIT 1];
+            system.assertEquals(c.OwnerId, currUserId, 'The Contact owner should be current system admin user');
+            system.assertEquals(c.Account.OwnerId, currUserId, 'The Account owner should be the same as the Contact Owner');
+        }
+    }
+
     // Helpers
     ////////////
 
@@ -1506,5 +1531,4 @@ private class ACCT_IndividualAccounts_TEST {
         
         return newRecTypeId;
     }
-
 }

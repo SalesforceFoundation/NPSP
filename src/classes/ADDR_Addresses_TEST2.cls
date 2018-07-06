@@ -1350,11 +1350,25 @@ public with sharing class ADDR_Addresses_TEST2 {
         Test.stopTest();
 
         // verify results
-        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account order by Account.Name];
+        listAcc = [
+            SELECT Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode,
+                BillingCountry, BillingLatitude, BillingLongitude
+            FROM Account
+            ORDER BY Id
+        ];
         system.assertEquals(cAcc, listAcc.size());
-        list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        list<Address__c> listAddr = [
+            SELECT Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c,
+                Latest_Start_Date__c, Latest_End_Date__c
+            FROM Address__c
+            ORDER BY Household_Account__c
+        ];
         system.assertEquals(cAcc, listAddr.size());
-        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        listCon = [
+            SELECT Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity
+            FROM Contact
+            ORDER BY AccountId
+        ];
         system.assertEquals(cAcc, listCon.size());        
         
         for (integer i = 0; i < cAcc; i++) {
@@ -1412,11 +1426,25 @@ public with sharing class ADDR_Addresses_TEST2 {
         Test.stopTest();
         
         // verify results
-        listAcc = [select Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, BillingLatitude, BillingLongitude from Account order by Account.Name];
+        listAcc = [
+            SELECT Id, Name, BillingStreet, BillingCity, BillingState, BillingPostalCode,
+                BillingCountry, BillingLatitude, BillingLongitude
+            FROM Account
+            ORDER BY Id
+        ];
         system.assertEquals(cAcc, listAcc.size());
-        listAddrT = [select Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c, Latest_Start_Date__c, Latest_End_Date__c from Address__c order by Household_Account__r.Name];
+        listAddrT = [
+            SELECT Id, Default_Address__c, MailingStreet__c, MailingCity__c, Household_Account__c,
+                Latest_Start_Date__c, Latest_End_Date__c
+            FROM Address__c
+            ORDER BY Household_Account__c
+        ];
         system.assertEquals(cAcc, listAddrT.size());
-        listCon = [select Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity from Contact order by Account.Name];
+        listCon = [
+            SELECT Id, AccountId, Name, Current_Address__c, MailingStreet, MailingCity
+            FROM Contact
+            ORDER BY AccountId
+        ];
         system.assertEquals(cAcc, listCon.size());        
         
         for (integer i = 0; i < cAcc; i++) {
@@ -1613,7 +1641,7 @@ public with sharing class ADDR_Addresses_TEST2 {
         Test.stopTest();
 
         // verify results
-        acc = [select Id, Name, BillingStreet from Account where Name like '%Testy%'];
+        acc = [SELECT Id, Name, BillingStreet FROM Account WHERE Id != :acc.Id];
         list<Address__c> listAddr = [select Id, Default_Address__c, MailingStreet__c from Address__c];
         system.assertEquals(1, listAddr.size());
         con = [select Id, Lastname, MailingStreet, Current_Address__c from Contact];
