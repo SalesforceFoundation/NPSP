@@ -74,7 +74,7 @@
             $scope.rowsData = result.data;
             $scope.totalPages = Math.ceil($scope.rowsCount / 50) + 1;
             $scope.prevButonDisabled = true;
-            $scope.nextButonDisabled = false;
+            $scope.nextButonDisabled = result.data.length == 0 ? true : false;
             $scope.rowErrors = {};
 
             $scope.lastSelectedRow = null;
