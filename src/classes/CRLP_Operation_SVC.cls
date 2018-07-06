@@ -68,6 +68,8 @@ public class CRLP_Operation_SVC {
         Date dateValue;
         DateTime dateTimeValue;
         Decimal amountValue = null;
+        String theYear;
+        Integer yearNum;
 
         // Get the Date value from the appropriate object. There should always be a date!
         // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
@@ -82,6 +84,19 @@ public class CRLP_Operation_SVC {
             } else if (rollup.dateFieldType == SoapType.DATETIME) {
                 dateTimeValue = (DateTime) dateSObject.get(dateField);
                 dateValue = dateTimeValue.date();
+            }
+        }
+
+        if (dateValue != null) {
+            yearNum = fiscalYrs.getYear(dateValue);
+            theYear = yearNum.format().replace(',', '');
+        }
+
+        //in the case of a years-ago-single-result group, only proceed if the detail record is in the right year
+        if (rollup.isYearsAgoSingleResult) {
+            Integer thisYear = (rollup.useFiscalYear ? fiscalYrs.getYear(Date.today()) : Date.today().year()) - rollup.yearsAgo;
+            if (yearNum != thisYear) {
+                return;
             }
         }
 
@@ -180,13 +195,16 @@ public class CRLP_Operation_SVC {
                     // result value from whatever record makes up the 'last' record' by date
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
+                }
+
+                // only allow datevalue to drive first and last values if datetimevalue wasn't already used
+                else if (dateTimeValue == null && dateValue != null && operation == CRLP_Operation.RollupType.FIRST && (dateValue < rollup.minDate || rollup.minDate == null)) {
                     // Operation = FIRST (always based on a date)
                     // Only want to use < as the operator for the date comparison so it only retrieves the first
                     // record that meets the minimum date.
                     setResultFieldValue(rollup.resultFieldType, resultVal, rollup, operation);
 
-                } else if (dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
+                } else if (dateTimeValue == null && dateValue != null && operation == CRLP_Operation.RollupType.LAST && (dateValue >= rollup.maxDate || rollup.maxDate == null)) {
                     // Operation = LAST (always based on a date)
                     // Use >= because Opps are sorted by CreatedDate ASC, meaning that we want to keep getting the
                     // result value from whatever record makes up the 'last' record' by date
@@ -217,11 +235,8 @@ public class CRLP_Operation_SVC {
             }
         }
 
-        String theYear;
-
         // Set the First/Last Date values; excluding Opportunities with a null Date or a null Amount
         if (dateValue != null) {
-            theYear = fiscalYrs.getYear(dateValue).format().replace(',', '');
             if (rollup.minDate == null || rollup.minDate > dateValue) {
                 rollup.minDate = dateValue;
             }
@@ -276,7 +291,7 @@ public class CRLP_Operation_SVC {
             rollup.idValue[arrayPosition] = (Id) resultVal;
         } else if (resultFieldType == SoapType.DOUBLE) {
             rollup.numValue[arrayPosition] = (Decimal)resultVal;
-        } else {
+        } else if (resultFieldType == SoapType.STRING) {
             rollup.textValue[arrayPosition] = String.valueOf(resultVal);
         }
     }
