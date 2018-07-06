@@ -2,15 +2,15 @@
     <apex:slds />
     <div class="slds-scope">
         <apex:form id="pgHeader">
-            <c:UTIL_PageHeader showBreadcrumb="false" parentEntityLabel="{! $ObjectType.Contact.Label }"
-                               parentAction="/003" parentRecordName="{!$ObjectType.Contact.Name }"
-                               parentRecordAction="/{!Contact.Id}" header="Recalculate Roll-Ups"
+            <c:UTIL_PageHeader showBreadcrumb="true"
+                               parentEntityLabel="{! $ObjectType.Contact.LabelPlural }" parentAction="/003"
+                               parentRecordName="{!Contact.Name }" parentRecordAction="/{!Contact.Id}"
+                               header="{!$Label.CRLP_RecalculatingRollups}"
                                icon="contact_120" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="true"
-                               cancelLabel="Return" cancelAction="/{!Contact.Id}"
-                               rendered="{!hasError == true}" />
+                               cancelLabel="{!returnLabel}" cancelAction="/{!Contact.Id}"
+                               rendered="true" />
         </apex:form>
-        <c:UTIL_PageMessages />
+        <c:UTIL_PageMessages allowClose="false"/>
     </div>
-    <c:UTIL_NavigateBack recordId="{!Contact.Id}" redirect="true" rendered="{!hasError == false}"/>
 </apex:page>

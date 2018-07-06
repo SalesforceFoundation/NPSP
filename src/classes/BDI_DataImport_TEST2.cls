@@ -53,7 +53,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDIDuplicateEmailNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailNewContacts') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Alternate_Email__c='c1@foo.com'));
@@ -66,22 +66,21 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(1, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(1, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1ImportStatus__c];
-        system.assertEquals(3, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
     
     /*********************************************************************************************************
@@ -93,7 +92,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDIDuplicatePhoneNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicatePhoneNewContacts') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Phone__c='123-456-7890'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Mobile_Phone__c='123-456-7890'));
@@ -110,25 +109,24 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(1, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(1, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1ImportStatus__c];
-        system.assertEquals(4, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[3].Contact1Imported__c, listCon[0].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[3].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[3].Contact1Imported__c, listCon[0].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[3].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -140,11 +138,11 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDIDuplicateNewContactManyFields() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateNewContactManyFields') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
             Contact1_Title__c='myTitle'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
-            Contact1_Birthdate__c=system.Today()));
+            Contact1_Birthdate__c=System.Today()));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', 
             Contact1_Home_Phone__c='123-456-7890'));
         insert listDI;
@@ -156,25 +154,24 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Title, Birthdate, HomePhone from Contact];
-        system.assertEquals(1, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
-        system.assertEquals('myTitle', listCon[0].Title);
-        system.assertEquals(system.Today(), listCon[0].Birthdate);
-        system.assertEquals('123-456-7890', listCon[0].HomePhone);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(1, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
+        System.assertEquals('myTitle', listCon[0].Title);
+        System.assertEquals(System.Today(), listCon[0].Birthdate);
+        System.assertEquals('123-456-7890', listCon[0].HomePhone);
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1ImportStatus__c];
-        system.assertEquals(3, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -190,14 +187,16 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIDuplicateEmailExistingContacts') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', npe01__HomeEmail__c='c2@C2.com'));
         listConExisting.add(new Contact(Firstname='c3', Lastname='C3', npe01__WorkEmail__c='c3@C3.com'));
         listConExisting.add(new Contact(Firstname='c4', Lastname='C4', npe01__AlternateEmail__c='c4@C4.com'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Alternate_Email__c='c1@C1.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Alternate_Email__c='c2@C2.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c3', Contact1_Lastname__c='C3', Contact1_Alternate_Email__c='c3@C3.com'));
@@ -211,23 +210,22 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Lastname];
-        system.assertEquals(4, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(4, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[2].Id);
-        system.assertEquals(listDI[3].Contact1Imported__c, listCon[3].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[2].Id);
+        System.assertEquals(listDI[3].Contact1Imported__c, listCon[3].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[3].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -243,11 +241,13 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingEmailExistingContacts') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Alternate_Email__c='c1@alt.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@alt.com'));
@@ -260,25 +260,24 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, npe01__HomeEmail__c, npe01__WorkEmail__c, npe01__AlternateEmail__c from Contact order by Lastname];
-        system.assertEquals(1, listCon.size());
-        system.assertEquals('c1@c1.com', listCon[0].npe01__HomeEmail__c);
-        system.assertEquals('c1@alt.com', listCon[0].npe01__AlternateEmail__c);
-        system.assertEquals('c1@alt.com', listCon[0].npe01__WorkEmail__c);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(1, listCon.size());
+        System.assertEquals('c1@c1.com', listCon[0].npe01__HomeEmail__c);
+        System.assertEquals('c1@alt.com', listCon[0].npe01__AlternateEmail__c);
+        System.assertEquals('c1@alt.com', listCon[0].npe01__WorkEmail__c);
         
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(3, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
     }
 
     /*********************************************************************************************************
@@ -294,11 +293,13 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIOverlappingPhoneExistingContacts') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Phone='123-456-7890'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Home_Phone__c='123-456-7890', Contact1_Mobile_Phone__c='999-888-7777'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Phone__c='999-888-7777'));
@@ -314,25 +315,24 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, HomePhone, MobilePhone, Phone, npe01__WorkPhone__c from Contact order by Lastname];
-        system.assertEquals(1, listCon.size());
-        system.assertEquals('123-456-7890', listCon[0].HomePhone);
-        system.assertEquals('999-888-7777', listCon[0].MobilePhone);
-        system.assertEquals('999-888-7777', listCon[0].npe01__WorkPhone__c);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(1, listCon.size());
+        System.assertEquals('123-456-7890', listCon[0].HomePhone);
+        System.assertEquals('999-888-7777', listCon[0].MobilePhone);
+        System.assertEquals('999-888-7777', listCon[0].npe01__WorkPhone__c);
         
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(3, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
-        system.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
-        system.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[0].Id);
+        System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
+        System.assertNotEquals(null, listDI[2].HouseholdAccountImported__c);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[2].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -346,14 +346,20 @@ private with sharing class BDI_DataImport_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='c1Title'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='c1PrimeTitle'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='c1Title'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='c1PrimeTitle'));
         insert listDI;
@@ -369,15 +375,15 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, Title from Contact];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c desc];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listConExisting[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listConExisting[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listConExisting[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listConExisting[1].Id);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -393,12 +399,14 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingContacts') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
             Contact1_Title__c='t1Updated', Contact1Imported__c=listConExisting[0].Id));
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
@@ -412,19 +420,17 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
-            from DataImport__c 
-            order by Contact1_Title__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
-        system.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        System.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        System.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -440,12 +446,14 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDISalesforceIdMatchingExistingAndNewContacts') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='foo@bar.com', Title='t1'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t2'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
             Contact1_Title__c='t1Updated', Contact1Imported__c=listConExisting[0].Id, 
             Contact2_Firstname__c='c3', Contact2_Title__c='t3'));
@@ -461,25 +469,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, AccountId, Firstname, Lastname, Email, Title from Contact order by Title];
-        system.assertEquals(4, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
         
         // verify each c2 was created in existing c1's household
-        system.assertEquals(listCon[0].AccountId, listCon[2].AccountId);
-        system.assertEquals(listCon[1].AccountId, listCon[3].AccountId);
+        System.assertEquals(listCon[0].AccountId, listCon[2].AccountId);
+        System.assertEquals(listCon[1].AccountId, listCon[3].AccountId);
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
-            from DataImport__c 
-            order by Contact1_Title__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
-        system.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        System.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        System.assertEquals(listDI[1].Contact1_Title__c, listCon[1].Title);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Contact2ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -495,11 +501,13 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'OneDISalesforceIdMatchingExistingAndNewContact') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
         
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c=null, Contact1_Lastname__c=null, Contact1_Personal_Email__c=null, 
             Contact1Imported__c=listConExisting[0].Id, 
             Contact2_Firstname__c='c2', Contact2_Lastname__c='C2'));
@@ -515,20 +523,18 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, AccountId, Firstname, Lastname, Email, Title from Contact order by Title];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size());
         
         // verify each c2 was created in existing c1's household
-        system.assertEquals(listCon[0].AccountId, listCon[1].AccountId);
+        System.assertEquals(listCon[0].AccountId, listCon[1].AccountId);
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, Contact1_Title__c 
-            from DataImport__c 
-            order by Contact1_Title__c];
-        system.assertEquals(1, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+        listDI = getDIs();
+        System.assertEquals(1, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
     }
 
    /*********************************************************************************************************
@@ -544,14 +550,16 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'SingleDISalesforceIdMatchingExistingHousehold') return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='t1'));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@c2.com', Title='t2'));
         insert listConExisting;
         
-        listConExisting = [select Id, Name, AccountId, Email, Title from Contact order by Title];
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+
+        listConExisting = getContacts();
         
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', 
             Contact1_Title__c='t1Updated', HouseholdAccountImported__c=listConExisting[1].AccountId));
         insert listDI;
@@ -563,18 +571,15 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, AccountId, Email, Title from Contact order by Title];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c, 
-            Contact1_Title__c, HouseholdAccountImported__c 
-            from DataImport__c 
-            order by Contact1_Title__c];
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(listDI[0].HouseholdAccountImported__c, listCon[1].AccountId);
-        system.assertEquals(listCon[0].AccountId, listCon[1].AccountId);
+        listDI = getDIs();
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[0].Contact1_Title__c, listCon[0].Title);
+        System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(listDI[0].HouseholdAccountImported__c, listCon[1].AccountId);
+        System.assertEquals(listCon[0].AccountId, listCon[1].AccountId);
     }
 
    /*********************************************************************************************************
@@ -585,14 +590,20 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNotMatchingExistingContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNotMatchingExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID1'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@c1.com', Title='ID2'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID3'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID4'));
         insert listDI;
@@ -608,15 +619,15 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
-        system.assertEquals(4, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[2].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[3].Id);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[2].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[3].Id);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -627,8 +638,12 @@ private with sharing class BDI_DataImport_TEST2 {
     **********************************************************************************************************/            
     static testMethod void ManyDIUniqueIdNewContacts() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID1'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@c1.com', Contact1_Title__c='ID2'));
         insert listDI;
@@ -644,15 +659,15 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results.
-        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title];
-        system.assertEquals(2, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(2, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1_Title__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
-        system.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[1].Id);
+        System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -666,16 +681,22 @@ private with sharing class BDI_DataImport_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingContacts') return;
+
+        //Since Data Import API does not have other non-encryptable fields to test matching on,
+        //we need to exit the test if the matching is done on the encrypted field. 
+        if (!Schema.sObjectType.Contact.fields.Title.isFilterable()) return;
             
          // existing contacts
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title='id1'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title='id2'));
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@foo.com', Title=null));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@foo.com', Title='id4'));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c='id1'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c='id3'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com', Contact1_Title__c=null));
@@ -693,26 +714,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, Email, Title from Contact order by Title NULLS LAST, Lastname NULLS LAST]; // id1, id2, id3, id4, null (c1), null (c2)
-        system.assertEquals(6, listCon.size());
-        system.debug('****DJH: listCon ' + listCon);
+        List<Contact> listCon = getContacts(); // Creation order
+        System.assertEquals(6, listCon.size());
         
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c from DataImport__c 
-            order by Contact1_Title__c NULLS LAST, Contact1_Lastname__c NULLS LAST];
-        system.assertEquals(4, listDI.size());
-        system.debug('****DJH: listDI ' + listDI);
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
 
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact1ImportStatus__c, label.bdiMatched);
+        System.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
+        System.assertEquals(listDI[0].Contact1ImportStatus__c, label.bdiMatched);
 
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[2].Id);
-        system.assertEquals(listDI[1].Contact1ImportStatus__c, label.bdiCreated);
+        System.assertEquals(listDI[1].Contact1Imported__c, listCon[4].Id);
+        System.assertEquals(listDI[1].Contact1ImportStatus__c, label.bdiCreated);
 
-        system.assertEquals(listDI[2].Contact1Imported__c, listCon[4].Id);
-        system.assertEquals(listDI[2].Contact1ImportStatus__c, label.bdiMatched);        
+        System.assertEquals(listDI[2].Contact1Imported__c, listCon[2].Id);
+        System.assertEquals(listDI[2].Contact1ImportStatus__c, label.bdiMatched);        
 
-        system.assertEquals(listDI[3].Contact1Imported__c, listCon[5].Id);
-        system.assertEquals(listDI[3].Contact1ImportStatus__c, label.bdiCreated);        
+        System.assertEquals(listDI[3].Contact1Imported__c, listCon[5].Id);
+        System.assertEquals(listDI[3].Contact1ImportStatus__c, label.bdiCreated);        
     }
 
    /*********************************************************************************************************
@@ -725,19 +743,21 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingExistingAccounts') return;
             
          // existing Accounts
-        list<Account> listAccExisting = new list<Account>();
-        listAccExisting.add(new Account(Name='foo', website='a1.com'));
-        listAccExisting.add(new Account(Name='a1', website='nota1.com'));
+        List<Account> listAccExisting = new List<Account>();
+        listAccExisting.add(new Account(Name='foo', Phone='415-111-4567'));
+        listAccExisting.add(new Account(Name='a1', Phone='415-222-2222'));
         insert listAccExisting;
- 
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Website__c='a1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='z', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-333-3333'));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -746,16 +766,16 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Account> listAcc = [select Id, Name, Website from Account];
-        system.assertEquals(3, listAcc.size());
+        List<Account> listAcc = getAccounts();
+        System.assertEquals(3, listAcc.size());
         
-        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account1_Name__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
-        system.assertEquals(listDI[0].Account1_Name__c, listAcc[0].Name);
-        system.assertNotEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(listDI[0].Account1Imported__c, listAccExisting[0].Id);
+        System.assertEquals(listDI[0].Account1_Name__c, listAcc[0].Name);
+        System.assertNotEquals(listDI[1].Account1Imported__c, listAccExisting[1].Id);
+        System.assertEquals(label.bdiMatched, listDI[0].Account1ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -768,14 +788,14 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdNewAccounts') return;
             
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='a1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='z.com'));
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-222-4567'));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -784,13 +804,13 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Account> listAcc = [select Id, Name, Website from Account];
-        system.assertEquals(2, listAcc.size());
+        List<Account> listAcc = getAccounts();
+        System.assertEquals(2, listAcc.size());
         
-        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account2Imported__c, Account2ImportStatus__c from DataImport__c order by Account1_Website__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
-        system.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        System.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
+        System.assertEquals(label.bdiCreated, listDI[1].Account1ImportStatus__c);        
     }
 
    /*********************************************************************************************************
@@ -803,23 +823,25 @@ private with sharing class BDI_DataImport_TEST2 {
         if (strTestOnly != '*' && strTestOnly != 'ManyDIUniqueIdMatchingNewAndExistingAccounts') return;
             
          // existing Accounts
-        list<Account> listAccExisting = new list<Account>();
-        listAccExisting.add(new Account(Name='a1', website='id1.com'));
-        listAccExisting.add(new Account(Name='a1', website='id2.com'));
-        listAccExisting.add(new Account(Name='a1', website=null));
-        listAccExisting.add(new Account(Name='a2', website='id4.com'));
+        List<Account> listAccExisting = new List<Account>();
+        listAccExisting.add(new Account(Name='a1', Phone='415-111-4567'));
+        listAccExisting.add(new Account(Name='a1', Phone='415-222-2222'));
+        listAccExisting.add(new Account(Name='a1', Phone=null));
+        listAccExisting.add(new Account(Name='a2', Phone='415-444-4444'));
         insert listAccExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listAccExisting);
  
-        list<DataImport__c> listDI = new list<DataImport__c>();
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id1.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c='id3.com'));
-        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Website__c=null));
-        listDI.add(new DataImport__c(Account1_Name__c='a2', Account1_Website__c=null));
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-111-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c='415-333-4567'));
+        listDI.add(new DataImport__c(Account1_Name__c='a1', Account1_Phone__c=null));
+        listDI.add(new DataImport__c(Account1_Name__c='a2', Account1_Phone__c=null));
         insert listDI;
         
         Data_Import_Settings__c diSettings = UTIL_CustomSettingsFacade.getDataImportSettings();
         // for testing, we need to use an existing account field that exists on both Account and the DI.
-        diSettings.Account_Custom_Unique_ID__c = 'Website';
+        diSettings.Account_Custom_Unique_ID__c = 'Phone';
           
         //run batch data import
         Test.StartTest();
@@ -828,25 +850,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Account> listAcc = [select Id, Name, Website from Account order by Website NULLS LAST, Name]; // id1, id2, id3, id4, null (a1), null (a2)
-        system.debug('****DJH: listAcc ' + listAcc);
-        system.assertEquals(6, listAcc.size());
+        List<Account> listAcc = getAccounts(); // Creation order
+        System.assertEquals(6, listAcc.size());
         
-        listDI = [select Account1Imported__c, Account1ImportStatus__c, Account1_Name__c from DataImport__c order by Account1_Website__c NULLS LAST, Account1_Name__c];
-        system.debug('****DJH: listDI ' + listDI);
-        system.assertEquals(4, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
         
-        system.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
-        system.assertEquals(listDI[0].Account1ImportStatus__c, label.bdiMatched);
+        System.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
+        System.assertEquals(listDI[0].Account1ImportStatus__c, label.bdiMatched);
 
-        system.assertEquals(listDI[1].Account1Imported__c, listAcc[2].Id);
-        system.assertEquals(listDI[1].Account1ImportStatus__c, label.bdiCreated);
+        System.assertEquals(listDI[1].Account1Imported__c, listAcc[4].Id);
+        System.assertEquals(listDI[1].Account1ImportStatus__c, label.bdiCreated);
 
-        system.assertEquals(listDI[2].Account1Imported__c, listAcc[4].Id);
-        system.assertEquals(listDI[2].Account1ImportStatus__c, label.bdiMatched);
+        System.assertEquals(listDI[2].Account1Imported__c, listAcc[2].Id);
+        System.assertEquals(listDI[2].Account1ImportStatus__c, label.bdiMatched);
 
-        system.assertEquals(listDI[3].Account1Imported__c, listAcc[5].Id);
-        system.assertEquals(listDI[3].Account1ImportStatus__c, label.bdiCreated);
+        System.assertEquals(listDI[3].Account1Imported__c, listAcc[5].Id);
+        System.assertEquals(listDI[3].Account1ImportStatus__c, label.bdiCreated);
     }
 
     /*********************************************************************************************************
@@ -859,7 +879,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void testPreferredEmailAutoSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testPreferredEmailAutoSetting') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
@@ -882,20 +902,20 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, npe01__Preferred_Email__c from Contact order by Name];
-        system.assertEquals(4, listCon.size());
-        system.assertEquals('Personal', listCon[0].npe01__Preferred_Email__c);
-        system.assertEquals('Work', listCon[1].npe01__Preferred_Email__c);
-        system.assertEquals('Alternate', listCon[2].npe01__Preferred_Email__c);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
+        System.assertEquals('Personal', listCon[0].npe01__Preferred_Email__c);
+        System.assertEquals('Work', listCon[1].npe01__Preferred_Email__c);
+        System.assertEquals('Alternate', listCon[2].npe01__Preferred_Email__c);
         // turns out we can't assume this, because the org may have a value specified as default!
-        //system.assertEquals(null, listCon[3].npe01__Preferred_Email__c);
+        //System.assertEquals(null, listCon[3].npe01__Preferred_Email__c);
       
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact1_Preferred_Email__c from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(4, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
         for (integer i = 0; i < 3; i++) {
-            system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
-            system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
-            system.assertEquals(listDI[i].Contact1_Preferred_Email__c, listCon[i].npe01__Preferred_Email__c);
+            System.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
+            System.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+            System.assertEquals(listDI[i].Contact1_Preferred_Email__c, listCon[i].npe01__Preferred_Email__c);
         }
     }
 
@@ -909,7 +929,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void testPreferredPhoneAutoSetting() {
         if (strTestOnly != '*' && strTestOnly != 'testPreferredPhoneAutoSetting') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
@@ -930,21 +950,21 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, npe01__PreferredPhone__c from Contact order by Name];
-        system.assertEquals(5, listCon.size());
-        system.assertEquals('Home', listCon[0].npe01__PreferredPhone__c);
-        system.assertEquals('Work', listCon[1].npe01__PreferredPhone__c);
-        system.assertEquals('Mobile', listCon[2].npe01__PreferredPhone__c);
-        system.assertEquals('Other', listCon[3].npe01__PreferredPhone__c);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(5, listCon.size());
+        System.assertEquals('Home', listCon[0].npe01__PreferredPhone__c);
+        System.assertEquals('Work', listCon[1].npe01__PreferredPhone__c);
+        System.assertEquals('Mobile', listCon[2].npe01__PreferredPhone__c);
+        System.assertEquals('Other', listCon[3].npe01__PreferredPhone__c);
         // turns out we can't assume this, because the org may have a value specified as default!
-        //system.assertEquals(null, listCon[4].npe01__PreferredPhone__c);
+        //System.assertEquals(null, listCon[4].npe01__PreferredPhone__c);
       
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, Contact1_Preferred_Phone__c from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(5, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(5, listDI.size());
         for (integer i = 0; i < 4; i++) {
-            system.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
-            system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
-            system.assertEquals(listDI[i].Contact1_Preferred_Phone__c, listCon[i].npe01__PreferredPhone__c);
+            System.assertEquals(listDI[i].Contact1Imported__c, listCon[i].Id);
+            System.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+            System.assertEquals(listDI[i].Contact1_Preferred_Phone__c, listCon[i].npe01__PreferredPhone__c);
         }
     }
 
@@ -991,7 +1011,7 @@ private with sharing class BDI_DataImport_TEST2 {
         ManyDIMultiContactMatchRules('Phone');
     }
     static void ManyDIMultiContactMatchRules(string strRule) {            
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Contact1_Firstname__c='c0', Contact1_Lastname__c='C0'));
         listDI.add(new DataImport__c(Account1_Name__c='a1', Contact1_Firstname__c=null, Contact1_Lastname__c='C1'));
         listDI.add(new DataImport__c(Account1_Name__c='a2', Contact1_Firstname__c='c2', Contact1_Lastname__c=null));
@@ -1013,23 +1033,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact];
-        system.assertEquals(3, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(3, listCon.size());
         
-        listDI = [select Account1_Name__c, Status__c, Contact1Imported__c, Contact1ImportStatus__c, Contact1_Lastname__c from DataImport__c order by Account1_Name__c];        
-        system.assertEquals(5, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(5, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Account1_Name__c == 'a2') {
-                system.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertEquals(label.bdiErrorInvalidLastname, listDI[i].Contact1ImportStatus__c);
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
             } else if (listDI[i].Account1_Name__c == 'a4') {
-                system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
-                system.assertEquals(label.bdiMatched, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].Contact1Imported__c);
+                System.assertEquals(label.bdiMatched, listDI[i].Contact1ImportStatus__c);
+                System.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
             } else {
-                system.assertNotEquals(null, listDI[i].Contact1Imported__c);                
-                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);                
-                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].Contact1Imported__c);
+                System.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+                System.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
             }
             
         }
@@ -1045,7 +1065,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDISomeInvalidContactData() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDISomeInvalidContactData') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c=null, Contact1_Personal_Email__c='c0@foo.com', Contact2_Firstname__c='c0b', Contact2_Lastname__c='C0b', Account1_Name__c='foo'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact2_Firstname__c='c2', Contact2_Lastname__c=null, Contact2_Alternate_Email__c='c2@foo.com'));
@@ -1060,40 +1080,38 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
-        system.assertEquals(4, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Status__c, FailureInformation__c, Contact1_Firstname__c, Account1ImportStatus__c,
-            Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c 
-            from DataImport__c order by Contact1ImportStatus__c];
-        system.assertEquals(5, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(5, listDI.size());
         integer cC1 = 0;
         integer cC2 = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Contact1Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+                System.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
                 cC1++;
             } 
             
             // make sure when c1 fails, we don't incorrectly mark c2 as created
             if (listDI[i].Contact1_Firstname__c == 'c0') {
-                system.assertEquals(null, listDI[i].Contact2ImportStatus__c);
-                system.assertEquals(null, listDI[i].Account1ImportStatus__c);
+                System.assertEquals(null, listDI[i].Contact2ImportStatus__c);
+                System.assertEquals(null, listDI[i].Account1ImportStatus__c);
             }
             
             if (listDI[i].Contact2Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
+                System.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
                 cC2++;
             }
             if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assert(listDI[i].FailureInformation__c.contains(label.bdiErrorInvalidLastname));                 
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                System.assert(listDI[i].FailureInformation__c.contains(label.bdiErrorInvalidLastname));                 
             }
         }
-        system.assertEquals(2, cC1);
-        system.assertEquals(2, cC2);
+        System.assertEquals(2, cC1);
+        System.assertEquals(2, cC2);
     }
     
     /*********************************************************************************************************
@@ -1106,7 +1124,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDITestContactDataErrorHandling() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestContactDataErrorHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='FailTest', Contact1_Personal_Email__c='c0@foo.com'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Work_Email__c='c1@foo.com'));
         listDI.add(new DataImport__c(Contact2_Firstname__c='c2', Contact2_Lastname__c='FailTest', Contact2_Alternate_Email__c='c2@foo.com'));
@@ -1121,33 +1139,31 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
-        system.assertEquals(4, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(4, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
 
-        listDI = [select Status__c, FailureInformation__c, 
-            Contact1Imported__c, Contact1ImportStatus__c, Contact2Imported__c, Contact2ImportStatus__c 
-            from DataImport__c order by Contact1ImportStatus__c];
-        system.assertEquals(5, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(5, listDI.size());
         integer cC1 = 0;
         integer cC2 = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Contact1Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
+                System.assertEquals(label.bdiCreated, listDI[i].Contact1ImportStatus__c);
                 cC1++;
             }
             if (listDI[i].Contact2Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
+                System.assertEquals(label.bdiCreated, listDI[i].Contact2ImportStatus__c);            
                 cC2++;
             }
             if (listDI[i].Contact1Imported__c == null && listDI[i].Contact2Imported__c == null) {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assert(listDI[i].Contact1ImportStatus__c != null || listDI[i].Contact2ImportStatus__c != null);                 
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                System.assert(listDI[i].Contact1ImportStatus__c != null || listDI[i].Contact2ImportStatus__c != null);                 
             }
         }
-        system.assertEquals(2, cC1);
-        system.assertEquals(2, cC2);
+        System.assertEquals(2, cC1);
+        System.assertEquals(2, cC2);
     }
 
     /*********************************************************************************************************
@@ -1160,7 +1176,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDITestAccountDataErrorHandling() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestAccountDataErrorHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0'));
         listDI.add(new DataImport__c(Account1_Name__c='FailTest1'));
         listDI.add(new DataImport__c(Account1_Name__c='a2'));
@@ -1180,31 +1196,30 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Account> listAcc = [select Id, Name from Account order by Name];
-        system.assertEquals(6, listAcc.size());
+        List<Account> listAcc = getAccounts();
+        System.assertEquals(6, listAcc.size());
 
-        listDI = [select Status__c, FailureInformation__c, Account1Imported__c, Account1ImportStatus__c,
-            Account2Imported__c, Account2ImportStatus__c from DataImport__c];
-        system.assertEquals(10, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(10, listDI.size());
         integer cA1 = 0;
         integer cA2 = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Account1Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Account1ImportStatus__c);
+                System.assertEquals(label.bdiCreated, listDI[i].Account1ImportStatus__c);
                 cA1++;
             }
             if (listDI[i].Account2Imported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].Account2ImportStatus__c);            
+                System.assertEquals(label.bdiCreated, listDI[i].Account2ImportStatus__c);            
                 cA2++;
             }
             if (listDI[i].Account1Imported__c == null && listDI[i].Account2Imported__c == null) {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assert(listDI[i].Account1ImportStatus__c != null || listDI[i].Account2ImportStatus__c != null);                 
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                System.assert(listDI[i].Account1ImportStatus__c != null || listDI[i].Account2ImportStatus__c != null);                 
             }
         }
-        system.assertEquals(3, cA1);
-        system.assertEquals(3, cA2);
+        System.assertEquals(3, cA1);
+        System.assertEquals(3, cA2);
     }
 
     /*********************************************************************************************************
@@ -1217,7 +1232,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDITestDonationDataErrorHandling() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestDonationDataErrorHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10));
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Name__c='FailTest1'));
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='FailTest2', Donation_Amount__c=30));
@@ -1233,23 +1248,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Opportunity> listOpp = [select Id, Name, Amount from Opportunity order by Amount];
-        system.assertEquals(2, listOpp.size());
+        list<Opportunity> listOpp = getOpps();
+        System.assertEquals(2, listOpp.size());
 
-        listDI = [select Status__c, FailureInformation__c, DonationImported__c, DonationImportStatus__c from DataImport__c];
-        system.assertEquals(6, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(6, listDI.size());
         integer cOpp = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].DonationImported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
+                System.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
                 cOpp++;
             } else {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assertNotEquals(null, listDI[i].DonationImportStatus__c);    
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                System.assertNotEquals(null, listDI[i].DonationImportStatus__c);    
             }
         }
-        system.assertEquals(cOpp, listOpp.size());
+        System.assertEquals(cOpp, listOpp.size());
     }
 
     /*********************************************************************************************************
@@ -1262,7 +1277,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void ManyDITestCampaignDataErrorHandling() {
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestCampaignDataErrorHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Account1_Name__c='a0', Donation_Donor__c='Account1', Donation_Amount__c=10, Donation_Campaign_Name__c='cmp1'));
         listDI.add(new DataImport__c(Account1_Name__c='FailTest1', Donation_Donor__c='Account1', Donation_Amount__c=20, Donation_Campaign_Name__c='cmpNotCreated'));
         listDI.add(new DataImport__c(Account1_Name__c='a2', Donation_Donor__c='Account1', Donation_Amount__c=30, Donation_Campaign_Name__c='cmp1'));
@@ -1276,22 +1291,22 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Opportunity> listOpp = [select Id, Name, Amount from Opportunity order by Amount];
-        system.assertEquals(3, listOpp.size());
-        list<Campaign> listCmp = [select Id, Name from Campaign];
-        system.assertEquals(2, listCmp.size());
+        List<Opportunity> listOpp = getOpps();
+        System.assertEquals(3, listOpp.size());
+        List<Campaign> listCmp = getCampaigns();
+        System.assertEquals(2, listCmp.size());
 
-        listDI = [select Status__c, FailureInformation__c, DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c from DataImport__c];
-        system.assertEquals(4, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].Donation_Campaign_Name__c == 'cmpNotCreated') {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
-                system.assertEquals(null, listDI[i].DonationImported__c);
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);
+                System.assertEquals(null, listDI[i].DonationImported__c);
             } else {
-                system.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
-                system.assertEquals(null, listDI[i].FailureInformation__c);    
-                system.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);    
+                System.assertEquals(BDI_DataImport_API.bdiImported, listDI[i].Status__c);
+                System.assertEquals(null, listDI[i].FailureInformation__c);    
+                System.assertEquals(label.bdiCreated, listDI[i].DonationImportStatus__c);    
             }
         }
     }
@@ -1309,7 +1324,7 @@ private with sharing class BDI_DataImport_TEST2 {
 
         if (strTestOnly != '*' && strTestOnly != 'ManyDITestAddressDataErrorHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c0', Contact1_Lastname__c='C0', Contact1_Personal_Email__c='c0@foo.com',Home_City__c='Seattle'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@foo.com',Home_City__c='FailTest1'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c2', Contact1_Lastname__c='C2', Contact1_Personal_Email__c='c2@foo.com',Home_City__c='Portland'));
@@ -1322,23 +1337,23 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Address__c> listAddr = [select Id, MailingCity__c from Address__c];
-        system.assertEquals(2, listAddr.size());
+        List<Address__c> listAddr = getAddresses();
+        System.assertEquals(2, listAddr.size());
 
-        listDI = [select Status__c, FailureInformation__c, HomeAddressImported__c, HomeAddressImportStatus__c from DataImport__c];
-        system.assertEquals(3, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
         integer cAddr = 0;
         for (integer i = 0; i < listDI.size(); i++) {
             if (listDI[i].HomeAddressImported__c != null) {
-                system.assertEquals(label.bdiCreated, listDI[i].HomeAddressImportStatus__c);
+                System.assertEquals(label.bdiCreated, listDI[i].HomeAddressImportStatus__c);
                 cAddr++;
             } else {
-                system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
-                system.assertNotEquals(null, listDI[i].FailureInformation__c);    
-                system.assertNotEquals(null, listDI[i].HomeAddressImportStatus__c);    
+                System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+                System.assertNotEquals(null, listDI[i].FailureInformation__c);    
+                System.assertNotEquals(null, listDI[i].HomeAddressImportStatus__c);    
             }
         }
-        system.assertEquals(cAddr, listAddr.size());
+        System.assertEquals(cAddr, listAddr.size());
     }
 
     /*********************************************************************************************************
@@ -1350,11 +1365,11 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void TwoDINewC2PartialMatch() {
         if (strTestOnly != '*' && strTestOnly != 'TwoDINewC2PartialMatch') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
-            Contact2_Firstname__c='c2'));   
+            Contact2_Firstname__c='c2'));
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
-            Contact2_Firstname__c='c2'));   
+            Contact2_Firstname__c='c2'));
         insert listDI;
           
         //run batch data import
@@ -1364,20 +1379,19 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
-        system.assertEquals(2, listCon.size());
-        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+        Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
+        System.assertEquals(2, contactById.size());
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[1].Contact2Imported__c, listCon[1].Id);
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+
+        System.assertEquals(listDI[0].Contact1Imported__c, listDI[1].Contact1Imported__c);
+        System.assertEquals(listDI[0].Contact2Imported__c, listDI[1].Contact2Imported__c);
+        System.assertNotEquals(listDI[1].Contact1ImportStatus__c, listDI[0].Contact1ImportStatus__c);
+        System.assertNotEquals(listDI[1].Contact2ImportStatus__c, listDI[0].Contact2ImportStatus__c);
         // 1 set created, 1 set matched.
-        system.assertNotEquals(listDI[1].Contact1ImportStatus__c, listDI[0].Contact1ImportStatus__c);
-        system.assertNotEquals(listDI[1].Contact2ImportStatus__c, listDI[0].Contact2ImportStatus__c);
+        System.assert(contactById.containsKey(listDI[0].Contact1Imported__c));
+        System.assert(contactById.containsKey(listDI[0].Contact2Imported__c));
     }
 
     /*********************************************************************************************************
@@ -1392,13 +1406,15 @@ private with sharing class BDI_DataImport_TEST2 {
          // existing contacts in same household
         Account hh = new Account(Name='household', npe01__SYSTEM_AccountType__c=CAO_Constants.HH_ACCOUNT_TYPE);
         insert hh;
-        list<Contact> listConExisting = new list<Contact>();
+        List<Contact> listConExisting = new List<Contact>();
         listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', AccountId=hh.Id));
         listConExisting.add(new Contact(Firstname='c2', Lastname='C2', Email='c2@C2.com', AccountId=hh.Id));
         insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
  
         // data import records
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
             Contact2_Firstname__c='c2'));   
         listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com',
@@ -1412,21 +1428,20 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name from Contact order by Name];
-        system.assertEquals(2, listCon.size());
-        system.assertNotEquals(listCon[1].Name, listCon[0].Name);
+        Map<Id, Contact> contactById = new Map<Id, Contact>(getContacts());
+        System.assertEquals(2, contactById.size());
 
-        listDI = [select Contact1Imported__c, Contact1ImportStatus__c, HouseholdAccountImported__c, 
-            Contact2Imported__c, Contact2ImportStatus__c from DataImport__c order by Contact1Imported__c];
-        system.assertEquals(2, listDI.size());
-        system.assertEquals(listDI[0].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[1].Contact1Imported__c, listCon[0].Id);
-        system.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals(listDI[1].Contact2Imported__c, listCon[1].Id);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);
-        system.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
-        system.assertEquals(label.bdiMatched, listDI[1].Contact2ImportStatus__c);        
+        listDI = getDIs();
+        System.assertEquals(2, listDI.size());
+        for (DataImport__c di : listDI) {
+            System.assert(contactById.containsKey(di.Contact1Imported__c));
+            System.assertEquals(di.Contact1_Firstname__c + ' ' + di.Contact1_Lastname__c, contactById.get(di.Contact1Imported__c).Name);
+            System.assert(contactById.containsKey(di.Contact2Imported__c));
+            System.assertEquals(di.Contact2_Firstname__c + ' ' + di.Contact2_Lastname__c, contactById.get(di.Contact2Imported__c).Name);
+            System.assertNotEquals(null, di.HouseholdAccountImported__c);
+            System.assertEquals(label.bdiMatched, di.Contact1ImportStatus__c);
+            System.assertEquals(label.bdiMatched, di.Contact2ImportStatus__c);
+        }
     }
 
     /*********************************************************************************************************
@@ -1439,7 +1454,7 @@ private with sharing class BDI_DataImport_TEST2 {
     static testMethod void testFieldLevelSecurity() {
         if (strTestOnly != '*' && strTestOnly != 'testFieldLevelSecurity') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c0', 'C0'));
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
@@ -1454,19 +1469,19 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Contact> listCon = [select Id, Name, npe01__Preferred_Email__c from Contact order by Name];
-        system.assertEquals(0, listCon.size());
+        List<Contact> listCon = getContacts();
+        System.assertEquals(0, listCon.size());
       
-        listDI = [select Contact1Imported__c, Status__c, FailureInformation__c from DataImport__c];
-        system.assertEquals(4, listDI.size());
+        listDI = getDIs();
+        System.assertEquals(4, listDI.size());
         for (integer i = 0; i < 3; i++) {
-            system.assertEquals(listDI[i].Contact1Imported__c, null);
-            system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
+            System.assertEquals(listDI[i].Contact1Imported__c, null);
+            System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[i].Status__c);
             string flsError = label.flsError;
             flsError = flsError.replace('{0}', '');
             flsError = flsError.replace('.', '');
-            //system.assertEquals(listDI[i].FailureInformation__c, flsError);
-            system.assert(listDI[i].FailureInformation__c.contains(flsError));
+            //System.assertEquals(listDI[i].FailureInformation__c, flsError);
+            System.assert(listDI[i].FailureInformation__c.contains(flsError));
         }
     }
 
@@ -1485,7 +1500,7 @@ private with sharing class BDI_DataImport_TEST2 {
 
         if (strTestOnly != '*' && strTestOnly != 'testInvalidAddressHandling') return;
             
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         listDI.add(BDI_DataImport_TEST.newDI('c2', 'C2'));
         listDI.add(BDI_DataImport_TEST.newDI('c3', 'C3'));
@@ -1501,47 +1516,46 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.stopTest();
     
         // verify expected results
-        list<Address__c> listAddr = [select Id, Household_Account__c, MailingCity__c from Address__c order by MailingCity__c]; 
-        system.assertEquals(2, listAddr.size());
-        system.assertEquals('Portland', listAddr[0].MailingCity__c);
-        system.assertEquals('Seattle', listAddr[1].MailingCity__c);
+        List<Address__c> listAddr = getAddresses(); 
+        System.assertEquals(2, listAddr.size());
+        System.assertEquals('Seattle', listAddr[0].MailingCity__c);
+        System.assertEquals('Portland', listAddr[1].MailingCity__c);
         
-        listDI = [select Status__c, FailureInformation__c, HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c 
-            from DataImport__c order by Contact1_Lastname__c];
-        system.assertEquals(3, listDI.size());
-        system.assertEquals(listDI[0].HomeAddressImported__c, listAddr[1].Id); 
-        system.assertEquals(listDI[1].HomeAddressImported__c, null);
-        system.assertEquals(listDI[2].HomeAddressImported__c, listAddr[0].Id);
+        listDI = getDIs();
+        System.assertEquals(3, listDI.size());
+        System.assertEquals(listDI[0].HomeAddressImported__c, listAddr[0].Id); 
+        System.assertEquals(listDI[1].HomeAddressImported__c, null);
+        System.assertEquals(listDI[2].HomeAddressImported__c, listAddr[1].Id);
 
-        system.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
-        system.assert(listDI[1].HomeAddressImportStatus__c.contains('invalid city'));        
-        system.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);        
+        System.assertEquals(label.bdiCreated, listDI[0].HomeAddressImportStatus__c);
+        System.assert(listDI[1].HomeAddressImportStatus__c.contains('Billing City'));
+        System.assertEquals(label.bdiCreated, listDI[2].HomeAddressImportStatus__c);
 
-        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
-        system.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
-        system.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported, listDI[0].Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiFailed, listDI[1].Status__c);
+        System.assertEquals(BDI_DataImport_API.bdiImported, listDI[2].Status__c);
 
-        system.assertEquals(null, listDI[0].FailureInformation__c);        
-        system.assert(listDI[1].FailureInformation__c.contains('invalid city'));        
-        system.assertEquals(null, listDI[2].FailureInformation__c);        
+        System.assertEquals(null, listDI[0].FailureInformation__c);
+        System.assert(listDI[1].FailureInformation__c.contains('Billing City'));
+        System.assertEquals(null, listDI[2].FailureInformation__c);
 
-        list<Account> listAcc = [select Id, Name, BillingCity from Account order by Name];
-        system.assertEquals(3, listAcc.size());
-        system.assertEquals('Seattle', listAcc[0].BillingCity);
-        system.assertEquals(null, listAcc[1].BillingCity);
-        system.assertEquals('Portland', listAcc[2].BillingCity);
+        List<Account> listAcc = getAccounts();
+        System.assertEquals(3, listAcc.size());
+        System.assertEquals('Seattle', listAcc[0].BillingCity);
+        System.assertEquals(null, listAcc[1].BillingCity);
+        System.assertEquals('Portland', listAcc[2].BillingCity);
                 
-        list<Contact> listCon = [select Id, Name, AccountId, MailingCity from Contact order by Lastname];
-        system.assertEquals(3, listCon.size());
-        system.assertEquals('c1 C1', listCon[0].Name);
-        system.assertEquals('c2 C2', listCon[1].Name);
-        system.assertEquals('c3 C3', listCon[2].Name);
-        system.assertNotEquals(null, listCon[0].AccountId);
-        system.assertNotEquals(null, listCon[1].AccountId);
-        system.assertNotEquals(null, listCon[2].AccountId);
-        system.assertEquals('Seattle', listCon[0].MailingCity);
-        system.assertEquals(null, listCon[1].MailingCity);
-        system.assertEquals('Portland', listCon[2].MailingCity);
+        List<Contact> listCon = getContacts();
+        System.assertEquals(3, listCon.size());
+        System.assertEquals('c1 C1', listCon[0].Name);
+        System.assertEquals('c2 C2', listCon[1].Name);
+        System.assertEquals('c3 C3', listCon[2].Name);
+        System.assertNotEquals(null, listCon[0].AccountId);
+        System.assertNotEquals(null, listCon[1].AccountId);
+        System.assertNotEquals(null, listCon[2].AccountId);
+        System.assertEquals('Seattle', listCon[0].MailingCity);
+        System.assertEquals(null, listCon[1].MailingCity);
+        System.assertEquals('Portland', listCon[2].MailingCity);
     }
 
     /*********************************************************************************************************
@@ -1556,9 +1570,9 @@ private with sharing class BDI_DataImport_TEST2 {
         // set 1x1 account model
         npe01__Contacts_and_Orgs_Settings__c contactSettingsForTests = UTIL_CustomSettingsFacade.getContactsSettingsForTests(
             new npe01__Contacts_and_Orgs_Settings__c (npe01__Account_Processor__c = CAO_Constants.ONE_TO_ONE_PROCESSOR));
-        system.assertEquals(false, CAO_Constants.isHHAccountModel());
+        System.assertEquals(false, CAO_Constants.isHHAccountModel());
         
-        list<DataImport__c> listDI = new list<DataImport__c>();
+        List<DataImport__c> listDI = new List<DataImport__c>();
         listDI.add(BDI_DataImport_TEST.newDI('c1', 'C1'));
         insert listDI;
           
@@ -1566,9 +1580,9 @@ private with sharing class BDI_DataImport_TEST2 {
         Test.StartTest();
         try {
             BDI_DataImport_API.importData();
-            system.assert(false, 'importData should have thrown exception');
+            System.assert(false, 'importData should have thrown exception');
         } catch (exception ex) {
-            system.assert(ex.getMessage().contains('Household Account model'));
+            System.assert(ex.getMessage().contains('Household Account model'));
         }
         Test.stopTest();
     }
@@ -1584,23 +1598,90 @@ private with sharing class BDI_DataImport_TEST2 {
 
         Test.startTest();
 
-        system.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Website__c'),
+        System.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Website__c'),
             BDI_DataImportService.strDICustomIDField('Contact1', 'Website'));
 
-        system.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
+        System.assertEquals('Contact1_Foo__c', BDI_DataImportService.strDICustomIDField('Contact1', 'Foo__c'));
 
         if (UTIL_Namespace.getNamespace().equalsIgnoreCase('npsp')) {
-            system.assertEquals('npsp__Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
+            System.assertEquals('npsp__Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
         } else {
-            system.assertEquals('Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
+            System.assertEquals('Contact1_Bar__c', BDI_DataImportService.strDICustomIDField('Contact1', 'npsp__Bar__c'));
         }
 
-        system.assertEquals('Contact1_Baz__c', BDI_DataImportService.strDICustomIDField('Contact1', 'randomNS__Baz__c'));
+        System.assertEquals('Contact1_Baz__c', BDI_DataImportService.strDICustomIDField('Contact1', 'randomNS__Baz__c'));
 
-        system.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Buz__c'),
+        System.assertEquals(UTIL_Namespace.StrTokenNSPrefix('Contact1_Buz__c'),
             BDI_DataImportService.strDICustomIDField('Contact1', UTIL_Namespace.StrTokenNSPrefix('Buz__c')));
 
         Test.stopTest();
     }
 
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves contact records in the order they were created during the test. 
+    * @return List<Contact> All contacts records in creation order
+    **********************************************************************************************************/
+    private static List<Contact> getContacts() {
+        return [
+            SELECT Id, AccountId, Birthdate, HomePhone, MailingCity, MobilePhone, Name, Title,
+                npe01__HomeEmail__c, npe01__AlternateEmail__c, npe01__Preferred_Email__c, npe01__PreferredPhone__c,
+                npe01__WorkEmail__c, npe01__WorkPhone__c
+            FROM Contact ORDER BY Id
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves data import records in the order they were created during the test. 
+    * @return List<DataImport__c> All data import records in creation order
+    **********************************************************************************************************/
+    private static List<DataImport__c> getDIs() {
+        return [
+            SELECT Account1Imported__c, Account1ImportStatus__c, Account1_Name__c,
+                Account2Imported__c, Account2ImportStatus__c, Account2_Name__c, Contact1_Preferred_Email__c, Contact1_Preferred_Phone__c,
+                Contact1Imported__c, Contact1ImportStatus__c, Contact1_Firstname__c, Contact1_Lastname__c, Contact1_Title__c,
+                Contact2Imported__c, Contact2ImportStatus__c, Contact2_Firstname__c, Contact2_Lastname__c,
+                DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c, FailureInformation__c,
+                HomeAddressImported__c, HomeAddressImportStatus__c, Home_City__c, HouseholdAccountImported__c, Status__c
+            FROM DataImport__c
+            ORDER BY Id
+        ];
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves account records in the order they were created during the test. 
+    * @return List<Account> All account records in creation order
+    **********************************************************************************************************/
+    private static List<Account> getAccounts() {
+        return [SELECT Id, BillingCity, Name FROM Account ORDER BY Id];
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves address records in the order they were created during the test. 
+    * @return List<Address__c> All address records in creation order
+    **********************************************************************************************************/
+    private static List<Address__c> getAddresses() {
+        return [SELECT Id, Household_Account__c, MailingCity__c FROM Address__c ORDER BY Id];
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves opportunity records in the order they were created during the test. 
+    * @return List<Opportunity> All opportunity records in creation order
+    **********************************************************************************************************/
+    private static List<Opportunity> getOpps() {
+        return [SELECT Id, Name, Amount FROM Opportunity ORDER BY Amount];
+    }
+
+    /*********************************************************************************************************
+    * @description operation:
+    *    Retrieves campaign records in the order they were created during the test. 
+    * @return List<Campaign> All campaign records
+    **********************************************************************************************************/
+    private static List<Campaign> getCampaigns() {
+        return [SELECT Id, Name FROM Campaign];
+    }
 }

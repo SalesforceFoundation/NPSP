@@ -111,25 +111,25 @@
     <layouts>
         <layout>NPSP Data Import Batch Layout</layout>
         <sections>
-            <label><!-- Contact &amp; Account Matching --></label>
+            <label>Contactpersoon en Account Matching</label>
             <section>Contact &amp; Account Matching</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
         <sections>
-            <label><!-- Donation Matching --></label>
+            <label>Donatie Matching</label>
             <section>Donation Matching</section>
         </sections>
         <sections>
-            <label><!-- Extensibility --></label>
+            <label>Rekbaarheid</label>
             <section>Extensibility</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- Batch Name --></nameFieldLabel>
     <webLinks>
-        <label><!-- Process_Batch --></label>
+        <label>Verwerk Batch</label>
         <name>Process_Batch</name>
     </webLinks>
 </CustomObjectTranslation>
