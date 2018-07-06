@@ -94,7 +94,7 @@ private class CON_ContactMerge_TEST2 {
             system.assertEquals(3, [select count() from Address__c]);
         }
 
-        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by MailingStreet];
+        list<Contact> listCon = [Select id, accountId, FirstName, LastName, MailingStreet, MailingCity from Contact order by Id];
         con = listCon[0];
         con2 = listCon[1];
         con3 = listCon[2];
@@ -623,6 +623,9 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeBucketToHH() {
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeOne2OneToOrg') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.HH_ACCOUNT_TYPE);
     }
 
@@ -632,6 +635,9 @@ private class CON_ContactMerge_TEST2 {
     */ 
     static testmethod void testNamesAndOppsMergeHHToBucket() {
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.HH_ACCOUNT_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
     }
 
@@ -644,6 +650,9 @@ private class CON_ContactMerge_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
 
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeBucketToOne2One') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.BUCKET_ORGANIZATION_TYPE, CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE);
     }
 
@@ -656,6 +665,9 @@ private class CON_ContactMerge_TEST2 {
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
         if (strTestOnly != '*' && strTestOnly != 'testNamesAndOppsMergeHHToBucket') return;
+
+        if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
+
         testNamesAndOppsMerge(CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE, CAO_Constants.BUCKET_ORGANIZATION_TYPE);
     }
 
@@ -745,7 +757,7 @@ private class CON_ContactMerge_TEST2 {
             from Account order by Id]);
         list<Contact> listCon = [select Id, Firstname, Lastname, AccountId, 
             is_Address_Override__c, Current_Address__c, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry 
-            from Contact order by Firstname];
+            from Contact order by Id];
             
         // verify the contacts belong to correct account.
         iConLoserSibling--;

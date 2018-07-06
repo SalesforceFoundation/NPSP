@@ -140,7 +140,7 @@
                                 <aura:if isTrue="{!not(v.isReadOnly)}">
                                     <c:CRLP_Tooltip helpText="{!v.labels.createDescriptionHelp}" fieldLabel="{!v.labels.description}" isRequired="true"/>
                                 </aura:if>
-                                <lightning:textarea aura:id="descriptionInput" class="rollupField"
+                                <lightning:textarea aura:id="descriptionInput" class="{!v.isReadOnly ? 'rollupField' :  'rollupField hasTooltip'}"
                                                     label="{!v.labels.description}"
                                                     name="{!v.labels.description}"
                                                     value="{!v.activeRollup.description}"
@@ -210,7 +210,7 @@
                                 <aura:if isTrue="{!not(v.isReadOnly)}">
                                     <c:CRLP_Tooltip helpText="{!v.labels.createDaysHelp}" fieldLabel="{!v.selectedTimeBoundOperationLabel}" isRequired="true"/>
                                 </aura:if>
-                                <lightning:input aura:id="integerInput"
+                                <lightning:input aura:id="integerInput" class="{!v.isReadOnly ? '' :  'hasTooltip'}"
                                                  type="text"
                                                  label="{!v.selectedTimeBoundOperationLabel}"
                                                  value="{!v.activeRollup.intValue}"
@@ -218,7 +218,7 @@
                                                  pattern="^\d{1,4}|10000$"
                                                  messageWhenPatternMismatch="{!v.labels.daysBackError}"
                                                  variant="{!v.isReadOnly ? '' : 'label-hidden'}"
-                                                 required="true"/>
+                                                 required="{!v.isReadOnly ? 'false' : 'true'}"/>
                             </lightning:layoutItem>
                         </aura:if>
                         <aura:if isTrue="{!v.renderMap.integerYears}">
@@ -308,7 +308,8 @@
                                                 apiName="{!v.activeRollup.amountField}"
                                                 options="{!v.amountFields}"
                                                 mediumDeviceSize="4"
-                                                hasNullOption="false"
+                                                hasNullOption="true"
+                                                isRequired="true"
                                                 helpText="{!v.labels.createAmountFieldHelp}"
                             />
                         </aura:if>

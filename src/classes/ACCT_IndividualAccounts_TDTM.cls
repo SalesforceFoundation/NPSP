@@ -458,20 +458,14 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
     */ 
     private void attachToBucketAccount(Contact[] contacts)
     {
-        //grab the first Account that is named Individual
-        List<Account> individuals = [Select Id from Account where name = :CAO_Constants.BUCKET_ACCOUNT_NAME ORDER BY CreatedDate Desc Limit 1];
+        Id individualAccountId = CAO_Constants.getIndividualAccountId();
         
-        Id individualAccountId = CAO_Constants.GetIndividualAccountId();
-        
-        if (individuals.size() > 0)
-        {
-            for(Contact c : contacts)
-            {
+        if (individualAccountId != null) {
+            for (Contact c : contacts) {
                 //connect all Contacts to the bucket Account
                 c.AccountId = individualAccountId;
             }
-        } else
-        {
+        } else {
             //if there is no bucket Account, the bucket model won't function unless we create one
             Account individual = new Account();
             individual.Name = CAO_Constants.BUCKET_ACCOUNT_NAME;
@@ -481,8 +475,7 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             individual.npe01__SYSTEM_AccountType__c = CAO_Constants.BUCKET_ORGANIZATION_TYPE;
             UTIL_DMLService.insertRecord(individual);
 
-            for(Contact c : contacts)
-            {
+            for (Contact c : contacts) {
                 //connect Contact to bucket Account
                 c.AccountId = individual.Id;
             }
@@ -536,12 +529,13 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
             }
         }
         // get all the Accounts that are connected to the existing Contacts
-        for (Account acc : [Select Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c from Account where npe01__One2OneContact__c in :contactIds]) {
+        for (Account acc : [SELECT Id, npe01__One2OneContact__c, npe01__SYSTEM_AccountType__c FROM Account
+                WHERE npe01__One2OneContact__c IN :contactIds]) {
             mapContactIdAccount.put(acc.npe01__One2OneContact__c, acc);
         }
         
         List<Account> accountInserts = new List<Account>();
-        ID rtIdAcccount = rtIdForNewAccount();
+        Id rtIdAcccount = rtIdForNewAccount();
         
         for (Contact c : contacts) {
             // if we found an Account already connected to this Contact, connect the Contact to that Account if it
@@ -559,16 +553,18 @@ public class ACCT_IndividualAccounts_TDTM extends TDTM_Runnable {
                 // construct the Account name
                 a.Name = CAO_Constants.isHHAccountModel() ? strNameHHAccountForContact(c) : strNameOne2OneAccountForContact(c);
                 
-                //connect the Account to the Contact for 1:1 and HHAccount
+                // connect the Account to the Contact for 1:1 and HHAccount
                 if (c.Id != null) {
                     a.npe01__One2OneContact__c = c.Id;
                 }
                 a.Phone = c.Phone;
                 a.Fax = c.Fax;
+                a.OwnerId = c.OwnerId;
                 // only set account's billing address if address management is off.
                 // otherwise, we'll let ADDR_Contact_TDTM push the new address into the account.
-                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c)
+                if (!CAO_Constants.isHHAccountModel() || UTIL_CustomSettingsFacade.getContactsSettings().Household_Account_Addresses_Disabled__c) {
                     ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Mailing', a, 'Billing');
+                }
                 ADDR_Addresses_TDTM.copyAddressStdSObj(c, 'Other', a, 'Shipping');
 
                 a.npe01__SYSTEM_AccountType__c = CAO_Constants.isHHAccountModel() ? CAO_Constants.HH_ACCOUNT_TYPE : CAO_Constants.ONE_TO_ONE_ORGANIZATION_TYPE;
