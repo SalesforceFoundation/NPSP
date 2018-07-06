@@ -250,7 +250,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             //verify the total allocations don't exceed the parent amount
             if (wrap.totalAmount > wrap.parentAmount) {
-                allo.addError(Label.alloTotalExceedsOppAmt + ' ' + wrap.totalAmount);
+                allo.addError(Label.alloTotalExceedsOppAmt);
             }
 
         }
