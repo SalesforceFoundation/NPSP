@@ -1152,7 +1152,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>EPTaskDependency</shortDescription>
-        <value>Engagement Plan Task dependencies cannot make recursive dependency loops.</value>
+        <value>Please choose a different Parent Task. This Task is already set as a prerequisite for the Parent Task you selected.</value>
     </labels>
     <labels>
         <fullName>EPTaskTemplate</fullName>
@@ -1160,7 +1160,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>EPTaskTemplate</shortDescription>
-        <value>Engagement Plan Tasks can only be dependent on other Engagement Plan Tasks that belong to the same Engagement Plan Template.</value>
+        <value>The Parent Task you selected belongs to a different Engagement Plan Template. Please select an Engagement Plan Task that's part of this Engagement Plan Template.</value>
     </labels>
     <labels>
         <fullName>EPTo</fullName>
@@ -1196,7 +1196,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>InactiveScheduledJobsOwnerErrMsg</shortDescription>
-        <value>There are scheduled jobs owned by an inactive user. Review your scheduled jobs and ensure the owner of each one is an active user.</value>
+        <value>There are Scheduled Jobs owned by an inactive User. Review your Scheduled Jobs and ensure the owner of each one is an active User. See Edit or Reschedule NPSP Scheduled Jobs in the Power of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Edit-or-Reschedule-NPSP-Scheduled-Jobs</value>
     </labels>
     <labels>
         <fullName>NameRequired</fullName>
@@ -1300,7 +1300,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Relationship Viewer - No Relationship</shortDescription>
-        <value>There are no relationships for this contact.</value>
+        <value>There are no Relationships for this Contact.</value>
     </labels>
     <labels>
         <fullName>REL_RECenter</fullName>
@@ -1493,7 +1493,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>RecurringDonationAccountAndContactError</shortDescription>
-        <value>Recurring Donations can only have an Organization or Contact specified, but not both.</value>
+        <value>You can specify either an Organization or Contact for a Recurring Donation, but not both.</value>
     </labels>
     <labels>
         <fullName>Saved</fullName>
@@ -1545,7 +1545,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>addrCiceroMissingAPIKey</shortDescription>
-        <value>The Cicero API Key must be specified in the Auth Token setting in the Address Verification Settings.</value>
+        <value>You must specify the Cicero API Key in the Auth Token field for Address Verification. Log into Salesforce and go to People | Addresses on the NPSP Settings page.</value>
     </labels>
     <labels>
         <fullName>addrCopyConAddBtnHHObjOnly</fullName>
@@ -1553,7 +1553,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>addrCopyConAddBtnHHObjOnly</shortDescription>
-        <value>This button only supports Contacts with Household objects, not Household Accounts.</value>
+        <value>The Copy Address to Household button only works with Contacts associated with a Household object.</value>
     </labels>
     <labels>
         <fullName>addrGeneralSettings</fullName>
@@ -1569,7 +1569,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>addrHHAccountOnly</shortDescription>
-        <value>Address objects are only supported on Household Accounts and Organizational Accounts (if enabled).</value>
+        <value>To use Addresses with non-Household Accounts, you must select Organizational Account Addresses Enabled in NPSP Settings | People | Addresses.</value>
     </labels>
     <labels>
         <fullName>addrHHAddressAlwaysDefault</fullName>
@@ -1585,7 +1585,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>addrSeasonalOverlap</shortDescription>
-        <value>Seasonal addresses cannot overlap with any other seasonal address in the Household.</value>
+        <value>Seasonal Address dates cannot overlap with any other Seasonal Addresses for this Household.</value>
     </labels>
     <labels>
         <fullName>addrSeasonalPartial</fullName>
@@ -1593,7 +1593,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>addrSeasonalPartial</shortDescription>
-        <value>An address must have all or none of its Seasonal fields set.</value>
+        <value>In the Seasonal Information section, please select values for all Seasonal fields, or leave them all blank.</value>
     </labels>
     <labels>
         <fullName>alloAddRow</fullName>
@@ -1617,7 +1617,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloAmountOrPercent</shortDescription>
-        <value>Each Allocation must have a value in either the Amount field or the Percent field.</value>
+        <value>Enter a value in either the Amount field or the Percent field.</value>
     </labels>
     <labels>
         <fullName>alloBatchCreateDefault</fullName>
@@ -1663,7 +1663,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloCampaignExceedsOppAmount</shortDescription>
-        <value>Your campaign allocations were not created. Campaign allocations for the opportunity exceeded the opportunity amount.</value>
+        <value>Your Campaign Allocations were not created. Campaign Allocations for the Opportunity exceeded the Opportunity amount.</value>
     </labels>
     <labels>
         <fullName>alloCantAllocateNothing</fullName>
@@ -1671,7 +1671,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloCantAllocateNothing</shortDescription>
-        <value>You can only create Allocations for Opportunities with a positive value in the Amount field.</value>
+        <value>You can't create Allocations for an Opportunity with a blank or zero amount.</value>
     </labels>
     <labels>
         <fullName>alloDefaultGAUMissing</fullName>
@@ -1679,7 +1679,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Default Allocations are enabled, but no default GAU is selected.</shortDescription>
-        <value>You&apos;ve enabled Default Allocations. You also need to select a default General Accounting Unit.</value>
+        <value>You've selected Default Allocations Enabled. You also need to select a Default General Accounting Unit.</value>
     </labels>
     <labels>
         <fullName>alloDefaultNotPercent</fullName>
@@ -1687,7 +1687,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloDefaultNotPercent</shortDescription>
-        <value>The default allocation cannot be percentage-based.</value>
+        <value>The General Accounting Unit set as default in NPSP Settings can only have amount-based, not percentage-based Allocations.</value>
     </labels>
     <labels>
         <fullName>alloDeleteRow</fullName>
@@ -1703,7 +1703,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>The allocations for this opportunity are greater than the amount of the opportun</shortDescription>
-        <value>You need to update your allocations before you can reduce the amount of an opportunity. The allocations for this opportunity are currently greater than the opportunity amount.</value>
+        <value>The Allocation totals for this Opportunity exceed the Opportunity amount. Update your Allocation amounts first, then update the Opportunity amount to match.</value>
     </labels>
     <labels>
         <fullName>alloManageCampaignAllocations</fullName>
@@ -1735,7 +1735,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloModifyCurrency</shortDescription>
-        <value>You can&apos;t modify allocation currencies directly. An allocation&apos;s currency is updated when the parent Opportunity, Campaign, or Recurring Donation currency is modified.</value>
+        <value>You can't modify Allocation currencies directly. NPSP updates Allocation currencies when you update the currency of the parent Opportunity, Campaign, or Recurring Donation.</value>
     </labels>
     <labels>
         <fullName>alloNegativeAmount</fullName>
@@ -1743,7 +1743,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativeAmount</shortDescription>
-        <value>The Amount field on an Allocation must contain a positive value.</value>
+        <valu>The Amount field can't contain a negative value.</value>
     </labels>
     <labels>
         <fullName>alloNegativePercent</fullName>
@@ -1751,7 +1751,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativePercent</shortDescription>
-        <value>The Percent field on an Allocation must contain a positive value.</value>
+        <value>The Percent field can't contain a negative value.</value>
     </labels>
     <labels>
         <fullName>alloObjectUnsupported</fullName>
@@ -1767,7 +1767,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Percent based Allocations cannot exceed 100%.</shortDescription>
-        <value>Percent-based allocations cannot exceed 100%.</value>
+        <value>Percent-based Allocations cannot exceed 100%.</value>
     </labels>
     <labels>
         <fullName>alloRemainder</fullName>
@@ -1783,7 +1783,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Each Allocation must have a single parent object: Opportunity, Recurring Donatio</shortDescription>
-        <value>Each allocation must have a single parent object: Opportunity, Recurring Donation, or Campaign.</value>
+        <value>An Allocation can have only one parent object: Opportunity, Recurring Donation, or Campaign.</value>
     </labels>
     <labels>
         <fullName>alloTotalExceedsOppAmt</fullName>
@@ -1791,7 +1791,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Opportunity Allocation totals must not exceed the amount of the Opportunity.</shortDescription>
-        <value>Opportunity allocation totals cannot exceed the amount of the opportunity.</value>
+        <value>Opportunity Allocation totals can't exceed the amount of the Opportunity.</value>
     </labels>
     <labels>
         <fullName>alloTotals</fullName>
@@ -1975,7 +1975,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiDataImporterDescription</shortDescription>
-        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack</value>
+        <value>The NPSP Data Importer helps you easily import your data into the Nonprofit Success Pack.</value>
     </labels>
     <labels>
         <fullName>bdiDataImporterInfoLine1</fullName>
@@ -2143,7 +2143,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>error message if the donation matched multiple opps</shortDescription>
-        <value>The Donation information matched against multiple Opportunities, so it was not imported.  The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+        <value>The Donation information matched against multiple Opportunities, so the NPSP Data Importer did not import it. The Donation Possible Matches field contains the Salesforce Ids of the matched Opportunities.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationNoMatch</fullName>
@@ -2151,7 +2151,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>error when no matching donation found, and a match is required</shortDescription>
-        <value>No matching donation was found.</value>
+        <value>The NPSP Data Importer found no matching Donations.</value>
     </labels>
     <labels>
         <fullName>bdiErrorDonationRequireNoMatch</fullName>
@@ -2159,7 +2159,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>error message if the donation matched opp(s), but behavior required no match</shortDescription>
-        <value>The Donation information matched against 1 or more Opportunities, but the setting required no matches, so it was not imported. The Donation Possible Matches field contains the Salesforce Id&apos;s of the matched Opportunities.</value>
+        <value>The Donation information matched against one or more Opportunities, but the setting required no matches, so the NPSP Data Importer did not import it. The Donation Possible Matches field contains the Salesforce Ids of the matched Opportunities.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidCampaignName</fullName>
@@ -2183,7 +2183,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error thrown if specified class doesn&apos;t support the given BDI interface</shortDescription>
-        <value>The Apex class {0} was not found or does not support the {1} interface.</value>
+        <value>Either the NPSP Data Importer could not find the Apex classs {0}, or this class does not support the {1} interface.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidLastname</fullName>
@@ -2191,7 +2191,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiErrorInvalidLastname</shortDescription>
-        <value>Last Name must be specified.</value>
+        <value>You must specify Last Name.</value>
     </labels>
     <labels>
         <fullName>bdiErrorInvalidOppRTName</fullName>
@@ -2207,7 +2207,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>bdiErrorNonHHAccountContact</shortDescription>
-        <value>Matched an existing contact from a non-Household Account, which is not supported.</value>
+        <value>This Contact matched an existing Contact that's associated with a non-Household Account. The Data Import Tool can only update Contacts that are part of a Household Account.</value>
     </labels>
     <labels>
         <fullName>bdiErrorPaymentMultiMatch</fullName>
@@ -2215,7 +2215,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>error message if the donation matched multiple pmts</shortDescription>
-        <value>The Donation information matched against multiple Payments, so it was not imported. The Payment Possible Matches field contains the Salesforce Id&apos;s of the matched Payments.</value>
+        <value>The Donation information matched against multiple Payments, so the NPSP Data Importer did not import it. The Payment Possible Matches field contains the Salesforce Ids of the matched Payments.</value>
     </labels>
     <labels>
         <fullName>bdiFailed</fullName>
@@ -2527,7 +2527,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanCantEdit</shortDescription>
-        <value>You can&apos;t assign this Engagement Plan to a new object. Please create a new Engagement Plan.</value>
+        <value>You can't change the Account, Contact, Campaign, or Case for an Engagement Plan. Create a new Engagement Plan instead.</value>
     </labels>
     <labels>
         <fullName>engagementPlanNoLookups</fullName>
@@ -2535,7 +2535,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanNoLookups</shortDescription>
-        <value>One object lookup must be populated for each Engagement Plan.</value>
+        <value>You must enter either an Account, Contact, Campaign, or Case for this Engagement Plan.</value>
     </labels>
     <labels>
         <fullName>engagementPlanTwoLookups</fullName>
@@ -2543,7 +2543,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>engagementPlanTwoLookups</shortDescription>
-        <value>Only one object lookup can be populated per Engagement Plan.</value>
+        <value>You can enter a value for only one of the following fields: Account, Contact, Campaign, Case.</value>
     </labels>
     <labels>
         <fullName>exceptionDeletePermission</fullName>
@@ -2605,7 +2605,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsAccOne2OneNoContacts</shortDescription>
-        <value>There are {0} One-to-One Accounts who have no Contacts.</value>
+        <value>There are {0} One-to-One Accounts that have no Contacts.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountDefaultRTInvalid</fullName>
@@ -2613,7 +2613,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTInvalid</shortDescription>
-        <value>The Record Type selected for the current Account Model isn&apos;t valid.</value>
+        <value>The Account Model record type isn't valid.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountDefaultRTIssue</fullName>
@@ -2621,7 +2621,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAccountDefaultRTIssue</shortDescription>
-        <value>The Record Type, {0}, is selected for the current Account Model (in NPSP Settings) and is used as your profile&apos;&apos;s default Account Record Type.</value>
+        <value>The Account Model record type, {0} (set in NPSP Settings) is currently set as your Profile's default Account record type.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAccountModel</fullName>
@@ -2653,7 +2653,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsAutoRelCampaignTypeMissing</shortDescription>
-        <value>Campaign Type must be specified for Relationship Autocreation from CampaignMembers.</value>
+        <value>You must specify a Campaign Type for Relationship Autocreation records with Campaign Members.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAutoRelFieldsMissing</fullName>
@@ -2661,7 +2661,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsAutoRelFieldsMissing</shortDescription>
-        <value>Relationship Autocreation requires a valid Object, Field and Relationship Type specified.</value>
+        <value>You must specify a valid Object, Field, and Relationship Type.</value>
     </labels>
     <labels>
         <fullName>healthDetailsAutoRelInvalidLookupField</fullName>
@@ -2692,7 +2692,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsContactData</shortDescription>
-        <value>There are {0} Contacts who have no Account.  These Contacts will be private to the user who created them.</value>
+        <value>There are {0} Contacts that have no Account. Contacts with no Account are private to the User who created them and can't be seen by other Users.</value>
     </labels>
     <labels>
         <fullName>healthDetailsDuplicateAcctRT</fullName>
@@ -2700,7 +2700,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsDuplicateAcctRT</shortDescription>
-        <value>You cannot specify the same Account Record Type for the Household Account Record Type and One-to-One Record Type.</value>
+        <value>You cannot specify the same Account record type for the Household Account record type and the One-to-One record type.</value>
     </labels>
     <labels>
         <fullName>healthDetailsGenderField</fullName>
@@ -2716,7 +2716,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsHHAccountModel</shortDescription>
-        <value>When using the Household Account Model, Household Rules must be set to No Contacts.</value>
+        <value>Model, you must set Household Object Rules to "No Contacts". You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</value>
     </labels>
     <labels>
         <fullName>healthDetailsHHActNoContacts</fullName>
@@ -2724,7 +2724,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsHHActNoContacts</shortDescription>
-        <value>There are {0} Household Accounts who have no Contacts.</value>
+        <value>There are {0} Household Accounts that have no Contacts.</value>
     </labels>
     <labels>
         <fullName>healthDetailsHHObNoContacts</fullName>
@@ -2732,7 +2732,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsHHObNoContacts</shortDescription>
-        <value>There are {0} Household objects who have no Contacts.</value>
+        <value>There are {0} Household object records that have no Contacts.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidCMField</fullName>
@@ -2740,7 +2740,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidCMField</shortDescription>
-        <value>CampaignMember field {0} does not exist.</value>
+        <value>Campaign Member field {0} does not exist.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidContactField</fullName>
@@ -2788,7 +2788,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsInvalidFiscalYears</shortDescription>
-        <value>Fiscal Year Rollups are not supported when the organization is using Custom Fiscal Years.</value>
+        <value>Your organization is using Custom Fiscal Years. NPSP does not support Fiscal Year Rollups with Custom Fiscal Years.</value>
     </labels>
     <labels>
         <fullName>healthDetailsInvalidLevelField</fullName>
@@ -2884,7 +2884,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsMailingListReportMissing</shortDescription>
-        <value>The NPSP_Campaign_Household_Mailing_List report is missing which is used by the Household Mailing List button.</value>
+        <value>The NPSP Campaign Household Mailing List Report is missing. This report is run when you click the Household Mailing List button from a Campaign record.</value>
     </labels>
     <labels>
         <fullName>healthDetailsMissingOppPayments</fullName>
@@ -2900,7 +2900,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsNothingScheduled</shortDescription>
-        <value>The NPSP default scheduled classes are not scheduled.</value>
+        <value>The NPSP default jobs are not scheduled. Scheduled jobs update summary fields on records every night.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCR</fullName>
@@ -2908,7 +2908,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsOCR</shortDescription>
-        <value>{0} and {1} cannot use the same role value.</value>
+        <value>{0} and {1} cannot use the same Role value.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRDupPrimary</fullName>
@@ -2916,7 +2916,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsOCRDupPrimary</shortDescription>
-        <value>There were {0} opportunities found that had more than one Opportunity Contact Role marked as Primary.</value>
+        <value>Health Check found {0} Opportunities that had more than one Opportunity Contact Role marked as Primary.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRDupPrimaryValid</fullName>
@@ -2932,7 +2932,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthDetailsOCRSettingsResolution</shortDescription>
-        <value>On the NPSP Settings tab, click Donations | Contact Roles, and edit the above settings values.</value>
+        <value>On the NPSP Settings tab, click Donations | Contact Roles, and edit the values of the above settings.</value>
     </labels>
     <labels>
         <fullName>healthDetailsOCRSettingsValid</fullName>
@@ -2972,7 +2972,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsSaveAcctFailed</shortDescription>
-        <value>Unable to create new Account.</value>
+        <value>Unable to create a new Account.</value>
     </labels>
     <labels>
         <fullName>healthDetailsSaveOppsFailed</fullName>
@@ -2996,7 +2996,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsTriggerHandlerDuplicate</shortDescription>
-        <value>Trigger Handler {0} on object {1} with the same Handler fields is repeated multiple times and will affect NPSP behavior.</value>
+        <value>Health Check found more than one Trigger Handler {0} on object {1} with the same field values. Duplicate Trigger Handlers will affect NPSP behavior.</value>
     </labels>
     <labels>
         <fullName>healthDetailsTriggerHandlerMismatch</fullName>
@@ -3076,7 +3076,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelAutoRelValid</shortDescription>
-        <value>Automatic Relationships valid.</value>
+        <value>Automatic Relationships are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelContactData</fullName>
@@ -3092,7 +3092,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelErrorRecipientValid</shortDescription>
-        <value>Error Notification recipient valid.</value>
+        <value>The Error Notification recipient is valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelFailed</fullName>
@@ -3108,7 +3108,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelFiscalYearsValid</shortDescription>
-        <value>Custom Fiscal Years are not in use.</value>
+        <value>Your organization is not using Custom Fiscal Years.</value>
     </labels>
     <labels>
         <fullName>healthLabelHHAccData</fullName>
@@ -3140,7 +3140,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelIntro</shortDescription>
-        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your account-related data. When complete, you can view the results, including detailed information for any failures.</value>
+        <value>Health Check verifies that all of your NPSP Settings are valid and looks for problems in your Account-related data. When complete, you can view the results below, including detailed information for any failures.</value>
     </labels>
     <labels>
         <fullName>healthLabelLastRun</fullName>
@@ -3204,7 +3204,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelPaymentMappingsValid</shortDescription>
-        <value>Payment Mappings valid.</value>
+        <value>Payment Mappings are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelRDOppsValid</fullName>
@@ -3212,7 +3212,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelRDOppsValid</shortDescription>
-        <value>New opportunities can be saved.</value>
+        <value>New Opportunities can be saved.</value>
     </labels>
     <labels>
         <fullName>healthLabelRDValid</fullName>
@@ -3220,7 +3220,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelRDValid</shortDescription>
-        <value>Recurring Donation Field Mappings valid.</value>
+        <value>Recurring Donation Field Mappings are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelRelReciprocalValid</fullName>
@@ -3228,7 +3228,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelRelReciprocalValid</shortDescription>
-        <value>Reciprocal Relationships valid.</value>
+        <value>Reciprocal Relationships are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelScheduler</fullName>
@@ -3244,7 +3244,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelSchedulerValid</shortDescription>
-        <value>NPSP recurring jobs are scheduled.</value>
+        <value>NPSP Recurring Jobs are scheduled.</value>
     </labels>
     <labels>
         <fullName>healthLabelShowPassedTests</fullName>
@@ -3284,7 +3284,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthLabelUDFValid</shortDescription>
-        <value>User Defined Rollups valid.</value>
+        <value>User Defined Rollups are valid.</value>
     </labels>
     <labels>
         <fullName>healthLabelVerifyLevels</fullName>
@@ -3316,7 +3316,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthPaymentAutoCloseStageInvalid</shortDescription>
-        <value>The selected opportunity stage to be transitioned to when all payments are paid must be an active Closed/Won stage.</value>
+        <value>Select an active Closed/Won stage in the Opportunity stage to be transitioned to when all Payments are Paid setting.</value>
     </labels>
     <labels>
         <fullName>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</fullName>
@@ -3324,7 +3324,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthPaymentAutoCloseStageMustBeActiveClosedWonOrBlank</shortDescription>
-        <value>Either do not select an opportunity stage (thus disabling the feature) or update the setting to use an active Closed/Won opportunity stage.</value>
+        <value>Select an active Closed/Won stage in the Opportunity Stage for When Fully Paid setting. You can also leave the value blank, which prevents NPSP from automatically updating the Opportunity stage when all Payments are received.</value>
     </labels>
     <labels>
         <fullName>healthPaymentAutoCloseStageValid</fullName>
@@ -3332,7 +3332,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>healthPaymentAutoCloseStageValid</shortDescription>
-        <value>Either no opportunity stage was selected for transitioning to when all payments are received, or the selected stage is an active Closed/Won stage.</value>
+        <value>The selected value in the Opportunity Stage for When Fully Paid setting is valid. This value is either an active Closed/Won stage, or blank.</value>
     </labels>
     <labels>
         <fullName>healthSolutionAccOne2OneNoContacts</fullName>
