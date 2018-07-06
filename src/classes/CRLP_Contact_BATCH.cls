@@ -63,8 +63,12 @@ public class CRLP_Contact_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         String className = CRLP_Contact_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
-                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+                CRLP_Contact_BATCH contactHardCreditBatch = new CRLP_Contact_BATCH(new List<Id>());
+                contactHardCreditBatch.setIncrementalRollup(new CRLP_IncrementalBatch.ContactHardCredit());
+                database.executeBatch(
+                    contactHardCreditBatch, 
+                    UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Rollups_Contact_Batch_Size__c.intValue()
+                );
             } else {
                 logDuplicateBatchError(className);
             }
