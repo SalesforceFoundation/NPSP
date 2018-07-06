@@ -550,163 +550,117 @@
 
         function beforeKeyDownHandler(event) {
 
+            var tabKey = event.keyCode === 9;
+            var enterKey = event.keyCode === 13;
+            var leftArrowKey = event.keyCode === 37;
+            var upArrowKey = event.keyCode === 38;
+            var rightArrowKey = event.keyCode === 39;
+            var downArrowKey = event.keyCode === 40;
+
             var selection = hot.getSelected();
             var rowIndex = selection[0];
             var colIndex = selection[1];
 
             var selectedColType = hot.getDataType(rowIndex, colIndex);
 
-            var editor =  hot.getActiveEditor();
+            var editor = hot.getActiveEditor();
 
             if (selectedColType == "dropdown") {
-                if (event.keyCode != 9 && event.keyCode != 37 && event.keyCode != 38 && event.keyCode != 39 && event.keyCode != 40) {
+                if (!tabKey && !leftArrowKey && !upArrowKey && !rightArrowKey && !downArrowKey) {
+                    if (event.keyCode == 32) {
+                        event.preventDefault();
+                    }
                     disableEdit(editor);
                 }
             }
 
-            if (event.keyCode === 9 || event.keyCode === 37 || event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 40) {
-
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
+            if (tabKey || leftArrowKey || upArrowKey || rightArrowKey || downArrowKey) {
 
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
-
-                var lastColumn = numberOfColumns - 1;
                 var lastRow = numberOfRows - 1;
+                var lastColumn = numberOfColumns - 1;
 
                 var isFirstRow = (rowIndex === 0) ? true : false;
 
                 var shiftKeyIsPressed = event.shiftKey;
 
-                if (!shiftKeyIsPressed && (event.keyCode === 9 || event.keyCode === 39)) {
+                if (colIndex == 2 && (downArrowKey || upArrowKey)) {
+                    event.preventDefault();
+                }
 
-                    // Tab or right arrow was pressed
-
+                if (!shiftKeyIsPressed && (tabKey || rightArrowKey)) {
                     try {
-                        if (colIndex === 0) {
+                        if (colIndex === 1) { 
+                           var actionBtn = document.getElementById('actionBtnId-' + rowIndex);
+                           actionBtn.classList.add("activeBtn");
+                           //actionBtn.focus();
+                        } 
+                        else if (rowIndex === lastRow && colIndex === lastColumn) {
 
+                            hot.selectCell(0, 0);
+
+                            var tooltipIcon = hot.getCell(0, 1).childNodes[0];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if (!tooltipIconStyle || tooltipIconStyle.display === "none") {
+                                hot.selectCell(0, 1);
+                            }
+                        } 
+                        else if (colIndex == lastColumn) {
+
+                            var nextRow = rowIndex + 1;
+
+                            var tooltipIcon = hot.getCell(nextRow, 1).childNodes[0];
+                            var tooltipIconStyle = tooltipIcon.style;
+
+                            if (!tooltipIconStyle || tooltipIconStyle.display === "none") {
+                                colIndex = 1;
+                                rowIndex++;
+                            } else {
+                                colIndex = 0;
+                                rowIndex = nextRow;
+                            }
+                            hot.selectCell(rowIndex, colIndex);
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                } 
+                else if (leftArrowKey || (shiftKeyIsPressed && tabKey)) {
+                    try {
+                        if (colIndex === 3) {
+                            var actionCell = hot.getCell(rowIndex, 2);
+                            var actionBtn = actionCell.childNodes[0].children[0];
+                            actionBtn.focus();
+                        } 
+                        else if (colIndex === 2) {
                             var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
                             var tooltipIconStyle = tooltipIcon.style;
 
-                            if(tooltipIconStyle.display === "none") {
-
-                                // tooltip icon is not being displayed, so skip the cell.
-                                hot.selectCell(rowIndex, 1);
-
-                                var selectedCell = hot.getSelected();
-
-                                var rowIndexSelectedCell = selectedCell[0];
-                                var colIndexSelectedCell = selectedCell[1];
-
-                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
-
-                                actionIcon.focus();
+                            if (tooltipIconStyle.display === "none") {
+                                colIndex = 0;
                             }
-                            else {
-
-                                hot.selectCell(rowIndex, 0);
-                            }
-                        }
-                        else if (rowIndex === lastRow && colIndex === lastColumn) {
-
-                            var tooltipIcon = hot.getCell(0, 0).childNodes["0"];
-                            var tooltipIconStyle = tooltipIcon.style;
-
-                            if(!tooltipIconStyle || tooltipIconStyle.display === "none") {
-
-                                // tooltip icon is not being displayed, so skip the cell.
-                                hot.selectCell(0, 1);
-
-                                var selectedCell = hot.getSelected();
-
-                                var rowIndexSelectedCell = selectedCell[0];
-                                var colIndexSelectedCell = selectedCell[1];
-
-                                var actionIcon = hot.getCell(rowIndexSelectedCell, colIndexSelectedCell).childNodes["0"];
-
-                                actionIcon.focus();
-                            }
-                            else {
-
-                                hot.selectCell(0, 0);
-                            }
-
-                        }
-                    }
-                    catch(err) {
-                        console.log(err);
-                    }
-                }
-                else if (event.keyCode === 37 || (shiftKeyIsPressed && event.keyCode === 9) ) {
-
-                    // Tab or right arrow was pressed
-                    try {
-
-                        var tooltipIcon = hot.getCell(rowIndex, 1).childNodes["0"];
-                        var tooltipIconStyle = tooltipIcon.style;
-
-                        if(tooltipIconStyle.display === "none") {
-
-                            if (colIndex === 3) {
-
-                                colIndex = lastColumn;
-
-                                if (isFirstRow) {
-
-                                    rowIndex = lastRow;
-                                }
-                                else {
-
-                                    row --;
-                                }
-                            }
-                        }
-                        else {
-
-                            if (colIndex === 2) {
-
-                                colIndex = lastColumn;
-
-                                if (isFirstRow) {
-
-                                    rowIndex = lastRow;
-                                }
-                                else {
-
-                                    row --;
-                                }
-                            }
+                        } 
+                        else if (colIndex === 1) {
+                            colIndex = 0;
                         }
                         hot.selectCell(rowIndex, colIndex);
-                    }
-                    catch(err) {
+                    } catch (err) {
                         console.log(err);
                     }
-                }
-                else if (event.keyCode === 38) {
+                } 
+                else if (upArrowKey) {
                     try {
-                        if (colIndex === 1) {
-                            colIndex = lastColumn;
-                            if (isFirstRow) {
-                                rowIndex = lastRow;
-                            }
-                            else {
-                                rowIndex --;
-                            }
-                        }
                         hot.selectCell(rowIndex, colIndex);
-                    }
-                    catch(err) {
+                    } catch (err) {
                         console.log(err);
                     }
                 }
-            }
-            else if (event.keyCode === 13 && selectedColType != "dropdown") {
+            } 
+            else if (enterKey && selectedColType != "dropdown") {
                 event.stopImmediatePropagation();
-
-                rowIndex ++;
-
+                rowIndex++;
                 hot.selectCell(rowIndex, colIndex);
             }
         }
@@ -797,7 +751,7 @@
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
             errorCol.colWidths = 40;
-            errorCol.disableVisualSelection = true;
+            errorCol.disableVisualSelection = false;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -1043,7 +997,7 @@
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            var selectElement = getLightningPicklist();
+            var selectElement = getLightningPicklist(row);
 
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
@@ -1117,16 +1071,17 @@
         };
 
         //ACTION picklist
-        function getLightningPicklist() {
+        function getLightningPicklist(row) {
 
             var divControl = document.createElement('div');
 
             divControl.className = 'slds-dropdown-trigger slds-dropdown-trigger_click picklist-click';
 
             var divButton = document.createElement('button');
+            divButton.id = 'actionBtnId-' + row;
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
-            divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
+            divButton.setAttribute('data-jq-dropdown', '#jq-dropdown-1');
             divButton.style.height = "25px";
             divButton.style.width = "25px";
 
@@ -1163,7 +1118,7 @@
         function setErrorMessage(apiName, errorMsg) {
 
             var message = apiName.split("_c").join("");
-            
+
             var message = message.split("_").join(" ").trim();
             for (var i = 0; i < message.length; i++) {
                 if (!isNaN(message[i]) && message[i] != " ") {
