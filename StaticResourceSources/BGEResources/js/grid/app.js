@@ -111,9 +111,16 @@
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
                 columns: getHotColumns(),
-                contextMenu: ['remove_row'],
                 manualColumnResize: true,
-                renderAllRows: true,
+                contextMenu: {
+					items: {
+						remove_row: {
+							disabled: function (){
+								return false
+							}
+						}
+					}
+				},
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -941,12 +948,36 @@
             var messageSectionDivList = document.createElement('ul');
             messageSectionDivList.style.listStyleType = 'disc';
 
-            errors.forEach(function(errorElement) {
+            if (errors.length <= 3) {
 
-                var messageSectionDivListElement = document.createElement('li');
-                messageSectionDivListElement.innerHTML = errorElement.field + " : " + errorElement.messages;
-                messageSectionDivList.appendChild(messageSectionDivListElement);
-            })
+                errors.forEach(function(errorElement) {
+
+                    var messageSectionDivListElement = document.createElement('li');
+                    messageSectionDivListElement.className += "slds-p-around_xx-small";
+
+                    messageSectionDivListElement.innerHTML = setErrorMessage(errorElement.field, errorElement.messages);
+                    messageSectionDivList.appendChild(messageSectionDivListElement);
+                })
+            }
+            else {
+
+                var moreCounter = errors.length - 3;
+
+                for (var i = 0; i < 4; i++) {
+
+                    var messageSectionDivListElement = document.createElement('li');
+                    messageSectionDivListElement.className += "slds-p-around_xx-small";
+
+                    if (i != 3) {
+                        messageSectionDivListElement.innerHTML = setErrorMessage(errors[i].field, errors[i].messages);
+                        messageSectionDivList.appendChild(messageSectionDivListElement);
+                    }
+                    else {
+                        messageSectionDivListElement.innerHTML = '(' + moreCounter + ' more...)';
+                        messageSectionDivList.appendChild(messageSectionDivListElement);
+                    }
+                }
+            }
 
             messageSectionDiv.appendChild(messageSectionDivList);
             messageSection.appendChild(messageSectionDiv);
