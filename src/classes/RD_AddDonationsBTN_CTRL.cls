@@ -56,9 +56,12 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             system.assert(sc.getId() != null);
 	        string qString = RD_RecurringDonations.strQueryRDNoWhere();
             qString += ' where id = \'' + sc.getId() + '\'';
-	        npe03__Recurring_Donation__c RecurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
-	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{RecurringDonation});
-	        
+	        npe03__Recurring_Donation__c recurringDonation = (npe03__Recurring_Donation__c)database.query(qString);
+            // This recalculates Rollups only in Legacy mode. 
+	        RD_RecurringDonations.evaluateRecurringDonationsForNewOppInsert(new list<npe03__Recurring_Donation__c>{recurringDonation});
+            //This recalculates Rollups only if Customizable Rollup is enabled.
+	        recalculateRollups(sc.getId());
+
 	        PageReference pageRef = sc.view();
 	        pageRef.setRedirect(true);
 	        return pageRef;
@@ -69,8 +72,27 @@ public with sharing class RD_AddDonationsBTN_CTRL {
             ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, e.getMessage()));
             return null;
         }
-        
     }
     
-
+    /*********************************************************************************************************
+    * @description Recalculates the Rollup for Recurring Donation.
+    * @return void.
+    */
+    private void recalculateRollups(Id recordId) {
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, CRLP_RollupProcessingOptions.RollupType.RecurringDonations)) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(
+                    CRLP_RollupProcessingOptions.RollupType.RecurringDonations, 
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, 
+                    new List<Id>{ recordId }, 
+                    null
+                );
+            } else {
+                System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{ recordId }));
+            }
+        }
+        else {
+            RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
+        }
+    }
 }
