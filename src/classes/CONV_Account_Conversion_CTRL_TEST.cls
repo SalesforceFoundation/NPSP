@@ -51,7 +51,7 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test');
         insert c;
-        system.assertEquals(1, [select count() from Account where Name = 'Test Contact' and npe01__One2OneContact__c = :c.id]);
+        system.assertEquals(1, [select count() from Account where npe01__One2OneContact__c = :c.id]);
         String HHName = 'Contact ' + system.label.npo02.DefaultHouseholdName;
         system.assertEquals(1, [select count() from npo02__Household__c where Name = :HHName]);
 
@@ -95,13 +95,10 @@ public with sharing class CONV_Account_Conversion_CTRL_TEST {
 
         //set account model to 1:1 for the test and enable household creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(true);
+
         //create a new user w/ sysadmin profile
-        Id sysadminId = UTIL_Profile.getInstance().getProfileIds(UTIL_Profile.SYSTEM_ADMINISTRATOR)[0];
-        User u = new User(LastName = 'TestUser', Email = 'UserEmail99332244@emailX.com', ProfileId = sysadminId,
-                            isActive = true, UserName = 'UserEmail99332244@emailX.npsp.test',
-                            Alias = 'tu093521', TimeZoneSidKey = 'America/Los_Angeles',
-                            LocaleSidKey = 'en_US', LanguageLocaleKey = 'en_US',
-                            EmailEncodingKey = 'ISO-8859-1');
+        User u = UTIL_UnitTestData_TEST.createUserWithoutInsert(UTIL_Profile.SYSTEM_ADMINISTRATOR);
+        u.IsActive = true;
         insert u;
 
         Contact c = new Contact(LastName = 'Contact', FirstName = 'Test', OwnerId = u.Id);

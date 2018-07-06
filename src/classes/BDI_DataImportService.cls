@@ -327,6 +327,7 @@ global with sharing class BDI_DataImportService {
                         dt == Schema.Displaytype.TextArea ||
                         dt == Schema.Displaytype.Id ||
                         dt == Schema.Displaytype.URL ||
+                        dt == Schema.Displaytype.Phone ||
                         dt == Schema.Displaytype.Reference)
                         isCustomIdInAccountDatatypeString = true;
                 }
@@ -751,7 +752,7 @@ global with sharing class BDI_DataImportService {
         if (!diSettings.Run_Opportunity_Rollups_while_Processing__c) {
             List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
             for (Trigger_Handler__c th : handlers) {
-                if (th.Object__c == 'Opportunity' && th.Class__c == 'RLLP_OppRollup_TDTM') {
+                if (th.Object__c == 'Opportunity' && (th.Class__c == 'RLLP_OppRollup_TDTM' || th.Class__c == 'CRLP_Rollup_TDTM')) {
                     th.Active__c = false;
                 }
             }
@@ -1201,13 +1202,20 @@ global with sharing class BDI_DataImportService {
             }
         }
 
-
         String strSoql = getSoqlSelectForAccount();
-        strSoql += ' WHERE ';
-        if (setSFId.size() > 0) {
-            strSoql += ' (Id IN :setSFId) OR ';
+        strSoql += ' WHERE (Id IN :setSFId)';
+
+        if (!setName.isEmpty()) {
+            UTIL_Finder finder = new UTIL_Finder(Account.SObjectType)
+                .withWhere(new UTIL_Where.FieldExpression(Account.Name).inSet(setName));
+
+            if (finder.isSoql()) {
+                strSoql += ' OR Name IN :setName';
+            } else {
+                setSFId.addAll(new Map<Id, SObject>(finder.find()).keySet());
+            }
         }
-        strSoql += 'Name IN :setName';
+
         if (isCustomIDInAccountMatchRules && isCustomIdInAccountDatatypeString)
             strSoql += ' OR ' + diSettings.Account_Custom_Unique_ID__c + ' IN :setCustomIDString';
         else if (isCustomIDInAccountMatchRules && !isCustomIdInAccountDatatypeString)

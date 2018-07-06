@@ -104,8 +104,8 @@ public with sharing class MTCH_FindGifts_CTRL {
                                 Matching_Gift__c, Matching_Gift_Account__c, Matching_Gift_Account__r.Matching_Gift_Percent__c,
                                 (SELECT Id, ContactId FROM OpportunityContactRoles WHERE IsPrimary = true AND IsDeleted = false)
                         FROM Opportunity 
-                        WHERE ((Matching_Gift__c = null AND StageName IN :closedWonStages AND Account.Name = :opp.Account.Name AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
-                        OR (Matching_Gift__c = null AND StageName IN :closedWonStages AND Matching_Gift_Account__r.Name = :opp.Account.Name AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
+                        WHERE ((Matching_Gift__c = null AND StageName IN :closedWonStages AND AccountId = :opp.AccountId AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
+                        OR (Matching_Gift__c = null AND StageName IN :closedWonStages AND Matching_Gift_Account__c = :opp.AccountId AND (Matching_Gift_Status__c = 'Potential' or Matching_Gift_Status__c = 'Submitted')) 
                         OR Matching_Gift__c = :opp.Id)
                         AND Id != :opp.Id 
                         ORDER BY Name];
