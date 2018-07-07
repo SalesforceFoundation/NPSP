@@ -35,8 +35,8 @@
 * @description Contact Hard Credit Rollup Batch Job
 */
 public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew implements Database.Batchable<SObject>, Database.Stateful, Schedulable {
-    
-    public CRLP_Contact_SoftCredit_BATCH() { }
+
+    public CRLP_Contact_SoftCredit_BATCH() {}
 
     /*******************************************************************************************************
      * @description Constructs the class - Rollup all Contacts that meet the "Non Skew" criteria
@@ -60,9 +60,14 @@ public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
+        String className = CRLP_Contact_SoftCredit_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
-            CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
                     CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            } else {
+                logDuplicateBatchError(className);
+            }
         }
     }
 }

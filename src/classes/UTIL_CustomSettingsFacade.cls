@@ -875,7 +875,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         crs.Rollups_GAU_Batch_Size__c = 1000;
         crs.Rollups_Skew_Dispatcher_Batch_Size__c = 300;
         crs.Rollups_Limit_on_Attached_Opps_for_Skew__c = 250;
-        crs.Enable_Incremental_Rollups_Mode__c = false;
+        crs.Disable_Related_Records_Filter__c = false;
     }
 
     /*******************************************************************************************************
@@ -900,11 +900,7 @@ public without sharing class UTIL_CustomSettingsFacade {
         customizableRollupSettings.Rollups_GAU_Batch_Size__c = mySettings.Rollups_GAU_Batch_Size__c;
         customizableRollupSettings.Rollups_Skew_Dispatcher_Batch_Size__c = mySettings.Rollups_Skew_Dispatcher_Batch_Size__c;
         customizableRollupSettings.Rollups_Limit_on_Attached_Opps_for_Skew__c = mySettings.Rollups_Limit_on_Attached_Opps_for_Skew__c;
-        customizableRollupSettings.Enable_Incremental_Rollups_Mode__c = mySettings.Enable_Incremental_Rollups_Mode__c;
-        customizableRollupSettings.Account_Hard_Credit_Last_Batch__c = mySettings.Account_Hard_Credit_Last_Batch__c;
-        customizableRollupSettings.Contact_Hard_Credit_Last_Batch__c = mySettings.Contact_Hard_Credit_Last_Batch__c;
-        customizableRollupSettings.Contact_Soft_Credit_Last_Batch__c = mySettings.Contact_Soft_Credit_Last_Batch__c;
-        customizableRollupSettings.Recurring_Donations_Last_Batch__c = mySettings.Recurring_Donations_Last_Batch__c;
+        customizableRollupSettings.Disable_Related_Records_Filter__c = mySettings.Disable_Related_Records_Filter__c;
         customizableRollupSettings.CMT_API_Status__c = mySettings.CMT_API_Status__c;
 
         orgCustomizableRollupSettings = customizableRollupSettings;

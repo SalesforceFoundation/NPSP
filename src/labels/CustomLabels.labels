@@ -600,8 +600,8 @@
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Help text for the active rollups tree</shortDescription>
-        <value>The list of active rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
+        <shortDescription>Help text for the rollups tree</shortDescription>
+        <value>The list of rollups that are using this filter group. As long as there are rollups listed here, you can't delete this filter group.</value>
     </labels>
     <labels>
         <fullName>CMT_DeleteConfirm</fullName>
@@ -722,6 +722,22 @@
         <protected>true</protected>
         <shortDescription>Context for when to add a date, amount, or detail field to a Rollup__mdt record.</shortDescription>
         <value>These fields determine what information is being summarized and provide the normal defaults for Donations. You can edit them as needed.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_BatchCalculating</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Displays on page when "Recalculate Rollups" button is hit on Acc/Con/GAU/RD.</shortDescription>
+        <value>The rollups batch job is calculating and may take a few moments to complete. Go back to the {0} and refresh to see updated rollup values.</value>
+    </labels>
+    <labels>
+        <fullName>CRLP_BatchSkipped</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error logged when a scheduled batch is skipped b/c yesterday&apos;s still running.</shortDescription>
+        <value>Today&apos;&apos;s scheduled {0} batch job was skipped because a previous {0} job was still running. The next batch job will run as scheduled. No action is required; this error is for information purposes only.</value>
     </labels>
     <labels>
         <fullName>CRLP_CreateRollupIntroHelpText</fullName>
@@ -973,6 +989,14 @@
         <value>Please wait a moment</value>
     </labels>
     <labels>
+        <fullName>CRLP_RecalculatingRollups</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for interstitial page on rollup recalc buttons</shortDescription>
+        <value>Recalculating Rollups</value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -986,7 +1010,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Shows rollups using a specific filter group.</shortDescription>
-        <value>Active Rollups Using this Filter Group</value>
+        <value>Rollups Using this Filter Group</value>
     </labels>
     <labels>
         <fullName>CRLP_RollupNew</fullName>
