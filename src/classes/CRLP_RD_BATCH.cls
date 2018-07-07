@@ -63,12 +63,8 @@ public class CRLP_RD_BATCH extends CRLP_Batch_Base_NonSkew implements Database.B
         String className = CRLP_RD_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_RD_BATCH recurringDonationsBatch = new CRLP_RD_BATCH(new List<Id>());
-                recurringDonationsBatch.setIncrementalRollup(new CRLP_IncrementalBatch.RecurringDonations());
-                database.executeBatch(
-                    recurringDonationsBatch, 
-                    UTIL_CustomSettingsFacade.getRecurringDonationsSettings().Recurring_Donation_Batch_Size__c.intValue()
-                );
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.RecurringDonations,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
                 logDuplicateBatchError(className);
             }

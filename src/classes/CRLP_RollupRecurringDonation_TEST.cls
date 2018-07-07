@@ -38,8 +38,6 @@ POSSIBILITY OF SUCH DAMAGE.
 @isTest
 private class CRLP_RollupRecurringDonation_TEST {
 
-    private static final Integer LAST_BATCH_RUN_DAYS_BACK = 10;
-
     private Enum TestType {
         TestTrigger, TestQueueuable, TestBatch, testSkewBatch
     }
@@ -259,38 +257,5 @@ private class CRLP_RollupRecurringDonation_TEST {
         System.assertEquals(lastPaymentDate, rd.npe03__Last_Payment_Date__c);
         System.assertEquals(instAmt * numClosedOpps, rd.npe03__Paid_Amount__c);
 
-    }
-
-    /*********************************************************************************************************
-    * @description Creates the Incremental Recurring Donations Rollup Settings, enables the Incremental Rollup and 
-    * sets the Last Batch Run. Runs the Rollup Batch Scheduler and confirms the Last Batch Run 
-    * is set to Today's date.
-    */
-    static testMethod void testIncrementalRecurringDonationsScheduler_WithLastBatchRun() {
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c(
-                Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = 50,
-                Enable_Incremental_Rollups_Mode__c = true,
-                Recurring_Donations_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-            )
-        );
-        UTIL_CustomSettingsFacade.getRecurringDonationsSettingsForTest(
-            new npe03__Recurring_Donations_Settings__c(
-                Recurring_Donation_Batch_Size__c = 50
-            )
-        );
-
-        mockRollupCMTValues();
-
-        Test.startTest();
-        Schedulable rollupBatchScheduler = new CRLP_RD_BATCH();
-        rollupBatchScheduler.execute(null);
-        Test.stopTest();
-
-        System.assertNotEquals(
-            Date.today(), 
-            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Recurring_Donations_Last_Batch__c
-        );
     }
 }

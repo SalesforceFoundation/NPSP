@@ -3,15 +3,6 @@
     <customSettingsType>Hierarchy</customSettingsType>
     <enableFeeds>false</enableFeeds>
     <fields>
-        <fullName>Account_Hard_Credit_Last_Batch__c</fullName>
-        <description>The last time at which the Account Hard Credit rollups batch job started and then completed successfully.</description>
-        <externalId>false</externalId>
-        <label>Account Hard Credit Last Batch</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
         <fullName>CMT_API_Status__c</fullName>
         <description>Result of the last CustomMetadataType deployment</description>
         <externalId>false</externalId>
@@ -23,24 +14,6 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Contact_Hard_Credit_Last_Batch__c</fullName>
-        <description>The last time at which the Contact Hard Credit rollups batch job started and then completed successfully.</description>
-        <externalId>false</externalId>
-        <label>Contact Hard Credit Last Batch</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
-        <fullName>Contact_Soft_Credit_Last_Batch__c</fullName>
-        <description>The last time at which the Contact Soft Credit rollups batch job started and then completed successfully.</description>
-        <externalId>false</externalId>
-        <label>Contact Soft Credit Last Batch</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
-    </fields>
-    <fields>
         <fullName>Customizable_Rollups_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
@@ -50,22 +23,13 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>Enable_Incremental_Rollups_Mode__c</fullName>
+        <fullName>Disable_Related_Records_Filter__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>Check this box to enable incremental rollups processing mode. This will make the customizable rollups to run faster.</inlineHelpText>
-        <label>Enable Incremental Rollups Mode</label>
+        <inlineHelpText>Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records.</inlineHelpText>
+        <label>Disable Related Records Filter</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
-    </fields>
-    <fields>
-        <fullName>Recurring_Donations_Last_Batch__c</fullName>
-        <description>The last time at which the Recurring Donations rollups batch job started and then completed successfully.</description>
-        <externalId>false</externalId>
-        <label>Recurring Donations Last Batch</label>
-        <required>false</required>
-        <trackTrending>false</trackTrending>
-        <type>Date</type>
     </fields>
     <fields>
         <fullName>Rollups_Account_Batch_Size__c</fullName>
