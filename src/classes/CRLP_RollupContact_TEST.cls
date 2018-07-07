@@ -36,8 +36,6 @@
 @isTest
 private class CRLP_RollupContact_TEST {
 
-    private static final Integer LAST_BATCH_RUN_DAYS_BACK = 10;
-
     private Enum TestType {
         TestTrigger, TestQueueuable, TestBatch, testSkewBatch, TestWithAlwaysRollupToPrimary
     }
@@ -487,34 +485,5 @@ private class CRLP_RollupContact_TEST {
             c3 = database.query(conQuery);
             System.assertEquals(null, c3.npo02__NumberOfClosedOpps__c);
         }
-    }
-
-    /*********************************************************************************************************
-    * @description Creates the Incremental Contact Hard Credit Settings, enables the Incremental Rollup and 
-    * sets the Last Batch Run. Runs the Rollup Batch Scheduler and confirms the Last Batch Run 
-    * is set to Today's date.
-    */
-    static testMethod void testIncrementalContactHardCreditScheduler_WithLastBatchRun() {
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c(
-                Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = 50,
-                Rollups_Contact_Batch_Size__c = 20,
-                Enable_Incremental_Rollups_Mode__c = true,
-                Contact_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-            )
-        );
-
-        mockRollupCMTValues();
-
-        Test.startTest();
-        Schedulable rollupBatchScheduler = new CRLP_Contact_BATCH();
-        rollupBatchScheduler.execute(null);
-        Test.stopTest();
-
-        System.assertNotEquals(
-            Date.today(), 
-            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Contact_Hard_Credit_Last_Batch__c
-        );
     }
 }
