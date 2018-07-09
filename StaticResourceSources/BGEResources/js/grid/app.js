@@ -738,14 +738,14 @@
 
             removeMessage();
             var messageSection = document.createElement('section');
-            messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-            messageSection.role = 'dialog'
+            messageSection.className = 'slds-popover slds-nubbin_bottom-left slds-theme_error tooltip-error';
+            messageSection.role = 'dialog';
 
             var messageSectionDiv = document.createElement('div');
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
-            messageSectionDivList.style.listStyleType = 'disc';
+            messageSectionDivList.style.listStyleType = 'none';
 
             if (errors.length <= 3) {
 
@@ -960,6 +960,21 @@
             liElement.appendChild(liLinkElement);
 
             return liElement;
+        }
+
+        function setErrorMessage(apiName, errorMsg) {
+
+            var message = apiName.split("_c").join("");
+
+            var message = message.split("_").join(" ").trim();
+            for (var i = 0; i < message.length; i++) {
+                if (!isNaN(message[i]) && message[i] != " ") {
+                    message = message.split(message[i]).join("");
+                    break;
+                }
+            }
+            message = message + " : " + errorMsg;
+            return message;
         }
 
     });
