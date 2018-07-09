@@ -9,109 +9,109 @@
         <value><!-- General Accounting Unit --></value>
     </caseValues>
     <fields>
-        <help>Actieve standaard accounting units zijn beschikbaar bij allocaties. Inactieve standaard accounting units kunnen geen nieuwe allocaties hebben.</help>
+        <help>Actieve Bestemmingen zijn beschikbaar bij Toewijzingen. Inactieve Bestemmingen kunnen geen nieuwe Toewijzingen hebben.</help>
         <label>Actief</label>
         <name>Active__c</name>
     </fields>
     <fields>
-        <help>Het gemiddelde van alle allocaties van alle tijden die bij deze standaard accounting unit horen</help>
-        <label>Gemiddelde Allocatie</label>
+        <help>Het gemiddelde van alle Toewijzingen van alle tijden die bij deze Bestemming horen</help>
+        <label>Gemiddelde Toewijzing</label>
         <name>Average_Allocation__c</name>
     </fields>
     <fields>
-        <help>Extra informatie over deze standaard accounting unit.</help>
+        <help>Extra informatie over deze Bestemming.</help>
         <label>Beschrijving</label>
         <name>Description__c</name>
     </fields>
     <fields>
-        <help>De eerste Opportunity sluitingsdatum van een allocatie geassocieerd met deze standaard accounting unit.</help>
-        <label>Eerste Allocatie Datum</label>
+        <help>De eerste Opportunity Sluitingsdatum van een Toewijzing met deze Bestemming.</help>
+        <label>Eerste Toewijzingsdatum</label>
         <name>First_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help>De grootste allocatie van alle tijden die bij deze standaard accounting unit hoort.</help>
-        <label>Grootste Allocatie</label>
+        <help>De grootste Toewijzing op deze Bestemming.</help>
+        <label>Grootste Toewijzing</label>
         <name>Largest_Allocation__c</name>
     </fields>
     <fields>
-        <help>De laatste Opportunity sluitingsdatum van een allocatie geassocieerd met deze standaard accounting unit.</help>
-        <label>Laatste Allocatie Datum</label>
+        <help>De laatste Opportunity Sluitingsdatum van een Toewijzing met deze Bestemming.</help>
+        <label>Laatste Toewijzingsdatum</label>
         <name>Last_Allocation_Date__c</name>
     </fields>
     <fields>
-        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden bij instellingen.</help>
-        <label>Aantal Allocaties Laatste N Dagen</label>
+        <help>Totaal aantal Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in de laatste N dagen. De waarde van N kan worden gewijzigd in de instellingen.</help>
+        <label>Aantal Toewijzingen Laatste N Dagen</label>
         <name>Number_of_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Vorig Jaar.</help>
-        <label>Aantal Allocaties Vorig Jaar</label>
+        <help>Totaal aantal Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in het vorig jaar.</help>
+        <label>Aantal Toewijzingen Vorig Jaar</label>
         <name>Number_of_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Huidig Jaar</help>
-        <label>Aantal Allocaties Huidig Jaar</label>
+        <help>Totaal aantal Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in het huidig jaar.</help>
+        <label>Aantal Toewijzingen Huidig Jaar</label>
         <name>Number_of_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase van Twee Jaar Geleden</help>
-        <label>Aantal Allocaties Twee Jaar Geleden</label>
+        <help>Totaal aantal Toewijzingen van Opportunities in een Gesloten/Gewonnen fase van twee jaar geleden.</help>
+        <label>Aantal Toewijzingen Twee Jaar Geleden</label>
         <name>Number_of_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>De kleinste allocatie van alle tijden van deze standaard accounting unit.</help>
-        <label>Kleinste Allocatie</label>
+        <help>De kleinste Toewijzing op deze Bestemming.</help>
+        <label>Kleinste Toewijzing</label>
         <name>Smallest_Allocation__c</name>
     </fields>
     <fields>
-        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase in de laatste N dagen. De waarde van N kan gewijzigd worden bij instellingen.</help>
-        <label>Allocaties Laatste N Dagen Totaal</label>
+        <help>De som van alle Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in de laatste N dagen. De waarde van N kan worden gewijzigd in de instellingen.</help>
+        <label>Totaal Toewijzingen Laatste N Dagen</label>
         <name>Total_Allocations_Last_N_Days__c</name>
     </fields>
     <fields>
-        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Vorig Jaar</help>
-        <label>Allocaties Vorig Jaar Totaal</label>
+        <help>De som van alle Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in het vorig jaar.</help>
+        <label>Totaal Toewijzingen Vorig Jaar</label>
         <name>Total_Allocations_Last_Year__c</name>
     </fields>
     <fields>
-        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Huidig Jaar</help>
-        <label>Allocaties Huidig Jaar Totaal</label>
+        <help>De som van alle Toewijzingen van Opportunities in een Gesloten/Gewonnen fase in het huidig jaar.</help>
+        <label>Totaal Toewijzingen Huidig Jaar</label>
         <name>Total_Allocations_This_Year__c</name>
     </fields>
     <fields>
-        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase van Twee Jaar Geleden</help>
-        <label>Allocaties Twee Jaar Geleden Totaal</label>
+        <help>De som van alle Toewijzingen van Opportunities in een Gesloten/Gewonnen fase van twee jaar geleden.</help>
+        <label>Totaal Toewijzingen Twee Jaar Geleden</label>
         <name>Total_Allocations_Two_Years_Ago__c</name>
     </fields>
     <fields>
-        <help>Som Totaal van alle allocaties van opportunities in een gesloten en gewonnen fase.</help>
-        <label>Allocaties Totaal</label>
+        <help>De som van alle Toewijzingen van Opportunities in een Gesloten/Gewonnen fase.</help>
+        <label>Totaal Toewijzingen</label>
         <name>Total_Allocations__c</name>
     </fields>
     <fields>
-        <help>Totaal aantal allocaties van opportunities in een gesloten en gewonnen fase.</help>
-        <label>Totaal Aantal Allocaties</label>
+        <help>Totaal aantal Toewijzingen van Opportunities in een Gesloten/Gewonnen fase.</help>
+        <label>Totaal Aantal Toewijzingen</label>
         <name>Total_Number_of_Allocations__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>General Accounting Unit Layout</layout>
         <sections>
-            <label>Allocatie Informatie</label>
+            <label>Toewijzing Informatie</label>
             <section>Allocation Information</section>
         </sections>
         <sections>
-            <label>Allocatie Totalen</label>
+            <label>Toewijzing Totalen</label>
             <section>Allocation Totals</section>
         </sections>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>
     <nameFieldLabel><!-- General Accounting Unit Name --></nameFieldLabel>
     <webLinks>
-        <label>Roll-ups Herberekenen</label>
+        <label>Herbereken Rollup</label>
         <name>Recalculate_Rollups</name>
     </webLinks>
 </CustomObjectTranslation>

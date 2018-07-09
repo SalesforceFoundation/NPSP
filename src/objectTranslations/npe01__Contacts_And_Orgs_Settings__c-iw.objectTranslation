@@ -21,6 +21,11 @@
         <value><!-- הContacts And Orgs Settings --></value>
     </caseValues>
     <fields>
+        <help><!-- For system use only: Namespace for cross package functionality. --></help>
+        <label><!-- Advancement Namespace --></label>
+        <name>Advancement_Namespace__c</name>
+    </fields>
+    <fields>
         <help>יוצר חבר מבצע באופן אוטומטי כאשר אתה יוצר הזדמנות שמשויך אליה מקור של איש קשר ראשי ומבצע ראשי, או מעדכן את ההזדמנות עם שלב של סגירה/זכייה.</help>
         <label>ניהול אוטומטי של חברי מבצע</label>
         <name>Automatic_Campaign_Member_Management__c</name>
