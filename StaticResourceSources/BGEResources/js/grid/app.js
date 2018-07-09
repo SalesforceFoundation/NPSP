@@ -100,7 +100,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -805,7 +804,9 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.colWidths = 80;
+            actionCol.disableVisualSelection = true;
+            actionCol.manualColumnResize =  true;
+            actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
@@ -859,6 +860,35 @@
                     col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === "BOOLEAN") {
+
+                    col.type = "checkbox";
+                    col.colWidths = 50;
+                }
+
+                else if (templateField.type === 'PHONE') {
+
+                    col.colWidths = 150;
+                    col.editor = TextEditorCustom;
+                }
+                else if (templateField.type === 'PERCENT') {
+                    col.type = "numeric";
+                    col.format = '0.000%';
+                    col.colWidths = 60;
+                    col.editor = NumberEditorCustom;
+                }
+                else if (templateField.type === 'GEOLOCATION') {
+                    col.type = "text";
+                    col.colWidths = 170;
+                }
+                else if (templateField.type === 'TIME') {
+                    col.type = 'time';
+                    col.timeFormat= 'h:mm:ss a';
+                    col.correctFormat= true;
+                    col.colWidths = 80;
+                    col.editor = TextEditorCustom;
+                }
+
+                if (templateField.type === "PICKLIST") {
 
                     col.type = "checkbox";
                     col.colWidths = 50;
@@ -939,14 +969,14 @@
 
             removeMessage();
             var messageSection = document.createElement('section');
-            messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-            messageSection.role = 'dialog'
+            messageSection.className = 'slds-popover slds-nubbin_bottom-left slds-theme_error tooltip-error';
+            messageSection.role = 'dialog';
 
             var messageSectionDiv = document.createElement('div');
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
-            messageSectionDivList.style.listStyleType = 'disc';
+            messageSectionDivList.style.listStyleType = 'none';
 
             if (errors.length <= 3) {
 
@@ -1163,6 +1193,22 @@
 
             return liElement;
         }
+
+        function setErrorMessage(apiName, errorMsg) {
+
+            var message = apiName.split("_c").join("");
+
+            var message = message.split("_").join(" ").trim();
+            for (var i = 0; i < message.length; i++) {
+                if (!isNaN(message[i]) && message[i] != " ") {
+                    message = message.split(message[i]).join("");
+                    break;
+                }
+            }
+            message = message + " : " + errorMsg;
+            return message;
+        }
+
     });
 })();
 
