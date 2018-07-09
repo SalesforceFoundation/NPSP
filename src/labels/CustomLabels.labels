@@ -1730,6 +1730,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Manage Opportunity Allocations</value>
     </labels>
     <labels>
+        <fullName>alloManagePaymentAllocations</fullName>
+        <categories>Allocation</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloManagePaymentAllocations</shortDescription>
+        <value>Manage Payment Allocations</value>
+    </labels>
+    <labels>
         <fullName>alloManageRecurringDonationAllocations</fullName>
         <categories>Allocation</categories>
         <language>en_US</language>

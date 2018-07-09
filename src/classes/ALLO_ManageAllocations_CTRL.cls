@@ -51,7 +51,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     private Set<sObjectType> sObjTypesAllowed = new Set<sObjectType> {
         Opportunity.sObjectType,
         Campaign.sObjectType,
-        npe03__Recurring_Donation__c.sObjectType
+        npe03__Recurring_Donation__c.sObjectType,
+        npe01__OppPayment__c.sObjectType
     };
     /** @description The sObjectType of the record the button was called from */
     private sObjectType sObjType;
@@ -63,6 +64,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
     public id parentId {get;set;}
     /** @description The parent opportunity, if we're dealing with opportunity allocations.*/
     public Opportunity opp {get;set;}
+    /** @description The parent payment, if we're dealing with payment allocations.*/
+    public npe01__OppPayment__c payment {get;set;}
     /** @description The parent campaign, if we're dealing with campaign allocations.*/
     public Campaign cam {get;set;}
     /** @description The parent recurring donation, if we're dealing with recurring donation allocations.*/
@@ -127,7 +130,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
             populateObjectParameters(Opportunity.sObjectType);
 
-            //only Opportunities have parent amounts and enforce being below this amount
+            //Opportunities have parent amounts and enforce being below this amount
             if (opp.Amount!=null) {
                 parentAmount = opp.Amount;
             }
@@ -167,10 +170,36 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             }
 
             populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
+        } else if (parentId.getSObjectType() == npe01__OppPayment__c.sObjectType) {
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                soql += ', CurrencyIsoCode ';
+            }
+            soql += ', npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :parentId LIMIT 1';
+            payment = database.query(soql);
+
+            pageTitle = System.Label.alloManagePaymentAllocations;
+            objectName = payment.Name;
+            if (UserInfo.isMultiCurrencyOrganization()) {
+                this.parentCurrencyCode = (String)payment.get('CurrencyIsoCode');
+            }
+
+            populateObjectParameters(npe01__OppPayment__c.sObjectType);
+
+            if (payment.npe01__Payment_Amount__c!=null) {
+                parentAmount = payment.npe01__Payment_Amount__c;
+            }
+            if (parentAmount==0) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
+            }
         }
 
         defaultAllo = new Allocation__c();
-        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c FROM Allocation__c WHERE Opportunity__c = :parentId OR Campaign__c = :parentId OR Recurring_Donation__c = :parentId];
+        listAllo = [SELECT Id, Name, Amount__c, Percent__c, General_Accounting_Unit__c 
+            FROM Allocation__c 
+            WHERE Opportunity__c = :parentId 
+            OR Campaign__c = :parentId 
+            OR Recurring_Donation__c = :parentId
+            OR Payment__c = :parentId];
 
         //find default allocation if enabled, remove from list
         if (settings.Default_Allocations_Enabled__c && opp!=null) {
@@ -245,6 +274,8 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             allo.Campaign__c = parentId;
         else if (rd!=null)
             allo.Recurring_Donation__c = parentId;
+        else if (payment!=null)
+            allo.Payment__c = parentId;
 
         //enable adding to the last row
         if (rowNumber == null || rowNumber >= listAllo.size()-1)
