@@ -654,7 +654,6 @@
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
-                    col.colWidths = 170;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
