@@ -863,6 +863,10 @@
                     col.colWidths = 80;
                     col.editor = TextEditorCustom;
                 }
+<<<<<<< HEAD
+=======
+                
+>>>>>>> feature/BGE_Nima__Staging
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
 
