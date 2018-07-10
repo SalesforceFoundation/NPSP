@@ -66,6 +66,26 @@ global class TDTM_Config_API {
         return TDTM_ObjectDataGateway.listTH;
     }
 
+    /*******************************************************************************************************
+    * @description Method to be called from each of the triggers (only one per object) that follow the TDTM 
+    * design. Figures out which classes need to be called, and calls them.
+    * @param isBefore Are we in a before trigger context.
+    * @param isAfter Are we in an after trigger context.
+    * @param isInsert Did the trigger run in response to an insert operation.
+    * @param isUpdate Did the trigger run in response to an update operation.
+    * @param isDelete Did the trigger run in response to a delete operation.
+    * @param isUnDelete Did the trigger run in response to an undelete operation.
+    * @param newList The records that were passed to the trigger as trigger.new.
+    * @param oldList The records that were passed to the trigger as trigger.old.
+    * @param describeObj The type of SObject the class runs for.
+    * @return void
+    */
+    global static void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
+    Boolean isDelete, Boolean isUnDelete, List<SObject> newList, List<SObject> oldList, 
+    Schema.DescribeSObjectResult describeObj) {
+        TDTM_TriggerHandler.run(isBefore, isAfter, isInsert, isUpdate, isDelete, isUnDelete, newList, oldList, describeObj, new TDTM_ObjectDataGateway());
+    }
+
     /**
      * @description Method to disable all NPSP roll-up triggers for the current code execution context.
      */
