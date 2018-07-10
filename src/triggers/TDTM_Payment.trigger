@@ -30,8 +30,6 @@
 trigger TDTM_Payment on npe01__OppPayment__c (before insert, before update, before delete, after insert,
         after update, after delete, after undelete) {
 
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();
-    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
-            Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe01__OppPayment__c,
-            new TDTM_ObjectDataGateway());
+    TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, Trigger.isDelete,
+            Trigger.isUnDelete, Trigger.new, Trigger.old, Schema.Sobjecttype.npe01__OppPayment__c);
 }
