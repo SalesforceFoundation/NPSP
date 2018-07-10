@@ -55,7 +55,7 @@ private class ALLO_ManageAllocations_TEST {
             if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Payment_Allocations_Enabled__c=true));
 
         }
     }
@@ -96,6 +96,50 @@ private class ALLO_ManageAllocations_TEST {
         list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Opportunity__c=:opp.id];
         system.assertEquals(1,queryAllo.size(),'The single allocation should be saved.');
         system.assertEquals(4,queryAllo[0].Amount__c,'The amount should be calculated based on the percent.');
+    }
+
+    /*******************************************************************************************************
+    * @description Runs manage allocations page on a payment with no allocations. Adds then deletes a
+    * row, then inserts an allocation and verifies the allocation was created properly.
+    ********************************************************************************************************/
+    static testMethod void testPayment() {
+        if (strTestOnly != '*' && strTestOnly != 'testOpp') return;
+        setupSettings(null);
+        
+        Decimal amt = 100;
+        Account acc = new Account(Name='foo');
+        insert acc;
+        Opportunity opp = new Opportunity(Name='foo', Amount = amt, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
+        insert opp;
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
+        insert gau;
+        npe01__OppPayment__c payment = new npe01__OppPayment__c(
+            npe01__Opportunity__c = opp.Id,
+            npe01__Payment_Amount__c = amt
+        );
+        insert payment;
+
+        ALLO_ManageAllocations_CTRL ctrl = setUpController(payment.Id);
+
+        system.assertEquals(1,ctrl.listAllo.size(),'The list of allocations should have a single empty allocation.');
+        system.assertEquals(null,ctrl.listAllo[0].id,'The allocation should have no Id.');
+        system.assertEquals(payment.Id,ctrl.listAllo[0].Payment__c,'The allocation should be attributed to current payment.');
+
+        ctrl.rowNumber = 0;
+        ctrl.addRow();
+        system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
+
+        ctrl.listAllo[0].Percent__c = 50;
+        ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
+        ctrl.rowNumber = 1;
+        ctrl.delRow();
+        Test.startTest();
+        ctrl.saveClose();
+        Test.stopTest();
+
+        list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c=:payment.id];
+        system.assertEquals(1,queryAllo.size(),'The single allocation should be saved.');
+        system.assertEquals(amt/2,queryAllo[0].Amount__c,'The amount should be calculated based on the percent.');
     }
 
     /*******************************************************************************************************

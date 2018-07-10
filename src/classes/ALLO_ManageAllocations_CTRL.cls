@@ -202,7 +202,7 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             OR Payment__c = :parentId];
 
         //find default allocation if enabled, remove from list
-        if (settings.Default_Allocations_Enabled__c && opp!=null) {
+        if (settings.Default_Allocations_Enabled__c && (opp!=null || payment!=null)) {
             for (integer i=0; i<listAllo.size(); i++) {
                 if (listAllo[i].General_Accounting_Unit__c == settings.Default__c) {
                     defaultAllo = listAllo[i];
