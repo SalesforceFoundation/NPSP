@@ -621,7 +621,7 @@
                             hot.selectCell(topRow, colIndex);
                         }
                     }
-                    else if (down || enter) {
+                    else if (down) {
                         event.preventDefault();
                         var bottomRow = rowIndex == lastRow? 49 : (rowIndex + 1);
                         if (!isTooltipDisplayed(bottomRow, 1)) {
