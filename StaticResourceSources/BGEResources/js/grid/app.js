@@ -751,35 +751,7 @@
                     col.colWidths = 80;
                     col.editor = TextEditorCustom;
                 }
-
-                if (templateField.type === "PICKLIST") {
-
-                    col.type = "checkbox";
-                    col.colWidths = 50;
-                }
-                else if (templateField.type === 'PHONE') {
-
-                    col.colWidths = 50;
-                    col.editor = TextEditorCustom;
-                }
-                else if (templateField.type === 'PERCENT') {
-                    col.type = "numeric";
-                    col.format = '0.000%';
-                    col.colWidths = 60;
-                    col.editor = NumberEditorCustom;
-                }
-                else if (templateField.type === 'GEOLOCATION') {
-                    col.type = "text";
-                    col.colWidths = 170;
-                }
-                else if (templateField.type === 'TIME') {
-                    col.type = 'time';
-                    col.timeFormat= 'h:mm:ss a';
-                    col.correctFormat= true;
-                    col.colWidths = 80;
-                    col.editor = TextEditorCustom;
-                }
-
+                
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
 
