@@ -119,6 +119,8 @@
 						}
 					}
 				},
+                manualColumnResize: true,
+                renderAllRows: false,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -130,7 +132,8 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                modifyColWidth: modifyColWidthHandler
             });
 
             $scope.$apply();
@@ -210,9 +213,7 @@
             }
         }
 
-
         function cellsHandler(row, col, prop) {
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -228,17 +229,26 @@
          * @param {*} event
          * @param {*} coords
          */
-        function afterOnCellMouseDownHandler(event, coords) {
+        function afterOnCellMouseDownHandler(event, coords, td) {
 
             if (coords.row < 0) {
                 hot.deselectCell();
             }
+
+            var now = new Date().getTime();
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return;
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
         }
 
         function afterInitHandler() {
-
-            // console.warn('HOT - afterInitHandler');
-
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
 
@@ -259,9 +269,27 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-
-            // console.warn('HOT - beforeRemoveRowHandler');
             deleteRow(index, amount, visualRows);
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 40;
+            }
+            else if (col === 2) {
+
+                return 70;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -494,12 +522,7 @@
                 $scope.lastSelectedColumn = col;
             }
 
-        /*    if (col < 3) {
-                hot.selectCell(row, $scope.lastSelectedColumn);
-            }
-            else { */
-                $scope.lastSelectedColumn = col;
-        //    }
+            $scope.lastSelectedColumn = col;
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
@@ -708,6 +731,10 @@
             }
         }
 
+        function disableEdit(editor) {
+            editor.TEXTAREA.setAttribute("disabled", "true");
+        }
+
         /// Auxiliary Methods
 
         function getCellDataType(sfdcDatatype) {
@@ -760,7 +787,6 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
             idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
@@ -770,9 +796,8 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.manualColumnResize = false;
             errorCol.colWidths = 40;
-        //    errorCol.disableVisualSelection = true;
+            errorCol.disableVisualSelection = false;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -780,8 +805,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-        //    actionCol.disableVisualSelection = true;
-            actionCol.manualColumnResize =  true;
             actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
@@ -840,7 +863,6 @@
                     col.type = "checkbox";
                     col.colWidths = 50;
                 }
-
                 else if (templateField.type === 'PHONE') {
 
                     col.colWidths = 150;
@@ -863,15 +885,14 @@
                     col.colWidths = 80;
                     col.editor = TextEditorCustom;
                 }
-                
+
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                         // In this case, the ENTER key is ignored and the editor field remains open.
                         col.source = Object.keys(templateField.picklistValues);
 
                         if (templateField.isRecordType) {
@@ -1022,7 +1043,7 @@
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            var selectElement = getLightningPicklist();
+            var selectElement = getLightningPicklist(row);
 
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
@@ -1078,10 +1099,6 @@
             Handsontable.dom.empty(td);
             td.appendChild(iconContainer);
 
-            td.style.borderBottom = 'none';
-            td.style.borderTop = 'none';
-            td.style.borderLeft = 'none';
-            td.style.background = 'white !important';
             td.className = 'tooltip-cell';
 
             return td;
@@ -1099,16 +1116,18 @@
             }, 1000);
         };
 
-        function getLightningPicklist() {
+        //ACTION picklist
+        function getLightningPicklist(row) {
 
             var divControl = document.createElement('div');
 
             divControl.className = 'slds-dropdown-trigger slds-dropdown-trigger_click picklist-click';
 
             var divButton = document.createElement('button');
+            divButton.id = 'actionBtnId-' + row;
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
-            divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
+            divButton.setAttribute('data-jq-dropdown', '#jq-dropdown-1');
             divButton.style.height = "25px";
             divButton.style.width = "25px";
 
@@ -1163,6 +1182,4 @@
             return (!tooltipIconStyle || tooltipIconStyle.display === "none") ? false : true;
         }
     });
-
 })();
-
