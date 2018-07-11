@@ -51,29 +51,9 @@
 .pagination-section {
     color: #758696 !important;
 }
-<<<<<<< HEAD
-
-.handsontable th {
-    color: #758696 !important;
-    border-bottom: 1px solid #cccccc !important;
-    height: 40px;
-    vertical-align: middle !important;
-    padding-left: 7px;
-    padding-right: 7px;
-}
-
 .handsontable td {
     color: #536787 !important;
     padding: 1px 7px !important;
-}
-
-.handsontable thead th .relative {
-    padding: 2px 7px;
-=======
-.handsontable td {
-    color: #536787 !important;
-    padding: 1px 7px !important;
->>>>>>> feature/BGE_QA
 }
 .fixed-horizontal {
     z-index: 999;
@@ -93,12 +73,9 @@
     margin-top: -10% !important;
     top: -15px !important;
     background-color: rgba(194,57,52,0.8) !important;
-<<<<<<< HEAD
-=======
 }
 .slds-nubbin_bottom-left {
     background-color: rgba(194,57,52,0.8) !important;
->>>>>>> feature/BGE_QA
 }
 .action-global {
     float: right;

@@ -105,7 +105,7 @@
                 height: $scope.tableHeight,
                 minRows: 50,
                 maxRows: 50,
-                rowHeights: 36,
+                rowHeights: 30,
                 colHeaders: true,
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
