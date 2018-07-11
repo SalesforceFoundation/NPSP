@@ -4,7 +4,6 @@
     */
     doInit: function (cmp, event, helper) {
         var action = cmp.get("c.setupRollupGrid");
-        console.log("in the init function");
 
         //setup rollup records, filter group records, and labels
         //also sets the rollups grid to display on page load
@@ -38,10 +37,11 @@
                         , {label: labels.labelRD, name: labels.objectRD}];
                     cmp.set("v.summaryObjects", summaryObjects);
 
-                    var detailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
+                    var unsortedDetailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
                         , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
                         , {label: labels.labelPayment, name: labels.objectPayment}
                         , {label: labels.labelAllocation, name: labels.objectAllocation}];
+                    var detailObjects = helper.sortData(cmp, 'label', 'asc', unsortedDetailObjects);
                     cmp.set("v.detailObjects", detailObjects);
 
                     var rollupColumns = [{
@@ -139,14 +139,11 @@
             }
             else if (state === "ERROR") {
                 var errors = response.getError();
-                if (errors) {
-                    if (errors[0] && errors[0].message) {
-                        console.log("Error message: " +
-                            errors[0].message);
-                    }
-                } else {
-                    console.log("Unknown error");
+                var msg = "Unknown error. Please try again.";
+                if (errors && errors[0] && errors[0].message) {
+                    msg = errors[0].message;
                 }
+                helper.showToast(cmp, 'error', "Error displaying Customizable Rollups", msg);
             }
             helper.toggleSpinner(cmp, false);
         });
@@ -158,7 +155,7 @@
      * @description: closes the toast notification window
      */
     closeNotificationWindow: function (cmp, event, helper) {
-        cmp.set("v.notificationClasses", "slds-hide");
+        cmp.set("v.toastHideClass", "slds-hide");
     },
 
     /**
@@ -239,9 +236,6 @@
     handleMessage: function(cmp, event, helper){
         var message = event.getParam("message");
         var channel = event.getParam("channel");
-
-        console.log("handleMessage: " + channel);
-        console.log(JSON.stringify(message));
 
         //ordered by frequency
         if (channel === 'cancelEvent') {

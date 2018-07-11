@@ -9,7 +9,7 @@
         <value><!-- DEPRECATED-Schedulable --></value>
     </caseValues>
     <fields>
-        <help>Bepaald of de baan actief is of niet</help>
+        <help>Bepaalt of de opdracht actief is.</help>
         <label>Actief</label>
         <name>Active__c</name>
     </fields>
@@ -19,7 +19,7 @@
         <name>Class_Name__c</name>
     </fields>
     <fields>
-        <help>Hoe vaak de baan moet worden uitgevoerd</help>
+        <help>Hoe vaak de opdracht moet worden uitgevoerd.</help>
         <label>Frequentie</label>
         <name>Frequency__c</name>
         <picklistValues>
@@ -44,15 +44,15 @@
         </picklistValues>
     </fields>
     <fields>
-        <help>Laatste keer dat de baan werd uitgevoerd</help>
-        <label>Laatste Keer Run</label>
+        <help>Laatste keer dat de opdracht is uitgevoerd.</help>
+        <label>Laatste Uitvoer</label>
         <name>Last_Time_Run__c</name>
     </fields>
     <gender><!-- Neuter --></gender>
     <layouts>
         <layout>Schedulable Layout</layout>
         <sections>
-            <label><!-- Custom Links --></label>
+            <label>Aangepaste Koppelingen</label>
             <section>Custom Links</section>
         </sections>
     </layouts>

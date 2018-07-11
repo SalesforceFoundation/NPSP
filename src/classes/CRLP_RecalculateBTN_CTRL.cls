@@ -39,6 +39,7 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
 
     private Id recordId;
     private SObjectType objType;
+    public String returnLabel { get; private set; }
 
     /** @description Used by the VF page for the button to render an apex pages message if there is one */
     public Boolean hasError { get; set; }
@@ -49,8 +50,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
     public CRLP_RecalculateBTN_CTRL(ApexPages.StandardController sc) {
         this.hasError = false;
         this.recordId = sc.getId();
+        this.returnLabel = '';
         if (this.recordId != null) {
             this.objType = this.recordId.getSobjectType();
+            this.returnLabel = String.format(Label.CRLP_Return, new List<String> {this.objType.getDescribe().getLabel()});
         }
 
         // if the current User does not have permissions to modify the object (though not checking specific fields)
@@ -85,6 +88,8 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
                 jobType = CRLP_RollupProcessingOptions.RollupType.ContactHardCredit;
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 jobType = CRLP_RollupProcessingOptions.RollupType.GAU;
+            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType) {
+                jobType = CRLP_RollupProcessingOptions.RollupType.RecurringDonations;
             }
 
             // Is skew mode needed?
@@ -126,8 +131,12 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             } else if (this.objType == General_Accounting_Unit__c.SObjectType) {
                 ALLO_Rollup_SCHED rollup = new ALLO_Rollup_SCHED(recordId);
                 rollup.runRollups();
+            } else if (this.objType == npe03__Recurring_Donation__c.SObjectType) {
+                RD_RecurringDonations.updateRecurringDonationOnOppChangeFuture(new Set<Id>{ recordId });
             }
+
         }
+        ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, String.format(System.Label.CRLP_BatchCalculating, new List<String>{this.objType.getDescribe().label})));
         return null;
     }
 

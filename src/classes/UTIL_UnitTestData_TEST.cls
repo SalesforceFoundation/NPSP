@@ -415,16 +415,25 @@ public class UTIL_UnitTestData_TEST {
     /**
      * @description Create a User having specified profile assigned
      * @param profileName Profile Name
-     * @return User
+     * @return Inserted User
      */
     public static User createUser(String profileName) {
-        User u = buildUser(buildUniqueLastName(), profileName);
+        User u = createUserWithoutInsert(profileName);
 
         //create the user
         System.runAs(u) {}
 
         return u;      
     } 
+
+    /**
+     * @description Build a User having specified profile assigned, but do not insert
+     * @param profileName Profile Name
+     * @return User
+     */
+    public static User createUserWithoutInsert(String profileName) {
+        return buildUser(buildUniqueLastName(), profileName);
+    }
 
     /**
      * @description Construct a unique last name to be assigned to a User
@@ -445,7 +454,7 @@ public class UTIL_UnitTestData_TEST {
     static User buildUser(String lastName, String profileName) {
         Profile p = [SELECT Id FROM Profile WHERE name = :profileName];
         String alias = lastName.replaceAll(' ', '').leftPad(8, '0').right(8);
-        String email = lastName.left(70) + '@email.com';
+        String email = lastName.left(70) + '@email.npsp';
 
         return new User(
             LastName = lastName, 
@@ -705,6 +714,23 @@ public class UTIL_UnitTestData_TEST {
         UTIL_UnitTestData_TEST.turnOffAutomaticHHNaming();
     }
 
+    /*********************************************************************************************************
+    * @description Extracts Ids of sObjects
+    * @param sObjects List of sObjects
+    * @return Set<Id> Set of sObjects' Ids
+    **********************************************************************************************************/
+    public static Set<Id> extractIds(List<sObject> sObjects) {
+        return (new Map<Id, sObject>(sObjects)).keySet();
+    }
+
+    /*********************************************************************************************************
+    * @description Sets the Fixed Search Results to the Ids of the sObjects
+    * @param sObjects List of sObjects
+    **********************************************************************************************************/
+    public static void setFixedSearchResults(List<sObject> sObjects) {
+        Test.setFixedSearchResults(new List<Id>(extractIds(sObjects)));
+    }
+
     /**
      * @description Create the default trigger handler records if they haven't already been created
      */
@@ -715,5 +741,13 @@ public class UTIL_UnitTestData_TEST {
             TDTM_ObjectDataGateway.ClearCachedTriggerHandlersForTest();
             haveTriggerRecordsBeenCreated = true;
         }
+    }
+
+    /**
+     * @description Returns True if the Account.Name is encrypted.
+     * It is mainly used in test methods with Individual Account model which is not supported when the Account.Name is encrypted.
+     */
+    public static Boolean isAccountNameEncrypted() {
+        return !Schema.sObjectType.Account.fields.Name.isFilterable();
     }
 }
