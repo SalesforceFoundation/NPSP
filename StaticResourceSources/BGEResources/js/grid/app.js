@@ -10,6 +10,44 @@
 
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
+        var NumberEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var TextEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var DateEditorCustom = Handsontable.editors.DateEditor.prototype.extend();
+
+        NumberEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htRight handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        TextEditorCustom.prototype.createElements = function () {
+
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        DateEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.DateEditor.prototype.createElements.apply(this, arguments);
+
+            // Create datepicker input and update relevant properties
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            // Replace textarea with datepicker input
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+
         function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
@@ -577,6 +615,8 @@
                 case 'STRING':
                 case 'EMAIL':
                 case 'ID':
+                case 'TEXTAREA':
+                case 'URL':
                     result = 'text';
                     break;
 
@@ -654,27 +694,34 @@
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
+                    col.colWidths = 170;
+                    col.editor = DateEditorCustom;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                     col.colWidths = 80;
+                    col.editor = NumberEditorCustom;
                 }
-                else if (templateField.type === "EMAIL") {
+                else if (templateField.type === "EMAIL" || templateField.type === "STRING" ||
+                         templateField.type === "TEXTAREA" || templateField.type === "URL") {
 
+                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === "BOOLEAN") {
 
@@ -685,6 +732,7 @@
                 else if (templateField.type === 'PHONE') {
 
                     col.colWidths = 150;
+                    col.editor = TextEditorCustom;
                 }
                 else if (templateField.type === 'PERCENT') {
                     col.type = "numeric";
@@ -701,10 +749,10 @@
                     col.timeFormat= 'h:mm:ss a';
                     col.correctFormat= true;
                     col.colWidths = 80;
+                    col.editor = TextEditorCustom;
                 }
-
+                
                 if (templateField.type === "PICKLIST") {
-
                     col.strict = false;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
