@@ -327,7 +327,7 @@ public with sharing class BDI_ContactService {
 
             // matched at least 1 contact; write the last one in the list to the lookup field.
             // this is maintaining legacy behavior.
-            if (!contacts.isEmpty()) {
+            if (contacts != null && !contacts.isEmpty()) {
                 con = contacts[contacts.size() - 1];
                 if (con.Id != null && con.AccountId != null && con.Account.npe01__SYSTEM_AccountType__c != CAO_Constants.HH_ACCOUNT_TYPE) {
                     bdi.LogBDIError(di, label.bdiErrorNonHHAccountContact, strCx + 'ImportStatus__c');
@@ -355,7 +355,7 @@ public with sharing class BDI_ContactService {
             }
 
             // found multiple contacts; write their IDs to the Possible Matches field.
-            if (contacts.size() > 1) {
+            if (contacts != null && contacts.size() > 1) {
                 List<Id> contactIds = new List<Id>();
                 for (Contact c : contacts) {
                     if (!contactIds.contains(c.Id)) {
@@ -363,11 +363,8 @@ public with sharing class BDI_ContactService {
                     }
                 }
                 String possibleMatches = String.join(contactIds,';');
-                // TODO: create the two Possible_Matches__c fields on DI object!
-                di.put(strCx + 'Possible_Matches__c', possibleMatches);
+                di.put(strCx + '_Possible_Matches__c', possibleMatches);
             }
-
-
 
             // associate the Contact and its dikeys with the di
             setContactForDi(con, di, listDiKey, iCx);
@@ -978,13 +975,11 @@ public with sharing class BDI_ContactService {
     * @return Contact the found Contact
     */
     private List<Contact> ContactsFromDiKeys(List<String> listDiKey) {
+        List<Contact> contacts = new List<Contact>();
         for (String diKey : listDiKey) {
-            List<Contact> contacts = mapDIKeyToContactList.get(diKey);
-            if (!contacts.isEmpty()) {
-                return contacts;
-            }
+            contacts.addAll(mapDIKeyToContactList.get(diKey));
         }
-        return null;
+        return contacts;
     }
 
     /*******************************************************************************************************
