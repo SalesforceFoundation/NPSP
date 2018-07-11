@@ -623,10 +623,14 @@
                     }
                     else if (down) {
                         event.preventDefault();
-                        var bottomRow = rowIndex == lastRow? 49 : (rowIndex + 1);
-                        if (!isTooltipDisplayed(bottomRow, 1)) {
+                        var numberOfRows = hot.countRows();
+                        var lastRow = numberOfRows - 1;
+                        rowIndex = (rowIndex === lastRow) ? lastRow : (rowIndex + 1);
+                        if (!isTooltipDisplayed(rowIndex, 1)) {
                             colIndex = 2;
-                            rowIndex++;
+                            hot.selectCell(rowIndex, colIndex);
+                        }
+                        else {
                             hot.selectCell(rowIndex, colIndex);
                         }
                     }
@@ -667,10 +671,7 @@
                 }
                 //== last cell of every column selected ==//
                 else if (colIndex == lastColumn) {
-                    if (left || shift && tab) {
-                        colIndex--;
-                    }
-                    else if (!shift &&  (right || tab)) {
+                    if (!shift &&  (right || tab)) {
                         var nextRow = rowIndex + 1;
                         if (!isTooltipDisplayed(nextRow, 1)) {
                             colIndex = 2;
@@ -692,14 +693,12 @@
                     event.preventDefault();
                     var numberOfRows = hot.countRows();
                     var lastRow = numberOfRows - 1;
-                    var bottomRow = rowIndex == lastRow? 49 : (rowIndex + 1);
-                    if (!isTooltipDisplayed(bottomRow, 1)) {
+                    rowIndex = (rowIndex === lastRow) ? lastRow : (rowIndex + 1);
+                    if (!isTooltipDisplayed(rowIndex, 1)) {
                         colIndex = 2;
-                        rowIndex++;
                         hot.selectCell(rowIndex, colIndex);
                     }
                     else {
-                        rowIndex++;
                         hot.selectCell(rowIndex, colIndex);
                     }
                 }
