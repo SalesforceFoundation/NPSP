@@ -8,45 +8,50 @@
     margin-right: 15px;
     max-width: 300px;
 }
-
-
 /* All headers */
-
 .handsontable th {
     font-family: "Salesforce Sans", Arial, sans-serif;
     font-size: 12px;
     background-color: white;
-    /* background-color: #a8b7c7;*/
-    /*    color: white;*/
+    color: #758696 !important;
+    border-bottom: 1px solid #cccccc !important;
+    height: 40px;
+    vertical-align: middle !important;
+    padding-left: 7px;
+    padding-right: 7px;
 }
-
+.handsontable th:first-child {
+    border: none !important;
+}
+.handsontable th:nth-child(2) {
+    border: none !important;
+    border-right: 1px solid #cccccc !important;
+}
+.handsontable thead th .relative {
+    padding: 2px 7px;
+}
 .scrollable {
     overflow-y: auto;
 }
-
 .slds-page-header {
     background: white !important;
 }
-
 .slds-docked-form-footer {
     background: white !important;
 }
-
 /* All headers */
-
 .ht_master tr:nth-of-type(odd)>td {
     background-color: #f4f6f9;
 }
-
 .handsontable td.htInvalid {
     background-color: transparent !important;
     border: 2px solid #c23934 !important;
     color: #c23934 !important;
 }
-
 .pagination-section {
     color: #758696 !important;
 }
+<<<<<<< HEAD
 
 .handsontable th {
     color: #758696 !important;
@@ -64,8 +69,12 @@
 
 .handsontable thead th .relative {
     padding: 2px 7px;
+=======
+.handsontable td {
+    color: #536787 !important;
+    padding: 1px 7px !important;
+>>>>>>> feature/BGE_QA
 }
-
 .fixed-horizontal {
     z-index: 999;
     width: 100%;
@@ -75,57 +84,44 @@
     top: 0px;
     left: 0px;
 }
-
 .tooltip-column {
     border: none !important;
     border-right: 1px solid #cccccc !important;
     background: white !important;
 }
-
 .tooltip-error {
     margin-top: -10% !important;
     top: -15px !important;
     background-color: rgba(194,57,52,0.8) !important;
+<<<<<<< HEAD
+=======
 }
-
+.slds-nubbin_bottom-left {
+    background-color: rgba(194,57,52,0.8) !important;
+>>>>>>> feature/BGE_QA
+}
 .action-global {
     float: right;
 }
-
 .slds-scope .slds-spinner_container.main-loader{
     background-color: rgba(255,255,255,1) !important;
 }
-
 .slds-scope .slds-spinner_container.table-loader{
     background-color: rgba(255,255,255,.6) !important;
 }
-
-.handsontable th:first-child {
-    border: none !important;
-}
-
-.handsontable th:nth-child(2) {
-    border: none !important;
-    border-right: 1px solid #cccccc !important;
-}
-
 .handsontable .htDimmed {
     border: none !important;
     color: transparent !important;
 }
-
 .handsontable .listbox.listbox td {
     color: #536787 !important;
 }
-
 /* Edit mode */
-
 .handsontableInput {
     vertical-align: middle;
     text-align: center;
     line-height: 31px !important;
 }
-
 .htAutocompleteArrow {
     float: right;
     font-size: 10px;
@@ -134,17 +130,25 @@
     width: 16px;
     text-align: center;
 }
-
 .pika-prev, .pika-next {
     overflow: hidden !important;
 }
-
-
 td.tooltip-cell {
     background: white !important;
+    border-bottom: none;
+    border-top: none !important;
+    border-left: none;
 }
-
 .action-cell {
     text-align: center !important;
     vertical-align: middle !important;
+}
+
+.handsontable .manualColumnResizer {
+    position: fixed;
+    top: 0;
+    cursor: col-resize;
+    z-index: 110;
+    width: 5px;
+    height: 40px !important;
 }
