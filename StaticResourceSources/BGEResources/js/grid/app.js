@@ -10,9 +10,45 @@
 
         BGE_HandsOnGridController.initGrid({batchId: batchId}, onInitHandler);
 
-        function onInitHandler(result, event) {
+        var NumberEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var TextEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
+        var DateEditorCustom = Handsontable.editors.DateEditor.prototype.extend();
 
-            console.log(result);
+        NumberEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htRight handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        TextEditorCustom.prototype.createElements = function () {
+
+            // Call the original createElements method
+            Handsontable.editors.TextEditor.prototype.createElements.apply(this, arguments);
+
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+        DateEditorCustom.prototype.createElements = function () {
+            // Call the original createElements method
+            Handsontable.editors.DateEditor.prototype.createElements.apply(this, arguments);
+
+            // Create datepicker input and update relevant properties
+            this.TEXTAREA.className = 'htLeft handsontableInput';
+
+            // Replace textarea with datepicker input
+            Handsontable.dom.empty(this.TEXTAREA_PARENT);
+            this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
+        };
+
+
+        function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
             $scope.selectPopper = undefined;
@@ -64,7 +100,6 @@
                 sortIndicator: true,
                 fillHandle: true,
                 autoWrapRow: true,
-                stretchH: 'all',
                 minSpareRows: 0,
                 width: $scope.tableWidth,
                 height: $scope.tableHeight,
@@ -256,9 +291,6 @@
         }
 
         function afterRemoveRowHandler(index, amount) {
-
-            // console.warn('HOT - afterRemoveRowHandler');
-
             updateSummaryData();
         }
 
@@ -267,8 +299,6 @@
         }
 
         function afterChangeHandler(changes, source) {
-
-            // console.warn('HOT - afterChangeHandler', source);
 
             var sourceOptions = ['edit', 'autofill', 'paste'];
 
@@ -378,8 +408,6 @@
                     if (result && result.length > 0) {
 
                         result.forEach(function(cellResponse) {
-
-                            // console.log(cellResponse);
 
                             var errCell = hot.getCellMeta(cellResponse.row, hot.propToCol(cellResponse.field));
 
@@ -587,6 +615,8 @@
                 case 'STRING':
                 case 'EMAIL':
                 case 'ID':
+                case 'TEXTAREA':
+                case 'URL':
                     result = 'text';
                     break;
 
@@ -629,7 +659,7 @@
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
             errorCol.manualColumnResize = false;
-            errorCol.colWidths = 30;
+            errorCol.colWidths = 40;
             errorCol.disableVisualSelection = true;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
@@ -640,7 +670,7 @@
             actionCol.data = 'Actions';
             actionCol.disableVisualSelection = true;
             actionCol.manualColumnResize =  true;
-            actionCol.colWidths = 80;
+            actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
 
@@ -664,27 +694,65 @@
                     col.className = "htLeft htMiddle slds-truncate custom-date";
                     col.correctFormat = true;
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
+                    col.colWidths = 170;
+                    col.editor = DateEditorCustom;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "DECIMAL") {
                     col.format = '0.00';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 100;
+                    col.editor = NumberEditorCustom;
                 }
                 else if (templateField.type === "NUMBER") {
                     col.format = '0';
                     col.className = "htRight htMiddle slds-truncate";
                     col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                    col.colWidths = 80;
+                    col.editor = NumberEditorCustom;
                 }
-                else if (templateField.type === "EMAIL") {
+                else if (templateField.type === "EMAIL" || templateField.type === "STRING" ||
+                         templateField.type === "TEXTAREA" || templateField.type === "URL") {
 
+                    col.editor = TextEditorCustom;
                 }
+                else if (templateField.type === "BOOLEAN") {
+
+                    col.type = "checkbox";
+                    col.colWidths = 50;
+                }
+
+                else if (templateField.type === 'PHONE') {
+
+                    col.colWidths = 150;
+                    col.editor = TextEditorCustom;
+                }
+                else if (templateField.type === 'PERCENT') {
+                    col.type = "numeric";
+                    col.format = '0.000%';
+                    col.colWidths = 60;
+                    col.editor = NumberEditorCustom;
+                }
+                else if (templateField.type === 'GEOLOCATION') {
+                    col.type = "text";
+                    col.colWidths = 170;
+                }
+                else if (templateField.type === 'TIME') {
+                    col.type = 'time';
+                    col.timeFormat= 'h:mm:ss a';
+                    col.correctFormat= true;
+                    col.colWidths = 80;
+                    col.editor = TextEditorCustom;
+                }
+                
                 if (templateField.type === "PICKLIST") {
-
                     col.strict = false;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
@@ -738,14 +806,14 @@
 
             removeMessage();
             var messageSection = document.createElement('section');
-            messageSection.className = 'slds-popover slds-nubbin_left slds-theme_error tooltip-error';
-            messageSection.role = 'dialog'
+            messageSection.className = 'slds-popover slds-nubbin_bottom-left slds-theme_error tooltip-error';
+            messageSection.role = 'dialog';
 
             var messageSectionDiv = document.createElement('div');
             messageSectionDiv.className = 'slds-popover__body';
 
             var messageSectionDivList = document.createElement('ul');
-            messageSectionDivList.style.listStyleType = 'disc';
+            messageSectionDivList.style.listStyleType = 'none';
 
             if (errors.length <= 3) {
 
@@ -960,6 +1028,21 @@
             liElement.appendChild(liLinkElement);
 
             return liElement;
+        }
+
+        function setErrorMessage(apiName, errorMsg) {
+
+            var message = apiName.split("_c").join("");
+
+            var message = message.split("_").join(" ").trim();
+            for (var i = 0; i < message.length; i++) {
+                if (!isNaN(message[i]) && message[i] != " ") {
+                    message = message.split(message[i]).join("");
+                    break;
+                }
+            }
+            message = message + " : " + errorMsg;
+            return message;
         }
 
     });
