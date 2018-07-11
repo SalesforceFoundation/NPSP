@@ -109,6 +109,7 @@
                 colHeaders: true,
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
+                manualRowResize: false,
                 columns: getHotColumns(),
                 contextMenu: {
 					items: {
@@ -133,7 +134,8 @@
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler,
-                modifyColWidth: modifyColWidthHandler
+                afterScrollHorizontally: afterScrollHandler,
+                afterScrollVertically: afterScrollHandler
             });
 
             $scope.$apply();
@@ -266,6 +268,12 @@
             $scope.isIndexLoading = false;
 
             renderBindings();
+        }
+
+        function afterScrollHandler() {
+
+            $('th').css('height', '40px');
+            $('td').css('height', '30px')
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
@@ -1066,10 +1074,18 @@
             var rowErrors = $scope.rowErrors[rowId];
 
             if (rowErrors && rowErrors.length > 0) {
+                
                 iconContainer.style.display = 'block';
+                td.style.borderBottom = '2px solid transparent';
+                td.style.borderTop = '2px solid transparent';
+                td.style.borderLeft = '2px solid transparent';
             }
             else {
+
                 iconContainer.style.display = 'none';
+                td.style.borderBottom = 'none';
+                td.style.borderTop = 'none';
+                td.style.borderLeft = 'none';
             }
 
             Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
@@ -1098,6 +1114,7 @@
             Handsontable.dom.empty(td);
             td.appendChild(iconContainer);
 
+            td.style.background = 'white !important';
             td.className = 'tooltip-cell';
 
             return td;
