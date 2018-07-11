@@ -83,9 +83,9 @@
 }
 
 .tooltip-error {
-    margin-left: 1% !important;
-    margin-top: -6% !important;
-    background-color: rgba(194,57,52,0.85) !important;
+    margin-top: -10% !important;
+    top: -15px !important;
+    background-color: rgba(194,57,52,0.8) !important;
 }
 
 .action-global {
