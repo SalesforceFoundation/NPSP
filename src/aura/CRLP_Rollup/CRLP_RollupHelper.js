@@ -1007,7 +1007,7 @@
             rollupType.name = labels.objectOpportunity;
             rollupType.summaryObject = labels.labelGAU;
             rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
-            cmp.set("v.activeRollup.rollupTypeObject", labels.objectAllocation);
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectRD){
             rollupType.name = labels.objectOpportunity;
