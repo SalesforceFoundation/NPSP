@@ -272,8 +272,7 @@
 
         function afterScrollHandler() {
 
-            $('th').css('height', '40px');
-            $('td').css('height', '30px')
+            setCellsHeight();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
@@ -1066,6 +1065,8 @@
 
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
+            setCellsHeight();
+
             Handsontable.renderers.TextRenderer.apply(this, arguments);
 
             var iconContainer = document.createElement('div');
@@ -1109,6 +1110,7 @@
             iconImage.src = resourcePath + '/icons/warning.png';
             // iconImage.style.width = "60%";
             iconImage.style.cursor = "pointer";
+            iconImage.style.paddingTop = '5px';
 
             iconContainer.appendChild(iconImage);
             Handsontable.dom.empty(td);
@@ -1197,5 +1199,12 @@
             var tooltipIconStyle = tooltipIcon.style;
             return (!tooltipIconStyle || tooltipIconStyle.display === "none") ? false : true;
         }
+
+        function setCellsHeight() {
+
+            $('th').css('height', '40px');
+            $('td').css('height', '30px')
+        }
+
     });
 })();
