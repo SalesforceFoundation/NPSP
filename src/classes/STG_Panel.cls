@@ -48,6 +48,30 @@ public with sharing virtual class STG_Panel {
     * @description the id of the panel, which we assume all derived classes will override.
     */ 
 	public virtual string idPanel() { return null; }
+
+    /*******************************************************************************************************
+    * @description Opportunity object label
+    */ 
+    static public string oppLabel {
+        get {
+            if(oppLabel == null){
+                oppLabel = Schema.sObjectType.Opportunity.Label;    
+            }
+            return oppLabel;
+        }
+    }
+
+    /*******************************************************************************************************
+    * @description Payment object label
+    */ 
+	static public string paymentLabel {
+        get {
+            if(paymentLabel == null){
+                paymentLabel = Schema.sObjectType.npe01__OppPayment__c.Label;    
+            }
+            return paymentLabel;
+        }
+    }
 	
     /*******************************************************************************************************
     * @description is the panel in Edit Mode
@@ -241,6 +265,21 @@ public with sharing virtual class STG_Panel {
         }
         private set;
     }    
+
+    /*******************************************************************************************************
+    * @description list of SelectOptions for Allocation Level setting
+    */ 
+    static public list<SelectOption> listSOAllocationLevels {
+        get {
+            if (listSOAllocationLevels == null) {
+                listSOAllocationLevels = new list<SelectOption>();
+                listSOAllocationLevels.add(new SelectOption(oppLabel, oppLabel));
+                listSOAllocationLevels.add(new SelectOption(paymentLabel, paymentLabel));
+            }
+            return listSOAllocationLevels;
+        }
+        private set;
+    }
 
     /*******************************************************************************************************
     * @description list of SelectOptions for Opportunity Contact Roles

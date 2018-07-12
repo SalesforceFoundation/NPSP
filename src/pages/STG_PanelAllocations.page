@@ -27,6 +27,18 @@
             <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsRollupSettings}</div>
             <div class="slds-form--horizontal">
                 <div class="slds-form-element">
+                    <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
+                    <div class="slds-form-element__control">
+                        <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
+                        <apex:selectList value="{!strAllocationLevel}" multiselect="false" size="1" rendered="{!isEditMode}" id="idAL" styleClass="slds-select">
+                            <apex:selectOptions value="{!listSOAllocationLevels}"/>
+                        </apex:selectList>
+                        <apex:outputPanel id="idALHelp" layout="block">
+                            <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" />
+                        </apex:outputPanel>
+                    </div>
+                </div>
+                <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Allocations_Settings__c.Fields.Excluded_Opp_RecTypes__c.Label}" for="idDBMS" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
                         <c:STG_DataBoundMultiSelect settingObject="{!stgService.stgAllo}" fieldname="Excluded_Opp_RecTypes__c" listSO="{!listSOOppRecTypesIds}" strValuesOverride="{!strExcludedOppRecTypesReadOnly}" inEditMode="{!isEditMode}" />

@@ -1778,6 +1778,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>The Manage Allocations button is only supported from a Campaign, Opportunity or Recurring Donation record.</value>
     </labels>
     <labels>
+        <fullName>alloPaymentNoDefault</fullName>
+        <categories>Allocation, Error</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>alloPaymentNoDefault</shortDescription>
+        <value>Default allocations must be enabled to use Payment level allocations.</value>
+    </labels>
+    <labels>
         <fullName>alloPaymentNotEnabled</fullName>
         <categories>Allocation, Error</categories>
         <language>en_US</language>
@@ -4891,6 +4899,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
+        <fullName>stgAllocationLevel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgAllocationLevel</shortDescription>
+        <value>Allocation Level</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -5249,6 +5265,14 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <protected>false</protected>
         <shortDescription>stgHelpAlloNDayValue</shortDescription>
         <value>Sets the value for &apos;N day&apos; rollups, where &apos;N&apos; is the number of days from today into the past. This value defaults to rollup over the past 365 days.</value>
+    </labels>
+    <labels>
+        <fullName>stgHelpAllocationLevel</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpAllocationLevel</shortDescription>
+        <value>This setting determines where Allocations will be handled.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>

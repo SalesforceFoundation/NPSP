@@ -41,9 +41,28 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelAllocations'; }
 
     /*********************************************************************************************************
+    * @description String that holds the selected Allocation Level
+    */
+    public String strAllocationLevel {get;set;}
+
+    /*********************************************************************************************************
     * @description The panel's constructor.
     */
-    public STG_PanelAllocations_CTRL() {}
+    public STG_PanelAllocations_CTRL() {
+        if(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
+            strAllocationLevel = paymentLabel;
+        } else {
+            strAllocationLevel = oppLabel;
+        }
+    }
+
+    /*********************************************************************************************************
+    * @description Enable or disable payment allocations based on settings selection
+    */
+    public void setAllocationLevel(){
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
+            (strAllocationLevel == paymentLabel);
+    }
 
     /*********************************************************************************************************
     * @description An allocation, used to present a GAU lookup in the page to allow selecting a default GAU.
@@ -111,6 +130,14 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
         STG_Panel.stgService.stgAllo.Default__c = allo.General_Accounting_Unit__c;
         strDefaultGAUName = null;
+
+        setAllocationLevel();
+
+        if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
+            !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloPaymentNoDefault));
+                return null;
+        }
 
         return super.saveSettings();
     }
