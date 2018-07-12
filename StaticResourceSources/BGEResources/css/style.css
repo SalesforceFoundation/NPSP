@@ -20,6 +20,11 @@
     /*    color: white;*/
 }
 
+.amount-style {
+
+    text-align: right !important;
+}
+
 .scrollable {
     overflow-y: auto;
 }
