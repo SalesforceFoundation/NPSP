@@ -47,7 +47,6 @@
             this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
         };
 
-
         function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
@@ -296,6 +295,111 @@
 
         function beforeChangeHandler(changes, source) {
 
+            if (source === "paste" ) {
+                var selection = hot.getSelected();
+                var rowIndex = selection[0];
+                var colIndex = selection[1];
+
+                var selectionRange = hot.getSelectedRange();
+
+
+                debugger;
+
+                var columnSpan = selectionRange.to.col - selectionRange.from.col;
+                var rowSpan = selectionRange.to.row - selectionRange.from.row;
+
+                if (columnSpan >= 1) {
+
+                    if (rowSpan >= 1) {
+                        var row = selectionRange.to.row;
+                        for (row; row <= selectionRange.from.row; row++) {
+                            var i = selectionRange.from.col;
+                            for (i; i <= selectionRange.to.col; i++) {
+                                var selectedColType = hot.getDataType(row, i);
+                                if (selectedColType == "dropdown") {
+                                    var cell = hot.getCellMeta(row, i);
+                                    if (!cell.__proto__.source.includes(changes[0][3])) {
+                                        hot.spliceCol(i, row, 1, "");
+                                    }
+                                }
+                            }
+                        }
+                    } 
+                    else if (rowSpan < 0) {
+                        var row = selectionRange.to.row;
+                        for (row; row >= selectionRange.from.row; row--) {
+                            var i = selectionRange.from.col;
+                            for (i; i <= selectionRange.to.col; i++) {
+                                var selectedColType = hot.getDataType(row, i);
+                                if (selectedColType == "dropdown") {
+                                    var cell = hot.getCellMeta(row, i);
+                                    if (!cell.__proto__.source.includes(changes[0][3])) {
+                                        hot.spliceCol(i, row, 1, "");
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // var row = selectionRange.from.row;
+                    // for (row; row <= selectionRange.to.row; row++) {
+                    //     var i = selectionRange.from.col;
+                    //     for (i; i <= selectionRange.to.col; i++) {
+                    //         var selectedColType = hot.getDataType(row, i);
+                    //         if (selectedColType == "dropdown") {
+                    //             var cell = hot.getCellMeta(row, i);
+                    //             if (!cell.__proto__.source.includes(changes[0][3])) {
+                    //                 hot.spliceCol(i, row, 1, "");
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                }
+                else if (columnSpan < 0) {
+                    var row = selectionRange.to.row;
+                    for (row; row >= selectionRange.from.row; row--) {
+                        var i = selectionRange.from.col;
+                        for (i; i >= selectionRange.to.col; i--) {
+                            var selectedColType = hot.getDataType(row, i);
+                            if (selectedColType == "dropdown") {
+                                var cell = hot.getCellMeta(row, i);
+                                if (!cell.__proto__.source.includes(changes[0][3])) {
+                                    hot.spliceCol(i, row, 1, "");
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    var selectedColType = hot.getDataType(rowIndex, colIndex);
+                    if (selectedColType === "dropdown") {
+                        var cell = hot.getCellMeta(rowIndex, colIndex);
+                        var availableValues = cell.__proto__.source;
+                        if (!(availableValues.includes(changes[0][3]))) {
+                            hot.spliceCol(colIndex, rowIndex, 1, "");
+                            var removeInvalid = hot.getCell(rowIndex, colIndex);
+                            removeInvalid.classList.remove('htInvalid');
+                        }
+                    }
+                }
+            }
+            else if (source === "autofill") {
+                var selectionRange = hot.getSelectedRange();
+                if (selectionRange.from.row === selectionRange.to.row) {
+                    //horizontal autofill
+                    var i = selectionRange.from.col + 1;
+                    for (i; i <= selectionRange.to.col; i++) {
+                        var selectedColType = hot.getDataType(selectionRange.from.row, i);
+                        if (selectedColType == "dropdown") {
+                            var cell = hot.getCellMeta(selectionRange.from.row, i);
+                            if (!cell.__proto__.source.includes(changes[0][3])) {
+                                //does not include the dragged value
+                                hot.spliceCol(i, selectionRange.from.row, 1, "");
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         function afterChangeHandler(changes, source) {
@@ -550,11 +654,11 @@
                     disableEdit(editor);
                 }
 
-                if ((event.keyCode == 91 || event.keyCode == 93) && event.keyCode == 86) {
+                // if ((event.keyCode == 91 || event.keyCode == 93) && event.keyCode == 86) {
 
-                    event.preventDefault();
+                //     event.preventDefault();
 
-                }
+                // }
             }
             if (tab || left || up || right || down) {
                 var numberOfColumns = hot.countCols();
@@ -875,6 +979,8 @@
                 
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
+
+                    // col.editor = DropdownEditor;
 
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
