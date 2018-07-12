@@ -979,6 +979,7 @@
             iconImage.src = resourcePath + '/icons/warning.png';
             // iconImage.style.width = "60%";
             iconImage.style.cursor = "pointer";
+            iconImage.style.paddingTop = '5px';
 
             iconContainer.appendChild(iconImage);
             Handsontable.dom.empty(td);

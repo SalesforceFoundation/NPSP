@@ -142,6 +142,9 @@
 
 td.tooltip-cell {
     background: white !important;
+    border-bottom: none;
+    border-top: none;
+    border-left: none;
 }
 
 .action-cell {
