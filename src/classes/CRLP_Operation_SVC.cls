@@ -74,10 +74,10 @@ public class CRLP_Operation_SVC {
         // Get the Date value from the appropriate object. There should always be a date!
         // It's a LOT faster the use the actual field name to retrieve the date than to use .get(fieldName).
         // Since the Date is almost always the CloseDate field, hardcoding this performance tweak.
-        SObject dateSObject = detailSObject;
         if (rollup.dateObject == oppObjectName && dateField == 'CloseDate') {
             dateValue = oppSObject.CloseDate;
         }
+        SObject dateSObject = rollup.dateObject == 'Opportunity' ? oppSObject : detailSObject;
         if (dateValue == null && dateField != null && dateSObject.get(dateField) != null) {
             if (rollup.dateFieldType == SoapType.DATE) {
                 dateValue = (Date) dateSObject.get(dateField);
