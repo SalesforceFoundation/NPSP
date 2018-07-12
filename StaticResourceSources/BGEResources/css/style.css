@@ -30,6 +30,12 @@
 .handsontable thead th .relative {
     padding: 2px 7px;
 }
+
+.amount-style {
+
+    text-align: right !important;
+}
+
 .scrollable {
     overflow-y: auto;
 }
