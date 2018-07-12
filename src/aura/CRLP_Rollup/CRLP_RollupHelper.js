@@ -751,10 +751,10 @@
         } else if (summaryObject === labels.objectGAU) {
             //check for the detail object to ensure correct value is selected on edit mode
             var detailName;
-            if (activeRollup.detailObject === labels.objectAllocation) {
-                detailName = labels.objectAllocation;
-            } else {
+            if (activeRollup.detailObject === labels.objectOpportunity) {
                 detailName = labels.objectOpportunity;
+            } else {
+                detailName = labels.objectAllocation;
             }
             templateList.push({
                 label: labels.labelAllocation + ' -> ' + labels.labelGAU
