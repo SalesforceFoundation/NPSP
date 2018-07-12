@@ -18,7 +18,6 @@ Delete Contact from Household
     Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
     Go To Object Home    Contact
     Select Row    &{Contact2}[FirstName] &{Contact2}[LastName]
-    Scroll Page To Location    150    0
     Click Link    link=Delete
     Sleep    5
     Go To Object Home    Account

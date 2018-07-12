@@ -132,7 +132,7 @@ Create Secondary Affiliation
     # Create Contact
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}   
-    Execute JavaScript    window.scrollTo(50,400)
+    Scroll Page To Location    50    400
     Click Related List Button   Organization Affiliations    New
     Populate Lookup Field    Organization    &{account}[Name]
     Click Modal Button    Save
@@ -144,5 +144,5 @@ Choose Frame
     
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
-    Execute JavaScript    window.scrollTo(${x_location},${y_location})    
-        
+    Execute JavaScript    window.scrollTo(${x_location},${y_location}) 
+    

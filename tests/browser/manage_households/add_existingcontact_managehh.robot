@@ -17,13 +17,17 @@ Add Existing Contact to Existing Household
     ${contact_id2} =  Create Contact
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
     Page Should Contain  &{contact2}[LastName] Household
-    Click Link    link=Edit
-    Delete Icon    Account Name    &{contact2}[LastName] Household
-    Populate Lookup Field    Account Name    &{contact1}[LastName] Household
-    Click Modal Button    Save
-    Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
-    Go To Object Home          Account
-    Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
-    Sleep    5  
-    Page Should Contain Link  &{contact2}[FirstName] &{contact2}[LastName]  
-    
+    Click Link    link=&{contact2}[LastName] Household
+    Header Field Should Have Link  Account Name
+    Click Link    link=Show more actions
+    Click Link    link=Manage Household    
+    Sleep     15     Input-textbox-notloaded-properly    
+    Select Frame   //iframe[@title= 'Manage Household']
+    Click Element     //input
+    Press Key      //input    &{contact1}[FirstName] &{contact1}[LastName]
+    Click Edit Button      Add
+    Sleep  5  Input-textbox-notloaded-properly
+    Click Button       //*[contains(@title, "Save")]
+    Sleep  10
+    Page Should Contain  &{contact2}[LastName] and &{contact1}[LastName] Household
+
