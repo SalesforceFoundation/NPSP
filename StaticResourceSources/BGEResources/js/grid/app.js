@@ -105,7 +105,7 @@
                 height: $scope.tableHeight,
                 minRows: 50,
                 maxRows: 50,
-                rowHeights: 36,
+                rowHeights: 30,
                 colHeaders: true,
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
@@ -263,8 +263,7 @@
 
         function afterScrollHandler() {
 
-            $('th').css('height', '40px');
-            $('td').css('height', '30px')
+            setCellsHeight();
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
@@ -935,6 +934,8 @@
 
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
+            setCellsHeight();
+
             Handsontable.renderers.TextRenderer.apply(this, arguments);
 
             var iconContainer = document.createElement('div');
@@ -1057,6 +1058,12 @@
             }
             message = message + " : " + errorMsg;
             return message;
+        }
+
+        function setCellsHeight() {
+
+            $('th').css('height', '40px');
+            $('td').css('height', '30px')
         }
 
     });
