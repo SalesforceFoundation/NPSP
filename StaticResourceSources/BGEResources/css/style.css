@@ -113,7 +113,7 @@
 td.tooltip-cell {
     background: white !important;
     border-bottom: none;
-    border-top: none !important;
+    border-top: none;
     border-left: none;
 }
 .action-cell {
