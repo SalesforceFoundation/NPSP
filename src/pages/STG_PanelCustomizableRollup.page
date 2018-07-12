@@ -65,7 +65,7 @@
             <div class="slds-grid {!IF(isHHAccount, '', 'slds-hide')}">
                 <apex:outputPanel rendered="{! !isPolling }">
                     <div class="slds-m-vertical_medium">
-                        <apex:outputText escape="false" styleClass="slds-text-body_small" value="You can find complete Customizable Rollups documentation here."/>
+                        <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
                     </div>
 
                     <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
@@ -87,8 +87,6 @@
             <div class="slds-grid {!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, '', 'slds-hide')}">
 -->
                 <p class="slds-text-body--small slds-m-top--x-small">
-                    <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
-                    <br/><br/>
                     <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
                 </p>
 <!--
@@ -105,7 +103,7 @@
                 <div class="slds-section-title--divider" >Reset Customizable Rollups</div>
 
                 <div class="slds-m-vertical_medium">
-                    <apex:outputText escape="false" styleClass="slds-text-body_small" value="Resetting Customizable Rollups will remove any new Rollups, Filter Groups, and Filter Rules you created, and reset all NPSP Rollups to their default behavior." />
+                    <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable3}" />
                 </div>
                 <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
                     Reset to Defaults
