@@ -438,7 +438,6 @@
 
                     $timeout(function() {
                         hot.render();
-                        updateSummaryData();
                     }, 200);
 
                 }
