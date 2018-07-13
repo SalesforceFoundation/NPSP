@@ -11,6 +11,9 @@ Create Household With Name Only
     &{contact} =  Salesforce Get  Contact  ${contact_id}
     Page Should Contain  &{contact}[LastName] Household
     Header Field Should Have Link  Account Name
+    Go To Object Home         Contact
+    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+    Should Be Equal As Strings    ${con_name}    True
     
 Create Household With Name and Email
     ${contact_id} =  Create Contact with Email
@@ -18,6 +21,9 @@ Create Household With Name and Email
     Page Should Contain  &{contact}[LastName] Household
     Header Field Should Have Link  Account Name
     Page Should Contain    skristem@salesforce.com
+    Go To Object Home         Contact
+    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+    Should Be Equal As Strings    ${con_name}    True
     
 Create Household with Name and Address
     ${contact_id} =  Create Contact with Address
@@ -26,4 +32,7 @@ Create Household with Name and Address
     Header Field Should Have Link  Account Name
     Select Tab    Details 
     Page Should Contain    50 Fremont Street  
+    Go To Object Home         Contact
+    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+    Should Be Equal As Strings    ${con_name}    True
          
