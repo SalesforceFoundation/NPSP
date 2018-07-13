@@ -355,12 +355,10 @@ public with sharing class BDI_ContactService {
             }
 
             // found multiple contacts; write their IDs to the Possible Matches field.
-            if (contacts != null && contacts.size() > 1) {
+            if (contacts.size() > 1) {
                 List<Id> contactIds = new List<Id>();
                 for (Contact c : contacts) {
-                    if (!contactIds.contains(c.Id)) {
-                        contactIds.add(c.Id);
-                    }
+                    contactIds.add(c.Id);
                 }
                 String possibleMatches = String.join(contactIds,';');
                 di.put(strCx + '_Possible_Matches__c', possibleMatches);
@@ -394,7 +392,9 @@ public with sharing class BDI_ContactService {
         strSoql += ' WHERE AccountId IN :setHHId';
         List<Contact> listHHContacts = database.query(strSoql);
         for (Contact con : listHHContacts) {
-            mapDIKeyToContact.put(con.Firstname + '|' + con.AccountId, con);
+            String looseKey = con.Firstname + '|' + con.AccountId;
+            mapDIKeyToContact.put(looseKey, con);
+            mapDIKeyToContactList.put(looseKey, new List<Contact>{con});
         }
     }
 
@@ -412,7 +412,7 @@ public with sharing class BDI_ContactService {
 
                 mapDIKeyToContact.put(diKey, con);
 
-                if (mapDIKeyToContactList.get(diKey) == null) {
+                if (!mapDIKeyToContactList.containsKey(diKey)) {
                     mapDIKeyToContactList.put(diKey,new List<Contact>());
                 }
                 mapDIKeyToContactList.get(diKey).add(con);
@@ -970,14 +970,21 @@ public with sharing class BDI_ContactService {
     }
 
     /*******************************************************************************************************
-    * @description finds a contact in our map, by matching against all the contact dikeys
+    * @description finds a list of contact in our map, by matching against all the contact dikeys
     * @param listDiKey list of dikey's to try to match against
     * @return Contact the found Contact
     */
     private List<Contact> ContactsFromDiKeys(List<String> listDiKey) {
         List<Contact> contacts = new List<Contact>();
         for (String diKey : listDiKey) {
-            contacts.addAll(mapDIKeyToContactList.get(diKey));
+            if (mapDIKeyToContactList.keySet().contains(diKey)) {
+                List<Contact> potentialContacts = mapDIKeyToContactList.get(diKey);
+                for (Contact con : potentialContacts) {
+                    if (!contacts.contains(con)) {
+                        contacts.add(con);
+                    }
+                }
+            }
         }
         return contacts;
     }
@@ -1023,6 +1030,11 @@ public with sharing class BDI_ContactService {
         // make sure all dikeys for that contact are in the dikey map
         for (String diKey : listDiKey) {
             mapDIKeyToContact.put(diKey, con);
+
+            if (!mapDIKeyToContactList.containsKey(diKey)) {
+                mapDIKeyToContactList.put(diKey,new List<Contact>());
+            }
+            mapDIKeyToContactList.get(diKey).add(con);
         }
     }
 
