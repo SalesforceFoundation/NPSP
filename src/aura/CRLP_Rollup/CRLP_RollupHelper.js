@@ -1172,7 +1172,8 @@
      */
     pollForDeploymentStatus: function(cmp, jobId, recordName, counter) {
         var helper=this;
-        var maxPollingRetryCount = 30;
+        var poolingInterval = 2000; // 2 seconds.
+        var maxPollingCount = 90; // 3 minutes, because the polling interval is 2 seconds (90 * 2 seconds).
         var mode = cmp.get("v.mode");
         var poller = window.setTimeout(
             $A.getCallback(function() {
@@ -1210,7 +1211,7 @@
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
-                            if (counter < maxPollingRetryCount) {
+                            if (counter < maxPollingCount) {
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened and keep page in edit mode
@@ -1235,7 +1236,7 @@
                     }
                 });
                 $A.enqueueAction(action);
-            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+            }), poolingInterval
         );
     },
 
