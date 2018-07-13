@@ -339,7 +339,7 @@
             if (sourceOptions.includes(source) && !$scope.isIndexLoading) {
 
                 var cellRecords = [];
-                console.log('changes.length ' + changes.length);
+
                 for (var i = 0; i < changes.length; i ++) {
 
                     var newValue = changes[i][3];
@@ -496,7 +496,7 @@
                             }
 
                             if (cellResponse.sfdcid) {
-                                
+
                                 idCellsForUpdate.push([cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid]);
 
                                 if (cellResponse.sfdcid !== cellResponse.recordId) {
