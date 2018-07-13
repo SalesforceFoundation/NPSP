@@ -1245,6 +1245,7 @@
         <members>alloCampaignExceedsOppAmount</members>
         <members>alloCantAllocateNothing</members>
         <members>alloDefaultGAUMissing</members>
+        <members>alloDefaultNotEnabled</members>
         <members>alloDefaultNotPercent</members>
         <members>alloDeleteRow</members>
         <members>alloExceedsOppAmount</members>
