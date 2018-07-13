@@ -596,6 +596,7 @@
         <members>BGE_TemplateRow</members>
         <members>BGE_TemplateSelection</members>
         <members>BGE_ValidateANDCommit</members>
+        <members>BatchDataImportMain</members>
         <members>CRLP_FilterGroup</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupApp</members>
@@ -1414,6 +1415,7 @@
         <members>bdiTime</members>
         <members>bgeErrorBatchTemplateMissing</members>
         <members>bgeErrorBatchTemplateNameRequired</members>
+        <members>bgeHandsOnGridCommitBatch</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>
@@ -2026,8 +2028,6 @@
         <members>stgTools</members>
         <members>stgUnknownError</members>
         <members>stgValidationHHAccountHHRules</members>
-        <members>healthDetailsInvalidRecordtypeName</members>
-        <members>bgeHandsOnGridCommitBatch</members>
         <name>CustomLabel</name>
     </types>
     <types>
@@ -2453,7 +2453,6 @@
         <members>Batch__c.All</members>
         <members>Batch__c.Completed_Batches</members>
         <members>Batch__c.Open_Batches</members>
-	<members>Batch_Template__c.All</members>
         <members>DataImportBatch__c.All</members>
         <members>DataImport__c.All</members>
         <members>DataImport__c.Dry_Run_Errors</members>
@@ -2484,7 +2483,9 @@
         <members>Contact.Quick_Update</members>
         <members>LogACall</members>
         <members>NewAccount</members>
+        <members>NewCase</members>
         <members>NewContact</members>
+        <members>NewEvent</members>
         <members>NewNote</members>
         <members>NewOpportunity</members>
         <members>NewTask</members>
@@ -2492,6 +2493,7 @@
         <members>New_Recurring_Donation</members>
         <members>Opportunity.New_Payment</members>
         <members>Opportunity.Quick_Update</members>
+        <members>SendEmail</members>
         <members>npe01__OppPayment__c.Quick_Update</members>
         <members>npe03__Recurring_Donation__c.New_Opportunity</members>
         <members>npe03__Recurring_Donation__c.Quick_Update</members>

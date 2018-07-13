@@ -47,6 +47,7 @@
             this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
         };
 
+
         function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
@@ -108,6 +109,7 @@
                 colHeaders: true,
                 columnHeaderHeight: 40,
                 fixedColumnsLeft: 3,
+                manualRowResize: false,
                 columns: getHotColumns(),
                 contextMenu: {
 					items: {
@@ -118,6 +120,8 @@
 						}
 					}
 				},
+                manualColumnResize: true,
+                renderAllRows: false,
 
                 cells: cellsHandler,
                 afterInit: afterInitHandler,
@@ -129,7 +133,9 @@
                 afterSelectionEnd: afterSelectionEndHandler,
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
-                beforeKeyDown: beforeKeyDownHandler
+                beforeKeyDown: beforeKeyDownHandler,
+                afterScrollHorizontally: afterScrollHandler,
+                afterScrollVertically: afterScrollHandler
             });
 
             $scope.$apply();
@@ -209,9 +215,7 @@
             }
         }
 
-
         function cellsHandler(row, col, prop) {
-
             if (prop === 'Errors') {
                 return { type: { renderer: tooltipCellRenderer } };
             }
@@ -227,17 +231,26 @@
          * @param {*} event
          * @param {*} coords
          */
-        function afterOnCellMouseDownHandler(event, coords) {
+        function afterOnCellMouseDownHandler(event, coords, td) {
 
             if (coords.row < 0) {
                 hot.deselectCell();
             }
+
+            var now = new Date().getTime();
+            if(!(td.lastClick && now - td.lastClick < 200)) {
+                td.lastClick = now;
+                return;
+            }
+
+            var editor =  hot.getActiveEditor();
+            var colType = hot.getDataType(coords.row, coords.col);
+            if (colType == "dropdown") {
+                editor.TEXTAREA.setAttribute("disabled", "true");
+            }
         }
 
         function afterInitHandler() {
-
-            // console.warn('HOT - afterInitHandler');
-
             $scope.isTableLoaded = true;
             $scope.isIndexLoading = true;
 
@@ -257,10 +270,33 @@
             renderBindings();
         }
 
-        function beforeRemoveRowHandler(index, amount, visualRows) {
+        function afterScrollHandler() {
 
-            // console.warn('HOT - beforeRemoveRowHandler');
+            setCellsHeight();
+        }
+
+        function beforeRemoveRowHandler(index, amount, visualRows) {
             deleteRow(index, amount, visualRows);
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 40;
+            }
+            else if (col === 2) {
+
+                return 70;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -598,12 +634,7 @@
                 $scope.lastSelectedColumn = col;
             }
 
-            if (col < 3) {
-                hot.selectCell(row, $scope.lastSelectedColumn);
-            }
-            else {
-                $scope.lastSelectedColumn = col;
-            }
+            $scope.lastSelectedColumn = col;
         }
 
         function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
@@ -653,12 +684,6 @@
                     }
                     disableEdit(editor);
                 }
-
-                // if ((event.keyCode == 91 || event.keyCode == 93) && event.keyCode == 86) {
-
-                //     event.preventDefault();
-
-                // }
             }
             if (tab || left || up || right || down) {
                 var numberOfColumns = hot.countCols();
@@ -873,7 +898,6 @@
             idCol.wordWrap = true;
             idCol.colWidths = 5;
             idCol.readOnly = true;
-            idCol.manualColumnResize = false;
             idCol.disableVisualSelection = true;
             frozenColumns.push(idCol);
 
@@ -883,9 +907,8 @@
             errorCol.data = 'Errors';
             errorCol.className = "htCenter htMiddle tooltip-column";
             errorCol.wordWrap = true;
-            errorCol.manualColumnResize = false;
             errorCol.colWidths = 40;
-            errorCol.disableVisualSelection = true;
+            errorCol.disableVisualSelection = false;
             errorCol.renderer = tooltipCellRenderer;
             errorCol.readOnly = true;
             frozenColumns.push(errorCol);
@@ -893,8 +916,6 @@
             var actionCol = new Object();
             actionCol.title = 'ACTIONS';
             actionCol.data = 'Actions';
-            actionCol.disableVisualSelection = true;
-            actionCol.manualColumnResize =  true;
             actionCol.colWidths = 70;
             actionCol.className = "htCenter htMiddle action-cell";
             frozenColumns.push(actionCol);
@@ -953,7 +974,6 @@
                     col.type = "checkbox";
                     col.colWidths = 50;
                 }
-
                 else if (templateField.type === 'PHONE') {
 
                     col.colWidths = 150;
@@ -976,17 +996,14 @@
                     col.colWidths = 80;
                     col.editor = TextEditorCustom;
                 }
-                
+
                 if (templateField.type === "PICKLIST") {
                     col.strict = false;
-
-                    // col.editor = DropdownEditor;
-
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
                          // allowInvalid: false - does not allow manual input of value that does not exist in the source.
-                         // In this case, the ENTER key is ignored and the editor field remains opened.
+                         // In this case, the ENTER key is ignored and the editor field remains open.
                         col.source = Object.keys(templateField.picklistValues);
 
                         if (templateField.isRecordType) {
@@ -1137,7 +1154,7 @@
 
         function actionCellsRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            var selectElement = getLightningPicklist();
+            var selectElement = getLightningPicklist(row);
 
             Handsontable.dom.addEvent(selectElement, 'click', function (e) {
                 e.preventDefault(); // prevent selection quirk
@@ -1153,6 +1170,8 @@
 
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
+            setCellsHeight();
+
             Handsontable.renderers.TextRenderer.apply(this, arguments);
 
             var iconContainer = document.createElement('div');
@@ -1161,10 +1180,18 @@
             var rowErrors = $scope.rowErrors[rowId];
 
             if (rowErrors && rowErrors.length > 0) {
+                
                 iconContainer.style.display = 'block';
+                td.style.borderBottom = '2px solid transparent';
+                td.style.borderTop = '2px solid transparent';
+                td.style.borderLeft = '2px solid transparent';
             }
             else {
+
                 iconContainer.style.display = 'none';
+                td.style.borderBottom = 'none';
+                td.style.borderTop = 'none';
+                td.style.borderLeft = 'none';
             }
 
             Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
@@ -1188,14 +1215,12 @@
             iconImage.src = resourcePath + '/icons/warning.png';
             // iconImage.style.width = "60%";
             iconImage.style.cursor = "pointer";
+            iconImage.style.paddingTop = '5px';
 
             iconContainer.appendChild(iconImage);
             Handsontable.dom.empty(td);
             td.appendChild(iconContainer);
 
-            td.style.borderBottom = 'none';
-            td.style.borderTop = 'none';
-            td.style.borderLeft = 'none';
             td.style.background = 'white !important';
             td.className = 'tooltip-cell';
 
@@ -1214,16 +1239,18 @@
             }, 1000);
         };
 
-        function getLightningPicklist() {
+        //ACTION picklist
+        function getLightningPicklist(row) {
 
             var divControl = document.createElement('div');
 
             divControl.className = 'slds-dropdown-trigger slds-dropdown-trigger_click picklist-click';
 
             var divButton = document.createElement('button');
+            divButton.id = 'actionBtnId-' + row;
             divButton.className = 'slds-button slds-button_icon slds-button_icon-border-filled';
             divButton.setAttribute('aria-haspopup', 'true');
-            divButton.setAttribute('data-jq-dropdown','#jq-dropdown-1');
+            divButton.setAttribute('data-jq-dropdown', '#jq-dropdown-1');
             divButton.style.height = "25px";
             divButton.style.width = "25px";
 
@@ -1277,7 +1304,12 @@
             var tooltipIconStyle = tooltipIcon.style;
             return (!tooltipIconStyle || tooltipIconStyle.display === "none") ? false : true;
         }
+
+        function setCellsHeight() {
+
+            $('th').css('height', '40px');
+            $('td').css('height', '30px')
+        }
+
     });
-
 })();
-
