@@ -169,7 +169,7 @@ class NPSP(object):
             return "False"
             
     def select_option(self, name):  
-        """selects various options contact new opportunity page using name
+        """selects various options in Contact>New opportunity page using name
         """
         locator=npsp_lex_locators['dd_options'].format(name)
         self.selenium.get_webelement(locator).click()
