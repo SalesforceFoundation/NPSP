@@ -1686,8 +1686,8 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <categories>Allocation, Error</categories>
         <language>en_US</language>
         <protected>false</protected>
-        <shortDescription>You must setup and enable Default Allocations in order to allocate at the payment level.</shortDescription>
-        <value>You must setup and enable Default Allocations in order to allocate at the payment level.</value>
+        <shortDescription>You must enable Default Allocations in order to allocate at the payment level.</shortDescription>
+        <value>You must enable Default Allocations in order to allocate at the payment level.</value>
     </labels>
     <labels>
         <fullName>alloDefaultNotPercent</fullName>
