@@ -238,7 +238,7 @@
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
                         // if there is a record id response
-                        if (deployResult && deployResult.completed === true && (deployResult.filterGroupItem || mode === 'delete')) {
+                        if (deployResult.completed === true && deployResult.failed === false && (deployResult.filterGroupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
@@ -303,6 +303,12 @@
                                 cmp.set("v.mode",'view');
                             }
 
+                        } else if (deployResult.completed === true && deployResult.failed === true) {
+                            helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), deployResult.errorMessage);
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            cmp.set("v.mode", "edit");
+                            helper.changeMode(cmp);
                         } else {
                             // No record id, so run call this method again to check in another 1 second
                             if (counter < maxPollingCount) {

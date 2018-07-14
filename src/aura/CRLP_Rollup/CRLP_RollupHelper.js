@@ -1188,7 +1188,7 @@
 
                         // if there is a record id response
                         var mode = cmp.get("v.mode");
-                        if (deployResult && deployResult.completed === true && (deployResult.rollupItem || mode === 'delete')) {
+                        if (deployResult.completed === true && deployResult.failed === false && (deployResult.rollupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
@@ -1209,6 +1209,12 @@
                                 helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
                             }
 
+                        } else if (deployResult.completed === true && deployResult.failed === true) {
+                            helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), deployResult.errorMessage);
+                            window.clearTimeout(poller);
+                            helper.toggleSpinner(cmp, false);
+                            cmp.set("v.mode", "edit");
+                            helper.changeMode(cmp);
                         } else {
                             // No record id, so run call this method again to check in another 1 second
                             if (counter < maxPollingCount) {
