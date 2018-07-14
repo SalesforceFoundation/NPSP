@@ -787,7 +787,9 @@ public with sharing class CRLP_RollupUI_SVC {
                                 errMsg += er + '\n';
                             }
                         }
-                        throw new RollupException(!String.isEmpty(errMsg) ? errMsg : result);
+                        response.completed = true;
+                        response.failed = true;
+                        response.errorMessage = !String.isEmpty(errMsg) ? errMsg : String.valueOf(result);
                     }
                 }
             }
