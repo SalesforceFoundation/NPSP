@@ -1172,7 +1172,7 @@
      */
     pollForDeploymentStatus: function(cmp, jobId, recordName, counter) {
         var helper=this;
-        var poolingInterval = 2000; // 2 seconds.
+        var pollingInterval = 2000; // 2 seconds.
         var maxPollingCount = 90; // 3 minutes, because the polling interval is 2 seconds (90 * 2 seconds).
         var mode = cmp.get("v.mode");
         var poller = window.setTimeout(
@@ -1242,7 +1242,7 @@
                     }
                 });
                 $A.enqueueAction(action);
-            }), poolingInterval
+            }), pollingInterval
         );
     },
 
