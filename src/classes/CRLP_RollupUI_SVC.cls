@@ -115,6 +115,8 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class DeploymentResult {
         @AuraEnabled public Boolean completed = false;
+        @AuraEnabled public Boolean failed = false;
+        @AuraEnabled public String errorMessage = '';
         @AuraEnabled public RollupTableItem rollupItem;
         @AuraEnabled public FilterGroupModel filterGroupItem;
     }
