@@ -52,9 +52,9 @@
     <fields>
         <fullName>Payment_Allocations_Enabled__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Enabling Payment Allocations allows setting of allocations at the payment level instead of opportunity level. Any allocations entered at the opportunity level will be used as the default for new payments.</description>
+        <description>Indicates whether Allocations can be set at the Payment level. If selected, you can manually create Allocation records for each Payment, or let NPSP automatically create Payment Allocation records based on the related Opportunity Allocation settings.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Enabling Payment Allocations allows setting of allocations at the payment level instead of opportunity level. Any allocations entered at the opportunity level will be used as the default for new payments.</inlineHelpText>
+        <inlineHelpText>Indicates whether Allocations can be set at the Payment level. Review the documentation about Payment-level Allocations before changing this setting.</inlineHelpText>
         <label>Payment Allocations Enabled</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>

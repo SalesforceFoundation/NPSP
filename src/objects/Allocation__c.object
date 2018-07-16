@@ -119,9 +119,9 @@
     <fields>
         <fullName>Payment__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>Attributes allocations to a payment. All settled payments will be rolled up to this allocation&apos;s general accounting unit.</description>
+        <description>Attributes allocations to a Payment. All settled Payments roll up to this Allocation&apos;s GAU.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Attributes allocations to a payment. All settled payments will be rolled up to this allocation&apos;s general accounting unit.</inlineHelpText>
+        <inlineHelpText>Attributes allocations to a Payment. All settled Payments roll up to this Allocation&apos;s GAU.</inlineHelpText>
         <label>Payment</label>
         <referenceTo>npe01__OppPayment__c</referenceTo>
         <relationshipLabel>GAU Allocations</relationshipLabel>
