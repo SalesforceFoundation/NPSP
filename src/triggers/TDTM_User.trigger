@@ -31,10 +31,7 @@
 trigger TDTM_User on User (after delete, after insert, after undelete, after update, 
                             before delete, before insert, before update) {
 
-    // Initializes the TDTM handler that figures out which classes need to be called, and calls them.
-    TDTM_TriggerHandler handler = new TDTM_TriggerHandler();  
-    
-    handler.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, 
+    TDTM_Config_API.run(Trigger.isBefore, Trigger.isAfter, Trigger.isInsert, Trigger.isUpdate, 
                 Trigger.isDelete, Trigger.isUnDelete, Trigger.new, Trigger.old, 
-                Schema.Sobjecttype.User, new TDTM_ObjectDataGateway());
+                Schema.Sobjecttype.User);
 }
