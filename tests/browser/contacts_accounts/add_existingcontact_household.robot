@@ -21,7 +21,7 @@ Add Existing Contact to Existing Household
     Delete Icon    Account Name    &{contact2}[LastName] Household
     Populate Lookup Field    Account Name    &{contact1}[LastName] Household
     Click Modal Button    Save
-    Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
+    Sleep    5
     Go To Object Home          Account
     Click Link    link=&{contact1}[LastName] and &{contact2}[LastName] Household
     Sleep    5  
