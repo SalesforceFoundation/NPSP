@@ -115,8 +115,6 @@ public with sharing class CRLP_RollupUI_SVC {
     */
     public class DeploymentResult {
         @AuraEnabled public Boolean completed = false;
-        @AuraEnabled public Boolean failed = false;
-        @AuraEnabled public String errorMessage = '';
         @AuraEnabled public RollupTableItem rollupItem;
         @AuraEnabled public FilterGroupModel filterGroupItem;
     }
@@ -756,7 +754,6 @@ public with sharing class CRLP_RollupUI_SVC {
      */
     @AuraEnabled
     public static String getDeploymentStatus(String jobId, String recordName, String objectType, String mode) {
-        DeploymentResult response = new DeploymentResult();
         try {
             Customizable_Rollup_Settings__c crs = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
             if (crs.CMT_API_Status__c != null) {
@@ -764,6 +761,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 if (deploymentStatus.containsKey(jobId)) {
                     String result = deploymentStatus.get(jobId);
                     if (result == Metadata.DeployStatus.Succeeded.name()) {
+                        DeploymentResult response = new DeploymentResult();
                         if (objectType == 'Rollup') {
                             Id rollupId = CRLP_Rollup_SEL.getRollupIdByDeveloperName(recordName);
                             response.completed = true;
@@ -777,7 +775,10 @@ public with sharing class CRLP_RollupUI_SVC {
                                 response.filterGroupItem = createFilterGroupModel(groupId);
                             }
                         }
+                        return JSON.serialize(response);
+
                     } else {
+
                         // If there is an error, parse the message to remove the metadata recordname leaving just the error message itself
                         List<String> errors = result.split('\n');
                         String errMsg = '';
@@ -787,9 +788,7 @@ public with sharing class CRLP_RollupUI_SVC {
                                 errMsg += er + '\n';
                             }
                         }
-                        response.completed = true;
-                        response.failed = true;
-                        response.errorMessage = !String.isEmpty(errMsg) ? errMsg : String.valueOf(result);
+                        throw new RollupException(!String.isEmpty(errMsg) ? errMsg : result);
                     }
                 }
             }
@@ -797,7 +796,7 @@ public with sharing class CRLP_RollupUI_SVC {
             // error retrieving the metadata record
             throw new AuraHandledException(ex.getMessage());
         }
-        return JSON.serialize(response);
+        return null;
     }
 
     /*******************************************************************************************************

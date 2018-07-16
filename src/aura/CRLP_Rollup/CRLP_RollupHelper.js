@@ -1173,7 +1173,7 @@
     pollForDeploymentStatus: function(cmp, jobId, recordName, counter) {
         var helper=this;
         var pollingInterval = 2000; // 2 seconds.
-        var maxPollingCount = 90; // 3 minutes, because the polling interval is 2 seconds (90 * 2 seconds).
+        var maxPollingCount = 45; // 1min 30, because the polling interval is 2 seconds (45 * 2 seconds).
         var mode = cmp.get("v.mode");
         var poller = window.setTimeout(
             $A.getCallback(function() {
@@ -1188,7 +1188,7 @@
 
                         // if there is a record id response
                         var mode = cmp.get("v.mode");
-                        if (deployResult.completed === true && deployResult.failed === false && (deployResult.rollupItem || mode === 'delete')) {
+                        if (deployResult && deployResult.completed === true && (deployResult.rollupItem || mode === 'delete')) {
                             window.clearTimeout(poller);
                             helper.toggleSpinner(cmp, false);
 
@@ -1209,12 +1209,6 @@
                                 helper.sendMessage(cmp, 'rollupRecordChange', deployResult.rollupItem);
                             }
 
-                        } else if (deployResult.completed === true && deployResult.failed === true) {
-                            helper.showToast(cmp, 'error', cmp.get("v.labels.rollupSaveFail"), deployResult.errorMessage);
-                            window.clearTimeout(poller);
-                            helper.toggleSpinner(cmp, false);
-                            cmp.set("v.mode", "edit");
-                            helper.changeMode(cmp);
                         } else {
                             // No record id, so run call this method again to check in another 1 second
                             if (counter < maxPollingCount) {
