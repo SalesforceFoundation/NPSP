@@ -35,6 +35,14 @@
 */
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
+    public static string oppAlloFilterGroup = 'NPSP_ClosedWon_Opps_HC';
+    public static string paymentAlloFilterGroup = 'NPSP_Paid_Payments';
+    public static string oppAlloAmountField = 'Amount';
+    public static string paymentAlloAmountField = 'npe01__Payment_Amount__c';
+    public static string oppAlloDateField = 'CloseDate';
+    public static string paymentAlloDateField = 'npe01__Payment_Date__c';
+    public static string paymentApiName = 'npe01__OppPayment__c';
+
     /*********************************************************************************************************
     * @description Returns the string Id of the Allocations panel. 
     */
@@ -60,8 +68,62 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     * @description Enable or disable payment allocations based on settings selection
     */
     public void setAllocationLevel(){
+        Boolean oldValue = STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c;
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
             (strAllocationLevel == paymentLabel);
+        if(oldValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
+            updateAlloCustomRollups(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
+        }
+    }
+
+    public void updateAlloCustomRollups(Boolean usePayments){
+        String curFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
+        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
+        String curObjectLevel = usePayments ? oppLabel : paymentApiName;
+        String newObjectLevel = usePayments ? paymentApiName : oppLabel;
+        String curAmountField = usePayments ? oppAlloAmountField : paymentAlloAmountField;
+        String newAmountField = usePayments ? paymentAlloAmountField : oppAlloAmountField;
+        String curDateField = usePayments ? oppAlloDateField : paymentAlloDateField;
+        String newDateField = usePayments ? paymentAlloDateField : oppAlloDateField;
+
+        List<Rollup__mdt> rollupsToUpdate = [
+            SELECT Id, MasterLabel, DeveloperName, Filter_Group__r.DeveloperName, Description__c, 
+                Date_Field__c, Operation__c, Amount_Field__c, Detail_Field__c, Use_Fiscal_Year__c, 
+                Date_Object__c, Amount_Object__c, Detail_Object__c, Integer__c, Active__c, 
+                Time_Bound_Operation_Type__c, Summary_Object__r.QualifiedApiName, 
+                Detail_Object__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, 
+                Date_Object__r.QualifiedApiName, Summary_Field__c, Summary_Field__r.QualifiedApiName, 
+                Detail_Field__r.QualifiedApiName, Amount_Field__r.QualifiedApiName, 
+                Date_Field__r.QualifiedApiName
+            FROM Rollup__mdt
+            WHERE Filter_Group__r.DeveloperName =: curFilter 
+            AND Detail_Object__r.QualifiedApiName =: curObjectLevel
+            AND Amount_Object__r.QualifiedApiName =: curObjectLevel
+            AND Date_Object__r.QualifiedApiName =: curObjectLevel
+            // AND Date_Field__r.MasterLabel =: curDateField
+            // AND Amount_Field__r.MasterLabel =: curAmountField
+        ];
+
+        List<CRLP_RollupCMT.Rollup> rollupList = new List<CRLP_RollupCMT.Rollup>();
+        for(Rollup__mdt rlp: rollupsToUpdate){
+            CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
+            crlp.filterGroupRecordName = newFilter;
+            crlp.detailObject = newObjectLevel;
+            crlp.dateObject = newObjectLevel;
+            crlp.amountObject = newObjectLevel;
+            crlp.amountField = newAmountField;
+            crlp.detailField = newAmountField;
+            crlp.dateField = newDateField;
+            rollupList.add(crlp);
+        }
+
+        // System.debug('rollupList:');
+        // System.debug(rollupList);
+
+        CRLP_ConfigBuilder_SVC.clearQueue();
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupList);
+        // TODO: Return the jobId to show progress?
+        CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
     }
 
     /*********************************************************************************************************

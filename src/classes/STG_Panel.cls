@@ -55,7 +55,7 @@ public with sharing virtual class STG_Panel {
     static public string oppLabel {
         get {
             if(oppLabel == null){
-                oppLabel = Schema.sObjectType.Opportunity.Label;    
+                oppLabel = Schema.sObjectType.Opportunity.getLabel();
             }
             return oppLabel;
         }
@@ -67,7 +67,7 @@ public with sharing virtual class STG_Panel {
 	static public string paymentLabel {
         get {
             if(paymentLabel == null){
-                paymentLabel = Schema.sObjectType.npe01__OppPayment__c.Label;    
+                paymentLabel = Schema.sObjectType.npe01__OppPayment__c.getLabel();
             }
             return paymentLabel;
         }
