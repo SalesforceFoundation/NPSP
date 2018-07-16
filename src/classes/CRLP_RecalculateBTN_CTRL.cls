@@ -56,6 +56,10 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             this.returnLabel = String.format(Label.CRLP_Return, new List<String> {this.objType.getDescribe().getLabel()});
         }
 
+        if (!Test.isRunningTest()) {
+            sc.addFields(new List<String>{ 'Name', 'Id' });
+        }
+
         // if the current User does not have permissions to modify the object (though not checking specific fields)
         // then prevent them from using the recalculate button.
         if (!this.objType.getDescribe().isUpdateable()) {
