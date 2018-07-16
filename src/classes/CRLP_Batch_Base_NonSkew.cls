@@ -117,7 +117,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (!Test.isRunningTest() || customizableRollupSettings.Disable_Related_Records_Filter__c == true) {
+                // Only use the related records filter if not disabled in settings and not running unit tests
+                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                         whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
