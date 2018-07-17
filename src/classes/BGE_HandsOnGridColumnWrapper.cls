@@ -88,8 +88,6 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
         apiName = templateField.Name;
         required = templateField.Required__c;
 
-        System.debug(objectName + ' ' +  type);
-
         if (type.equalsIgnoreCase('PICKLIST')) {
             picklistValues = getObjectFieldPicklistValues(recordFieldDescribe);
         }
