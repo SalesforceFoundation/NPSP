@@ -356,11 +356,7 @@
                         if (selectedColType == "dropdown") {
                             var cell = hot.getCellMeta(x, y);
                             if (!cell.__proto__.source.includes(changes[0][3])) {
-                                //var aux to keep actual value
-                                //ask if value trying to paste exists in picklist
                                 cell.instance.setDataAtCell(x, y, cell.__proto__.source[0]);
-                                // cell.instance.setDataAtCell(x, y, "");
-                                //hot.getCell(x, y).classList.remove('htInvalid');
                             }
                         }
                     }
@@ -375,7 +371,7 @@
 
                 if (rowStart === rowEnd) {
                     //horizontal autofill
-                    var y = colStart + 1;
+                    var y = colStart;
                     for (y; y <= colEnd; y++) {
                         var selectedColType = hot.getDataType(rowStart, y);
                         if (selectedColType == "dropdown") {
@@ -383,8 +379,6 @@
                             if (!cell.__proto__.source.includes(changes[0][3])) {
                                 //does not include the dragged value
                                 cell.instance.setDataAtCell(rowStart, y, cell.__proto__.source[0]);
-                                // cell.instance.setDataAtCell(rowStart, y, "");
-                                // hot.getCell(rowStart, y).classList.remove('htInvalid');
                             }
                         }
                     }
@@ -736,7 +730,6 @@
                             }
                         }
                         else if (shift && tab) {
-                            colIndex--;
                             hot.selectCell(rowIndex, colIndex);
                         }
                     } catch(err) {
