@@ -144,6 +144,25 @@
             movedSideWays = false;
         }
 
+        // setTimeout(function () {
+        //     var countR = hot.countRows();
+        //     var countC = hot.countCols();
+        //     var lastRow = countR - 1;
+        //     var lastColumn = countC - 1;
+
+        //     var totalRecords = $scope.rowsCount;
+
+        //     for (var x = totalRecords; x < lastRow; x++) {
+        //         for (var y = 3; y < lastColumn; y++) {
+        //             var col = hot.getDataType(x, y);
+        //             if (col === "dropdown") {
+        //                 var cell = hot.getCellMeta(x, y);
+        //                 cell.instance.setDataAtCell(x, y, cell.__proto__.source[0]);
+        //             }
+        //         }
+        //     }
+        // }, 500);
+
         function backAction() {
 
             $window.location.href = '/' + batchId;
@@ -333,104 +352,58 @@
 
             if (source === "paste" ) {
                 var selection = hot.getSelected();
-                var rowIndex = selection[0];
-                var colIndex = selection[1];
+                var rowStart = selection[0];
+                var rowEnd = selection[2];
+                var colStart = selection[1];
+                var colEnd = selection[3];
 
-                var selectionRange = hot.getSelectedRange();
-
-
-                debugger;
-
-                var columnSpan = selectionRange.to.col - selectionRange.from.col;
-                var rowSpan = selectionRange.to.row - selectionRange.from.row;
-
-                if (columnSpan >= 1) {
-
-                    if (rowSpan >= 1) {
-                        var row = selectionRange.to.row;
-                        for (row; row <= selectionRange.from.row; row++) {
-                            var i = selectionRange.from.col;
-                            for (i; i <= selectionRange.to.col; i++) {
-                                var selectedColType = hot.getDataType(row, i);
-                                if (selectedColType == "dropdown") {
-                                    var cell = hot.getCellMeta(row, i);
-                                    if (!cell.__proto__.source.includes(changes[0][3])) {
-                                        hot.spliceCol(i, row, 1, "");
-                                    }
-                                }
-                            }
-                        }
-                    } 
-                    else if (rowSpan < 0) {
-                        var row = selectionRange.to.row;
-                        for (row; row >= selectionRange.from.row; row--) {
-                            var i = selectionRange.from.col;
-                            for (i; i <= selectionRange.to.col; i++) {
-                                var selectedColType = hot.getDataType(row, i);
-                                if (selectedColType == "dropdown") {
-                                    var cell = hot.getCellMeta(row, i);
-                                    if (!cell.__proto__.source.includes(changes[0][3])) {
-                                        hot.spliceCol(i, row, 1, "");
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // var row = selectionRange.from.row;
-                    // for (row; row <= selectionRange.to.row; row++) {
-                    //     var i = selectionRange.from.col;
-                    //     for (i; i <= selectionRange.to.col; i++) {
-                    //         var selectedColType = hot.getDataType(row, i);
-                    //         if (selectedColType == "dropdown") {
-                    //             var cell = hot.getCellMeta(row, i);
-                    //             if (!cell.__proto__.source.includes(changes[0][3])) {
-                    //                 hot.spliceCol(i, row, 1, "");
-                    //             }
-                    //         }
-                    //     }
-                    // }
+                if (colStart > colEnd) {
+                    var aux = colEnd;
+                    colEnd = colStart;
+                    colStart = aux;
                 }
-                else if (columnSpan < 0) {
-                    var row = selectionRange.to.row;
-                    for (row; row >= selectionRange.from.row; row--) {
-                        var i = selectionRange.from.col;
-                        for (i; i >= selectionRange.to.col; i--) {
-                            var selectedColType = hot.getDataType(row, i);
-                            if (selectedColType == "dropdown") {
-                                var cell = hot.getCellMeta(row, i);
-                                if (!cell.__proto__.source.includes(changes[0][3])) {
-                                    hot.spliceCol(i, row, 1, "");
-                                }
-                            }
-                        }
-                    }
+
+                if (rowStart > rowEnd) {
+                    var aux = rowEnd;
+                    rowEnd = rowStart;
+                    rowStart = aux;
                 }
-                else {
-                    var selectedColType = hot.getDataType(rowIndex, colIndex);
-                    if (selectedColType === "dropdown") {
-                        var cell = hot.getCellMeta(rowIndex, colIndex);
-                        var availableValues = cell.__proto__.source;
-                        if (!(availableValues.includes(changes[0][3]))) {
-                            hot.spliceCol(colIndex, rowIndex, 1, "");
-                            var removeInvalid = hot.getCell(rowIndex, colIndex);
-                            removeInvalid.classList.remove('htInvalid');
+
+                for (var x = rowStart; x <= rowEnd; x++) {
+                    for (var y = colStart; y <= colEnd; y++) {
+                        var selectedColType = hot.getDataType(x, y);
+                        if (selectedColType == "dropdown") {
+                            var cell = hot.getCellMeta(x, y);
+                            if (!cell.__proto__.source.includes(changes[0][3])) {
+                                //var aux to keep actual value
+                                //ask if value trying to paste exists in picklist
+                                cell.instance.setDataAtCell(x, y, cell.__proto__.source[0]);
+                                // cell.instance.setDataAtCell(x, y, "");
+                                //hot.getCell(x, y).classList.remove('htInvalid');
+                            }
                         }
                     }
                 }
             }
             else if (source === "autofill") {
-                var selectionRange = hot.getSelectedRange();
-                if (selectionRange.from.row === selectionRange.to.row) {
+                var selection = hot.getSelected();
+                var rowStart = selection[0];
+                var rowEnd = selection[2];
+                var colStart = selection[1];
+                var colEnd = selection[3];
+
+                if (rowStart === rowEnd) {
                     //horizontal autofill
-                    var i = selectionRange.from.col + 1;
-                    for (i; i <= selectionRange.to.col; i++) {
-                        var selectedColType = hot.getDataType(selectionRange.from.row, i);
+                    var y = colStart + 1;
+                    for (y; y <= colEnd; y++) {
+                        var selectedColType = hot.getDataType(rowStart, y);
                         if (selectedColType == "dropdown") {
-                            var cell = hot.getCellMeta(selectionRange.from.row, i);
+                            var cell = hot.getCellMeta(rowStart, y);
                             if (!cell.__proto__.source.includes(changes[0][3])) {
                                 //does not include the dragged value
-                                hot.spliceCol(i, selectionRange.from.row, 1, "");
+                                cell.instance.setDataAtCell(rowStart, y, cell.__proto__.source[0]);
+                                // cell.instance.setDataAtCell(rowStart, y, "");
+                                // hot.getCell(rowStart, y).classList.remove('htInvalid');
                             }
                         }
                     }
@@ -480,7 +453,6 @@
                             var col = this.propToCol(changes[i][1])
                             var cellType = this.getDataType(changes[i][0], hot.propToCol('Id'));
 
-
                             var cellRecord = {
                                 row: changes[i][0],
                                 field: changes[i][1],
@@ -496,7 +468,16 @@
                             }
 
                             if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                                cellRecords.push(cellRecord);
+                                if (hot.getDataType(newCell.row, newCell.col) == "dropdown") {
+                                    var cell = hot.getCellMeta(newCell.row, newCell.col);
+                                    var includesValue = cell.__proto__.source.includes(changes[0][3]);
+                                    if (includesValue && newValue!= cell.__proto__.source[0]) {
+                                        cellRecords.push(cellRecord);
+                                    }
+                                }
+                                else {
+                                    cellRecords.push(cellRecord);
+                                }
                             }
                             else if ((newValue == 'NaN') && (cellType == 'date')) {
                                 if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
@@ -1010,6 +991,7 @@
                             $scope.recordTypeMap = templateField.picklistValues;
                         }
                     }
+                    
                 }
 
                 if (templateField.apiName !== "Id") {

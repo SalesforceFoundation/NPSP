@@ -104,6 +104,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         Map<String, String> result = new Map<String, String>();
 
+        result.put('', '');
+
 		for (Schema.PicklistEntry value :fieldDescribe.getPicklistValues()) {
 
             String picklistLabel = value.getLabel().length() > 27 ? value.getLabel().substring(0, 26) : value.getLabel();
