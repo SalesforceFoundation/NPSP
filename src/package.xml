@@ -1258,7 +1258,6 @@
         <members>alloNegativeAmount</members>
         <members>alloNegativePercent</members>
         <members>alloObjectUnsupported</members>
-        <members>alloPaymentNoDefault</members>
         <members>alloPaymentNotEnabled</members>
         <members>alloPercentExceed100</members>
         <members>alloRemainder</members>

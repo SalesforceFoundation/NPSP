@@ -76,7 +76,12 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         }
     }
 
-    public void updateAlloCustomRollups(Boolean usePayments){
+    /*********************************************************************************************************
+    * @description Method to update custom rollups based on Allocation level
+    * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
+    * @return String the jobId for the custom rollup deployment
+    */
+    public String updateAlloCustomRollups(Boolean usePayments){
         String curFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
         String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
         String curObjectLevel = usePayments ? oppLabel : paymentApiName;
@@ -100,9 +105,11 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             AND Detail_Object__r.QualifiedApiName =: curObjectLevel
             AND Amount_Object__r.QualifiedApiName =: curObjectLevel
             AND Date_Object__r.QualifiedApiName =: curObjectLevel
-            // AND Date_Field__r.MasterLabel =: curDateField
-            // AND Amount_Field__r.MasterLabel =: curAmountField
         ];
+
+        if(rollupsToUpdate.isEmpty()){
+            return null;
+        }
 
         List<CRLP_RollupCMT.Rollup> rollupList = new List<CRLP_RollupCMT.Rollup>();
         for(Rollup__mdt rlp: rollupsToUpdate){
@@ -117,13 +124,10 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             rollupList.add(crlp);
         }
 
-        // System.debug('rollupList:');
-        // System.debug(rollupList);
-
         CRLP_ConfigBuilder_SVC.clearQueue();
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupList);
-        // TODO: Return the jobId to show progress?
-        CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+        String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
+        return jobId;
     }
 
     /*********************************************************************************************************
@@ -197,7 +201,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
         if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
             !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
-                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloPaymentNoDefault));
+                ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultNotEnabled));
                 return null;
         }
 

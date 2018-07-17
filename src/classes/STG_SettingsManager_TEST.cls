@@ -192,7 +192,6 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
 
-        // Check that Allocation rollups are at the Opportunity level
         List<Rollup__mdt> rollups = [SELECT Id, Filter_Group__r.Developername 
             FROM Rollup__mdt
             WHERE Filter_Group__r.Developername =: STG_PanelAllocations_CTRL.oppAlloFilterGroup 
@@ -200,7 +199,8 @@ public with sharing class STG_SettingsManager_TEST {
             AND Amount_Object__r.MasterLabel =: STG_Panel.oppLabel
             AND Date_Object__r.MasterLabel =: STG_Panel.oppLabel
         ];
-        system.assert(rollups.size() > 30);
+        Integer numOppRollups = rollups.size();
+        system.assert(numOppRollups > 0, 'Check that Allocation rollups are at the Opportunity level');
         
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;
@@ -218,19 +218,8 @@ public with sharing class STG_SettingsManager_TEST {
         panel.saveSettings();
         Test.stopTest();
 
-        // TODO: Check that Allocation rollups have been updated correctly, now at Payment level
-        rollups = [SELECT Id, Filter_Group__r.Developername 
-            FROM Rollup__mdt
-            WHERE Filter_Group__r.Developername =: STG_PanelAllocations_CTRL.paymentAlloFilterGroup
-            AND Detail_Object__r.MasterLabel =: STG_Panel.paymentLabel
-            AND Amount_Object__r.MasterLabel =: STG_Panel.paymentLabel
-            AND Date_Object__r.MasterLabel =: STG_Panel.paymentLabel
-        ];
-
-        System.debug('rollups');
-        System.debug(rollups);
-        //system.assert(rollups.size() > 30);
-
+        system.assert(CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size() == numOppRollups, 'Check that Opportunity Allocation rollups have been queued for update');
+        
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
         system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');
