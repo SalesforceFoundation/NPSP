@@ -2496,6 +2496,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Merge Duplicate Contact Records</value>
     </labels>
     <labels>
+        <fullName>conMergePortalUser</fullName>
+        <categories>Contact Merge</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Is Portal/Community User</shortDescription>
+        <value>Is a Portal/Community User</value>
+    </labels>
+    <labels>
         <fullName>conMergeSearchPlaceholder</fullName>
         <categories>Contact Merge</categories>
         <language>en_US</language>
