@@ -94,6 +94,7 @@
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
+        <members>BGE_Template_CTRL</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -592,6 +593,7 @@
         <members>BGE_ReviewScreen</members>
         <members>BGE_SearchBar</members>
         <members>BGE_TemplateCreation</members>
+        <members>BGE_TemplateDetails</members>
         <members>BGE_TemplateFieldDynamicRow</members>
         <members>BGE_TemplateRow</members>
         <members>BGE_TemplateSelection</members>
