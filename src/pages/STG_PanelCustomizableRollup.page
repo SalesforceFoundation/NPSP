@@ -23,7 +23,7 @@
                                     </apex:outputText>
                                 </div>
                                 <div class="slds-media__body">
-                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                    <h2 class="slds-text-heading_small slds-text-heading_small">
                                         <apex:outputText value="{!$Label.PageMessagesInfo}: " />
                                         <apex:outputText value="{!$Label.stgCRLPHouseholdAccountError}"/>
                                     </h2>
