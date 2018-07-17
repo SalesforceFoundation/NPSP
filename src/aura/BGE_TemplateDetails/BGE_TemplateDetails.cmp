@@ -1,0 +1,43 @@
+<aura:component>
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:attribute name="model" type="Object" access="PRIVATE" />
+    <aura:attribute name="availableTemplateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
+
+    <div class="slds-grid slds-wrap slds-p-around_large">
+        <div class="slds-col slds-size--1-of-12" />
+
+        <div class="slds-col slds-size--4-of-12">
+            <lightning:treeGrid
+                aura:id="availableTemplateFields"
+                columns="{!v.availableTemplateFields.columns}"
+                data="{!v.availableTemplateFields.data}"
+                selectedRows="{!v.availableTemplateFields.selectedRows}"
+                keyField="id"
+                onrowselection="{!c.selectAvailableTemplateFields}"
+            />
+        </div>
+
+        <div class="slds-col slds-size--1-of-12">
+            <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                <div class="slds-m-bottom__xx-small">
+                    <lightning:buttonIcon iconName="utility:chevronright" alternativeText="Settings" onclick="{!c.updateToActive}"/>
+                </div>
+                <div class="slds-m-top_xx-small">
+                    <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="Settings" onclick="{!c.updateToAvailable}"/>
+                </div>
+            </div>
+        </div>
+        
+        <div class="slds-col slds-size--5-of-12">
+            <lightning:treeGrid
+                columns="{!v.activeTemplateFields.columns}"
+                data="{!v.activeTemplateFields.data}"
+                keyField="id"
+                selectedRows="{!v.activeTemplateFields.selectedRows}"
+                onrowselection="{!c.selectActiveTemplateFields}"
+            />
+        </div>
+    </div>
+        
+</aura:component>
