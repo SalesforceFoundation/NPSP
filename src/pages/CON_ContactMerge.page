@@ -178,6 +178,9 @@
                             </table>
                         </apex:outputText>
                     </div>
+                    <div class="slds-card__footer">
+                        <apex:commandButton action="{!nextStep}" rendered="{!hasResults}" value="{!$Label.labelListViewNext}" styleClass="slds-button slds-button_neutral"/>
+                    </div>
                 </div>
             </apex:form>
         </apex:outputText>
@@ -231,6 +234,9 @@
                                                             <input type="radio" class="radio-winner-value" name="{!row.fieldName}" data-target="{!$Component.winner}" value="{!col.objId}"/>
                                                         </apex:outputText>
                                                         <span class="slds-radio_faux"></span>
+                                                        <span>
+                                                            <apex:outputText value="{!col.objId}"/>
+                                                        </span>
                                                         <span class="slds-assistive-text">{!$Label.conMergeWinnerAsstText}</span>
                                                     </label>
                                                 </th>
@@ -283,6 +289,9 @@
                                 </apex:repeat>
                             </tbody>
                         </table>
+                    </div>
+                    <div class="slds-card__footer">
+                        <button type="button" class="slds-button slds-button_brand" data-toggle="modal" data-target="merge_warning_modal">{!$Label.conMergeBtnLabel}</button>
                     </div>
                 </div>
                 <div>
