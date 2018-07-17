@@ -402,8 +402,8 @@
     private static Map<SObjectType, String> getOpportunityChildRelationships() {
 
         return new Map<SObjectType, String>{
-            Partial_Soft_Credit__c.SObjectType => 'Partial_Soft_Credits__r',
-            Allocation__c.SObjectType => 'Allocations__r',
+            Partial_Soft_Credit__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Partial_Soft_Credits__r'),
+            Allocation__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Allocations__r'),
             OpportunityContactRole.SObjectType => 'OpportunityContactRoles',
             npe01__OppPayment__c.SObjectType => 'npe01__OppPayment__r'
         };
