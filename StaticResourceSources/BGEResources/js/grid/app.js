@@ -1016,7 +1016,6 @@
                 window.addEventListener('resize', updateHotTable, true);
             }
 
-            console.log('daleeeeeeeeee');
             $(".amount-style").parent().css('text-align', 'right');
         }
 
