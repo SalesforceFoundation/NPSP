@@ -1343,6 +1343,7 @@
         <members>conMergeFoundContacts</members>
         <members>conMergePageTitle</members>
         <members>conMergePageTitleDetail</members>
+        <members>conMergePortalUser</members>
         <members>conMergeSearchPlaceholder</members>
         <members>conMergeSelectAll</members>
         <members>conMergeSelectContact</members>
