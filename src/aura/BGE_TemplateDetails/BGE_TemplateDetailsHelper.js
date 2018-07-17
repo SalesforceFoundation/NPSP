@@ -47,15 +47,15 @@
             function _convertToGridData(fieldsBySObject) {
                 var result = [];
                 
-                Object.keys(fieldsBySObject).sort().forEach(function(sObject) {
+                Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
                     var gridDataRow = {
-                        id: sObject,
-                        name: sObject,
+                        id: sObjectName,
+                        name: sObjectName,
                         selected: false,
                         _children: []
                     };
 
-                    fieldsBySObject[sObject].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
@@ -140,14 +140,14 @@
             function _convertToGridData(fieldsBySObject) {
                 var result = [];
                 
-                Object.keys(fieldsBySObject).sort().forEach(function(sObject) {
+                Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
                     var gridDataRow = {
-                        id: sObject,
-                        name: sObject,
+                        id: sObjectName,
+                        name: sObjectName,
                         selected: false,
                         _children: []
                     };
-                    fieldsBySObject[sObject].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
@@ -188,13 +188,25 @@
 
         return (function (templateFields) {
             var _templateFields = templateFields;
+            var _bgeTemplateController;
             
             /* **********************************************************
              * @Description Gets the Template Fields module.
              * @return Template Fields module.
              ************************************************************/
             function init() {
-                _templateFields.load();
+                _bgeTemplateController.getTemplateDetails({
+                    success: function(response) {
+                        _templateFields.load(response.templateFields);
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+            function setBackendController(bgeTemplateController) {
+                _bgeTemplateController = bgeTemplateController
             }
 
             /* **********************************************************
@@ -208,6 +220,7 @@
             // TemplateDetailsModel module public functions.
             return {
                 init: init,
+                setBackendController: setBackendController,
                 getTemplateFields: getTemplateFields
             }
         })(templateFields);
@@ -231,10 +244,10 @@
             function _groupFieldsBySObject(fields) {
                 var result = {};
                 fields.forEach(function(currentField) {
-                	if ((currentField.sObject in result) == false) {
-                        result[currentField.sObject] = [];
+                	if ((currentField.sObjectName in result) == false) {
+                        result[currentField.sObjectName] = [];
                     }
-                    result[currentField.sObject].push(currentField);
+                    result[currentField.sObjectName].push(currentField);
                 });
                 return result;
             }
@@ -244,79 +257,13 @@
              * onDataChanged listeners.
              * @return List of fields.
              ************************************************************/
-            function load() {
-                _allFields = [
-                    {
-                        id: "Contact.FirstName",
-                        sObject: "Contact",
-                        name: "FirstName",
-                        selected: false
-                    },
-                    {
-                        id: "Contact.LastName",
-                        sObject: "Contact",
-                        name: "LastName",
-                        selected: false,
-                        template: {
-                            defaultValue: "555555555",
-                            required: true,
-                            hide: false
-                        }
-                    },
-                    {
-                        id: "Contact.Email",
-                        sObject: "Contact",
-                        name: "Email",
-                        selected: false,
-                        template: {
-                            defaultValue: "",
-                            required: false,
-                            hide: false
-                        }  
-                    },
-                    {
-                        id: "Contact.Phone",
-                        sObject: "Contact",
-                        name: "Phone",
-                        selected: false
-                    },
-                    {
-                        id: "Account.Name",
-                        sObject: "Account",
-                        name: "Name",
-                        selected: false
-                    },
-                    {
-                        id: "Account.Fax",
-                        sObject: "Account",
-                        name: "Fax",
-                        selected: false
-                    },
-
-                    {
-                        id: "Account.Description",
-                        sObject: "Account",
-                        name: "Description",
-                        selected: false,
-                        template: {
-                            defaultValue: "222222222",
-                            required: true,
-                            hide: false
-                        }  
-                    },
-                    {
-                        id: "Account.Industry",
-                        sObject: "Account",
-                        name: "Industry",
-                        selected: false,
-                        template: {
-                            defaultValue: "111111111",
-                            required: true,
-                            hide: true
-                        } 
-                    }
-                ];
-                
+            function load(allFields) {
+                _allFields = [];
+                allFields.forEach(function(currentField) {
+                    currentField.id = currentField.sObjectName + "." + currentField.name;
+                    currentField.selected = false;
+                    _allFields.push(currentField);
+                });
                 this.onDataChanged.notify();
             }
             
@@ -328,7 +275,7 @@
             function getAvailables() {
                 var _availableFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (!currentField.template) {
+                    if (!currentField.activeInfo) {
                         _availableFields.push(currentField);
                     }
                 });
@@ -343,7 +290,7 @@
             function getActives() {
                 var _activeFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (currentField.template) {
+                    if (currentField.activeInfo) {
                         _activeFields.push(currentField);
                     }
                 });
@@ -379,8 +326,8 @@
              ************************************************************/
             function updateToActive() {
                 _allFields.forEach(function(currentField) {
-                    if (!currentField.template && currentField.selected) {
-                        currentField.template = {
+                    if (!currentField.activeInfo && currentField.selected) {
+                        currentField.activeInfo = {
                             defaultValue: "",
                             required: false,
                             hide: false
@@ -397,8 +344,8 @@
              ************************************************************/
             function updateToAvailable() {
                 _allFields.forEach(function(currentField) {
-                    if (currentField.template && currentField.selected) {
-                        delete currentField.template;
+                    if (currentField.activeInfo && currentField.selected) {
+                        delete currentField.activeInfo;
                     }
                 });
                 this.onDataChanged.notify();
@@ -411,13 +358,13 @@
              * @return void.
              ************************************************************/
             function _selectFields(fieldsGroupBySObject, fieldsToSelect) {
-                Object.keys(fieldsGroupBySObject).forEach(function(sObject) {
-                    if (sObject in fieldsToSelect) {
-                        fieldsGroupBySObject[sObject].forEach(function(currentField) {
+                Object.keys(fieldsGroupBySObject).forEach(function(sObjectName) {
+                    if (sObjectName in fieldsToSelect) {
+                        fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
                             currentField.selected = false;
                         });
                     } else {
-                        fieldsGroupBySObject[sObject].forEach(function(currentField) {
+                        fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
                             currentField.selected = (currentField.id in fieldsToSelect);
                         });
                     }  
@@ -476,5 +423,48 @@
                 notify: notify
             };
         };
-    }
+    },
+    
+    /*********************************************** Template Detail Controller *********************************************/
+
+    /* **********************************************************
+     * @Description Gets Template Details Controller
+     ************************************************************/
+    BGETemplateController : function(component) {
+        return (function (component) {
+            var _component = component;
+
+            /* **********************************************************
+             * @Description Calls the getTemplateDetails method.
+             * @return Template Fields module.
+             ************************************************************/
+            function getTemplateDetails(callback) {
+                var action = _component.get("c.getTemplateDetails");
+                action.setCallback(callback, _processResponse);
+                $A.enqueueAction(action);
+            }
+
+            function _processResponse(response) {
+                var state = response.getState();
+                if (state === "SUCCESS") {
+                    this.success(JSON.parse(response.getReturnValue()));
+                }
+                else if (state === "ERROR") {
+                    var errors = response.getError();
+                    if (errors) {
+                        if (errors[0] && errors[0].message) {
+                            this.error(errors[0].message);
+                        }
+                    } else {
+                        this.error("Unknown error");
+                    }
+                }
+            }
+            
+            // BGETemplateController module public functions.
+            return {
+                getTemplateDetails: getTemplateDetails
+            }
+        })(component);
+    },
 })

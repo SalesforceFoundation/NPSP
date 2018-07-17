@@ -1,4 +1,4 @@
-<aura:component>
+<aura:component controller="BGE_Template_CTRL">
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <aura:attribute name="model" type="Object" access="PRIVATE" />
     <aura:attribute name="availableTemplateFields" type="Object" access="PRIVATE" />

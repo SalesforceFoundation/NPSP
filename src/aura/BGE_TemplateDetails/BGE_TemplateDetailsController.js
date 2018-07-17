@@ -6,8 +6,12 @@
      * @Description. Constructs the Model Module, and the View Modules.
      *****************************************************************/
     init: function (component, event, helper) {
+        var bgeTemplateController = helper.BGETemplateController(component);
+
         var model = helper.TemplateDetailsModel();
+        model.setBackendController(bgeTemplateController);
         component.set('v.model', model);
+        
         var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model.getTemplateFields());
         component.set('v.availableTemplateFields', availableTemplateFieldsView);
         var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model.getTemplateFields());
