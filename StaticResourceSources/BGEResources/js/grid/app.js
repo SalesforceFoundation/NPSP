@@ -144,25 +144,6 @@
             movedSideWays = false;
         }
 
-        // setTimeout(function () {
-        //     var countR = hot.countRows();
-        //     var countC = hot.countCols();
-        //     var lastRow = countR - 1;
-        //     var lastColumn = countC - 1;
-
-        //     var totalRecords = $scope.rowsCount;
-
-        //     for (var x = totalRecords; x < lastRow; x++) {
-        //         for (var y = 3; y < lastColumn; y++) {
-        //             var col = hot.getDataType(x, y);
-        //             if (col === "dropdown") {
-        //                 var cell = hot.getCellMeta(x, y);
-        //                 cell.instance.setDataAtCell(x, y, cell.__proto__.source[0]);
-        //             }
-        //         }
-        //     }
-        // }, 500);
-
         function backAction() {
 
             $window.location.href = '/' + batchId;
