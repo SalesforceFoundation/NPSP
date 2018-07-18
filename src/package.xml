@@ -2555,6 +2555,7 @@
         <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
+        <members>DataImportBatch__c.View_Templates</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>

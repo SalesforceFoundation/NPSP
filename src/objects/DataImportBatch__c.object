@@ -380,6 +380,6 @@
         <openType>sidebar</openType>
         <protected>false</protected>
         <requireRowSelection>false</requireRowSelection>
-        <url>/one/one.app?source=aloha#/sObject/Batch_Template__c/home</url>
+        <url>{!URLFOR($Action.Batch_Template__c.Tab, $ObjectType.Batch_Template__c)}</url>
     </webLinks>
 </CustomObject>
