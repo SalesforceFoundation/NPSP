@@ -223,7 +223,8 @@
      */
     pollForDeploymentStatus : function(cmp, jobId, recordName, counter) {
         var helper=this;
-        var maxPollingRetryCount = 30;
+        var pollingInterval = 2000; // 2 seconds.
+        var maxPollingCount = 45; // 1min 30, because the polling interval is 2 seconds (45 * 2 seconds).
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
@@ -304,7 +305,7 @@
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
-                            if (counter < maxPollingRetryCount) {
+                            if (counter < maxPollingCount) {
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened
@@ -326,7 +327,7 @@
                     }
                 });
                 $A.enqueueAction(action);
-            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+            }), pollingInterval
         );
     },
 
