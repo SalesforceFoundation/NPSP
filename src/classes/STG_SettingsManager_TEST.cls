@@ -41,6 +41,56 @@ public with sharing class STG_SettingsManager_TEST {
     * if you want to run all tests, then use '*'
     */
     private static string strTestOnly = '*';
+
+    /*********************************************************************************************************
+    * @description used for testing converstion of Opportunity Allocation rollups to Payment
+    */
+    private static String oppClosedFilter = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    
+    /**
+     * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
+     */
+    private static void mockRollupCMTValues() {
+
+        // Create a single Filter Group (no need for filter rules here)
+        String filterGroupId1 = CMT_UnitTestData_TEST.getNewRecordId();
+
+        // Simple testing filters for IsWon, RecordType, and Paid/Written Off
+        String filterGroupsJSON = '[' +
+                CMT_UnitTestData_TEST.createFilterGroupRecord(filterGroupId1, oppClosedFilter) +
+                ']';
+        String filterRulesJSON = '[' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule1', 'Opportunity', 'IsWon', 'Equals', 'True') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule2', 'Opportunity', 'RecordTypeId', 'Equals', 'Something') + ',' +
+                CMT_UnitTestData_TEST.createFilterRuleRecord(null, filterGroupId1, oppClosedFilter+'.Rule3', 'npe01__OppPayment__c', 'npe01__Paid__c', 'Equals', 'True') +
+                ']';
+
+        // Deserialize the filter group and filter rule to use for the tests
+        CMT_FilterRule_SEL.cachedFilterGroups = (List<Filter_Group__mdt>)JSON.deserialize(filterGroupsJSON, List<Filter_Group__mdt>.class);
+        CMT_FilterRule_SEL.cachedFilterRules = (List<Filter_Rule__mdt>)JSON.deserialize(filterRulesJSON, List<Filter_Rule__mdt>.class);
+
+        // Create a single Rollup that uses the above Filter Group
+        String rollupsJSON = '[' +
+                CMT_UnitTestData_TEST.createRollupRecord('Household Total Donations All Time', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__TotalOppAmount__c', CRLP_Operation.RollupType.SUM, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('String Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'BillingState', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Date Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
+
+                CMT_UnitTestData_TEST.createRollupRecord('Id Field', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        'ParentId', CRLP_Operation.RollupType.AVERAGE, 'Amount') +
+                ']';
+
+        // Deserialize the rollups to use for testing
+        CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
+    }
     
     /*********************************************************************************************************
     * @description Tests the Settings Manager page
@@ -186,21 +236,55 @@ public with sharing class STG_SettingsManager_TEST {
     }
 
     /*********************************************************************************************************
+    * @description Test reactivating Customizable Rollups with a different Allocation level than before
+    * @return void
+    */
+    public static testMethod void testPanelCRLP_reactivatedRollups() {
+        if (strTestOnly != '*' && strTestOnly != 'testPanelCRLP_reactivatedRollups') return;
+
+        mockRollupCMTValues();
+
+        STG_PanelCustomizableRollup_CTRL panel = new STG_PanelCustomizableRollup_CTRL();
+        System.assertEquals('idPanelCustomizableRollup', panel.idPanel());
+        System.assertEquals(false, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
+            'CRLPs should not be enabled in STG_Panel.');
+
+        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
+
+        Test.startTest();
+        panel.saveSettings();
+        Test.stopTest();
+
+        System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
+            'CRLPs should be enabled in STG_Panel.');
+        System.assert(CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size() > 0, 
+            'Check that existing Opportunity Allocation rollups have been queued for update');
+
+    }
+
+    /*********************************************************************************************************
     * @description Tests the Allocations panel
     * @return void
     */
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
 
-        List<Rollup__mdt> rollups = [SELECT Id, Filter_Group__r.Developername 
-            FROM Rollup__mdt
-            WHERE Filter_Group__r.Developername =: STG_PanelAllocations_CTRL.oppAlloFilterGroup 
-            AND Detail_Object__r.MasterLabel =: STG_Panel.oppLabel
-            AND Amount_Object__r.MasterLabel =: STG_Panel.oppLabel
-            AND Date_Object__r.MasterLabel =: STG_Panel.oppLabel
-        ];
-        Integer numOppRollups = rollups.size();
-        system.assert(numOppRollups > 0, 'Check that Allocation rollups are at the Opportunity level');
+        mockRollupCMTValues();
+
+        Id oppAlloFilterGroupId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oppClosedFilter);
+
+        Integer numOppRollups = 0;
+        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
+        for(Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
+            if( rlp.Filter_Group__c == oppAlloFilterGroupId 
+                && rlp.Detail_Object__c == STG_Panel.oppLabel){
+                    numOppRollups++;
+            }
+        }
+
+        system.assert(numOppRollups > 0, 'Check that Allocation rollups are currently at the Opportunity level');
         
         General_Accounting_Unit__c gau = new General_Accounting_Unit__c(name='foo');
         insert gau;

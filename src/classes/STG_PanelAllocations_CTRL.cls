@@ -35,13 +35,16 @@
 */
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
-    public static string oppAlloFilterGroup = 'NPSP_ClosedWon_Opps_HC';
-    public static string paymentAlloFilterGroup = 'NPSP_Paid_Payments';
+    public static string oppAlloFilterGroupId =
+        CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC);
+    public static string paymentAlloFilterGroupId = 
+        CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid);
+    public static string paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
+    public static string opportunityApiName = STG_Panel.oppLabel;
     public static string oppAlloAmountField = 'Amount';
     public static string paymentAlloAmountField = 'npe01__Payment_Amount__c';
     public static string oppAlloDateField = 'CloseDate';
     public static string paymentAlloDateField = 'npe01__Payment_Date__c';
-    public static string paymentApiName = 'npe01__OppPayment__c';
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Allocations panel. 
@@ -81,31 +84,25 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
     * @return String the jobId for the custom rollup deployment
     */
-    public String updateAlloCustomRollups(Boolean usePayments){
-        String curFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
-        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
-        String curObjectLevel = usePayments ? oppLabel : paymentApiName;
-        String newObjectLevel = usePayments ? paymentApiName : oppLabel;
-        String curAmountField = usePayments ? oppAlloAmountField : paymentAlloAmountField;
+    public static String updateAlloCustomRollups(Boolean usePayments){
+        String oldFilter = usePayments ? oppAlloFilterGroupId : paymentAlloFilterGroupId;
+        String newFilter = usePayments ? paymentAlloFilterGroupId : oppAlloFilterGroupId;
+        String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
+        String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
+        String oldAmountField = usePayments ? oppAlloAmountField : paymentAlloAmountField;
         String newAmountField = usePayments ? paymentAlloAmountField : oppAlloAmountField;
-        String curDateField = usePayments ? oppAlloDateField : paymentAlloDateField;
+        String oldDateField = usePayments ? oppAlloDateField : paymentAlloDateField;
         String newDateField = usePayments ? paymentAlloDateField : oppAlloDateField;
 
-        List<Rollup__mdt> rollupsToUpdate = [
-            SELECT Id, MasterLabel, DeveloperName, Filter_Group__r.DeveloperName, Description__c, 
-                Date_Field__c, Operation__c, Amount_Field__c, Detail_Field__c, Use_Fiscal_Year__c, 
-                Date_Object__c, Amount_Object__c, Detail_Object__c, Integer__c, Active__c, 
-                Time_Bound_Operation_Type__c, Summary_Object__r.QualifiedApiName, 
-                Detail_Object__r.QualifiedApiName, Amount_Object__r.QualifiedApiName, 
-                Date_Object__r.QualifiedApiName, Summary_Field__c, Summary_Field__r.QualifiedApiName, 
-                Detail_Field__r.QualifiedApiName, Amount_Field__r.QualifiedApiName, 
-                Date_Field__r.QualifiedApiName
-            FROM Rollup__mdt
-            WHERE Filter_Group__r.DeveloperName =: curFilter 
-            AND Detail_Object__r.QualifiedApiName =: curObjectLevel
-            AND Amount_Object__r.QualifiedApiName =: curObjectLevel
-            AND Date_Object__r.QualifiedApiName =: curObjectLevel
-        ];
+        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
+        for(Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
+            if(rlp.Filter_Group__c == oldFilter 
+                && rlp.Detail_Object__c == oldObjectLevel
+                && rlp.Amount_Object__c == oldObjectLevel
+                && rlp.Date_Object__c == oldObjectLevel){
+                    rollupsToUpdate.add(rlp);
+            }
+        }
 
         if(rollupsToUpdate.isEmpty()){
             return null;
