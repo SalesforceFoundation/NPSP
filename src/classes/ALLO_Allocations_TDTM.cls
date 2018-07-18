@@ -505,9 +505,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     }
 
     /*******************************************************************************************************
-    * @description Creates allocations by copying from campaign or recurring donation allocations, if 
-    * available. Adjusts default allocation if enabled.
-    * @param listOpps A list of opportunities.
+    * @description Creates allocations by copying from campaign or recurring donation allocations to Opps,
+    * or from Opportunitys to Payments. Adjusts default allocation if enabled.
+    * @param listSObjs A list of Opportunities or Payments.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
     private void copyRecurringDonationCampaignAllocations(list<SObject> listSObjs) {
