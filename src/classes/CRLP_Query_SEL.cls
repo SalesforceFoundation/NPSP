@@ -133,14 +133,12 @@
             // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
             // ====================================================================================================
 
+            Map<SObjectType, String> opportunityChildRelationships = getOpportunityChildRelationships();
+
             // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
             for (SObjectType obj : childObjects) {
-                // Loop through all the relationships on the detail object to find the one that matches the child object
-                for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
-                    if (cr.childSObject == obj) {
-                        mainSoql += buildChildQuery(obj, cr.getRelationshipName());
-                        break;
-                    }
+                if (opportunityChildRelationships.containsKey(obj)) {
+                    mainSoql += buildChildQuery(obj, opportunityChildRelationships.get(obj));
                 }
             }
 
@@ -395,5 +393,19 @@
         }
 
         return String.join(whereClauses, ' AND ');
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the Child Relationships on Opportunity, used by Rollups logic.
+    * @return Map<SObjectType, String>.
+    ********************************************************************************************************/
+    private static Map<SObjectType, String> getOpportunityChildRelationships() {
+
+        return new Map<SObjectType, String>{
+            Partial_Soft_Credit__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Partial_Soft_Credits__r'),
+            Allocation__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Allocations__r'),
+            OpportunityContactRole.SObjectType => 'OpportunityContactRoles',
+            npe01__OppPayment__c.SObjectType => 'npe01__OppPayment__r'
+        };
     }
 }
