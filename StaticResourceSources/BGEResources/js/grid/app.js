@@ -145,7 +145,7 @@
 
         function backAction() {
 
-            $window.location.href = '/' + batchId;
+            $window.history.back();
         }
 
         function prevPageAction() {
