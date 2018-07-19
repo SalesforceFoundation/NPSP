@@ -45,34 +45,57 @@ public with sharing class BGE_Template_CTRL {
         TemplateDetails templateDetails = new TemplateDetails();
         templateDetails.name = 'BGE Template';
         templateDetails.description = 'BGE Template Description';
-
-        Field accountNameField = new Field();
-        accountNameField.sObjectName = 'Account';
-        accountNameField.name = 'Name';
-        templateDetails.templateFields.add(accountNameField);
-
-        Field accountDescriptionField = new Field();
-        accountDescriptionField.sObjectName = 'Account';
-        accountDescriptionField.name = 'Description';
-        accountDescriptionField.activeInfo = new ActiveInfo();
-        accountDescriptionField.activeInfo.defaultValue = 'Account-Description';
-        accountDescriptionField.activeInfo.required = true;
-        templateDetails.templateFields.add(accountDescriptionField);
-
-        Field contactFirstNameField = new Field();
-        contactFirstNameField.sObjectName = 'Contact';
-        contactFirstNameField.name = 'FirstName';
-        templateDetails.templateFields.add(contactFirstNameField);
-
-        Field contactLastNameField = new Field();
-        contactLastNameField.sObjectName = 'Contact';
-        contactLastNameField.name = 'LastName';
-        contactLastNameField.activeInfo = new ActiveInfo();
-        contactLastNameField.activeInfo.defaultValue = 'Contact-LastName';
-        contactLastNameField.activeInfo.hide = true;
-        templateDetails.templateFields.add(contactLastNameField);
+        templateDetails.enableTotalPrompt = true;
+        templateDetails.requireTotalPrompt = true;
+        templateDetails.templateFields = getAvailableFields();
 
         return JSON.serialize(templateDetails);
+    }
+
+    /*******************************************************************************************************
+    * @description Retrieves the Template Details information, and the related list of fields.
+    * @return
+    */
+    @AuraEnabled
+    public static List<Field> getAvailableFields() {
+
+        List<Field> fields = new List<Field>();
+
+        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe('DataImport__c');
+        Set<String> bannedFields = new Set<String>{'Account1Imported__c',
+                'Account1ImportStatus__c',
+                'Account2Imported__c',
+                'Account2ImportStatus__c',
+                'ApexJobId__c',
+                'Contact1Imported__c',
+                'Contact1ImportStatus__c',
+                'Contact2Imported__c',
+                'Contact2ImportStatus__c',
+                'DonationImported__c',
+                'DonationImportStatus__c',
+                'Donation_Possible_Matches__c',
+                'FailureInformation__c',
+                'HomeAddressImported__c',
+                'HomeAddressImportStatus__c',
+                'HouseholdAccountImported__c',
+                'ImportedDate__c',
+                'NPSP_Data_Import_Batch__c',
+                'PaymentImported__c',
+                'PaymentImportStatus__c',
+                'Payment_Possible_Matches__c',
+                'Status__c',
+                'Account2ImportStatus__c'
+        };
+
+        for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
+            if (!bannedFields.contains(dfr.name) && dfr.inlineHelpText != null && dfr.inlineHelpText.split('\\.').size() > 1) {
+                Field fld = new Field();
+                fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
+                fld.name = dfr.getLabel();
+                fields.add(fld);
+            }
+        }
+        return fields;
     }
     
     /*******************************************************************************************************
@@ -98,18 +121,13 @@ public with sharing class BGE_Template_CTRL {
     public class Field {
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
-        @AuraEnabled public ActiveInfo activeInfo;
-    }
-
-    /*******************************************************************************************************
-    * @description 
-    */
-    public class ActiveInfo {
+        @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
         @AuraEnabled public Boolean required;
         @AuraEnabled public Boolean hide;
 
-        public ActiveInfo() {
+        public Field() {
+            isActive = false;
             required = false;
             hide = false;
         }
