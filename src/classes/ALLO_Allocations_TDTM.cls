@@ -332,7 +332,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                             }
                             //delete duplicate default GAU allocations
                             if (!oppWrap.mapDefaultDupes.isEmpty()) {
-                                dmlWrapper.objectsToDelete.add(oppWrap.mapDefaultDupes.values());
+                                dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
                             }
                         //this opp has no allocations, just create the default
                         } else dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
@@ -470,7 +470,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     dmlWrapper.objectsToDelete.addAll((list<sObject>)oppWrap.listAllo);
                     if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null)
                         dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
-                        dmlWrapper.objectsToDelete.addAll((List<sObject>)oppWrap.mapDefaultDupes.values());
+                        dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
                 } else {
 
                     for (Allocation__c allo : oppWrap.listAllo) {
@@ -512,7 +512,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                         }
                         //delete duplicate default GAU allocations
                         if (!oppWrap.mapDefaultDupes.isEmpty()) {
-                            dmlWrapper.objectsToDelete.add(oppWrap.mapDefaultDupes.values());
+                            dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
                         }
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
