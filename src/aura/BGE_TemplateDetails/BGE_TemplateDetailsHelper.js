@@ -387,7 +387,7 @@
 
             /* **********************************************************
              * @Description Selects the available fields.
-             * @param fieldsToSelect. Set of available fields to select.
+             * @param fieldsToSelect. Set of View available fields selected.
              * @return void.
              ************************************************************/
             function selectAvailables(fieldsToSelect) {
@@ -409,7 +409,6 @@
 
             /* **********************************************************
              * @Description Updates the selected fields to Active.
-             * @param fieldsToSelect. Set of active fields to select.
              * @return void.
              ************************************************************/
             function updateToActive() {
@@ -423,7 +422,6 @@
 
             /* **********************************************************
              * @Description Updates the selected fields to Available.
-             * @param fieldsToSelect. Set of active fields to select.
              * @return void.
              ************************************************************/
             function updateToAvailable() {
@@ -437,21 +435,15 @@
 
             /* **********************************************************
              * @Description Selects the fields.
-             * @param fieldsGroupBySObject. Fields to select.
-             * @param fieldsToSelect. Set of available fields to select.
+             * @param fieldsGroupBySObject. Model Fields to select.
+             * @param fieldsToSelect. Set of View available fields selected.
              * @return void.
              ************************************************************/
             function _selectFields(fieldsGroupBySObject, fieldsToSelect) {
                 Object.keys(fieldsGroupBySObject).forEach(function(sObjectName) {
-                    if (sObjectName in fieldsToSelect) {
-                        fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
-                            currentField.selected = false;
-                        });
-                    } else {
-                        fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
-                            currentField.selected = (currentField.id in fieldsToSelect);
-                        });
-                    }  
+                    fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
+                        currentField.selected = (currentField.id in fieldsToSelect);
+                    });
                 });
             }
             
