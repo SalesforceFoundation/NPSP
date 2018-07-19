@@ -330,56 +330,15 @@
         }
 
         function beforeChangeHandler(changes, source) {
-
-            if (source === "paste" ) {
-                var selection = hot.getSelected();
-                var rowStart = selection[0];
-                var rowEnd = selection[2];
-                var colStart = selection[1];
-                var colEnd = selection[3];
-
-                if (colStart > colEnd) {
-                    var aux = colEnd;
-                    colEnd = colStart;
-                    colStart = aux;
-                }
-
-                if (rowStart > rowEnd) {
-                    var aux = rowEnd;
-                    rowEnd = rowStart;
-                    rowStart = aux;
-                }
-
-                for (var x = rowStart; x <= rowEnd; x++) {
-                    for (var y = colStart; y <= colEnd; y++) {
-                        var selectedColType = hot.getDataType(x, y);
-                        if (selectedColType == "dropdown") {
-                            var cell = hot.getCellMeta(x, y);
-                            if (!cell.__proto__.source.includes(changes[0][3])) {
-                                cell.instance.setDataAtCell(x, y, cell.__proto__.source[0]);
-                            }
-                        }
-                    }
-                }
-            }
-            else if (source === "autofill") {
-                var selection = hot.getSelected();
-                var rowStart = selection[0];
-                var rowEnd = selection[2];
-                var colStart = selection[1];
-                var colEnd = selection[3];
-
-                if (rowStart === rowEnd) {
-                    //horizontal autofill
-                    var y = colStart;
-                    for (y; y <= colEnd; y++) {
-                        var selectedColType = hot.getDataType(rowStart, y);
-                        if (selectedColType == "dropdown") {
-                            var cell = hot.getCellMeta(rowStart, y);
-                            if (!cell.__proto__.source.includes(changes[0][3])) {
-                                //does not include the dragged value
-                                cell.instance.setDataAtCell(rowStart, y, cell.__proto__.source[0]);
-                            }
+            if (source === "paste" || source === "autofill") {
+                for (var i = 0; i < changes.length; i++) {
+                    var row = changes[i][0];
+                    var col = hot.propToCol(changes[i][1]);
+                    var cellColType = hot.getDataType(row, col);
+                    if (cellColType == "dropdown") {
+                        var cell = hot.getCellMeta(row, col);
+                        if (!cell.__proto__.source.includes(changes[i][3])) {
+                            cell.instance.setDataAtCell(row, col, cell.__proto__.source[0]);
                         }
                     }
                 }
@@ -953,7 +912,7 @@
                 }
 
                 if (templateField.type === "PICKLIST") {
-                    col.strict = false;
+                    col.strict = true;
                     // Check if by any change the list containing picklist values are null empty or undefined.
                     if (templateField.picklistValues) {
 
