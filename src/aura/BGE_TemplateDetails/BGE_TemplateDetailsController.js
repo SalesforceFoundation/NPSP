@@ -23,6 +23,13 @@
     },
 
     /* ***************************************************************
+     * @Description. Cancels edit or creation of the template.
+     *****************************************************************/
+    cancel: function(component, event, helper) {
+
+    },
+
+    /* ***************************************************************
      * @Description. Saves the template information. 
      *****************************************************************/
     save: function(component, event, helper) {

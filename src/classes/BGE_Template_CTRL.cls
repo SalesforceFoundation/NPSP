@@ -61,7 +61,7 @@ public with sharing class BGE_Template_CTRL {
 
         List<Field> fields = new List<Field>();
 
-        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe('DataImport__c');
+        Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
         Set<String> bannedFields = new Set<String>{'Account1Imported__c',
                 'Account1ImportStatus__c',
                 'Account2Imported__c',
