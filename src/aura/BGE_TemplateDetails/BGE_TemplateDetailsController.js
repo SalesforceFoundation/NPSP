@@ -12,9 +12,11 @@
         model.setBackendController(bgeTemplateController);
         component.set('v.model', model);
         
-        var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model.getTemplateFields());
+        var templateInfoView = helper.TemplateInfoView(component, model);
+        component.set('v.templateInfo', templateInfoView);
+        var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model);
         component.set('v.availableTemplateFields', availableTemplateFieldsView);
-        var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model.getTemplateFields());
+        var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model);
         component.set('v.activeTemplateFields', activeTemplateFieldsView);
 
         model.init();
