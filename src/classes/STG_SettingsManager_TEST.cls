@@ -43,7 +43,7 @@ public with sharing class STG_SettingsManager_TEST {
     private static string strTestOnly = '*';
 
     /*********************************************************************************************************
-    * @description used for testing converstion of Opportunity Allocation rollups to Payment
+    * @description used for testing conversion of Opportunity Allocation rollups to Payment
     */
     private static String oppClosedFilter = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
     
@@ -291,19 +291,35 @@ public with sharing class STG_SettingsManager_TEST {
 
         STG_PanelAllocations_CTRL panel = new STG_PanelAllocations_CTRL();
         system.assertEquals('idPanelAllocations', panel.idPanel());
+        // To fully test switching Allocation levels, enable customizable rollups
+        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
+
         STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c = true;
         STG_Panel.stgService.stgAllo.Default__c = gau.id;
 
         system.assertEquals(false, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should not be enabled.');
         system.assertEquals(panel.strAllocationLevel, STG_Panel.oppLabel, 'If Payment Allocations are not enabled, allocation level should be opportunity');
-        panel.strAllocationLevel = STG_Panel.paymentLabel; // Simulate selecting Payment Allocations
+        // Simulate selecting Payment Allocations
+        panel.strAllocationLevel = STG_Panel.paymentLabel;
 
         Test.startTest();
         panel.saveSettings();
         Test.stopTest();
-
-        system.assert(CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size() == numOppRollups, 'Check that Opportunity Allocation rollups have been queued for update');
         
+        system.assertEquals(numOppRollups, CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size(), 'Check that Opportunity Allocation rollups have been queued for update');
+
+        Integer rollupChangeCount = 0;
+        for(Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
+            for (Metadata.CustomMetadataValue val : md.values) {
+                if ((String)val.field == 'Detail_Object__c') {
+                    if(val.value == CRLP_DefaultConfigBuilder.paymentObject){
+                        rollupChangeCount++;
+                    }
+                }
+            }
+        }
+        system.assertEquals(numOppRollups, rollupChangeCount, 'The queued rollups should all be for Payments');
+
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');
         system.assertNotEquals(null,UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default__c, 'Default should be filled with the Id of the created General Accounting Unit.');

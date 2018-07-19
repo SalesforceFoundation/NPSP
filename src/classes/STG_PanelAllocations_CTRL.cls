@@ -35,16 +35,14 @@
 */
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
-    public static string oppAlloFilterGroupId =
-        CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC);
-    public static string paymentAlloFilterGroupId = 
-        CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid);
-    public static string paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
-    public static string opportunityApiName = STG_Panel.oppLabel;
-    public static string oppAlloAmountField = 'Amount';
-    public static string paymentAlloAmountField = 'npe01__Payment_Amount__c';
-    public static string oppAlloDateField = 'CloseDate';
-    public static string paymentAlloDateField = 'npe01__Payment_Date__c';
+    public static final string oppAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    public static final string paymentAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
+    public static final string paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
+    public static final string opportunityApiName = STG_Panel.oppLabel;
+    public static final string oppAlloAmountField = 'Amount';
+    public static final string paymentAlloAmountField = 'npe01__Payment_Amount__c';
+    public static final string oppAlloDateField = 'CloseDate';
+    public static final string paymentAlloDateField = 'npe01__Payment_Date__c';
 
     /*********************************************************************************************************
     * @description Returns the string Id of the Allocations panel. 
@@ -52,7 +50,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public override string idPanel() { return 'idPanelAllocations'; }
 
     /*********************************************************************************************************
-    * @description String that holds the selected Allocation Level
+    * @description String that holds the selected Allocation Level from the settings picklist
     */
     public String strAllocationLevel {get;set;}
 
@@ -71,22 +69,22 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     * @description Enable or disable payment allocations based on settings selection
     */
     public void setAllocationLevel(){
-        Boolean oldValue = STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c;
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
             (strAllocationLevel == paymentLabel);
-        if(oldValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c){
-            updateAlloCustomRollups(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
-        }
     }
 
     /*********************************************************************************************************
     * @description Method to update custom rollups based on Allocation level
+    * set as a future method to not interfere with setup object DML operations
     * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
     * @return String the jobId for the custom rollup deployment
     */
-    public static String updateAlloCustomRollups(Boolean usePayments){
-        String oldFilter = usePayments ? oppAlloFilterGroupId : paymentAlloFilterGroupId;
-        String newFilter = usePayments ? paymentAlloFilterGroupId : oppAlloFilterGroupId;
+    @future
+    public static void updateAlloCustomRollups(Boolean usePayments){
+        String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
+        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
+        Id oldFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldFilter);
         String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
         String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
         String oldAmountField = usePayments ? oppAlloAmountField : paymentAlloAmountField;
@@ -96,16 +94,16 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
 
         List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
         for(Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
-            if(rlp.Filter_Group__c == oldFilter 
-                && rlp.Detail_Object__c == oldObjectLevel
-                && rlp.Amount_Object__c == oldObjectLevel
-                && rlp.Date_Object__c == oldObjectLevel){
+            if(rlp.Filter_Group__c == oldFilterId 
+                && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
+                && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
+                && rlp.Date_Object__r.QualifiedApiName == oldObjectLevel){
                     rollupsToUpdate.add(rlp);
             }
         }
 
         if(rollupsToUpdate.isEmpty()){
-            return null;
+            return;
         }
 
         List<CRLP_RollupCMT.Rollup> rollupList = new List<CRLP_RollupCMT.Rollup>();
@@ -124,7 +122,6 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         CRLP_ConfigBuilder_SVC.clearQueue();
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupList);
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
-        return jobId;
     }
 
     /*********************************************************************************************************
@@ -194,12 +191,19 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         STG_Panel.stgService.stgAllo.Default__c = allo.General_Accounting_Unit__c;
         strDefaultGAUName = null;
 
+        Boolean oldPayAlloValue = STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c;
         setAllocationLevel();
 
         if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
             !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.ERROR, Label.alloDefaultNotEnabled));
                 return null;
+        }
+
+        // If the Allocation level changed and custom rollups are enabled, update them
+        if(oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
+            && STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c){
+                updateAlloCustomRollups(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
         }
 
         return super.saveSettings();
