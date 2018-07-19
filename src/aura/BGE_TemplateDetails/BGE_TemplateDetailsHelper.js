@@ -4,11 +4,43 @@
     /* ***************************************************************
      * @Description Returns the Available Template Fields View module.
      * @param component. Lightning Component reference.
-     * @param templateFieldsModel. The Template Fields Model.
+     * @param model. The Model.
      * @return View of the Available Template Fields module.
      *****************************************************************/
-    AvailableTemplateFieldsView : function(component, templateFieldsModel) {
-		return (function (component, templateFieldsModel) {
+    TemplateInfoView : function(component, model) {
+        return (function (component, model) {
+
+            // Subscribe to the model onFieldsUpdated event. 
+            model.getTemplateInfo().onInfoUpdated.subscribe(function() {
+                console.log('HEYYY');
+                var templateInfoView = component.get('v.templateInfo');
+                var templateInfo = model.getTemplateInfo();
+                templateInfoView.name = templateInfo.name;
+                templateInfoView.description = templateInfo.description;
+                templateInfoView.enableTotalPrompt = templateInfo.enableTotalPrompt;
+                templateInfoView.requireTotalPrompt = templateInfo.requireTotalPrompt;
+
+                component.set('v.templateInfo', templateInfoView);
+            });
+            
+            //  module public functions
+            return {
+                name: '', 
+                description: '',
+                enableTotalPrompt: false,
+                requireTotalPrompt: false
+            };
+        })(component, model);
+    },
+
+    /* ***************************************************************
+     * @Description Returns the Available Template Fields View module.
+     * @param component. Lightning Component reference.
+     * @param model. The Template Fields Model.
+     * @return View of the Available Template Fields module.
+     *****************************************************************/
+    AvailableTemplateFieldsView : function(component, model) {
+		return (function (component, model) {
             var _columns = [
                 {
                 	type: 'text',
@@ -17,10 +49,10 @@
             	}
             ];
 
-            // Subscribe to the TemplateFieldsModel onDataChanged event. 
-            templateFieldsModel.onDataChanged.subscribe(function() {
+            // Subscribe to the model onFieldsUpdated event. 
+            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var availableTemplateFields = component.get('v.availableTemplateFields');
-                availableTemplateFields.data = _convertToGridData(templateFieldsModel.getAvailables());
+                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailables());
                 availableTemplateFields.selectedRows = [];
 
                 availableTemplateFields.data.forEach(function(fieldGroup) {
@@ -77,17 +109,18 @@
                 data: [],
                 selectedRows: []
             };
-        })(component, templateFieldsModel);
+        })(component, model);
 	},
     
     /* ***************************************************************
      * @Description Returns the Available Template Fields View module.
      * @param component. Lightning Component reference.
-     * @param templateFieldsModel. The Template Fields Model.
+     * @param model(). The Template Fields Model.
      * @return View of the Available Template Fields module.
      *****************************************************************/
-    ActiveTemplateFieldsView : function(component, templateFieldsModel) {
-		return (function (component, templateFieldsModel) {
+    ActiveTemplateFieldsView : function(component, model) {
+
+		return (function (component, model) {
     		var _columns = [
                 {
                     type: 'text',
@@ -111,10 +144,10 @@
                 }
             ];
             
-            // Subscribe to the TemplateFieldsModel onDataChanged event. 
-            templateFieldsModel.onDataChanged.subscribe(function() {
+            // Subscribe to the model.getTemplateFields() onFieldsUpdated event. 
+            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var activeTemplateFields = component.get('v.activeTemplateFields');
-                activeTemplateFields.data = _convertToGridData(templateFieldsModel.getActives());
+                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActives());
                 activeTemplateFields.selectedRows = [];
 
                 activeTemplateFields.data.forEach(function(fieldGroup) {
@@ -172,7 +205,7 @@
                 selectedFields: []
             };
      
-        })(component, templateFieldsModel);
+        })(component, model);
 	},
     
     /*********************************************** Model Modules *********************************************/
@@ -183,11 +216,13 @@
      * Details components.
      * @return Model module of the Template Fields.
      ************************************************************/
-     TemplateDetailsModel : function() {
+    TemplateDetailsModel : function() {
         var templateFields = this.TemplateFields();
+        var templateInfo = this.TemplateInfo();
 
-        return (function (templateFields) {
+        return (function (templateFields, templateInfo) {
             var _templateFields = templateFields;
+            var _templateInfo = templateInfo;
             var _bgeTemplateController;
             
             /* **********************************************************
@@ -197,6 +232,15 @@
             function init() {
                 _bgeTemplateController.getTemplateDetails({
                     success: function(response) {
+                        _templateInfo.load(
+                            {
+                                name: response.name,
+                                description: response.description,
+                                enableTotalPrompt: response.enableTotalPrompt,
+                                requireTotalPrompt: response.requireTotalPrompt
+                            }
+                        );
+
                         _templateFields.load(response.templateFields);
                     },
                     error: function(error) {
@@ -216,26 +260,70 @@
             function getTemplateFields() {
                 return _templateFields;
             }
+
+            /* **********************************************************
+             * @Description Gets the Template Fields module.
+             * @return Template Fields module.
+             ************************************************************/
+            function getTemplateInfo() {
+                return templateInfo;
+            }
             
             // TemplateDetailsModel module public functions.
             return {
                 init: init,
                 setBackendController: setBackendController,
-                getTemplateFields: getTemplateFields
+                getTemplateFields: getTemplateFields,
+                getTemplateInfo: getTemplateInfo
             }
-        })(templateFields);
+        })(templateFields, templateInfo);
+    },
+
+    /* **********************************************************
+     * @Description Gets the Model module of the Template Info.
+     * @return Model module of the Template Info.
+     ************************************************************/
+    TemplateInfo : function() {
+        var Event = this.Event();
+
+        return (function (Event) {
+            var _onInfoUpdated = new Event(this);
+            
+            /* **********************************************************
+             * @Description Loads the Info, and notify all the 
+             * _onInfoUpdated listeners.
+             * @return List of fields.
+             ************************************************************/
+            function load(info) {
+                this.name = info.name;
+                this.description = info.description;
+                this.enableTotalPrompt = info.enableTotalPrompt;
+                this.requireTotalPrompt = info.requireTotalPrompt;
+                this.onInfoUpdated.notify()
+            }
+            
+            // TemplateInfo module public functions.
+            return {
+                name: '',
+                description: '',
+                enableTotalPrompt: false,
+                requireTotalPrompt: false,
+                load: load,
+                onInfoUpdated: _onInfoUpdated
+            }
+        })(Event);
     },
 
     /* **********************************************************
      * @Description Gets the Template Fields module.
      * @return Model module of the Template Fields.
      ************************************************************/
-     TemplateFields : function() {
+    TemplateFields : function() {
   		var Event = this.Event();
         
 		return (function (Event) {
             var _allFields = [];
-            var _onDataChanged = new Event(this);
+            var _onFieldsUpdated = new Event(this);
             
             /* **********************************************************
              * @Description Groups the fields by SObject name.
@@ -254,7 +342,7 @@
             
             /* **********************************************************
              * @Description Loads the fields, and notify all the 
-             * onDataChanged listeners.
+             * onFieldsUpdated listeners.
              * @return List of fields.
              ************************************************************/
             function load(allFields) {
@@ -264,7 +352,7 @@
                     currentField.selected = false;
                     _allFields.push(currentField);
                 });
-                this.onDataChanged.notify();
+                this.onFieldsUpdated.notify();
             }
             
             /* **********************************************************
@@ -275,7 +363,7 @@
             function getAvailables() {
                 var _availableFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (!currentField.activeInfo) {
+                    if (!currentField.isActive) {
                         _availableFields.push(currentField);
                     }
                 });
@@ -290,7 +378,7 @@
             function getActives() {
                 var _activeFields = [];
                 _allFields.forEach(function(currentField) {
-                    if (currentField.activeInfo) {
+                    if (currentField.isActive) {
                         _activeFields.push(currentField);
                     }
                 });
@@ -304,8 +392,8 @@
              ************************************************************/
             function selectAvailables(fieldsToSelect) {
                 var availableTemplateFields = getAvailables();
-                _selectFields(availableTemplateFields, fieldsToSelect)
-                this.onDataChanged.notify();
+                _selectFields(availableTemplateFields, fieldsToSelect);
+                this.onFieldsUpdated.notify();
             }
 
             /* **********************************************************
@@ -316,7 +404,7 @@
             function selectActives(fieldsToSelect) {
                 var activeTemplateFields = getActives();
                 _selectFields(activeTemplateFields, fieldsToSelect)
-                this.onDataChanged.notify();
+                this.onFieldsUpdated.notify();
             }
 
             /* **********************************************************
@@ -326,15 +414,11 @@
              ************************************************************/
             function updateToActive() {
                 _allFields.forEach(function(currentField) {
-                    if (!currentField.activeInfo && currentField.selected) {
-                        currentField.activeInfo = {
-                            defaultValue: "",
-                            required: false,
-                            hide: false
-                        };
+                    if (!currentField.isActive && currentField.selected) {
+                        currentField.isActive = true;
                     }
                 });
-                this.onDataChanged.notify();
+                this.onFieldsUpdated.notify();
             }
 
             /* **********************************************************
@@ -344,11 +428,11 @@
              ************************************************************/
             function updateToAvailable() {
                 _allFields.forEach(function(currentField) {
-                    if (currentField.activeInfo && currentField.selected) {
-                        delete currentField.activeInfo;
+                    if (currentField.isActive && currentField.selected) {
+                        currentField.isActive = false;
                     }
                 });
-                this.onDataChanged.notify();
+                this.onFieldsUpdated.notify();
             }
 
             /* **********************************************************
@@ -380,7 +464,8 @@
                 selectActives: selectActives,
                 updateToActive: updateToActive,
                 updateToAvailable: updateToAvailable,
-                onDataChanged: _onDataChanged
+                onFieldsUpdated: _onFieldsUpdated
+
             }
         })(Event);
 	},
