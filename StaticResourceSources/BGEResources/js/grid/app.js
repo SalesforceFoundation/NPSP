@@ -47,7 +47,6 @@
             this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
         };
 
-
         function onInitHandler(result, event) {
 
             $scope.templateId = result.templateId;
@@ -112,14 +111,14 @@
                 manualRowResize: false,
                 columns: getHotColumns(),
                 contextMenu: {
-					items: {
-						remove_row: {
-							disabled: function (){
-								return false
-							}
-						}
-					}
-				},
+                    items: {
+                        remove_row: {
+                            disabled: function (){
+                                return false
+                            }
+                        }
+                    }
+                },
                 manualColumnResize: true,
                 renderAllRows: false,
 
@@ -375,6 +374,11 @@
                             var col = this.propToCol(changes[i][1])
                             var cellType = this.getDataType(changes[i][0], hot.propToCol('Id'));
 
+                            // set new external Id value if the Id cell have null value in the data import that have changes
+                            if (!this.getDataAtRowProp(changes[i][0], 'Id')) {
+
+                                this.setDataAtRowProp(changes[i][0], 'Id', Date.now().toString(), 'manual');
+                            }
 
                             var cellRecord = {
                                 row: changes[i][0],
@@ -434,11 +438,13 @@
 
                     $timeout(function() {
                         hot.render();
-                    }, 500);
+                    }, 200);
 
                 }
 
                 function onDmlGridHandler(result, event) {
+
+                    var idCellsForUpdate = [];
 
                     if (result && result.length > 0) {
 
@@ -488,10 +494,9 @@
                                 }
                             }
 
-
                             if (cellResponse.sfdcid) {
-                                // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
-                                hot.setDataAtCell(cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid, 'manual');
+
+                                idCellsForUpdate.push([cellResponse.row, hot.propToCol('Id'), cellResponse.sfdcid]);
 
                                 if (cellResponse.sfdcid !== cellResponse.recordId) {
 
@@ -501,12 +506,16 @@
                                 }
                             }
 
-                            $timeout(function() {
-
-                                hot.render();
-                                updateSummaryData();
-                            }, 200);
                         });
+
+                        // setDataAtCell ALWAYS TRIGGER A FULL TABLE RENDER - USE WITH CARE AND IN BULK WHERE POSSIBLE
+                        hot.setDataAtCell(idCellsForUpdate, 'manual');
+
+                        $timeout(function() {
+
+                            hot.render();
+                            updateSummaryData();
+                        }, 200);
                     }
                 }
             }
@@ -1132,13 +1141,13 @@
             TD.className = "htRight htMiddle slds-truncate htNoWrap";
 
             var innerContent = '<div class="slds-grid slds-nowrap slds-size_12-of-12">' +
-                                    '<div class="slds-size_10-of-12" style="text-align: left">' +
-                                        '<div class="ellipsis" style="width: 98%; vertical-align:  middle;">' + val + '</div>' +
+                                    '<div class="slds-size_11-of-12" style="text-align: left">' +
+                                        '<div class="ellipsis slds-size_12-of-12" style="vertical-align: middle;">' + val + '</div>' +
                                     '</div>' +
-                                    '<div class="slds-size_2-of-12 slds-col_bump-right">' +
-                                        '<div style="width: 10px" class="htAutocompleteArrow">▼</div>' +
+                                    '<div class="slds-size_1-of-12">' +
+                                        '<div class="slds-size_12-of-12 htAutocompleteArrow">▼</div>' +
                                     '</div>' +
-                                '</div>';
+                               '</div>';
 
             TD.innerHTML = innerContent;
 
