@@ -144,7 +144,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
             }
         }
 
-        System.assertEquals(32, payAlloCount, 'Allocation Rollups should have been created for the Payment object instead of Opportunity');
+        System.assertEquals(36, payAlloCount, 'Allocation Rollups should have been created for the Payment object instead of Opportunity');
         System.assertEquals(8, fgCount, 'There should be 8 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }

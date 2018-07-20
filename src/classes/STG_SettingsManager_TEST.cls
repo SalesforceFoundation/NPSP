@@ -1046,6 +1046,8 @@ public with sharing class STG_SettingsManager_TEST {
         System.assert(panel.isAdmin);
         System.assertEquals(false, ApexPages.hasMessages());
         STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
+        // Clear cache so test passes in orgs that have rollups
+        CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
         panel.saveSettings();
         System.assertEquals(true, panel.isPolling, 'Polling should be active.');
         System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be enabled in STG_Panel.');

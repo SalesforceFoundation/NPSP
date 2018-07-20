@@ -5283,6 +5283,14 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <value>This setting determines where Allocations will be handled.</value>
     </labels>
     <labels>
+        <fullName>stgHelpAllocationLevel2</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgHelpAllocationLevel2</shortDescription>
+        <value>Note: Payment Level Allocation rollups are only supported when Customizable Rollups are enabled.</value>
+    </labels>
+    <labels>
         <fullName>stgHelpAutoAffil</fullName>
         <categories>Settings</categories>
         <language>en_US</language>

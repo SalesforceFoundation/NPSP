@@ -25,7 +25,7 @@
         <c:UTIL_PageMessages />
         <div class="slds-section-title--divider" >{!$Label.stgLabelAllocationsRollupSettings}</div>
         <div class="slds-form--horizontal">
-            <div class="slds-form-element">
+            <div class="slds-form-element" style="margin-bottom: .5rem;">
                 <apex:outputLabel value="{!$Label.stgAllocationLevel}" for="idAL" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
                     <apex:outputText value="{!strAllocationLevel}" rendered="{!NOT(isEditMode)}" styleClass="slds-form-element__static"/>
@@ -34,6 +34,7 @@
                     </apex:selectList>
                     <apex:outputPanel id="idALHelp" layout="block">
                         <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel}" />
+                        <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpAllocationLevel2}" />
                     </apex:outputPanel>
                 </div>
             </div>
