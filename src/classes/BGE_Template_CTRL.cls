@@ -41,12 +41,27 @@ public with sharing class BGE_Template_CTRL {
     * @return 
     */
     @AuraEnabled
-    public static String getTemplateDetails() {
+    public static String getTemplateDetails(Id templateId) {
         TemplateDetails templateDetails = new TemplateDetails();
-        templateDetails.name = 'BGE Template';
-        templateDetails.description = 'BGE Template Description';
-        templateDetails.enableTotalPrompt = true;
-        templateDetails.requireTotalPrompt = true;
+
+        if (templateId != null) {
+            Batch_Template__c batchTemplate = [SELECT
+                    Name,
+                    Description__c,
+                    Display_Total_Prompt__c,
+                    Require_Total_Match__c,
+                    Active_Fields__c
+            FROM Batch_Template__c
+            WHERE Id = :templateId];
+
+            templateDetails.name = batchTemplate.Name;
+            templateDetails.description = batchTemplate.Description__c;
+            templateDetails.displayTotalPrompt = batchTemplate.Display_Total_Prompt__c;
+            templateDetails.requireTotalMatch = batchTemplate.Require_Total_Match__c;
+            //templateDetails.activeFields = batchTemplate.Active_Fields__c;
+
+        }
+
         templateDetails.templateFields = getAvailableFields();
 
         return JSON.serialize(templateDetails);
@@ -88,14 +103,14 @@ public with sharing class BGE_Template_CTRL {
         };
 
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            if (!bannedFields.contains(dfr.name) && dfr.inlineHelpText != null) {
+            if (!bannedFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name)) && dfr.inlineHelpText != null) {
                 Field fld = new Field();
                 if (dfr.name == 'Donation_Donor__c') {
                     fld.sObjectName = 'Opportunity';
                 } else {
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
                 }
-                fld.name = dfr.getLabel().split(' ',2)[1];
+                fld.name = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
                 fields.add(fld);
             }
         }
@@ -114,6 +129,8 @@ public with sharing class BGE_Template_CTRL {
             Batch_Template__c batchTemplate = new Batch_Template__c();
             batchTemplate.Name = templateDetails.name;
             batchTemplate.Description__c = templateDetails.description;
+            batchTemplate.Display_Total_Prompt__c = templateDetails.displayTotalPrompt;
+            batchTemplate.Require_Total_Match__c = templateDetails.requireTotalMatch;
             batchTemplate.Active_Fields__c = activeFields;
 
             insert batchTemplate;
@@ -130,13 +147,13 @@ public with sharing class BGE_Template_CTRL {
     public class TemplateDetails {
         @AuraEnabled public String name;
         @AuraEnabled public String description;
-        @AuraEnabled public Boolean enableTotalPrompt;
-        @AuraEnabled public Boolean requireTotalPrompt;
+        @AuraEnabled public Boolean displayTotalPrompt;
+        @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public List<Field> templateFields;
 
         public TemplateDetails() {
-            enableTotalPrompt = false;
-            requireTotalPrompt = false;
+            displayTotalPrompt = false;
+            requireTotalMatch = false;
             templateFields = new List<Field>();
         }
     }

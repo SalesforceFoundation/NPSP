@@ -19,6 +19,7 @@
     <actionOverrides>
         <actionName>Edit</actionName>
         <content>BGE_TemplateDetails</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -33,6 +34,7 @@
     <actionOverrides>
         <actionName>New</actionName>
         <content>BGE_TemplateDetails</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -47,6 +49,7 @@
     <actionOverrides>
         <actionName>View</actionName>
         <content>BGE_TemplateDetails</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -119,6 +122,16 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Display_Total_Prompt__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, BGE grid prompts user for expected Opportunity total.</description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Display Total Prompt</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Donation_Date_Range__c</fullName>
@@ -212,6 +225,16 @@
         <externalId>false</externalId>
         <inlineHelpText>When checked, the NPSP Data Import Batch will be automatically processed based on the schedule for the associated job.</inlineHelpText>
         <label>Process Using Scheduled Job</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
+        <fullName>Require_Total_Match__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, BGE grid validates the expected total against the actual total and prohibits the batch from processing if totals do not match.</description>
+        <externalId>false</externalId>
+        <inlineHelpText></inlineHelpText>
+        <label>Require Total Match</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

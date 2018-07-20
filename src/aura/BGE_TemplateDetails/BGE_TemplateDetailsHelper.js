@@ -17,8 +17,8 @@
                 var templateInfo = model.getTemplateInfo();
                 templateInfoView.name = templateInfo.name;
                 templateInfoView.description = templateInfo.description;
-                templateInfoView.enableTotalPrompt = templateInfo.enableTotalPrompt;
-                templateInfoView.requireTotalPrompt = templateInfo.requireTotalPrompt;
+                templateInfoView.displayTotalPrompt = templateInfo.displayTotalPrompt;
+                templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
 
                 component.set('v.templateInfo', templateInfoView);
             });
@@ -27,8 +27,8 @@
             return {
                 name: '', 
                 description: '',
-                enableTotalPrompt: false,
-                requireTotalPrompt: false
+                displayTotalPrompt: false,
+                requireTotalMatch: false
             };
         })(component, model);
     },
@@ -236,8 +236,8 @@
                             {
                                 name: response.name,
                                 description: response.description,
-                                enableTotalPrompt: response.enableTotalPrompt,
-                                requireTotalPrompt: response.requireTotalPrompt
+                                displayTotalPrompt: response.displayTotalPrompt,
+                                requireTotalMatch: response.requireTotalMatch
                             }
                         );
 
@@ -313,8 +313,8 @@
             function load(info) {
                 this.name = info.name;
                 this.description = info.description;
-                this.enableTotalPrompt = info.enableTotalPrompt;
-                this.requireTotalPrompt = info.requireTotalPrompt;
+                this.displayTotalPrompt = info.displayTotalPrompt;
+                this.requireTotalMatch = info.requireTotalMatch;
                 this.onInfoUpdated.notify()
             }
             
@@ -322,8 +322,8 @@
             return {
                 name: '',
                 description: '',
-                enableTotalPrompt: false,
-                requireTotalPrompt: false,
+                displayTotalPrompt: false,
+                requireTotalMatch: false,
                 load: load,
                 onInfoUpdated: _onInfoUpdated
             }
@@ -533,6 +533,9 @@
              ************************************************************/
             function getTemplateDetails(callback) {
                 var action = _component.get("c.getTemplateDetails");
+                action.setParams({
+                    templateId: component.get("v.recordId")
+                });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);
             }

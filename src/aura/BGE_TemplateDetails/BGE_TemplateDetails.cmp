@@ -34,7 +34,7 @@
   @group-content
   @description Component used to view, edit, or create a Batch Template record.
 -->
-<aura:component controller="BGE_Template_CTRL">
+<aura:component controller="BGE_Template_CTRL" implements="lightning:actionOverride,force:hasRecordId">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
@@ -42,11 +42,14 @@
     <aura:attribute name="availableTemplateFields" type="Object" access="PRIVATE" />
     <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
 
+    <!-- public attributes -->
+    <aura:attribute name="recordId" type="Id" />
+
     <!-- events we handle -->
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
 
     <!-- START MARKUP -->
-    <div aura:id="body">
+    <div aura:id="body" style="background: white">
 
         <h2 class="slds-text-heading_medium slds-p-around_large">New Template</h2>
 
@@ -96,8 +99,8 @@
             </div>
 
             <div class="row slds-p-around_large">
-                <lightning:input type="checkbox" label="Enable Total Prompt" name="enableTotalPrompt"  checked="{!v.templateInfo.enableTotalPrompt}"/>
-                <lightning:input type="checkbox" label="Require Total Prompt" name="requireTotalPrompt" checked="{!v.templateInfo.requireTotalPrompt}"/>
+                <lightning:input type="checkbox" label="Display Total Prompt" name="displayTotalPrompt"  checked="{!v.templateInfo.displayTotalPrompt}"/>
+                <lightning:input type="checkbox" label="Require Total Match" name="requireTotalMatch" checked="{!v.templateInfo.requireTotalMatch}"/>
             </div>
 
             <div class="row slds-p-around_large">
