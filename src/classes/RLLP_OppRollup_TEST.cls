@@ -223,7 +223,7 @@ public with sharing class RLLP_OppRollup_TEST {
     * @description Runs testGivingRollupIndividualProcessor test method for the bucket account processor.
     */
     static testMethod void testGivingRollupIndividualBucket(){
-        //skip the test if Advancement is installed
+        //skip the test if Advancement is installed - Bucket Account not supported in ADV
         if(ADV_PackageInfo_SVC.useAdv()) return;
         testGivingRollupIndividualProcessor(CAO_Constants.BUCKET_PROCESSOR);
     }

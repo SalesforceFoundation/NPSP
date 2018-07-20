@@ -267,7 +267,7 @@ public class RD_RecurringDonations_TEST {
     }
     
     static testMethod void contactRolesOnOppsBucket() {
-        //skip the test if Advancement is installed
+        //skip the test if Advancement is installed - Bucket Account not supported in ADV
         if(ADV_PackageInfo_SVC.useAdv()) return;
         
         contactRolesOnOppsProcessor(CAO_Constants.BUCKET_PROCESSOR);

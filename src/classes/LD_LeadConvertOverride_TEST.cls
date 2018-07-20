@@ -150,6 +150,9 @@ private class LD_LeadConvertOverride_TEST {
     static testMethod void newLeadConversionMerge_TestBucketAccount(){
         if (UTIL_UnitTestData_TEST.isAccountNameEncrypted()) return;
 
+        //skip the test if Advancement is installed - Bucket Account not supported in ADV
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         newLeadConversionMerge_Test(CAO_Constants.BUCKET_PROCESSOR);
     }
     /*******************************************************************************************************
