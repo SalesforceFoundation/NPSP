@@ -59,7 +59,7 @@ public class TDTM_TriggerHandler {
     * @param dao The class that is going to retrieve all the TDTM records.
     * @return void
     */
-    public void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
+    public static void run(Boolean isBefore, Boolean isAfter, Boolean isInsert, Boolean isUpdate,
     Boolean isDelete, Boolean isUnDelete, List<Sobject> newList, List<Sobject> oldList, 
     Schema.DescribeSobjectResult describeObj, TDTM_iTableDataGateway dao) {
     	if (disableTDTM) {
@@ -153,7 +153,7 @@ public class TDTM_TriggerHandler {
         }
     }
 
-    private TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
+    private static TDTM_Runnable.DmlWrapper runClass(SObject classToRunRecord, List<Sobject> newList, List<Sobject> oldList, 
     TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
     	        
         if(classToRunRecord != null) {
@@ -194,7 +194,7 @@ public class TDTM_TriggerHandler {
         return null;
     }
     
-    private void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
+    private static void runAsync(TDTM_Runnable classToRun, String classToRunName, List<Sobject> newList, 
     List<Sobject> oldList, TDTM_Runnable.Action thisAction, Schema.DescribeSobjectResult describeObj) {
        set<Id> setNewId;
        if(newlist != null) {

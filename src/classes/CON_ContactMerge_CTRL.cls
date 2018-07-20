@@ -44,12 +44,12 @@ public with sharing class CON_ContactMerge_CTRL {
     public String searchText { get { return searchText; } set { searchText = value; } }
     
     /*******************************************************************************************************
-    * @description List of contactWrapper objects for display in search results pane.
+    * @description List of ContactWrapper objects for display in search results pane.
     */
     public List<ContactWrapper> searchResults {get; private set;}
     
     /*******************************************************************************************************
-    * @description List of contactWrapper objects for display in search results pane.
+    * @description Map of the contacts selected for merge.
     */
     private Map<String, Contact> selectedRecords;
     
@@ -71,7 +71,7 @@ public with sharing class CON_ContactMerge_CTRL {
     /*******************************************************************************************************
     * @description Wraps a contact together with a checkbox, to allow contact selection.
     */
-    public class contactWrapper {
+    public class ContactWrapper {
         /*******************************************************************************************************
         * @description The contact.
         */
@@ -85,7 +85,7 @@ public with sharing class CON_ContactMerge_CTRL {
         * @description Constructor that initializes instance properties.
         * @c The contact to wrap.
         */ 
-        public contactWrapper(Contact c) {
+        public ContactWrapper(Contact c) {
             con = c;
             selected = false;
         }
@@ -179,7 +179,7 @@ public with sharing class CON_ContactMerge_CTRL {
     */
     public CON_ContactMerge_CTRL(ApexPages.StandardSetController controller){
         searchText='';
-        searchResults = new List<contactWrapper>();
+        searchResults = new List<ContactWrapper>();
         selectedRecords = new Map<String, Contact>();
         step = 1;
         fieldRows = new List<FieldRow>();
@@ -349,7 +349,7 @@ public with sharing class CON_ContactMerge_CTRL {
             temp.values.add(new Cell(c.id, con.name));  
         }
         fieldRows.add(temp);
-        
+
         // Add second row to select the master record. Select the one which is last modified
         temp = new FieldRow(MASTER_KEY, 'Master Record', true, null);
         {
@@ -364,7 +364,22 @@ public with sharing class CON_ContactMerge_CTRL {
             }
         }
         fieldRows.add(temp);
-        
+
+        // Add the portal row if any of the contacts have a user record
+        List<User> portalUsers = new List<User>([SELECT Id, ContactId FROM User WHERE ContactId IN :contacts]);
+        if (!portalUsers.isEmpty()) {
+            Map<Id, Boolean> hasUserRecordByContactId = new Map<Id, Boolean>();
+            for (User portalUser : portalUsers) {
+                hasUserRecordByContactId.put(portalUser.ContactId, true);
+            }
+            temp = new FieldRow(System.Label.conMergePortalUser, System.Label.conMergePortalUser, false, null);
+            for (Sobject c: contacts) {
+                Contact con = (Contact) c;
+                temp.values.add(new Cell(c.id, String.valueOf(hasUserRecordByContactId.containsKey(c.Id))));
+            }
+            fieldRows.add(temp);
+        }
+
         // Add a dummy row to add a 'Standard Fields' header before the list of standard fields
         fieldRows.add(new FieldRow('Standard Fields', 'Standard Fields', false, 'separator'));
         
