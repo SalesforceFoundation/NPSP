@@ -478,6 +478,7 @@
                                 }
 
                                 debugRowErrors = $scope.rowErrors;
+
                             }
                             else if ($scope.rowErrors[cellResponse.recordId]) {
 
@@ -1134,11 +1135,11 @@
             return td;
         }
 
-        function dropdownAndDateCellRenderer(hotInstance, TD, row, col, prop, value, cellProperties) {
+        function dropdownAndDateCellRenderer(instance, TD, row, col, prop, value, cellProperties) {
 
             var val = value == null ? '' : value;
 
-            TD.className = "htRight htMiddle slds-truncate htNoWrap";
+            TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete";
 
             var innerContent = '<div class="slds-grid slds-nowrap slds-size_12-of-12">' +
                                     '<div class="slds-size_11-of-12" style="text-align: left">' +
@@ -1151,10 +1152,24 @@
 
             TD.innerHTML = innerContent;
 
-            Handsontable.dom.addEvent(TD, 'click', function (e) {
-                e.preventDefault(); // prevent selection quirk
-                TD.className = 'htRight htMiddle slds-truncate htNoWrap current';
-            });
+            var rowId = instance.getDataAtCell(row, instance.propToCol('Id'));
+            var rowErrors = $scope.rowErrors[rowId];
+
+            var errorInCell = false;
+
+            if (rowErrors) {
+                for (var i=0; i < rowErrors.length; i++) {
+                    if (rowErrors[i].field == prop) {
+                        errorInCell = true;
+                    }
+                }
+            }
+
+            if (errorInCell) {
+                TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete htInvalid";
+            }
+
+            return TD;
         }
 
         // Validation Errors
