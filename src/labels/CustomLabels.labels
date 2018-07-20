@@ -5433,7 +5433,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
         <value>
-            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/articles/Resource/Customizable-Rollups-Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
+            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
         </value>
     </labels>
     <labels>
@@ -5443,7 +5443,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable2</shortDescription>
         <value>
-            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
+            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
             You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won't be applied to your legacy rollup settings.
         </value>
