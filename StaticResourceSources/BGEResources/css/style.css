@@ -51,8 +51,11 @@
 }
 .handsontable td.htInvalid {
     background-color: transparent !important;
-    border: 2px solid #c23934 !important;
+    /* border: 2px solid #c23934 !important; */
     color: #c23934 !important;
+    -webkit-box-shadow: inset 0px 0px 0px 2px #c23934;
+    -moz-box-shadow: inset 0px 0px 0px 2px #c23934;
+    box-shadow: inset 0px 0px 0px 2px #c23934;
 }
 .pagination-section {
     color: #758696 !important;
@@ -77,11 +80,12 @@
 }
 .tooltip-error {
     margin-top: -10% !important;
-    top: -15px !important;
+    top: -10px !important;
     background-color: rgba(194,57,52,0.8) !important;
 }
-.slds-nubbin_bottom-left {
+.slds-nubbin_bottom-left:before {
     background-color: rgba(194,57,52,0.8) !important;
+
 }
 .action-global {
     float: right;
