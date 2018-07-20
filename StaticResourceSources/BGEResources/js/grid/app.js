@@ -1086,16 +1086,10 @@
             if (rowErrors && rowErrors.length > 0) {
                 
                 iconContainer.style.display = 'block';
-                td.style.borderBottom = '2px solid transparent';
-                td.style.borderTop = '2px solid transparent';
-                td.style.borderLeft = '2px solid transparent';
             }
             else {
 
                 iconContainer.style.display = 'none';
-                td.style.borderBottom = 'none';
-                td.style.borderTop = 'none';
-                td.style.borderLeft = 'none';
             }
 
             Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
@@ -1126,6 +1120,10 @@
             td.appendChild(iconContainer);
 
             td.style.background = 'white !important';
+            td.style.borderBottom = 'none';
+            td.style.borderTop = 'none';
+            td.style.borderLeft = 'none';
+
             td.className = 'tooltip-cell';
 
             return td;
