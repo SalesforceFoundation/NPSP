@@ -88,16 +88,20 @@ public with sharing class BGE_Template_CTRL {
         };
 
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            if (!bannedFields.contains(dfr.name) && dfr.inlineHelpText != null && dfr.inlineHelpText.split('\\.').size() > 1) {
+            if (!bannedFields.contains(dfr.name) && dfr.inlineHelpText != null) {
                 Field fld = new Field();
-                fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
-                fld.name = dfr.getLabel();
+                if (dfr.name == 'Donation_Donor__c') {
+                    fld.sObjectName = 'Opportunity';
+                } else {
+                    fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
+                }
+                fld.name = dfr.getLabel().split(' ',2)[1];
                 fields.add(fld);
             }
         }
         return fields;
     }
-    
+
     /*******************************************************************************************************
     * @description 
     */
