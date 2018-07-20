@@ -329,7 +329,19 @@
         }
 
         function beforeChangeHandler(changes, source) {
-
+            if (source === "paste" || source === "autofill") {
+                for (var i = 0; i < changes.length; i++) {
+                    var row = changes[i][0];
+                    var col = hot.propToCol(changes[i][1]);
+                    var cellColType = hot.getDataType(row, col);
+                    if (cellColType == "dropdown") {
+                        var cell = hot.getCellMeta(row, col);
+                        if (!cell.__proto__.source.includes(changes[i][3])) {
+                            cell.instance.setDataAtCell(row, col, cell.__proto__.source[0]);
+                        }
+                    }
+                }
+            }
         }
 
         function afterChangeHandler(changes, source) {
@@ -395,7 +407,16 @@
                             }
 
                             if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                                cellRecords.push(cellRecord);
+                                if (hot.getDataType(newCell.row, newCell.col) == "dropdown") {
+                                    var cell = hot.getCellMeta(newCell.row, newCell.col);
+                                    var includesValue = cell.__proto__.source.includes(changes[0][3]);
+                                    if (includesValue && newValue!= cell.__proto__.source[0]) {
+                                        cellRecords.push(cellRecord);
+                                    }
+                                }
+                                else {
+                                    cellRecords.push(cellRecord);
+                                }
                             }
                             else if ((newValue == 'NaN') && (cellType == 'date')) {
                                 if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
@@ -678,7 +699,6 @@
                             }
                         }
                         else if (shift && tab) {
-                            colIndex--;
                             hot.selectCell(rowIndex, colIndex);
                         }
                     } catch(err) {
@@ -914,6 +934,7 @@
                             $scope.recordTypeMap = templateField.picklistValues;
                         }
                     }
+                    
                 }
 
                 if (templateField.apiName !== "Id") {
