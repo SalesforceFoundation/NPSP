@@ -103,6 +103,28 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description Saves the Template Details information, and the list of active fields.
+    * @return
+    */
+    @AuraEnabled
+    public static void saveTemplate(String templateInfo, String activeFields) {
+        try {
+            TemplateDetails templateDetails = (TemplateDetails) JSON.deserialize(templateInfo, BGE_Template_CTRL.TemplateDetails.class);
+
+            Batch_Template__c batchTemplate = new Batch_Template__c();
+            batchTemplate.Name = templateDetails.name;
+            batchTemplate.Description__c = templateDetails.description;
+            batchTemplate.Active_Fields__c = activeFields;
+
+            insert batchTemplate;
+        } catch (Exception ex) {
+            //TODO: is BDI right to use here?
+            ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
+            throw new AuraHandledException('ERROR: ' + ex.getMessage());
+        }
+    }
+
+    /*******************************************************************************************************
     * @description 
     */
     public class TemplateDetails {

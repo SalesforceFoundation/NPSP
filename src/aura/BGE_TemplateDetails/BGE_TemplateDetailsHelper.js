@@ -268,13 +268,29 @@
             function getTemplateInfo() {
                 return templateInfo;
             }
+
+            /* **********************************************************
++             * @Description Saves the Template Details and Fields.
++             * @return ?
++             ************************************************************/
+            function saveTemplateDetails() {
+                _bgeTemplateController.saveTemplateDetails({
+                    success: function(response) {
+                    //do something fun here
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
             
             // TemplateDetailsModel module public functions.
             return {
                 init: init,
                 setBackendController: setBackendController,
                 getTemplateFields: getTemplateFields,
-                getTemplateInfo: getTemplateInfo
+                getTemplateInfo: getTemplateInfo,
+                saveTemplateDetails: saveTemplateDetails
             }
         })(templateFields, templateInfo);
     },
@@ -521,6 +537,20 @@
                 $A.enqueueAction(action);
             }
 
+            /* **********************************************************
+             * @Description Calls the saveTemplateDetails method.
+             * @return save result status and any related errors
+             ************************************************************/
+            function saveTemplateDetails(callback) {
+                var action = _component.get("c.saveTemplate");
+                action.setParams({
+                    templateInfo: JSON.stringify(component.get("v.templateInfo")),
+                    activeFields: JSON.stringify(component.get("v.activeTemplateFields.data"))
+                });
+                action.setCallback(callback, _processResponse);
+                $A.enqueueAction(action);
+            }
+
             function _processResponse(response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {
@@ -540,7 +570,8 @@
             
             // BGETemplateController module public functions.
             return {
-                getTemplateDetails: getTemplateDetails
+                getTemplateDetails: getTemplateDetails,
+                saveTemplateDetails: saveTemplateDetails
             }
         })(component);
     },

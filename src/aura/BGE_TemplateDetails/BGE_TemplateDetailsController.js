@@ -33,7 +33,8 @@
      * @Description. Saves the template information. 
      *****************************************************************/
     save: function(component, event, helper) {
-
+        var model = component.get('v.model');
+        model.saveTemplateDetails();
     },
 
     /******************************** Template Fields Controller Functions *****************************/
