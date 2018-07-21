@@ -429,6 +429,9 @@ public with sharing class CONV_Account_Conversion_BATCH_TEST {
     public testMethod static void testSettingPrimaryAffiliation(){
         if (strTestOnly != '*' && strTestOnly != 'testSettingPrimaryAffiliation') return;
 
+        //skip the test if Advancement is installed - Bucket Account not supported in ADV
+        if(ADV_PackageInfo_SVC.useAdv()) return;
+
         //setup individual model and test account creation
         CONV_Account_Conversion_BATCH_TEST.setPreHHAccountModel(false);
 
