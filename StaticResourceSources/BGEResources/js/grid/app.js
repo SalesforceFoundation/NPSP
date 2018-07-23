@@ -329,7 +329,19 @@
         }
 
         function beforeChangeHandler(changes, source) {
-
+            if (source === "paste" || source === "autofill") {
+                for (var i = 0; i < changes.length; i++) {
+                    var row = changes[i][0];
+                    var col = hot.propToCol(changes[i][1]);
+                    var cellColType = hot.getDataType(row, col);
+                    if (cellColType == "dropdown") {
+                        var cell = hot.getCellMeta(row, col);
+                        if (!cell.__proto__.source.includes(changes[i][3])) {
+                            cell.instance.setDataAtCell(row, col, cell.__proto__.source[0]);
+                        }
+                    }
+                }
+            }
         }
 
         function afterChangeHandler(changes, source) {
@@ -395,7 +407,16 @@
                             }
 
                             if (cellRecord.newValue && (newValue !== 'NaN') && (cellRecord.oldValue !== cellRecord.newValue) || newValue == null) {
-                                cellRecords.push(cellRecord);
+                                if (hot.getDataType(newCell.row, newCell.col) == "dropdown") {
+                                    var cell = hot.getCellMeta(newCell.row, newCell.col);
+                                    var includesValue = cell.__proto__.source.includes(changes[0][3]);
+                                    if (includesValue && newValue!= cell.__proto__.source[0]) {
+                                        cellRecords.push(cellRecord);
+                                    }
+                                }
+                                else {
+                                    cellRecords.push(cellRecord);
+                                }
                             }
                             else if ((newValue == 'NaN') && (cellType == 'date')) {
                                 if (!$scope.rowErrors[cellRecord.recordId] || ($scope.rowErrors[cellRecord.recordId] && $scope.rowErrors[cellRecord.recordId].length == 0)) {
@@ -478,6 +499,7 @@
                                 }
 
                                 debugRowErrors = $scope.rowErrors;
+
                             }
                             else if ($scope.rowErrors[cellResponse.recordId]) {
 
@@ -678,7 +700,6 @@
                             }
                         }
                         else if (shift && tab) {
-                            colIndex--;
                             hot.selectCell(rowIndex, colIndex);
                         }
                     } catch(err) {
@@ -846,6 +867,7 @@
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
                     col.colWidths = 170;
                     col.editor = DateEditorCustom;
+                    col.renderer = dropdownAndDateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -914,6 +936,8 @@
                             $scope.recordTypeMap = templateField.picklistValues;
                         }
                     }
+
+                    col.renderer = dropdownAndDateCellRenderer;
                 }
 
                 if (templateField.apiName !== "Id") {
@@ -1084,7 +1108,7 @@
             var rowErrors = $scope.rowErrors[rowId];
 
             if (rowErrors && rowErrors.length > 0) {
-                
+
                 iconContainer.style.display = 'block';
             }
             else {
@@ -1127,6 +1151,43 @@
             td.className = 'tooltip-cell';
 
             return td;
+        }
+
+        function dropdownAndDateCellRenderer(instance, TD, row, col, prop, value, cellProperties) {
+
+            var val = value == null ? '' : value;
+
+            TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete";
+
+            var innerContent = '<div class="slds-grid slds-nowrap slds-size_12-of-12">' +
+                                    '<div class="slds-size_11-of-12" style="text-align: left">' +
+                                        '<div class="ellipsis slds-size_12-of-12" style="vertical-align: middle;">' + val + '</div>' +
+                                    '</div>' +
+                                    '<div class="slds-size_1-of-12">' +
+                                        '<div class="slds-size_12-of-12 htAutocompleteArrow">▼</div>' +
+                                    '</div>' +
+                               '</div>';
+
+            TD.innerHTML = innerContent;
+
+            var rowId = instance.getDataAtCell(row, instance.propToCol('Id'));
+            var rowErrors = $scope.rowErrors[rowId];
+
+            var errorInCell = false;
+
+            if (rowErrors) {
+                for (var i=0; i < rowErrors.length; i++) {
+                    if (rowErrors[i].field == prop) {
+                        errorInCell = true;
+                    }
+                }
+            }
+
+            if (errorInCell) {
+                TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete htInvalid";
+            }
+
+            return TD;
         }
 
         // Validation Errors
