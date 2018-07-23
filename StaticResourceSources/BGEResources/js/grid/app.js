@@ -499,6 +499,7 @@
                                 }
 
                                 debugRowErrors = $scope.rowErrors;
+
                             }
                             else if ($scope.rowErrors[cellResponse.recordId]) {
 
@@ -866,6 +867,7 @@
                     col.datePickerConfig = { 'yearRange': [1000, 3000] }
                     col.colWidths = 170;
                     col.editor = DateEditorCustom;
+                    col.renderer = dropdownAndDateCellRenderer;
                 }
                 else if (templateField.type === "CURRENCY") {
                     col.format = '$0,0.00'
@@ -934,7 +936,8 @@
                             $scope.recordTypeMap = templateField.picklistValues;
                         }
                     }
-                    
+
+                    col.renderer = dropdownAndDateCellRenderer;
                 }
 
                 if (templateField.apiName !== "Id") {
@@ -1105,7 +1108,7 @@
             var rowErrors = $scope.rowErrors[rowId];
 
             if (rowErrors && rowErrors.length > 0) {
-                
+
                 iconContainer.style.display = 'block';
             }
             else {
@@ -1148,6 +1151,43 @@
             td.className = 'tooltip-cell';
 
             return td;
+        }
+
+        function dropdownAndDateCellRenderer(instance, TD, row, col, prop, value, cellProperties) {
+
+            var val = value == null ? '' : value;
+
+            TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete";
+
+            var innerContent = '<div class="slds-grid slds-nowrap slds-size_12-of-12">' +
+                                    '<div class="slds-size_11-of-12" style="text-align: left">' +
+                                        '<div class="ellipsis slds-size_12-of-12" style="vertical-align: middle;">' + val + '</div>' +
+                                    '</div>' +
+                                    '<div class="slds-size_1-of-12">' +
+                                        '<div class="slds-size_12-of-12 htAutocompleteArrow">▼</div>' +
+                                    '</div>' +
+                               '</div>';
+
+            TD.innerHTML = innerContent;
+
+            var rowId = instance.getDataAtCell(row, instance.propToCol('Id'));
+            var rowErrors = $scope.rowErrors[rowId];
+
+            var errorInCell = false;
+
+            if (rowErrors) {
+                for (var i=0; i < rowErrors.length; i++) {
+                    if (rowErrors[i].field == prop) {
+                        errorInCell = true;
+                    }
+                }
+            }
+
+            if (errorInCell) {
+                TD.className = "htRight htMiddle slds-truncate htNoWrap htAutocomplete htInvalid";
+            }
+
+            return TD;
         }
 
         // Validation Errors
