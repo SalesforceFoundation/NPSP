@@ -62,6 +62,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
         decimal totalPercent = 0;                                            //holds total percentage allocations
         list<Allocation__c> triggerList = new list<Allocation__c>();         //all allocations for this opportunity in the current trigger set
         list<Allocation__c> listAllo = new list<Allocation__c>();            //all non-default allocations for this parent object
+        Map<Id, Allocation__c> mapDefaultDupes = new Map<Id, Allocation__c>();//duplicate default allocations, if any
         Allocation__c defaultAllo = null;                                    //the default allocation for this parent object
         boolean defaultInTrigger = false;                                    //is the default allocation in the current trigger set?
     }
@@ -328,7 +329,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                     oppWrap.defaultAllo.Amount__c = amountDifferential;
                                     dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
                                 }
-                            }          
+                            }
+                            //delete duplicate default GAU allocations
+                            if (!oppWrap.mapDefaultDupes.isEmpty()) {
+                                dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
+                            }
                         //this opp has no allocations, just create the default
                         } else dmlWrapper.objectsToInsert.add(makeDefaultAllocation(opp));
                     //if this was a recurring donation allocation, add to list for processing
@@ -465,6 +470,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     dmlWrapper.objectsToDelete.addAll((list<sObject>)oppWrap.listAllo);
                     if (settings.Default_Allocations_Enabled__c && oppWrap.defaultAllo!=null)
                         dmlWrapper.objectsToDelete.add(oppWrap.defaultAllo);
+                        dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
                 } else {
 
                     for (Allocation__c allo : oppWrap.listAllo) {
@@ -503,6 +509,10 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                                 }
                                 dmlWrapper.objectsToUpdate.add(oppWrap.defaultAllo);
                             }
+                        }
+                        //delete duplicate default GAU allocations
+                        if (!oppWrap.mapDefaultDupes.isEmpty()) {
+                            dmlWrapper.objectsToDelete.addAll((List<SObject>)oppWrap.mapDefaultDupes.values());
                         }
                     }
                     //if the Opportunity amount has decreased, we run the risk of allocations exceeding the total opportunity amount
@@ -552,6 +562,9 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
                     allo.addError(Label.alloDefaultNotPercent);
                 if (wrap.defaultAllo == null)
                     wrap.defaultAllo = allo;
+                else if (wrap.defaultAllo.Id != allo.Id) {
+                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                }
                 wrap.defaultInTrigger = true;
                 continue;
             }
@@ -579,8 +592,13 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
 
             //save the default allocation.
             if (settings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == idDefaultGAU) {
+                if (wrap.defaultAllo == null || wrap.defaultAllo.Id == allo.Id) {
                 wrap.defaultAllo = allo;
                 //keep the default allocation from listAllo
+                }
+                else {
+                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                }
                 continue;
             }
 
@@ -678,7 +696,11 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
             
             //save the default allocation.
             if (settings.Default_Allocations_Enabled__c && allo.General_Accounting_Unit__c == idDefaultGAU) {
-                wrap.defaultAllo = allo;
+                if (wrap.defaultAllo == null)
+                    wrap.defaultAllo = allo;
+                else if (wrap.defaultAllo.Id != allo.Id) {
+                    wrap.mapDefaultDupes.put(allo.Id, allo);
+                }
                 continue;
             }
 

@@ -134,7 +134,8 @@
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler,
                 afterScrollHorizontally: afterScrollHandler,
-                afterScrollVertically: afterScrollHandler
+                afterScrollVertically: afterScrollHandler,
+                modifyColWidth: modifyColWidthHandler
             });
 
             $scope.$apply();
@@ -198,9 +199,9 @@
 
                 var totalColumns = hot.countCols();
                 var totalRows = hot.countRows();
-    
+
                 for (var indexRow = 0; indexRow < totalRows; indexRow++) {
-    
+
                     var cellValue = hot.getDataAtCell(indexRow, hot.propToCol('Id'));
                     if (cellValue == null) {
                         hot.setDataAtCell(indexRow, hot.propToCol('Id'), Date.now().toString(), 'manual');
