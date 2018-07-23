@@ -139,3 +139,10 @@ td.tooltip-cell {
     width: 5px;
     height: 40px !important;
 }
+
+.ellipsis {
+    width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
