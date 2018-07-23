@@ -104,6 +104,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         Map<String, String> result = new Map<String, String>();
 
+        result.put('', '');
+
 		for (Schema.PicklistEntry value :fieldDescribe.getPicklistValues()) {
 
             result.put(value.getLabel(), value.getValue());
@@ -117,6 +119,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         Map<String, Schema.RecordTypeInfo> recordTypes = Schema.getGlobalDescribe().get(objectName).getDescribe().getRecordTypeInfosByName();
 
+        result.put('', '');
+
         for (Schema.RecordTypeInfo recordType :recordTypes.values()) {
 
             result.put(recordType.getName(), recordType.getRecordTypeId());
@@ -126,7 +130,6 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
     }
 
     public static Map<String, Schema.SObjectField> getObjectFields(String objectName) {
-        System.debug('$$$$$$$  ' + objectName);
         return Schema.getGlobalDescribe().get(objectName).getDescribe().fields.getMap();
     }
 
