@@ -602,118 +602,139 @@
             var selectedColType = hot.getDataType(rowIndex, colIndex);
             
             if (selectedColType == "dropdown") {
+
                 var editor = hot.getActiveEditor();
+
                 if (!tab && !left && !up && !right && !down) {
+
                     if (spacebar) {
                         //prevent spacebar default behavior to auto scroll down
                         event.preventDefault();
                     }
+
                     disableEdit(editor);
                 }
             }
+
             if (tab || left || up || right || down) {
+
                 var numberOfColumns = hot.countCols();
                 var numberOfRows = hot.countRows();
                 var lastRow = numberOfRows - 1;
                 var lastColumn = numberOfColumns - 1;
                 var isFirstRow = (rowIndex === 0) ? true : false;
+
                 //== ACTIONS column ==//
                 if (colIndex === 2) {
+
                     if (down || up) {
                         event.preventDefault();
                     }
                     else if (left || shift && tab) {
-                        if (!isTooltipDisplayed(rowIndex, 1)) {
+
+                        if (!isTooltipDisplayed(rowIndex)) {
+
+                            colIndex = 0;
+
                             if (isFirstRow) {
-                                colIndex = 0;
                                 rowIndex = 0;
                             }
-                            else {
-                                colIndex = 0;
-                            }
-                            hot.selectCell(rowIndex, colIndex);
                         }
                         else {
                             colIndex = 1;
-                            hot.selectCell(rowIndex, colIndex);
                         }
+
+                        hot.selectCell(rowIndex, colIndex);
                     }
                     else if (right || tab) {
-                        try{
+
+                        try {
                             hot.selectCell(rowIndex, colIndex);
-                        } catch(err){
+                        }
+                        catch(err){
                             console.log(err);
                         }
                     }
                 }
                 //== TOOLTIP / ERROR column ==//
                 else if (colIndex === 1) {
+
                     if (up) {
                         event.preventDefault();
+
                         var topRow = isFirstRow ? 0 : (rowIndex - 1);
-                        if (!isTooltipDisplayed(topRow, 1)) {
+
+                        if (!isTooltipDisplayed(topRow)) {
                             colIndex = 2;
-                            hot.selectCell(topRow, colIndex);
                         }
-                        else {
-                            hot.selectCell(topRow, colIndex);
-                        }
+
+                        hot.selectCell(topRow, colIndex);
                     }
                     else if (down) {
+
                         event.preventDefault();
+
                         var numberOfRows = hot.countRows();
                         var lastRow = numberOfRows - 1;
                         rowIndex = (rowIndex === lastRow) ? lastRow : (rowIndex + 1);
-                        if (!isTooltipDisplayed(rowIndex, 1)) {
+
+                        if (!isTooltipDisplayed(rowIndex)) {
                             colIndex = 2;
-                            hot.selectCell(rowIndex, colIndex);
                         }
-                        else {
-                            hot.selectCell(rowIndex, colIndex);
-                        }
+
+                        hot.selectCell(rowIndex, colIndex);
                     }
                     else if (left || shift && tab) {
+                        colIndex = 0;
+
                         if (isFirstRow) {
-                            colIndex = 0;
                             rowIndex = 0;
                         }
-                        else {
-                            colIndex = 0;
-                        }
+
                         hot.selectCell(rowIndex, colIndex);
                     }
                     else if (right || tab) {
-                        try{
+
+                        try {
                             hot.selectCell(rowIndex, colIndex);
-                        } catch(err){
+                        }
+                        catch(err){
                             console.log(err);
                         }
                     }
                 }
                 //== last row last column cell selected == //
                 else if (rowIndex === lastRow && colIndex === lastColumn) {
+
                     try {
                         if (!shift && (right || tab)) {
+
                             hot.selectCell(0, 0);
-                            if (!isTooltipDisplayed(0, 1)) {
+
+                            if (!isTooltipDisplayed(0)) {
                                 hot.selectCell(0, 1);
                             }
                         }
                         else if (shift && tab) {
                             hot.selectCell(rowIndex, colIndex);
                         }
-                    } catch(err) {
+                    }
+                    catch(err) {
                         console.log(err);
                     }
                 }
                 //== last cell of every column selected ==//
                 else if (colIndex == lastColumn) {
+
                     if (!shift &&  (right || tab)) {
+
                         var nextRow = rowIndex + 1;
-                        if (!isTooltipDisplayed(nextRow, 1)) {
+
+                        if (!isTooltipDisplayed(nextRow)) {
+                        // if (rowErrors && rowErrors.length > 0) {
                             colIndex = 2;
                             rowIndex++;
-                        } 
+                        }
                         else {
                             colIndex = 0;
                             rowIndex++;
@@ -726,12 +747,17 @@
                 }
             } 
             else if (enter && selectedColType != "dropdown") {
+
                 if (colIndex === 1) {
+
                     event.preventDefault();
+
                     var numberOfRows = hot.countRows();
                     var lastRow = numberOfRows - 1;
+
                     rowIndex = (rowIndex === lastRow) ? lastRow : (rowIndex + 1);
-                    if (!isTooltipDisplayed(rowIndex, 1)) {
+
+                    if (!isTooltipDisplayed(rowIndex)) {
                         colIndex = 2;
                         hot.selectCell(rowIndex, colIndex);
                     }
@@ -1262,10 +1288,12 @@
             return message;
         }
 
-        function isTooltipDisplayed(row, col) {
-            var tooltipIcon = hot.getCell(row, col).childNodes[0];
-            var tooltipIconStyle = tooltipIcon.style;
-            return (!tooltipIconStyle || tooltipIconStyle.display === "none") ? false : true;
+        function isTooltipDisplayed(row) {
+
+            var rowId = hot.getDataAtCell(row, hot.propToCol('Id'));
+            var rowErrors = $scope.rowErrors[rowId];
+
+            return (rowErrors && rowErrors.length > 0) ? true : false;
         }
 
         function setCellsHeight() {
