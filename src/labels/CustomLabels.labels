@@ -1401,7 +1401,7 @@ If you’re not sure how to resolve these errors, post a message in the Nonprofi
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>RP Remote Site Settings Deactivated</shortDescription>
-        <value>To take advantage of all the new functionality on the Getting Started page, you need to make sure the Remote Site is active. Go to Setup, search for Remote Site Settings, then click Edit next to SFDOEndpoints. Ensure that the Active box is checked, then click Save.</value>
+        <value>To take advantage of all the new functionality on the Getting Started page, go to Setup, search for Remote Site Settings, and ensure that the SFDOEndpoints site is active. If it isn't, click Edit, check the Active box, and click Save.</value>
     </labels>
     <labels>
         <fullName>RP_SalesforceOrgLinkLabel</fullName>
@@ -5492,7 +5492,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpErrorNotifyOn</shortDescription>
-        <value>Check this if you&apos;d like the system to post notifications for certain type of errors.</value>
+        <value>When selected, NPSP will display notifications for certain types of errrors.</value>
     </labels>
     <labels>
         <fullName>stgHelpErrorNotifyTo</fullName>
@@ -5580,7 +5580,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpHHObjectOverview</shortDescription>
-        <value>To learn more about the recommended Household account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
+        <value>To learn more about the recommended Household Account model, see the &lt;a href=&quot;https://powerofus.force.com/NPSP_Account_Model&quot; target=&quot;_blank&quot;&gt;NPSP Documentation&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>stgHelpHHRules</fullName>
@@ -5703,8 +5703,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpNewRDFieldMap</shortDescription>
-        <value>First, select the Recurring Donation field you want to map. Then select the Opportunity field you want to map to. The Recurring Donation field you select will appear on all child opportunities for the Recurring Donation.
-
+        <value>Select the Recurring Donation field you want to map, and the Opportunity field you want to map it to. NPSP will copy the value of the Recurring Donation field you select to your selected Opportunity field on all child Opportunities for the Recurring Donation.
 IMPORTANT: Both of these fields must have the same data type.</value>
     </labels>
     <labels>
@@ -5769,7 +5768,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOppNamingAttribution</shortDescription>
-        <value>Specifies whether you want to apply these settings to Contact donations (i.e. opportunities associated with Household, 1-to-1, or Individual &quot;Bucket&quot; accounts), Organization donations, or both Contact and Organization donations.</value>
+        <value>Specifies whether you want to apply these settings to Contact Donations (i.e. Opportunities associated with Household, 1-to-1, or Individual "Bucket" Accounts), Organization Donations, or both Contact and Organization Donations.</value>
     </labels>
     <labels>
         <fullName>stgHelpOppNamingDateFormat</fullName>
@@ -5817,7 +5816,7 @@ IMPORTANT: Both of these fields must have the same data type.</value>
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpOrgAccountAddressMgmt</shortDescription>
-        <value>Enables Address management for Organizational Accounts when selected.</value>
+        <value>When selected, enables Address Management for non-Household Accounts such as Organizational Accounts.</value>
     </labels>
     <labels>
         <fullName>stgHelpOverrunCount</fullName>
@@ -5919,7 +5918,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDAddCampaign</shortDescription>
-        <value>If selected, adds the campaign that you&apos;ve specified for the Recurring Donation to all related (i.e. &apos;child&apos;) opportunities. If this option is not selected, the campaign appears on the Recurring Donation&apos;s first opportunity only.</value>
+        <value>When selected, NPSP copies the Campaign you specified on the Recurring Donation record to all of its child Opportunities. If this is not selected, NPSP copies the Campaign to the first child Opportunity only.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDBatch</fullName>
@@ -5957,7 +5956,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDFailures</shortDescription>
-        <value>Number of Recurring Donations unsuccessfully updated in the last batch operation.</value>
+        <value>The number of Recurring Donations that failed to update in the last batch operation.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDFieldMap</fullName>
@@ -5997,7 +5996,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDMaxDonations</shortDescription>
-        <value>Restricts the total number of donations (installments) for Fixed-Length Recurring Donations. Default is 50.</value>
+        <value>Restricts the total number of Donations (installments) for Fixed-Length Recurring Donations. The default is 50.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOpenOppBehavior</fullName>
@@ -6005,7 +6004,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOpenOppBehavior</shortDescription>
-        <value>Tells Salesforce what to do with any remaining open opportunities when you mark the status of a Open-Ended Recurring Donation as Closed.</value>
+        <value>Tells NPSP what to do with any remaining open Opportunities when you mark the status of an Open-Ended Recurring Donation as Closed.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppForecastMonths</fullName>
@@ -6013,7 +6012,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppForecastMonths</shortDescription>
-        <value>Number of months&apos; worth of open opportunities created for Open-Ended Recurring Donations. The default is 12, so after every month, Salesforce creates another month&apos;s worth of open opportunities (i.e., the total months&apos; worth of open opportunities is always 12).</value>
+        <value>Number of months' worth of open Opportunities that NPSP maintains on Open-Ended Recurring Donations. NPSP makes sure there are always this many months' worth of Opportunities by creating the appropriate number of new Opportunities every month.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDOppRT</fullName>
@@ -6021,7 +6020,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDOppRT</shortDescription>
-        <value>The opportunity record type assigned to the Recurring Donation&apos;s child opportunities.</value>
+        <value>The Opportunity record type assigned to the Recurring Donation's child Opportunities.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodFrequency</fullName>
@@ -6037,7 +6036,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDPeriodName</shortDescription>
-        <value>The name of the new Custom Installment Period</value>
+        <value>The name of the new Custom Installment Period.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDPeriodType</fullName>
@@ -6045,7 +6044,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRDPeriodType</shortDescription>
-        <value>The type of time period the Custom Installment Period covers.</value>
+        <value>The unit of time (days, weeks, months, years) for the Custom Installment Period.</value>
     </labels>
     <labels>
         <fullName>stgHelpRDSuccesses</fullName>
@@ -6061,7 +6060,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRecDon</shortDescription>
-        <value>This setting lets you create custom installment periods for Recurring Donations, different from the default installment periods (monthly, quarterly, yearly, and so on) that come with the NPSP.</value>
+        <value>This setting lets you create Custom Installment Periods for Recurring Donations, different from the default Installment Periods (monthly, quarterly, yearly, and so on) that come with NPSP.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelAutoCreatedDup</fullName>
@@ -6069,7 +6068,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelAutoCreatedDup</shortDescription>
-        <value>The NPSP de-duplicates Auto-Created Relationships automatically. Select this option if you want to disable automatic de-duplication, and allow multiple Relationships of the same Type to exist between two Contacts.</value>
+        <value>NPSP deduplicates auto-created Relationships. Select this option if you want to disable automatic deduplication, and allow multiple Relationships of the same Type to exist between two Contacts.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelFieldSyncToggle</fullName>
@@ -6077,7 +6076,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpRelFieldSyncToggle</shortDescription>
-        <value>Select this option to sync custom Relationships fields between the two contacts in a relationship pair.</value>
+        <value>Select this option to sync custom Relationships fields between the two Contacts in a relationship pair.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelGenderField</fullName>
@@ -6117,7 +6116,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpRelReciprocalName</shortDescription>
-        <value>The name of the relationship. This is the Type value the user selects when creating a relationship between contacts.</value>
+        <value>The name of the Relationship. The name will be an option Users can select in the Type picklist when creating a Relationship between Contacts.</value>
     </labels>
     <labels>
         <fullName>stgHelpRelReciprocalNeutral</fullName>
@@ -6133,7 +6132,7 @@ This process may take some time, but you can close this page and the process wil
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpRelSyncFields</shortDescription>
-        <value>The custom Relationships fields you do not want synchronized between the two contacts in a relationship pair. Control or command click to select more than one field.</value>
+        <value>Select the custom Relationship fields you do not want synchronized between the two Contacts in a Relationship pair. Control or command click to select more than one field.</value>
     </labels>
     <labels>
         <fullName>stgHelpRespectDuplicateRuleSettings</fullName>
@@ -6262,7 +6261,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpStoreErrorsOn</shortDescription>
-        <value>Check this if you&apos;d like errors to be stored in the database.</value>
+        <value>When selected, NPSP will store errors. You can view stored errors in System Tools | Error Log on the NPSP Settings page.</value>
     </labels>
     <labels>
         <fullName>stgHelpTDTM</fullName>
@@ -6334,7 +6333,7 @@ To check your existing settings, go to Duplicate Rules under Setup. For any rule
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpTriggerHandlersAsync</shortDescription>
-        <value>Marking any Trigger Handler to run Asynchronously can have unintended consequences, and should be fully tested before deploying in production.</value>
+        <value>If you select the Asynchronous After Events option for a Trigger Handler, it can have unintended consequences. You should test the Trigger Handler thoroughly in a sandbox environment before deploying it to production.</value>
     </labels>
     <labels>
         <fullName>stgHelpUDROperation</fullName>
@@ -6599,7 +6598,7 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgLabelHonoreeNotificationHelpText</shortDescription>
-        <value>Create automatic Opportunity Contact Roles for Honoree and Notification Recipient contacts</value>
+        <value>Auto-create Opportunity Contact Roles for Honoree and Notification Recipient Contacts.</value>
     </labels>
     <labels>
         <fullName>stgLabelHonoreeNotificationOCR</fullName>
