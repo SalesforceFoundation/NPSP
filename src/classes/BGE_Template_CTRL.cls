@@ -103,9 +103,10 @@ public with sharing class BGE_Template_CTRL {
         };
 
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            if (!bannedFields.contains(UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name)) && dfr.inlineHelpText != null) {
+            String namespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
+            if (!bannedFields.contains(namespacedObject) && dfr.inlineHelpText != null) {
                 Field fld = new Field();
-                if (dfr.name == 'Donation_Donor__c') {
+                if (namespacedObject == 'Donation_Donor__c') {
                     fld.sObjectName = 'Opportunity';
                 } else {
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
