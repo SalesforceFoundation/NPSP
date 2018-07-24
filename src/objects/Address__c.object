@@ -109,7 +109,7 @@
         <fullName>Administrative_Area__c</fullName>
         <description>Depending on the country and area, could be a city, township, municipality or other civic region associated with this address.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Depending on the country and area, could be a city, township, municipality or other civic region associated with this address.</inlineHelpText>
+        <inlineHelpText>Use this to record the township, municipality, or other civic region associated with this Address.</inlineHelpText>
         <label>Administrative Area</label>
         <length>255</length>
         <required>false</required>
@@ -123,7 +123,7 @@
         <defaultValue>false</defaultValue>
         <description>Indicates whether more than on valid address was found when attempting to validate it through an external service.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates whether more than on valid address was found when attempting to validate it through an external service.</inlineHelpText>
+        <inlineHelpText>Indicates whether more than one valid Address was found when attempting to validate it through an external service.</inlineHelpText>
         <label>Ambiguous</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -133,7 +133,7 @@
         <fullName>Congressional_District__c</fullName>
         <description>The congressional district to which the address belongs pertains.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The congressional district to which the address belongs pertains.</inlineHelpText>
+        <inlineHelpText>The congressional district the Address is in.</inlineHelpText>
         <label>Congressional District</label>
         <length>255</length>
         <required>false</required>
@@ -144,7 +144,7 @@
     </fields>
     <fields>
         <fullName>County_Name__c</fullName>
-        <description>Name of the county the address is located at.</description>
+        <description>The name of the county the Address is in.</description>
         <externalId>false</externalId>
         <inlineHelpText>Name of the county the address is located at.</inlineHelpText>
         <label>County Name</label>
@@ -159,7 +159,7 @@
         <fullName>Default_Address__c</fullName>
         <defaultValue>false</defaultValue>
         <externalId>false</externalId>
-        <inlineHelpText>Is this the Default Address to use for the Household and its Contacts?</inlineHelpText>
+        <inlineHelpText>Indicates whether this is the Default Address to use for the Household and its Contacts.</inlineHelpText>
         <label>Default Address</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
@@ -194,7 +194,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <description>Location expressed as latitude and longitude.</description>
         <displayLocationInDecimal>true</displayLocationInDecimal>
         <externalId>false</externalId>
-        <inlineHelpText>Location expressed as latitude and longitude.</inlineHelpText>
+        <inlineHelpText>The Address expressed as latitude and longitude.</inlineHelpText>
         <label>Geolocation</label>
         <required>false</required>
         <scale>6</scale>
@@ -205,7 +205,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Household_Account__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The Account this Address is for.</inlineHelpText>
+        <inlineHelpText>Lookup to the Account associated with this Address.</inlineHelpText>
         <label>Account</label>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Addresses</relationshipLabel>
@@ -220,7 +220,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_End_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent ending date that this address was used. Generally used with Latest Start Date to track a date range for an address that&apos;s no longer in use.</inlineHelpText>
+        <inlineHelpText>The most recent ending date that this Address was used. Generally used with Latest Start Date to track a date range for an Address that's no longer in use.</inlineHelpText>
         <label>Latest End Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -230,7 +230,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Latest_Start_Date__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The most recent starting date that this address was used. Generally used with Latest End Date to track a date range for an address that&apos;s no longer in use.</inlineHelpText>
+        <inlineHelpText>The most recent starting date that this Address was used. Generally used with Latest End Date to track a date range for an Address that's no longer in use.</inlineHelpText>
         <label>Latest Start Date</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -305,7 +305,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>Pre_Verification_Address__c</fullName>
         <description>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Stores the address as entered before verification with a remote service, in case any information is lost in the verification process.</inlineHelpText>
+        <inlineHelpText>Stores the Address as entered before verification with a remote service, in case any information is lost in the verification process.</inlineHelpText>
         <label>Pre-Verification Address</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -315,7 +315,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Seasonal_End_Day__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The day of the month when this address no longer replaces the default address.</inlineHelpText>
+        <inlineHelpText>The day of the month when this Address no longer replaces the Default Address.</inlineHelpText>
         <label>Seasonal End Day</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -485,7 +485,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Seasonal_End_Month__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The month of the year when this address no longer replaces the default address.</inlineHelpText>
+        <inlineHelpText>The month of the year when this Address no longer replaces the Default Address.</inlineHelpText>
         <label>Seasonal End Month</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -560,7 +560,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Seasonal_Start_Day__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The day of the month when this address replaces the default address.</inlineHelpText>
+        <inlineHelpText>The day of the month when this Address replaces the Default Address.</inlineHelpText>
         <label>Seasonal Start Day</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -730,7 +730,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
     <fields>
         <fullName>Seasonal_Start_Month__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>The month of the year when this address replaces the default address.</inlineHelpText>
+        <inlineHelpText>The month of the year when this Address replaces the Default Address.</inlineHelpText>
         <label>Seasonal Start Month</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -806,7 +806,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>State_Lower_District__c</fullName>
         <description>The state lower district (such as a state assembly district) this address belongs to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The state lower district (such as a state assembly district) this address belongs to.</inlineHelpText>
+        <inlineHelpText>The state lower district (such as a state assembly district) this Address belongs to.</inlineHelpText>
         <label>State Lower District</label>
         <length>255</length>
         <required>false</required>
@@ -819,7 +819,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>State_Upper_District__c</fullName>
         <description>The state upper district (such as state senate district) this address belongs to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The state upper district (such as state senate district) this address belongs to.</inlineHelpText>
+        <inlineHelpText>The state upper district (such as state senate district) this Address belongs to.</inlineHelpText>
         <label>State Upper District</label>
         <length>255</length>
         <required>false</required>
@@ -832,7 +832,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <fullName>Verification_Status__c</fullName>
         <description>Status of the address verification.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If this address requires verification, click the Verify Address button at the top of this page. Consult the Help documentation in the Power of Us Hub for more information.</inlineHelpText>
+        <inlineHelpText>If this Address requires verification, click the Show more actions dropdown arrow in the upper right and then click Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</inlineHelpText>
         <label>Verification Status</label>
         <length>255</length>
         <required>false</required>
@@ -846,7 +846,7 @@ MailingCity__c &amp; IF(LEN(MailingCity__c) &gt; 0, &quot;, &quot;, &quot;&quot;
         <defaultValue>false</defaultValue>
         <description>Indicates whether the address has been verified by an external address verification service.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates whether the address has been verified by an external address verification service.</inlineHelpText>
+        <inlineHelpText>Indicates whether the Address has been verified by an external address verification service.</inlineHelpText>
         <label>Verified</label>
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
