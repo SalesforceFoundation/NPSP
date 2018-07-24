@@ -947,6 +947,9 @@
         } else if (amountObjectName === labels.objectPartialSoftCredit) {
             amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
             cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
+        }  else if (amountObjectName === labels.objectAccountSoftCredit) {
+            amountFieldName = labels.objectAccountSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject", labels.objectAccountSoftCredit);
         } else {
             amountFieldName = labels.objectOpportunity + ' Amount';
             cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);

@@ -127,15 +127,18 @@ public abstract class CRLP_Batch_Base {
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             options.parentKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+            options.detailObjType = Account_Soft_Credit__c.SObjectType;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
+            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') + '.AccountId';
+            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();

@@ -330,6 +330,8 @@
             parentRelationshipPrefix = SObjectType.Allocation__c.fields.Opportunity__c.getName().replace('__c', '__r');
         } else if (detailObjectType == Partial_Soft_Credit__c.SObjectType) {
             parentRelationshipPrefix = 'Opportunity';
+        } else if (detailObjectType == Account_Soft_Credit__c.SObjectType) {
+            parentRelationshipPrefix = SObjectType.Account_Soft_Credit__c.fields.Opportunity__c.getName().replace('__c', '__r');
         }
 
         // The following loop will confirm that all Filter Groups use the same Rule for the same field

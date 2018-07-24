@@ -188,7 +188,12 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 List<String> whereClauses = new List<String>();
                 whereClauses.add(this.keyField + ' IN : summaryRecords');
 
-                String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
+                String addlFilter;
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
+                } else {
+                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
+                }
                 if (!String.isEmpty(addlFilter)) {
                     whereClauses.add(addlFilter);
                 }
@@ -208,11 +213,13 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
                 query += ' ORDER BY ' + this.keyField;
 
-                if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
-                    query += ', Opportunity__r.CreatedDate ASC ';
+                String createdDateClause;
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    createdDateClause = ', Opportunity.CreatedDate ASC ';
                 } else {
-                    query += ', Opportunity.CreatedDate ASC ';
+                    createdDateClause = ', Opportunity__r.CreatedDate ASC ';
                 }
+                query += createdDateClause;
 
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> OCR Query =' + query);
                 System.debug('PROBLEM QUERY: '+query);
