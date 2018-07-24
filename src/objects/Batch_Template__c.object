@@ -77,6 +77,16 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Active_Fields__c</fullName>
+        <description>Represents the data model of active fields for a NPSP_Batch_Import__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Active Fields</label>
+        <length>30000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Batch_Process_Size__c</fullName>
         <defaultValue>50</defaultValue>
         <description>The number of NPSP Data Import records to process at a time in each batch.</description>
