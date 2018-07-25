@@ -842,6 +842,7 @@
         <members>DataImport__c.Contact1_Mobile_Phone__c</members>
         <members>DataImport__c.Contact1_Other_Phone__c</members>
         <members>DataImport__c.Contact1_Personal_Email__c</members>
+        <members>DataImport__c.Contact1_Possible_Matches__c</members>
         <members>DataImport__c.Contact1_Preferred_Email__c</members>
         <members>DataImport__c.Contact1_Preferred_Phone__c</members>
         <members>DataImport__c.Contact1_Salutation__c</members>
@@ -858,6 +859,7 @@
         <members>DataImport__c.Contact2_Mobile_Phone__c</members>
         <members>DataImport__c.Contact2_Other_Phone__c</members>
         <members>DataImport__c.Contact2_Personal_Email__c</members>
+        <members>DataImport__c.Contact2_Possible_Matches__c</members>
         <members>DataImport__c.Contact2_Preferred_Email__c</members>
         <members>DataImport__c.Contact2_Preferred_Phone__c</members>
         <members>DataImport__c.Contact2_Salutation__c</members>
