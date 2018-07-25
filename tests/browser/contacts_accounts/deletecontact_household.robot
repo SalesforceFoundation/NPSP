@@ -15,7 +15,7 @@ Delete Contact from Household
     #2 Create a new contact under HouseHold Validation
     ${contact_id2} =  New Contact for HouseHold
     &{contact2} =  Salesforce Get  Contact  ${contact_id2}
-    Page Should Contain  &{contact1}[LastName] and &{contact2}[LastName] Household
+    Header Field Value    Account Name    &{contact1}[LastName] and &{contact2}[LastName] Household
     Go To Object Home    Contact
     Select Row    &{Contact2}[FirstName] &{Contact2}[LastName]
     Click Link    link=Delete
