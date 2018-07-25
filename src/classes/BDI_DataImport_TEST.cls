@@ -107,7 +107,11 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Contact2Imported__c, listCon[0].Id);
         System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);
+
+        // no possible matches because this was a newly created contact
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
     }
     
     /*********************************************************************************************************
@@ -140,7 +144,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
         System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);        
         System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, listDI[0].Contact2ImportStatus__c);
+
+        // no possible matches because these were both newly created contacts
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -175,7 +184,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[1].Contact1ImportStatus__c);
+
+        // no possible matches because this was a newly created contact
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
     
     /*********************************************************************************************************
@@ -210,7 +224,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
         System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);
+
+        // no possible matches because these were both newly created contacts
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -256,7 +275,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertNotEquals(null, listDI[1].HouseholdAccountImported__c);
         System.assertEquals(label.bdiCreated, listDI[0].Contact1ImportStatus__c);
         System.assertEquals(label.bdiCreated, listDI[1].Contact1ImportStatus__c);        
-        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);
+
+        // no possible matches because these were both newly created contacts
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -300,7 +324,10 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Contact2Imported__c, listCon[1].Id);
         System.assertNotEquals(null, listDI[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiMatched, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);        
+        System.assertEquals(label.bdiMatched, listDI[0].Contact2ImportStatus__c);
+        System.assertEquals(listCon[0].Id, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(listCon[1].Id, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -346,9 +373,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(null, listDI[0].Contact2Imported__c);
         System.assertEquals(null, listDI[0].HouseholdAccountImported__c);
         System.assertEquals(label.bdiErrorNonHHAccountContact, listDI[0].Contact1ImportStatus__c);
-        System.assertEquals(null, listDI[0].Contact2ImportStatus__c);     
-        List<Address__c> listAddr = getAddresses();   
+        System.assertEquals(null, listDI[0].Contact2ImportStatus__c);
+        List<Address__c> listAddr = getAddresses();
         System.assertEquals(0, listAddr.size());
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -380,7 +410,12 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listDI[0].Account1Imported__c, listAcc[0].Id);
         System.assertEquals(listDI[0].Account2Imported__c, listAcc[1].Id);
         System.assertEquals(label.bdiCreated, listDI[0].Account1ImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[0].Account2ImportStatus__c);        
+        System.assertEquals(label.bdiCreated, listDI[0].Account2ImportStatus__c);
+
+        // no possible matches because these were both newly created contacts
+        System.assertEquals(null, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(null, listDI[0].Contact2_Possible_Matches__c);
+
     }
 
     /*********************************************************************************************************
@@ -611,6 +646,9 @@ public with sharing class BDI_DataImport_TEST {
             System.assertEquals(di.Contact2_Firstname__c + ' ' + di.Contact2_Lastname__c, contactById.get(di.Contact2Imported__c).Name);
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
+            // no possible matches because these were both newly created contacts
+            System.assertEquals(null, di.Contact1_Possible_Matches__c);
+            System.assertEquals(null, di.Contact2_Possible_Matches__c);
         }
         
         List<Account> listAcc = getOrganizations();
@@ -669,6 +707,9 @@ public with sharing class BDI_DataImport_TEST {
             System.assertEquals(di.Home_City__c, contactById.get(di.Contact2Imported__c).MailingCity);
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
+            // no possible matches because these were both newly created contacts
+            System.assertEquals(null, di.Contact1_Possible_Matches__c);
+            System.assertEquals(null, di.Contact2_Possible_Matches__c);
         }
         
         List<Address__c> listAddr = getAddresses(); 
@@ -736,6 +777,9 @@ public with sharing class BDI_DataImport_TEST {
             System.assertEquals(di.Home_City__c, contactById.get(di.Contact2Imported__c).MailingCity);
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
+            System.assertEquals(di.Contact1Imported__c, di.Contact1_Possible_Matches__c);
+            // In this test, Contact2 is always newly created, not matched
+            System.assertEquals(null, di.Contact2_Possible_Matches__c);
         }
         
         List<Address__c> listAddr = getAddresses(); 
@@ -827,10 +871,14 @@ public with sharing class BDI_DataImport_TEST {
         integer cMatched = 0;
         for (DataImport__c di : listDI) {
             System.assertEquals(di.HomeAddressImported__c, listAddr[0].Id);
-            if (di.HomeAddressImportStatus__c == label.bdiCreated)
-                cCreated++; 
-            else if (di.HomeAddressImportStatus__c == label.bdiMatched)
-                cMatched++; 
+            if (di.HomeAddressImportStatus__c == label.bdiCreated) {
+                cCreated++;
+            } else if (di.HomeAddressImportStatus__c == label.bdiMatched) {
+                cMatched++;
+            }
+            // no possible matches because these were both newly created contacts
+            System.assertEquals(null, di.Contact1_Possible_Matches__c);
+            System.assertEquals(null, di.Contact2_Possible_Matches__c);
         }
         // we didn't have an easy way to track the specific DI record that caused the addr to be created vs matched
         // in these duplicate (but new) scenarios, so we will live with marking them all as created.
@@ -886,6 +934,9 @@ public with sharing class BDI_DataImport_TEST {
             System.assertEquals(di.Home_City__c, contactById.get(di.Contact2Imported__c).MailingCity);
             System.assertNotEquals(null, contactById.get(di.Contact1Imported__c).AccountId);
             System.assertNotEquals(null, contactById.get(di.Contact2Imported__c).AccountId);
+            // no possible matches because these were both newly created contacts
+            System.assertEquals(null, di.Contact1_Possible_Matches__c);
+            System.assertEquals(null, di.Contact2_Possible_Matches__c);
         }
 
         List<Address__c> listAddr = getAddresses(); 
@@ -952,7 +1003,9 @@ public with sharing class BDI_DataImport_TEST {
         System.assertEquals(listAddr[0].Id, listDI[0].HomeAddressImported__c);   
         System.assertEquals(listAddr[2].Id, listDI[1].HomeAddressImported__c);   
         System.assertEquals(label.bdiMatched, listDI[0].HomeAddressImportStatus__c);
-        System.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);            
+        System.assertEquals(label.bdiCreated, listDI[1].HomeAddressImportStatus__c);
+        System.assertEquals(listCon[0].Id, listDI[0].Contact1_Possible_Matches__c);
+        System.assertEquals(listCon[1].Id, listDI[1].Contact1_Possible_Matches__c);
     }
     
     /*********************************************************************************************************
@@ -1446,6 +1499,47 @@ public with sharing class BDI_DataImport_TEST {
     }
 
     /*********************************************************************************************************
+    * @description operation
+    *        import identical existing contacts to test matching returning multiple possible matches
+    * verify:
+    *        both contact IDs stored on DI record
+    **********************************************************************************************************/
+    static testMethod void OneDIMultipleExistingContactsMatched() {
+        if (strTestOnly != '*' && strTestOnly != 'OneDIExistingContactsExistingHousehold') return;
+
+        // existing contacts into the same household
+        List<Contact> listConExisting = new List<Contact>();
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
+        // identical contact to test multiple contact matching
+        listConExisting.add(new Contact(Firstname='c1', Lastname='C1', Email='c1@C1.com', Salutation='Mr'));
+        insert listConExisting;
+
+        UTIL_UnitTestData_TEST.setFixedSearchResults(listConExisting);
+
+        List<DataImport__c> listDI = new List<DataImport__c>();
+        listDI.add(new DataImport__c(Contact1_Firstname__c='c1', Contact1_Lastname__c='C1', Contact1_Personal_Email__c='c1@C1.com', Contact1_Salutation__c='Dr',
+                Contact2_Firstname__c='c2', Contact2_Salutation__c='Prof'));
+        insert listDI;
+
+        //run batch data import
+        Test.StartTest();
+        BDI_DataImport_BATCH bdi = new BDI_DataImport_BATCH();
+        ID ApexJobId = Database.executeBatch(bdi, 10);
+        Test.stopTest();
+
+        // verify expected results
+        List<Contact> listCon = getContacts();
+        System.assertEquals(3, listCon.size());
+
+        listDI = getDIs();
+        System.assertEquals(1, listDI.size());
+        DataImport__c di = listDI[0];
+        System.assertEquals(listCon[1].Id, di.Contact1Imported__c, 'The second of the two identical Contacts should be in the lookup.');
+        System.assertEquals(listCon[0].Id+';'+listCon[1].Id, di.Contact1_Possible_Matches__c);
+        System.assertEquals(label.bdiMatched, di.Contact1ImportStatus__c);
+    }
+
+    /*********************************************************************************************************
     * @description operation:
     *    Retrieves data import records in the order they were created during the test. 
     * @return List<DataImport__c> All data import records in creation order
@@ -1454,8 +1548,8 @@ public with sharing class BDI_DataImport_TEST {
         return [
             SELECT Account1Imported__c, Account1ImportStatus__c, Account1_Name__c,
                 Account2Imported__c, Account2ImportStatus__c, Account2_Name__c, Contact1_Preferred_Email__c, Contact1_Preferred_Phone__c,
-                Contact1Imported__c, Contact1ImportStatus__c, Contact1_Firstname__c, Contact1_Lastname__c, Contact1_Title__c,
-                Contact2Imported__c, Contact2ImportStatus__c, Contact2_Firstname__c, Contact2_Lastname__c,
+                Contact1Imported__c, Contact1ImportStatus__c, Contact1_Firstname__c, Contact1_Lastname__c, Contact1_Title__c, Contact1_Possible_Matches__c,
+                Contact2Imported__c, Contact2ImportStatus__c, Contact2_Firstname__c, Contact2_Lastname__c, Contact2_Possible_Matches__c,
                 DonationImported__c, DonationImportStatus__c, Donation_Campaign_Name__c, FailureInformation__c, Status__c,
                 HomeAddressImported__c, HomeAddressImportStatus__c, HouseholdAccountImported__c, Home_Street__c, Home_City__c,
                 Home_State_Province__c, Home_Zip_Postal_Code__c, Home_Country__c
