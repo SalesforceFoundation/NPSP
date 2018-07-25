@@ -1003,7 +1003,7 @@
         <protected>true</protected>
         <shortDescription>Warning before complete reset of Customizable Rollups</shortDescription>
         <value>
-            Are you sure you want to reset Customizable Rollups to NPSP defaults? This will delete any rollups you've created, as well as any other changes you've made to NPSP default rollups.
+            Are you sure you want to reset Customizable Rollups? This will delete any new Customizable Rollups, Filter Rules, and Filter Groups you created, as well as reset all NPSP rollups to their default behavior.
         </value>
     </labels>
     <labels>
