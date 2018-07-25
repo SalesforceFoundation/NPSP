@@ -280,7 +280,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (summaryRecords.size() > 0) {
 
                 Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)) {
+                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType) && this.detailObjectType != Account_Soft_Credit__c.SObjectType) {
                     paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
                 }
 
