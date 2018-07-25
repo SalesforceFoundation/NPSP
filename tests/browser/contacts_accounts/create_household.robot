@@ -8,31 +8,28 @@ Suite Teardown  Delete Records and Close Browser
 
 Create Household With Name Only
     ${contact_id} =  Create Contact
-    &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Page Should Contain  &{contact}[LastName] Household
-    Header Field Should Have Link  Account Name
+    &{contact} =  Salesforce Get  Contact  ${contact_id} 
+    Header Field Value    Account Name    &{contact}[LastName] Household
     Go To Object Home         Contact
-    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
-    Should Be Equal As Strings    ${con_name}    True
+    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+
     
 Create Household With Name and Email
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Page Should Contain  &{contact}[LastName] Household
-    Header Field Should Have Link  Account Name
-    Page Should Contain    skristem@salesforce.com
+    Header Field Value    Account Name    &{contact}[LastName] Household
+    Header Field Value    Email    skristem@salesforce.com
     Go To Object Home         Contact
-    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
-    Should Be Equal As Strings    ${con_name}    True
+    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+
     
 Create Household with Name and Address
     ${contact_id} =  Create Contact with Address
     &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Page Should Contain  &{contact}[LastName] Household
-    Header Field Should Have Link  Account Name
+    Header Field Value    Account Name    &{contact}[LastName] Household
     Select Tab    Details 
     Page Should Contain    50 Fremont Street  
     Go To Object Home         Contact
-    ${con_name}    Verify Record    &{contact}[FirstName] &{contact}[LastName]
-    Should Be Equal As Strings    ${con_name}    True
+    Verify Record    &{contact}[FirstName] &{contact}[LastName]
+
          

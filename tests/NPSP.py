@@ -13,6 +13,7 @@ from SeleniumLibrary.errors import ElementNotFound
 from simple_salesforce import SalesforceMalformedRequest
 from simple_salesforce import SalesforceResourceNotFound
 from locator import npsp_lex_locators
+from selenium.webdriver import ActionChains
 #import os
 #import sys
 #sys.path.append(os.path.abspath(os.path.join('..',
@@ -91,19 +92,27 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click() 
         
-    def select_row(self, value ):
-        """To select a row on object page based on name and open the dropdown"""
-        locators = npsp_lex_locators['name']
-        list_ele = self.selenium.get_webelements(locators)
-        index= 1
-        for locator in list_ele:
-            global index
-            if locator.text != value:
-                index = index+1
-            else:
-                drop_down = npsp_lex_locators['locate_dropdown'].format(index)
-                self.selenium.get_webelement(drop_down).click()
-                self.selenium.get_webelement(drop_down).click()
+    def select_row(self,value):
+        """To select a row on object page based on name and open the dropdown"""    
+        drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
+        self.selenium.get_webelement(drop_down).click()
+        self.selenium.get_webelement(drop_down).click()
+
+
+
+#     def select_row(self, value ):
+#         """To select a row on object page based on name and open the dropdown"""
+#         locators = npsp_lex_locators['name']
+#         list_ele = self.selenium.get_webelements(locators)
+#         index= 1
+#         for locator in list_ele:
+#             global index
+#             if locator.text != value:
+#                 index = index+1
+#             else:
+#                 drop_down = npsp_lex_locators['locate_dropdown'].format(index)
+#                 self.selenium.get_webelement(drop_down).click()
+#                 self.selenium.get_webelement(drop_down).click()
             
     def select_related_row(self, value ):
         """To select row from a related list based on name and open the dropdown"""
@@ -161,17 +170,84 @@ class NPSP(object):
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
         """
-        try:
-            locator=npsp_lex_locators['account_list'].format(name)
-            verify = self.selenium.get_webelement(locator).click()
-            return "True"
-        except:
-            return "False"
+        locator=npsp_lex_locators['account_list'].format(name)
+        self.selenium.page_should_contain_element(locator)
+
             
     def select_option(self, name):  
         """selects various options in Contact>New opportunity page using name
         """
         locator=npsp_lex_locators['dd_options'].format(name)
         self.selenium.get_webelement(locator).click()
-                 
+        
+    def verify_related_list_items(self,list_name,value):
+        """Verifies a specified related list has specified value(doesn't work if the list is in table format)"""
+        locator=npsp_lex_locators['related_list_items'].format(list_name,value)
+        self.selenium.page_should_contain_element(locator)
+    
+    def click_managehh_special_button(self,title):  
+        """clicks on the new contact button on manage hh page"""      
+        locator=npsp_lex_locators['manage_hh_page']['mhh_button'].format(title)
+        self.selenium.get_webelement(locator).click()  
+        
+    def header_field_value(self,title,value):   
+        """Validates if the specified header field has specified value"""   
+        locator= npsp_lex_locators['header_field_value'].format(title,value)
+        self.selenium.page_should_contain_element(locator)
+        
+    def Verify_affiliated_contact(self,list_name,first_name,last_name, y):   
+        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case"""   
+        locator= npsp_lex_locators['affiliated_contacts'].format(list_name,first_name,last_name)
+        if y.upper()=="Y":
+            self.selenium.page_should_contain_element(locator)
+        elif y.upper()=="N":
+            self.selenium.page_should_not_contain_element(locator)
+        
+    def fill_address_form(self, **kwargs):
+        """Validates if the affiliated contacts have the added contact details enter Y for positive case and N for negative case""" 
+        for label, value in kwargs.items():
+            locator= npsp_lex_locators['manage_hh_page']['address'].format(label,value)
+            if label=="Street":
+                locator = locator+"textarea"
+                self.selenium.get_webelement(locator).send_keys(value)
+            else:
+                locator = locator+"input"
+                self.selenium.get_webelement(locator).send_keys(value)
+         
+    def Verify_details_address(self,field,value):   
+        """Validates if the details page address field has specified value"""   
+        locator= npsp_lex_locators['detail_page']['address'].format(field,value)
+        self.selenium.page_should_contain_element(locator)        
+        
+    #def DnD(self):
+    def validate_checkbox(self,name,checkbox_title):   
+        """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
+          
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+        self.selenium.page_should_contain_element(locator)
+        
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal")
+        self.selenium.page_should_contain_element(locator)
+        
+        locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName") 
+        self.selenium.page_should_contain_element(locator)
+        
+        if checkbox_title == "Informal Greeting":
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBInformal")
+        elif checkbox_title == "Formal Greeting":
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBFormal") 
+        elif checkbox_title.capitalize() == "Household Name":
+            locator=npsp_lex_locators['manage_hh_page']['mhh_checkbox'].format(name,"fauxCBExName")       
+        return locator
+    
+    def check_field_value(self, title, value):
+        """checks value of a field in details page(section without header)"""
+        locator=npsp_lex_locators['detail_page']['verify_field_value'].format(title,value)
+        self.selenium.page_should_contain_element(locator)
+        
+    def click_managehh_button(self,title):  
+        """clicks on the new contact button on manage hh page"""      
+        locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
+        self.selenium.get_webelement(locator).click()    
+    
                   

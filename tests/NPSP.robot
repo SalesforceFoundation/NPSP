@@ -142,6 +142,14 @@ Choose Frame
     [Arguments]    ${frame}
     Select Frame    //iframe[contains(@title,'${frame}')]
     
+Select Frame with ID
+    [Arguments]    ${id}
+    Select Frame    //iframe[contains(@id, '${id}')]    
+    
+Select Frame With Title
+    [Arguments]    ${name}
+    Select Frame    //iframe[@title= '${name}']    
+    
 Scroll Page To Location
     [Arguments]    ${x_location}    ${y_location}
     Execute JavaScript    window.scrollTo(${x_location},${y_location}) 

@@ -10,7 +10,7 @@ Delete Contact with Closed Won Opportunity from Household
     #1 contact HouseHold Validation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}
-    Page Should Contain  &{contact}[LastName] Household
+    Header Field Value    Account Name    &{contact}[LastName] Household
     Scroll Page To Location    0    500
     Sleep    5
     Click Special Related List Button   Opportunities    New Contact Donation
@@ -35,7 +35,7 @@ Delete Contact with Closed Won Opportunity from Household
     Select Row    &{Contact}[FirstName] &{Contact}[LastName]
     Click Link    link=Delete
     Sleep    5    
-    Select Frame    //iframe[contains(@id, "vfFrameId")]
+    Select Frame With ID    vfFrameId
     Click Button    //input[@class="btn slds-button slds-button_brand"]
     Sleep    5
     Page Should Contain    Error

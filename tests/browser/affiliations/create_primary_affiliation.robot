@@ -12,4 +12,5 @@ Create Primary Affiliation for Contact
     &{contact} =  Salesforce Get  Contact  ${con}
     Go To Object Home          Account
     Click Link    link=&{account}[Name]
-    Page Should Contain    &{contact}[LastName]
+    Verify Affiliated Contact    Affiliated Contacts    &{contact}[FirstName]    &{contact}[LastName]    Y    
+   
