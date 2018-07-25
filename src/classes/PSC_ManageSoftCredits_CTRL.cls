@@ -171,7 +171,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         // now deal with any remaining OCR's that didn't have a PSC, but are soft credits
         for (OpportunityContactRole ocr : mapIdToOCR.values()) {
-            if (ocr.Role != null && softCreditRoles.contains(ocr.Role))
+            if (ocr.Role != null && softCreditRoles.contains(ocr.Role) && !ocr.IsPrimary)
                 softCredits.add(new SoftCredit(ocr));
         }
         
