@@ -78,7 +78,7 @@
         <defaultValue>true</defaultValue>
         <description>Whether this Level is currently in use.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Whether this Level is currently in use.</inlineHelpText>
+        <inlineHelpText>Indicates whether this Level is currently in use.</inlineHelpText>
         <label>Active</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -115,7 +115,7 @@
         <fullName>Level_Field__c</fullName>
         <description>The field (developer name) on the Target object to store the lookup to the current Level.  Note that this field implicitly defines the “Ladder” that this Level is part of.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The field (developer name) on the Target object to store the lookup to the current Level.  Note that this field implicitly defines the “Ladder” that this Level is part of.</inlineHelpText>
+        <inlineHelpText>Indicates which field to use on the target object to store the current Level.</inlineHelpText>
         <label>Level Field</label>
         <length>255</length>
         <required>true</required>
@@ -128,7 +128,7 @@
         <fullName>Maximum_Amount__c</fullName>
         <description>The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The maximum amount the value must be below to be assigned this Level.  If empty, then any amount greater than or equal to this Level&apos;s Minimum Amount will assign this Level.</inlineHelpText>
+        <inlineHelpText>The amount the value must be below for NPSP to assign this Level. If this field is empty, NPSP will assign this Level for any amount greater than or equal to this Level's Minimum Amount.</inlineHelpText>
         <label>Maximum Amount (&lt;)</label>
         <precision>18</precision>
         <required>false</required>
@@ -142,7 +142,7 @@
         <fullName>Minimum_Amount__c</fullName>
         <description>The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The minimum amount to be assigned this Level.  If empty, then any amount less than this Level&apos;s Maximum Amount will assign this Level.</inlineHelpText>
+        <inlineHelpText>The minimum amount needed for NPSP to assign this Level. If this field is empty, then NPSP will assign this Level to any amount less than this Level's Maximum Amount.</inlineHelpText>
         <label>Minimum Amount (&gt;=)</label>
         <precision>18</precision>
         <required>false</required>
@@ -156,7 +156,7 @@
         <fullName>Previous_Level_Field__c</fullName>
         <description>The field (developer name) on the Target object to store the lookup to the previous Level the object had.  Optional.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The field (developer name) on the Target object to store the lookup to the previous Level the object had.  Optional.</inlineHelpText>
+        <inlineHelpText>Indicates which field to use on the target object to store the previous Level.</inlineHelpText>
         <label>Previous Level Field</label>
         <length>255</length>
         <required>false</required>
