@@ -250,4 +250,17 @@ class NPSP(object):
         locator=npsp_lex_locators['manage_hh_page']['button'].format(title)
         self.selenium.get_webelement(locator).click()    
     
-                  
+    def select_modal_checkbox(self,title):
+        """"""
+        locator=npsp_lex_locators['modal']['checkbox'].format(title)
+        self.selenium.get_webelement(locator).click()    
+        
+    def verify_occurance(self,title,value):
+        """"""
+        locator=npsp_lex_locators['record']['related']['check_occurance'].format(title,value)
+        self.selenium.page_should_contain_element(locator)    
+     
+    def select_related_dropdown(self,title):
+        """"""
+        locator=npsp_lex_locators['record']['related']['drop-down'].format(title)
+        self.selenium.get_webelement(locator).click()              

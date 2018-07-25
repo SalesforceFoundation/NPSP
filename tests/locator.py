@@ -9,6 +9,8 @@ npsp_lex_locators={
         'dropdown':"//div[@class='select-options']/ul[@class='scrollable']/li[@class='uiMenuItem uiRadioMenuItem']/a[contains(text(),'{}')]",
         'related': {
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
+            'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span[text()=" ({})"]',
+            'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
          },    
     },
     'object':{
@@ -48,6 +50,9 @@ npsp_lex_locators={
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[contains(@title, "{}")]',
         'mhh_button':'//span[text()="{}"]',
+    },
+    'modal':{
+        'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
     }
 }
     
