@@ -2002,6 +2002,12 @@
         <members>Account-iw</members>
         <members>Account-ja</members>
         <members>Account-nl_NL</members>
+        <members>Account_Soft_Credit__c-de</members>
+        <members>Account_Soft_Credit__c-es</members>
+        <members>Account_Soft_Credit__c-fr</members>
+        <members>Account_Soft_Credit__c-iw</members>
+        <members>Account_Soft_Credit__c-ja</members>
+        <members>Account_Soft_Credit__c-nl_NL</members>
         <members>Activity-de</members>
         <members>Activity-es</members>
         <members>Activity-fr</members>
