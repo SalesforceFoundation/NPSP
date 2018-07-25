@@ -99,9 +99,14 @@
             <valueSetDefinition>
                 <sorted>false</sorted>
                 <value>
-                    <fullName>Influence</fullName>
+                    <fullName>Donation Source</fullName>
                     <default>false</default>
-                    <label>Influence</label>
+                    <label>Donation Source</label>
+                </value>
+                <value>
+                    <fullName>Influencer</fullName>
+                    <default>false</default>
+                    <label>Influencer</label>
                 </value>
                 <value>
                     <fullName>Match</fullName>

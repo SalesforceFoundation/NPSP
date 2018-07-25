@@ -569,7 +569,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                         Account__c = accForSoftCredits.Id,
                         Opportunity__c = opp.Id,
                         Amount__c = ACCOUNT_SOFT_CREDIT_AMOUNT,
-                        Role__c = 'Influence'
+                        Role__c = 'Influencer'
                 );
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     accSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
