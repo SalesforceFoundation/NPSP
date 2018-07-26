@@ -1753,7 +1753,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>alloNegativeAmount</shortDescription>
-        <valu>The Amount field can't contain a negative value.</value>
+        <value>The Amount field can't contain a negative value.</value>
     </labels>
     <labels>
         <fullName>alloNegativePercent</fullName>
