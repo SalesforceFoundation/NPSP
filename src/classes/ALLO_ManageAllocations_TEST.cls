@@ -55,7 +55,7 @@ private class ALLO_ManageAllocations_TEST {
             if (alloset!=null)
                 UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(alloset);
             else 
-                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c(Payment_Allocations_Enabled__c=true));
+                UTIL_CustomSettingsFacade.getAllocationsSettingsForTests(new Allocations_Settings__c());
 
         }
     }
@@ -103,21 +103,26 @@ private class ALLO_ManageAllocations_TEST {
     * row, then inserts an allocation and verifies the allocation was created properly.
     ********************************************************************************************************/
     static testMethod void testPayment() {
-        if (strTestOnly != '*' && strTestOnly != 'testOpp') return;
-        setupSettings(null);
-        
+        if (strTestOnly != '*' && strTestOnly != 'testPayment') return;
+
         Decimal amt = 100;
         Account acc = new Account(Name='foo');
         insert acc;
         Opportunity opp = new Opportunity(Name='foo', Amount = amt, AccountID=acc.id, CloseDate=system.today(), StageName=UTIL_UnitTestData_TEST.getClosedWonStage());
         insert opp;
-        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
-        insert gau;
         npe01__OppPayment__c payment = new npe01__OppPayment__c(
             npe01__Opportunity__c = opp.Id,
             npe01__Payment_Amount__c = amt
         );
         insert payment;
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='def');
+        General_Accounting_Unit__c gau = new General_Accounting_Unit__c(Name='foo');
+        insert new List<General_Accounting_Unit__c>{defaultGau, gau};
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id)
+        );
 
         ALLO_ManageAllocations_CTRL ctrl = setUpController(payment.Id);
 
@@ -129,17 +134,24 @@ private class ALLO_ManageAllocations_TEST {
         ctrl.addRow();
         system.assertEquals(2,ctrl.listAllo.size(),'Adding a row increases the size of the allocation list.');
 
-        ctrl.listAllo[0].Percent__c = 50;
-        ctrl.listAllo[0].General_Accounting_Unit__c = gau.id;
+        ctrl.listAllo[0].Percent__c = 25;
+        ctrl.listAllo[0].General_Accounting_Unit__c = gau.Id;
         ctrl.rowNumber = 1;
         ctrl.delRow();
         Test.startTest();
         ctrl.saveClose();
         Test.stopTest();
 
-        list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c FROM Allocation__c WHERE Payment__c=:payment.id];
-        system.assertEquals(1,queryAllo.size(),'The single allocation should be saved.');
-        system.assertEquals(amt/2,queryAllo[0].Amount__c,'The amount should be calculated based on the percent.');
+        list<Allocation__c> queryAllo = [SELECT Id, Percent__c, Amount__c 
+            FROM Allocation__c 
+            WHERE Payment__c=:payment.id
+            ORDER BY Amount__c ASC
+        ];
+        Decimal firstAmt = amt/4;
+        Decimal remainderAmt = amt - firstAmt;
+        system.assertEquals(2,queryAllo.size(),'The allocation, and the default to make up the remainder, should be saved.');
+        system.assertEquals(firstAmt,queryAllo[0].Amount__c,'The amount should be calculated based on the percent.');
+        system.assertEquals(remainderAmt,queryAllo[1].Amount__c,'The default allocation should make up the remainder');
     }
 
     /*******************************************************************************************************

@@ -49,7 +49,12 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     public static final npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
     /** @description The id of the default General Accounting Unit if default allocations are enabled */
-    public static id idDefaultGAU = settings.Default__c;
+    public static id idDefaultGAU {
+        get {
+            return settings.Default__c;
+        }
+        set;
+    }
 
     /*******************************************************************************************************
     * @description wrapper class to hold all allocation and opportunity information for a single parent: 
