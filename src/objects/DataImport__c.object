@@ -845,6 +845,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Contact1_Possible_Matches__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact1 Possible Matches</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
+    </fields>
+    <fields>
         <fullName>Contact1_Preferred_Email__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Contact1.npe01__Preferred_Email__c</inlineHelpText>
@@ -1046,6 +1055,15 @@
         <trackTrending>false</trackTrending>
         <type>Email</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Contact2_Possible_Matches__c</fullName>
+        <externalId>false</externalId>
+        <label>Contact2 Possible Matches</label>
+        <length>131072</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>Contact2_Preferred_Email__c</fullName>
