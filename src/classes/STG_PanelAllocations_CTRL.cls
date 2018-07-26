@@ -68,7 +68,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     /*********************************************************************************************************
     * @description Enable or disable payment allocations based on settings selection
     */
-    public void setAllocationLevel(){
+    public void setAllocationLevelFromSelection(){
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
             (strAllocationLevel == paymentLabel);
     }
@@ -80,7 +80,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     * @return String the jobId for the custom rollup deployment
     */
     @future
-    public static void updateAlloCustomRollups(Boolean usePayments){
+    public static void updateCustomRollupsAlloLevel(Boolean usePayments){
         String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
         String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
         Id oldFilterId = 
@@ -93,7 +93,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         String newDateField = usePayments ? paymentAlloDateField : oppAlloDateField;
 
         List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
-        for(Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
+        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
             if(rlp.Filter_Group__c == oldFilterId 
                 && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
                 && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
@@ -102,12 +102,12 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             }
         }
 
-        if(rollupsToUpdate.isEmpty()){
+        if (rollupsToUpdate.isEmpty()){
             return;
         }
 
-        List<CRLP_RollupCMT.Rollup> rollupList = new List<CRLP_RollupCMT.Rollup>();
-        for(Rollup__mdt rlp: rollupsToUpdate){
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+        for (Rollup__mdt rlp: rollupsToUpdate){
             CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
             crlp.filterGroupRecordName = newFilter;
             crlp.detailObject = newObjectLevel;
@@ -116,11 +116,11 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
             crlp.amountField = newAmountField;
             crlp.detailField = newAmountField;
             crlp.dateField = newDateField;
-            rollupList.add(crlp);
+            rollups.add(crlp);
         }
 
         CRLP_ConfigBuilder_SVC.clearQueue();
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupList);
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
     }
 
@@ -192,7 +192,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         strDefaultGAUName = null;
 
         Boolean oldPayAlloValue = STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c;
-        setAllocationLevel();
+        setAllocationLevelFromSelection();
 
         if (STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c && 
             !STG_Panel.stgService.stgAllo.Default_Allocations_Enabled__c) {
@@ -201,9 +201,9 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         }
 
         // If the Allocation level changed and custom rollups are enabled, update them
-        if(oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
+        if (oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
             && STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c){
-                updateAlloCustomRollups(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
+                updateCustomRollupsAlloLevel(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
         }
 
         return super.saveSettings();

@@ -270,6 +270,7 @@ public with sharing class STG_SettingsManager_TEST {
     public static testMethod void testPanelAllo() {
         if (strTestOnly != '*' && strTestOnly != 'testPanelAllo') return;
 
+        // Adding mock data to test custom rollups updates when allocation level changes
         mockRollupCMTValues();
 
         Id oppAlloFilterGroupId = 
@@ -277,7 +278,7 @@ public with sharing class STG_SettingsManager_TEST {
 
         Integer numOppRollups = 0;
         List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
-        for(Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
+        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
             if( rlp.Filter_Group__c == oppAlloFilterGroupId 
                 && rlp.Detail_Object__c == STG_Panel.oppLabel){
                     numOppRollups++;
@@ -309,7 +310,7 @@ public with sharing class STG_SettingsManager_TEST {
         system.assertEquals(numOppRollups, CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size(), 'Check that Opportunity Allocation rollups have been queued for update');
 
         Integer rollupChangeCount = 0;
-        for(Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
+        for (Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
             for (Metadata.CustomMetadataValue val : md.values) {
                 if ((String)val.field == 'Detail_Object__c') {
                     if(val.value == CRLP_DefaultConfigBuilder.paymentObject){

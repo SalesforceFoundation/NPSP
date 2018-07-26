@@ -161,7 +161,7 @@ public with sharing class STG_PanelCustomizableRollup_CTRL extends STG_Panel {
                         UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
 
                         // Update and deploy custom rollups if the Allocation level has changed since they were enabled
-                        STG_PanelAllocations_CTRL.updateAlloCustomRollups(
+                        STG_PanelAllocations_CTRL.updateCustomRollupsAlloLevel(
                             STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
                     }
 

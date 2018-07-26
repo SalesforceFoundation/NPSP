@@ -4912,7 +4912,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgAllocationLevel</shortDescription>
-        <value>Allocation Level</value>
+        <value>Allocation Type</value>
     </labels>
     <labels>
         <fullName>stgBtnCancel</fullName>
@@ -5280,7 +5280,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpAllocationLevel</shortDescription>
-        <value>This setting determines where Allocations will be handled.</value>
+        <value>Determines whether Payment Allocations are enabled by default, or whether allocations default to the Opportunity settings.</value>
     </labels>
     <labels>
         <fullName>stgHelpAllocationLevel2</fullName>
@@ -5288,7 +5288,7 @@ To view these jobs, search for Scheduled Jobs in Salesforce Setup.</value>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgHelpAllocationLevel2</shortDescription>
-        <value>Note: Payment Level Allocation rollups are only supported when Customizable Rollups are enabled.</value>
+        <value>Payment Allocation Rollups are only supported when Payment Allocations and Customizable Rollups are enabled.</value>
     </labels>
     <labels>
         <fullName>stgHelpAutoAffil</fullName>
