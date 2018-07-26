@@ -1517,7 +1517,7 @@
         <externalId>false</externalId>
         <formula>Current_Address__r.Verification_Status__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address.  Consult the Power of Us Hub documentation for more information on Address Verification.</inlineHelpText>
+        <inlineHelpText>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address. Consult the Power of Us Hub documentation for more information on Address Verification.</inlineHelpText>
         <label>Address Verification Status</label>
         <required>false</required>
         <type>Text</type>
