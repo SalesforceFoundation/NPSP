@@ -128,10 +128,16 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         Map<Id, SoftCredit> ocrs = new Map<Id, SoftCredit>();
         softCredits = new List<SoftCredit>();
-        set<String> softCreditRoles = new set<String>();
-        if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c != null)
-            softCreditRoles = new set<String>(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c.split(';'));
-        
+        Set<String> softCreditRoles = new Set<String>();
+
+        if (UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c) {
+            for(Schema.PicklistEntry pe : Schema.sObjectType.OpportunityContactRole.fields.Role.getPicklistValues()) {
+                softCreditRoles.add(pe.getLabel());
+            }
+        } else if (UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c != null) {
+            softCreditRoles = new Set<String>(UTIL_CustomSettingsFacade.getHouseholdsSettings().npo02__Soft_Credit_Roles__c.split(';'));
+        }
+
         // get all OCR's for the Opp
         map<Id, OpportunityContactRole> mapIdToOCR = new map<Id, OpportunityContactRole>([SELECT Id, ContactId, Role, 
             IsPrimary, Opportunity.Amount FROM OpportunityContactRole WHERE OpportunityId = :opp.Id]);
@@ -165,7 +171,7 @@ public with sharing class PSC_ManageSoftCredits_CTRL {
         
         // now deal with any remaining OCR's that didn't have a PSC, but are soft credits
         for (OpportunityContactRole ocr : mapIdToOCR.values()) {
-            if (ocr.Role != null && softCreditRoles.contains(ocr.Role))
+            if (ocr.Role != null && softCreditRoles.contains(ocr.Role) && !ocr.IsPrimary)
                 softCredits.add(new SoftCredit(ocr));
         }
         
