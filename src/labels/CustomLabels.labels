@@ -2734,7 +2734,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthDetailsHHAccountModel</shortDescription>
-        <value>Model, you must set Household Object Rules to "No Contacts". You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</value>
+        <value>When using the Household Account Model, you must set Household Object Rules to "No Contacts". You can set the Household Object Rules field on the NPSP Settings Page under People | Households.</value>
     </labels>
     <labels>
         <fullName>healthDetailsHHActNoContacts</fullName>
@@ -3573,7 +3573,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionOCRException</shortDescription>
-        <value>If you have more than 50,000 Opportunities and Opportunity Contact Roles, you can safely ignore any errors dealing with soql limits.</value>
+        <value>If you have more than 50,000 Opportunities and Opportunity Contact Roles, you can safely ignore any errors dealing with SOQL limits.</value>
     </labels>
     <labels>
         <fullName>healthSolutionPaymentMappingBadDataTypes</fullName>
@@ -3628,7 +3628,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>healthSolutionTriggerHandlerMismatch</shortDescription>
-        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See  the  Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
+        <value>Changes to triggers can affect core NPSP functionality in unexpected ways, and should be thoroughly tested before deployment to production. If these changes were unintentional, you should reset your Trigger Handlers to match the default NPSP configuration. See the Manage Trigger Handlers article in the Power Of Us Hub for more information: https://powerofus.force.com/articles/Resource/NPSP-Manage-Trigger-Handlers</value>
     </labels>
     <labels>
         <fullName>healthSolutionUDFBadDatatypes</fullName>
@@ -3660,7 +3660,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>hhCmpDedupeBatchMessage</shortDescription>
-        <value>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it's done, you can  view the Household Mailing report by clicking on the Household Mailing Report link.</value>
+        <value>Due to the large number of Campaign Members on this Campaign, NPSP is using a batch process to identify Household Members, which may take several minutes to complete. When it's done, you can view the Household Mailing report by clicking on the Household Mailing Report link.</value>
     </labels>
     <labels>
         <fullName>hhCmpDedupeBatchProgressTitle</fullName>
