@@ -46,9 +46,11 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <content>BGE_TemplateDetails</content>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Batch_Template_Record_Home</content>
+        <formFactor>Large</formFactor>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
-        <type>LightningComponent</type>
+        <type>Flexipage</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>

@@ -6,12 +6,20 @@
      * @Description. Constructs the Model Module, and the View Modules.
      *****************************************************************/
     init: function (component, event, helper) {
+        //view mode is set with lightning app builder; determine if page is in edit or create mode by checking for recordId
+        if (component.get("v.mode") != 'view') {
+            if (component.get("v.recordId") != 'null') {
+                component.set("v.mode", "edit");
+            } else {
+                component.set("v.mode", "create");
+            }
+        }
         var bgeTemplateController = helper.BGETemplateController(component);
 
         var model = helper.TemplateDetailsModel();
         model.setBackendController(bgeTemplateController);
         component.set('v.model', model);
-        
+
         var templateInfoView = helper.TemplateInfoView(component, model);
         component.set('v.templateInfo', templateInfoView);
         var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model);

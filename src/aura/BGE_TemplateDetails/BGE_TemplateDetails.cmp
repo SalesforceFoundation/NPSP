@@ -34,7 +34,7 @@
   @group-content
   @description Component used to view, edit, or create a Batch Template record.
 -->
-<aura:component controller="BGE_Template_CTRL" implements="lightning:actionOverride,force:hasRecordId">
+<aura:component controller="BGE_Template_CTRL" implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome">
 
     <!-- private attributes -->
     <aura:attribute name="model" type="Object" access="PRIVATE" />
@@ -43,6 +43,7 @@
     <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
+    <aura:attribute name="mode" type="String" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
     <aura:attribute name="recordId" type="Id" />
 
     <!-- events we handle -->
@@ -57,35 +58,37 @@
 
             <div class="row slds-p-around_large">
                 <div class="slds-col slds-size_4-of-12">
-                    <lightning:input type="text" name="name" label="Name" value="{!v.templateInfo.name}"/>
+                    <lightning:input type="text" name="name" label="Name" value="{!v.templateInfo.name}" readonly="{!v.mode=='view'}"/>
                 </div>
                 <div class="slds-col slds-size_4-of-12 slds-p-top_small">
-                    <lightning:textarea name="description" label="Description"  value="{!v.templateInfo.description}"/>
+                    <lightning:textarea name="description" label="Description"  value="{!v.templateInfo.description}" readonly="{!v.mode=='view'}"/>
                 </div>
             </div>
 
             <div class="row slds-grid slds-wrap slds-p-around_large">
-                <div class="slds-col slds-size_3-of-12">
-                    <lightning:treeGrid
-                        aura:id="availableTemplateFields"
-                        columns="{!v.availableTemplateFields.columns}"
-                        data="{!v.availableTemplateFields.data}"
-                        selectedRows="{!v.availableTemplateFields.selectedRows}"
-                        keyField="id"
-                        onrowselection="{!c.selectAvailableTemplateFields}"
-                    />
-                </div>
+                <aura:if isTrue="{!v.mode != 'view'}">
+                    <div class="slds-col slds-size_3-of-12">
+                        <lightning:treeGrid
+                            aura:id="availableTemplateFields"
+                            columns="{!v.availableTemplateFields.columns}"
+                            data="{!v.availableTemplateFields.data}"
+                            selectedRows="{!v.availableTemplateFields.selectedRows}"
+                            keyField="id"
+                            onrowselection="{!c.selectAvailableTemplateFields}"
+                        />
+                    </div>
 
-                <div class="slds-col slds-size_1-of-12">
-                    <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
-                        <div class="slds-m-bottom__xx-small">
-                            <lightning:buttonIcon iconName="utility:chevronright" alternativeText="Settings" onclick="{!c.updateToActive}"/>
-                        </div>
-                        <div class="slds-m-top_xx-small">
-                            <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="Settings" onclick="{!c.updateToAvailable}"/>
+                    <div class="slds-col slds-size_1-of-12">
+                        <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                            <div class="slds-m-bottom__xx-small">
+                                <lightning:buttonIcon iconName="utility:chevronright" alternativeText="Settings" onclick="{!c.updateToActive}"/>
+                            </div>
+                            <div class="slds-m-top_xx-small">
+                                <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="Settings" onclick="{!c.updateToAvailable}"/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </aura:if>
 
                 <div class="slds-col slds-size_5-of-12">
                     <lightning:treeGrid
@@ -99,16 +102,26 @@
             </div>
 
             <div class="row slds-p-around_large">
-                <lightning:input type="checkbox" label="Display Total Prompt" name="displayTotalPrompt"  checked="{!v.templateInfo.displayTotalPrompt}"/>
-                <lightning:input type="checkbox" label="Require Total Match" name="requireTotalMatch" checked="{!v.templateInfo.requireTotalMatch}"/>
+                <lightning:input type="checkbox"
+                                 label="Display Total Prompt"
+                                 name="displayTotalPrompt"
+                                 checked="{!v.templateInfo.displayTotalPrompt}"
+                                 readonly="{!v.mode=='view'}"/>
+                <lightning:input type="checkbox"
+                                 label="Require Total Match"
+                                 name="requireTotalMatch"
+                                 checked="{!v.templateInfo.requireTotalMatch}"
+                                 readonly="{!v.mode=='view'}"/>
             </div>
 
-            <div class="row slds-p-around_large">
-                <div class="slds-align_absolute-center">
-                    <lightning:button label="Cancel" onclick="{!c.cancel}" />
-                    <lightning:button variant="brand" label="Save Template" onclick="{!c.save}" />
+            <aura:if isTrue="{!v.mode != 'view'}">
+                <div class="row slds-p-around_large">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button label="Cancel" onclick="{!c.cancel}" />
+                        <lightning:button variant="brand" label="Save Template" onclick="{!c.save}" />
+                    </div>
                 </div>
-            </div>
+            </aura:if>
 
         </div>
     </div>

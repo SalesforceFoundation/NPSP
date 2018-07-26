@@ -58,7 +58,7 @@ public with sharing class BGE_Template_CTRL {
             templateDetails.description = batchTemplate.Description__c;
             templateDetails.displayTotalPrompt = batchTemplate.Display_Total_Prompt__c;
             templateDetails.requireTotalMatch = batchTemplate.Require_Total_Match__c;
-            //templateDetails.activeFields = batchTemplate.Active_Fields__c;
+            templateDetails.activeFields = batchTemplate.Active_Fields__c;
 
         }
 
@@ -151,6 +151,7 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean displayTotalPrompt;
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public List<Field> templateFields;
+        @AuraEnabled public String activeFields;
 
         public TemplateDetails() {
             displayTotalPrompt = false;

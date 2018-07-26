@@ -230,6 +230,7 @@
              * @return Template Fields module.
              ************************************************************/
             function init() {
+
                 _bgeTemplateController.getTemplateDetails({
                     success: function(response) {
                         _templateInfo.load(
@@ -262,17 +263,16 @@
             }
 
             /* **********************************************************
-             * @Description Gets the Template Fields module.
-             * @return Template Fields module.
+             * @Description Gets the Template Info module.
+             * @return Template Info module.
              ************************************************************/
             function getTemplateInfo() {
-                return templateInfo;
+                return _templateInfo;
             }
 
             /* **********************************************************
-+             * @Description Saves the Template Details and Fields.
-+             * @return ?
-+             ************************************************************/
+             * @Description Saves the Template Details and Fields.
+             ************************************************************/
             function saveTemplateDetails() {
                 _bgeTemplateController.saveTemplateDetails({
                     success: function(response) {
