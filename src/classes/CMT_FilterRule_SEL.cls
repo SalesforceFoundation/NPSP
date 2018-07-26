@@ -164,9 +164,16 @@ public without sharing class CMT_FilterRule_SEL {
     }
 
     /**
-    * @description Return a simple list of all Rollup definition CMT records
+    * @description Return a simple list of all Filter Group definition CMT records
     */
     public static List<Filter_Group__mdt> getFilterGroups() {
         return cachedFilterGroups;
+    }
+
+    /**
+    * @description Return a simple list of all Filter Rule definition CMT records
+    */
+    public static List<Filter_Rule__mdt> getFilterRules() {
+        return cachedFilterRules;
     }
 }
