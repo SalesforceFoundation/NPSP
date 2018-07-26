@@ -1245,7 +1245,7 @@
         <fullName>Primary_Contact_Campaign_Member_Status__c</fullName>
         <description>The status to use when creating a campaign member for this opportunity&apos;s primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status NPSP uses when it automatically creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</inlineHelpText>
+        <inlineHelpText>The status NPSP uses when it creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</inlineHelpText>
         <label>Primary Contact Campaign Member Status</label>
         <length>40</length>
         <required>false</required>
