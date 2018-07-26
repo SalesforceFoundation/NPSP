@@ -1163,6 +1163,7 @@
         <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
         <members>CRLP_RecalculatingRollups</members>
+        <members>CRLP_ResetRollupsWarning</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
@@ -1683,6 +1684,7 @@
         <members>stgCRLPInfoOnUDRBody</members>
         <members>stgCRLPInfoOnUDRHeading</members>
         <members>stgCRLPNonAdminError</members>
+        <members>stgCRLPReset</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
@@ -1952,6 +1954,7 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgReset</members>
         <members>stgSelectOne</members>
         <members>stgTools</members>
         <members>stgUnknownError</members>
