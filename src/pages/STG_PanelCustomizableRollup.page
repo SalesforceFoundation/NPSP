@@ -1,22 +1,18 @@
 <apex:page controller="STG_PanelCustomizableRollup_CTRL" >
 
     <apex:slds/>
+    <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>
+
     <div class="slds-scope">
-        <apex:form id="form" styleClass="slds-m-around--x-large">
+        <apex:form id="form" styleClass="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.CRLP_RollupSummary}" />
-            <div class="slds-grid">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                    <p class="slds-text-body--small slds-m-top--x-small">
-                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
-                        <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
-                    </p>
-                </div>
-            </div>
+
             <c:UTIL_PageMessages allowClose="false" id="messages"/>
 
+            <!-- BEGIN NON-HH ACCOUNT MODEL MESSAGE -->
             <apex:outputPanel rendered="{! !isHHAccount }">
                 <div class="slds" id="page_messages">
-                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
                         <div class="notify__content">
                             <div class="slds-media">
                                 <div class="slds-media__figure">
@@ -27,7 +23,7 @@
                                     </apex:outputText>
                                 </div>
                                 <div class="slds-media__body">
-                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                    <h2 class="slds-text-heading_small slds-text-heading_small">
                                         <apex:outputText value="{!$Label.PageMessagesInfo}: " />
                                         <apex:outputText value="{!$Label.stgCRLPHouseholdAccountError}"/>
                                     </h2>
@@ -37,10 +33,12 @@
                     </div>
                 </div>
             </apex:outputPanel>
+            <!-- END NON-HH ACCOUNT MODEL MESSAGE -->
 
+            <!-- BEGIN NON-ADMIN MESSAGE -->
             <apex:outputPanel rendered="{! !isAdmin }">
                 <div class="slds" id="page_messages">
-                    <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_info slds-theme--info">
+                    <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_info slds-theme_info">
                         <div class="notify__content">
                             <div class="slds-media">
                                 <div class="slds-media__figure">
@@ -51,7 +49,7 @@
                                     </apex:outputText>
                                 </div>
                                 <div class="slds-media__body">
-                                    <h2 class="slds-text-heading_small slds-text-heading--small">
+                                    <h2 class="slds-text-heading_small slds-text-heading_small">
                                         <apex:outputText value="{!$Label.PageMessagesInfo}: " />
                                         <apex:outputText value="{!$Label.stgCRLPNonAdminError}"/>
                                     </h2>
@@ -61,52 +59,118 @@
                     </div>
                 </div>
             </apex:outputPanel>
+            <!-- BEGIN NON-ADMIN MESSAGE -->
 
-            <div class="slds-card {!IF(isPolling,'','slds-hide')}">
-                <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                    <p class="slds-text-body--small slds-m-top--x-small">
+            <!-- BEGIN INTRO TEXT AND TOGGLE -->
+            <div class="slds-grid {!IF(isHHAccount, '', 'slds-hide')}">
+                <apex:outputPanel rendered="{! !isPolling }">
+                    <div class="slds-m-vertical_medium">
+                        <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable1}"/>
+                    </div>
+
+                    <label class="slds-checkbox_toggle slds-grid slds-m-vertical_small">
+                        <span class="slds-form-element__label slds-m-bottom_none">Customizable Rollups</span>
+                        <apex:inputCheckbox onClick="onToggle(); return false;" id="enableCRLPToggle" html-name="checkbox-toggle-2" value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" html-aria-describedby="checkbox-toggle-2" />
+                        <span class="slds-checkbox_faux_container" aria-live="assertive">
+                                        <span class="slds-checkbox_faux"></span>
+                                        <span class="slds-checkbox_on">Enabled</span>
+                                        <span class="slds-checkbox_off">Disabled</span>
+                                    </span>
+                    </label>
+
+                </apex:outputPanel>
+            </div>
+            <!-- END INTRO TEXT AND TOGGLE -->
+
+            <!-- BEGIN HELP TEXT -->
+            <div class="slds-grid {!IF(!isPolling, '', 'slds-hide')}">
+                <p class="slds-text-body_small slds-m-top_x-small">
+                    <apex:outputText escape="false" value="{!$Label.stgHelpCustomizableRollupsEnable2}"/>
+                </p>
+            </div>
+            <!-- END HELP TEXT -->
+
+            <!-- BEGIN ENABLED OPTIONS -->
+            <apex:outputPanel rendered="{! stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isPolling}">
+
+                <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-vertical_large slds-button slds-button_brand" action="{!navigate}" /><br/>
+
+                <div class="slds-section-title_divider" >Reset Customizable Rollups</div>
+
+                <div class="slds-m-vertical_medium">
+                    <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable3}" />
+                </div>
+                <button type="button" class="slds-button slds-button_destructive" data-toggle="modal" data-target="warning_modal" id="resetBTN">
+                    Reset to Defaults
+                </button>
+
+            </apex:outputPanel>
+            <!-- END ENABLED OPTIONS -->
+
+            <!-- BEGIN POLLING MESSAGE -->
+            <div class="slds-card slds-m-top_medium {!IF(isPolling,'','slds-hide')}">
+                <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                    <p class="slds-text-body_small slds-m-top_x-small">
                         <apex:outputText rendered="{!isPolling}" value="{!$Label.stgDeploymentInProgress}" />
                     </p>
                 </div>
             </div>
+            <!-- END POLLING MESSAGE -->
 
             <apex:actionPoller action="{!checkDeploymentStatus}"
                                enabled="{!isPolling}"
                                reRender="form"
                                interval="5"
                                status="deploymentStatus"
-                               />
+            />
 
-            <div class="{!IF(isHHAccount, '', 'slds-hide')}">
+            <apex:actionFunction name="reset" action="{!resetRollupsToDefaultConfig}" reRender="form" status="statusLoad" />
+            <apex:actionFunction name="enableCRLPs" action="{!enableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
+            <apex:actionFunction name="disableCRLPs" action="{!disableCRLPs}" reRender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" status="statusLoad" />
 
-                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large {!IF(isAdmin, '', 'slds-hide')}">
-                    <apex:commandButton id="editCRLPs" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode && !isPolling}" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
-                </div>
+        </apex:form>
 
-                <div class="slds-form--horizontal slds-m-around--large">
-                    <div class="slds-form-element">
-                        <apex:outputLabel value="{!$ObjectType.Customizable_Rollup_Settings__c.Fields.Customizable_Rollups_Enabled__c.Label}" for="cbxCRLPE" styleClass="slds-form-element__label" rendered="{! !isPolling }"/>
-                        <div class="slds-form-element__control">
-                            <apex:inputCheckbox value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" rendered="{!isEditMode}" id="cbxCRLPE" html-aria-describedby="{!$Component.cbxCRLPEHelp}" styleClass="slds-checkbox" />
-                            <apex:inputCheckbox value="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c}" rendered="{!isReadOnlyMode && !isPolling}" disabled="true" id="cbxCRLPEO" html-aria-describedby="{!$Component.cbxCRLPEHelp}" styleClass="slds-checkbox" />
-                            <apex:outputPanel id="cbxCRLPEHelp" layout="block">
-                                <apex:outputText styleClass="slds-form-element__help" value="{!$Label.stgHelpCustomizableRollupsEnable3}" rendered="{! !isPolling }" />
-                            </apex:outputPanel>
+        <!-- BEGIN RESET WARNING MODAL -->
+        <div class="slds-scope">
+            <div id="warning_modal" tabindex="-1" aria-hidden="true" aria-labelledby="warning_modal_heading" role="dialog" class="slds-modal">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <h2 id="warning_modal_heading" class="slds-text-heading_medium">{!$Label.CONV_Warning}</h2>
+                        <button class="slds-button slds-button_icon-inverse slds-modal__close" data-dismiss="modal" data-target="warning_modal">
+                            <svg aria-hidden="true" class="slds-button__icon slds-button__icon_large" data-dismiss="modal" data-target="warning_modal" viewBox="0 0 24 24">
+                                <path  data-dismiss="modal" data-target="warning_modal" d="M14.6 11.9l6-6c.3-.3.3-.7 0-1l-.9-1c-.3-.3-.7-.3-1 0L12.6 10c-.1.2-.4.2-.6 0L6 3.9c-.3-.3-.7-.3-1 0l-1 .9c-.3.3-.3.7 0 1l6.1 6.1c.1.1.1.4 0 .6L4 18.6c-.3.3-.3.7 0 1l.9.9c.3.3.7.3 1 0l6.1-6c.2-.2.5-.2.6 0l6.1 6c.3.3.7.3 1 0l.9-.9c.3-.3.3-.7 0-1l-6-6c-.2-.2-.2-.5 0-.7z"/>
+                            </svg>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                    </div>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <p>
+                            {!$Label.CRLP_ResetRollupsWarning}
+                        </p>
+                    </div>
+                    <div class="slds-modal__footer">
+                        <div class="slds-x-small-buttons_horizontal">
+                            <button class="slds-button slds-button_neutral" data-dismiss="modal" data-target="warning_modal">{!$Label.CONV_Cancel}</button>
+                            <button id="warning_modal_reset_button" class="slds-button slds-button_destructive" data-dismiss="modal" data-target="warning_modal">{!$Label.stgReset}</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-p-around_large">
-                    <apex:commandButton id="saveCRLPs" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" immediate="false" rendered="{!isEditMode}" rerender="form, status, idPanelSchedule, idPanelConRole, idPanelMembership, idPanelAllocations, UDRsTreeItem, donorStatsTreeItem" styleClass="slds-button slds-button_small slds-button_brand" />
-                    <apex:commandButton id="cancelCRLPs" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" immediate="true" rendered="{!isEditMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
-                    <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" action="{!navigate}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button--small slds-button--neutral" />
-<!--
-                    <apex:commandButton id="resetCRLPs" value="{!$Label.stgCRLPReset}" action="{!resetRollupsToDefaultConfig}" rendered="{!stgService.stgCRLP.Customizable_Rollups_Enabled__c && !isEditMode && !isPolling}" styleClass="slds-button slds-button&#45;&#45;small slds-button&#45;&#45;neutral" />
--->
-                </div>
-
             </div>
+            <div class="slds-backdrop" tabindex="-1"></div>
+        </div>
+        <!-- END RESET WARNING MODAL -->
 
-        </apex:form>
+        <script type="text/javascript">
+            document.getElementById('warning_modal_reset_button').addEventListener('click', reset);
+            function onToggle() {
+                if (document.getElementById('{!$Component.form.enableCRLPToggle}').checked) {
+                    enableCRLPs();
+                } else {
+                    disableCRLPs();
+                }
+            }
+        </script>
+
     </div>
+
 </apex:page>
