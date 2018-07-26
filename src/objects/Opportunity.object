@@ -948,7 +948,7 @@
         <fullName>Grant_Requirements_Website__c</fullName>
         <description>A URL that points to the grant requirements on the grant-maker&apos;s website.</description>
         <externalId>false</externalId>
-        <inlineHelpText>A URL that points to the grant requirements on the grantmaker's website..</inlineHelpText>
+        <inlineHelpText>A URL that points to the grant requirements on the grantmaker's website.</inlineHelpText>
         <label>Grant Requirements Website</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
