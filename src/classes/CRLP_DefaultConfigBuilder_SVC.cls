@@ -52,12 +52,27 @@ public class CRLP_DefaultConfigBuilder_SVC {
 
         List<CRLP_RollupCMT.FilterGroup> filterGroups = buildDefaultFilterGroups();
 
+        List<CRLP_RollupCMT.FilterRule> filterRulesToSoftDelete = softDeleteExtraFilterRulesInNPSPFilterGroups(filterGroups);
+        List<CRLP_RollupCMT.FilterGroup> filterGroupsToSoftDelete = softDeleteExtraFilterGroupsAndRules(filterGroups);
+
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
         rollups.addAll(buildDefaultRollups());
         rollups.addAll(buildUserDefinedRollups());
 
+        List<CRLP_RollupCMT.Rollup> rollupsToSoftDelete = softDeleteExtraRollups(rollups);
+
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroups);
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
+
+        if(!filterRulesToSoftDelete.isEmpty()){
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterRulesToSoftDelete);
+        }
+        if(!filterGroupsToSoftDelete.isEmpty()){
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(filterGroupsToSoftDelete);
+        }
+        if(!rollupsToSoftDelete.isEmpty()){
+            CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollupsToSoftDelete);
+        }
 
         String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
         return jobId;
@@ -626,8 +641,106 @@ public class CRLP_DefaultConfigBuilder_SVC {
             groups.add(groupPaymentsWrittenOffContacts);
         }
 
-
         return groups;
+    }
+
+    /*************************************************************************************************************
+     * @description Soft deletes all extra Filter Rules in the NPSP Filter Groups upon CRLP Reset
+     * @param List<FilterGroup> the default Filter Groups (wrapper classes) with their lists of default Filter Rules
+     * @return List<FilterRule> defined Filter Rule wrapper classes
+     */
+    private static List<CRLP_RollupCMT.FilterRule> softDeleteExtraFilterRulesInNPSPFilterGroups(List<CRLP_RollupCMT.FilterGroup> groups) {
+
+        List<CRLP_RollupCMT.FilterRule> rulesToSoftDelete = new List<CRLP_RollupCMT.FilterRule>();
+        List<Filter_Rule__mdt> allExistingRules = CMT_FilterRule_SEL.getFilterRules();
+
+        // only proceed if there are existing rules to compare to
+        if (!allExistingRules.isEmpty()) {
+
+            Set<String> defaultRuleNames = new Set<String>();
+            Set<String> defaultGroupNames = new Set<String>();
+            for (CRLP_RollupCMT.FilterGroup grp : groups) {
+                defaultGroupNames.add(grp.recordName);
+                for (CRLP_RollupCMT.FilterRule rule : grp.rules) {
+                    defaultRuleNames.add(rule.recordName);
+                }
+            }
+
+            for (Filter_Rule__mdt rule : allExistingRules) {
+                if (!defaultRuleNames.contains(rule.DeveloperName) && defaultGroupNames.contains(rule.Filter_Group__r.DeveloperName)) {
+                    CRLP_RollupCMT.FilterRule ruleToDelete = new CRLP_RollupCMT.FilterRule(rule);
+                    ruleToDelete.isDeleted = true;
+                    rulesToSoftDelete.add(ruleToDelete);
+                }
+            }
+        }
+
+        return rulesToSoftDelete;
+    }
+
+    /*************************************************************************************************************
+    * @description Soft deletes all extra Filter Groups and their Filter Rules upon CRLP Reset
+    * @param List<FilterGroup> the default Filter Groups (wrapper classes)
+    * @return List<FilterGroup> defined Filter Group wrapper classes with their Filter Rules
+    */
+    private static List<CRLP_RollupCMT.FilterGroup> softDeleteExtraFilterGroupsAndRules(List<CRLP_RollupCMT.FilterGroup> groups) {
+
+        List<CRLP_RollupCMT.FilterGroup> groupsToSoftDelete = new List<CRLP_RollupCMT.FilterGroup>();
+        List<Filter_Group__mdt> allExistingGroups = CMT_FilterRule_SEL.getFilterGroups();
+
+        // only proceed if there are existing groups to compare to
+        if (!allExistingGroups.isEmpty()) {
+
+            Set<String> defaultGroupNames = new Set<String>();
+            for (CRLP_RollupCMT.FilterGroup grp : groups) {
+                defaultGroupNames.add(grp.recordName);
+            }
+
+            for (Filter_Group__mdt grp : allExistingGroups) {
+                if (!defaultGroupNames.contains(grp.DeveloperName)) {
+                    CRLP_RollupCMT.FilterGroup groupToDelete = new CRLP_RollupCMT.FilterGroup(grp);
+                    groupToDelete.isDeleted = true;
+                    for (CRLP_RollupCMT.FilterRule rule : groupToDelete.rules) {
+                        rule.isDeleted = true;
+                    }
+                    groupsToSoftDelete.add(groupToDelete);
+                }
+            }
+        }
+
+        return groupsToSoftDelete;
+    }
+
+    /*************************************************************************************************************
+     * @description Soft deletes all extra Rollups upon CRLP Reset
+     * @param List<Rollup> the default Rollups (wrapper classes)
+     * @return List<Rollup> defined Rollup wrapper classes
+     */
+    private static List<CRLP_RollupCMT.Rollup> softDeleteExtraRollups(List<CRLP_RollupCMT.Rollup> rollups) {
+
+        List<CRLP_RollupCMT.Rollup> rollupsToSoftDelete = new List<CRLP_RollupCMT.Rollup>();
+
+        List<Rollup__mdt> allExistingRollups = CRLP_Rollup_SEL.getRollupDefinitions();
+
+        // only proceed if there are existing rollups to compare to
+        if (!allExistingRollups.isEmpty()) {
+
+            Set<String> defaultRollupNames = new Set<String>();
+            for (CRLP_RollupCMT.Rollup rlp : rollups) {
+                defaultRollupNames.add(rlp.recordName);
+            }
+
+
+            for (Rollup__mdt rollup : allExistingRollups) {
+                if (!defaultRollupNames.contains(rollup.DeveloperName)) {
+                    CRLP_RollupCMT.Rollup rollupToDelete = new CRLP_RollupCMT.Rollup(rollup);
+                    rollupToDelete.isDeleted = true;
+                    rollupsToSoftDelete.add(rollupToDelete);
+                }
+            }
+        }
+
+        return rollupsToSoftDelete;
     }
 
     /*************************************************************************************************************
