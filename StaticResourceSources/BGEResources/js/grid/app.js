@@ -770,7 +770,7 @@
                     }
                 }
             }
-            else if (enter && selectedColType != "dropdown") {
+            else if ((enter || spacebar) && selectedColType != "dropdown") {
 
                 if (colIndex === tooltipCol) {
                     event.preventDefault();
@@ -1048,7 +1048,7 @@
                     $(".action-cell button").removeClass("action-button-active");
                 }
 
-            }, 100);
+            }, 250);
         }
 
         function addMessage(cell, errors) {
