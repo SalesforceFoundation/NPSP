@@ -424,14 +424,16 @@ public with sharing class CRLP_RollupUI_SVC {
                 if (detailObj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
                     List<String> pscFieldsToReturn = new List<String>{
                             UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
-                            UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                            UTIL_Namespace.StrAllNSPrefix('Amount__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Id')
                     };
                     List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, pscFieldsToReturn, true);
                     objNameToFieldTypeMap.put(detailObj, pscList);
                 } else if (detailObj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
                     List<String> ascFieldsToReturn = new List<String>{
                             UTIL_Namespace.StrAllNSPrefix('Role__c'),
-                            UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                            UTIL_Namespace.StrAllNSPrefix('Amount__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Id')
                     };
                     List<Map<String, String>> ascList = getSpecificFieldsWithType(detailObj, ascFieldsToReturn, true);
                     objNameToFieldTypeMap.put(detailObj, ascList);
@@ -514,6 +516,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
             }
             fieldObject.put('type', fieldType);
+
+            if (fieldType == 'ID') {
+                fieldObject.put('referenceTo', objectName);
+            }
 
             fieldObjectList.add(fieldObject);
         }
