@@ -145,4 +145,8 @@ td.tooltip-cell {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
+}
+
+.action-button-active {
+    box-shadow: 0px 0px 0px 2px #5292f8;
+}
