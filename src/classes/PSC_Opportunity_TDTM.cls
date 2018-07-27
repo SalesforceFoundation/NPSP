@@ -50,8 +50,8 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
         if (triggerAction == TDTM_Runnable.Action.AfterUpdate && userInfo.isMultiCurrencyOrganization()) {
             DMLWrapper dmlWrapper = new DmlWrapper();
 
-            dmlWrapper.objectsToUpdate.addAll((list<sObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Partial_Soft_Credit__c.SObjectType));
-            dmlWrapper.objectsToUpdate.addAll((list<sObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Account_Soft_Credit__c.SObjectType));
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Partial_Soft_Credit__c.SObjectType));
+            dmlWrapper.objectsToUpdate.addAll((list<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Account_Soft_Credit__c.SObjectType));
 
             //set flag to allow changing PSC currency
             PSC_PartialSoftCredit_TDTM.blockCurrencyChange = false;
@@ -67,20 +67,20 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     * @param listOld The list of opportunities from trigger old. 
     * @return list<sObject> Partial Soft Credits or Account Soft Credits with modified currency that need updating via DML.
     ********************************************************************************************************/
-    public static list<sObject> updateSoftCreditCurrencyFromParent(list<sObject> newlist, list<sObject> oldlist, SObjectType objType) {
-        list<sObject> results = new list<sObject>();
+    public static list<SObject> updateSoftCreditCurrencyFromParent(list<SObject> newlist, list<SObject> oldlist, SObjectType objType) {
+        list<SObject> results = new List<SObject>();
         //map holds object id to currency iso code
-        map<id,string> mapOppIdToISO = new map<id,string>();
+        Map<Id,String> mapOppIdToISO = new Map<Id,String>();
 
         //if the parent currency has changed, add to map
-        for (integer i=0;i<newlist.size();i++) {
+        for (Integer i=0;i<newlist.size();i++) {
             if (newlist[i].get('CurrencyIsoCode')!=oldlist[i].get('CurrencyIsoCode')) {
                 mapOppIdToISO.put((id)newlist[i].get('id'),(string)newlist[i].get('CurrencyIsoCode'));
             }
         }
 
         //can't put mapOppIdToISO.keySet() in dynamic soql query, so creating new set to hold the IDs
-        set<id> oppIds = mapOppIdToISO.keySet();
+        Set<Id> oppIds = mapOppIdToISO.keySet();
 
         if (objType == Partial_Soft_Credit__c.SObjectType) {
             //query all PSCs associated with these opps, update their ISO code

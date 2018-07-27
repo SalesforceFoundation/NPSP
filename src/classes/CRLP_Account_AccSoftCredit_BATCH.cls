@@ -60,7 +60,14 @@ public class CRLP_Account_AccSoftCredit_BATCH extends CRLP_Batch_Base_NonSkew im
      * @description Scheduler execute method to support scheduling this job directly from the UI
      */
     public void execute(SchedulableContext context) {
-        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+        String className = CRLP_Account_AccSoftCredit_BATCH.class.getName();
+        if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
+            if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
+            } else {
+                logDuplicateBatchError(className);
+            }
+        }
     }
 }

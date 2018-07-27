@@ -222,7 +222,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 query += createdDateClause;
 
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> OCR Query =' + query);
-                System.debug('PROBLEM QUERY: '+query);
                 // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
                 // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
                 if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
@@ -236,7 +235,6 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
             String parentObjectField;
             String parentKeyField = options.parentKeyField;
-            System.debug('parentkeyfield: '+parentKeyField);
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
             // If this is the case, need to parse out the two components to use

@@ -311,7 +311,6 @@ public class CRLP_Rollup_SEL {
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
                             && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
-                    System.debug('wanna hit here! '+includeRollupDefinition);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                         rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);

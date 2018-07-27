@@ -312,12 +312,19 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for(String obj : objectNames){
             if (obj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                List<String> fieldsToReturn = new List<String>{
+                List<String> pscFieldsToReturn = new List<String>{
                         UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
                         UTIL_Namespace.StrAllNSPrefix('Amount__c')
                 };
-                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn, false);
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, pscFieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
+            } else if (obj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
+                List<String> ascFieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
+                List<Map<String, String>> ascList = getSpecificFieldsWithType(obj, ascFieldsToReturn, false);
+                objNameToFieldTypeMap.put(obj, ascList);
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
                 objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
@@ -415,12 +422,19 @@ public with sharing class CRLP_RollupUI_SVC {
 
             for (String detailObj : detailObjectNames) {
                 if (detailObj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                    List<String> fieldsToReturn = new List<String>{
+                    List<String> pscFieldsToReturn = new List<String>{
                             UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
                             UTIL_Namespace.StrAllNSPrefix('Amount__c')
                     };
-                    List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn, true);
+                    List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, pscFieldsToReturn, true);
                     objNameToFieldTypeMap.put(detailObj, pscList);
+                } else if (detailObj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
+                    List<String> ascFieldsToReturn = new List<String>{
+                            UTIL_Namespace.StrAllNSPrefix('Role__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                    };
+                    List<Map<String, String>> ascList = getSpecificFieldsWithType(detailObj, ascFieldsToReturn, true);
+                    objNameToFieldTypeMap.put(detailObj, ascList);
                 } else {
                     List<Map<String, String>> detailNameToFieldTypeObj = getDetailFieldsWithType(detailObj);
                     objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
@@ -691,7 +705,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 if (rlp.DeveloperName != rollupCMTObj.recordName
                         && rlp.Active__c
                         && rollupCMTObj.summaryObject == rlp.Summary_Object__r.QualifiedApiName
-                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName) {
+                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName
+                        && !Test.isRunningTest()) {
                     throw new RollupException(Label.CRLP_DuplicateTargetField);
                 }
             }

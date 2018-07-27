@@ -732,7 +732,7 @@
                     name: labels.objectOpportunity
                 },
                 {
-                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.softCredit + ')',
+                    label: labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelAccount + ' ' + labels.softCredit + ')',
                     summaryObject: labels.objectAccount,
                     name: labels.objectAccountSoftCredit
                 },
@@ -1007,7 +1007,7 @@
         } else if (detailObject === labels.objectAccountSoftCredit && summaryObject === labels.objectAccount) {
             rollupType.name = labels.objectAccountSoftCredit;
             rollupType.summaryObject = labels.objectAccount;
-            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.softCredit + ')';
+            rollupType.label = labels.labelOpportunity + ' -> ' + labels.labelAccount + ' (' + labels.labelAccount + ' ' + labels.softCredit + ')';
             cmp.set("v.activeRollup.rollupTypeObject", labels.objectAccountSoftCredit);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectContact) {
