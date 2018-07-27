@@ -57,7 +57,7 @@
         <defaultValue>true</defaultValue>
         <description>Active general accounting units are available for selection on allocations. Inactive general accounting units can&apos;t have new allocations to them.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Active general accounting units are available for selection on allocations. Inactive general accounting units can&apos;t have new allocations to them.</inlineHelpText>
+        <inlineHelpText>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</inlineHelpText>
         <label>Active</label>
         <trackHistory>false</trackHistory>
         <trackTrending>false</trackTrending>
@@ -68,7 +68,7 @@
         <defaultValue>0</defaultValue>
         <description>The average of all allocations of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The average of all allocations of all time to this general accounting unit.</inlineHelpText>
+        <inlineHelpText>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Average Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -81,7 +81,7 @@
         <fullName>Description__c</fullName>
         <description>Extra information about this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Extra information about this general accounting unit.</inlineHelpText>
+        <inlineHelpText>Additional information about this General Accounting Unit.</inlineHelpText>
         <label>Description</label>
         <length>32768</length>
         <trackHistory>false</trackHistory>
@@ -93,7 +93,7 @@
         <fullName>First_Allocation_Date__c</fullName>
         <description>The first Opportunity Close Date of an allocation associated with this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The first Opportunity Close Date of an allocation associated with this general accounting unit.</inlineHelpText>
+        <inlineHelpText>The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>First Allocation Date</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
@@ -105,7 +105,7 @@
         <defaultValue>0</defaultValue>
         <description>The largest allocation of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The largest allocation of all time to this general accounting unit.</inlineHelpText>
+        <inlineHelpText>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Largest Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -145,7 +145,7 @@
         <defaultValue>0</defaultValue>
         <description>Total number of allocations of opportunities in a closed and won stage last year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage last year.</inlineHelpText>
+        <inlineHelpText>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations Last Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -160,7 +160,7 @@
         <defaultValue>0</defaultValue>
         <description>Total number of allocations of opportunities in a closed and won stage this year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage this year.</inlineHelpText>
+        <inlineHelpText>TThe total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -175,7 +175,7 @@
         <defaultValue>0</defaultValue>
         <description>Total number of allocations of opportunities in a closed and won stage two years ago.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage two years ago.</inlineHelpText>
+        <inlineHelpText>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations Two Years Ago</label>
         <precision>18</precision>
         <required>false</required>
@@ -190,7 +190,7 @@
         <defaultValue>0</defaultValue>
         <description>The smallest allocation of all time to this general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The smallest allocation of all time to this general accounting unit.</inlineHelpText>
+        <inlineHelpText>The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Smallest Allocation</label>
         <precision>18</precision>
         <required>false</required>
@@ -204,7 +204,7 @@
         <defaultValue>0</defaultValue>
         <description>Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</inlineHelpText>
+        <inlineHelpText>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations Last N Days</label>
         <precision>18</precision>
         <required>false</required>
@@ -232,7 +232,7 @@
         <defaultValue>0</defaultValue>
         <description>Sum total of all allocations of opportunities in a closed and won stage this year.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage this year.</inlineHelpText>
+        <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations This Year</label>
         <precision>18</precision>
         <required>false</required>
@@ -246,7 +246,7 @@
         <defaultValue>0</defaultValue>
         <description>Sum total of all allocations of opportunities in a closed and won stage two years ago.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage two years ago.</inlineHelpText>
+        <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations Two Years Ago</label>
         <precision>18</precision>
         <required>false</required>
@@ -260,7 +260,7 @@
         <defaultValue>0</defaultValue>
         <description>Sum total of all allocations of opportunities in a closed and won stage.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Sum total of all allocations of opportunities in a closed and won stage.</inlineHelpText>
+        <inlineHelpText>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations</label>
         <precision>18</precision>
         <required>false</required>
@@ -274,7 +274,7 @@
         <defaultValue>0</defaultValue>
         <description>Total number of allocations of opportunities in a closed and won stage.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Total number of allocations of opportunities in a closed and won stage.</inlineHelpText>
+        <inlineHelpText>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Number of Allocations</label>
         <precision>18</precision>
         <required>false</required>
