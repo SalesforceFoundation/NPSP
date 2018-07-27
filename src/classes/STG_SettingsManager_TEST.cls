@@ -249,15 +249,15 @@ public with sharing class STG_SettingsManager_TEST {
         System.assertEquals(false, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
             'CRLPs should not be enabled in STG_Panel.');
 
-        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
-        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
-
         Test.startTest();
-        panel.saveSettings();
+        STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = true;
+        panel.enableCRLPs();
         Test.stopTest();
 
         System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 
             'CRLPs should be enabled in STG_Panel.');
+        System.assertEquals(true, STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c, 
+            'Payment Allocations should be enabled in STG_Panel.');
         System.assert(CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size() > 0, 
             'Check that existing Opportunity Allocation rollups have been queued for update');
 
@@ -1046,25 +1046,33 @@ public with sharing class STG_SettingsManager_TEST {
         System.assert(panel.isHHAccount);
         System.assert(panel.isAdmin);
         System.assertEquals(false, ApexPages.hasMessages());
-        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = true;
+
         // Clear cache so test passes in orgs that have rollups
         CRLP_Rollup_SEL.cachedRollups = new List<Rollup__mdt>();
-        panel.saveSettings();
+        panel.enableCRLPs();
         System.assertEquals(true, panel.isPolling, 'Polling should be active.');
-        System.assertEquals(true, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be enabled in STG_Panel.');
         //fake the success result.
         UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Succeeded';
         PageReference deploymentPR = panel.checkDeploymentStatus();
         System.assertEquals(null, deploymentPR, 'Returned PageReference should be null');
+        System.assertEquals(false, panel.isPolling, 'Polling should not be active.');
+
+        panel.resetRollupsToDefaultConfig();
+        System.assertEquals(true, panel.isPolling, 'Polling should be active.');
+        //fake the success result.
+        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Succeeded';
+        deploymentPR = panel.checkDeploymentStatus();
+        System.assertEquals(null, deploymentPR, 'Returned PageReference should be null');
+        System.assertEquals(false, panel.isPolling, 'Polling should not be active.');
+
+        panel.disableCRLPs();
+        System.assertEquals(false, panel.isPolling, 'Polling should not be active.');
         //fake the fail result.
         UTIL_CustomSettingsFacade.getCustomizableRollupSettings().CMT_API_Status__c = '123 Failed';
-        //set enabled=true to test the failure setting it false.
-        UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Customizable_Rollups_Enabled__c = true;
         deploymentPR = panel.checkDeploymentStatus();
-        System.assertEquals(false, UTIL_CustomSettingsFacade.getcustomizableRollupSettings().Customizable_Rollups_Enabled__c, 'CRLPs should be disabled.');
-        STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c = false;
-        panel.saveSettings();
-        System.assertEquals(false, STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'CRLPs should be disabled in STG_Panel.');
+        System.assertEquals(null, deploymentPR, 'Returned PageReference should be null');
+        System.assertEquals(false, panel.isPolling, 'Polling should not be active.');
+
         PageReference navPR = panel.navigate();
         System.debug(navPR);
         System.assertNotEquals(null, navPR, 'Returned PageReference should not be null');

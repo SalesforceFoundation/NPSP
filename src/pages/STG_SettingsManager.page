@@ -24,10 +24,10 @@
     .clsLoading {
         z-index: 99;
         position: fixed;
-        top: 45%;
-        left: 45%;
-        width: 80px;
-        height: 80px;
+        vertical-align: center;
+        horiz-align: center;
+        width: 100%;
+        height: 100%;
     }
 
 </style>
@@ -221,9 +221,15 @@
                 <apex:actionStatus id="statusLoad"
                     onstart="document.getElementById('divLoading').style.display = 'block';"
                     onstop="document.getElementById('divLoading').style.display = 'none';" />
-                <div class="slds-spinner--large clsLoading" id="divLoading" style="display:none" >
-                    <img src="{!URLFOR($Resource.SLDS, '/0_12_2/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
-                    <span class="loadingText" style="vertical-align: middle;" >{!$Label.labelMessageLoading}</span>
+
+                <div id="divLoading" style="display: none;">
+                    <div class="slds-spinner_container clsLoading">
+                        <div role="status" class="slds-spinner slds-spinner_large">
+                            <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                            <div class="slds-spinner__dot-a"></div>
+                            <div class="slds-spinner__dot-b"></div>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="panel noborder" id="idPanelHome" style="display:none" >
