@@ -94,9 +94,23 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
+                // Count all Filter_Group__mdt records, but then double check that they aren't queued just to be soft Deleted
                 fgCount++;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
+                        fgCount--;
+                        break;
+                    }
+                }
             } else if (md.fullName.contains('Rollup__mdt')) {
+                // Count all Rollup__mdt records, but then double check that they aren't queued just to be soft Deleted
                 rlpCount++;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Is_Deleted__c' && (Boolean)val.value == true ) {
+                        rlpCount--;
+                        break;
+                    }
+                }
             }
         }
 
@@ -129,9 +143,23 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
+                // Count all Filter_Group__mdt records, but then double check that they aren't queued just to be soft Deleted
                 fgCount++;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
+                        fgCount--;
+                        break;
+                    }
+                }
             } else if (md.fullName.contains('Rollup__mdt')) {
+                // Count all Rollup__mdt records, but then double check that they aren't queued just to be soft Deleted
                 rlpCount++;
+                for (Metadata.CustomMetadataValue val : md.values) {
+                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
+                        rlpCount--;
+                        break;
+                    }
+                }
                 String lbl = md.label;
                 for (Metadata.CustomMetadataValue val : md.values) {
                     if ((String)val.field == 'Active__c') {
