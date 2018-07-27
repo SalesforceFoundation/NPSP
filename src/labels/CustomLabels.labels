@@ -997,6 +997,16 @@
         <value>Recalculating Rollups</value>
     </labels>
     <labels>
+        <fullName>CRLP_ResetRollupsWarning</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Warning before complete reset of Customizable Rollups</shortDescription>
+        <value>
+            Are you sure you want to reset Customizable Rollups? This will delete any new Customizable Rollups, Filter Rules, and Filter Groups you created, as well as reset all NPSP rollups to their default behavior.
+        </value>
+    </labels>
+    <labels>
         <fullName>CRLP_Return</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -5149,7 +5159,15 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>stgCRLPGoToSetup</shortDescription>
-        <value>Go to Customizable Rollups Setup</value>
+        <value>Configure Customizable Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgCRLPReset</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgCRLPReset</shortDescription>
+        <value>Reset Customizable Rollups</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -5427,9 +5445,9 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
+        <shortDescription>stgHelpCustomizableRollupsEnable1</shortDescription>
         <value>
-            Rolling up donor data is an essential part of fundraising with the Nonprofit Success Pack. And since every nonprofit is unique, it is especially important that you're able to roll up exactly the data you need, and to the right records. With Customizable Rollups, you can create as many custom rollups as you need and define their process, filters, and where they roll up to. And when you enable Customizable Rollups, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups, into Customizable Rollups.
+            You can find complete Customizable Rollups documentation &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Overview&quot; target=&quot;_blank&quot;&gt;here&lt;/a&gt;.
         </value>
     </labels>
     <labels>
@@ -5437,17 +5455,11 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
+        <shortDescription>stgHelpCustomizableRollupsEnable2</shortDescription>
         <value>
-            &lt;br/&gt;&lt;br/&gt;Enabling Customizable Rollups makes some changes to your org that are important to review and understand before turning this feature on. Here are the high level changes.
+            When you enable Customizable Rollups for the first time, we will automatically convert your existing rollups and the 87 out-of-box NPSP rollups into Customizable Rollups. For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
             &lt;br/&gt;&lt;br/&gt;
-            ● Existing Rollups are converted to new Customizable Rollups
-            &lt;br/&gt;● Existing Rollup settings (in NPSP Settings) are removed and saved as metadata
-            &lt;br/&gt;● New Rollup Settings appear in NPSP Settings under Donations
-            &lt;br/&gt;&lt;br/&gt;
-            For complete details, see &lt;a href=&quot;https://powerofus.force.com/NPSP_Customizable_Rollups_Considerations&quot; target=&quot;_blank&quot;&gt;this doc&lt;/a&gt;.
-            &lt;br/&gt;&lt;br/&gt;
-            Keep in mind that you can go back to old rollups, but any new rollups or rollup/filter changes made in Customizable Rollups, won't be applied to the old rollup settings.
+            You can disable and go back to legacy rollups, but any new rollups or rollup/filter changes made in Customizable Rollups won't be applied to your legacy rollup settings.
         </value>
     </labels>
     <labels>
@@ -5457,7 +5469,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <protected>true</protected>
         <shortDescription>stgHelpCustomizableRollupsEnable</shortDescription>
         <value>
-            When checked, enables Customizable Rollups and converts out-of-box NPSP rollups as well as any existing User Defined Rollups into Customizable Rollups.
+            Removes any new rollups, filter groups, and filter rules you created while using Customizable Rollups AND resets all NPSP legacy rollups back to their default behavior.
         </value>
     </labels>
     <labels>
@@ -7382,6 +7394,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgPowerOfUsHub</shortDescription>
         <value>Power of Us Hub</value>
+    </labels>
+    <labels>
+        <fullName>stgReset</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgReset</shortDescription>
+        <value>Reset</value>
     </labels>
     <labels>
         <fullName>stgSelectOne</fullName>

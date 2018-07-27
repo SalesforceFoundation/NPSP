@@ -141,7 +141,7 @@
 
             </div>
 
-            <div id="jq-dropdown-1" class="jq-dropdown jq-dropdown-tip">
+            <div id="action-menu-container" class="jq-dropdown jq-dropdown-tip">
                 <ul class="jq-dropdown-menu">
                     <li><a href="javascript:void(0)" ng-click="removeRowOnColumnAction()" style="color: #006dcc">Remove Row</a></li>
                 </ul>
