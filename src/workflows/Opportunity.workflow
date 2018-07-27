@@ -63,7 +63,7 @@
             <operation>notEqual</operation>
             <value>0</value>
         </criteriaItems>
-        <description>Enable this rule if you would like the Fair Market Value copied to the Amount, if the Amount is zero or is blank.</description>
+        <description>Enable this rule to copy the Fair Market Value to the Amount field, when the Amount is zero or blank.</description>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
     <rules>
@@ -81,7 +81,7 @@
             <type>FieldUpdate</type>
         </actions>
         <active>false</active>
-        <description>Emails an acknowledgment to the Primary Contact when Email Acknowledgment is set.</description>
+        <description>Emails an acknowledgement to the Primary Contact for an Opportunity when the Acknowledgement Status is set to Email Acknowledgement Now.</description>
         <formula>TEXT(Acknowledgment_Status__c) = $Label.sendAcknowledgmentFireStatus &amp;&amp;  Primary_Contact__r.Email &lt;&gt; NULL &amp;&amp;  Primary_Contact__r.Do_Not_Contact__c &lt;&gt; True &amp;&amp;  Primary_Contact__r.HasOptedOutOfEmail &lt;&gt; True &amp;&amp;  Primary_Contact__r.Deceased__c &lt;&gt; True</formula>
         <triggerType>onCreateOrTriggeringUpdate</triggerType>
     </rules>
