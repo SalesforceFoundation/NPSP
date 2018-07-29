@@ -10,9 +10,8 @@
     TemplateInfoView : function(component, model) {
         return (function (component, model) {
 
-            // Subscribe to the model onFieldsUpdated event. 
+            // Subscribe to the model onInfoUpdated event.
             model.getTemplateInfo().onInfoUpdated.subscribe(function() {
-                console.log('HEYYY');
                 var templateInfoView = component.get('v.templateInfo');
                 var templateInfo = model.getTemplateInfo();
                 templateInfoView.name = templateInfo.name;
@@ -188,7 +187,7 @@
                                 selected: sObjectField.selected,
                                 defaultValue: sObjectField.defaultValue,
                                 required: sObjectField.required,
-                                hide: sObjectField.hide,
+                                hide: sObjectField.hide
                             }
                         );
                     });
@@ -242,7 +241,7 @@
                             }
                         );
 
-                        _templateFields.load(response.templateFields);
+                        _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
                     },
                     error: function(error) {
                         console.log(error);
@@ -250,6 +249,46 @@
                 });
             }
 
+            /* **********************************************************
+             * @Description Saves the model information to the backend.
+             * @return void.
+             ************************************************************/
+            function save() {
+                var templateDetailsData = {
+                    name: _templateInfo.name,
+                    description: _templateInfo.description,
+                    displayTotalPrompt: _templateInfo.displayTotalPrompt,
+                    requireTotalMatch: _templateInfo.requireTotalMatch
+                };
+                var activeFields = [];
+
+                var activeFieldsBySObject = _templateFields.getActives();
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                        activeFields.push({
+                            name: currentField.name,
+                            sObjectName: currentField.sObjectName,
+                            defaultValue: currentField.defaultValue,
+                            required: currentField.required,
+                            hide: currentField.hide
+                        })
+                    });
+                });
+
+                _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
+                    success: function(response) {
+                        console.log('Success!');
+                    },
+                    error: function(error) {
+                        console.log(error);
+                    }
+                });
+            }
+
+            /* **********************************************************
+             * @Description Injects the Apex backend controller module.
+             * @return void.
+             ************************************************************/
             function setBackendController(bgeTemplateController) {
                 _bgeTemplateController = bgeTemplateController
             }
@@ -270,27 +309,13 @@
                 return _templateInfo;
             }
 
-            /* **********************************************************
-             * @Description Saves the Template Details and Fields.
-             ************************************************************/
-            function saveTemplateDetails() {
-                _bgeTemplateController.saveTemplateDetails({
-                    success: function(response) {
-                    //do something fun here
-                    },
-                    error: function(error) {
-                        console.log(error);
-                    }
-                });
-            }
-            
             // TemplateDetailsModel module public functions.
             return {
                 init: init,
+                save: save,
                 setBackendController: setBackendController,
                 getTemplateFields: getTemplateFields,
-                getTemplateInfo: getTemplateInfo,
-                saveTemplateDetails: saveTemplateDetails
+                getTemplateInfo: getTemplateInfo
             }
         })(templateFields, templateInfo);
     },
@@ -361,11 +386,25 @@
              * onFieldsUpdated listeners.
              * @return List of fields.
              ************************************************************/
-            function load(allFields) {
+            function load(allFields, activeFields) {
                 _allFields = [];
+                var activeFieldMap = [];
+
+                if (activeFields) {
+                    activeFields.forEach(function(activeField) {
+                        var fieldId = activeField.sObjectName + "." + activeField.name;
+                        activeFieldMap.push(fieldId);
+                    });
+                }
+
                 allFields.forEach(function(currentField) {
                     currentField.id = currentField.sObjectName + "." + currentField.name;
-                    currentField.selected = false;
+                    //update all fields to include Active fields
+                    if (activeFieldMap.indexOf(currentField.id) != -1) {
+                        currentField.isActive = true;
+                    } else {
+                        currentField.isActive = false;
+                    }
                     _allFields.push(currentField);
                 });
                 this.onFieldsUpdated.notify();
@@ -413,13 +452,13 @@
             }
 
             /* **********************************************************
-             * @Description Selects the available fields.
+             * @Description Selects the active fields.
              * @param fieldsToSelect. Set of active fields to select.
              * @return void.
              ************************************************************/
             function selectActives(fieldsToSelect) {
                 var activeTemplateFields = getActives();
-                _selectFields(activeTemplateFields, fieldsToSelect)
+                _selectFields(activeTemplateFields, fieldsToSelect);
                 this.onFieldsUpdated.notify();
             }
 
@@ -544,11 +583,11 @@
              * @Description Calls the saveTemplateDetails method.
              * @return save result status and any related errors
              ************************************************************/
-            function saveTemplateDetails(callback) {
+            function saveTemplateDetails(templateDetails, activeFields, callback) {
                 var action = _component.get("c.saveTemplate");
                 action.setParams({
-                    templateInfo: JSON.stringify(component.get("v.templateInfo")),
-                    activeFields: JSON.stringify(component.get("v.activeTemplateFields.data"))
+                    "templateInfo": JSON.stringify(templateDetails),
+                    "activeFields": JSON.stringify(activeFields)
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);

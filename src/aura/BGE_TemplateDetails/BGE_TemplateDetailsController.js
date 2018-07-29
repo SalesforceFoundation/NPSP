@@ -7,6 +7,7 @@
      *****************************************************************/
     init: function (component, event, helper) {
         //view mode is set with lightning app builder; determine if page is in edit or create mode by checking for recordId
+        //todo: move this to proper place in the module
         if (component.get("v.mode") != 'view') {
             if (component.get("v.recordId") != 'null') {
                 component.set("v.mode", "edit");
@@ -41,8 +42,10 @@
      * @Description. Saves the template information. 
      *****************************************************************/
     save: function(component, event, helper) {
+        var templateInfoData = component.get("v.templateInfo");
         var model = component.get('v.model');
-        model.saveTemplateDetails();
+        model.getTemplateInfo().load(templateInfoData);
+        model.save();
     },
 
     /******************************** Template Fields Controller Functions *****************************/

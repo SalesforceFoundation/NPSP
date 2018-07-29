@@ -38,7 +38,7 @@ public with sharing class BGE_Template_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, and the related list of fields.
-    * @return 
+    * @return JSON model of all template details data.
     */
     @AuraEnabled
     public static String getTemplateDetails(Id templateId) {
@@ -69,7 +69,7 @@ public with sharing class BGE_Template_CTRL {
 
     /*******************************************************************************************************
     * @description Retrieves the Template Details information, and the related list of fields.
-    * @return
+    * @return list of Template Fields
     */
     @AuraEnabled
     public static List<Field> getAvailableFields() {
@@ -125,7 +125,7 @@ public with sharing class BGE_Template_CTRL {
     @AuraEnabled
     public static void saveTemplate(String templateInfo, String activeFields) {
         try {
-            TemplateDetails templateDetails = (TemplateDetails) JSON.deserialize(templateInfo, BGE_Template_CTRL.TemplateDetails.class);
+            TemplateDetails templateDetails = (TemplateDetails) JSON.deserialize(templateInfo, TemplateDetails.class);
 
             Batch_Template__c batchTemplate = new Batch_Template__c();
             batchTemplate.Name = templateDetails.name;
