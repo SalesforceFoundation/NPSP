@@ -11,6 +11,7 @@ npsp_lex_locators={
             'button': "//article[contains(@class, 'forceRelatedListCardDesktop')][.//img][.//span[@title='{}']]//a[@title='{}']",
             'check_occurance':'//h2/a/span[@title="{}"]/following-sibling::span[text()=" ({})"]',
             'drop-down':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]/parent::*/div/div/div/a[contains(@class, "slds-button")]',
+            'title':'//div[contains(@class, "slds-card")]/header[.//span[@title="{}"]]',
          },    
     },
     'object':{
@@ -36,7 +37,8 @@ npsp_lex_locators={
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
     'related_list_items':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")][.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
     
-    'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//a[text()="{}"]',
+    'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[text()="{}"]',
+    'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
     'affiliated_contacts':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]/../following-sibling::td/span[text()="{}"]',
     
     'detail_page': {
@@ -53,6 +55,13 @@ npsp_lex_locators={
     },
     'modal':{
         'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
+    },
+    'opportunity':{
+        'contact_role':'//div[contains(@class,"listItemBody")][./h3//a[text()="{}"]]//parent::h3/following-sibling::ul/li/div[contains(@class,"forceListRecordItem")]/div[@title="Role:"]/following-sibling::div/span[text()="{}"]',
+    },
+    'object':{
+        'contact_role':'//tbody//a[text()= "{}"]/../../following-sibling::td/span/span[text() = "{}"]',
+        'record':'//tbody//a[text()= "{}"]',
     }
 }
     

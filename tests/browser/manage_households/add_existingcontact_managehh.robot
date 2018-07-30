@@ -6,7 +6,7 @@ Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
-Add Existing Contact to Existing Household 
+Add Existing Contact to Existing Household through Manage Household Page
     #1 contact HouseHold Validation
     ${contact_id1} =  Create Contact with Email
     &{contact1} =  Salesforce Get  Contact  ${contact_id1}

@@ -138,6 +138,22 @@ Create Secondary Affiliation
     Click Modal Button    Save
     [Return]         ${account_id}    ${contact_id}
     
+Create Opportunities
+    [Arguments]    ${opp_name}    ${hh_name}  
+    Select Window
+    Sleep    2   
+    Populate Form
+    ...                       Opportunity Name= ${opp_name}
+    ...                       Amount=100 
+    Click Dropdown    Stage
+    Click Link    link=Closed Won
+    Populate Lookup Field    Account Name    ${hh_name}
+    Click Dropdown    Close Date
+    Pick Date    10
+    Select Modal Checkbox    Do Not Automatically Create Payment
+    Click Modal Button        Save
+    
+    
 Choose Frame
     [Arguments]    ${frame}
     Select Frame    //iframe[contains(@title,'${frame}')]
