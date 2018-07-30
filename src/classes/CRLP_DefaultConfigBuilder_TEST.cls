@@ -94,22 +94,14 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
-                // Count all Filter_Group__mdt records, but then double check that they aren't queued just to be soft Deleted
                 fgCount++;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
-                        fgCount--;
-                        break;
-                    }
+                if (isDeleteFlagTrue(md)) {
+                    fgCount--;
                 }
             } else if (md.fullName.contains('Rollup__mdt')) {
-                // Count all Rollup__mdt records, but then double check that they aren't queued just to be soft Deleted
                 rlpCount++;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Is_Deleted__c' && (Boolean)val.value == true ) {
-                        rlpCount--;
-                        break;
-                    }
+                if (isDeleteFlagTrue(md)) {
+                    fgCount--;
                 }
             }
         }
@@ -143,22 +135,14 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
-                // Count all Filter_Group__mdt records, but then double check that they aren't queued just to be soft Deleted
                 fgCount++;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
-                        fgCount--;
-                        break;
-                    }
+                if (isDeleteFlagTrue(md)) {
+                    fgCount--;
                 }
             } else if (md.fullName.contains('Rollup__mdt')) {
-                // Count all Rollup__mdt records, but then double check that they aren't queued just to be soft Deleted
                 rlpCount++;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Is_Deleted__c' && val.value == true ) {
-                        rlpCount--;
-                        break;
-                    }
+                if (isDeleteFlagTrue(md)) {
+                    rlpCount--;
                 }
                 String lbl = md.label;
                 for (Metadata.CustomMetadataValue val : md.values) {
@@ -176,5 +160,17 @@ private class CRLP_DefaultConfigBuilder_TEST {
 
         System.assertEquals(12, fgCount, 'There should be 12 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
+    }
+
+    /**
+     * @description Helper method to check if a metadata record has been flagged as soft-deleted
+     */
+    private static Boolean isDeleteFlagTrue(Metadata.CustomMetadata md) {
+        for (Metadata.CustomMetadataValue val : md.values) {
+            if ((String) val.field == 'Is_Deleted__c' && (Boolean) val.value == true) {
+                return true;
+            }
+        }
+        return false;
     }
 }
