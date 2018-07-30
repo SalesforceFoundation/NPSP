@@ -1191,8 +1191,8 @@ private with sharing class RD_RecurringDonations_TEST2 {
         Date nextDonationDate = Date.newInstance(System.today().year(), 1, 31);
         Date dateEstablished = nextDonationDate.toStartOfMonth();
         Date installmentDate = Date.newInstance(System.today().year(), 3, 27);
-        Integer expectedDay;
-        Integer actualDay;
+        Date expectedDate = installmentDate;
+        Date actualDate;
 
         npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
             Name = 'DateProvided',
@@ -1203,14 +1203,13 @@ private with sharing class RD_RecurringDonations_TEST2 {
             Day_Of_Month__c = null
         );
 
-        expectedDay = installmentDate.day();
-        actualDay = RD_RecurringDonations.adjustDayOfMonth(installmentDate, recurringDonation).day();
-        System.assertEquals(expectedDay, actualDay);
+        actualDate = RD_RecurringDonations.adjustDayOfMonth(installmentDate, recurringDonation);
+        System.assertEquals(expectedDate, actualDate);
     }
 
     @isTest
     private static void adjustDayOfMonthReturnsDateBasedOnEstablishedDay() {
-        Date dateEstablished = Date.newInstance(System.today().year(), 1, 11);
+        Date dateEstablished = Date.newInstance(System.today().year(), 1, 31);
         Date installmentDate = Date.newInstance(System.today().year(), 3, 28);
         Integer expectedDay;
         Integer actualDay;
@@ -1228,6 +1227,29 @@ private with sharing class RD_RecurringDonations_TEST2 {
             expectedDay = dateEstablished.day();
             actualDay = RD_RecurringDonations.adjustDayOfMonth(installmentDate.addDays(i), recurringDonation).day();
             System.assertEquals(expectedDay, actualDay);
+        }
+    }
+
+    @isTest
+    private static void adjustDayOfMonthReturnsSameDateWhenNextDonationNotEndOfMonth() {
+        Date dateEstablished = Date.newInstance(System.today().year(), 1, 11);
+        Date installmentDate = Date.newInstance(System.today().year(), 3, 28);
+        Date expectedDate;
+        Date actualDate;
+
+        npe03__Recurring_Donation__c recurringDonation = new npe03__Recurring_Donation__c(
+            Name = 'EstablishedDate',
+            npe03__Next_Payment_Date__c = dateEstablished,
+            npe03__Date_Established__c = dateEstablished,
+            npe03__Installment_Period__c = System.Label.npe03.RecurringDonationInstallmentPeriodMonthly,
+            Always_Use_Last_Day_Of_Month__c = false,
+            Day_Of_Month__c = null
+        );
+
+        for (Integer i = 0; i < 3; i++) {
+            expectedDate = installmentDate.addDays(i);
+            actualDate = RD_RecurringDonations.adjustDayOfMonth(expectedDate, recurringDonation);
+            System.assertEquals(expectedDate, actualDate);
         }
     }
 
