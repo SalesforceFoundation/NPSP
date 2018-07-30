@@ -139,14 +139,14 @@ private class CRLP_DefaultConfigBuilder_TEST {
             } else if (md.fullName.contains('Rollup__mdt')) {
                 if (!isDeleteFlagTrue(md)) {
                     rlpCount++;
-                }
-                String lbl = md.label;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Active__c') {
-                        if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
-                            System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
-                        } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
-                            System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                    String lbl = md.label;
+                    for (Metadata.CustomMetadataValue val : md.values) {
+                        if ((String)val.field == 'Active__c') {
+                            if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
+                                System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
+                            } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
+                                System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                            }
                         }
                     }
                 }
