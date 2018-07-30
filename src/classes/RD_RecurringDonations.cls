@@ -1176,7 +1176,7 @@ public class RD_RecurringDonations {
 
     /*******************************************************************************************************
     * @description If the day is an end of month day, uses the day from the next donation when available,
-    * otherwise uses the day from the date established.
+    * otherwise uses the day from the date established when the stored day is greater than the day provided.
     * @param day The day to analyze
     * @param recurringDonation The recurring donation record to evaluate
     * @return Integer The preferred day
@@ -1185,7 +1185,6 @@ public class RD_RecurringDonations {
         final Integer shortestMonthDay = 28;
         final Integer longestMonthDay = 31;
 
-
         if (day < shortestMonthDay || day == longestMonthDay
             || (recurringDonation.npe03__Next_Payment_Date__c == null
                 && recurringDonation.npe03__Date_Established__c == null)) {
@@ -1193,11 +1192,15 @@ public class RD_RecurringDonations {
         }
 
         if (recurringDonation.npe03__Next_Payment_Date__c != null) {
-            return recurringDonation.npe03__Next_Payment_Date__c.day();
+            return recurringDonation.npe03__Next_Payment_Date__c.day() > day
+                ? recurringDonation.npe03__Next_Payment_Date__c.day()
+                : day;
         }
 
         if (recurringDonation.npe03__Date_Established__c != null) {
-            return recurringDonation.npe03__Date_Established__c.day();
+            return recurringDonation.npe03__Date_Established__c.day() > day
+                ? recurringDonation.npe03__Date_Established__c.day()
+                : day;
         }
 
         return day;
