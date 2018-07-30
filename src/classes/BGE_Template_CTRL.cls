@@ -42,7 +42,7 @@ public with sharing class BGE_Template_CTRL {
     */
     @AuraEnabled
     public static String getTemplateDetails(Id templateId) {
-        TemplateDetails templateDetails = new TemplateDetails();
+        TemplateDetailsModel templateDetails = new TemplateDetailsModel();
 
         if (templateId != null) {
             Batch_Template__c batchTemplate = [SELECT
@@ -63,6 +63,7 @@ public with sharing class BGE_Template_CTRL {
         }
 
         templateDetails.templateFields = getAvailableFields();
+        templateDetails.labels = getBatchTemplateLabels();
 
         return JSON.serialize(templateDetails);
     }
@@ -117,6 +118,24 @@ public with sharing class BGE_Template_CTRL {
         }
         return fields;
     }
+    /*******************************************************************************************************
+    * @description Retrieves the object and field labels for the component.
+    * @return map of Batch Template object and field name keys to labels.
+    */
+    @AuraEnabled
+    public static Map<String, String> getBatchTemplateLabels() {
+
+        Map<String, String> labels = new Map<String, String> {
+            'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
+            'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
+            'totalPromptHelp' => Schema.Batch_Template__c.Display_Total_Prompt__c.getDescribe().getInlineHelpText(),
+            'totalPromptLabel' => Schema.Batch_Template__c.Display_Total_Prompt__c.getDescribe().getLabel(),
+            'totalMatchHelp' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getInlineHelpText(),
+            'totalMatchLabel' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getLabel()
+        };
+
+        return labels;
+    }
 
     /*******************************************************************************************************
     * @description Saves the Template Details information, and the list of active fields.
@@ -125,7 +144,7 @@ public with sharing class BGE_Template_CTRL {
     @AuraEnabled
     public static void saveTemplate(String templateInfo, String activeFields) {
         try {
-            TemplateDetails templateDetails = (TemplateDetails) JSON.deserialize(templateInfo, TemplateDetails.class);
+            TemplateDetailsModel templateDetails = (TemplateDetailsModel) JSON.deserialize(templateInfo, TemplateDetailsModel.class);
 
             Batch_Template__c batchTemplate = new Batch_Template__c();
             batchTemplate.Name = templateDetails.name;
@@ -145,15 +164,16 @@ public with sharing class BGE_Template_CTRL {
     /*******************************************************************************************************
     * @description 
     */
-    public class TemplateDetails {
+    public class TemplateDetailsModel {
         @AuraEnabled public String name;
         @AuraEnabled public String description;
         @AuraEnabled public Boolean displayTotalPrompt;
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public List<Field> templateFields;
         @AuraEnabled public String activeFields;
+        @AuraEnabled public Map<String, String> labels;
 
-        public TemplateDetails() {
+        public TemplateDetailsModel() {
             displayTotalPrompt = false;
             requireTotalMatch = false;
             templateFields = new List<Field>();

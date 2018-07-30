@@ -23,6 +23,8 @@
 
         var templateInfoView = helper.TemplateInfoView(component, model);
         component.set('v.templateInfo', templateInfoView);
+        var templateMetadataView = helper.TemplateMetadataView(component, model);
+        component.set('v.templateMetadata', templateMetadataView);
         var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model);
         component.set('v.availableTemplateFields', availableTemplateFieldsView);
         var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model);

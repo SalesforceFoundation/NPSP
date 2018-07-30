@@ -2,10 +2,10 @@
     /********************************************* View Modules *********************************************/
     
     /* ***************************************************************
-     * @Description Returns the Available Template Fields View module.
+     * @Description Returns the Template Info View module.
      * @param component. Lightning Component reference.
      * @param model. The Model.
-     * @return View of the Available Template Fields module.
+     * @return View of the Template Info module.
      *****************************************************************/
     TemplateInfoView : function(component, model) {
         return (function (component, model) {
@@ -33,6 +33,31 @@
     },
 
     /* ***************************************************************
+     * @Description Returns the Template Metadata View module.
+     * @param component. Lightning Component reference.
+     * @param model. The Model.
+     * @return View of the Template Metadata module.
+     *****************************************************************/
+    TemplateMetadataView : function(component, model) {
+        return (function (component, model) {
+
+            // Subscribe to the model onMetadataUpdated event.
+            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
+                var templateMetadataView = component.get('v.templateMetadata');
+                var templateMetadata = model.getTemplateMetadata();
+                templateMetadataView.labels = templateMetadata.labels;
+
+                component.set('v.templateMetadata', templateMetadataView);
+            });
+
+            //  module public functions
+            return {
+                labels: {}
+            };
+        })(component, model);
+    },
+
+    /* ***************************************************************
      * @Description Returns the Available Template Fields View module.
      * @param component. Lightning Component reference.
      * @param model. The Template Fields Model.
@@ -44,7 +69,7 @@
                 {
                 	type: 'text',
                 	fieldName: 'name',
-                	label: 'Available Fields'
+                	label: $A.get("$Label.c.bgeBatchTemplateAvailableFields")
             	}
             ];
 
@@ -124,22 +149,22 @@
                 {
                     type: 'text',
                     fieldName: 'name',
-                    label: 'Active Fields'
+                    label: $A.get("$Label.c.bgeBatchTemplateActiveFields")
                 },
                 {
                     type: 'text',
                     fieldName: 'defaultValue',
-                    label: 'Default Value'
+                    label: $A.get("$Label.c.stgDefaultValue")
                 },
                 {
                     type: 'boolean',
                     fieldName: 'required',
-                    label: 'Required'
+                    label: $A.get("$Label.c.lblRequired")
                 },
                 {
                     type: 'boolean',
                     fieldName: 'hide',
-                    label: 'Hide'
+                    label: $A.get("$Label.c.stgLabelHide")
                 }
             ];
             
@@ -218,10 +243,12 @@
     TemplateDetailsModel : function() {
         var templateFields = this.TemplateFields();
         var templateInfo = this.TemplateInfo();
+        var templateMetadata = this.TemplateMetadata();
 
         return (function (templateFields, templateInfo) {
             var _templateFields = templateFields;
             var _templateInfo = templateInfo;
+            var _templateMetadata = templateMetadata;
             var _bgeTemplateController;
             
             /* **********************************************************
@@ -242,6 +269,7 @@
                         );
 
                         _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
+                        _templateMetadata.load(response.labels);
                     },
                     error: function(error) {
                         console.log(error);
@@ -309,13 +337,22 @@
                 return _templateInfo;
             }
 
+            /* **********************************************************
+             * @Description Gets the Template Info module.
+             * @return Template Info module.
+             ************************************************************/
+            function getTemplateMetadata() {
+                return _templateMetadata;
+            }
+
             // TemplateDetailsModel module public functions.
             return {
                 init: init,
                 save: save,
                 setBackendController: setBackendController,
                 getTemplateFields: getTemplateFields,
-                getTemplateInfo: getTemplateInfo
+                getTemplateInfo: getTemplateInfo,
+                getTemplateMetadata: getTemplateMetadata
             }
         })(templateFields, templateInfo);
     },
@@ -516,7 +553,39 @@
             }
         })(Event);
 	},
-    
+
+    /* **********************************************************
+     * @Description Gets the Model module of the Template Metadata, such as page mode and labels.
+     * @return Model module of the Template Metadata.
+     ************************************************************/
+    TemplateMetadata : function() {
+        var Event = this.Event();
+
+        return (function (Event) {
+            var _onMetadataUpdated = new Event(this);
+
+            /* **********************************************************
+             * @Description Loads the Info, and notify all the
+             * _onMetadataUpdated listeners.
+             * @return List of fields.
+             ************************************************************/
+            function load(labels) {
+                this.labels = labels;
+                //todo: figure out how putting the mode here would work... or does it not?
+                //this.mode = info.description;
+                this.onMetadataUpdated.notify()
+            }
+
+            // TemplateInfo module public functions.
+            return {
+                labels: {},
+                mode: '',
+                load: load,
+                onMetadataUpdated: _onMetadataUpdated
+            }
+        })(Event);
+    },
+
     /* **********************************************************
      * @Description. Publisher/Subscribers. It is used by the Model 
      * modules to notify the View modules on a specific change in the

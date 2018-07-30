@@ -137,7 +137,7 @@
         <defaultValue>false</defaultValue>
         <description>When checked, BGE grid prompts user for expected Opportunity total.</description>
         <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
+        <inlineHelpText>When checked, BGE grid prompts user for expected Opportunity total.</inlineHelpText>
         <label>Display Total Prompt</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -242,7 +242,7 @@
         <defaultValue>false</defaultValue>
         <description>When checked, BGE grid validates the expected total against the actual total and prohibits the batch from processing if totals do not match.</description>
         <externalId>false</externalId>
-        <inlineHelpText></inlineHelpText>
+        <inlineHelpText>When checked, BGE grid validates the expected total against the actual total and prohibits the batch from processing if totals do not match.</inlineHelpText>
         <label>Require Total Match</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
