@@ -849,7 +849,7 @@
         <defaultValue>false</defaultValue>
         <description>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates that this organization is a grant making organization. Can apply to foundations, government agencies, corporations, etc.</inlineHelpText>
+        <inlineHelpText>Indicates that this organization is a grantmaking organization.</inlineHelpText>
         <label>Grantmaker</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
@@ -858,7 +858,7 @@
         <fullName>Matching_Gift_Administrator_Name__c</fullName>
         <description>The name of the company&apos;s matching gift administrator.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The name of the company&apos;s matching gift administrator.</inlineHelpText>
+        <inlineHelpText>The name of the company's Matching Gift administrator.</inlineHelpText>
         <label>Matching Gift Administrator Name</label>
         <length>255</length>
         <required>false</required>
@@ -882,7 +882,7 @@
         <fullName>Matching_Gift_Amount_Min__c</fullName>
         <description>The smallest gift the company will match.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The smallest gift the company will match.</inlineHelpText>
+        <inlineHelpText>The smallest amount the company will match on any single gift.</inlineHelpText>
         <label>Matching Gift Amount Min</label>
         <precision>18</precision>
         <required>false</required>
@@ -906,7 +906,7 @@
         <fullName>Matching_Gift_Comments__c</fullName>
         <description>Additional notes about the company&apos;s matching gift program.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Additional notes about the company&apos;s matching gift program.</inlineHelpText>
+        <inlineHelpText>Additional notes about the company's Matching Gift program.</inlineHelpText>
         <label>Matching Gift Comments</label>
         <length>32768</length>
         <trackFeedHistory>false</trackFeedHistory>
@@ -918,7 +918,7 @@
         <defaultValue>false</defaultValue>
         <description>Is this a company that offers matching gifts?</description>
         <externalId>false</externalId>
-        <inlineHelpText>Is this a company that offers matching gifts?</inlineHelpText>
+        <inlineHelpText>Indicates that this company offers Matching Gifts.</inlineHelpText>
         <label>Matching Gift Company</label>
         <trackFeedHistory>false</trackFeedHistory>
         <type>Checkbox</type>
@@ -927,7 +927,7 @@
         <fullName>Matching_Gift_Email__c</fullName>
         <description>Email of the company&apos;s matching gift administrator.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Email of the company&apos;s matching gift administrator.</inlineHelpText>
+        <inlineHelpText>Email of the company's Matching Gift administrator.</inlineHelpText>
         <label>Matching Gift Email</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -938,7 +938,7 @@
         <fullName>Matching_Gift_Info_Updated__c</fullName>
         <description>The date when the matching gift information was last updated.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The date when the matching gift information was last updated.</inlineHelpText>
+        <inlineHelpText>The date you last updated the Matching Gift information.</inlineHelpText>
         <label>Matching Gift Info Updated</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -960,7 +960,7 @@
         <fullName>Matching_Gift_Phone__c</fullName>
         <description>Phone for the matching gift administration office.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Phone for the matching gift administration office.</inlineHelpText>
+        <inlineHelpText>The phone number of the company's Matching Gift administrator.</inlineHelpText>
         <label>Matching Gift Phone</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -970,7 +970,7 @@
         <fullName>Matching_Gift_Request_Deadline__c</fullName>
         <description>Any restrictions on how old gifts can be to be eligible for matching.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Any restrictions on how old gifts can be to be eligible for matching.</inlineHelpText>
+        <inlineHelpText>Use this field to note any age restrictions this company places on Matching Gift eligibility.</inlineHelpText>
         <label>Matching Gift Request Deadline</label>
         <length>255</length>
         <required>false</required>
@@ -984,7 +984,7 @@
         <externalId>false</externalId>
         <formula>year(npo02__MembershipEndDate__c ) - year(npo02__MembershipJoinDate__c)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>Formula: The number of years for which this Household has had a Member.</inlineHelpText>
+        <inlineHelpText>The number of years that a member of this Household has had a Membership (read only).</inlineHelpText>
         <label>Membership Span</label>
         <precision>18</precision>
         <required>false</required>
@@ -999,7 +999,7 @@
         <formula>if ( npo02__MembershipEndDate__c  &lt;today(), if (npo02__MembershipEndDate__c  &gt; ( TODAY() -
 IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c)), $Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Period__c, 30)) , &quot;Grace Period&quot; , &quot;Expired&quot;) , if(isnull(npo02__MembershipEndDate__c ),&quot;&quot;,&quot;Current&quot;))</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-        <inlineHelpText>Formula: Current, expired, or grace period.  Default grace period set in Household Settings.</inlineHelpText>
+        <inlineHelpText>The Membership status of this Household, for example, Current, Expired, or Grace Period. The value is based on Membership End Date and Grace Period. The Default Grace Period is set in NPSP Settings, under Household Settings. This field is read only.</inlineHelpText>
         <label>Membership Status</label>
         <required>false</required>
         <type>Text</type>
@@ -1008,7 +1008,7 @@ IF(NOT(ISNULL($Setup.npo02__Households_Settings__c.npo02__Membership_Grace_Perio
     <fields>
         <fullName>Number_of_Household_Members__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>for Household Accounts, the number of Contacts in the Household.</inlineHelpText>
+        <inlineHelpText>The number of Contacts who are members of this Household.</inlineHelpText>
         <label>Number of Household Members</label>
         <precision>10</precision>
         <required>false</required>
