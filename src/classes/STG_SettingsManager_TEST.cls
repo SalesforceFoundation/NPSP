@@ -312,7 +312,8 @@ public with sharing class STG_SettingsManager_TEST {
         Integer rollupChangeCount = 0;
         for (Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
             for (Metadata.CustomMetadataValue val : md.values) {
-                if ((String)val.field == 'Detail_Object__c') {
+                String valField = (String)val.field;
+                if (valField.contains('Detail_Object__c')){
                     if(val.value == CRLP_DefaultConfigBuilder.paymentObject){
                         rollupChangeCount++;
                     }

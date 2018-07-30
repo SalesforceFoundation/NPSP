@@ -55,7 +55,7 @@ public class CRLP_DefaultConfigBuilder {
     public static final Allocations_Settings__c legacyAllocSettings = UTIL_CustomSettingsFacade.getAllocationsSettings();
 
     /** @description Boolean set to true if Payment Allocations are enabled */
-    public static final Boolean paymentAllocationsEnabled = legacyAllocSettings.Payment_Allocations_Enabled__c;
+    public static Boolean paymentAllocationsEnabled = legacyAllocSettings.Payment_Allocations_Enabled__c;
 
     /** @description Number of days to use for all the N_Days rollups */
     public static final String LastNDaysString = (legacySettings.npo02__Rollup_N_Day_Value__c != null ?

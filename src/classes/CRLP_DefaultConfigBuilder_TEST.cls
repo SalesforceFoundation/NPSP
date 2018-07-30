@@ -135,7 +135,8 @@ private class CRLP_DefaultConfigBuilder_TEST {
                 rlpCount++;
                 String lbl = md.label;
                 for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Detail_Object__c') {
+                    String valField = (String)val.field;
+                    if (valField.contains('Detail_Object__c')){
                         if(val.value == CRLP_DefaultConfigBuilder.paymentObject){
                             payAlloCount++;
                         }
