@@ -507,6 +507,7 @@
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
+                        currentField.selected = false;
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -520,6 +521,7 @@
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive && currentField.selected) {
                         currentField.isActive = false;
+                        currentField.selected = false;
                     }
                 });
                 this.onFieldsUpdated.notify();

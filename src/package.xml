@@ -1422,7 +1422,9 @@
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
         <members>bgeBatchTemplateActiveFields</members>
+        <members>bgeBatchTemplateAddFields</members>
         <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateRemoveFields</members>
         <members>bgeErrorBatchTemplateMissing</members>
         <members>bgeErrorBatchTemplateNameRequired</members>
         <members>bgeHandsOnGridCommitBatch</members>

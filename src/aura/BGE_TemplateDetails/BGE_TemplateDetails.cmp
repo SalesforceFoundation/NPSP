@@ -82,10 +82,10 @@
                     <div class="slds-col slds-size_1-of-12">
                         <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
                             <div class="slds-m-bottom__xx-small">
-                                <lightning:buttonIcon iconName="utility:chevronright" alternativeText="Settings" onclick="{!c.updateToActive}"/>
+                                <lightning:buttonIcon iconName="utility:chevronright" alternativeText="{!$Label.c.bgeBatchTemplateAddFields}" onclick="{!c.updateToActive}"/>
                             </div>
                             <div class="slds-m-top_xx-small">
-                                <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="Settings" onclick="{!c.updateToAvailable}"/>
+                                <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="{!$Label.c.bgeBatchTemplateRemoveFields}" onclick="{!c.updateToAvailable}"/>
                             </div>
                         </div>
                     </div>
