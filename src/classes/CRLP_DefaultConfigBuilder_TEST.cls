@@ -94,9 +94,13 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
-                fgCount++;
+                if (!isDeleteFlagTrue(md)) {
+                    fgCount++;
+                }
             } else if (md.fullName.contains('Rollup__mdt')) {
-                rlpCount++;
+                if (!isDeleteFlagTrue(md)) {
+                    rlpCount++;
+                }
             }
         }
 
@@ -129,16 +133,20 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer rlpCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
-                fgCount++;
+                if (!isDeleteFlagTrue(md)) {
+                    fgCount++;
+                }
             } else if (md.fullName.contains('Rollup__mdt')) {
-                rlpCount++;
-                String lbl = md.label;
-                for (Metadata.CustomMetadataValue val : md.values) {
-                    if ((String)val.field == 'Active__c') {
-                        if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
-                            System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
-                        } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
-                            System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                if (!isDeleteFlagTrue(md)) {
+                    rlpCount++;
+                    String lbl = md.label;
+                    for (Metadata.CustomMetadataValue val : md.values) {
+                        if ((String)val.field == 'Active__c') {
+                            if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
+                                System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
+                            } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
+                                System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                            }
                         }
                     }
                 }
@@ -148,5 +156,17 @@ private class CRLP_DefaultConfigBuilder_TEST {
 
         System.assertEquals(12, fgCount, 'There should be 12 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
+    }
+
+    /**
+     * @description Helper method to check if a metadata record has been flagged as soft-deleted
+     */
+    private static Boolean isDeleteFlagTrue(Metadata.CustomMetadata md) {
+        for (Metadata.CustomMetadataValue val : md.values) {
+            if ((String) val.field == 'Is_Deleted__c' && (Boolean) val.value == true) {
+                return true;
+            }
+        }
+        return false;
     }
 }
