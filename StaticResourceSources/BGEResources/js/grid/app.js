@@ -135,7 +135,8 @@
                 beforeKeyDown: beforeKeyDownHandler,
                 afterScrollHorizontally: afterScrollHandler,
                 afterScrollVertically: afterScrollHandler,
-                modifyColWidth: modifyColWidthHandler
+                modifyColWidth: modifyColWidthHandler,
+                afterOnCellMouseOver: afterOnCellMouseOverHandler
             });
 
             $scope.$apply();
@@ -273,6 +274,19 @@
         function afterScrollHandler() {
 
             setCellsHeight();
+        }
+
+        function afterOnCellMouseOverHandler(event, coords, td) {
+
+            var editor =  hot.getActiveEditor();
+
+            if (editor) {
+                var colType = hot.getDataType(editor.row, editor.col);
+
+                if ( (coords.col === 1 || coords.col === 2) && (colType === 'date' || colType === 'dropdown') ) {
+                    hot.destroyEditor();
+                }
+            }
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
