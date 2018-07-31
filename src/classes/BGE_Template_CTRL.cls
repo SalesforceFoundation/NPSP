@@ -48,7 +48,7 @@ public with sharing class BGE_Template_CTRL {
             Batch_Template__c batchTemplate = [SELECT
                     Name,
                     Description__c,
-                    Display_Total_Prompt__c,
+                    Enable_Total_Entry__c,
                     Require_Total_Match__c,
                     Active_Fields__c
             FROM Batch_Template__c
@@ -56,7 +56,7 @@ public with sharing class BGE_Template_CTRL {
 
             templateDetails.name = batchTemplate.Name;
             templateDetails.description = batchTemplate.Description__c;
-            templateDetails.displayTotalPrompt = batchTemplate.Display_Total_Prompt__c;
+            templateDetails.displayTotalPrompt = batchTemplate.Enable_Total_Entry__c;
             templateDetails.requireTotalMatch = batchTemplate.Require_Total_Match__c;
             templateDetails.activeFields = batchTemplate.Active_Fields__c;
         }
@@ -127,8 +127,8 @@ public with sharing class BGE_Template_CTRL {
         Map<String, String> labels = new Map<String, String> {
             'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
             'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-            'totalPromptHelp' => Schema.Batch_Template__c.Display_Total_Prompt__c.getDescribe().getInlineHelpText(),
-            'totalPromptLabel' => Schema.Batch_Template__c.Display_Total_Prompt__c.getDescribe().getLabel(),
+            'totalPromptHelp' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getInlineHelpText(),
+            'totalPromptLabel' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getLabel()
         };
@@ -148,7 +148,7 @@ public with sharing class BGE_Template_CTRL {
             Batch_Template__c batchTemplate = new Batch_Template__c();
             batchTemplate.Name = templateDetails.name;
             batchTemplate.Description__c = templateDetails.description;
-            batchTemplate.Display_Total_Prompt__c = templateDetails.displayTotalPrompt;
+            batchTemplate.Enable_Total_Entry__c = templateDetails.displayTotalPrompt;
             batchTemplate.Require_Total_Match__c = templateDetails.requireTotalMatch;
             batchTemplate.Active_Fields__c = activeFields;
 

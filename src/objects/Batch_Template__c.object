@@ -133,12 +133,12 @@
         <type>TextArea</type>
     </fields>
     <fields>
-        <fullName>Display_Total_Prompt__c</fullName>
+        <fullName>Enable_Total_Entry__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When checked, BGE grid prompts user for expected Opportunity total.</description>
+        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, BGE grid prompts user for expected Opportunity total.</inlineHelpText>
-        <label>Display Total Prompt</label>
+        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
+        <label>Enable Expected Totals Entry</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>
@@ -240,10 +240,10 @@
     <fields>
         <fullName>Require_Total_Match__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When checked, BGE grid validates the expected total against the actual total and prohibits the batch from processing if totals do not match.</description>
+        <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
         <externalId>false</externalId>
-        <inlineHelpText>When checked, BGE grid validates the expected total against the actual total and prohibits the batch from processing if totals do not match.</inlineHelpText>
-        <label>Require Total Match</label>
+        <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
+        <label>Require Expected Totals Match</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
     </fields>

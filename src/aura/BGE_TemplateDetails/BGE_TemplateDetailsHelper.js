@@ -381,7 +381,7 @@
                 this.description = info.description;
                 this.displayTotalPrompt = info.displayTotalPrompt;
                 this.requireTotalMatch = info.requireTotalMatch;
-                this.onInfoUpdated.notify()
+                this.onInfoUpdated.notify();
             }
             
             // TemplateInfo module public functions and properties
@@ -583,7 +583,7 @@
                 this.labels = labels;
                 //isReadOnly (View) is passed from record home with lightning app builder
                 if (component.get("v.isReadOnly")) {
-                    this.mode = 'view'
+                    this.mode = 'view';
                 } else {
                     if (component.get("v.recordId") !== null) {
                         this.mode = 'edit';
@@ -591,7 +591,7 @@
                         this.mode = 'create';
                     }
                 }
-                this.onMetadataUpdated.notify()
+                this.onMetadataUpdated.notify();
             }
 
             // TemplateInfo module public functions and properties
