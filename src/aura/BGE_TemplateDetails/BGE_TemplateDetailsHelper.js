@@ -46,6 +46,7 @@
                 var templateMetadataView = component.get('v.templateMetadata');
                 var templateMetadata = model.getTemplateMetadata();
                 templateMetadataView.labels = templateMetadata.labels;
+                templateMetadataView.mode = templateMetadata.mode;
 
                 component.set('v.templateMetadata', templateMetadataView);
             });
@@ -255,7 +256,7 @@
              * @Description Gets the Template Fields module.
              * @return Template Fields module.
              ************************************************************/
-            function init() {
+            function init(component) {
 
                 _bgeTemplateController.getTemplateDetails({
                     success: function(response) {
@@ -269,7 +270,7 @@
                         );
 
                         _templateFields.load(response.templateFields, JSON.parse(response.activeFields));
-                        _templateMetadata.load(response.labels);
+                        _templateMetadata.load(response.labels, component);
                     },
                     error: function(error) {
                         console.log(error);
@@ -571,10 +572,18 @@
              * _onMetadataUpdated listeners.
              * @return List of fields.
              ************************************************************/
-            function load(labels) {
+            function load(labels, component) {
                 this.labels = labels;
-                //todo: figure out how putting the mode here would work... or does it not?
-                //this.mode = info.description;
+                //isReadOnly (View) is passed from record home with lightning app builder
+                if (component.get("v.isReadOnly")) {
+                    this.mode = 'view'
+                } else {
+                    if (component.get("v.recordId") != 'null') {
+                        this.mode = 'edit';
+                    } else {
+                        this.mode = 'create';
+                    }
+                }
                 this.onMetadataUpdated.notify()
             }
 

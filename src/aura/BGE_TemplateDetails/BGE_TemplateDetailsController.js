@@ -6,15 +6,6 @@
      * @Description. Constructs the Model Module, and the View Modules.
      *****************************************************************/
     init: function (component, event, helper) {
-        //view mode is set with lightning app builder; determine if page is in edit or create mode by checking for recordId
-        //todo: move this to proper place in the module
-        if (component.get("v.mode") != 'view') {
-            if (component.get("v.recordId") != 'null') {
-                component.set("v.mode", "edit");
-            } else {
-                component.set("v.mode", "create");
-            }
-        }
         var bgeTemplateController = helper.BGETemplateController(component);
 
         var model = helper.TemplateDetailsModel();
@@ -30,7 +21,7 @@
         var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model);
         component.set('v.activeTemplateFields', activeTemplateFieldsView);
 
-        model.init();
+        model.init(component);
     },
 
     /* ***************************************************************
@@ -53,7 +44,7 @@
     /******************************** Template Fields Controller Functions *****************************/
 
     /* ***************************************************************
-     * @Description. Updates the selected available fields in the 
+     * @Description. Updates the selected (checked) available fields in the
      * Template Fields Model.
      *****************************************************************/
     selectAvailableTemplateFields: function (component, event, helper) {

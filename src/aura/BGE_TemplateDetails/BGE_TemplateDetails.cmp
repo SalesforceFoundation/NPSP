@@ -44,7 +44,7 @@
     <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
-    <aura:attribute name="mode" type="String" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
+    <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
     <aura:attribute name="recordId" type="Id" />
 
     <!-- events we handle -->
@@ -59,15 +59,15 @@
 
             <div class="row slds-p-around_large">
                 <div class="slds-col slds-size_4-of-12">
-                    <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}" value="{!v.templateInfo.name}" readonly="{!v.mode=='view'}"/>
+                    <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}" value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}"/>
                 </div>
                 <div class="slds-col slds-size_4-of-12 slds-p-top_small">
-                    <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}" value="{!v.templateInfo.description}" readonly="{!v.mode=='view'}"/>
+                    <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}" value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"/>
                 </div>
             </div>
 
             <div class="row slds-grid slds-wrap slds-p-around_large">
-                <aura:if isTrue="{!v.mode != 'view'}">
+                <aura:if isTrue="{! !v.isReadOnly}">
                     <div class="slds-col slds-size_3-of-12">
                         <lightning:treeGrid
                             aura:id="availableTemplateFields"
@@ -98,14 +98,14 @@
                         keyField="id"
                         selectedRows="{!v.activeTemplateFields.selectedRows}"
                         onrowselection="{!c.selectActiveTemplateFields}"
-                        hideCheckboxColumn="{!v.mode == 'view'}"
+                        hideCheckboxColumn="{!v.isReadOnly}"
                     />
                 </div>
             </div>
 
             <div class="row slds-p-around_large">
 
-                <aura:if isTrue="{!v.mode == 'view'}">
+                <aura:if isTrue="{!v.isReadOnly}">
 
                     <div class="slds-form-element">
                         <ui:outputCheckbox value="{!v.templateInfo.displayTotalPrompt}" class="slds-form-element__control templateOutputCheckbox"/>
@@ -122,7 +122,7 @@
                                              label="{!v.templateMetadata.labels.totalPromptLabel}"
                                              name="displayTotalPrompt"
                                              checked="{!v.templateInfo.displayTotalPrompt}"
-                                             readonly="{!v.mode=='view'}"
+                                             readonly="{!v.isReadOnly}"
                                              variant="label-hidden"/>
                             <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalPromptHelp}" fieldLabel="{!v.templateMetadata.labels.totalPromptLabel}"/>
                         </div>
@@ -131,7 +131,7 @@
                                              label="{!v.templateMetadata.labels.totalMatchLabel}"
                                              name="requireTotalMatch"
                                              checked="{!v.templateInfo.requireTotalMatch}"
-                                             readonly="{!v.mode=='view'}"
+                                             readonly="{!v.isReadOnly}"
                                              variant="label-hidden"/>
                             <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalMatchHelp}" fieldLabel="{!v.templateMetadata.labels.totalMatchLabel}"/>
                         </div>
@@ -139,7 +139,7 @@
                 </aura:if>
             </div>
 
-            <aura:if isTrue="{!v.mode != 'view'}">
+            <aura:if isTrue="{! !v.isReadOnly}">
                 <div class="row slds-p-around_large">
                     <div class="slds-align_absolute-center">
                         <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />

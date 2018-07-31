@@ -59,7 +59,6 @@ public with sharing class BGE_Template_CTRL {
             templateDetails.displayTotalPrompt = batchTemplate.Display_Total_Prompt__c;
             templateDetails.requireTotalMatch = batchTemplate.Require_Total_Match__c;
             templateDetails.activeFields = batchTemplate.Active_Fields__c;
-
         }
 
         templateDetails.templateFields = getAvailableFields();

@@ -1,3 +1,4 @@
 <design:component>
-    <design:attribute name="mode" datasource="view" default="view" label="Mode"/>
+    <design:attribute name="isReadOnly" default="true" label="Is Read Only"
+                      description="Necessary for component when shown on the record home."/>
 </design:component>
