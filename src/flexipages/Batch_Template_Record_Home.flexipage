@@ -14,8 +14,8 @@
         </componentInstances>
         <componentInstances>
             <componentInstanceProperties>
-                <name>mode</name>
-                <value>view</value>
+                <name>isReadOnly</name>
+                <value>true</value>
             </componentInstanceProperties>
             <componentName>BGE_TemplateDetails</componentName>
         </componentInstances>
