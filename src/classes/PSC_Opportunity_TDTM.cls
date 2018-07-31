@@ -47,11 +47,11 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     public override DmlWrapper run(List<SObject> listNew, List<SObject> listOld, 
         TDTM_Runnable.Action triggerAction, Schema.DescribeSObjectResult objResult) {
 
-        if (triggerAction == TDTM_Runnable.Action.AfterUpdate && userInfo.isMultiCurrencyOrganization()) {
-            DMLWrapper dmlWrapper = new DmlWrapper();
+        if (triggerAction == TDTM_Runnable.Action.AfterUpdate && UserInfo.isMultiCurrencyOrganization()) {
+            DmlWrapper dmlWrapper = new DmlWrapper();
 
-            dmlWrapper.objectsToUpdate.addAll((list<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Partial_Soft_Credit__c.SObjectType));
-            dmlWrapper.objectsToUpdate.addAll((list<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Account_Soft_Credit__c.SObjectType));
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Partial_Soft_Credit__c.SObjectType));
+            dmlWrapper.objectsToUpdate.addAll((List<SObject>)updateSoftCreditCurrencyFromParent(listNew, listOld, Account_Soft_Credit__c.SObjectType));
 
             //set flag to allow changing PSC currency
             PSC_PartialSoftCredit_TDTM.blockCurrencyChange = false;
@@ -67,15 +67,15 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
     * @param listOld The list of opportunities from trigger old. 
     * @return list<sObject> Partial Soft Credits or Account Soft Credits with modified currency that need updating via DML.
     ********************************************************************************************************/
-    public static list<SObject> updateSoftCreditCurrencyFromParent(list<SObject> newlist, list<SObject> oldlist, SObjectType objType) {
-        list<SObject> results = new List<SObject>();
+    public static List<SObject> updateSoftCreditCurrencyFromParent(List<SObject> newlist, List<SObject> oldlist, SObjectType objType) {
+        List<SObject> results = new List<SObject>();
         //map holds object id to currency iso code
         Map<Id,String> mapOppIdToISO = new Map<Id,String>();
 
         //if the parent currency has changed, add to map
         for (Integer i=0;i<newlist.size();i++) {
             if (newlist[i].get('CurrencyIsoCode')!=oldlist[i].get('CurrencyIsoCode')) {
-                mapOppIdToISO.put((id)newlist[i].get('id'),(string)newlist[i].get('CurrencyIsoCode'));
+                mapOppIdToISO.put((Id)newlist[i].get('id'),(String)newlist[i].get('CurrencyIsoCode'));
             }
         }
 
@@ -84,18 +84,20 @@ public with sharing class PSC_Opportunity_TDTM extends TDTM_Runnable {
 
         if (objType == Partial_Soft_Credit__c.SObjectType) {
             //query all PSCs associated with these opps, update their ISO code
-            for (Partial_Soft_Credit__c psc : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
-                string oppCurrency = mapOppIdToISO.get(psc.Opportunity__c);
+            for (Partial_Soft_Credit__c psc : Database.query('SELECT Id, Amount__c, Opportunity__c, CurrencyIsoCode FROM Partial_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
+                String oppCurrency = mapOppIdToISO.get(psc.Opportunity__c);
 
                 psc.put('CurrencyIsoCode', oppCurrency);
+                psc.put('Amount__c', psc.Amount__c);
                 results.add(psc);
             }
         } else if (objType == Account_Soft_Credit__c.SObjectType) {
             //query all AccSCs associated with these opps, update their ISO code
-            for (Account_Soft_Credit__c accountSC : database.query('SELECT Id, Opportunity__c, CurrencyIsoCode FROM Account_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
-                string oppCurrency = mapOppIdToISO.get(accountSC.Opportunity__c);
+            for (Account_Soft_Credit__c accountSC : Database.query('SELECT Id, Amount__c, Opportunity__c, CurrencyIsoCode FROM Account_Soft_Credit__c WHERE Opportunity__c IN :oppIds')) {
+                String oppCurrency = mapOppIdToISO.get(accountSC.Opportunity__c);
 
                 accountSC.put('CurrencyIsoCode', oppCurrency);
+                accountSC.put('Amount__c', accountSC.Amount__c);
                 results.add(accountSC);
             }
         }

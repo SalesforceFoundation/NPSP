@@ -55,13 +55,11 @@ public class OPP_AccountSoftCredit_TDTM extends TDTM_Runnable {
         // BEFORE INSERT
         if (triggerAction == TDTM_Runnable.Action.BeforeInsert) {
             synchronizeCurrencyIsoCode(listNew);
-            return null;
         }
 
         // BEFORE UPDATE
         else if (triggerAction == TDTM_Runnable.Action.BeforeUpdate) {
             blockManualCurrencyChange(listNew, listOld);
-            return null;
         }
 
         return null;
@@ -73,18 +71,18 @@ public class OPP_AccountSoftCredit_TDTM extends TDTM_Runnable {
     * @param listAccSC the list of AccSCs from trigger new.
     * @return void.
     ********************************************************************************************************/
-    private void synchronizeCurrencyIsoCode(list<Account_Soft_Credit__c> listAccSC) {
+    private void synchronizeCurrencyIsoCode(List<Account_Soft_Credit__c> listAccSC) {
 
         // collect all our Opps and Contacts referenced by the PSC's
-        set<Id> setOppId = new set<Id>();
+        Set<Id> setOppId = new set<Id>();
         for (Account_Soft_Credit__c accSC : listAccSC) {
             setOppId.add(accSC.Opportunity__c);
         }
 
         //copy opportunity currency if multicurrency is enabled
         if (userInfo.isMultiCurrencyOrganization()) {
-            string oppQuery = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id IN :setOppId';
-            map<id, Opportunity> mapOppIdOpp = new map<id, Opportunity>((list<Opportunity>) database.query(oppQuery));
+            String oppQuery = 'SELECT Id, CurrencyIsoCode FROM Opportunity WHERE Id IN :setOppId';
+            Map<Id, Opportunity> mapOppIdOpp = new Map<Id, Opportunity>((List<Opportunity>) Database.query(oppQuery));
 
             for (Account_Soft_Credit__c accSC : listAccSC)
                 accSC.put('CurrencyIsoCode', mapOppIdOpp.get(accSC.Opportunity__c).get('CurrencyIsoCode'));
@@ -97,14 +95,14 @@ public class OPP_AccountSoftCredit_TDTM extends TDTM_Runnable {
     * @param listAccSCOld the list of AccSCs from trigger old.
     * @return void.
     ********************************************************************************************************/
-    private void blockManualCurrencyChange(list<Account_Soft_Credit__c> listAccSCNew, list<Account_Soft_Credit__c> listAccSCOld) {
+    private void blockManualCurrencyChange(List<Account_Soft_Credit__c> listAccSCNew, List<Account_Soft_Credit__c> listAccSCOld) {
 
-        for (integer i = 0; i < listAccSCNew.size(); i++) {
+        for (Integer i = 0; i < listAccSCNew.size(); i++) {
             Account_Soft_Credit__c accSCNew = listAccSCNew[i];
             Account_Soft_Credit__c accSCOld = listAccSCOld[i];
 
             // don't allow manually changing the AccSC currency: it must be changed through the parent opportunity
-            if (userInfo.isMultiCurrencyOrganization() && accSCNew.get('CurrencyIsoCode') != accSCOld.get('CurrencyIsoCode') && blockCurrencyChange) {
+            if (userInfo.isMultiCurrencyOrganization() && accSCNew.get('CurrencyIsoCode') != accSCOld.get('CurrencyIsoCode') && OPP_AccountSoftCredit_TDTM.blockCurrencyChange) {
                 accSCNew.addError(Label.pscManageSoftCreditsCantChangeCurrency);
             }
         }

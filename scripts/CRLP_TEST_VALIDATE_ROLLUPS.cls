@@ -3,12 +3,14 @@
  *
  * - CREATE TEST DATA AND AND TEST BOTH LEGACY AND CUSTOMIZABLE ROLLUP ENGINE BY VALIDATING THE
  *   RESULTING FIELD VALUES AGAINST EXPECTED RESULTS.
- * - REQUIRES 4 CUSTOM FIELDS ON THE ACCOUNT WITH CORRESPONDING ROLLUP CMT RECORDS
+ * - REQUIRES 5 CUSTOM FIELDS ON THE ACCOUNT WITH CORRESPONDING ROLLUP CMT RECORDS
  *      1. TEST_Total_Payments__c
  *      2. TEST_Total_Writeoffs__c
- *      3. TEST_Acc_Soft_Credit_Total__c
- *      4. TEST_Acc_Soft_Credit_Largest_Amt__c
- * - CAN USE createCustomRollups METHOD BELOW FROM ANON APEX TO CREATE THE CMT RECORDS
+ *      3. TEST_Soft_Credit_Total__c
+ *      4. TEST_Acc_Soft_Credit_Total__c
+ *      5. TEST_Acc_Soft_Credit_Largest_Amt__c
+ * - REQUIRES CRLPs TO BE ENABLED IN TEST ORG
+ * - CAN USE createCustomRollups METHOD BELOW FROM ANON APEX TO CREATE THE EXTRA CMT RECORDS
  * - REQUIRES MEMBERSHIP RECORD TYPE TO BE CONFIGURED AS EXCLUDED IN LEGACY AND CRLPs
  * - ALL TESTS ARE CONDUCTED USING EXECUTE ANONYMOUS; EXECUTING ONE METHOD AT A TIME IN THE FOLLOWING ORDER:
  *   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
@@ -33,6 +35,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final String ORG_CONTACT_NAME = 'CRLPTEST-ORG-DONATION';
     private static final String GAU_NAME = 'CRLP Default GAU';
     private static final String RD_NAME = 'CRLP TEST RD';
+    private static final String ACCOUNT_SOFT_CREDIT_ROLE_A = 'Influencer';
+    private static final String ACCOUNT_SOFT_CREDIT_ROLE_B = 'Donation Source';
 
     private static final Decimal ORG_DONATION_AMT = 5000;
     private static final Decimal BASE_AMOUNT_USD = 100;
@@ -208,7 +212,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             } else if (a.Name == ACCOUNT_NAME_ASC) {
                 // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
                 if (cs.Customizable_Rollups_Enabled__c == true) {
-                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + 10, (Double) a.get('TEST_Acc_Soft_Credit_Total__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Total__c should be');
+                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + 10 - ACCOUNT_SOFT_CREDIT_AMOUNT, (Double) a.get('TEST_Acc_Soft_Credit_Total__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Total__c should be');
                     assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT + 10, (Double) a.get('TEST_Acc_Soft_Credit_Largest_Amt__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Largest_Amt__c should be');
                 }
 
@@ -569,7 +573,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
                         Account__c = accForSoftCredits.Id,
                         Opportunity__c = opp.Id,
                         Amount__c = ACCOUNT_SOFT_CREDIT_AMOUNT,
-                        Role__c = 'Influencer'
+                        Role__c = ACCOUNT_SOFT_CREDIT_ROLE_A
                 );
                 if (UserInfo.isMultiCurrencyOrganization()) {
                     accSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
@@ -579,10 +583,12 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         }
         insert accSCs;
 
-        //give one AccSC a larger amount in order to validate a LARGEST rollup
         accSCs = [SELECT Id, Amount__c FROM Account_Soft_Credit__c WHERE Account__r.Name = :ACCOUNT_NAME_ASC];
+        //give one AccSC a larger amount in order to validate a LARGEST rollup
         accSCs[0].Amount__c += 10;
-        update accSCs[0];
+        //give one AccSC a different role in order to validate filter group exclusion
+        accSCs[1].Role__c = ACCOUNT_SOFT_CREDIT_ROLE_B;
+        update accSCs;
 
         Contact rdContact = [SELECT Id, AccountId FROM Contact WHERE Account.Name = :ACCOUNT_NAME_RD LIMIT 1];
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
@@ -729,10 +735,23 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         rollupContactSoftCreditsToAccount.operation = CRLP_Operation.RollupType.SUM.name();
         rollupContactSoftCreditsToAccount.isActive = true;
 
+        //Filter Group/Rule for Account Soft Credits
+        CRLP_RollupCMT.FilterGroup filterGroupInfluencerAccSC = new CRLP_RollupCMT.FilterGroup('TEMP: Account Soft Credits Group');
+        filterGroupInfluencerAccSC.description = 'All Paid Payments regardless of Record Type';
+        filterGroupInfluencerAccSC.recordName = 'NPSP_TEMP_AccSC_Group_Influencer';
+
+        CRLP_RollupCMT.FilterRule filterRuleInfluencer = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: Influencer');
+        filterRuleInfluencer.recordName = 'NPSP_TEMP_AccSC_Influencer';
+        filterRuleInfluencer.objectName = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        filterRuleInfluencer.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
+        filterRuleInfluencer.fieldName = 'Role__c';
+        filterRuleInfluencer.value = ACCOUNT_SOFT_CREDIT_ROLE_A;
+        filterGroupInfluencerAccSC.rules.add(filterRuleInfluencer);
+
         // Account Soft Credits
         CRLP_RollupCMT.Rollup rollupAccountSoftCreditSum = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Sum');
         rollupAccountSoftCreditSum.recordName = 'NPSP_TEMP_Total_AccSoftCredits_Account';
-        rollupAccountSoftCreditSum.filterGroupRecordName = 'NPSP_ClosedWon_Opps_HC';
+        rollupAccountSoftCreditSum.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
         rollupAccountSoftCreditSum.summaryObject = 'Account';
         rollupAccountSoftCreditSum.summaryField = 'TEST_Acc_Soft_Credit_Total__c';
         rollupAccountSoftCreditSum.detailObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
@@ -747,7 +766,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         // Account Soft Credits
         CRLP_RollupCMT.Rollup rollupAccountSoftCreditLargest = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Largest Amount');
         rollupAccountSoftCreditLargest.recordName = 'NPSP_TEMP_Last_AccSoftCredits_Account';
-        rollupAccountSoftCreditLargest.filterGroupRecordName = 'NPSP_ClosedWon_Opps_HC';
+        rollupAccountSoftCreditLargest.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
         rollupAccountSoftCreditLargest.summaryObject = 'Account';
         rollupAccountSoftCreditLargest.summaryField = 'TEST_Acc_Soft_Credit_Largest_Amt__c';
         rollupAccountSoftCreditLargest.detailObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
@@ -759,7 +778,10 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
         rollupAccountSoftCreditLargest.operation = CRLP_Operation.RollupType.LARGEST.name();
         rollupAccountSoftCreditLargest.isActive = true;
 
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup> { filterGroupPayments, filterGroupWrittenOff });
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup> {
+                filterGroupPayments,
+                filterGroupWrittenOff,
+                filterGroupInfluencerAccSC });
         CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{
                 rollupTotalPaid,
                 rollupTotalWrittenOff,

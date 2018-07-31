@@ -4634,7 +4634,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsCantChangeCurrency</shortDescription>
-        <value>You can't modify Partial Soft Credit currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the curency of all related Partial Soft Credit records.</value>
+        <value>You can't modify soft credit currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the currency of all related soft credits.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsFull</fullName>
