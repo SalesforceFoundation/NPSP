@@ -812,12 +812,10 @@
                 }
                 else {
 
-                    if (enter) {
-                        event.stopImmediatePropagation();
-                        rowIndex++;
+                    event.stopImmediatePropagation();
+                    rowIndex++;
 
-                        hot.selectCell(rowIndex, colIndex);
-                    }
+                    hot.selectCell(rowIndex, colIndex);
                 }
             }
         }
