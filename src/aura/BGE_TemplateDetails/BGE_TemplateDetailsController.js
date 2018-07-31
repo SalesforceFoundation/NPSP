@@ -1,11 +1,11 @@
-({ // eslint-disable-line
+({
 
     /******************************** Template Details Controller Functions *****************************/
 
     /* ***************************************************************
      * @Description. Constructs the Model Module, and the View Modules.
      *****************************************************************/
-    init: function (component, event, helper) {
+    doInit: function (component, event, helper) {
         var bgeTemplateController = helper.BGETemplateController(component);
 
         var model = helper.TemplateDetailsModel();
@@ -57,7 +57,7 @@
     },
 
     /* ***************************************************************
-     * @Description. Updates the selected active fields in the 
+     * @Description. Updates the selected (checked) active fields in the
      * Template Fields Model.
      *****************************************************************/
     selectActiveTemplateFields: function (component, event, helper) {
@@ -79,11 +79,11 @@
     },
 
     /* ***************************************************************
-     * @Description. Updates the selected active fields in the 
+     * @Description. Updates the selected active fields in the
      * Template Fields Model to available.
      *****************************************************************/
     updateToAvailable: function (component, event, helper) {
         var model = component.get('v.model');
         model.getTemplateFields().updateToAvailable();
     }
-}); // eslint-disable-line
+});

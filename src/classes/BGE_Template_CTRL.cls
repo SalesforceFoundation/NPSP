@@ -37,7 +37,7 @@
 public with sharing class BGE_Template_CTRL {
 
     /*******************************************************************************************************
-    * @description Retrieves the Template Details information, and the related list of fields.
+    * @description Retrieves the Template Details information, the related list of fields, and component labels.
     * @return JSON model of all template details data.
     */
     @AuraEnabled
@@ -68,8 +68,8 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Retrieves the Template Details information, and the related list of fields.
-    * @return list of Template Fields
+    * @description Retrieves the related list of fields.
+    * @return list of Template Fields with sObjectName and Name.
     */
     @AuraEnabled
     public static List<Field> getAvailableFields() {
@@ -119,7 +119,7 @@ public with sharing class BGE_Template_CTRL {
     }
     /*******************************************************************************************************
     * @description Retrieves the object and field labels for the component.
-    * @return map of Batch Template object and field name keys to labels.
+    * @return Map of Batch Template object and field name keys to their labels.
     */
     @AuraEnabled
     public static Map<String, String> getBatchTemplateLabels() {
@@ -137,8 +137,8 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description Saves the Template Details information, and the list of active fields.
-    * @return
+    * @description Saves the Template Details information with the structured list of active fields.
+    * @return void.
     */
     @AuraEnabled
     public static void saveTemplate(String templateInfo, String activeFields) {
@@ -161,7 +161,7 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description 
+    * @description a class to retrieve and save the required information for the BGE_TemplateDetails component.
     */
     public class TemplateDetailsModel {
         @AuraEnabled public String name;
@@ -180,7 +180,7 @@ public with sharing class BGE_Template_CTRL {
     }
 
     /*******************************************************************************************************
-    * @description 
+    * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class Field {
         @AuraEnabled public String name;

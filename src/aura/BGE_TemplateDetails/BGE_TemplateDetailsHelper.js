@@ -22,7 +22,7 @@
                 component.set('v.templateInfo', templateInfoView);
             });
             
-            //  module public functions
+            //  module public functions and properties
             return {
                 name: '', 
                 description: '',
@@ -51,9 +51,10 @@
                 component.set('v.templateMetadata', templateMetadataView);
             });
 
-            //  module public functions
+            //  module public functions and properties
             return {
-                labels: {}
+                labels: {},
+                mode: ''
             };
         })(component, model);
     },
@@ -97,7 +98,7 @@
             });
             
             /* *******************************************************************
-             * @Description Converts the Fields list to the availableTemplateFields
+             * @Description Converts the Available Fields list to the availableTemplateFields
              * Lightning:treeGrid data format.
              * @return availableTemplateFields Lightning:treeGrid data format.
              *********************************************************************/
@@ -128,7 +129,7 @@
                 return result;
             }
             
-            // AvailableTemplateFieldsView module public functions
+            // AvailableTemplateFieldsView module public functions and properties
 			return {
                 columns: _columns,
                 data: [],
@@ -138,10 +139,10 @@
 	},
     
     /* ***************************************************************
-     * @Description Returns the Available Template Fields View module.
+     * @Description Returns the Active Template Fields View module.
      * @param component. Lightning Component reference.
      * @param model(). The Template Fields Model.
-     * @return View of the Available Template Fields module.
+     * @return View of the Active Template Fields module.
      *****************************************************************/
     ActiveTemplateFieldsView : function(component, model) {
 
@@ -169,7 +170,7 @@
                 }
             ];
             
-            // Subscribe to the model.getTemplateFields() onFieldsUpdated event. 
+            // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var activeTemplateFields = component.get('v.activeTemplateFields');
                 activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActives());
@@ -191,7 +192,7 @@
             });
             
             /* *******************************************************************
-             * @Description Converts the Fields list to the activeTemplateFields
+             * @Description Converts the Active Fields list to the activeTemplateFields
              * Lightning:treeGrid data format.
              * @return activeTemplateFields Lightning:treeGrid data format.
              *********************************************************************/
@@ -223,7 +224,7 @@
                 return result;
             }
             
-            // ActiveTemplateFieldsView module public functions.
+            // ActiveTemplateFieldsView module public functions and properties
 			return {
                 columns: _columns,
                 data: [],
@@ -236,25 +237,27 @@
     /*********************************************** Model Modules *********************************************/
 
     /* **********************************************************
-     * @Description Gets the Model module of the Template Fields.
+     * @Description Gets the Model module of Template Details.
      * This is the main and only Model module for the Template 
-     * Details components.
-     * @return Model module of the Template Fields.
+     * Details components. Contains references to TemplateFields
+     * and TemplateInfo sub-modules.
+     * @return Model module of Template Details.
      ************************************************************/
     TemplateDetailsModel : function() {
         var templateFields = this.TemplateFields();
         var templateInfo = this.TemplateInfo();
         var templateMetadata = this.TemplateMetadata();
 
-        return (function (templateFields, templateInfo) {
+        return (function (templateFields, templateInfo, templateMetadata) {
             var _templateFields = templateFields;
             var _templateInfo = templateInfo;
             var _templateMetadata = templateMetadata;
             var _bgeTemplateController;
             
             /* **********************************************************
-             * @Description Gets the Template Fields module.
-             * @return Template Fields module.
+             * @Description Gets the Template Details and loads sub-modules.
+             * @param component. Lightning Component reference.
+             * @return void.
              ************************************************************/
             function init(component) {
 
@@ -315,7 +318,7 @@
             }
 
             /* **********************************************************
-             * @Description Injects the Apex backend controller module.
+             * @Description Sets the Apex backend controller module.
              * @return void.
              ************************************************************/
             function setBackendController(bgeTemplateController) {
@@ -339,14 +342,14 @@
             }
 
             /* **********************************************************
-             * @Description Gets the Template Info module.
-             * @return Template Info module.
+             * @Description Gets the Template Metadata module.
+             * @return Template Metadata module.
              ************************************************************/
             function getTemplateMetadata() {
                 return _templateMetadata;
             }
 
-            // TemplateDetailsModel module public functions.
+            // TemplateDetailsModel module public functions and properties
             return {
                 init: init,
                 save: save,
@@ -381,7 +384,7 @@
                 this.onInfoUpdated.notify()
             }
             
-            // TemplateInfo module public functions.
+            // TemplateInfo module public functions and properties
             return {
                 name: '',
                 description: '',
@@ -406,12 +409,13 @@
             
             /* **********************************************************
              * @Description Groups the fields by SObject name.
-             * @return Maps of SObject group to List of related fields.
+             * @param fields: list of field objects.
+             * @return Map of SObject name to List of related fields.
              ************************************************************/
             function _groupFieldsBySObject(fields) {
                 var result = {};
                 fields.forEach(function(currentField) {
-                	if ((currentField.sObjectName in result) == false) {
+                	if ((currentField.sObjectName in result) === false) {
                         result[currentField.sObjectName] = [];
                     }
                     result[currentField.sObjectName].push(currentField);
@@ -420,9 +424,11 @@
             }
             
             /* **********************************************************
-             * @Description Loads the fields, and notify all the 
-             * onFieldsUpdated listeners.
-             * @return List of fields.
+             * @Description Load the fields and notify onFieldsUpdated listeners.
+             * @param allFields: list of allFields with sObjectName/Name.
+             * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
+             * todo: and Default Value, Hide and Required flags.
+             * @return void.
              ************************************************************/
             function load(allFields, activeFields) {
                 _allFields = [];
@@ -438,7 +444,7 @@
                 allFields.forEach(function(currentField) {
                     currentField.id = currentField.sObjectName + "." + currentField.name;
                     //update all fields to include Active fields
-                    if (activeFieldMap.indexOf(currentField.id) != -1) {
+                    if (activeFieldMap.indexOf(currentField.id) !== -1) {
                         currentField.isActive = true;
                     } else {
                         currentField.isActive = false;
@@ -450,8 +456,7 @@
             
             /* **********************************************************
              * @Description Gets the available fields.
-             * @return Maps of SObject group to List of related available
-             * fields.
+             * @return Map of SObject group to List of inactive fields.
              ************************************************************/
             function getAvailables() {
                 var _availableFields = [];
@@ -465,8 +470,7 @@
             
             /* **********************************************************
              * @Description Gets the active fields.
-             * @return Maps of SObject group to List of related active
-             * fields.
+             * @return Map of SObject group to List of related active fields.
              ************************************************************/
             function getActives() {
                 var _activeFields = [];
@@ -479,8 +483,9 @@
             }
 
             /* **********************************************************
-             * @Description Selects the available fields.
-             * @param fieldsToSelect. Set of View available fields selected.
+             * @Description Selects the available fields and
+             *      notify onFieldsUpdated listeners.
+             * @param fieldsToSelect. Map of IDs to available fields.
              * @return void.
              ************************************************************/
             function selectAvailables(fieldsToSelect) {
@@ -490,8 +495,8 @@
             }
 
             /* **********************************************************
-             * @Description Selects the active fields.
-             * @param fieldsToSelect. Set of active fields to select.
+             * @Description Selects the active fields and notifies onFieldsUpdated listeners.
+             * @param fieldsToSelect. Map of IDs to active fields.
              * @return void.
              ************************************************************/
             function selectActives(fieldsToSelect) {
@@ -501,7 +506,8 @@
             }
 
             /* **********************************************************
-             * @Description Updates the selected fields to Active.
+             * @Description Updates the selected fields to Active, unselects
+             *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
             function updateToActive() {
@@ -515,7 +521,8 @@
             }
 
             /* **********************************************************
-             * @Description Updates the selected fields to Available.
+             * @Description Updates the selected fields to Available, unselects
+             *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
             function updateToAvailable() {
@@ -529,9 +536,9 @@
             }
 
             /* **********************************************************
-             * @Description Selects the fields.
-             * @param fieldsGroupBySObject. Model Fields to select.
-             * @param fieldsToSelect. Set of View available fields selected.
+             * @Description Selects the fields by updating fieldsGroupBySObject reference.
+             * @param fieldsGroupBySObject. Available or Active Model Fields grouped by sObject.
+             * @param fieldsToSelect. Fields grouped by sObject.
              * @return void.
              ************************************************************/
             function _selectFields(fieldsGroupBySObject, fieldsToSelect) {
@@ -542,7 +549,7 @@
                 });
             }
             
-            // TemplateFieldsModel module public functions.
+            // TemplateFieldsModel module public functions and properties
             return {
                 load: load,
                 getAvailables: getAvailables,
@@ -569,8 +576,8 @@
 
             /* **********************************************************
              * @Description Loads the Info, and notify all the
-             * _onMetadataUpdated listeners.
-             * @return List of fields.
+             *      _onMetadataUpdated listeners.
+             * @return void.
              ************************************************************/
             function load(labels, component) {
                 this.labels = labels;
@@ -578,7 +585,7 @@
                 if (component.get("v.isReadOnly")) {
                     this.mode = 'view'
                 } else {
-                    if (component.get("v.recordId") != 'null') {
+                    if (component.get("v.recordId") !== null) {
                         this.mode = 'edit';
                     } else {
                         this.mode = 'create';
@@ -587,7 +594,7 @@
                 this.onMetadataUpdated.notify()
             }
 
-            // TemplateInfo module public functions.
+            // TemplateInfo module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -598,9 +605,8 @@
     },
 
     /* **********************************************************
-     * @Description. Publisher/Subscribers. It is used by the Model 
-     * modules to notify the View modules on a specific change in the
-     * Model module.
+     * @Description. Publisher/Subscribers used by the Model modules
+     *      to notify the View modules on a specific change.
      * @return Event
      ************************************************************/
     Event: function () {
@@ -641,6 +647,7 @@
 
     /* **********************************************************
      * @Description Gets Template Details Controller
+     * @return Template Details Controller.
      ************************************************************/
     BGETemplateController : function(component) {
         return (function (component) {
@@ -648,7 +655,7 @@
 
             /* **********************************************************
              * @Description Calls the getTemplateDetails method.
-             * @return Template Fields module.
+             * @return void.
              ************************************************************/
             function getTemplateDetails(callback) {
                 var action = _component.get("c.getTemplateDetails");
@@ -661,7 +668,7 @@
 
             /* **********************************************************
              * @Description Calls the saveTemplateDetails method.
-             * @return save result status and any related errors
+             * @return void.
              ************************************************************/
             function saveTemplateDetails(templateDetails, activeFields, callback) {
                 var action = _component.get("c.saveTemplate");
@@ -673,6 +680,10 @@
                 $A.enqueueAction(action);
             }
 
+            /* **********************************************************
+             * @Description Processes the response from any Apex method.
+             * @return void.
+             ************************************************************/
             function _processResponse(response) {
                 var state = response.getState();
                 if (state === "SUCCESS") {

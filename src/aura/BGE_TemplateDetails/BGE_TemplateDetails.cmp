@@ -48,10 +48,10 @@
     <aura:attribute name="recordId" type="Id" />
 
     <!-- events we handle -->
-    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- START MARKUP -->
-    <div aura:id="body" style="background: white">
+    <div aura:id="body" class="bodyDiv">
 
         <h2 class="slds-text-heading_medium slds-p-horizontal_large slds-p-top_large">{!v.templateMetadata.labels.batchTemplateLabel}</h2>
 
@@ -108,11 +108,11 @@
                 <aura:if isTrue="{!v.isReadOnly}">
 
                     <div class="slds-form-element">
-                        <ui:outputCheckbox value="{!v.templateInfo.displayTotalPrompt}" class="slds-form-element__control templateOutputCheckbox"/>
+                        <ui:outputCheckbox value="{!v.templateInfo.displayTotalPrompt}" class="slds-form-element__control"/>
                         <span class="slds-form-element__label">{!v.templateMetadata.labels.totalPromptLabel}</span>
                     </div>
                     <div class="slds-form-element">
-                        <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control templateOutputCheckbox"/>
+                        <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
                         <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
                     </div>
 

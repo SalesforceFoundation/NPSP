@@ -1,11 +1,9 @@
+.THIS.bodyDiv {
+    background: white;
+}
 /*formatting for edit mode checkboxes*/
 .THIS .templateInputCheckbox{
     display: inline-flex;
-}
-/*removes the extra required asterisk for tooltip workaround*/
-.THIS .hasTooltip .slds-form-element__label {
-    display: none;
-    visibility: hidden;
 }
 /*padding for helptext icon*/
 .THIS .uiOutputCheckbox {
