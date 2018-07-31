@@ -55,7 +55,7 @@
         <fullName>Amount__c</fullName>
         <description>Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.</inlineHelpText>
+        <inlineHelpText>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</inlineHelpText>
         <label>Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -68,7 +68,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <description>Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.</inlineHelpText>
+        <inlineHelpText>The Campaign associated with this Allocation. Use this field if you want new Opportunities associated with this Campaign to be allocated in the same way.</inlineHelpText>
         <label>Campaign</label>
         <referenceTo>Campaign</referenceTo>
         <relationshipLabel>GAU Allocations</relationshipLabel>
@@ -82,17 +82,17 @@
         <deleteConstraint>Restrict</deleteConstraint>
         <description>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</inlineHelpText>
+        <inlineHelpText>The General Accounting Unit this Allocation is attributed to. Only General Accounting Units marked as active are available for new Allocations.</inlineHelpText>
         <label>General Accounting Unit</label>
         <lookupFilter>
             <active>true</active>
-            <errorMessage>Allocations can only be assigned to active general accounting units. Allocations assigned to inactive general accounting units cannot be modified.</errorMessage>
+            <errorMessage>Choose an active General Accounting Unit for this Allocation. You cannot modify an Allocation assigned to an inactive General Accounting Unit.</errorMessage>
             <filterItems>
                 <field>General_Accounting_Unit__c.Active__c</field>
                 <operation>equals</operation>
                 <value>True</value>
             </filterItems>
-            <infoMessage>Only active general accounting units can be selected.</infoMessage>
+            <infoMessage>You must select an active General Accounting Unit for this Allocation.</infoMessage>
             <isOptional>false</isOptional>
         </lookupFilter>
         <referenceTo>General_Accounting_Unit__c</referenceTo>
@@ -107,7 +107,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <description>Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation&apos;s general accounting unit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation&apos;s general accounting unit.</inlineHelpText>
+        <inlineHelpText>The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation's General Accounting Unit.</inlineHelpText>
         <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>GAU Allocations</relationshipLabel>
@@ -120,7 +120,7 @@
         <fullName>Percent__c</fullName>
         <description>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</inlineHelpText>
+        <inlineHelpText>Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</inlineHelpText>
         <label>Percent</label>
         <precision>9</precision>
         <required>false</required>
@@ -133,7 +133,7 @@
         <deleteConstraint>SetNull</deleteConstraint>
         <description>Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.</inlineHelpText>
+        <inlineHelpText>The Recurring Donation this Allocation is attributed to. NPSP automatically allocates all new Opportunities associated with the Recurring Donation in the same way.</inlineHelpText>
         <label>Recurring Donation</label>
         <referenceTo>npe03__Recurring_Donation__c</referenceTo>
         <relationshipLabel>GAU Allocations</relationshipLabel>
