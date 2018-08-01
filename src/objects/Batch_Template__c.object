@@ -18,7 +18,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>Edit</actionName>
-        <content>BGE_TemplateCreation</content>
+        <content>BGE_TemplateDetails</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -32,7 +32,7 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>New</actionName>
-        <content>BGE_TemplateCreation</content>
+        <content>BGE_TemplateDetails</content>
         <skipRecordTypeSelect>false</skipRecordTypeSelect>
         <type>LightningComponent</type>
     </actionOverrides>
@@ -46,7 +46,11 @@
     </actionOverrides>
     <actionOverrides>
         <actionName>View</actionName>
-        <type>Default</type>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Batch_Template_Record_Home</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
     </actionOverrides>
     <allowInChatterGroups>false</allowInChatterGroups>
     <compactLayoutAssignment>SYSTEM</compactLayoutAssignment>
@@ -70,6 +74,16 @@
         <trackTrending>false</trackTrending>
         <type>Text</type>
         <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Active_Fields__c</fullName>
+        <description>Represents the data model of active fields for a NPSP_Batch_Import__c record. Not intended for direct customer use and should not be edited directly.</description>
+        <externalId>false</externalId>
+        <label>Active Fields</label>
+        <length>30000</length>
+        <trackTrending>false</trackTrending>
+        <type>LongTextArea</type>
+        <visibleLines>3</visibleLines>
     </fields>
     <fields>
         <fullName>Batch_Process_Size__c</fullName>
@@ -117,6 +131,16 @@
         <required>false</required>
         <trackTrending>false</trackTrending>
         <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Enable_Total_Entry__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the user filling out the template may enter the expected number of gifts and expected total amount for the batch.</inlineHelpText>
+        <label>Enable Expected Totals Entry</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
     </fields>
     <fields>
         <fullName>Donation_Date_Range__c</fullName>
@@ -214,6 +238,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Require_Total_Match__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When checked, the total number of gifts and total amount must match the expected totals entered for the batch.</inlineHelpText>
+        <label>Require Expected Totals Match</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Run_Opportunity_Rollups_while_Processing__c</fullName>
         <defaultValue>false</defaultValue>
         <description>When checked, NPSP calculates donor statistics when donations are processed. If unchecked, donor statistics are calculated during the default nightly Scheduled Job. Note that selecting this checkbox may slow down processing of this batch</description>
@@ -236,6 +270,7 @@
     <pluralLabel>Batch Templates</pluralLabel>
     <searchLayouts/>
     <sharingModel>ReadWrite</sharingModel>
+    <visibility>Public</visibility>
     <webLinks>
         <fullName>Edit_Processing_Settings</fullName>
         <availability>online</availability>

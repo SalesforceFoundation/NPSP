@@ -94,6 +94,7 @@
         <members>BGE_TemplateController</members>
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
+        <members>BGE_Template_CTRL</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -592,6 +593,7 @@
         <members>BGE_ReviewScreen</members>
         <members>BGE_SearchBar</members>
         <members>BGE_TemplateCreation</members>
+        <members>BGE_TemplateDetails</members>
         <members>BGE_TemplateFieldDynamicRow</members>
         <members>BGE_TemplateRow</members>
         <members>BGE_TemplateSelection</members>
@@ -738,15 +740,18 @@
         <members>Batch_Template_Field__c.Sticky_Field_Visibility__c</members>
         <members>Batch_Template_Field__c.Sticky_Field__c</members>
         <members>Batch_Template__c.Account_Custom_Unique_ID__c</members>
+        <members>Batch_Template__c.Active_Fields__c</members>
         <members>Batch_Template__c.Batch_Process_Size__c</members>
         <members>Batch_Template__c.Contact_Custom_Unique_ID__c</members>
         <members>Batch_Template__c.Contact_Matching_Rule__c</members>
         <members>Batch_Template__c.Description__c</members>
+        <members>Batch_Template__c.Display_Total_Prompt__c</members>
         <members>Batch_Template__c.Donation_Date_Range__c</members>
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>
         <members>Batch_Template__c.Donation_Matching_Rule__c</members>
         <members>Batch_Template__c.Process_Using_Scheduled_Job__c</members>
+        <members>Batch_Template__c.Require_Total_Match__c</members>
         <members>Batch_Template__c.Run_Opportunity_Rollups_while_Processing__c</members>
         <members>Batch__c.Batch_Status__c</members>
         <members>Batch__c.Description__c</members>
@@ -1416,6 +1421,10 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
+        <members>bgeBatchTemplateActiveFields</members>
+        <members>bgeBatchTemplateAddFields</members>
+        <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateRemoveFields</members>
         <members>bgeErrorBatchTemplateMissing</members>
         <members>bgeErrorBatchTemplateNameRequired</members>
         <members>bgeHandsOnGridCommitBatch</members>
@@ -1763,6 +1772,7 @@
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
+        <members>stgDefaultValue</members>
         <members>stgDeploymentInProgress</members>
         <members>stgDeploymentTryAgain</members>
         <members>stgDocumentation</members>
@@ -1932,6 +1942,7 @@
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
+        <members>stgLabelHide</members>
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
@@ -2417,6 +2428,10 @@
         <name>FieldSet</name>
     </types>
     <types>
+        <members>Batch_Template_Record_Home</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
         <members>Account-Household Layout</members>
         <members>Account-Organization Layout</members>
         <members>Address__c-Address Layout</members>
@@ -2560,6 +2575,7 @@
         <members>DataImportBatch__c.Batch_Gift_Entry</members>
         <members>DataImportBatch__c.Edit_Processing_Settings</members>
         <members>DataImportBatch__c.Process_Batch</members>
+        <members>DataImportBatch__c.View_Templates</members>
         <members>DataImport__c.Delete_All_Data_Import_Records</members>
         <members>DataImport__c.Delete_Imported_Data_Import_Records</members>
         <members>DataImport__c.Process_Data_Import</members>
