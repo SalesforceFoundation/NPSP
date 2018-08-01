@@ -57,7 +57,7 @@
         <defaultValue>true</defaultValue>
         <description>Indicates that this module is active</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates that this module is active</inlineHelpText>
+        <inlineHelpText>Indicates whether this Trigger Handler is in use.</inlineHelpText>
         <label>Active</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -67,7 +67,7 @@
         <defaultValue>false</defaultValue>
         <description>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Indicates that this module should be run asynchronously in this transaction, for any of its After events.</inlineHelpText>
+        <inlineHelpText>Indicates whether this class should run asynchronously in this transaction, for any of its After events.</inlineHelpText>
         <label>Asynchronous After Events</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -76,7 +76,7 @@
         <fullName>Class__c</fullName>
         <description>Name of the class to be run</description>
         <externalId>false</externalId>
-        <inlineHelpText>Name of the class to be run</inlineHelpText>
+        <inlineHelpText>The name of the class to run.</inlineHelpText>
         <label>Class</label>
         <length>255</length>
         <required>true</required>
@@ -88,7 +88,7 @@
         <fullName>Load_Order__c</fullName>
         <description>Order in which this module should be run, helps maintain dependencies in the modules and data.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Order in which this module should be run, helps maintain dependencies in the modules and data.</inlineHelpText>
+        <inlineHelpText>The order in which this class should run. The order is in relation to other triggers on the same object with the same Trigger Actions, for example, all “before insert” triggers on Account.</inlineHelpText>
         <label>Load Order</label>
         <precision>18</precision>
         <required>false</required>
@@ -101,7 +101,7 @@
         <fullName>Object__c</fullName>
         <description>Name of the object this handler should be run for</description>
         <externalId>false</externalId>
-        <inlineHelpText>Name of the object this handler should be run for</inlineHelpText>
+        <inlineHelpText>The name of the object the class should act on, for example, Account, Contact, Opportunity.</inlineHelpText>
         <label>Object</label>
         <length>255</length>
         <required>true</required>
@@ -113,7 +113,7 @@
         <fullName>Trigger_Action__c</fullName>
         <description>Trigger Action in which this module should fire</description>
         <externalId>false</externalId>
-        <inlineHelpText>Trigger Action in which this module should fire</inlineHelpText>
+        <inlineHelpText>The context in which this class should run, for example, before a record is inserted, after a record is deleted, etc.</inlineHelpText>
         <label>Trigger Action</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -165,7 +165,7 @@
         <defaultValue>false</defaultValue>
         <description>The record is managed by the user and updates won&apos;t be pushed to it.</description>
         <externalId>false</externalId>
-        <inlineHelpText>Check it if you intent to manage the record yourself. Be aware that updates to the package won&apos;t update the record.</inlineHelpText>
+        <inlineHelpText>When selected, NPSP will no longer push updates to this Trigger Handler. Select this option if you have made changes that you do not want NPSP to overwrite.</inlineHelpText>
         <label>User Managed</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
@@ -174,7 +174,7 @@
         <fullName>Usernames_to_Exclude__c</fullName>
         <description>Semicolon separated list of Salesforce usernames that this trigger will NOT run for</description>
         <externalId>false</externalId>
-        <inlineHelpText>Semicolon separated list of Salesforce usernames that this trigger will NOT run for. Leave blank to run for all users.</inlineHelpText>
+        <inlineHelpText>A semicolon-separated list of Usernames that this Trigger Handler will not run for. Leave blank to run for all Users.</inlineHelpText>
         <label>Usernames to Exclude</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
