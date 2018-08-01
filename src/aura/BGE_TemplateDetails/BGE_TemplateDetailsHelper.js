@@ -113,14 +113,32 @@
                         _children: []
                     };
 
-                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
                             	name: sObjectField.name,
-                                selected: sObjectField.selected
+                                selected: sObjectField.selected,
+                                availableSortOrder: sObjectField.availableSortOrder
                             }
                         );
+
+                        gridDataRow._children.sort(function(a,b) {
+
+                            var nameA = a.name.toUpperCase(); // ignore upper and lowercase
+                            var nameB = b.name.toUpperCase(); // ignore upper and lowercase
+                            if (nameA < nameB) {
+                                return -1;
+                            }
+                            if (nameA > nameB) {
+                                return 1;
+                            }
+
+                            // names must be equal
+                            return 0;
+
+                        });
+
                     });
 
                     result.push(gridDataRow);
@@ -206,7 +224,7 @@
                         selected: false,
                         _children: []
                     };
-                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
@@ -214,9 +232,27 @@
                                 selected: sObjectField.selected,
                                 defaultValue: sObjectField.defaultValue,
                                 required: sObjectField.required,
-                                hide: sObjectField.hide
+                                hide: sObjectField.hide,
+                                activeSortOrder: sObjectField.activeSortOrder
                             }
                         );
+
+                        gridDataRow._children.sort(function(a,b) {
+
+                            var sortA = a.activeSortOrder;
+                            var sortB = b.activeSortOrder;
+                            if (sortA < sortB) {
+                                return -1;
+                            }
+                            if (sortA > sortB) {
+                                return 1;
+                            }
+
+                            // numbers must be equal
+                            return 0;
+
+                        });
+
                     });
                     result.push(gridDataRow);
                 });
@@ -441,19 +477,23 @@
                     });
                 }
 
+                var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
                     currentField.id = currentField.sObjectName + "." + currentField.name;
                     //update all fields to include Active fields
                     if (activeFieldMap.indexOf(currentField.id) !== -1) {
                         currentField.isActive = true;
+                        currentField.activeSortOrder = activeFieldMap.indexOf(currentField.id);
                     } else {
                         currentField.isActive = false;
                     }
+                    currentField.availableSortOrder = availableSortOrder;
+                    availableSortOrder++;
                     _allFields.push(currentField);
                 });
                 this.onFieldsUpdated.notify();
             }
-            
+
             /* **********************************************************
              * @Description Gets the available fields.
              * @return Map of SObject group to List of inactive fields.
@@ -467,7 +507,7 @@
                 });
                 return _groupFieldsBySObject(_availableFields);
             }
-            
+
             /* **********************************************************
              * @Description Gets the active fields.
              * @return Map of SObject group to List of related active fields.
@@ -480,6 +520,123 @@
                     }
                 });
                 return _groupFieldsBySObject(_activeFields);
+            }
+
+            /* **********************************************************
+             * @Description moves the selected fields up in the Active Fields view
+             * @return void
+             ************************************************************/
+            function moveFieldsUp(selectedRows) {
+
+                // if the selectedRows are all at the top (start with activeSortOrder=0) AND are all neighbors, then do nothing
+                if(selectedRows[0].activeSortOrder === 0) {
+                    var isSequential = selectedRows.reduce(function(isSequential, currentValue, currentIndex, selectedRows) {
+                        if (currentIndex !== 0) {
+                            return selectedRows[currentIndex].activeSortOrder-1 === selectedRows[currentIndex-1].activeSortOrder;
+                        } else {
+                            return true;
+                        }
+                    });
+                    if (isSequential) {
+                        return;
+                    }
+                }
+
+                var activeFieldsBySObject = getActives();
+
+                selectedRows.forEach(function(currentRow) {
+
+                    if (currentRow.activeSortOrder !== 0) {
+                        var objectName = currentRow.id.split('.')[0];
+                        var k;
+                        var j;
+                        for (var i=0; i < _allFields.length; i++)  {
+
+                            // find the previous field based on activeSortOrder
+                            if (_allFields[i].isActive &&
+                                _allFields[i].sObjectName === objectName &&
+                                _allFields[i].activeSortOrder === currentRow.activeSortOrder-1) {
+                                j = i;
+                            }
+
+                            // find the current field
+                            if (_allFields[i].id === currentRow.id) {
+                                k = i;
+                            }
+
+                            // when both have been found, swap their activeSortOrders and break
+                            if (j >= 0 && k >= 0) {
+                                _swapActiveSortOrder(_allFields[j], _allFields[k]);
+                                break;
+                            }
+                        }
+                    }
+                });
+                this.onFieldsUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description moves the selected fields down in the Active Fields view
+             * @return void
+             ************************************************************/
+            function moveFieldsDown(selectedRows) {
+                // if the last selectedRow is at the bottom of its group AND all are neighbors, then do nothing
+                var lastRow = selectedRows[selectedRows.length-1]
+                if(lastRow.posInSet === lastRow.setSize) {
+                    var isSequential = selectedRows.reduce(function(isSequential, currentValue, currentIndex, selectedRows) {
+                        if (currentIndex !== 0) {
+                            return selectedRows[currentIndex].activeSortOrder-1 === selectedRows[currentIndex-1].activeSortOrder;
+                        } else {
+                            return true;
+                        }
+                    });
+                    if (isSequential) {
+                        return;
+                    }
+                }
+
+                var activeFieldsBySObject = getActives();
+
+                selectedRows.forEach(function(currentRow) {
+                    if (currentRow.activeSortOrder !== selectedRows.length+1) {
+                        var objectName = currentRow.id.split('.')[0];
+                        var k;
+                        var j;
+                        for (var i=0; i < _allFields.length; i++)  {
+
+                            // find the next field based on activeSortOrder
+                            if (_allFields[i].isActive &&
+                                _allFields[i].sObjectName === objectName &&
+                                _allFields[i].activeSortOrder === currentRow.activeSortOrder+1) {
+                                j = i;
+                            }
+
+                            // find the current field
+                            if (_allFields[i].id === currentRow.id) {
+                                k = i;
+                            }
+
+                            // when both have been found, swap their activeSortOrders and break
+                            if (j >= 0 && k >= 0) {
+                                _swapActiveSortOrder(_allFields[j], _allFields[k]);
+                                break;
+                            }
+                        }
+                    }
+                });
+                this.onFieldsUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description
+             * @return
+             ************************************************************/
+            function _swapActiveSortOrder(fieldA, fieldB) {
+
+                var holder = fieldA.activeSortOrder;
+                fieldA.activeSortOrder = fieldB.activeSortOrder;
+                fieldB.activeSortOrder = holder;
+
             }
 
             /* **********************************************************
@@ -511,10 +668,14 @@
              * @return void.
              ************************************************************/
             function updateToActive() {
+
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
                         currentField.selected = false;
+                        // TODO: this seems expensive. is there a better way?
+                        var activeFieldsBySObject = getActives();
+                        currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -558,7 +719,9 @@
                 selectActives: selectActives,
                 updateToActive: updateToActive,
                 updateToAvailable: updateToAvailable,
-                onFieldsUpdated: _onFieldsUpdated
+                onFieldsUpdated: _onFieldsUpdated,
+                moveFieldsUp: moveFieldsUp,
+                moveFieldsDown: moveFieldsDown
 
             }
         })(Event);

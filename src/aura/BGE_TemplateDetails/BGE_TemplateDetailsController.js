@@ -43,6 +43,27 @@
 
     /******************************** Template Fields Controller Functions *****************************/
 
+
+    /* ***************************************************************
+     * @Description. Updates the selected active fields in the
+     * Template Fields Model to available.
+     *****************************************************************/
+    moveFieldsDown: function (component, event, helper) {
+        var model = component.get('v.model');
+        var selectedRows = component.find("activeTreeGrid").getSelectedRows();
+        model.getTemplateFields().moveFieldsDown(selectedRows);
+    },
+
+    /* ***************************************************************
+     * @Description. Updates the selected active fields in the
+     * Template Fields Model to available.
+     *****************************************************************/
+    moveFieldsUp: function (component, event, helper) {
+        var model = component.get('v.model');
+        var selectedRows = component.find("activeTreeGrid").getSelectedRows();
+        model.getTemplateFields().moveFieldsUp(selectedRows);
+    },
+
     /* ***************************************************************
      * @Description. Updates the selected (checked) available fields in the
      * Template Fields Model.
