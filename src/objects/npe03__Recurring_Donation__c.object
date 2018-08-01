@@ -20,7 +20,7 @@
     <fields>
         <fullName>Day_of_Month__c</fullName>
         <externalId>false</externalId>
-        <inlineHelpText>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. Installment period must be Monthly or Quarterly, or a custom installment period using months.</inlineHelpText>
+        <inlineHelpText>Sets future monthly, custom monthly, or quarterly donation installments to the selected day of the month, regardless of Next Donation Date. NOTE: If the Always use last day of month checkbox is selected, it supersedes the Day of Month value.</inlineHelpText>
         <label>Day of Month</label>
         <required>false</required>
         <trackHistory>false</trackHistory>
