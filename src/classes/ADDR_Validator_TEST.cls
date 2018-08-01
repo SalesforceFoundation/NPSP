@@ -448,8 +448,8 @@ public with sharing class ADDR_Validator_TEST {
         Test.stopTest();
         
         System.assertEquals(null, sc.apiSettingsSaveMessage, 'Save message should be empty: ' + sc.apiSettingsSaveMessage);
-        System.assert(sc.apiSettingsErrorMessage.contains('Auth ID cannot be blank'), 'Error message should contain "Auth ID cannot be blank": ' + sc.apiSettingsErrorMessage);
-        System.assert(sc.apiSettingsErrorMessage.contains('Auth Token cannot be blank'), 'Error message should contain "Auth Token cannot be blank": ' + sc.apiSettingsErrorMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains('You must provide an Auth ID'), 'Error message should contain "You must provide an Auth ID": ' + sc.apiSettingsErrorMessage);
+        System.assert(sc.apiSettingsErrorMessage.contains('You must provide an Auth Token'), 'Error message should contain "You must provide an Auth Token": ' + sc.apiSettingsErrorMessage);
     }
 
 

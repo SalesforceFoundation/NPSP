@@ -68,7 +68,7 @@
         <description>The contact&apos;s full name.</description>
         <externalId>false</externalId>
         <formula>HYPERLINK(&apos;/&apos; + Contact__c,Contact__r.FirstName + &apos; &apos; + Contact__r.LastName, &apos;_self&apos;)</formula>
-        <inlineHelpText>The contact&apos;s full name.</inlineHelpText>
+        <inlineHelpText>The full name of the Contact who gets this soft credit (read only).</inlineHelpText>
         <label>Contact Name</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
@@ -78,9 +78,9 @@
     <fields>
         <fullName>Contact_Role_ID__c</fullName>
         <caseSensitive>true</caseSensitive>
-        <description>The OpportunityContactRole this soft credit applies to.</description>
+        <description>The Opportunity Contact Role this soft credit applies to.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The OpportunityContactRole this soft credit applies to.</inlineHelpText>
+        <inlineHelpText>The Opportunity Contact Role this soft credit applies to.</inlineHelpText>
         <label>Contact Role ID</label>
         <length>18</length>
         <required>false</required>
@@ -92,7 +92,7 @@
         <fullName>Contact__c</fullName>
         <description>The contact who gets this soft credit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The contact who gets this soft credit.</inlineHelpText>
+        <inlineHelpText>Lookup to the Contact who gets this soft credit.</inlineHelpText>
         <label>Contact</label>
         <referenceTo>Contact</referenceTo>
         <relationshipLabel>Partial Soft Credits</relationshipLabel>
