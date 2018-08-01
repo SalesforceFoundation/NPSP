@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2012 (2.0)
 * @group Utilities
-* @description The controller for the VF progress indicator component  
+* @description The controller for the job progress indicator vf component
 */
 public with sharing class UTIL_JobProgress_CTRL {
 
