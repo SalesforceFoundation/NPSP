@@ -236,22 +236,18 @@
                                 activeSortOrder: sObjectField.activeSortOrder
                             }
                         );
-
-                        gridDataRow._children.sort(function(a,b) {
-
-                            var sortA = a.activeSortOrder;
-                            var sortB = b.activeSortOrder;
-                            if (sortA < sortB) {
-                                return -1;
-                            }
-                            if (sortA > sortB) {
-                                return 1;
-                            }
-
-                            // numbers must be equal
-                            return 0;
-
-                        });
+                    });
+                    gridDataRow._children.sort(function(a,b) {
+                        var sortA = a.activeSortOrder;
+                        var sortB = b.activeSortOrder;
+                        if (sortA < sortB) {
+                            return -1;
+                        }
+                        if (sortA > sortB) {
+                            return 1;
+                        }
+                        // numbers must be equal
+                        return 0;
 
                     });
                     result.push(gridDataRow);
@@ -332,14 +328,27 @@
 
                 var activeFieldsBySObject = _templateFields.getActives();
                 Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    activeFieldsBySObject[sObjectName].sort(function(a,b) {
+                        var sortA = a.activeSortOrder;
+                        var sortB = b.activeSortOrder;
+                        if (sortA < sortB) {
+                            return -1;
+                        }
+                        if (sortA > sortB) {
+                            return 1;
+                        }
+                        // numbers must be equal
+                        return 0;
+                    });
                     activeFieldsBySObject[sObjectName].forEach(function(currentField) {
                         activeFields.push({
                             name: currentField.name,
                             sObjectName: currentField.sObjectName,
                             defaultValue: currentField.defaultValue,
                             required: currentField.required,
-                            hide: currentField.hide
-                        })
+                            hide: currentField.hide,
+                            activeSortOrder: currentField.activeSortOrder
+                        });
                     });
                 });
 
@@ -468,22 +477,22 @@
              ************************************************************/
             function load(allFields, activeFields) {
                 _allFields = [];
-                var activeFieldMap = [];
+                var activeFieldMap = new Map();
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
                         var fieldId = activeField.sObjectName + "." + activeField.name;
-                        activeFieldMap.push(fieldId);
+                        activeFieldMap.set(fieldId, activeField.activeSortOrder);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
                     currentField.id = currentField.sObjectName + "." + currentField.name;
-                    //update all fields to include Active fields
-                    if (activeFieldMap.indexOf(currentField.id) !== -1) {
+                    //set Active fields with saved sort order
+                    if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
-                        currentField.activeSortOrder = activeFieldMap.indexOf(currentField.id);
+                        currentField.activeSortOrder = activeFieldMap.get(currentField.id);
                     } else {
                         currentField.isActive = false;
                     }
@@ -541,8 +550,6 @@
                         return;
                     }
                 }
-
-                var activeFieldsBySObject = getActives();
 
                 selectedRows.forEach(function(currentRow) {
 
@@ -691,6 +698,7 @@
                     if (currentField.isActive && currentField.selected) {
                         currentField.isActive = false;
                         currentField.selected = false;
+                        currentField.activeSortOrder = null;
                     }
                 });
                 this.onFieldsUpdated.notify();
