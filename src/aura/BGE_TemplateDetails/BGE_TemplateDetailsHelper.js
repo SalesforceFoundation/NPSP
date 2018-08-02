@@ -78,7 +78,7 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var availableTemplateFields = component.get('v.availableTemplateFields');
-                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailables());
+                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailablesBySObject());
                 availableTemplateFields.selectedRows = [];
 
                 availableTemplateFields.data.forEach(function(fieldGroup) {
@@ -191,7 +191,7 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var activeTemplateFields = component.get('v.activeTemplateFields');
-                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActives());
+                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActivesBySObject());
                 activeTemplateFields.selectedRows = [];
 
                 activeTemplateFields.data.forEach(function(fieldGroup) {
@@ -326,7 +326,7 @@
                 };
                 var activeFields = [];
 
-                var activeFieldsBySObject = _templateFields.getActives();
+                var activeFieldsBySObject = _templateFields.getActivesBySObject();
                 Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
                     activeFieldsBySObject[sObjectName].sort(function(a,b) {
                         var sortA = a.activeSortOrder;
@@ -505,9 +505,23 @@
 
             /* **********************************************************
              * @Description Gets the available fields.
-             * @return Map of SObject group to List of inactive fields.
+             * @return List of inactive fields.
              ************************************************************/
             function getAvailables() {
+                var _availableFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (!currentField.isActive) {
+                        _availableFields.push(currentField);
+                    }
+                });
+                return _availableFields;
+            }
+
+            /* **********************************************************
+             * @Description Gets the available fields grouped by SObject.
+             * @return Map of SObject group to List of inactive fields.
+             ************************************************************/
+            function getAvailablesBySObject() {
                 var _availableFields = [];
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive) {
@@ -519,9 +533,23 @@
 
             /* **********************************************************
              * @Description Gets the active fields.
-             * @return Map of SObject group to List of related active fields.
+             * @return List of related active fields.
              ************************************************************/
             function getActives() {
+                var _activeFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (currentField.isActive) {
+                        _activeFields.push(currentField);
+                    }
+                });
+                return _activeFields;
+            }
+
+            /* **********************************************************
+             * @Description Gets the active fields grouped by SObject.
+             * @return Map of SObject group to List of related active fields.
+             ************************************************************/
+            function getActivesBySObject() {
                 var _activeFields = [];
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive) {
@@ -602,7 +630,7 @@
                     }
                 }
 
-                var activeFieldsBySObject = getActives();
+                var activeFieldsBySObject = getActivesBySObject();
 
                 selectedRows.forEach(function(currentRow) {
                     if (currentRow.activeSortOrder !== selectedRows.length+1) {
@@ -681,7 +709,7 @@
                         currentField.isActive = true;
                         currentField.selected = false;
                         // TODO: this seems expensive. is there a better way?
-                        var activeFieldsBySObject = getActives();
+                        var activeFieldsBySObject = getActivesBySObject();
                         currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
                     }
                 });
@@ -705,16 +733,14 @@
             }
 
             /* **********************************************************
-             * @Description Selects the fields by updating fieldsGroupBySObject reference.
-             * @param fieldsGroupBySObject. Available or Active Model Fields grouped by sObject.
+             * @Description Selects the fields by updating fields reference.
+             * @param fields. Available or Active Model Fields.
              * @param fieldsToSelect. Fields grouped by sObject.
              * @return void.
              ************************************************************/
-            function _selectFields(fieldsGroupBySObject, fieldsToSelect) {
-                Object.keys(fieldsGroupBySObject).forEach(function(sObjectName) {
-                    fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
-                        currentField.selected = (currentField.id in fieldsToSelect);
-                    });
+            function _selectFields(fields, fieldsToSelect) {
+                fields.forEach(function(currentField) {
+                    currentField.selected = (currentField.id in fieldsToSelect);
                 });
             }
             
@@ -722,7 +748,9 @@
             return {
                 load: load,
                 getAvailables: getAvailables,
+                getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
+                getActivesBySObject: getActivesBySObject,
                 selectAvailables: selectAvailables,
                 selectActives: selectActives,
                 updateToActive: updateToActive,
