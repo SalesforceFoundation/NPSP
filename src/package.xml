@@ -745,7 +745,7 @@
         <members>Batch_Template__c.Contact_Custom_Unique_ID__c</members>
         <members>Batch_Template__c.Contact_Matching_Rule__c</members>
         <members>Batch_Template__c.Description__c</members>
-        <members>Batch_Template__c.Display_Total_Prompt__c</members>
+        <members>Batch_Template__c.Enable_Total_Entry__c</members>
         <members>Batch_Template__c.Donation_Date_Range__c</members>
         <members>Batch_Template__c.Donation_Matching_Behavior__c</members>
         <members>Batch_Template__c.Donation_Matching_Implementing_Class__c</members>

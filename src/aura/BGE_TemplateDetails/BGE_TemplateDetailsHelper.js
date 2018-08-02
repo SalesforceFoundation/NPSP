@@ -358,7 +358,7 @@
                 getTemplateInfo: getTemplateInfo,
                 getTemplateMetadata: getTemplateMetadata
             }
-        })(templateFields, templateInfo);
+        })(templateFields, templateInfo, templateMetadata);
     },
 
     /* **********************************************************
