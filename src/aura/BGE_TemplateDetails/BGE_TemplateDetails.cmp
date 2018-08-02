@@ -1,0 +1,154 @@
+<!--
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2018
+  @group Batch Gift Entry
+  @group-content
+  @description Component used to view, edit, or create a Batch Template record.
+-->
+<aura:component controller="BGE_Template_CTRL" implements="lightning:actionOverride,force:hasRecordId,flexipage:availableForRecordHome">
+
+    <!-- private attributes -->
+    <aura:attribute name="model" type="Object" access="PRIVATE" />
+    <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
+    <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
+    <aura:attribute name="availableTemplateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
+
+    <!-- public attributes -->
+    <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
+    <aura:attribute name="recordId" type="Id" />
+
+    <!-- events we handle -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- START MARKUP -->
+    <div aura:id="body" class="bodyDiv">
+
+        <h2 class="slds-text-heading_medium slds-p-horizontal_large slds-p-top_large">{!v.templateMetadata.labels.batchTemplateLabel}</h2>
+
+        <div class="row slds-form slds-form_compound">
+
+            <div class="row slds-p-around_large">
+                <div class="slds-col slds-size_4-of-12">
+                    <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}" value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}"/>
+                </div>
+                <div class="slds-col slds-size_4-of-12 slds-p-top_small">
+                    <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}" value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"/>
+                </div>
+            </div>
+
+            <div class="row slds-grid slds-wrap slds-p-around_large">
+                <aura:if isTrue="{! !v.isReadOnly}">
+                    <div class="slds-col slds-size_3-of-12">
+                        <lightning:treeGrid
+                            aura:id="availableTemplateFields"
+                            columns="{!v.availableTemplateFields.columns}"
+                            data="{!v.availableTemplateFields.data}"
+                            selectedRows="{!v.availableTemplateFields.selectedRows}"
+                            keyField="id"
+                            onrowselection="{!c.selectAvailableTemplateFields}"
+                        />
+                    </div>
+
+                    <div class="slds-col slds-size_1-of-12">
+                        <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                            <div class="slds-m-bottom__xx-small">
+                                <lightning:buttonIcon iconName="utility:chevronright" alternativeText="{!$Label.c.bgeBatchTemplateAddFields}" onclick="{!c.updateToActive}"/>
+                            </div>
+                            <div class="slds-m-top_xx-small">
+                                <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="{!$Label.c.bgeBatchTemplateRemoveFields}" onclick="{!c.updateToAvailable}"/>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+
+                <div class="slds-col slds-size_5-of-12">
+                    <lightning:treeGrid
+                        columns="{!v.activeTemplateFields.columns}"
+                        data="{!v.activeTemplateFields.data}"
+                        keyField="id"
+                        selectedRows="{!v.activeTemplateFields.selectedRows}"
+                        onrowselection="{!c.selectActiveTemplateFields}"
+                        hideCheckboxColumn="{!v.isReadOnly}"
+                    />
+                </div>
+            </div>
+
+            <div class="row slds-p-around_large">
+
+                <aura:if isTrue="{!v.isReadOnly}">
+
+                    <div class="slds-form-element">
+                        <ui:outputCheckbox value="{!v.templateInfo.displayTotalPrompt}" class="slds-form-element__control"/>
+                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalPromptLabel}</span>
+                    </div>
+                    <div class="slds-form-element">
+                        <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
+                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
+                    </div>
+
+                    <aura:set attribute="else">
+                        <div>
+                            <lightning:input aura:id="totalPromptCheckbox" type="checkbox" class="templateInputCheckbox"
+                                             label="{!v.templateMetadata.labels.totalPromptLabel}"
+                                             name="displayTotalPrompt"
+                                             checked="{!v.templateInfo.displayTotalPrompt}"
+                                             readonly="{!v.isReadOnly}"
+                                             variant="label-hidden"/>
+                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalPromptHelp}" fieldLabel="{!v.templateMetadata.labels.totalPromptLabel}"/>
+                        </div>
+                        <div>
+                            <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
+                                             label="{!v.templateMetadata.labels.totalMatchLabel}"
+                                             name="requireTotalMatch"
+                                             checked="{!v.templateInfo.requireTotalMatch}"
+                                             readonly="{!v.isReadOnly}"
+                                             variant="label-hidden"/>
+                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalMatchHelp}" fieldLabel="{!v.templateMetadata.labels.totalMatchLabel}"/>
+                        </div>
+                    </aura:set>
+                </aura:if>
+            </div>
+
+            <aura:if isTrue="{! !v.isReadOnly}">
+                <div class="row slds-p-around_large">
+                    <div class="slds-align_absolute-center">
+                        <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                        <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+                    </div>
+                </div>
+            </aura:if>
+
+        </div>
+    </div>
+    <!-- END MARKUP -->
+</aura:component>
