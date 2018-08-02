@@ -106,9 +106,9 @@ global class BGE_HandsOnGridController {
                 Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
                 String type = String.valueOf(dataImportFieldDescribe.getType()).toUpperCase();
 
-                if ((new String[] {'STRING', 'PICKLIST'}).contains(type)) {
+                if ((new String[] {'STRING', 'PICKLIST', 'PHONE'}).contains(type)) {
 
-                    dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
+                    dataImport.put((String) cellData.get('field'), String.valueOf(cellData.get('newValue')) );
                     dataImports.put(rowKey, (DataImport__c) dataImport);
                 }
                 else if ((new String[] {'EMAIL'}).contains(type)) {
