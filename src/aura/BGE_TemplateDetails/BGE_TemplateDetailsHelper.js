@@ -451,23 +451,9 @@
 		return (function (Event) {
             var _allFields = [];
             var _onFieldsUpdated = new Event(this);
-            
-            /* **********************************************************
-             * @Description Groups the fields by SObject name.
-             * @param fields: list of field objects.
-             * @return Map of SObject name to List of related fields.
-             ************************************************************/
-            function _groupFieldsBySObject(fields) {
-                var result = {};
-                fields.forEach(function(currentField) {
-                	if ((currentField.sObjectName in result) === false) {
-                        result[currentField.sObjectName] = [];
-                    }
-                    result[currentField.sObjectName].push(currentField);
-                });
-                return result;
-            }
-            
+
+            /* ******************PUBLIC FUNCTIONS*************************/
+
             /* **********************************************************
              * @Description Load the fields and notify onFieldsUpdated listeners.
              * @param allFields: list of allFields with sObjectName/Name.
@@ -565,46 +551,22 @@
              ************************************************************/
             function moveFieldsUp(selectedRows) {
 
-                // if the selectedRows are all at the top (start with activeSortOrder=0) AND are all neighbors, then do nothing
-                if(selectedRows[0].activeSortOrder === 0) {
-                    var isSequential = selectedRows.reduce(function(isSequential, currentValue, currentIndex, selectedRows) {
-                        if (currentIndex !== 0) {
-                            return selectedRows[currentIndex].activeSortOrder-1 === selectedRows[currentIndex-1].activeSortOrder;
-                        } else {
-                            return true;
-                        }
-                    });
-                    if (isSequential) {
-                        return;
+                var activeFieldsBySObject = getActivesBySObject();
+
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    var isSequential;
+                    // if the selectedRows are all at the top (start with activeSortOrder=0) AND are all neighbors, then continue
+                    if (activeFieldsBySObject[sObjectName][0].activeSortOrder === 0) {
+                        var isSequential = activeFieldsBySObject[sObjectName].reduce(function (isSequential, currentValue, currentIndex, array) {
+                            return array[currentIndex].activeSortOrder - 1 === array[currentIndex - 1].activeSortOrder;
+                        });
                     }
-                }
-
-                selectedRows.forEach(function(currentRow) {
-
-                    if (currentRow.activeSortOrder !== 0) {
-                        var objectName = currentRow.id.split('.')[0];
-                        var k;
-                        var j;
-                        for (var i=0; i < _allFields.length; i++)  {
-
-                            // find the previous field based on activeSortOrder
-                            if (_allFields[i].isActive &&
-                                _allFields[i].sObjectName === objectName &&
-                                _allFields[i].activeSortOrder === currentRow.activeSortOrder-1) {
-                                j = i;
+                    if (!isSequential) {
+                        activeFieldsBySObject[sObjectName].forEach(function(currentRow) {
+                            if (currentRow.activeSortOrder !== 0) {
+                                _swapActiveFields(currentRow, currentRow.activeSortOrder-1);
                             }
-
-                            // find the current field
-                            if (_allFields[i].id === currentRow.id) {
-                                k = i;
-                            }
-
-                            // when both have been found, swap their activeSortOrders and break
-                            if (j >= 0 && k >= 0) {
-                                _swapActiveSortOrder(_allFields[j], _allFields[k]);
-                                break;
-                            }
-                        }
+                        });
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -630,48 +592,12 @@
                     }
                 }
 
-                var activeFieldsBySObject = getActivesBySObject();
-
                 selectedRows.forEach(function(currentRow) {
                     if (currentRow.activeSortOrder !== selectedRows.length+1) {
-                        var objectName = currentRow.id.split('.')[0];
-                        var k;
-                        var j;
-                        for (var i=0; i < _allFields.length; i++)  {
-
-                            // find the next field based on activeSortOrder
-                            if (_allFields[i].isActive &&
-                                _allFields[i].sObjectName === objectName &&
-                                _allFields[i].activeSortOrder === currentRow.activeSortOrder+1) {
-                                j = i;
-                            }
-
-                            // find the current field
-                            if (_allFields[i].id === currentRow.id) {
-                                k = i;
-                            }
-
-                            // when both have been found, swap their activeSortOrders and break
-                            if (j >= 0 && k >= 0) {
-                                _swapActiveSortOrder(_allFields[j], _allFields[k]);
-                                break;
-                            }
-                        }
+                        _swapActiveFields(currentRow, currentRow.activeSortOrder+1);
                     }
                 });
                 this.onFieldsUpdated.notify();
-            }
-
-            /* **********************************************************
-             * @Description
-             * @return
-             ************************************************************/
-            function _swapActiveSortOrder(fieldA, fieldB) {
-
-                var holder = fieldA.activeSortOrder;
-                fieldA.activeSortOrder = fieldB.activeSortOrder;
-                fieldB.activeSortOrder = holder;
-
             }
 
             /* **********************************************************
@@ -731,6 +657,24 @@
                 this.onFieldsUpdated.notify();
             }
 
+            /* ******************PRIVATE FUNCTIONS************************/
+
+            /* **********************************************************
+             * @Description Groups the fields by SObject name.
+             * @param fields: list of field objects.
+             * @return Map of SObject name to List of related fields.
+             ************************************************************/
+            function _groupFieldsBySObject(fields) {
+                var result = {};
+                fields.forEach(function(currentField) {
+                    if ((currentField.sObjectName in result) === false) {
+                        result[currentField.sObjectName] = [];
+                    }
+                    result[currentField.sObjectName].push(currentField);
+                });
+                return result;
+            }
+
             /* **********************************************************
              * @Description Selects the fields by updating fields reference.
              * @param fields. Available or Active Model Fields.
@@ -742,7 +686,52 @@
                     currentField.selected = (currentField.id in fieldsToSelect);
                 });
             }
-            
+
+            /* **********************************************************
+             * @Description finds row in _allFields and swaps its activeSortOrder
+             *      with the neighbor it needs to swap with.
+             * @param neighborSortOrder - sort order of its neighbor,
+             *      either +1 or -1 of row.activeSortOrder
+             * @return void
+             ************************************************************/
+            function _swapActiveFields(row, neighborSortOrder) {
+
+                var objectName = row.id.split('.')[0];
+                var k;
+                var j;
+                for (var i=0; i < _allFields.length; i++)  {
+
+                    // find the neighbor field based on activeSortOrder
+                    if (_allFields[i].isActive &&
+                        _allFields[i].sObjectName === objectName &&
+                        _allFields[i].activeSortOrder === neighborSortOrder) {
+                        j = i;
+                    }
+
+                    // find the current field
+                    if (_allFields[i].id === row.id) {
+                        k = i;
+                    }
+
+                    // when both have been found, swap their activeSortOrders and break
+                    if (j >= 0 && k >= 0) {
+                        _swapActiveSortOrder(_allFields[j], _allFields[k]);
+                        break;
+                    }
+                }
+
+            }
+
+            /* **********************************************************
+             * @Description swap the active sort order on two fields.
+             * @return void
+             ************************************************************/
+            function _swapActiveSortOrder(fieldA, fieldB) {
+                var holder = fieldA.activeSortOrder;
+                fieldA.activeSortOrder = fieldB.activeSortOrder;
+                fieldB.activeSortOrder = holder;
+            }
+
             // TemplateFieldsModel module public functions and properties
             return {
                 load: load,
