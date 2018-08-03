@@ -50,8 +50,7 @@
      *****************************************************************/
     moveFieldsDown: function (component, event, helper) {
         var model = component.get('v.model');
-        var selectedRows = component.find("activeTreeGrid").getSelectedRows();
-        model.getTemplateFields().moveFieldsDown(selectedRows);
+        model.getTemplateFields().moveSelectedDown();
     },
 
     /* ***************************************************************
@@ -60,8 +59,7 @@
      *****************************************************************/
     moveFieldsUp: function (component, event, helper) {
         var model = component.get('v.model');
-        var selectedRows = component.find("activeTreeGrid").getSelectedRows();
-        model.getTemplateFields().moveFieldsUp(selectedRows);
+        model.getTemplateFields().moveSelectedUp();
     },
 
     /* ***************************************************************

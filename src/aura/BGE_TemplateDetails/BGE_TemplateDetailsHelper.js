@@ -122,23 +122,6 @@
                                 availableSortOrder: sObjectField.availableSortOrder
                             }
                         );
-
-                        gridDataRow._children.sort(function(a,b) {
-
-                            var nameA = a.name.toUpperCase(); // ignore upper and lowercase
-                            var nameB = b.name.toUpperCase(); // ignore upper and lowercase
-                            if (nameA < nameB) {
-                                return -1;
-                            }
-                            if (nameA > nameB) {
-                                return 1;
-                            }
-
-                            // names must be equal
-                            return 0;
-
-                        });
-
                     });
 
                     result.push(gridDataRow);
@@ -237,19 +220,6 @@
                             }
                         );
                     });
-                    gridDataRow._children.sort(function(a,b) {
-                        var sortA = a.activeSortOrder;
-                        var sortB = b.activeSortOrder;
-                        if (sortA < sortB) {
-                            return -1;
-                        }
-                        if (sortA > sortB) {
-                            return 1;
-                        }
-                        // numbers must be equal
-                        return 0;
-
-                    });
                     result.push(gridDataRow);
                 });
                 
@@ -325,30 +295,15 @@
                     requireTotalMatch: _templateInfo.requireTotalMatch
                 };
                 var activeFields = [];
-
-                var activeFieldsBySObject = _templateFields.getActivesBySObject();
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    activeFieldsBySObject[sObjectName].sort(function(a,b) {
-                        var sortA = a.activeSortOrder;
-                        var sortB = b.activeSortOrder;
-                        if (sortA < sortB) {
-                            return -1;
-                        }
-                        if (sortA > sortB) {
-                            return 1;
-                        }
-                        // numbers must be equal
-                        return 0;
-                    });
-                    activeFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        activeFields.push({
-                            name: currentField.name,
-                            sObjectName: currentField.sObjectName,
-                            defaultValue: currentField.defaultValue,
-                            required: currentField.required,
-                            hide: currentField.hide,
-                            activeSortOrder: currentField.activeSortOrder
-                        });
+                
+                _templateFields.getActives().forEach(function(currentField) {
+                    activeFields.push({
+                        name: currentField.name,
+                        sObjectName: currentField.sObjectName,
+                        defaultValue: currentField.defaultValue,
+                        required: currentField.required,
+                        hide: currentField.hide,
+                        activeSortOrder: currentField.activeSortOrder
                     });
                 });
 
@@ -542,7 +497,7 @@
                         _activeFields.push(currentField);
                     }
                 });
-                return _activeFields;
+                return _sortFieldsByOrder(_activeFields);
             }
 
             /* **********************************************************
@@ -556,6 +511,7 @@
                         _activeFields.push(currentField);
                     }
                 });
+                _activeFields = _sortFieldsByOrder(_activeFields);
                 return _groupFieldsBySObject(_activeFields);
             }
 
@@ -563,7 +519,10 @@
              * @Description moves the selected fields up in the Active Fields view
              * @return void
              ************************************************************/
-            function moveFieldsUp(selectedRows) {
+            function moveSelectedUp() {
+
+
+
 
                 // if the selectedRows are all at the top (start with activeSortOrder=0) AND are all neighbors, then do nothing
                 if(selectedRows[0].activeSortOrder === 0) {
@@ -614,7 +573,7 @@
              * @Description moves the selected fields down in the Active Fields view
              * @return void
              ************************************************************/
-            function moveFieldsDown(selectedRows) {
+            function moveSelectedDown() {
                 // if the last selectedRow is at the bottom of its group AND all are neighbors, then do nothing
                 var lastRow = selectedRows[selectedRows.length-1]
                 if(lastRow.posInSet === lastRow.setSize) {
@@ -742,6 +701,26 @@
                     currentField.selected = (currentField.id in fieldsToSelect);
                 });
             }
+
+            /***********************************************************
+             * @Description Selects the fields by updating fields reference.
+             * @param fields. Available or Active Model Fields.
+             * @param fieldsToSelect. Fields grouped by sObject.
+             * @return void.
+             ************************************************************/
+            function _sortFieldsByOrder(fields) {
+                fields.sort(function(currentField, nextField) {
+                    if (currentField.activeSortOrder < nextField.activeSortOrder) {
+                        return -1;
+                    }
+                    if (currentField.activeSortOrder > nextField.activeSortOrder) {
+                        return 1;
+                    }
+                    // numbers must be equal
+                    return 0;
+                });
+                return fields;
+            }
             
             // TemplateFieldsModel module public functions and properties
             return {
@@ -755,8 +734,8 @@
                 updateSelectedToActive: updateSelectedToActive,
                 updateSelectedToAvailable: updateSelectedToAvailable,
                 onFieldsUpdated: _onFieldsUpdated,
-                moveFieldsUp: moveFieldsUp,
-                moveFieldsDown: moveFieldsDown
+                moveSelectedUp: moveSelectedUp,
+                moveSelectedDown: moveSelectedDown
 
             }
         })(Event);
