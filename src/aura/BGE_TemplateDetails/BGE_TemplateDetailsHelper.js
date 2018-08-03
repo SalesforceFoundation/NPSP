@@ -506,26 +506,21 @@
              * @return void
              ************************************************************/
             function moveSelectedUp() {
-
-
-
-
                 var activeFieldsBySObject = getActivesBySObject();
 
                 Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    var isSequential;
-                    // if the selectedRows are all at the top (start with activeSortOrder=0) AND are all neighbors, then continue
-                    if (activeFieldsBySObject[sObjectName][0].activeSortOrder === 0) {
-                        var isSequential = activeFieldsBySObject[sObjectName].reduce(function (isSequential, currentValue, currentIndex, array) {
-                            return array[currentIndex].activeSortOrder - 1 === array[currentIndex - 1].activeSortOrder;
-                        });
+                    var currentGroupFields = activeFieldsBySObject[sObjectName];
+                    if (_getSelectedFields(currentGroupFields).length > 1 || 
+                        (currentGroupFields.length > 0 && currentGroupFields[0].selected)
+                    ) {
+                        return;
                     }
-                    if (!isSequential) {
-                        activeFieldsBySObject[sObjectName].forEach(function(currentRow) {
-                            if (currentRow.activeSortOrder !== 0) {
-                                _swapActiveFields(currentRow, currentRow.activeSortOrder-1);
-                            }
-                        });
+                    for (var i = 0; i < currentGroupFields.length; i ++) {
+                        if (currentGroupFields[i].selected) {
+                            currentGroupFields[i].activeSortOrder --;
+                            currentGroupFields[i - 1].activeSortOrder ++;
+                            break;
+                        }
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -536,24 +531,21 @@
              * @return void
              ************************************************************/
             function moveSelectedDown() {
-                // if the last selectedRow is at the bottom of its group AND all are neighbors, then do nothing
-                var lastRow = selectedRows[selectedRows.length-1]
-                if(lastRow.posInSet === lastRow.setSize) {
-                    var isSequential = selectedRows.reduce(function(isSequential, currentValue, currentIndex, selectedRows) {
-                        if (currentIndex !== 0) {
-                            return selectedRows[currentIndex].activeSortOrder-1 === selectedRows[currentIndex-1].activeSortOrder;
-                        } else {
-                            return true;
-                        }
-                    });
-                    if (isSequential) {
+                var activeFieldsBySObject = getActivesBySObject();
+
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    var currentGroupFields = activeFieldsBySObject[sObjectName];
+                    if (_getSelectedFields(currentGroupFields).length > 1 || 
+                        (currentGroupFields.length > 0 && currentGroupFields[currentGroupFields.length - 1].selected)
+                    ) {
                         return;
                     }
-                }
-
-                selectedRows.forEach(function(currentRow) {
-                    if (currentRow.activeSortOrder !== selectedRows.length+1) {
-                        _swapActiveFields(currentRow, currentRow.activeSortOrder+1);
+                    for (var i = 0; i < currentGroupFields.length; i ++) {
+                        if (currentGroupFields[i].selected) {
+                            currentGroupFields[i].activeSortOrder ++;
+                            currentGroupFields[i + 1].activeSortOrder --;
+                            break;
+                        }
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -619,8 +611,23 @@
             /* ******************PRIVATE FUNCTIONS************************/
 
             /* **********************************************************
+             * @Description Get selected fields
+             * @param fields: list of fields.
+             * @return Selected fields.
+             ************************************************************/
+            function _getSelectedFields(fields) {
+                var result = [];
+                fields.forEach(function(currentField) {
+                    if (currentField.selected) {
+                        result.push(currentField);
+                    }
+                });
+                return result;
+            }
+
+            /* **********************************************************
              * @Description Groups the fields by SObject name.
-             * @param fields: list of field objects.
+             * @param fields: list of fields.
              * @return Map of SObject name to List of related fields.
              ************************************************************/
             function _groupFieldsBySObject(fields) {
@@ -636,8 +643,8 @@
 
             /* **********************************************************
              * @Description Selects the fields by updating fields reference.
-             * @param fields. Available or Active Model Fields.
-             * @param fieldsToSelect. Fields grouped by sObject.
+             * @param fields. List of fields.
+             * @param fieldsToSelect. Id of fields to select.
              * @return void.
              ************************************************************/
             function _selectFields(fields, fieldsToSelect) {
@@ -646,57 +653,10 @@
                 });
             }
 
-            /* **********************************************************
-             * @Description finds row in _allFields and swaps its activeSortOrder
-             *      with the neighbor it needs to swap with.
-             * @param neighborSortOrder - sort order of its neighbor,
-             *      either +1 or -1 of row.activeSortOrder
-             * @return void
-             ************************************************************/
-            function _swapActiveFields(row, neighborSortOrder) {
-
-                var objectName = row.id.split('.')[0];
-                var k;
-                var j;
-                for (var i=0; i < _allFields.length; i++)  {
-
-                    // find the neighbor field based on activeSortOrder
-                    if (_allFields[i].isActive &&
-                        _allFields[i].sObjectName === objectName &&
-                        _allFields[i].activeSortOrder === neighborSortOrder) {
-                        j = i;
-                    }
-
-                    // find the current field
-                    if (_allFields[i].id === row.id) {
-                        k = i;
-                    }
-
-                    // when both have been found, swap their activeSortOrders and break
-                    if (j >= 0 && k >= 0) {
-                        _swapActiveSortOrder(_allFields[j], _allFields[k]);
-                        break;
-                    }
-                }
-
-            }
-
-            /* **********************************************************
-             * @Description swap the active sort order on two fields.
-             * @return void
-             ************************************************************/
-            function _swapActiveSortOrder(fieldA, fieldB) {
-                var holder = fieldA.activeSortOrder;
-                fieldA.activeSortOrder = fieldB.activeSortOrder;
-                fieldB.activeSortOrder = holder;
-            }
-
-
             /***********************************************************
-             * @Description Selects the fields by updating fields reference.
-             * @param fields. Available or Active Model Fields.
-             * @param fieldsToSelect. Fields grouped by sObject.
-             * @return void.
+             * @Description Sort the fields by order.
+             * @param fields. List of the fields to sort.
+             * @return sorted fields.
              ************************************************************/
             function _sortFieldsByOrder(fields) {
                 fields.sort(function(currentField, nextField) {
