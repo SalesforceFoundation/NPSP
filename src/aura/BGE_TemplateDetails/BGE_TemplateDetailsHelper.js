@@ -702,8 +702,7 @@
              *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
-            function updateToActive() {
-
+            function updateSelectedToActive() {
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
@@ -721,7 +720,7 @@
              *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
-            function updateToAvailable() {
+            function updateSelectedToAvailable() {
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive && currentField.selected) {
                         currentField.isActive = false;
@@ -753,8 +752,8 @@
                 getActivesBySObject: getActivesBySObject,
                 selectAvailables: selectAvailables,
                 selectActives: selectActives,
-                updateToActive: updateToActive,
-                updateToAvailable: updateToAvailable,
+                updateSelectedToActive: updateSelectedToActive,
+                updateSelectedToAvailable: updateSelectedToAvailable,
                 onFieldsUpdated: _onFieldsUpdated,
                 moveFieldsUp: moveFieldsUp,
                 moveFieldsDown: moveFieldsDown

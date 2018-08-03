@@ -96,7 +96,7 @@
      *****************************************************************/
     updateToActive: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToActive();
+        model.getTemplateFields().updateSelectedToActive();
     },
 
     /* ***************************************************************
@@ -105,6 +105,6 @@
      *****************************************************************/
     updateToAvailable: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToAvailable();
+        model.getTemplateFields().updateSelectedToAvailable();
     }
 });
