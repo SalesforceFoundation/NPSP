@@ -25,7 +25,7 @@ Add New Contact to Existing Household
     Sleep    2
     Click Button    //*[text()="New Contact"]
     Sleep  5  Input-textbox-notloaded-properly
-    Click Managehh Special Button    New Contact
+    Click Span Button    New Contact
     Sleep    2
     Click Managehh Button       Save
     Sleep  5

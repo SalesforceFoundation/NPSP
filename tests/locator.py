@@ -21,8 +21,9 @@ npsp_lex_locators={
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
     'loading_box': 'css: div.auraLoadingBox.oneLoadingBox',
     'spinner': 'css: div.slds-spinner',
-    #'name':'//tbody/tr/th/span/a',
-    #'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
+    'name':'//tbody/tr/th/span/a',
+    'select_name':'//tbody//a[text()= "{}"]',
+    'locate_dropdown':'//tbody/tr[{}]/td/span//div/a/lightning-icon',
     'locating_delete_dropdown':'//tbody//a[text()= "{}"]/../../following-sibling::td/span//div/a/lightning-icon',
     'related_name':'//tbody/tr/td/a[contains(@class,"forceOutputLookup")]',
     'rel_loc_dd':'//tbody/tr[{}]/td[4]//lightning-primitive-icon',
@@ -36,7 +37,7 @@ npsp_lex_locators={
     'account_list':'//tbody/tr/th[.//span[contains(@class, "slds-grid")]]/descendant::a[text()="{}"]',
     'dd_options':'//*[@id="p3"]/option[text()="{}"]',
     'related_list_items':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")][.//div[contains(@class, "outputLookupContainer")]]//a[text()="{}"]',
-    
+    'span_button':'//span[text()="{}"]',
     'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[text()="{}"]',
     'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
     'affiliated_contacts':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]/../following-sibling::td/span[text()="{}"]',
@@ -51,7 +52,7 @@ npsp_lex_locators={
         'address':'//div[contains(@class, "uiInput")][.//label[contains(@class, "uiLabel")]/span[text()="{}"]]/',
         'mhh_checkbox':'//*[@id="SortCanvas"]/li//a[text()="{}"]/ancestor::div[contains(@class, "slds-card__header")]/following-sibling::div[contains(@class,"slds-card__body")]//form//div//label/span[@id = "{}"]',
         'button':'//*[contains(@title, "{}")]',
-        'mhh_button':'//span[text()="{}"]',
+        
     },
     'modal':{
         'checkbox':'//div[contains(@class,"uiInputCheckbox")]/label/span[text()="{}"]/../following-sibling::input[@type="checkbox"]',
@@ -62,6 +63,18 @@ npsp_lex_locators={
     'object':{
         'contact_role':'//tbody//a[text()= "{}"]/../../following-sibling::td/span/span[text() = "{}"]',
         'record':'//tbody//a[text()= "{}"]',
+        'button': "css: div.windowViewMode-normal ul.forceActionsContainer.oneActionsRibbon a[title='{}']",
+    },
+    'engagement_plan':{
+        'id':'//*[@id="j_id0:theForm:{}"]',
+        'task_id':'//*[@id="{}"]',
+        'input_box':'//*[contains(@id ,"j_id0:theForm:j_id102_{}") and @class= "slds-input"]',
+        'dropdown':'//div[contains(@class,"slds-p-top_small")]/label[text()="{}"]/following-sibling::div/select',
+        'checkbox':'//div[contains(@class,"slds-p-top_small")]/label[@class="slds-checkbox"][./span/following-sibling::{}[text()="{}"]/]',
+        'check_related_list_item':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//th//a[text()="{}"]',
+        'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a',
+        'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
+        'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
     }
 }
     
