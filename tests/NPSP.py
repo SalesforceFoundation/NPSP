@@ -96,7 +96,7 @@ class NPSP(object):
         """To select a row on object page based on name and open the dropdown"""    
         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
         self.selenium.get_webelement(drop_down).click()
-        self.selenium.get_webelement(drop_down).click()
+        #self.selenium.get_webelement(drop_down).click()
 
 
 
@@ -263,4 +263,35 @@ class NPSP(object):
     def select_related_dropdown(self,title):
         """"""
         locator=npsp_lex_locators['record']['related']['drop-down'].format(title)
-        self.selenium.get_webelement(locator).click()              
+        self.selenium.get_webelement(locator).click()   
+        
+    def get_header_date_value(self,title):   
+        """Validates if the specified header field has specified value"""   
+        locator= npsp_lex_locators['header_datepicker'].format(title)
+        date=self.selenium.get_webelement(locator).text   
+        return date 
+        
+    def get_main_header(self):
+        header = self.selenium.get_webelement("//h1/span").text
+        return header
+    
+    def verify_contact_role(self,name,role):
+        """verifies the contact role on opportunity page"""
+        locator=npsp_lex_locators['opportunity']['contact_role'].format(name,role)
+        self.selenium.page_should_contain_element(locator)  
+        
+    def select_relatedlist(self,title):
+        """click on the related list to open it"""
+        locator=npsp_lex_locators['record']['related']['title'].format(title)
+        self.selenium.get_webelement(locator).click()  
+        
+    def verify_contact_roles(self, **kwargs):
+        """""" 
+        for name, value in kwargs.items():
+            locator= npsp_lex_locators['object']['contact_role'].format(name,value)
+            self.selenium.page_should_contain_element(locator)   
+            
+    def page_contains_record(self,title):   
+        """Validates if the specified record is present on the page"""   
+        locator= npsp_lex_locators['object']['record'].format(title)
+        self.selenium.page_should_not_contain_element(locator)     

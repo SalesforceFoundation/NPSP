@@ -19,18 +19,19 @@ Create Donation from a Contact
     Select Option    Donation    
     Click Element    //input[@title='Continue']
     Sleep    5  
-    Select Window
-    Sleep    5   
-    Populate Form
-    ...                       Opportunity Name= Sravani $100 donation
-    ...                       Amount=100 
-    Click Dropdown    Stage
-    Click Link    link=Closed Won
-    Populate Lookup Field    Account Name    &{Contact}[LastName] Household
-    Click Dropdown    Close Date
-    Pick Date    10
-    Select Modal Checkbox    Do Not Automatically Create Payment
-    Click Modal Button        Save
+    Create Opportunities    Test $100 donation    &{Contact}[LastName] Household
+    # Select Window
+    # Sleep    5   
+    # Populate Form
+    # ...                       Opportunity Name= Sravani $100 donation
+    # ...                       Amount=100 
+    # Click Dropdown    Stage
+    # Click Link    link=Closed Won
+    # Populate Lookup Field    Account Name    &{Contact}[LastName] Household
+    # Click Dropdown    Close Date
+    # Pick Date    10
+    # Select Modal Checkbox    Do Not Automatically Create Payment
+    # Click Modal Button        Save
     Sleep    2
     Verify Occurance    Payments    0
     
