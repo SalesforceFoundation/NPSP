@@ -580,28 +580,14 @@
              * @return void.
              ************************************************************/
             function updateSelectedToActive() {
-
-                var activeFieldCountBySObject = {};
-                var activeFieldsBySObject = getActivesBySObject();
-
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    activeFieldCountBySObject[sObjectName] = activeFieldsBySObject[sObjectName].length;
-                });
-
-                console.log(activeFieldCountBySObject);
-
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
                         currentField.selected = false;
 
-                        if (activeFieldCountBySObject[currentField.sObjectName]) {
-                            currentField.activeSortOrder = activeFieldCountBySObject[currentField.sObjectName];
-                            activeFieldCountBySObject[currentField.sObjectName]++;
-                        } else {
-                            currentField.activeSortOrder = 0;
-                            activeFieldCountBySObject[currentField.sObjectName] = 0;
-                        }
+                        // TODO: this seems expensive. is there a better way?
+                        var activeFieldsBySObject = getActivesBySObject();
+                        currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
                     }
                 });
                 this.onFieldsUpdated.notify();
