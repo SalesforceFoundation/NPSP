@@ -48,8 +48,12 @@
                 <h3 class="slds-text-heading--small slds-text-heading_small">{!batchComponentLabel}</h3>
             </div>
             <div data-job-progress="list-container" class="slds-card__body">
-                <div class="slds-spinner--large slds-container--center slds-m-vertical--xx-large slds-spinner_large slds-container_center slds-m-vertical_xx-large">
-                    <img src="{!URLFOR($Resource.SLDS, '/0_12_2/assets/images/spinners/slds_spinner_brand.gif')}" alt="Loading..." />
+                <div class="slds-spinner--large slds-container--center slds-m-vertical--xx-large slds-spinner_large slds-container_center slds-m-vertical_xx-large" >
+                    <div role="status" class="slds-spinner slds-spinner_large slds-spinner_brand">
+                        <span class="slds-assistive-text">Loading...</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
                 </div>
             </div>
         </div>
