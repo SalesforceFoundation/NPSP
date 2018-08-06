@@ -811,10 +811,13 @@
                     $('ul.jq-dropdown-menu :first-child > a').focus();
                 }
                 else {
-                    event.stopImmediatePropagation();
-                    rowIndex++;
 
-                    hot.selectCell(rowIndex, colIndex);
+                    if (enter) {
+                        event.stopImmediatePropagation();
+                        rowIndex++;
+
+                        hot.selectCell(rowIndex, colIndex);
+                    }
                 }
             }
         }
