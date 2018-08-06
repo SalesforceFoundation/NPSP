@@ -2404,6 +2404,34 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateActiveFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateActiveFields</shortDescription>
+        <value>Active Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateAddFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text for arrow utility icon when adding fields</shortDescription>
+        <value>Add Fields to Template</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateAvailableFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateAvailableFields</shortDescription>
+        <value>Available Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateRemoveFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Alt text for arrow utility icon when adding fields</shortDescription>
+        <value>Remove Fields from Template</value>
+    </labels>
+    <labels>
         <fullName>bgeErrorBatchTemplateMissing</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -5170,6 +5198,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Reset Customizable Rollups</value>
     </labels>
     <labels>
+        <fullName>stgDefaultValue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDefaultValue</shortDescription>
+        <value>Default Value</value>
+    </labels>
+    <labels>
         <fullName>stgDocumentation</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6617,6 +6653,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelHHSettings</shortDescription>
         <value>Household Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHide</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelHide</shortDescription>
+        <value>Hide</value>
     </labels>
     <labels>
         <fullName>stgLabelHonoreeNotificationHelpText</fullName>

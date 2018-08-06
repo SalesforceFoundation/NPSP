@@ -1,0 +1,11 @@
+.THIS.bodyDiv {
+    background: white;
+}
+/*formatting for edit mode checkboxes*/
+.THIS .templateInputCheckbox{
+    display: inline-flex;
+}
+/*padding for helptext icon*/
+.THIS .uiOutputCheckbox {
+    padding-right: .5rem;
+}
