@@ -2425,6 +2425,34 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Available Fields</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateEdit</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template in Edit mode</shortDescription>
+        <value>Edit Batch Template</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateMoveFieldDown</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateMoveFieldDown</shortDescription>
+        <value>Move Field Down</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateMoveFieldUp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateMoveFieldUp</shortDescription>
+        <value>Move Field Up</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateNew</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template in Create mode</shortDescription>
+        <value>New Batch Template</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateRemoveFields</fullName>
         <language>en_US</language>
         <protected>true</protected>

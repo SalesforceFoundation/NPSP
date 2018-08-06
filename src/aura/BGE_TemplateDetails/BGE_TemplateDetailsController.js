@@ -32,6 +32,14 @@
     },
 
     /* ***************************************************************
+     * @Description. Navigates from View to Edit mode.
+     *****************************************************************/
+    changeModeToEdit: function(component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateMetadata().setMode('edit');
+    },
+
+    /* ***************************************************************
      * @Description. Saves the template information. 
      *****************************************************************/
     save: function(component, event, helper) {

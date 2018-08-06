@@ -15,8 +15,9 @@
                 var templateInfoView = component.get('v.templateInfo');
                 var templateInfo = model.getTemplateInfo();
                 templateInfoView.name = templateInfo.name;
+                templateInfoView.id = templateInfo.id;
                 templateInfoView.description = templateInfo.description;
-                templateInfoView.displayTotalPrompt = templateInfo.displayTotalPrompt;
+                templateInfoView.enableTotalEntry = templateInfo.enableTotalEntry;
                 templateInfoView.requireTotalMatch = templateInfo.requireTotalMatch;
 
                 component.set('v.templateInfo', templateInfoView);
@@ -24,9 +25,10 @@
             
             //  module public functions and properties
             return {
-                name: '', 
+                name: '',
+                id: '',
                 description: '',
-                displayTotalPrompt: false,
+                enableTotalEntry: false,
                 requireTotalMatch: false
             };
         })(component, model);
@@ -47,6 +49,17 @@
                 var templateMetadata = model.getTemplateMetadata();
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
+
+                if (templateMetadataView.mode === 'view' && !component.get("v.isReadOnly")) {
+                    component.set("v.isReadOnly", true);
+                } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
+                    component.set("v.isReadOnly", false);
+                    if (templateMetadata.mode === 'edit') {
+                        templateMetadata.labels.batchTemplateHeader = $A.get("$Label.c.bgeBatchTemplateEdit")
+                    } else if (templateMetadata.mode === 'create') {
+                        templateMetadata.labels.batchTemplateHeader = $A.get("$Label.c.bgeBatchTemplateNew");
+                    }
+                }
 
                 component.set('v.templateMetadata', templateMetadataView);
             });
@@ -266,8 +279,9 @@
                         _templateInfo.load(
                             {
                                 name: response.name,
+                                id: response.id,
                                 description: response.description,
-                                displayTotalPrompt: response.displayTotalPrompt,
+                                enableTotalEntry: response.enableTotalEntry,
                                 requireTotalMatch: response.requireTotalMatch
                             }
                         );
@@ -288,8 +302,9 @@
             function save() {
                 var templateDetailsData = {
                     name: _templateInfo.name,
+                    id: _templateInfo.id,
                     description: _templateInfo.description,
-                    displayTotalPrompt: _templateInfo.displayTotalPrompt,
+                    enableTotalEntry: _templateInfo.enableTotalEntry,
                     requireTotalMatch: _templateInfo.requireTotalMatch
                 };
                 var activeFields = [];
@@ -309,7 +324,7 @@
 
                 _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
                     success: function(response) {
-                        console.log('Success!');
+                        _templateMetadata.setMode('view');
                     },
                     error: function(error) {
                         console.log(error);
@@ -379,7 +394,8 @@
             function load(info) {
                 this.name = info.name;
                 this.description = info.description;
-                this.displayTotalPrompt = info.displayTotalPrompt;
+                this.id = info.id;
+                this.enableTotalEntry = info.enableTotalEntry;
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.onInfoUpdated.notify();
             }
@@ -387,8 +403,9 @@
             // TemplateInfo module public functions and properties
             return {
                 name: '',
+                id: '',
                 description: '',
-                displayTotalPrompt: false,
+                enableTotalEntry: false,
                 requireTotalMatch: false,
                 load: load,
                 onInfoUpdated: _onInfoUpdated
@@ -594,11 +611,23 @@
                 this.onMetadataUpdated.notify();
             }
 
+            /* **********************************************************
+             * @Description sets the mode, and notify all the
+             *      _onMetadataUpdated listeners.
+             * @param mode - string that is the selected mode
+             * @return void.
+             ************************************************************/
+            function setMode(mode) {
+                this.mode = mode;
+                this.onMetadataUpdated.notify();
+            }
+
             // TemplateInfo module public functions and properties
             return {
                 labels: {},
                 mode: '',
                 load: load,
+                setMode: setMode,
                 onMetadataUpdated: _onMetadataUpdated
             }
         })(Event);
