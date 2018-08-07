@@ -3,18 +3,16 @@ public with sharing class BGE_HandsOnGridSelector {
     public static final Integer SQL_MINOR_LIMIT = 1;
     public static final Integer SQL_MAJOR_LIMIT = 10000;
 
-    public Map<Id, Batch_Template_Field__c> getTemplateFieldsByTemplateId(Id recordId) {
-
-        System.debug('==>' + [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId]);
+    //public Map<Id, Batch_Template_Field__c> getTemplateFieldsByTemplateId(Id recordId) {
+    public List<Object> getTemplateFieldsByTemplateId(Id recordId) {
 
         String activeFields = [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId][0].Active_Fields__c;
+        
+		//Map<String, String> templateFields = (Map<String, String>)JSON.deserialize(activeFields, Map<String,String>.class);
+		List<Object> result = (List<Object>)JSON.deserializeUntyped(activeFields);
+        System.debug('result ==>' + result);
 
-        List<String> myresult = ((String)JSON.deserializeUntyped(activeFields);
-        //List<Object> objectNames = (List<Object>)myresult.get('sObjectName');
-        System.debug('myresult ==> ' + myresult);
-        //List<String> fieldNames = new List<String>();
-
-
+        /*                         
         Map<Id, Batch_Template_Field__c> result = new Map<Id, Batch_Template_Field__c>([SELECT
                                                                                             Name,
                                                                                             Order__c,
@@ -24,6 +22,7 @@ public with sharing class BGE_HandsOnGridSelector {
                                                                                         WHERE Batch_Template__c =: recordId
                                                                                         ORDER BY Order__c ASC
                                                                                         LIMIT :SQL_MAJOR_LIMIT]);
+		*/        
         return result;
     }
 
