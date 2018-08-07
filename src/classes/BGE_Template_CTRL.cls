@@ -143,7 +143,7 @@ public with sharing class BGE_Template_CTRL {
     * @return void.
     */
     @AuraEnabled
-    public static void saveTemplate(String templateInfo, String activeFields) {
+    public static string saveTemplate(String templateInfo, String activeFields) {
         try {
             TemplateDetailsModel templateDetails = (TemplateDetailsModel) JSON.deserialize(templateInfo, TemplateDetailsModel.class);
             system.debug(templateDetails);
@@ -151,16 +151,7 @@ public with sharing class BGE_Template_CTRL {
             Batch_Template__c batchTemplate = new Batch_Template__c();
 
             if (templateDetails.id != null) {
-                system.debug('template details is ' + templateDetails.id);
-                batchTemplate = [SELECT
-                        Name,
-                        Id,
-                        Description__c,
-                        Enable_Total_Entry__c,
-                        Require_Total_Match__c,
-                        Active_Fields__c
-                FROM Batch_Template__c
-                WHERE Id = :templateDetails.id];
+                batchTemplate.Id = templateDetails.id;
             }
             batchTemplate.Name = templateDetails.name;
             batchTemplate.Description__c = templateDetails.description;
@@ -169,6 +160,10 @@ public with sharing class BGE_Template_CTRL {
             batchTemplate.Active_Fields__c = activeFields;
 
             upsert batchTemplate;
+            templateDetails.id = batchTemplate.Id;
+
+            return JSON.serialize(templateDetails);
+
         } catch (Exception ex) {
             //TODO: is BDI right to use here?
             ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);

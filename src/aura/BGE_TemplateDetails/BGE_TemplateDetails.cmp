@@ -51,10 +51,10 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- START MARKUP -->
-    <header role="banner">
-        <div class="slds-page-header slds-p-bottom_large">
+    <header role="banner" class="header">
+        <div class="slds-page-header">
             <div class="slds-grid">
-                <div class="slds-col slds-has-flexi-truncate">
+                <div class="slds-col slds-has-flexi-truncate headerText">
                     <div class="slds-media slds-no-space slds-grow">
                         <div class="slds-media__figure">
                             <lightning:icon iconName="standard:contract" alternativeText="{!v.templateMetadata.labels.batchTemplateLabel}" size="medium"/>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small">
+                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <aura:if isTrue="{!v.templateMetadata.mode == 'view'}">
                         <lightning:buttonGroup>
                             <lightning:button label="Edit" onclick="{!c.changeModeToEdit}"/>

@@ -325,6 +325,15 @@
                 _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
                     success: function(response) {
                         _templateMetadata.setMode('view');
+                        _templateInfo.load(
+                            {
+                                name: response.name,
+                                id: response.id,
+                                description: response.description,
+                                enableTotalEntry: response.enableTotalEntry,
+                                requireTotalMatch: response.requireTotalMatch
+                            }
+                        );
                     },
                     error: function(error) {
                         console.log(error);
