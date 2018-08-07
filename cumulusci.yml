@@ -47,6 +47,12 @@ tasks:
         options:
             path: dev_config/src
 
+    deploy_dev_nima:
+        description: Post install config for NimaCloud to revert BGE Template Overrides (Added Aug-2018)
+        class_path: cumulusci.tasks.salesforce.Deploy
+        options:
+            path: dev_config/src_nima_bge
+
     deploy_dev_config_managed:
         description: Deploys the post install configuration for a managed DE org
         class_path: cumulusci.tasks.salesforce.Deploy
