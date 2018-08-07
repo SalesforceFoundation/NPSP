@@ -2425,6 +2425,20 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Available Fields</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateMoveFieldDown</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateMoveFieldDown</shortDescription>
+        <value>Move Field Down</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateMoveFieldUp</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateMoveFieldUp</shortDescription>
+        <value>Move Field Up</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateRemoveFields</fullName>
         <language>en_US</language>
         <protected>true</protected>

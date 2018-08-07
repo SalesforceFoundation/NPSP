@@ -93,6 +93,7 @@
 
                 <div class="slds-col slds-size_5-of-12">
                     <lightning:treeGrid
+                        aura:id="activeTreeGrid"
                         columns="{!v.activeTemplateFields.columns}"
                         data="{!v.activeTemplateFields.data}"
                         keyField="id"
@@ -101,6 +102,20 @@
                         hideCheckboxColumn="{!v.isReadOnly}"
                     />
                 </div>
+
+                <aura:if isTrue="{! !v.isReadOnly}">
+                    <div class="slds-col slds-size_1-of-12">
+                        <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                            <div class="slds-m-bottom__xx-small">
+                                <lightning:buttonIcon iconName="utility:chevronup" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldUp}" onclick="{!c.moveFieldsUp}"/>
+                            </div>
+                            <div class="slds-m-top_xx-small">
+                                <lightning:buttonIcon iconName="utility:chevrondown" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldDown}" onclick="{!c.moveFieldsDown}"/>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+
             </div>
 
             <div class="row slds-p-around_large">
