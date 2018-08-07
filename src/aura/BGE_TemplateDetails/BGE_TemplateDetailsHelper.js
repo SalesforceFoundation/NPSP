@@ -78,7 +78,7 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var availableTemplateFields = component.get('v.availableTemplateFields');
-                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailables());
+                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailablesBySObject());
                 availableTemplateFields.selectedRows = [];
 
                 availableTemplateFields.data.forEach(function(fieldGroup) {
@@ -113,12 +113,13 @@
                         _children: []
                     };
 
-                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
                             	name: sObjectField.name,
-                                selected: sObjectField.selected
+                                selected: sObjectField.selected,
+                                availableSortOrder: sObjectField.availableSortOrder
                             }
                         );
                     });
@@ -173,7 +174,7 @@
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var activeTemplateFields = component.get('v.activeTemplateFields');
-                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActives());
+                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActivesBySObject());
                 activeTemplateFields.selectedRows = [];
 
                 activeTemplateFields.data.forEach(function(fieldGroup) {
@@ -206,7 +207,7 @@
                         selected: false,
                         _children: []
                     };
-                    fieldsBySObject[sObjectName].sort().forEach(function(sObjectField) {
+                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
@@ -214,7 +215,8 @@
                                 selected: sObjectField.selected,
                                 defaultValue: sObjectField.defaultValue,
                                 required: sObjectField.required,
-                                hide: sObjectField.hide
+                                hide: sObjectField.hide,
+                                activeSortOrder: sObjectField.activeSortOrder
                             }
                         );
                     });
@@ -294,16 +296,14 @@
                 };
                 var activeFields = [];
 
-                var activeFieldsBySObject = _templateFields.getActives();
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    activeFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        activeFields.push({
-                            name: currentField.name,
-                            sObjectName: currentField.sObjectName,
-                            defaultValue: currentField.defaultValue,
-                            required: currentField.required,
-                            hide: currentField.hide
-                        })
+                _templateFields.getActives().forEach(function(currentField) {
+                    activeFields.push({
+                        name: currentField.name,
+                        sObjectName: currentField.sObjectName,
+                        defaultValue: currentField.defaultValue,
+                        required: currentField.required,
+                        hide: currentField.hide,
+                        activeSortOrder: currentField.activeSortOrder
                     });
                 });
 
@@ -406,23 +406,9 @@
 		return (function (Event) {
             var _allFields = [];
             var _onFieldsUpdated = new Event(this);
-            
-            /* **********************************************************
-             * @Description Groups the fields by SObject name.
-             * @param fields: list of field objects.
-             * @return Map of SObject name to List of related fields.
-             ************************************************************/
-            function _groupFieldsBySObject(fields) {
-                var result = {};
-                fields.forEach(function(currentField) {
-                	if ((currentField.sObjectName in result) === false) {
-                        result[currentField.sObjectName] = [];
-                    }
-                    result[currentField.sObjectName].push(currentField);
-                });
-                return result;
-            }
-            
+
+            /* ******************PUBLIC FUNCTIONS*************************/
+
             /* **********************************************************
              * @Description Load the fields and notify onFieldsUpdated listeners.
              * @param allFields: list of allFields with sObjectName/Name.
@@ -432,31 +418,35 @@
              ************************************************************/
             function load(allFields, activeFields) {
                 _allFields = [];
-                var activeFieldMap = [];
+                var activeFieldMap = new Map();
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
                         var fieldId = activeField.sObjectName + "." + activeField.name;
-                        activeFieldMap.push(fieldId);
+                        activeFieldMap.set(fieldId, activeField.activeSortOrder);
                     });
                 }
 
+                var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
                     currentField.id = currentField.sObjectName + "." + currentField.name;
-                    //update all fields to include Active fields
-                    if (activeFieldMap.indexOf(currentField.id) !== -1) {
+                    //set Active fields with saved sort order
+                    if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
+                        currentField.activeSortOrder = activeFieldMap.get(currentField.id);
                     } else {
                         currentField.isActive = false;
                     }
+                    currentField.availableSortOrder = availableSortOrder;
+                    availableSortOrder++;
                     _allFields.push(currentField);
                 });
                 this.onFieldsUpdated.notify();
             }
-            
+
             /* **********************************************************
              * @Description Gets the available fields.
-             * @return Map of SObject group to List of inactive fields.
+             * @return List of inactive fields.
              ************************************************************/
             function getAvailables() {
                 var _availableFields = [];
@@ -465,12 +455,26 @@
                         _availableFields.push(currentField);
                     }
                 });
+                return _availableFields;
+            }
+
+            /* **********************************************************
+             * @Description Gets the available fields grouped by SObject.
+             * @return Map of SObject group to List of inactive fields.
+             ************************************************************/
+            function getAvailablesBySObject() {
+                var _availableFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (!currentField.isActive) {
+                        _availableFields.push(currentField);
+                    }
+                });
                 return _groupFieldsBySObject(_availableFields);
             }
-            
+
             /* **********************************************************
              * @Description Gets the active fields.
-             * @return Map of SObject group to List of related active fields.
+             * @return List of related active fields.
              ************************************************************/
             function getActives() {
                 var _activeFields = [];
@@ -479,7 +483,72 @@
                         _activeFields.push(currentField);
                     }
                 });
+                return _sortFieldsByOrder(_activeFields);
+            }
+
+            /* **********************************************************
+             * @Description Gets the active fields grouped by SObject.
+             * @return Map of SObject group to List of related active fields.
+             ************************************************************/
+            function getActivesBySObject() {
+                var _activeFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (currentField.isActive) {
+                        _activeFields.push(currentField);
+                    }
+                });
+                _activeFields = _sortFieldsByOrder(_activeFields);
                 return _groupFieldsBySObject(_activeFields);
+            }
+
+            /* **********************************************************
+             * @Description moves the selected fields up in the Active Fields view
+             * @return void
+             ************************************************************/
+            function moveSelectedUp() {
+                var activeFieldsBySObject = getActivesBySObject();
+
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    var currentGroupFields = activeFieldsBySObject[sObjectName];
+                    if (_getSelectedFields(currentGroupFields).length > 1 || 
+                        (currentGroupFields.length > 0 && currentGroupFields[0].selected)
+                    ) {
+                        return;
+                    }
+                    for (var i = 0; i < currentGroupFields.length; i ++) {
+                        if (currentGroupFields[i].selected) {
+                            currentGroupFields[i].activeSortOrder --;
+                            currentGroupFields[i - 1].activeSortOrder ++;
+                            break;
+                        }
+                    }
+                });
+                this.onFieldsUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description moves the selected fields down in the Active Fields view
+             * @return void
+             ************************************************************/
+            function moveSelectedDown() {
+                var activeFieldsBySObject = getActivesBySObject();
+
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    var currentGroupFields = activeFieldsBySObject[sObjectName];
+                    if (_getSelectedFields(currentGroupFields).length > 1 || 
+                        (currentGroupFields.length > 0 && currentGroupFields[currentGroupFields.length - 1].selected)
+                    ) {
+                        return;
+                    }
+                    for (var i = 0; i < currentGroupFields.length; i ++) {
+                        if (currentGroupFields[i].selected) {
+                            currentGroupFields[i].activeSortOrder ++;
+                            currentGroupFields[i + 1].activeSortOrder --;
+                            break;
+                        }
+                    }
+                });
+                this.onFieldsUpdated.notify();
             }
 
             /* **********************************************************
@@ -510,11 +579,15 @@
              *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
-            function updateToActive() {
+            function updateSelectedToActive() {
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
                         currentField.selected = false;
+
+                        // TODO: this seems expensive. is there a better way?
+                        var activeFieldsBySObject = getActivesBySObject();
+                        currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
                     }
                 });
                 this.onFieldsUpdated.notify();
@@ -525,40 +598,95 @@
              *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
-            function updateToAvailable() {
+            function updateSelectedToAvailable() {
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive && currentField.selected) {
                         currentField.isActive = false;
                         currentField.selected = false;
+                        currentField.activeSortOrder = null;
                     }
                 });
                 this.onFieldsUpdated.notify();
             }
 
+            /* ******************PRIVATE FUNCTIONS************************/
+
             /* **********************************************************
-             * @Description Selects the fields by updating fieldsGroupBySObject reference.
-             * @param fieldsGroupBySObject. Available or Active Model Fields grouped by sObject.
-             * @param fieldsToSelect. Fields grouped by sObject.
+             * @Description Get selected fields
+             * @param fields: list of fields.
+             * @return Selected fields.
+             ************************************************************/
+            function _getSelectedFields(fields) {
+                var result = [];
+                fields.forEach(function(currentField) {
+                    if (currentField.selected) {
+                        result.push(currentField);
+                    }
+                });
+                return result;
+            }
+
+            /* **********************************************************
+             * @Description Groups the fields by SObject name.
+             * @param fields: list of fields.
+             * @return Map of SObject name to List of related fields.
+             ************************************************************/
+            function _groupFieldsBySObject(fields) {
+                var result = {};
+                fields.forEach(function(currentField) {
+                    if ((currentField.sObjectName in result) === false) {
+                        result[currentField.sObjectName] = [];
+                    }
+                    result[currentField.sObjectName].push(currentField);
+                });
+                return result;
+            }
+
+            /* **********************************************************
+             * @Description Selects the fields by updating fields reference.
+             * @param fields. List of fields.
+             * @param fieldsToSelect. Id of fields to select.
              * @return void.
              ************************************************************/
-            function _selectFields(fieldsGroupBySObject, fieldsToSelect) {
-                Object.keys(fieldsGroupBySObject).forEach(function(sObjectName) {
-                    fieldsGroupBySObject[sObjectName].forEach(function(currentField) {
-                        currentField.selected = (currentField.id in fieldsToSelect);
-                    });
+            function _selectFields(fields, fieldsToSelect) {
+                fields.forEach(function(currentField) {
+                    currentField.selected = (currentField.id in fieldsToSelect);
                 });
             }
-            
+
+            /***********************************************************
+             * @Description Sort the fields by order.
+             * @param fields. List of the fields to sort.
+             * @return sorted fields.
+             ************************************************************/
+            function _sortFieldsByOrder(fields) {
+                fields.sort(function(currentField, nextField) {
+                    if (currentField.activeSortOrder < nextField.activeSortOrder) {
+                        return -1;
+                    }
+                    if (currentField.activeSortOrder > nextField.activeSortOrder) {
+                        return 1;
+                    }
+                    // numbers must be equal
+                    return 0;
+                });
+                return fields;
+            }
+
             // TemplateFieldsModel module public functions and properties
             return {
                 load: load,
                 getAvailables: getAvailables,
+                getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
+                getActivesBySObject: getActivesBySObject,
                 selectAvailables: selectAvailables,
                 selectActives: selectActives,
-                updateToActive: updateToActive,
-                updateToAvailable: updateToAvailable,
-                onFieldsUpdated: _onFieldsUpdated
+                updateSelectedToActive: updateSelectedToActive,
+                updateSelectedToAvailable: updateSelectedToAvailable,
+                onFieldsUpdated: _onFieldsUpdated,
+                moveSelectedUp: moveSelectedUp,
+                moveSelectedDown: moveSelectedDown
 
             }
         })(Event);
