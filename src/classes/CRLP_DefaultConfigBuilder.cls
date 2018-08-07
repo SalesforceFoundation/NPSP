@@ -116,9 +116,9 @@ public class CRLP_DefaultConfigBuilder {
     private static final String paymentAmountFld = 'npe01__OppPayment__c.npe01__Payment_Amount__c';
     private static final String paymentPaidDateFld = 'npe01__OppPayment__c.npe01__Payment_Date__c';
 
-    public static String allocationObject = paymentAllocationsEnabled ? paymentObject : opportunityObject;
-    public static String allocationLevelAmtFld = paymentAllocationsEnabled ? paymentAmountFld : oppAmountFld;
-    public static String allocationDateFld = paymentAllocationsEnabled ? paymentPaidDateFld : oppCloseDateFld;
+    private static final String allocationObject = paymentAllocationsEnabled ? paymentObject : opportunityObject;
+    private static final String allocationLevelAmtFld = paymentAllocationsEnabled ? paymentAmountFld : oppAmountFld;
+    private static final String allocationDateFld = paymentAllocationsEnabled ? paymentPaidDateFld : oppCloseDateFld;
 
     /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
      * following set of rollup properties

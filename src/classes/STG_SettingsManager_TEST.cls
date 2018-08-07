@@ -46,6 +46,7 @@ public with sharing class STG_SettingsManager_TEST {
     * @description used for testing conversion of Opportunity Allocation rollups to Payment
     */
     private static String oppClosedFilter = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    private static String pmtsPaidFilter = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
     
     /**
      * @description Create Rollup__mdt records to test rolling up from the Opp and Payment objects to the Account
@@ -309,18 +310,25 @@ public with sharing class STG_SettingsManager_TEST {
         
         system.assertEquals(numOppRollups, CRLP_ConfigBuilder_SVC.queuedMetadataTypes.size(), 'Check that Opportunity Allocation rollups have been queued for update');
 
-        Integer rollupChangeCount = 0;
+        Integer rollupObjChangeCount = 0;
+        Integer rollupFilterChangeCount = 0;
         for (Metadata.CustomMetadata md: CRLP_ConfigBuilder_SVC.queuedMetadataTypes){
             for (Metadata.CustomMetadataValue val : md.values) {
                 String valField = (String)val.field;
                 if (valField.contains('Detail_Object__c')){
                     if(val.value == CRLP_DefaultConfigBuilder.paymentObject){
-                        rollupChangeCount++;
+                        rollupObjChangeCount++;
+                    }
+                }
+                else if (valField.contains('Filter_Group__c')){
+                    if(val.value == pmtsPaidFilter){
+                        rollupFilterChangeCount++;
                     }
                 }
             }
         }
-        system.assertEquals(numOppRollups, rollupChangeCount, 'The queued rollups should all be for Payments');
+        system.assertEquals(numOppRollups, rollupObjChangeCount, 'The queued rollups should all be for Payments');
+        system.assertEquals(numOppRollups, rollupFilterChangeCount, 'The queued rollups should all have the Payments paid filter');
 
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Payment_Allocations_Enabled__c, 'Payment Allocations should be enabled.');
         system.assertEquals(true, UTIL_CustomSettingsFacade.getOrgAllocationsSettings().Default_Allocations_Enabled__c, 'Settings should save successfully.');

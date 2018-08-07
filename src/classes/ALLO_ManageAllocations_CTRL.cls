@@ -118,10 +118,10 @@ public with sharing class ALLO_ManageAllocations_CTRL {
         parentAmount = 0;
 
         String soql = 'SELECT Id, Name ';
+        if (UserInfo.isMultiCurrencyOrganization()) {
+            soql += ', CurrencyIsoCode ';
+        }
         if (parentId.getSObjectType() == Opportunity.sObjectType) {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                soql += ', CurrencyIsoCode ';
-            }
             soql += ', Amount FROM Opportunity WHERE Id = :parentId LIMIT 1';
             opp = database.query(soql);
 
@@ -142,9 +142,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
                 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.Warning, Label.alloCantAllocateNothing));
             }
         } else if (parentId.getSObjectType() == Campaign.sObjectType) {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                soql += ', CurrencyIsoCode ';
-            }
             soql += ' FROM Campaign WHERE Id = :parentId LIMIT 1';
             cam = database.query(soql);
 
@@ -157,9 +154,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
             populateObjectParameters(Campaign.sObjectType);
 
         } else if (parentId.getSObjectType() == npe03__Recurring_Donation__c.sObjectType) {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                soql += ', CurrencyIsoCode ';
-            }
             soql += ' FROM npe03__Recurring_Donation__c WHERE Id = :parentId LIMIT 1';
             rd = database.query(soql);
 
@@ -171,9 +165,6 @@ public with sharing class ALLO_ManageAllocations_CTRL {
 
             populateObjectParameters(npe03__Recurring_Donation__c.sObjectType);
         } else if (parentId.getSObjectType() == npe01__OppPayment__c.sObjectType) {
-            if (UserInfo.isMultiCurrencyOrganization()) {
-                soql += ', CurrencyIsoCode ';
-            }
             soql += ', npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :parentId LIMIT 1';
             payment = database.query(soql);
 

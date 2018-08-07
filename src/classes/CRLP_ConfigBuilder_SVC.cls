@@ -42,6 +42,15 @@
 */
 public class CRLP_ConfigBuilder_SVC {
 
+    public static final String oppAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    public static final String paymentAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
+    public static final String paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
+    public static final String opportunityApiName = STG_Panel.oppLabel;
+    public static final String oppAlloAmountApiName = 'Amount';
+    public static final String paymentAlloAmountApiName = 'npe01__Payment_Amount__c';
+    public static final String oppAlloDateApiName = 'CloseDate';
+    public static final String paymentAlloDateApiName = 'npe01__Payment_Date__c';
+
     /** @description Metadata queued up for deployment */
     @TestVisible
     private static List<Metadata.CustomMetadata> queuedMetadataTypes = new List<Metadata.CustomMetadata>();
@@ -118,6 +127,58 @@ public class CRLP_ConfigBuilder_SVC {
     private static String getUniqueJobId() {
         return UserInfo.getUserId().left(15).right(4).toUpperCase() +
                 String.valueOf(Integer.valueOf(math.rint(math.random()*5000000))).right(6);
+    }
+
+    /*********************************************************************************************************
+    * @description Method to update custom rollups based on Allocation level
+    * set as a future method to not interfere with setup object DML operations
+    * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
+    */
+    @future
+    public static void updateCustomRollupsAlloLevel(Boolean usePayments){
+        String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
+        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
+        Id oldFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldFilter);
+        Id newFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newFilter);
+        String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
+        String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
+        String oldAmountField = usePayments ? oppAlloAmountApiName : paymentAlloAmountApiName;
+        String newAmountField = usePayments ? paymentAlloAmountApiName : oppAlloAmountApiName;
+        String oldDateField = usePayments ? oppAlloDateApiName : paymentAlloDateApiName;
+        String newDateField = usePayments ? paymentAlloDateApiName : oppAlloDateApiName;
+
+        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
+        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
+            if((rlp.Filter_Group__c == oldFilterId || rlp.Filter_Group__c == newFilterId)
+                && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
+                && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
+                && rlp.Date_Object__r.QualifiedApiName == oldObjectLevel){
+                    rollupsToUpdate.add(rlp);
+            }
+        }
+
+        if (rollupsToUpdate.isEmpty()){
+            return;
+        }
+
+        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
+        for (Rollup__mdt rlp: rollupsToUpdate){
+            CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
+            crlp.filterGroupRecordName = newFilter;
+            crlp.detailObject = newObjectLevel;
+            crlp.dateObject = newObjectLevel;
+            crlp.amountObject = newObjectLevel;
+            crlp.amountField = newAmountField;
+            crlp.detailField = newAmountField;
+            crlp.dateField = newDateField;
+            rollups.add(crlp);
+        }
+
+        clearQueue();
+        queueRollupConfigForDeploy(rollups);
+        deployedQueuedMetadataTypes();
     }
 
 }

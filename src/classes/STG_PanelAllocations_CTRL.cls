@@ -35,19 +35,10 @@
 */
 public with sharing class STG_PanelAllocations_CTRL extends STG_Panel { 
 
-    public static final string oppAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
-    public static final string paymentAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
-    public static final string paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
-    public static final string opportunityApiName = STG_Panel.oppLabel;
-    public static final string oppAlloAmountField = 'Amount';
-    public static final string paymentAlloAmountField = 'npe01__Payment_Amount__c';
-    public static final string oppAlloDateField = 'CloseDate';
-    public static final string paymentAlloDateField = 'npe01__Payment_Date__c';
-
     /*********************************************************************************************************
     * @description Returns the string Id of the Allocations panel. 
     */
-    public override string idPanel() { return 'idPanelAllocations'; }
+    public override String idPanel() { return 'idPanelAllocations'; }
 
     /*********************************************************************************************************
     * @description String that holds the selected Allocation Level from the settings picklist
@@ -71,57 +62,6 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
     public void setAllocationLevelFromSelection(){
         STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c = 
             (strAllocationLevel == paymentLabel);
-    }
-
-    /*********************************************************************************************************
-    * @description Method to update custom rollups based on Allocation level
-    * set as a future method to not interfere with setup object DML operations
-    * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
-    * @return String the jobId for the custom rollup deployment
-    */
-    @future
-    public static void updateCustomRollupsAlloLevel(Boolean usePayments){
-        String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
-        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
-        Id oldFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldFilter);
-        String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
-        String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
-        String oldAmountField = usePayments ? oppAlloAmountField : paymentAlloAmountField;
-        String newAmountField = usePayments ? paymentAlloAmountField : oppAlloAmountField;
-        String oldDateField = usePayments ? oppAlloDateField : paymentAlloDateField;
-        String newDateField = usePayments ? paymentAlloDateField : oppAlloDateField;
-
-        List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
-        for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
-            if(rlp.Filter_Group__c == oldFilterId 
-                && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
-                && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
-                && rlp.Date_Object__r.QualifiedApiName == oldObjectLevel){
-                    rollupsToUpdate.add(rlp);
-            }
-        }
-
-        if (rollupsToUpdate.isEmpty()){
-            return;
-        }
-
-        List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
-        for (Rollup__mdt rlp: rollupsToUpdate){
-            CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
-            crlp.filterGroupRecordName = newFilter;
-            crlp.detailObject = newObjectLevel;
-            crlp.dateObject = newObjectLevel;
-            crlp.amountObject = newObjectLevel;
-            crlp.amountField = newAmountField;
-            crlp.detailField = newAmountField;
-            crlp.dateField = newDateField;
-            rollups.add(crlp);
-        }
-
-        CRLP_ConfigBuilder_SVC.clearQueue();
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(rollups);
-        String jobId = CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes();
     }
 
     /*********************************************************************************************************
@@ -203,7 +143,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         // If the Allocation level changed and custom rollups are enabled, update them
         if (oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
             && STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c){
-                updateCustomRollupsAlloLevel(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
+                CRLP_ConfigBuilder_SVC.updateCustomRollupsAlloLevel(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
         }
 
         return super.saveSettings();

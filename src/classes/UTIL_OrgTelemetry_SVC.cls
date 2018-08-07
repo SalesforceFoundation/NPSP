@@ -48,8 +48,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         STG_SettingsService stgSvc = new STG_SettingsService();
         Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-        if (!Test.isRunningTest()) {
-            System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups', (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
-        }
+        System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups', (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
     }
 }
