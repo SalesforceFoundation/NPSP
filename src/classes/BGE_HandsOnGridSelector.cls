@@ -5,6 +5,16 @@ public with sharing class BGE_HandsOnGridSelector {
 
     public Map<Id, Batch_Template_Field__c> getTemplateFieldsByTemplateId(Id recordId) {
 
+        System.debug('==>' + [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId]);
+
+        String activeFields = [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId][0].Active_Fields__c;
+
+        List<String> myresult = ((String)JSON.deserializeUntyped(activeFields);
+        //List<Object> objectNames = (List<Object>)myresult.get('sObjectName');
+        System.debug('myresult ==> ' + myresult);
+        //List<String> fieldNames = new List<String>();
+
+
         Map<Id, Batch_Template_Field__c> result = new Map<Id, Batch_Template_Field__c>([SELECT
                                                                                             Name,
                                                                                             Order__c,
