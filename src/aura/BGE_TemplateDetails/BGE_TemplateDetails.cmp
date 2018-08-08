@@ -62,7 +62,7 @@
                         <div class="slds-media__body">
                             <p class="slds-breadcrumb__item slds-line-height_reset">{!v.templateMetadata.labels.batchTemplateLabel}</p>
                             <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
-                                {!if(v.templateMetadata.mode == 'view', v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
+                                {!if(v.isReadOnly, v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
                             </h1>
                         </div>
                     </div>

@@ -53,8 +53,8 @@
 
 
     /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
+     * @Description. Increases selected field activeSortOrder by 1 in the
+     * Template Fields Model, and moves neighbor fields up.
      *****************************************************************/
     moveFieldsDown: function (component, event, helper) {
         var model = component.get('v.model');
@@ -62,8 +62,8 @@
     },
 
     /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
+     * @Description. Decreases selected field activeSortOrder by 1 in the
+     * Template Fields Model, and moves neighbor fields down.
      *****************************************************************/
     moveFieldsUp: function (component, event, helper) {
         var model = component.get('v.model');

@@ -50,7 +50,7 @@
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
 
-                if (templateMetadataView.mode === 'view' && !component.get("v.isReadOnly")) {
+                if (templateMetadataView.mode === 'view') {
                     component.set("v.isReadOnly", true);
                 } else if (templateMetadataView.mode === 'create' || templateMetadataView.mode === 'edit') {
                     component.set("v.isReadOnly", false);
