@@ -441,6 +441,7 @@
     <types>
         <members>BDI_SettingsUI</members>
         <members>BGE_SettingsUITemplate</members>
+        <members>BGE_HandsOnGridComponent</members>
         <members>RP_GettingStarted</members>
         <members>RP_GitHub</members>
         <members>RP_Youtube</members>
