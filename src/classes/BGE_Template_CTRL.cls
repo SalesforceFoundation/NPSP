@@ -128,6 +128,7 @@ public with sharing class BGE_Template_CTRL {
 
         Map<String, String> labels = new Map<String, String> {
             'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
+            'batchTemplateObject' => Schema.SObjectType.Batch_Template__c.getName(),
             'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
             'totalEntryHelp' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getInlineHelpText(),
             'totalEntryLabel' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getLabel(),

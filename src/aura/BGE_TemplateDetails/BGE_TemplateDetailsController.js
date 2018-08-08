@@ -28,7 +28,18 @@
      * @Description. Cancels edit or creation of the template.
      *****************************************************************/
     cancel: function(component, event, helper) {
-
+        var model = component.get('v.model');
+        if (component.get("v.templateMetadata.mode") === 'create') {
+            //navigate to record home
+            var homeEvent = $A.get("e.force:navigateToObjectHome");
+            homeEvent.setParams({
+                "scope": component.get("v.templateMetadata.labels.batchTemplateObject")
+            });
+            homeEvent.fire();
+        } else {
+            model.getTemplateMetadata().setMode('view');
+            model.init(component);
+        }
     },
 
     /* ***************************************************************
