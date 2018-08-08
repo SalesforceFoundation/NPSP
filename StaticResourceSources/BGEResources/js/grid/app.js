@@ -291,6 +291,8 @@
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
+            debugger;
+
             var container = document.getElementById('my-hot-table');
             container.appendChild(deleteRowConfirmationModal());
 
@@ -1385,10 +1387,13 @@
 
         function deleteRowConfirmationModal() {
 
-            var modal = "<div style='height: 100px; width: 200px; border:1px solid red;'></div>"; 
+            var modal = "<div style='position:absolute; height:100px; width:200px; border:1px solid red;'></div>"; 
+
+            var modalContainer = document.createElement('div');
+            modalContainer.setAttribute("style", "position:absolute; height:100px; width:200px; border: 1px solid blue;");
 
 
-            return modal;
+            return modalContainer;
 
             // <div class="demo-only" style="height: 640px;">
             //     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
