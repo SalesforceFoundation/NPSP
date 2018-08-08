@@ -43,6 +43,25 @@
 
     /******************************** Template Fields Controller Functions *****************************/
 
+
+    /* ***************************************************************
+     * @Description. Updates the selected active fields in the
+     * Template Fields Model to available.
+     *****************************************************************/
+    moveFieldsDown: function (component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateFields().moveSelectedDown();
+    },
+
+    /* ***************************************************************
+     * @Description. Updates the selected active fields in the
+     * Template Fields Model to available.
+     *****************************************************************/
+    moveFieldsUp: function (component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateFields().moveSelectedUp();
+    },
+
     /* ***************************************************************
      * @Description. Updates the selected (checked) available fields in the
      * Template Fields Model.
@@ -75,7 +94,7 @@
      *****************************************************************/
     updateToActive: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToActive();
+        model.getTemplateFields().updateSelectedToActive();
     },
 
     /* ***************************************************************
@@ -84,6 +103,6 @@
      *****************************************************************/
     updateToAvailable: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToAvailable();
+        model.getTemplateFields().updateSelectedToAvailable();
     }
 });

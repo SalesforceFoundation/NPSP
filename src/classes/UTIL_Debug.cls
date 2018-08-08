@@ -35,8 +35,9 @@
 */
 public class UTIL_Debug {
 
-    //enable debug logs in all tests, otherwise get the setting
-    public static boolean enabled = test.isRunningTest() ? true : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
+    // Disable debug logs in all tests, otherwise get the setting
+    // August 2018: Previously, debugging was enabled in all tests. Disabling should significantly help with performance.
+    public static Boolean enabled = Test.isRunningTest() ? false : UTIL_CustomSettingsFacade.getErrorSettings().Enable_Debug__c;
 
     /*******************************************************************************************************
     * @description Prints a debug message to the debug log, if debugging is enabled or a test is being run.
