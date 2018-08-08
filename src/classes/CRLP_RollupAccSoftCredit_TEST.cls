@@ -107,9 +107,6 @@ private class CRLP_RollupAccSoftCredit_TEST {
         CRLP_Rollup_SEL.cachedRollups = (List<Rollup__mdt>) JSON.deserialize(rollupsJSON, List<Rollup__mdt>.class);
     }
 
-    static testMethod void test_Rollups_Queueable() {
-        testRollupsServices(TestType.TestQueueuable);
-    }
     static testMethod void test_Rollups_Batch() {
         testRollupsServices(TestType.TestBatch);
     }
@@ -174,13 +171,9 @@ private class CRLP_RollupAccSoftCredit_TEST {
 
         List<Opportunity> opps = new List<Opportunity>();
         Date closeDate = Date.Today().addMonths(-100);
-        Decimal totalDonations = 0, total2YearsAgo = 0;
         Decimal maxAmt = 1000;
         Decimal baseAmt = 100;
         Integer cnt = 100;
-        String bestGiftYear;
-        Set<String> donationYears = new Set<String>();
-        Date lastCloseDate;
         for (Integer n=0; n<cnt; n++) {
             Decimal amt = (n==50 ? maxAmt : baseAmt);
             opps.add(new Opportunity (
@@ -191,21 +184,11 @@ private class CRLP_RollupAccSoftCredit_TEST {
                     Primary_Contact__c = c.Id,
                     RecordTypeId = rtId
             ));
-            totalDonations += amt;
-            if (closeDate.addMonths(n).year() == Date.Today().addYears(-2).year()) {
-                total2YearsAgo += amt;
-            }
-            String donationYr = closeDate.addMonths(n).year().format().replace(',','');
-            donationYears.add(donationYr);
-            if (amt == maxAmt) {
-                bestGiftYear = donationYr;
-            }
-            lastCloseDate = closeDate.addMonths(n);
         }
 
         insert opps;
 
-        // create 5 $10 Account Soft Credits
+        // create 5 Account Soft Credits
         Integer accSCBaseAmt = 10;
         Integer accSCMaxAmt = 50;
         Integer ascCount = 5;
