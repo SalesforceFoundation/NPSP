@@ -568,7 +568,7 @@
          * When HOT starts - it sets the initial row on the last selected ROW.
          * @param {*} row
          */
-        function afterSelectionHandler(row, col) {
+        function afterSelectionHandler(row, col, rowEnd, colEnd) {
 
             setActionButtonActive(row, col);
             $('#action-menu-container').hide();
@@ -579,9 +579,14 @@
             }
 
             $scope.lastSelectedColumn = col;
+
+            if ( (col != colEnd) && (col <= 2 || colEnd <= 2) ) {
+
+                hot.deselectCell();
+            }
         }
 
-        function afterSelectionEndHandler(row, column, rowEnd, columnEnd) {
+        function afterSelectionEndHandler(row, col, rowEnd, colEnd) {
 
             if ((row != $scope.lastSelectedRow)) {
 
