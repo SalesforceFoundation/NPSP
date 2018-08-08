@@ -201,7 +201,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return Boolean
     */
     public static Boolean hasRunningJob(String className) {
-        className = (className.contains('__') ? className.split('__')[1] : className);
+        className = (className.contains('.') ? className.substringAfter('.') : className);
         // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
         Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
         Integer jobCount = [SELECT COUNT()

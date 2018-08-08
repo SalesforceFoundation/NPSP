@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Opportunity/Payment to Account Rollups
+* @description Unit Test for the Opportunity/Payment to Account Rollups (Hard Credit Only)
 */
 @isTest
 private class CRLP_RollupAccount_TEST {

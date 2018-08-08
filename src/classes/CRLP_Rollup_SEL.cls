@@ -307,7 +307,7 @@ public class CRLP_Rollup_SEL {
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
                         rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                            && r.Amount_Object__r.QualifiedApiName != pscObjectName);
+                            && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
                             && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
