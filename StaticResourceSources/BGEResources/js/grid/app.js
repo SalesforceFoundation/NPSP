@@ -290,7 +290,11 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-            deleteRow(index, amount, visualRows);
+
+            var container = document.getElementById('my-hot-table');
+            container.appendChild(deleteRowConfirmationModal());
+
+            //deleteRow(index, amount, visualRows);
         }
 
         function modifyColWidthHandler(width, col) {
@@ -1377,6 +1381,36 @@
 
             $('th').css('height', '40px');
             $('td').css('height', '30px')
+        }
+
+        function deleteRowConfirmationModal() {
+
+            var modal = "<div style='height: 100px; width: 200px; border:1px solid red;'></div>"; 
+
+
+            return modal;
+
+            // <div class="demo-only" style="height: 640px;">
+            //     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            //         <div class="slds-modal__container">
+            //         <header class="slds-modal__header">
+            //             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+
+            //             <span class="slds-assistive-text">Close</span>
+            //             </button>
+            //             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Warning</h2>
+            //         </header>
+            //         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            //             <p>Do you really want to remove this row?</p>
+            //         </div>
+            //         <footer class="slds-modal__footer">
+            //             <button class="slds-button slds-button_neutral">Cancel</button>
+            //             <button class="slds-button slds-button_brand">Confirm</button>
+            //         </footer>
+            //         </div>
+            //     </section>
+            //     <div class="slds-backdrop slds-backdrop_open"></div>
+            // </div>
         }
 
     });
