@@ -70,15 +70,6 @@ tasks:
         options:
             package_xml: lib/admin_profile.xml
 
-    browsertests:
-        description: Runs the Ruby/Watir browser tests in the test/browser folder using Chrome
-        class_path: cumulusci.tasks.command.SalesforceBrowserTest
-        options:
-            command: 'cd test/browser; bundle exec cucumber --format pretty --format junit --out ../junit -c features/ --tags @smoketest'
-            dir: '.'
-            env:
-                SELENIUM_BROWSER: chrome
-
     pmd:
         description: Run Apex code analysis with PMD. This task assumes that PMD is available in PATH. On MacOS PMD is available to install in brew.
         class_path: tasks.pmd.PMDTask
@@ -268,11 +259,6 @@ orgs:
             config_file: orgs/beta_multicurrency.json
         beta_wave:
             config_file: orgs/beta_wave.json
-        browsertest_classic:
-            config_file: orgs/browsertest_classic.json
-        browsertest_classic_namespaced:
-            config_file: orgs/browsertest_classic.json
-            namespaced: True
         prerelease:
             config_file: orgs/prerelease.json
         trial:
