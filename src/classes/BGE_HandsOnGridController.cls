@@ -27,6 +27,14 @@ global class BGE_HandsOnGridController {
 
         BGE_HandsOnGridColumnWrapper[] columns = new BGE_HandsOnGridColumnWrapper[] {};
         String[] fieldNames = new String[] {};
+            
+            for(Object fld : templateFields){    
+                Map<String,Object> data = (Map<String,Object>)fld;
+                
+                //system.debug(data.get('name'));
+                //columns.add(new BGE_HandsOnGridColumnWrapper(data.get('sObjectName')));
+            	//fieldNames.add(data.get('name'));
+            }
 
         /*
         for (Batch_Template_Field__c templateField :templateFields.values()) {
@@ -35,10 +43,11 @@ global class BGE_HandsOnGridController {
         }
 		*/
             
-        for (Object templateField : templateFields) {
+        //for (Object templateField : templateFields) {
+            //System.debug('templateField ==>' + templateField);
             //columns.add(new BGE_HandsOnGridColumnWrapper(templateField));
             //fieldNames.add(templateField.Name);
-        }
+        //}
 
         if (!columns.isEmpty()) {
 
