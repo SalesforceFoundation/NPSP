@@ -83,7 +83,7 @@
             var _columns = [
                 {
                 	type: 'text',
-                	fieldName: 'name',
+                	fieldName: 'label',
                 	label: $A.get("$Label.c.bgeBatchTemplateAvailableFields")
             	}
             ];
@@ -121,7 +121,7 @@
                 Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
                     var gridDataRow = {
                         id: sObjectName,
-                        name: sObjectName,
+                        label: sObjectName,
                         selected: false,
                         _children: []
                     };
@@ -130,7 +130,7 @@
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
-                            	name: sObjectField.name,
+                            	label: sObjectField.label,
                                 selected: sObjectField.selected,
                                 availableSortOrder: sObjectField.availableSortOrder
                             }
@@ -164,7 +164,7 @@
     		var _columns = [
                 {
                     type: 'text',
-                    fieldName: 'name',
+                    fieldName: 'label',
                     label: $A.get("$Label.c.bgeBatchTemplateActiveFields")
                 },
                 {
@@ -216,7 +216,7 @@
                 Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
                     var gridDataRow = {
                         id: sObjectName,
-                        name: sObjectName,
+                        label: sObjectName,
                         selected: false,
                         _children: []
                     };
@@ -224,7 +224,7 @@
                         gridDataRow._children.push(
                             {
                                 id: sObjectField.id,
-                            	name: sObjectField.name,
+                            	label: sObjectField.label,
                                 selected: sObjectField.selected,
                                 defaultValue: sObjectField.defaultValue,
                                 required: sObjectField.required,
@@ -313,6 +313,7 @@
 
                 _templateFields.getActives().forEach(function(currentField) {
                     activeFields.push({
+                        label: currentField.label,
                         name: currentField.name,
                         sObjectName: currentField.sObjectName,
                         defaultValue: currentField.defaultValue,
@@ -448,14 +449,14 @@
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + "." + activeField.name;
+                        var fieldId = activeField.sObjectName + "." + activeField.label;
                         activeFieldMap.set(fieldId, activeField.activeSortOrder);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + "." + currentField.name;
+                    currentField.id = currentField.sObjectName + "." + currentField.label;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
