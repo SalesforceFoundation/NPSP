@@ -51,9 +51,34 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- START MARKUP -->
-    <div aura:id="body" class="bodyDiv">
+    <header role="banner" class="header">
+        <div class="slds-page-header">
+            <div class="slds-grid">
+                <div class="slds-col slds-has-flexi-truncate headerText">
+                    <div class="slds-media slds-no-space slds-grow">
+                        <div class="slds-media__figure">
+                            <lightning:icon iconName="standard:contract" alternativeText="{!v.templateMetadata.labels.batchTemplateLabel}" size="medium"/>
+                        </div>
+                        <div class="slds-media__body">
+                            <p class="slds-breadcrumb__item slds-line-height_reset">{!v.templateMetadata.labels.batchTemplateLabel}</p>
+                            <h1 class="slds-page-header__title slds-m-right_small slds-truncate">
+                                {!if(v.isReadOnly, v.templateInfo.name, v.templateMetadata.labels.batchTemplateHeader)}
+                            </h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
+                    <aura:if isTrue="{!v.templateMetadata.mode == 'view'}">
+                        <lightning:buttonGroup>
+                            <lightning:button label="Edit" onclick="{!c.changeModeToEdit}"/>
+                        </lightning:buttonGroup>
+                    </aura:if>
+                </div>
+            </div>
+        </div>
+    </header>
 
-        <h2 class="slds-text-heading_medium slds-p-horizontal_large slds-p-top_large">{!v.templateMetadata.labels.batchTemplateLabel}</h2>
+    <div aura:id="body" class="slds-tabs_card">
 
         <div class="row slds-form slds-form_compound">
 
@@ -123,8 +148,8 @@
                 <aura:if isTrue="{!v.isReadOnly}">
 
                     <div class="slds-form-element">
-                        <ui:outputCheckbox value="{!v.templateInfo.displayTotalPrompt}" class="slds-form-element__control"/>
-                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalPromptLabel}</span>
+                        <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
+                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span>
                     </div>
                     <div class="slds-form-element">
                         <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
@@ -133,13 +158,13 @@
 
                     <aura:set attribute="else">
                         <div>
-                            <lightning:input aura:id="totalPromptCheckbox" type="checkbox" class="templateInputCheckbox"
-                                             label="{!v.templateMetadata.labels.totalPromptLabel}"
-                                             name="displayTotalPrompt"
-                                             checked="{!v.templateInfo.displayTotalPrompt}"
+                            <lightning:input aura:id="totalEntryCheckbox" type="checkbox" class="templateInputCheckbox"
+                                             label="{!v.templateMetadata.labels.totalEntryLabel}"
+                                             name="enableTotalEntry"
+                                             checked="{!v.templateInfo.enableTotalEntry}"
                                              readonly="{!v.isReadOnly}"
                                              variant="label-hidden"/>
-                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalPromptHelp}" fieldLabel="{!v.templateMetadata.labels.totalPromptLabel}"/>
+                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalEntryHelp}" fieldLabel="{!v.templateMetadata.labels.totalEntryLabel}"/>
                         </div>
                         <div>
                             <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
