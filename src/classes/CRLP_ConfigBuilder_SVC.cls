@@ -134,11 +134,8 @@ public class CRLP_ConfigBuilder_SVC {
     * set as a future method to not interfere with setup object DML operations
     * @param usePayments Boolean if true, update to use Payment Allocations, otherwise use Opportunty
     */
-    public static void updateCustomRollupsAlloLevel(){
-
-        STG_SettingsService stgService = new STG_SettingsService();
-        Boolean usePayments = stgService.stgAllo.Payment_Allocations_Enabled__c;
-
+    @future
+    public static void updateCustomRollupsAlloLevel(Boolean usePayments){
         String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
         String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
         Id oldFilterId = 
@@ -182,12 +179,6 @@ public class CRLP_ConfigBuilder_SVC {
         clearQueue();
         queueRollupConfigForDeploy(rollups);
         deployedQueuedMetadataTypes();
-    }
-
-    public class AsyncUpdateAlloLevel implements System.Queueable {
-        public void execute(QueueableContext context) {
-            CRLP_ConfigBuilder_SVC.updateCustomRollupsAlloLevel();
-        }
     }
 
 }

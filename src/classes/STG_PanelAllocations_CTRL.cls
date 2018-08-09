@@ -143,7 +143,7 @@ public with sharing class STG_PanelAllocations_CTRL extends STG_Panel {
         // If the Allocation level changed and custom rollups are enabled, update them
         if (oldPayAlloValue != STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c 
             && STG_Panel.stgService.stgCRLP.Customizable_Rollups_Enabled__c){
-                System.enqueueJob(new CRLP_ConfigBuilder_SVC.AsyncUpdateAlloLevel());
+                CRLP_ConfigBuilder_SVC.updateCustomRollupsAlloLevel(STG_Panel.stgService.stgAllo.Payment_Allocations_Enabled__c);
         }
 
         return super.saveSettings();
