@@ -135,8 +135,6 @@
         <members>CRLP_FiscalYears</members>
         <members>CRLP_FiscalYears_TEST</members>
         <members>CRLP_GAU_BATCH</members>
-        <members>CRLP_IncrementalBatch</members>
-        <members>CRLP_IncrementalBatch_TEST</members>
         <members>CRLP_Operation</members>
         <members>CRLP_Operation_SVC</members>
         <members>CRLP_Operation_TEST</members>
@@ -704,7 +702,7 @@
         <members>Contact.is_Address_Override__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
-        <members>Customizable_Rollup_Settings__c.Enable_Incremental_Rollups_Mode__c</members>
+        <members>Customizable_Rollup_Settings__c.Disable_Related_Records_Filter__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>

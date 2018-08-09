@@ -36,8 +36,6 @@
 @isTest
 private class CRLP_RollupAccount_TEST {
 
-    private static final Integer LAST_BATCH_RUN_DAYS_BACK = 10;
-
     private Enum TestType {
         TestTrigger, TestQueueuable, TestBatch, testSkewBatch
     }
@@ -326,34 +324,5 @@ private class CRLP_RollupAccount_TEST {
         System.assertEquals(baseAmt, a.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
         System.assertEquals(donationYears.size(), a.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
         System.assertEquals(donationYears.size(), a.Description.split(';').size(), 'The list of donated years should match');
-    }
-
-    /*********************************************************************************************************
-    * @description Creates the Incremental Account Hard Credit Rollup Settings, enables the Incremental Rollup and 
-    * sets the Last Batch Run. Runs the Rollup Batch Scheduler and confirms the Last Batch Run 
-    * is set to Today's date.
-    */
-    static testMethod void testIncrementalAccountHardCreditScheduler_WithLastBatchRun() {
-        UTIL_CustomSettingsFacade.getRollupSettingsForTests(
-            new Customizable_Rollup_Settings__c(
-                Customizable_Rollups_Enabled__c = true,
-                Rollups_Limit_on_Attached_Opps_for_Skew__c = 50,
-                Rollups_Account_Batch_Size__c = 20,
-                Enable_Incremental_Rollups_Mode__c = true,
-                Account_Hard_Credit_Last_Batch__c = Date.today().addDays(-LAST_BATCH_RUN_DAYS_BACK)
-            )
-        );
-
-        mockRollupCMTValues();
-
-        Test.startTest();
-        Schedulable rollupBatchScheduler = new CRLP_Account_BATCH();
-        rollupBatchScheduler.execute(null);
-        Test.stopTest();
-
-        System.assertNotEquals(
-            Date.today(), 
-            UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Account_Hard_Credit_Last_Batch__c
-        );
     }
 }

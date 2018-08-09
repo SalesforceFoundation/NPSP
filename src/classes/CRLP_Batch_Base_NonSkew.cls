@@ -36,18 +36,7 @@
 */
 public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
-    private CRLP_IncrementalBatch.Rollup incrementalRollup;
-
     protected CRLP_Batch_Base_NonSkew() { }
-
-    /*******************************************************************************************************
-    * @description Sets the Incremental Rollup.
-    * @param incrementalRollup. The Incremental Rollup Mode.
-    * @return void.
-    ********************************************************************************************************/
-    public void setIncrementalRollup(CRLP_IncrementalBatch.Rollup incrementalRollup) {
-        this.incrementalRollup = incrementalRollup;
-    }
 
     // These 2 fields are used to check for Contacts or Accounts (both objects have the same fields) that may have
     // non-zero values in these fields even though they have no attached opportunities. In that case, the parents
@@ -124,11 +113,25 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 if (!String.isEmpty(skewClause)) {
                     whereClauses.add(skewClause);
                 }
-            }
 
-            // Add the Incremental Mode where clause.
-            if (incrementalRollup != null && String.isNotBlank(incrementalRollup.getWereClause())) {
-                whereClauses.add(incrementalRollup.getWereClause());
+                Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
+
+                // Only use the related records filter if not disabled in settings and not running unit tests
+                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
+                    if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                        whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
+                        String contactField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
+                        whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
+                        whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                        // It's not possible to do an inner query on this due to the following Salesforce error:
+                        // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
+                        whereClauses.add('Id IN (SELECT npe03__Recurring_Donation__c FROM Opportunity ALLROWS)');
+                    }
+                }
             }
 
             // TODO DO we need to exclude Organization Donations??
@@ -275,17 +278,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    /*******************************************************************************************************
-    * @description This method is called when the batch is completed.
-    * @param batchContext. The Batch Context.
-    * @return void.
-    ********************************************************************************************************/
-    public virtual void finish(Database.BatchableContext batchContext) {
-
-        if (this.incrementalRollup != null && batchHasErrors(batchContext) == false) {
-            incrementalRollup.refreshLastBatchRun();
-        }
-
+    public void finish(Database.BatchableContext bc) {
         // In debug mode, write a summary of the job to the error log
         if (CRLP_Debug_UTIL.isDebuggingEnabled) {
             Error__c logEntry = new Error__c(
@@ -300,25 +293,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
         }
     }
 
-    /*******************************************************************************************************
-    * @description Checks if the Batch has errors.
-    * @param batchContext. The Batch Context.
-    * @return Boolean.
-    ********************************************************************************************************/
-    private Boolean batchHasErrors(Database.BatchableContext batchContext) {
-        List<AsyncApexJob> currentBatch = [
-            SELECT NumberOfErrors 
-            FROM AsyncApexJob 
-            WHERE Id = :batchContext.getJobId()
-        ];
-        
-        return (currentBatch.isEmpty() == false && currentBatch[0].NumberOfErrors > 0);
-    }
-
-    /*******************************************************************************************************
-    * @description Instantiates the ProcessingOptions class for Non-Skew Mode batch operations.
-    * @return CRLP_RollupProcessingOptions.ProcessingOptions.
-    ********************************************************************************************************/
+    /**
+     * @description Instantiate the ProcessingOptions class for Non-Skew Mode batch operations.
+     */
     private CRLP_RollupProcessingOptions.ProcessingOptions buildProcessingOptions() {
         CRLP_RollupProcessingOptions.ProcessingOptions options = super.initOptionsInstance();
         options.detailObjType = this.detailObjectType;
