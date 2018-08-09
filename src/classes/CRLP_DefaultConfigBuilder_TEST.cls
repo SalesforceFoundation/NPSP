@@ -163,7 +163,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
      */
     private static Boolean isDeleteFlagTrue(Metadata.CustomMetadata md) {
         for (Metadata.CustomMetadataValue val : md.values) {
-            if ((String) val.field == 'Is_Deleted__c' && (Boolean) val.value == true) {
+            if ((String) val.field == UTIL_Namespace.StrAllNSPrefix('Is_Deleted__c') && (Boolean) val.value == true) {
                 return true;
             }
         }
