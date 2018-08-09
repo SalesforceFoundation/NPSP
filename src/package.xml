@@ -1424,8 +1424,10 @@
         <members>bgeBatchTemplateActiveFields</members>
         <members>bgeBatchTemplateAddFields</members>
         <members>bgeBatchTemplateAvailableFields</members>
+        <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateMoveFieldDown</members>
         <members>bgeBatchTemplateMoveFieldUp</members>
+        <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateRemoveFields</members>
         <members>bgeErrorBatchTemplateMissing</members>
         <members>bgeErrorBatchTemplateNameRequired</members>
