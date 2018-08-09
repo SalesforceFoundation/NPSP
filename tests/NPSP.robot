@@ -3,6 +3,11 @@
 Resource       cumulusci/robotframework/Salesforce.robot
 Library        tests/NPSP.py
 
+*** Variables ***
+${task1}  Send Email1
+${sub_task}    Welcome Email1
+${task2}     Make a Phone Call1
+
 
 *** Keywords ***
 
@@ -152,7 +157,35 @@ Create Opportunities
     Pick Date    10
     Select Modal Checkbox    Do Not Automatically Create Payment
     Click Modal Button        Save
-    
+
+Create Engagement Plan
+    ${plan_name} =     Generate Random String
+    Go To Object Home         npsp__Engagement_Plan_Template__c
+    Click Special Object Button       New
+    Sleep    2
+    Select Frame With Title    Manage Engagement Plan Template
+    Enter Eng Plan Values
+    ...             Engagement Plan Template Name=${plan_name}
+    ...             Description=This plan is created via Automation  
+    Click Task Button    Add Task
+    Enter Task Id and Subject    5    ${task1}
+    Click Task Button    Add Dependent Task
+    Enter Task Id and Subject    32    ${sub_task}
+    Click Task Button    Add Task
+    Enter Task Id and Subject    59    ${task2}
+    Scroll Page To Location    50    0
+    Click Task Button    Save
+    Sleep    2
+    [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
+     
+Verify Engagement Plan
+    [Arguments]       ${plan_name}     @{others}
+    Go To Object Home         npsp__Engagement_Plan_Template__c
+    Click Link    link=${plan_name}
+    Check Field Value    Engagement Plan Template Name    ${plan_name}
+    Select Tab    Related
+    Check Related List Values    Engagement Plan Tasks      @{others}
+       
     
 Choose Frame
     [Arguments]    ${frame}

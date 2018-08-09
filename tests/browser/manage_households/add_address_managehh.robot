@@ -27,7 +27,7 @@ Add New Address to Household
     ...                       Postal Code=99999
     ...                       Country=US   
     
-    Click Managehh Special Button    Set Address
+    Click Span Button    Set Address
     Sleep    2
     Click Managehh Button       Save
     Sleep    3

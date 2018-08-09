@@ -92,14 +92,39 @@ class NPSP(object):
         self.selenium.set_focus_to_element(locator)
         self.selenium.get_webelement(locator).click() 
         
-    def select_row(self,value):
-        """To select a row on object page based on name and open the dropdown"""    
-        drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
-        self.selenium.get_webelement(drop_down).click()
-        #self.selenium.get_webelement(drop_down).click()
+#     def select_row(self,value):
+#         """To select a row on object page based on name and open the dropdown"""    
+#         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
+#         self.selenium.get_webelement(drop_down).click()
+#         #self.selenium.get_webelement(drop_down).click()
 
+#     def select_row(self,value):
+#         """To select a row on object page based on name and open the dropdown"""    
+#         locator = npsp_lex_locators['select_name'].format(value)
+#         self.selenium.set_focus_to_element(locator)
+#         drop_down = npsp_lex_locators['locating_delete_dropdown'].format(value)
+#         time.sleep(1)
+#         return drop_down
+    
+    def select_row(self, value):
+        """To select a row on object page based on name and open the dropdown"""
+        locators = npsp_lex_locators['name']
+        list_ele = self.selenium.get_webelements(locators)
+        for index, element in enumerate(list_ele):
+            if element.text == value:
+                drop_down = npsp_lex_locators['locate_dropdown'].format(index + 1)
+                self.selenium.get_webelement(drop_down).click()
+                time.sleep(1)
 
-
+    def select_related_row(self, value):
+        """To select a row on object page based on name and open the dropdown"""
+        locators = npsp_lex_locators['related_name']
+        list_ele = self.selenium.get_webelements(locators)
+        for index, element in enumerate(list_ele):
+            if element.text == value:
+                drop_down = npsp_lex_locators['rel_loc_dd'].format(index + 1)
+                self.selenium.get_webelement(drop_down).click()
+                time.sleep(1)
 #     def select_row(self, value ):
 #         """To select a row on object page based on name and open the dropdown"""
 #         locators = npsp_lex_locators['name']
@@ -114,19 +139,19 @@ class NPSP(object):
 #                 self.selenium.get_webelement(drop_down).click()
 #                 self.selenium.get_webelement(drop_down).click()
             
-    def select_related_row(self, value ):
-        """To select row from a related list based on name and open the dropdown"""
-        locators = npsp_lex_locators['related_name']
-        list_ele = self.selenium.get_webelements(locators)
-        index= 1
-        for locator in list_ele:
-            global index
-            if locator.text != value:
-                index = index+1
-            else:
-                drop_down = npsp_lex_locators['rel_loc_dd'].format(index)
-                self.selenium.get_webelement(drop_down).click()
-                self.selenium.get_webelement(drop_down).click()      
+#     def select_related_row(self, value ):
+#         """To select row from a related list based on name and open the dropdown"""
+#         locators = npsp_lex_locators['related_name']
+#         list_ele = self.selenium.get_webelements(locators)
+#         index= 1
+#         for locator in list_ele:
+#             global index
+#             if locator.text != value:
+#                 index = index+1
+#             else:
+#                 drop_down = npsp_lex_locators['rel_loc_dd'].format(index)
+#                 self.selenium.get_webelement(drop_down).click()
+#                 self.selenium.get_webelement(drop_down).click()      
                 
     def delete_icon(self, field_name,value):  
         """To click on x """
@@ -185,9 +210,9 @@ class NPSP(object):
         locator=npsp_lex_locators['related_list_items'].format(list_name,value)
         self.selenium.page_should_contain_element(locator)
     
-    def click_managehh_special_button(self,title):  
-        """clicks on the new contact button on manage hh page"""      
-        locator=npsp_lex_locators['manage_hh_page']['mhh_button'].format(title)
+    def click_span_button(self,title):  
+        """clicks on the button under span tag"""      
+        locator=npsp_lex_locators['span_button'].format(title)
         self.selenium.get_webelement(locator).click()  
         
     def header_field_value(self,title,value):   
@@ -219,7 +244,7 @@ class NPSP(object):
         locator= npsp_lex_locators['detail_page']['address'].format(field,value)
         self.selenium.page_should_contain_element(locator)        
         
-    #def DnD(self):
+   
     def validate_checkbox(self,name,checkbox_title):   
         """validates all 3 checkboxes for contact on manage hh page and returns locator for the checkbox thats required"""   
           
@@ -286,7 +311,7 @@ class NPSP(object):
         self.selenium.get_webelement(locator).click()  
         
     def verify_contact_roles(self, **kwargs):
-        """""" 
+        """verifies the role of a specific contact on Opportunities page""" 
         for name, value in kwargs.items():
             locator= npsp_lex_locators['object']['contact_role'].format(name,value)
             self.selenium.page_should_contain_element(locator)   
@@ -294,4 +319,79 @@ class NPSP(object):
     def page_contains_record(self,title):   
         """Validates if the specified record is present on the page"""   
         locator= npsp_lex_locators['object']['record'].format(title)
-        self.selenium.page_should_not_contain_element(locator)     
+        self.selenium.page_should_not_contain_element(locator) 
+             
+                         
+               
+    def click_special_object_button(self, title):
+        locator = npsp_lex_locators['object']['button'].format(title)
+        self.selenium.get_webelement(locator).click()
+        
+    def click_eng_plan_dropdown(self, title):
+        locator = npsp_lex_locators['engagement_plan']['dropdown'].format(title)
+        self.selenium.set_focus_to_element(locator)
+        self.selenium.get_webelement(locator).click()
+        
+    def select_eng_plan_checkbox(self,title):
+        """"""
+        if title=="Skip Weekends":
+            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("span",title)
+            self.selenium.get_webelement(locator).click()
+        else:
+            locator=npsp_lex_locators['engagement_plan']['checkbox'].format("label",title)
+            self.selenium.get_webelement(locator).click()
+            
+    def enter_eng_plan_values(self, **kwargs):
+        """Enter values into corresponding fields in Engagement Plan Templet page"""
+        for name, value in kwargs.items():
+            if name == "Engagement Plan Template Name":
+                id = "idName"
+                locator = npsp_lex_locators['engagement_plan']['id'].format(id) 
+                self.selenium.get_webelement(locator).send_keys(value)     
+            elif name == "Description":
+                id = "idDesc"
+                locator = npsp_lex_locators['engagement_plan']['id'].format(id)
+                self.selenium.get_webelement(locator).send_keys(value)  
+
+                
+    def enter_task_id_and_subject(self, id, value):
+        """Enter values into corresponding task subject fields based on last 2 digits of id"""
+        locator = npsp_lex_locators['engagement_plan']['input_box'].format(id) 
+        self.selenium.get_webelement(locator).send_keys(value)
+    
+    
+    def click_task_button(self, title):
+        if title=="Add Dependent Task":
+            id="btnAddDepTask"           
+            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            self.selenium.get_webelement(locator).click()    
+        elif title=="Add Task":
+            id="j_id0:theForm:btnAddTask"
+            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            self.selenium.get_webelement(locator).click() 
+        elif title=="Save":
+            id="j_id0:theForm:j_id5:j_id6:saveBTN"
+            locator = npsp_lex_locators['engagement_plan']['task_id'].format(id)
+            self.selenium.get_webelement(locator).click()
+    
+    def check_related_list_values(self,list_name,*args):
+        """Verifies the value of custom related list"""
+        for value in args:
+            locator = npsp_lex_locators['engagement_plan']['check_related_list_item'].format(list_name,value)
+            self.selenium.page_should_contain_element(locator)
+
+    def verify_eng_plan_exists(self,name, delete=None):  
+        """verifies that the Engagement Plans related list has a plan stored under it and clicks on dropdown if True is passed as 2nd argument"""
+        locator = npsp_lex_locators['engagement_plan']['check_eng_plan'].format(name)
+        self.selenium.page_should_contain_element(locator) 
+        plan=self.selenium.get_webelement(locator).text   
+        if delete == "True":
+               locator = npsp_lex_locators['engagement_plan']['dd'].format(name)
+               self.selenium.get_webelement(locator).click()      
+        return plan
+    
+    def check_activity_tasks(self, *args):
+        """verifies that the specified tasks are present under activity tab """
+        for value in args:
+            locator = npsp_lex_locators['engagement_plan']['tasks'].format(value)
+            self.selenium.page_should_contain_element(locator)
