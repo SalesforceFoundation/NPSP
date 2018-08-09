@@ -1213,12 +1213,11 @@
             var rowErrors = $scope.rowErrors[rowId];
 
             if (rowErrors && rowErrors.length > 0) {
-
                 iconContainer.style.display = 'block';
             }
             else {
-
                 iconContainer.style.display = 'none';
+                removeMessage();
             }
 
             Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
