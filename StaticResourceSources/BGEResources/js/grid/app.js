@@ -83,7 +83,6 @@
             $scope.tableHeight = window.innerHeight - 130;
 
             $scope.removeRowOnColumnAction = removeRowOnColumnAction;
-            //$scope.removeRowOnColumnAction = beforeRemoveRowHandler;
 
             var table = document.getElementById('my-hot-table');
 
@@ -111,16 +110,15 @@
                 fixedColumnsLeft: 3,
                 manualRowResize: false,
                 columns: getHotColumns(),
-                // contextMenu: {
-                //     items: {
-                //         remove_row: {
-                //             disabled: function (){
-                //                 return false
-                //             }
-                //         }
-                //     }
-                // },
-                contextMenu: ['remove_row'],
+                contextMenu: {
+                    items: {
+                        remove_row: {
+                            disabled: function (){
+                                return false
+                            }
+                        }
+                    }
+                },
                 manualColumnResize: true,
                 renderAllRows: false,
 
@@ -291,17 +289,6 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-
-
-            //return deleteRowConfirmationModal();
-
-            // if (!index && !amount && !visualRows) {
-            //     var row = hot.getSelected()[0];
-            //     index =  row;
-            //     visualRows = [row];
-            //     amount = 1;
-            // }
-
             var confirmDialog = confirm("Are you sure you want to delete the selected row(s)?");
             if(confirmDialog == true){
                 return deleteRow(index, amount, visualRows);
@@ -329,7 +316,7 @@
 
                 function deleteRowsGridHandler(result, event) {
 
-                    if (callback != 'undefined') {
+                    if (callback) {
                         callback();
                     }
                 };
@@ -1395,61 +1382,5 @@
             $('th').css('height', '40px');
             $('td').css('height', '30px')
         }
-
-        function deleteRowConfirmationModal() {
-
-            //var modal = "<div style='position:absolute; height:100px; width:200px; border:1px solid red;'></div>"; 
-
-            var modalContainer = document.createElement('div');
-            modalContainer.setAttribute('id', 'modalContainer');
-            modalContainer.setAttribute("style", "position:fixed; height:200px; width:500px; border: 1px solid blue;");
-            var body = document.getElementById('my-hot-table');
-            body.appendChild(modalContainer);
-
-            var modal_container2 = document.createElement('div');
-
-            var modal_section = document.createElement('section');
-            modal_section.setAttribute('role', 'dialog');
-            modal_section.setAttribute('class', 'slds-modal slds-fade-in-open');
-
-            var modal_section_container = document.createElement('div');
-            modal_section_container.setAttribute('class', 'slds-modal__container');
-
-            var modal_section_container_header = document.createElement('header');
-            modal_section_container_header.setAttribute('class', 'slds-modal__header');
-
-            var modal_section_container_header_button = document.createElement('button');
-            modal_section_container_header_button.setAttribute('class', 'slds-button slds-button_icon slds-modal__close slds-button_icon-inverse');
-
-            var modal_section_container_header_title = document.createElement('h2');
-            modal_section_container_header_title.setAttribute('class', 'slds-text-heading_medium slds-hyphenate');
-            modal_section_container_header_title.innerHTML = 'Warning';
-
-
-
-
-            return modalContainer;
-
-            // <div class="demo-only" style="height: 640px;">
-            //     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
-            //         <div class="slds-modal__container">
-            //         <header class="slds-modal__header">
-            //             <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
-            //             </button>
-            //             <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Warning</h2>
-            //         </header>
-            //         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-            //             <p>Do you really want to remove this row?</p>
-            //         </div>
-            //         <footer class="slds-modal__footer">
-            //             <button class="slds-button slds-button_neutral">Cancel</button>
-            //             <button class="slds-button slds-button_brand">Confirm</button>
-            //         </footer>
-            //         </div>
-            //     </section>
-            //     <div class="slds-backdrop slds-backdrop_open"></div>
-            // </div>
-        }
-
     });
 })();
