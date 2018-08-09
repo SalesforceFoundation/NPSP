@@ -52,6 +52,7 @@ class NPSP(object):
         xpath = npsp_lex_locators["mailing_address"].format(loc)
         field = self.selenium.get_webelement(xpath)
         field.send_keys(value)
+        time.sleep(1)
         
         
     def click_record_button(self, title):
@@ -182,15 +183,23 @@ class NPSP(object):
         locator=npsp_lex_locators['click_aff_id'].format(self.aff_id_text)
         self.selenium.get_webelement(locator).click()   
         
-    def confirm_status(self, field,status):
-        locator=npsp_lex_locators['check_status'].format(field,status)
-        verify_former=self.selenium.get_webelement(locator).text
-        return verify_former
+    def confirm_value(self, field,value,status):
+        locator=npsp_lex_locators['check_status'].format(field,value)
+        if status.upper()=="Y":
+            self.selenium.page_should_contain_element(locator)
+        elif status.upper()=="N":
+            self.selenium.page_should_not_contain_element(locator)
+        #verify_former=self.selenium.get_webelement(locator).text
+        #return verify_former
     
-    def verify_field_value(self, field,value):
+    def verify_field_value(self, field,value,status):
         locator=npsp_lex_locators['check_field'].format(field,value)
-        verify_former=self.selenium.get_webelement(locator).text
-        return verify_former
+        if status.upper()=="Y":
+            self.selenium.page_should_contain_element(locator)
+        elif status.upper()=="N":
+            self.selenium.page_should_not_contain_element(locator)
+#         verify_former=self.selenium.get_webelement(locator).text
+#         return verify_former
     
     def verify_record(self, name):
         """ Checks for the record in the object page and returns true if found else returns false
@@ -395,3 +404,88 @@ class NPSP(object):
         for value in args:
             locator = npsp_lex_locators['engagement_plan']['tasks'].format(value)
             self.selenium.page_should_contain_element(locator)
+
+    def enter_level_values(self, **kwargs):
+        """Enter values into corresponding fields in Levels page"""
+        for name, value in kwargs.items():
+            if name == "Level Name":
+                id = "fldName"
+                locator = npsp_lex_locators['levels']['id'].format(id)
+                self.selenium.set_focus_to_element(locator)  
+                self.selenium.get_webelement(locator).send_keys(value)      
+            elif name == "Minimum Amount":
+                id = "fldMinAmount"
+                locator = npsp_lex_locators['levels']['id'].format(id)
+                self.selenium.set_focus_to_element(locator) 
+                field=self.selenium.get_webelement(locator)
+                field.clear()
+                field.send_keys(value)  
+            elif name == "Maximum Amount":
+                id = "fldMaxAmount"
+                locator = npsp_lex_locators['levels']['id'].format(id)
+                self.selenium.set_focus_to_element(locator) 
+                field=self.selenium.get_webelement(locator)
+                field.clear()
+                field.send_keys(value)                    
+
+    def enter_level_dd_values(self, name,value):
+        """Enter values into corresponding fields in Levels page"""                 
+        if name == "Target":
+            id = "fldTarget"
+            locator = npsp_lex_locators['levels']['select'].format(id)
+            loc = self.selenium.get_webelement(locator)
+            self.selenium.set_focus_to_element(locator)       
+            self.selenium.select_from_list_by_label(loc,value)
+            time.sleep(2)
+        elif name == "Source Field":
+            id = "fldSourceField"
+            locator = npsp_lex_locators['levels']['select'].format(id)
+            loc = self.selenium.get_webelement(locator) 
+            self.selenium.set_focus_to_element(locator)      
+            self.selenium.select_from_list_by_label(loc,value) 
+            time.sleep(2) 
+        elif name == "Level Field":
+            id = "fldLevel"
+            locator = npsp_lex_locators['levels']['select'].format(id)
+            loc = self.selenium.get_webelement(locator) 
+            self.selenium.set_focus_to_element(locator)      
+            self.selenium.select_from_list_by_label(loc,value)
+            time.sleep(2)
+        elif name == "Previous Level Field":
+            id = "fldPreviousLevel"
+            locator = npsp_lex_locators['levels']['select'].format(id)
+            loc = self.selenium.get_webelement(locator) 
+            self.selenium.set_focus_to_element(locator)      
+            self.selenium.select_from_list_by_label(loc,value) 
+    
+    def click_level_button(self,title):   
+        if title == "Save":
+            id = "saveBTN"
+            locator = npsp_lex_locators['levels']['button'].format(id) 
+            self.selenium.get_webelement(locator).click()                
+            
+    def select_app_launcher_link(self,title):
+        locator = npsp_lex_locators['app_launcher']['select-option'].format(title) 
+        self.selenium.get_webelement(locator).click()
+        time.sleep(1)
+        
+    def click_on_first_record(self):  
+        """selects first record of the page"""
+        locator = npsp_lex_locators['select_one_record']
+        self.selenium.get_webelement(locator).click()
+        time.sleep(1)  
+        
+    def select_search(self):
+        """selects first record of the page"""
+        locator = npsp_lex_locators["click_search"]
+        loc = self.selenium.get_webelement(locator)
+        loc.send_keys(Keys.TAB+ Keys.RETURN)
+        time.sleep(1)  
+        
+    def enter_gau(self, value):
+        id = "lksrch"
+        locator = npsp_lex_locators["engagement_plan"]["task_id"].format(id)
+        loc = self.selenium.get_webelement(locator)
+        loc.send_keys(value)
+        self.selenium.get_webelement("//*[@title='Go!']").click()
+        time.sleep(1)

@@ -1,5 +1,8 @@
 npsp_lex_locators={
     'mailing_address': "//*[contains(@placeholder,'{}')]",
+    'app_launcher':{
+        'select-option':'//span/mark[text()="{}"]',
+    },
     'object_dd':"//h1[contains(@class,'slds-page-header__title')]/a/div[contains(@class,'triggerLinkTextAndIconWrapper')][.//lightning-primitive-icon]",
     "record": {
         'button': "//div[@class='actionsContainer']/button[@title='{}']",
@@ -15,7 +18,8 @@ npsp_lex_locators={
          },    
     },
     'object':{
-        'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']"
+        'radio_button':"//div[contains(@class,'changeRecordTypeRightColumn')]/div/label[@class='slds-radio']/div[.//span[text()='{}']]/preceding::div[1]/span[@class='slds-radio--faux']",
+        
     },
     'tab': "//div[@class='uiTabBar']/ul[@class='tabs__nav']/li[contains(@class,'uiTabItem')]/a[@class='tabHeader']/span[contains(text(), '{}')]",
     'desktop_rendered': 'css: div.desktop.container.oneOne.oneAppLayoutHost[data-aura-rendered-by]',
@@ -41,6 +45,8 @@ npsp_lex_locators={
     'header_field_value':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[text()="{}"]',
     'header_datepicker':'//li[contains(@class, "slds-page-header__detail")][.//p[contains(@class, "slds-text-heading--label")][@title="{}"]]//*[@class="uiOutputDate"]',
     'affiliated_contacts':'//div[@class = "forceRelatedListContainer"][.//a[contains(@class, "slds-card")]]//span[text() = "{}"]/ancestor::div[contains(@class, "slds-card")]/following-sibling::div[contains(@class, "slds-card")]//tbody//td/span[text()="{}"]/../following-sibling::td/span[text()="{}"]',
+    'select_one_record':"//tbody/tr[1]/th/span/a",
+    'click_search':'//*[@id="j_id0:theForm:j_id49:0:j_id51:util_inputfield:inputX"]',
     
     'detail_page': {
         'address':'//h3[contains(@class, "slds-section__title")][.//span[contains(text(),"Address")]]/../..//div[contains(@class, "test-id")]/span[text()= "{}"]/../following-sibling::div//a[@title = "{}"]/div[contains(@class, "slds")]',
@@ -75,6 +81,12 @@ npsp_lex_locators={
         'check_eng_plan':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a',
         'dd':'//h2/a/span[@title="{}"]//ancestor::div[@class = "slds-card__header slds-grid"]/following-sibling::div//tbody/tr/th/div/a/ancestor::th/following-sibling::td//lightning-primitive-icon',
         'tasks':'//div[@class="slds-section__content"]/ul/li//a[text()="{}"]',
+    },
+    'levels':{
+        'id':'//input[@id="j_id0:j_id4:{}"]',
+        'select':'//select[@id="j_id0:j_id4:{}"]',
+        'button':'//input[@id="j_id0:j_id4:j_id6:j_id7:{}"]',
+        
     }
 }
     
