@@ -51,6 +51,8 @@
     <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
 
     <!-- START MARKUP -->
+
+    <!-- Banner -->
     <header role="banner" class="header">
         <div class="slds-page-header">
             <div class="slds-grid">
@@ -79,116 +81,161 @@
         </div>
     </header>
 
-    <div aura:id="body" class="slds-tabs_card">
+    <div aura:id="body" class="slds-tabs_card slds-grid slds-grid--align-center">
+        <div class="slds-size_1-of-1 slds-large-size_3-of-5 slds-m-around--medium">
 
-        <div class="row slds-form slds-form_compound">
-
-            <div class="row slds-p-around_large">
-                <div class="slds-col slds-size_4-of-12">
-                    <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}" value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}"/>
-                </div>
-                <div class="slds-col slds-size_4-of-12 slds-p-top_small">
-                    <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}" value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"/>
-                </div>
-            </div>
-
-            <div class="row slds-grid slds-wrap slds-p-around_large">
-                <aura:if isTrue="{! !v.isReadOnly}">
-                    <div class="slds-col slds-size_3-of-12">
-                        <lightning:treeGrid
-                            aura:id="availableTemplateFields"
-                            columns="{!v.availableTemplateFields.columns}"
-                            data="{!v.availableTemplateFields.data}"
-                            selectedRows="{!v.availableTemplateFields.selectedRows}"
-                            keyField="id"
-                            onrowselection="{!c.selectAvailableTemplateFields}"
-                        />
-                    </div>
-
-                    <div class="slds-col slds-size_1-of-12">
-                        <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
-                            <div class="slds-m-bottom__xx-small">
-                                <lightning:buttonIcon iconName="utility:chevronright" alternativeText="{!$Label.c.bgeBatchTemplateAddFields}" onclick="{!c.updateToActive}"/>
-                            </div>
-                            <div class="slds-m-top_xx-small">
-                                <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="{!$Label.c.bgeBatchTemplateRemoveFields}" onclick="{!c.updateToAvailable}"/>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Title -->
+            <div class="slds-text-align--center slds-m-vertical--medium">
+                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
+                    <h2 class="slds-text-heading--medium">Template Overview</h2>
                 </aura:if>
-
-                <div class="slds-col slds-size_5-of-12">
-                    <lightning:treeGrid
-                        aura:id="activeTreeGrid"
-                        columns="{!v.activeTemplateFields.columns}"
-                        data="{!v.activeTemplateFields.data}"
-                        keyField="id"
-                        selectedRows="{!v.activeTemplateFields.selectedRows}"
-                        onrowselection="{!c.selectActiveTemplateFields}"
-                        hideCheckboxColumn="{!v.isReadOnly}"
-                    />
-                </div>
-
-                <aura:if isTrue="{! !v.isReadOnly}">
-                    <div class="slds-col slds-size_1-of-12">
-                        <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
-                            <div class="slds-m-bottom__xx-small">
-                                <lightning:buttonIcon iconName="utility:chevronup" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldUp}" onclick="{!c.moveFieldsUp}"/>
-                            </div>
-                            <div class="slds-m-top_xx-small">
-                                <lightning:buttonIcon iconName="utility:chevrondown" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldDown}" onclick="{!c.moveFieldsDown}"/>
-                            </div>
-                        </div>
-                    </div>
+                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '2' }">
+                    <h2 class="slds-text-heading--medium">Select Fields</h2>
                 </aura:if>
-
-            </div>
-
-            <div class="row slds-p-around_large">
-
-                <aura:if isTrue="{!v.isReadOnly}">
-
-                    <div class="slds-form-element">
-                        <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
-                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span>
-                    </div>
-                    <div class="slds-form-element">
-                        <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
-                        <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
-                    </div>
-
-                    <aura:set attribute="else">
-                        <div>
-                            <lightning:input aura:id="totalEntryCheckbox" type="checkbox" class="templateInputCheckbox"
-                                             label="{!v.templateMetadata.labels.totalEntryLabel}"
-                                             name="enableTotalEntry"
-                                             checked="{!v.templateInfo.enableTotalEntry}"
-                                             readonly="{!v.isReadOnly}"
-                                             variant="label-hidden"/>
-                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalEntryHelp}" fieldLabel="{!v.templateMetadata.labels.totalEntryLabel}"/>
-                        </div>
-                        <div>
-                            <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
-                                             label="{!v.templateMetadata.labels.totalMatchLabel}"
-                                             name="requireTotalMatch"
-                                             checked="{!v.templateInfo.requireTotalMatch}"
-                                             readonly="{!v.isReadOnly}"
-                                             variant="label-hidden"/>
-                            <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalMatchHelp}" fieldLabel="{!v.templateMetadata.labels.totalMatchLabel}"/>
-                        </div>
-                    </aura:set>
+                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
+                    <h2 class="slds-text-heading--medium">Set Field Options</h2>
                 </aura:if>
             </div>
 
-            <aura:if isTrue="{! !v.isReadOnly}">
+            <!--Progress Indicator-->
+            <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base" hasError="false" variant="base">
+                <lightning:progressStep label="Template Overview" value="1"/>
+                <lightning:progressStep label="Select Fields" value="2"/>
+                <lightning:progressStep label="Set Field Options" value="3"/>
+            </lightning:progressIndicator>
+
+            <div class="row slds-form slds-form_compound">
+
+                <!-- step 1: Template Overview -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
+                    <div class="row slds-p-around_large">
+                        <div class="slds-col slds-size_4-of-12">
+                            <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}" value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}"/>
+                        </div>
+                        <div class="slds-col slds-size_4-of-12 slds-p-top_small">
+                            <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}" value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"/>
+                        </div>
+
+                        <aura:if isTrue="{!v.isReadOnly}">
+
+                            <div class="slds-form-element">
+                                <ui:outputCheckbox value="{!v.templateInfo.enableTotalEntry}" class="slds-form-element__control"/>
+                                <span class="slds-form-element__label">{!v.templateMetadata.labels.totalEntryLabel}</span>
+                            </div>
+                            <div class="slds-form-element">
+                                <ui:outputCheckbox value="{!v.templateInfo.requireTotalMatch}" class="slds-form-element__control"/>
+                                <span class="slds-form-element__label">{!v.templateMetadata.labels.totalMatchLabel}</span>
+                            </div>
+
+                            <aura:set attribute="else">
+                                <div>
+                                    <lightning:input aura:id="totalEntryCheckbox" type="checkbox" class="templateInputCheckbox"
+                                                     label="{!v.templateMetadata.labels.totalEntryLabel}"
+                                                     name="enableTotalEntry"
+                                                     checked="{!v.templateInfo.enableTotalEntry}"
+                                                     readonly="{!v.isReadOnly}"
+                                                     variant="label-hidden"/>
+                                    <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalEntryHelp}" fieldLabel="{!v.templateMetadata.labels.totalEntryLabel}"/>
+                                </div>
+                                <div>
+                                    <lightning:input aura:id="totalMatchCheckbox" type="checkbox" class="templateInputCheckbox"
+                                                     label="{!v.templateMetadata.labels.totalMatchLabel}"
+                                                     name="requireTotalMatch"
+                                                     checked="{!v.templateInfo.requireTotalMatch}"
+                                                     readonly="{!v.isReadOnly}"
+                                                     variant="label-hidden"/>
+                                    <c:CRLP_Tooltip helpText="{!v.templateMetadata.labels.totalMatchHelp}" fieldLabel="{!v.templateMetadata.labels.totalMatchLabel}"/>
+                                </div>
+                            </aura:set>
+                        </aura:if>
+
+                        <lightning:dualListbox name="targetObjects"
+                                               label= "Select Target Objects"
+                                               sourceLabel="Available"
+                                               selectedLabel="Selected"
+                                               fieldLevelHelp="help goes here"
+                                               options="{!v.templateInfo.availableTargetObjects}"
+                                               onchange=""/>
+
+                    </div>
+                </aura:if>
+
+                <!-- step 2: Select Fields -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
+                    <div class="row slds-grid slds-wrap slds-p-around_large">
+                        <aura:if isTrue="{! !v.isReadOnly}">
+                            <div class="slds-col slds-size_3-of-12">
+                                <lightning:treeGrid
+                                        aura:id="availableTemplateFields"
+                                        columns="{!v.availableTemplateFields.columns}"
+                                        data="{!v.availableTemplateFields.data}"
+                                        selectedRows="{!v.availableTemplateFields.selectedRows}"
+                                        keyField="id"
+                                        onrowselection="{!c.selectAvailableTemplateFields}"
+                                />
+                            </div>
+
+                            <div class="slds-col slds-size_1-of-12">
+                                <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                                    <div class="slds-m-bottom__xx-small">
+                                        <lightning:buttonIcon iconName="utility:chevronright" alternativeText="{!$Label.c.bgeBatchTemplateAddFields}" onclick="{!c.updateToActive}"/>
+                                    </div>
+                                    <div class="slds-m-top_xx-small">
+                                        <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="{!$Label.c.bgeBatchTemplateRemoveFields}" onclick="{!c.updateToAvailable}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+
+                        <div class="slds-col slds-size_5-of-12">
+                            <lightning:treeGrid
+                                    aura:id="activeTreeGrid"
+                                    columns="{!v.activeTemplateFields.columns}"
+                                    data="{!v.activeTemplateFields.data}"
+                                    keyField="id"
+                                    selectedRows="{!v.activeTemplateFields.selectedRows}"
+                                    onrowselection="{!c.selectActiveTemplateFields}"
+                                    hideCheckboxColumn="{!v.isReadOnly}"
+                            />
+                        </div>
+
+                        <aura:if isTrue="{! !v.isReadOnly}">
+                            <div class="slds-col slds-size_1-of-12">
+                                <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
+                                    <div class="slds-m-bottom__xx-small">
+                                        <lightning:buttonIcon iconName="utility:chevronup" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldUp}" onclick="{!c.moveFieldsUp}"/>
+                                    </div>
+                                    <div class="slds-m-top_xx-small">
+                                        <lightning:buttonIcon iconName="utility:chevrondown" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldDown}" onclick="{!c.moveFieldsDown}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </aura:if>
+
+                    </div>
+                </aura:if>
+
+                <!-- step 3: Set Field Options -->
+                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
+                </aura:if>
+
+                <!-- Buttons! -->
                 <div class="row slds-p-around_large">
-                    <div class="slds-align_absolute-center">
-                        <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-                        <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+                    <div class="slds-grid slds-grid_align-end">
+                        <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
+                            <!-- TODO: label! -->
+                            <lightning:button variant="neutral" label="Back" onclick="{!c.back}" />
+                        </aura:if>
+                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
+                            <lightning:button variant="neutral" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                        </aura:if>
+                        <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
+                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+                        </aura:if>
                     </div>
                 </div>
-            </aura:if>
-
+            </div>
         </div>
     </div>
     <!-- END MARKUP -->

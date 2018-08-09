@@ -62,6 +62,24 @@
         model.save();
     },
 
+    /* ***************************************************************
+    * @Description. Moves to next wizard step
+    *****************************************************************/
+    next: function(component, event, helper) {
+        var step = component.get("v.templateMetadata.progressIndicatorStep");
+        var model = component.get('v.model');
+        model.getTemplateMetadata().stepUp(step);
+    },
+
+    /* ***************************************************************
+    * @Description. Moves to previous wizard step
+    *****************************************************************/
+    back: function(component, event, helper) {
+        var step = component.get("v.templateMetadata.progressIndicatorStep");
+        var model = component.get('v.model');
+        model.getTemplateMetadata().stepDown(step);
+    },
+
     /******************************** Template Fields Controller Functions *****************************/
 
 

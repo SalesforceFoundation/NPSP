@@ -22,14 +22,34 @@
 
                 component.set('v.templateInfo', templateInfoView);
             });
-            
+
+            // Subscribe to the model onFieldsUpdated event.
+            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
+                var templateInfoView = component.get('v.templateInfo');
+
+                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(objName) {
+
+                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
+
+                    templateInfoView.availableTargetObjects.push(
+                        {
+                            label: objLabel,
+                            value: objName
+                        }
+                    );
+                });
+
+                component.set('v.templateInfo', templateInfoView);
+            });
+
             //  module public functions and properties
             return {
                 name: '',
                 id: '',
                 description: '',
                 enableTotalEntry: false,
-                requireTotalMatch: false
+                requireTotalMatch: false,
+                availableTargetObjects: []
             };
         })(component, model);
     },
@@ -49,6 +69,7 @@
                 var templateMetadata = model.getTemplateMetadata();
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
+                templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
 
                 if (templateMetadataView.mode === 'view' && !component.get("v.isReadOnly")) {
                     component.set("v.isReadOnly", true);
@@ -67,7 +88,8 @@
             //  module public functions and properties
             return {
                 labels: {},
-                mode: ''
+                mode: '',
+                progressIndicatorStep: ''
             };
         })(component, model);
     },
@@ -728,6 +750,7 @@
 
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
+            var _onMetadataPendingChange = new Event(this);
 
             /* **********************************************************
              * @Description Loads the Info, and notify all the
@@ -746,6 +769,7 @@
                         this.mode = 'create';
                     }
                 }
+                this.progressIndicatorStep = '1';
                 this.onMetadataUpdated.notify();
             }
 
@@ -760,13 +784,42 @@
                 this.onMetadataUpdated.notify();
             }
 
+            /* **********************************************************
+             * @Description increments the step for the progressIndicator
+             * @param step - number of the current step
+             * @return void.
+             ************************************************************/
+            function stepUp(step) {
+                var stepNum = parseInt(step);
+                stepNum = stepNum + 1;
+                this.onMetadataPendingChange.notify();
+                this.progressIndicatorStep = stepNum.toString();
+                this.onMetadataUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description decrements the step for the progressIndicator
+             * @param step - number of the current step
+             * @return void.
+             ************************************************************/
+            function stepDown(step) {
+                var stepNum = parseInt(step);
+                stepNum = stepNum - 1;
+                this.progressIndicatorStep = stepNum.toString();
+                this.onMetadataUpdated.notify();
+            }
+
             // TemplateInfo module public functions and properties
             return {
                 labels: {},
                 mode: '',
+                progressIndicatorStep: '',
                 load: load,
                 setMode: setMode,
-                onMetadataUpdated: _onMetadataUpdated
+                stepUp: stepUp,
+                stepDown: stepDown,
+                onMetadataUpdated: _onMetadataUpdated,
+                onMetadataPendingChange: _onMetadataPendingChange
             }
         })(Event);
     },
