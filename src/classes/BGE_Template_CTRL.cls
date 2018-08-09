@@ -111,7 +111,8 @@ public with sharing class BGE_Template_CTRL {
                 } else {
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
                 }
-                fld.name = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                fld.name = dfr.getName();
                 fields.add(fld);
             }
         }
@@ -183,6 +184,7 @@ public with sharing class BGE_Template_CTRL {
     * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class Field {
+        @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
         @AuraEnabled public Boolean isActive;
