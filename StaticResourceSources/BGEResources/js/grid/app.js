@@ -83,6 +83,7 @@
             $scope.tableHeight = window.innerHeight - 130;
 
             $scope.removeRowOnColumnAction = removeRowOnColumnAction;
+            //$scope.removeRowOnColumnAction = beforeRemoveRowHandler;
 
             var table = document.getElementById('my-hot-table');
 
@@ -292,16 +293,21 @@
         function beforeRemoveRowHandler(index, amount, visualRows) {
 
 
-            return deleteRowConfirmationModal();
+            //return deleteRowConfirmationModal();
 
-
-
-            // var confirmDialog = confirm("Are you sure you want to delete the selected row(s)?");
-            // if(confirmDialog == true){
-            //     return deleteRow(index, amount, visualRows);
-            // } else {
-            //     return false
+            // if (!index && !amount && !visualRows) {
+            //     var row = hot.getSelected()[0];
+            //     index =  row;
+            //     visualRows = [row];
+            //     amount = 1;
             // }
+
+            var confirmDialog = confirm("Are you sure you want to delete the selected row(s)?");
+            if(confirmDialog == true){
+                return deleteRow(index, amount, visualRows);
+            } else {
+                return false
+            }
         }
 
         function deleteRow(index, amount, visualRows, callback) {
@@ -323,7 +329,7 @@
 
                 function deleteRowsGridHandler(result, event) {
 
-                    if (callback) {
+                    if (callback != 'undefined') {
                         callback();
                     }
                 };
