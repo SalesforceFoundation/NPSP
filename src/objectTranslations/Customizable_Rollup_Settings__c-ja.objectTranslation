@@ -16,6 +16,11 @@
         <name>Customizable_Rollups_Enabled__c</name>
     </fields>
     <fields>
+        <help><!-- Check this box to prevent hard credit and soft credit rollups on Accounts and Contacts from only processing Account and Contact records that have existing related Opportunity or Opportunity Contact Role records. --></help>
+        <label><!-- Disable Related Records Filter --></label>
+        <name>Disable_Related_Records_Filter__c</name>
+    </fields>
+    <fields>
         <help><!-- Number of records per batch to process when recalculating donor rollups to the Account object. --></help>
         <label><!-- Account Hard Credit Batch Size --></label>
         <name>Rollups_Account_Batch_Size__c</name>

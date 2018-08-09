@@ -63,12 +63,8 @@ public class CRLP_Account_BATCH extends CRLP_Batch_Base_NonSkew implements Datab
         String className = CRLP_Account_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_Account_BATCH accountHardCreditBatch = new CRLP_Account_BATCH(new List<Id>());
-                accountHardCreditBatch.setIncrementalRollup(new CRLP_IncrementalBatch.AccountHardCredit());
-                database.executeBatch(
-                    accountHardCreditBatch, 
-                    UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Rollups_Account_Batch_Size__c.intValue()
-                );
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
+                        CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
                 logDuplicateBatchError(className);
             }

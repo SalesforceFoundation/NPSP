@@ -63,12 +63,8 @@ public class CRLP_Contact_SoftCredit_BATCH extends CRLP_Batch_Base_NonSkew imple
         String className = CRLP_Contact_SoftCredit_BATCH.class.getName();
         if (CRLP_Rollup_SVC.isCustomizableRollupEngineEnabled) {
             if (!UTIL_MasterSchedulableHelper.hasRunningJob(className)) {
-                CRLP_Contact_SoftCredit_BATCH contactSoftCreditBatch = new CRLP_Contact_SoftCredit_BATCH(new List<Id>());
-                contactSoftCreditBatch.setIncrementalRollup(new CRLP_IncrementalBatch.ContactSoftCredit());
-                database.executeBatch(
-                    contactSoftCreditBatch, 
-                    UTIL_CustomSettingsFacade.getCustomizableRollupSettings().Rollups_Contact_Soft_Credit_Batch_Size__c.intValue()
-                );
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode);
             } else {
                 logDuplicateBatchError(className);
             }
