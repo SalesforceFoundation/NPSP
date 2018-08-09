@@ -3,50 +3,12 @@ public with sharing class BGE_HandsOnGridSelector {
     public static final Integer SQL_MINOR_LIMIT = 1;
     public static final Integer SQL_MAJOR_LIMIT = 10000;
 
-    //public Map<Id, Batch_Template_Field__c> getTemplateFieldsByTemplateId(Id recordId) {
     public List<Object> getTemplateFieldsByTemplateId(Id recordId) {
 
         String activeFields = [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId][0].Active_Fields__c;
-        System.debug('activeFields ==>' + activeFields);
-        
-        /*
-        Map<String, Object> deserialized = (Map<String, Object>)JSON.deserializeUntyped(activeFields);
-        List<Map<String, Object>> result = new List<Map<String, Object>>();
-        for (Object instance : (List<Object>)deserialized.get('Active_Fields__c')){
-            result.add((Map<String, Object>)instance);
-            System.debug('result ==>' + result);
-        }
-        */
-        
-        //Map<String,Object> result = new Map<String, Object>();
         
         List<Object> result = (List<Object>)JSON.deserializeUntyped(activeFields);
-        /*
-        for(Object fld : fieldList){    
-            Map<String,Object> data = (Map<String,Object>)fld;
-            
-            //Magic!
-            system.debug(data.get('name'));
-        }
-		*/	
-        
-        
-        
-		//Map<String, String> templateFields = (Map<String, String>)JSON.deserialize(activeFields, Map<String,String>.class);
-		//List<Object> result = (List<Object>)JSON.deserializeUntyped(activeFields);
-        
-
-        /*                         
-        Map<Id, Batch_Template_Field__c> result = new Map<Id, Batch_Template_Field__c>([SELECT
-                                                                                            Name,
-                                                                                            Order__c,
-                                                                                            Read_Only__c,
-                                                                                            Required__c
-                                                                                        FROM Batch_Template_Field__c
-                                                                                        WHERE Batch_Template__c =: recordId
-                                                                                        ORDER BY Order__c ASC
-                                                                                        LIMIT :SQL_MAJOR_LIMIT]);
-		*/        
+                
         return result;
     }
 
