@@ -25,8 +25,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     // TODO -- Add support for verifying that dupe OCR's for Soft Credit Contact Roles are not duped in results
 
-    // Use this rate when testing in a multicurrency org
-    private static final Double CURR_EXCHANGE_RATE = 123.11;
+    // When testing in a multicurrency org, set up CAD with this rate: 1.2311
+    private static final Double CURR_EXCHANGE_RATE = 1.2311;
 
     private static final String ACCOUNT_NAME_RD = 'CRLP TEST RD ACCOUNT 3';
     private static final String ACCOUNT_NAME_ORG = 'CRLP TEST ORG ACCOUNT 4';
@@ -41,8 +41,9 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final Decimal ORG_DONATION_AMT = 5000;
     private static final Decimal BASE_AMOUNT_USD = 100;
     private static final Decimal RD_AMOUNT_USD = 150;
-    private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
-    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = OPPORTUNITY_AMOUNT/2;
+    private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? BASE_AMOUNT_USD*CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
+    private static final Decimal ACCOUNT_SOFT_CREDIT_BASE_AMOUNT = BASE_AMOUNT_USD/2;
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_BASE_AMOUNT*CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_BASE_AMOUNT);
     private static final Integer OPP_COUNT_PER_ACCT = 500;
     private static final Integer CLOSED_OPP_COUNT_PER_ACCT = 450;
 
@@ -212,8 +213,8 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
             } else if (a.Name == ACCOUNT_NAME_ASC) {
                 // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
                 if (cs.Customizable_Rollups_Enabled__c == true) {
-                    assertValue((ACCOUNT_SOFT_CREDIT_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) + 10 - ACCOUNT_SOFT_CREDIT_AMOUNT, (Double) a.get('TEST_Acc_Soft_Credit_Total__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Total__c should be');
-                    assertValue(ACCOUNT_SOFT_CREDIT_AMOUNT + 10, (Double) a.get('TEST_Acc_Soft_Credit_Largest_Amt__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Largest_Amt__c should be');
+                    assertValue((ACCOUNT_SOFT_CREDIT_BASE_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) , (Double) a.get('TEST_Acc_Soft_Credit_Total__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Total__c should be');
+                    assertValue(ACCOUNT_SOFT_CREDIT_BASE_AMOUNT * 2, (Double) a.get('TEST_Acc_Soft_Credit_Largest_Amt__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Largest_Amt__c should be');
                 }
 
             } else if (a.Id != orgAcct.Id) {
@@ -585,7 +586,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
         accSCs = [SELECT Id, Amount__c FROM Account_Soft_Credit__c WHERE Account__r.Name = :ACCOUNT_NAME_ASC];
         //give one AccSC a larger amount in order to validate a LARGEST rollup
-        accSCs[0].Amount__c += 10;
+        accSCs[0].Amount__c = accSCs[0].Amount__c*2;
         //give one AccSC a different role in order to validate filter group exclusion
         accSCs[1].Role__c = ACCOUNT_SOFT_CREDIT_ROLE_B;
         update accSCs;
