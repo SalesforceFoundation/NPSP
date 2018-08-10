@@ -1305,7 +1305,7 @@ ISBLANK(npe03__Recurring_Donation__c),
         <fullName>Recurring_Donation_Installment_Number__c</fullName>
         <description>The installment number of this Opportunity's Recurring Donation schedule.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The installment number of this opportunity&apos;s recurring donation schedule.</inlineHelpText>
+        <inlineHelpText>The installment number of this Opportunity's Recurring Donation schedule.</inlineHelpText>
         <label>Recurring Donation Installment Number</label>
         <precision>18</precision>
         <required>false</required>
