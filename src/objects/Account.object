@@ -856,7 +856,7 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Administrator_Name__c</fullName>
-        <description>The name of the company&apos;s Matching Gift administrator.</description>
+        <description>The name of the company's Matching Gift administrator.</description>
         <externalId>false</externalId>
         <inlineHelpText>The name of the company's Matching Gift administrator.</inlineHelpText>
         <label>Matching Gift Administrator Name</label>
@@ -904,7 +904,7 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Comments__c</fullName>
-        <description>Additional notes about the company&apos;s Matching Gift program.</description>
+        <description>Additional notes about the company's Matching Gift program.</description>
         <externalId>false</externalId>
         <inlineHelpText>Additional notes about the company's Matching Gift program.</inlineHelpText>
         <label>Matching Gift Comments</label>
@@ -925,7 +925,7 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Email__c</fullName>
-        <description>Email of the company&apos;s Matching Gift administrator.</description>
+        <description>Email of the company's Matching Gift administrator.</description>
         <externalId>false</externalId>
         <inlineHelpText>Email of the company's Matching Gift administrator.</inlineHelpText>
         <label>Matching Gift Email</label>
