@@ -99,9 +99,9 @@
     </fields>
     <fields>
         <fullName>Object__c</fullName>
-        <description>The name of the object the class should act on, for example, Account, Contact, Opportunity.</description>
+        <description>The name of the object the class should act on, for example, Account, Contact, or Opportunity.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The name of the object the class should act on, for example, Account, Contact, Opportunity.</inlineHelpText>
+        <inlineHelpText>The name of the object the class should act on, for example, Account, Contact, or Opportunity.</inlineHelpText>
         <label>Object</label>
         <length>255</length>
         <required>true</required>
