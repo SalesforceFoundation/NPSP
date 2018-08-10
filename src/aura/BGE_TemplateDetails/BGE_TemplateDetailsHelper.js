@@ -31,7 +31,7 @@
 
                     var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
 
-                    templateInfoView.availableTargetObjects.push(
+                    templateInfoView.availableSObjects.push(
                         {
                             label: objLabel,
                             value: objName
@@ -49,7 +49,7 @@
                 description: '',
                 enableTotalEntry: false,
                 requireTotalMatch: false,
-                availableTargetObjects: []
+                availableSObjects: []
             };
         })(component, model);
     },
@@ -69,7 +69,21 @@
                 var templateMetadata = model.getTemplateMetadata();
                 templateMetadataView.labels = templateMetadata.labels;
                 templateMetadataView.mode = templateMetadata.mode;
-                templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
+                templateMetadataView.hasError = templateMetadata.hasError;
+                templateMetadataView.errorMessage = templateMetadata.errorMessage;
+
+                if (!templateMetadataView.hasError) {
+                    templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
+                } else {
+                    component.find('notifLib').showNotice({
+                        "variant": "error",
+                        "header": "Something has gone wrong!",
+                        "message": templateMetadataView.errorMessage,
+                        closeCallback: function() {
+                            //callback action here
+                        }
+                    });
+                }
 
                 if (templateMetadataView.mode === 'view' && !component.get("v.isReadOnly")) {
                     component.set("v.isReadOnly", true);
@@ -89,7 +103,9 @@
             return {
                 labels: {},
                 mode: '',
-                progressIndicatorStep: ''
+                progressIndicatorStep: '',
+                hasError: false,
+                errorMessage: ''
             };
         })(component, model);
     },
@@ -431,6 +447,14 @@
                 this.requireTotalMatch = info.requireTotalMatch;
                 this.onInfoUpdated.notify();
             }
+
+            /* **********************************************************
+             * @Description Validates the required templateInfo.
+             * @return Boolean validity.
+             ************************************************************/
+            function isValid() {
+                return this.name && this.description
+            }
             
             // TemplateInfo module public functions and properties
             return {
@@ -440,6 +464,7 @@
                 enableTotalEntry: false,
                 requireTotalMatch: false,
                 load: load,
+                isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
             }
         })(Event);
@@ -454,6 +479,7 @@
         
 		return (function (Event) {
             var _allFields = [];
+            var _allSObjects = []
             var _onFieldsUpdated = new Event(this);
 
             /* ******************PUBLIC FUNCTIONS*************************/
@@ -506,6 +532,23 @@
                 });
                 return _availableFields;
             }
+/*            /!* **********************************************************
+             * @Description Gets the available fields.
+             * @return List of inactive fields.
+             ************************************************************!/
+            function getAvailableSObjects() {
+                Object.keys(getAvailablesBySObject()).forEach(function(objName) {
+                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
+
+                    _allSObjects.push(
+                        {
+                            label: objLabel,
+                            value: objName,
+                            selected: true
+                        }
+                    );
+                });
+            }*/
 
             /* **********************************************************
              * @Description Gets the available fields grouped by SObject.
@@ -750,7 +793,6 @@
 
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
-            var _onMetadataPendingChange = new Event(this);
 
             /* **********************************************************
              * @Description Loads the Info, and notify all the
@@ -785,14 +827,26 @@
             }
 
             /* **********************************************************
+             * @Description sets error state and message
+             * @param hasError - Boolean indicating error state.
+             * @param message - String for the error message
+             * @return void.
+             ************************************************************/
+            function setError(hasError, message) {
+                this.hasError = hasError;
+                this.errorMessage = message;
+                this.onMetadataUpdated.notify();
+            }
+
+            /* **********************************************************
              * @Description increments the step for the progressIndicator
              * @param step - number of the current step
              * @return void.
              ************************************************************/
             function stepUp(step) {
+                this.setError(false, '');
                 var stepNum = parseInt(step);
                 stepNum = stepNum + 1;
-                this.onMetadataPendingChange.notify();
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
@@ -814,12 +868,14 @@
                 labels: {},
                 mode: '',
                 progressIndicatorStep: '',
+                hasError: false,
+                errorMessage: '',
                 load: load,
                 setMode: setMode,
+                setError: setError,
                 stepUp: stepUp,
                 stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated,
-                onMetadataPendingChange: _onMetadataPendingChange
+                onMetadataUpdated: _onMetadataUpdated
             }
         })(Event);
     },

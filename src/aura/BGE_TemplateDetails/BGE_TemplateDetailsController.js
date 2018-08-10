@@ -66,9 +66,18 @@
     * @Description. Moves to next wizard step
     *****************************************************************/
     next: function(component, event, helper) {
-        var step = component.get("v.templateMetadata.progressIndicatorStep");
         var model = component.get('v.model');
-        model.getTemplateMetadata().stepUp(step);
+        var step = component.get("v.templateMetadata.progressIndicatorStep");
+
+        if (step === '1') {
+            var templateInfoData = component.get("v.templateInfo");
+            model.getTemplateInfo().load(templateInfoData);
+            if (model.getTemplateInfo().isValid()) {
+                model.getTemplateMetadata().stepUp(step);
+            } else {
+                model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
+            }
+        }
     },
 
     /* ***************************************************************
