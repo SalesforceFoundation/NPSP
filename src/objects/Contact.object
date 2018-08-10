@@ -1670,7 +1670,8 @@
         <fullName>Last_Soft_Credit_Amount__c</fullName>
         <description>The amount of this Contact's most recent soft credit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The amount ofThe number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.ision>18</precision>
+        <inlineHelpText>The amount of this Contact's most recent soft credit.</inlineHelpText>
+        <precision>18</precision>
         <required>false</required>
         <scale>2</scale>
         <trackFeedHistory>false</trackFeedHistory>
