@@ -66,6 +66,8 @@
     * @Description. Moves to next wizard step
     *****************************************************************/
     next: function(component, event, helper) {
+        console.log('in next');
+        console.log(component.get("v.availableTemplateFields.Contact1.values"));
         var model = component.get('v.model');
         var step = component.get("v.templateMetadata.progressIndicatorStep");
 
@@ -77,6 +79,9 @@
             } else {
                 model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
             }
+        } else if (step === '2') {
+            model.getTemplateFields().updateActives();
+            model.getTemplateMetadata().stepUp(step);
         }
     },
 
@@ -134,23 +139,5 @@
         });
         var model = component.get('v.model');
         model.getTemplateFields().selectActives(selectedFields);
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected available fields in the 
-     * Template Fields Model to active.
-     *****************************************************************/
-    updateToActive: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().updateSelectedToActive();
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
-     *****************************************************************/
-    updateToAvailable: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().updateSelectedToAvailable();
     }
 });

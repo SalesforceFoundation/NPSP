@@ -1,0 +1,20 @@
+<aura:component>
+    <aura:attribute name="title" type="String" access="public"/>
+    <aura:attribute name="expanded" type="Boolean" access="public" default="false"/>
+
+    <div aura:id="section" class="{!v.expanded ? 'slds-section slds-is-open' : 'slds-section'}">
+        <div class="slds-section__title" onclick="{!c.toggle}">
+            <button aria-controls="expando-unique-id" aria-expanded="{!v.expanded}"
+                    class="slds-button slds-section__title-action">
+                <lightning:icon iconName="utility:switch"
+                                alternativeText="Switch"
+                                size="xx-small"
+                                class="{!v.expanded ? '' : 'rotate'}"/>
+                <span class="slds-truncate slds-p-left_xx-small" title="Section Title">{!v.title}</span>
+            </button>
+        </div>
+        <div aria-hidden="{!not(v.expanded)}" class="slds-section__content" id="expando-unique-id">
+            {!v.body}
+        </div>
+    </div>
+</aura:component>

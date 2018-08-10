@@ -129,21 +129,35 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var availableTemplateFields = component.get('v.availableTemplateFields');
-                availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailablesBySObject());
+                //availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailablesBySObject());
                 availableTemplateFields.selectedRows = [];
 
-                availableTemplateFields.data.forEach(function(fieldGroup) {
-                    if (fieldGroup.selected) {
-                        availableTemplateFields.selectedRows.push(fieldGroup.id);
-                    }
-                    if (fieldGroup._children) {
-                        fieldGroup._children.forEach(function(currentField) {
-                            if (currentField.selected) {
-                                availableTemplateFields.selectedRows.push(currentField.id);
+                var availableFieldsBySObject = model.getTemplateFields().getAvailablesBySObject();
+
+                Object.keys(availableFieldsBySObject).forEach(function(sObjectName) {
+                    availableTemplateFields[sObjectName] = {};
+                    availableTemplateFields[sObjectName].options = [];
+                    availableFieldsBySObject[sObjectName].forEach(function(fld) {
+                        availableTemplateFields[sObjectName].options.push(
+                            {
+                                label: fld.label,
+                                value: sObjectName + ' ' + fld.name
                             }
-                        });
-                    }  
+                        )
+                    });
                 });
+
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
+
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    availableTemplateFields[sObjectName] = {};
+                    availableTemplateFields[sObjectName].options = [];
+                    availableFieldsBySObject[sObjectName].forEach(function(fld) {
+                        availableTemplateFields[sObjectName].values.push(fld.name);
+                    });
+                });
+
+                console.log(JSON.stringify(availableTemplateFields.Contact1.options));
 
                 component.set('v.availableTemplateFields', availableTemplateFields);
             });

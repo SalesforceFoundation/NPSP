@@ -155,7 +155,7 @@
                             </aura:if>
                         </div>
 
-                        <div class="slds-p-top_large">
+                        <!--<div class="slds-p-top_large">
                             <lightning:dualListbox name="targetObjects"
                                                    label="Select Target Objects"
                                                    sourceLabel="Available"
@@ -163,15 +163,15 @@
                                                    fieldLevelHelp="help goes here"
 \                                                  options="{!v.templateInfo.availableSObjects}"
                                                    onchange=""/>
-                            <!--<lightning:dualListbox name="targetObjects"
+                            &lt;!&ndash;<lightning:dualListbox name="targetObjects"
                                                    label="Select Target Objects"
                                                    sourceLabel="Available"
                                                    selectedLabel="Selected"
                                                    fieldLevelHelp="help goes here"
                                                    options="{!v.availableTemplateFields.availableSObjects}"
                                                    values="{!v.availableTemplateFields.activeSObjects}"
-                                                   onchange=""/>-->
-                        </div>
+                                                   onchange=""/>&ndash;&gt;
+                        </div>-->
 
                     </div>
                 </aura:if>
@@ -179,7 +179,70 @@
 
                 <!-- Step 2: Select Fields -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
-                    <div class="row slds-grid slds-wrap slds-p-around_large">
+
+                    <div class="slds-grid slds-grid--align-center">
+                        <div class="slds-size_1-of-1 slds-m-around--medium">
+                            <h1 class="slds-text-heading--small slds-m-bottom--small">Select Fields</h1>
+                            <div class="slds-text-body--regular slds-m-vertical--medium">Choose the fields to include in this Batch Gift Entry
+                                Template. Once you've moved fields to the selected list, you can use the up/down arrows to change the order
+                                in which they will appear as columns in the grid.
+                            </div>
+
+                            <!-- Contact 1 -->
+                            <c:sldsExpandableSection title="Contact 1" expanded="true">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                    <div class="slds-col slds-size_4-of-6">
+                                        <lightning:dualListbox name="multipleOptions"
+                                                               label="Fields"
+                                                               sourceLabel="Available"
+                                                               selectedLabel="Selected"
+                                                               options="{!v.availableTemplateFields.Contact1.options}"
+                                                               value="{!v.availableTemplateFields.Contact1.values}"
+                                        />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                </div>
+                            </c:sldsExpandableSection>
+
+                            <!-- Household -->
+                            <c:sldsExpandableSection title="Household" expanded="false">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                    <div class="slds-col slds-size_4-of-6">
+                                        <lightning:dualListbox name="multipleOptions"
+                                                               label="Fields"
+                                                               sourceLabel="Available"
+                                                               selectedLabel="Selected"
+                                                               options="{!v.availableTemplateFields.Household.options}"
+                                                               value="{!v.availableTemplateFields.Household.values}"
+                                        />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                </div>
+                            </c:sldsExpandableSection>
+
+                            <!-- Opportunity -->
+                            <c:sldsExpandableSection title="Opportunity" expanded="false">
+                                <div class="slds-grid">
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                    <div class="slds-col slds-size_4-of-6">
+                                        <lightning:dualListbox name="multipleOptions"
+                                                               label="Fields"
+                                                               sourceLabel="Available"
+                                                               selectedLabel="Selected"
+                                                               options="{!v.availableTemplateFields.Opportunity.options}"
+                                                               value="{!v.availableTemplateFields.Opportunity.values}"
+                                        />
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-6"></div>
+                                </div>
+                            </c:sldsExpandableSection>
+
+                        </div>
+                    </div>
+
+                    <!--<div class="row slds-grid slds-wrap slds-p-around_large">
                         <aura:if isTrue="{! !v.isReadOnly}">
                             <div class="slds-col slds-size_3-of-12">
                                 <lightning:treeGrid
@@ -229,12 +292,13 @@
                             </div>
                         </aura:if>
 
-                    </div>
+                    </div>-->
                 </aura:if>
                 <!--End Step 2-->
 
                 <!-- Step 3: Set Field Options -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
+
                 </aura:if>
                 <!--End Step 3-->
 
