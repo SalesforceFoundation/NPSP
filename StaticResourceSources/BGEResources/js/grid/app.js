@@ -172,7 +172,6 @@
         }
 
         function removeRowOnColumnAction() {
-
             var row = hot.getSelected()[0];
 
             hot.alter('remove_row', row);
@@ -290,26 +289,11 @@
         }
 
         function beforeRemoveRowHandler(index, amount, visualRows) {
-            deleteRow(index, amount, visualRows);
-        }
-
-        function modifyColWidthHandler(width, col) {
-
-            if(col === 0){
-
-                return 5;
-            }
-            else if (col === 1) {
-
-                return 40;
-            }
-            else if (col === 2) {
-
-                return 70;
-            }
-            else {
-
-                return width;
+            var confirmDialog = confirm("Are you sure you want to delete the selected row(s)?");
+            if(confirmDialog == true){
+                return deleteRow(index, amount, visualRows);
+            } else {
+                return false
             }
         }
 
@@ -341,6 +325,26 @@
 
         function afterRemoveRowHandler(index, amount) {
             updateSummaryData();
+        }
+
+        function modifyColWidthHandler(width, col) {
+
+            if(col === 0){
+
+                return 5;
+            }
+            else if (col === 1) {
+
+                return 40;
+            }
+            else if (col === 2) {
+
+                return 70;
+            }
+            else {
+
+                return width;
+            }
         }
 
         function beforeChangeHandler(changes, source) {
@@ -1377,6 +1381,5 @@
             $('th').css('height', '40px');
             $('td').css('height', '30px')
         }
-
     });
 })();
