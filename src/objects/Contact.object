@@ -1671,6 +1671,7 @@
         <description>The amount of this Contact's most recent soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of this Contact's most recent soft credit.</inlineHelpText>
+        <label>Last Soft Credit Amount</label>
         <precision>18</precision>
         <required>false</required>
         <scale>2</scale>
