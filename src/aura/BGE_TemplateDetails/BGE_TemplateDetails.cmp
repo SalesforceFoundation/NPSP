@@ -70,7 +70,8 @@
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
                     <aura:if isTrue="{!v.templateMetadata.mode == 'view'}">
                         <lightning:buttonGroup>
-                            <lightning:button label="Edit" onclick="{!c.changeModeToEdit}"/>
+                            <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
+                            <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
                         </lightning:buttonGroup>
                     </aura:if>
                 </div>

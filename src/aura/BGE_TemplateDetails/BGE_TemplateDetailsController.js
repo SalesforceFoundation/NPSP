@@ -25,10 +25,23 @@
     },
 
     /* ***************************************************************
-     * @Description. Cancels edit or creation of the template.
+     * @Description. Cancels creation or view of the template by
+     * navigating to object home. Cancels edit by querying model data.
      *****************************************************************/
     cancel: function(component, event, helper) {
-
+        var model = component.get('v.model');
+        var mode = component.get("v.templateMetadata.mode");
+        if (mode === 'create' || mode === 'view') {
+            //navigate to record home
+            var homeEvent = $A.get("e.force:navigateToObjectHome");
+            homeEvent.setParams({
+                "scope": component.get("v.templateMetadata.labels.batchTemplateObject")
+            });
+            homeEvent.fire();
+        } else if (mode === 'edit') {
+            model.getTemplateMetadata().setMode('view');
+            model.init(component);
+        }
     },
 
     /* ***************************************************************
