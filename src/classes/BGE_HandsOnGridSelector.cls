@@ -3,17 +3,12 @@ public with sharing class BGE_HandsOnGridSelector {
     public static final Integer SQL_MINOR_LIMIT = 1;
     public static final Integer SQL_MAJOR_LIMIT = 10000;
 
-    public Map<Id, Batch_Template_Field__c> getTemplateFieldsByTemplateId(Id recordId) {
+    public List<Object> getTemplateFieldsByTemplateId(Id recordId) {
 
-        Map<Id, Batch_Template_Field__c> result = new Map<Id, Batch_Template_Field__c>([SELECT
-                                                                                            Name,
-                                                                                            Order__c,
-                                                                                            Read_Only__c,
-                                                                                            Required__c
-                                                                                        FROM Batch_Template_Field__c
-                                                                                        WHERE Batch_Template__c =: recordId
-                                                                                        ORDER BY Order__c ASC
-                                                                                        LIMIT :SQL_MAJOR_LIMIT]);
+        String activeFields = [SELECT Active_Fields__c FROM Batch_Template__c WHERE Id =: recordId][0].Active_Fields__c;
+        
+        List<Object> result = (List<Object>)JSON.deserializeUntyped(activeFields);
+                
         return result;
     }
 
