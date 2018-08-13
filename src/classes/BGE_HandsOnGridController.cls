@@ -113,7 +113,7 @@ global class BGE_HandsOnGridController {
                 }
                 else if ((new String[] {'EMAIL'}).contains(type)) {
 
-                    String email = (String) cellData.get('newValue');
+                    String email = String.valueOf(cellData.get('newValue'));
 
                     if (isEmailValid(email)) {
                         dataImport.put((String) cellData.get('field'), cellData.get('newValue'));
