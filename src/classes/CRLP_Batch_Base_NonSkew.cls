@@ -96,11 +96,9 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             String query = CRLP_Query_SEL.buildObjectQueryForRollup(this.summaryObjectType);
 
             // Fields in the fieldsToCheckForNonZero[] list must always be in the Contact query
-            if (this.summaryObjectType == Contact.SObjectType) {
-                for (String f : fieldsToCheckForNonZero) {
-                    if (!query.containsIgnoreCase(f)) {
-                        query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
-                    }
+            for (String f : fieldsToCheckForNonZero) {
+                if (!query.containsIgnoreCase(f)) {
+                    query = query.split(' FROM ')[0] + ', ' + f + ' FROM ' + query.split(' FROM ')[1];
                 }
             }
 
@@ -118,7 +116,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
 
                 Customizable_Rollup_Settings__c customizableRollupSettings = UTIL_CustomSettingsFacade.getCustomizableRollupSettings();
 
-                if (!Test.isRunningTest() || customizableRollupSettings.Disable_Related_Records_Filter__c == true) {
+                // Only use the related records filter if not disabled in settings and not running unit tests
+                if (customizableRollupSettings.Disable_Related_Records_Filter__c == false && !Test.isRunningTest()) {
                     if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                         whereClauses.add('Id IN (SELECT AccountId FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {

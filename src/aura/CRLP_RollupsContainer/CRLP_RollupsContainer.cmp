@@ -59,9 +59,8 @@
     <aura:attribute name="lastActiveRecordId" type="Id" description="ID of the previous record to save for return."/>
     <aura:attribute name="width" type="Integer" access="private" default="12" description="Size of the current container width."/>
     <aura:attribute name="sortedBy" type="String" access="private" description="The field name that the table is sorted by."/>
-    <aura:attribute name="sortedDirection" type="String" access="private" description="Sorted direction, either asc or desc."/>
-    <aura:attribute name="notificationClasses" type="String" description="Controls whether notification message is displayed"
-                    access="private" default="slds-hide"/>
+    <aura:attribute name="sortedDirection" type="String" default="asc" access="private" description="Sorted direction, either asc or desc."/>
+    <aura:attribute name="toastHideClass" type="String" description="Controls whether toast is displayed" access="private" default="slds-hide"/>
     <aura:attribute name="notificationText" type="Map" description="Map of title and message to display in the toast" access="private"/>
     <aura:attribute name="toastStatus" type="String" access="private" default="success"
                     description="Controls the color and icon of the toast. Options are info, success, error or warning."/>
@@ -82,7 +81,7 @@
 
         <!--START TOAST-->
         <div class="slds-notify_container slds-float_left">
-            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.notificationClasses}"
+            <div class="{! 'slds-notify slds-notify_toast slds-theme_' + v.toastStatus + ' ' + v.toastHideClass}"
                  role="alert">
                 <lightning:icon iconName="{!'utility:' + v.toastStatus}" class="slds-p-right_small" variant="inverse"
                                 size="small" alternativeText="{!v.notificationText.alternativeText}"/>
@@ -269,7 +268,7 @@
         <!--BEGIN FILTER GROUPS GRID -->
         <aura:if isTrue="{!v.isFilterGroupsGrid}">
             <aura:if isTrue="{!and(v.isFilterGroupsGrid, v.filterGroupList.length > 0)}">
-                <div class="slds-p-horizontal_large slds-p-bottom_large datatable_container">
+                <div class="slds-p-horizontal_large slds-p-bottom_large">
                     <lightning:datatable data="{!v.filterGroupList}"
                                          columns="{!v.filterGroupColumns}"
                                          class="lightningTable"
@@ -293,23 +292,19 @@
 
         <!--BEGIN ROLLUP DETAIL-->
         <aura:if isTrue="{!v.isRollupDetail}">
-            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-                <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}"
-                               activeRollupId="{#v.activeRecordId}"
-                               mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
-                               summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
-            </div>
+            <c:CRLP_Rollup labels="{#v.labels}" activeRollup="{!v.activeRecord}"
+                           activeRollupId="{#v.activeRecordId}"
+                           mode="{!v.detailMode}" filterGroups="{#v.filterGroupList}"
+                           summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </aura:if>
         <!--END ROLLUP DETAIL-->
 
         <!--BEGIN FILTER GROUP DETAIL-->
         <aura:if isTrue="{!v.isFilterGroupDetail}">
-            <div class="{!and(if(lessthan(v.filterRuleList.length, 3), equals(v.mode, 'edit')), 'datatableContainer slds-p-bottom_large', 'slds-p-bottom_large')}">
-                <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}"
-                                    activeFilterGroupId="{#v.activeRecordId}"
-                                    mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
-                                    summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
-            </div>
+            <c:CRLP_FilterGroup labels="{#v.labels}" activeFilterGroup="{!v.activeRecord}"
+                                activeFilterGroupId="{#v.activeRecordId}"
+                                mode="{!v.detailMode}" rollupList="{#v.cachedRollupList}"
+                                summaryObjects="{#v.summaryObjects}" detailObjects="{#v.detailObjects}"/>
         </aura:if>
         <!--END FILTER GROUP DETAIL-->
 

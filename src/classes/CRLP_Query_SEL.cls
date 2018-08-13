@@ -73,22 +73,20 @@
         String contactRelField = UTIL_Namespace.StrAllNSPrefix('Contact__c');
         Set<String> queryFields = new Set<String>{'Id'};
         for (DescribeFieldResult dfr : allFieldsToQuery) {
-            if (dfr.isAccessible()) {
-                queryFields.add(dfr.getName());
-                // Special conditions - these are foreign key fields that are supported in filters for record type and user
-                if (dfr.getName() == 'RecordTypeId') {
-                    queryFields.add('RecordType.DeveloperName');
-                } else if (dfr.getName() == 'OwnerId') {
-                    queryFields.add('Owner.Alias');
-                } else if (dfr.getName() == 'CreatedById') {
-                    queryFields.add('CreatedBy.Alias');
-                } else if (dfr.getName() == 'LastModifiedById') {
-                    queryFields.add('LastModifiedBy.Alias');
-                } else if (dfr.getName() == 'ContactId') {
-                    queryFields.add('Contact.AccountId');
-                } else if (dfr.getName() == contactRelField) {
-                    queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
-                }
+            queryFields.add(dfr.getName());
+            // Special conditions - these are foreign key fields that are supported in filters for record type and user
+            if (dfr.getName() == 'RecordTypeId') {
+                queryFields.add('RecordType.DeveloperName');
+            } else if (dfr.getName() == 'OwnerId') {
+                queryFields.add('Owner.Alias');
+            } else if (dfr.getName() == 'CreatedById') {
+                queryFields.add('CreatedBy.Alias');
+            } else if (dfr.getName() == 'LastModifiedById') {
+                queryFields.add('LastModifiedBy.Alias');
+            } else if (dfr.getName() == 'ContactId') {
+                queryFields.add('Contact.AccountId');
+            } else if (dfr.getName() == contactRelField) {
+                queryFields.add(contactRelField.replace('__c', '__r') + '.AccountId');
             }
         }
         // Convert the Set to the List to support String.Join()
@@ -135,14 +133,12 @@
             // Is the primary detail object NOT the OCR or Allocation object (must be Opportunity)
             // ====================================================================================================
 
+            Map<SObjectType, String> opportunityChildRelationships = getOpportunityChildRelationships();
+
             // Get the query for each child object, change the FROM object to the relationship name, and append to the main query
             for (SObjectType obj : childObjects) {
-                // Loop through all the relationships on the detail object to find the one that matches the child object
-                for (ChildRelationship cr : detailObject.getDescribe().getChildRelationships()) {
-                    if (cr.childSObject == obj) {
-                        mainSoql += buildChildQuery(obj, cr.getRelationshipName());
-                        break;
-                    }
+                if (opportunityChildRelationships.containsKey(obj)) {
+                    mainSoql += buildChildQuery(obj, opportunityChildRelationships.get(obj));
                 }
             }
 
@@ -232,18 +228,16 @@
         }
 
         for (Schema.DescribeFieldResult fld : allFieldsToQuery) {
-            if (fld.isAccessible()) {
-                addlQuery += ',' + parentKeyField + '.' + fld.getName();
-                // Special conditions - these are foreign key fields that are supported in filters for record type and user
-                if (fld.getName() == 'RecordTypeId') {
-                    addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
-                } else if (fld.getName() == 'OwnerId') {
-                    addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
-                } else if (fld.getName() == 'CreatedById') {
-                    addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
-                } else if (fld.getName() == 'LastModifiedById') {
-                    addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
-                }
+            addlQuery += ',' + parentKeyField + '.' + fld.getName();
+            // Special conditions - these are foreign key fields that are supported in filters for record type and user
+            if (fld.getName() == 'RecordTypeId') {
+                addlQuery += ',' + parentKeyField + '.' + 'RecordType.DeveloperName';
+            } else if (fld.getName() == 'OwnerId') {
+                addlQuery += ',' + parentKeyField + '.' + 'Owner.Alias';
+            } else if (fld.getName() == 'CreatedById') {
+                addlQuery += ',' + parentKeyField + '.' + 'CreatedBy.Alias';
+            } else if (fld.getName() == 'LastModifiedById') {
+                addlQuery += ',' + parentKeyField + '.' + 'LastModifiedBy.Alias';
             }
         }
 
@@ -399,5 +393,19 @@
         }
 
         return String.join(whereClauses, ' AND ');
+    }
+
+    /*******************************************************************************************************
+    * @description Gets the Child Relationships on Opportunity, used by Rollups logic.
+    * @return Map<SObjectType, String>.
+    ********************************************************************************************************/
+    private static Map<SObjectType, String> getOpportunityChildRelationships() {
+
+        return new Map<SObjectType, String>{
+            Partial_Soft_Credit__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Partial_Soft_Credits__r'),
+            Allocation__c.SObjectType => UTIL_Namespace.StrTokenNSPrefix('Allocations__r'),
+            OpportunityContactRole.SObjectType => 'OpportunityContactRoles',
+            npe01__OppPayment__c.SObjectType => 'npe01__OppPayment__r'
+        };
     }
 }

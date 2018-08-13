@@ -4,9 +4,7 @@
      * this is run when the page is first loaded or when a cancel event resets the page
      */
     setObjectAndFieldDependencies: function (cmp) {
-        console.log("In setObjectAndFieldDependencies");
-
-        //need to reset fields to populate the selected objects -- refactor to see if necessary
+        //TODO: need to reset fields to populate the selected objects -- refactor to see if necessary
         //fields can be lazy loaded if user is creating a new rollup
         if (cmp.get("v.mode") !== 'create') {
             this.fieldSetup(cmp);
@@ -32,8 +30,6 @@
         var tempList = [{"name": "", "label": cmp.get("v.labels.noFilterGroupSelect")}];
         tempList = tempList.concat(filterGroups);
         cmp.set("v.filterGroups", tempList);
-
-        console.log('Called reset details');
     },
 
     /**
@@ -44,9 +40,6 @@
         var mode = cmp.get("v.mode");
         //we check to see if mode is null since the change handler is called when mode is cleared in the container
         if (mode) {
-            console.log("Mode is " + mode);
-            console.log("In changeMode");
-
             //View is the only readOnly mode. Clone removes the activeRollupId for save.
             //Create hides all fields and sets isIncomplete to disable the save button.
             if (mode === "view") {
@@ -96,7 +89,6 @@
      */
     filterFieldsByType: function (cmp, typeList, allFields, summaryFieldReferenceTo) {
         //if type is null, no detail field is selected
-        console.log("filter fields by type function");
         var newFields = [];
 
         if (typeList && allFields) {
@@ -215,8 +207,6 @@
      * @param label: summaryObject API label
      */
     onChangeSummaryObject: function (cmp, summaryObject, label) {
-        console.log("hitting onChangeSummaryObjectHelper");
-
         this.resetFields(cmp, summaryObject, 'summary');
         cmp.set("v.activeRollup.summaryField", null);
         cmp.set("v.activeRollup.summaryObjectLabel", label);
@@ -264,7 +254,6 @@
      * @param label: filter group label
      */
     onChangeFilterGroup: function (cmp, label) {
-        console.log('in helper on change filter group');
         cmp.set("v.activeRollup.filterGroupLabel", label);
     },
 
@@ -289,7 +278,6 @@
      * @param operation: operation API name
      */
     onChangeOperation: function (cmp, operation) {
-        console.log("in helper onChangeOperation");
         var renderMap = cmp.get("v.renderMap");
         var rollupTypeLabel = cmp.get("v.selectedRollupType").label;
 
@@ -334,6 +322,20 @@
         var label = operations[operation];
         cmp.set("v.selectedOperationLabel", label);
 
+        var amountObject = cmp.get("v.activeRollup.amountObject");
+        if (amountObject) {
+            //reset allowed amount fields because percents and num/curr are tricky based on operation
+            this.resetFields(cmp, amountObject, 'amount');
+            //clear the amount field if it's no longer available based on new operation
+            var amountFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.amountField"), cmp.get("v.amountFields"));
+            if (!amountFieldLabel) {
+                cmp.set("v.activeRollup.amountField", null);
+                cmp.set("v.activeRollup.amountFieldLabel", '');
+                //set intelligent default if previously selected amount is unavailable
+                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject);
+            }
+        }
+
         //check that detail field and rollup type have been populated before saving
         this.verifyRollupSaveActive(cmp, cmp.get("v.activeRollup.detailField"));
 
@@ -345,7 +347,6 @@
      * @param rollupTypeLabel: rollup type label
      */
     onChangeRollupType: function (cmp, rollupTypeObject, rollupTypeLabel) {
-        console.log('in helper on change rollup');
         var renderMap = cmp.get("v.renderMap");
         var labels = cmp.get("v.labels");
         var activeRollup = cmp.get("v.activeRollup");
@@ -360,32 +361,7 @@
         //reset amount fields
         this.resetFields(cmp, amountObjectName, 'amount');
         cmp.set("v.activeRollup.amountObject", amountObjectName);
-        var labels = cmp.get("v.labels");
-
-        var amountFieldName;
-        // Set the amount field and assumed detail object based on the selected rollup type
-        if (amountObjectName === labels.objectPayment) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPayment);
-            amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectPayment);
-        } else if (amountObjectName === labels.objectAllocation) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelAllocation);
-            amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectAllocation);
-        } else if (amountObjectName === labels.objectPartialSoftCredit) {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelPartialSoftCredit);
-            amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
-            cmp.set("v.activeRollup.detailObject",labels.objectPartialSoftCredit);
-        } else {
-            cmp.set("v.activeRollup.amountObjectLabel", labels.labelOpportunity);
-            amountFieldName = labels.objectOpportunity + ' Amount';
-            cmp.set("v.activeRollup.detailObject",labels.objectOpportunity);
-        }
-
-        this.resetFields(cmp, activeRollup.amountObject, "amount");
-        var amountFields = cmp.get("v.amountFields");
-        cmp.set("v.activeRollup.amountField", amountFieldName);
-        cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+        this.setDefaultAmount(cmp, labels, amountObjectName);
 
         var detailObjects = cmp.get("v.detailObjects");
         cmp.set("v.activeRollup.amountObjectLabel", this.retrieveFieldLabel(amountObjectName, detailObjects));
@@ -428,7 +404,6 @@
      * @param label: summary field label
      */
     onChangeSummaryField: function (cmp, value, label) {
-        console.log('in helper on change summary');
         //toggle rendering for create flow
         if (cmp.get("v.mode") === 'create' || cmp.get("v.mode") === 'clone') {
             var renderMap = cmp.get("v.renderMap");
@@ -452,10 +427,27 @@
             this.onChangeOperation(cmp, '');
         }
 
-        if (cmp.get("v.activeRollup.amountObject")) {
-            console.log("amount object: "+cmp.get("v.activeRollup.amountObject"));
-            var potentialDetailObjects = this.getPotentialDetailObjects(cmp, cmp.get("v.activeRollup.amountObject"));
+        var amountObject = cmp.get("v.activeRollup.amountObject");
+        if (amountObject) {
+            var potentialDetailObjects = this.getPotentialDetailObjects(cmp, amountObject);
             this.filterDetailFieldsBySummaryField(cmp, potentialDetailObjects);
+
+            //reset detail and amount fields if not in the new lists
+            var detailFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.detailField"), cmp.get("v.detailFields"));
+            if (!detailFieldLabel) {
+                cmp.set("v.activeRollup.detailField", null);
+                cmp.set("v.activeRollup.detailFieldLabel", '');
+            }
+
+            //reset amount fields for change between double/currency and percent, then reset amount field if not in the new list
+            this.resetFields(cmp, amountObject, 'amount');
+            var amountFieldLabel = this.retrieveFieldLabel(cmp.get("v.activeRollup.amountField"), cmp.get("v.amountFields"));
+            if (!amountFieldLabel) {
+                cmp.set("v.activeRollup.amountField", null);
+                cmp.set("v.activeRollup.amountFieldLabel", '');
+                //set intelligent default if previously selected amount is unavailable
+                this.setDefaultAmount(cmp, cmp.get("v.labels"), amountObject);
+            }
         }
 
         this.updateRollupName(cmp);
@@ -468,7 +460,6 @@
      * @param label: time bound operations label
      */
     onChangeTimeBoundOperationsOptions: function (cmp, isOnChange, label) {
-        console.log("in helper changeTimeBoundOperationsOptions");
         var operation = cmp.get("v.activeRollup.timeBoundOperationType");
         var renderMap = cmp.get("v.renderMap");
         if (operation === 'All_Time') {
@@ -550,7 +541,6 @@
      * @return: updated render map
      */
     renderAmountField: function (cmp, operation, rollupLabel, renderMap) {
-
         if ((operation === 'Largest'
             || operation === 'Smallest'
             || operation === 'Best_Year'
@@ -561,6 +551,14 @@
 
             //enable amount field
             renderMap["amountField"] = true;
+
+            //show warning if no fields available and amount field displayed
+            var amountFields = cmp.get("v.amountFields");
+            if (amountFields.length === 0) {
+                var labels = cmp.get("v.labels");
+                cmp.set("v.isIncomplete", true);
+                this.showToast(cmp, 'warning', labels.noFields, '');
+            }
 
         } else {
             //disable amount field
@@ -665,8 +663,6 @@
      * @param context: which fields to reset. values are: detail, summary, date, and amount
      */
     resetFields: function (cmp, object, context) {
-
-        console.log("Fired field reset for context [" + context + "] and object [" + object + "]");
         var newFields = cmp.get("v.objectDetails")[object];
 
         if (newFields === undefined || newFields.length === 0) {
@@ -681,10 +677,26 @@
             newFields = this.uniqueSummaryFieldCheck(cmp, newFields);
             cmp.set("v.summaryFields", newFields);
         } else if (context === 'date') {
-            newFields = this.filterFieldsByType(cmp, ["DATE"], newFields);
+            newFields = this.filterFieldsByType(cmp, ["DATE", "DATETIME"], newFields);
             cmp.set("v.dateFields", newFields);
         } else if (context === 'amount') {
-            newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY", "PERCENT"], newFields);
+            var activeRollup = cmp.get("v.activeRollup");
+            var summaryFieldType = this.retrieveFieldType(cmp, activeRollup.summaryField, cmp.get("v.summaryFields"));
+            var operation = Boolean(activeRollup.operation) ? activeRollup.operation : null;
+            if (operation && operation === 'Average' || operation === 'Sum' || operation === 'Best_Year_Total' || operation === 'Best_Year') {
+                // these operations must be type-matched to the amount field more precisely
+                // note that only average applies to percent
+                if (summaryFieldType && summaryFieldType === 'PERCENT') {
+                    newFields = this.filterFieldsByType(cmp, ["PERCENT"], newFields);
+                } else {
+                    newFields = this.filterFieldsByType(cmp, ["DOUBLE", "CURRENCY"], newFields);
+                }
+            } else {
+                // operation here is by definition smallest/largest, which can be percent/double/currency
+                // (first/last/count don't have amount context)
+                newFields = this.filterFieldsByType(cmp, ["PERCENT", "DOUBLE", "CURRENCY"], newFields);
+            }
+
             cmp.set("v.amountFields", newFields);
         }
     },
@@ -739,10 +751,10 @@
         } else if (summaryObject === labels.objectGAU) {
             //check for the detail object to ensure correct value is selected on edit mode
             var detailName;
-            if (activeRollup.detailObject === labels.objectAllocation) {
-                detailName = labels.objectAllocation;
-            } else {
+            if (activeRollup.detailObject === labels.objectOpportunity) {
                 detailName = labels.objectOpportunity;
+            } else {
+                detailName = labels.objectAllocation;
             }
             templateList.push({
                 label: labels.labelAllocation + ' -> ' + labels.labelGAU
@@ -854,7 +866,6 @@
         action.setParams({rollupCMT: JSON.stringify(rollupCMT)});
         action.setCallback(this, function (response) {
             var state = response.getState();
-            console.log('STATE=' + state);
 
             if (state === "SUCCESS") {
                 // Response value will be in the format of "JobId-RecordDeveloperName"
@@ -862,16 +873,11 @@
                 var jobId = responseText.split("-")[0];
                 var recordName = responseText.split("-")[1];
 
-                console.log('Response = ' + response.getReturnValue());
-                console.log('Returned jobId = ' + jobId);
-                console.log('Returned RecordName = ' + recordName);
-
                 cmp.set("v.activeRollup.recordName", recordName);
                 if (cmp.get("v.cachedRollup") && cmp.get("v.cachedRollup.recordName")) {
                     cmp.set("v.cachedRollup.recordName", recordName);
                 }
 
-                console.log('Calling pollForDeploymentStatus');
                 this.pollForDeploymentStatus(cmp, jobId, recordName, 0);
 
             } else if (state === "ERROR") {
@@ -901,10 +907,41 @@
     },
 
     /**
+     * @description: Set the default amount field and detail object based on the selected rollup type for all target fields but percentages
+     */
+    setDefaultAmount: function(cmp, labels, amountObjectName) {
+        var summaryFieldType = this.retrieveFieldType(cmp, cmp.get("v.activeRollup.summaryField"), cmp.get("v.summaryFields"));
+
+        var amountFieldName;
+        var amountFields = cmp.get("v.amountFields");
+
+        if (amountObjectName === labels.objectPayment) {
+            amountFieldName = labels.objectPayment + ' npe01__Payment_Amount__c';
+            cmp.set("v.activeRollup.detailObject", labels.objectPayment);
+        } else if (amountObjectName === labels.objectAllocation) {
+            amountFieldName = labels.objectAllocation + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject", labels.objectAllocation);
+        } else if (amountObjectName === labels.objectPartialSoftCredit) {
+            amountFieldName = labels.objectPartialSoftCredit + ' ' + labels.namespacePrefix + 'Amount__c';
+            cmp.set("v.activeRollup.detailObject", labels.objectPartialSoftCredit);
+        } else {
+            amountFieldName = labels.objectOpportunity + ' Amount';
+            cmp.set("v.activeRollup.detailObject", labels.objectOpportunity);
+        }
+
+        // only assume the amount field if the summary field is a number or currency.
+        // if the summary field is a percent, the admin has to explicitly select an amount field
+        if(summaryFieldType !== 'PERCENT') {
+            cmp.set("v.activeRollup.amountField", amountFieldName);
+            cmp.set("v.activeRollup.amountFieldLabel", this.retrieveFieldLabel(amountFieldName, amountFields));
+        }
+
+    },
+
+    /**
      * @description: sets the selected rollup type based on detail and summary objects when a record is loaded
      */
     setRollupType: function (cmp) {
-        console.log('IN SET ROLLUP TYPE FUNCTION.');
         var summaryObject = cmp.get("v.activeRollup.summaryObject");
         var detailObject = cmp.get("v.activeRollup.detailObject");
         var amountObject = cmp.get("v.activeRollup.amountObject");
@@ -970,7 +1007,7 @@
             rollupType.name = labels.objectOpportunity;
             rollupType.summaryObject = labels.labelGAU;
             rollupType.label = labels.labelAllocation + ' -> ' + labels.labelGAU;
-            cmp.set("v.activeRollup.rollupTypeObject", labels.objectAllocation);
+            cmp.set("v.activeRollup.rollupTypeObject", labels.objectOpportunity);
 
         } else if (detailObject === labels.objectOpportunity && summaryObject === labels.objectRD){
             rollupType.name = labels.objectOpportunity;
@@ -1135,12 +1172,12 @@
      */
     pollForDeploymentStatus: function(cmp, jobId, recordName, counter) {
         var helper=this;
-        var maxPollingRetryCount = 30;
+        var pollingInterval = 2000; // 2 seconds.
+        var maxPollingCount = 45; // 1min 30, because the polling interval is 2 seconds (45 * 2 seconds).
         var mode = cmp.get("v.mode");
         var poller = window.setTimeout(
             $A.getCallback(function() {
                 counter++;
-                console.log('setTimeout(' + jobId + ',' + recordName + '):' + counter);
                 var action = cmp.get("c.getDeploymentStatus");
                 action.setParams({jobId: jobId, recordName: recordName, objectType: 'Rollup', mode: mode});
                 action.setCallback(this, function (response) {
@@ -1148,7 +1185,7 @@
                     if (state === "SUCCESS") {
                         // Response will be a serialized deployResult wrapper class
                         var deployResult = JSON.parse(response.getReturnValue());
-                        console.log('deployResult=' + JSON.stringify(deployResult));
+
                         // if there is a record id response
                         var mode = cmp.get("v.mode");
                         if (deployResult && deployResult.completed === true && (deployResult.rollupItem || mode === 'delete')) {
@@ -1174,7 +1211,7 @@
 
                         } else {
                             // No record id, so run call this method again to check in another 1 second
-                            if (counter < maxPollingRetryCount) {
+                            if (counter < maxPollingCount) {
                                 helper.pollForDeploymentStatus(cmp, jobId, recordName, counter);
                             } else {
                                 // When the counter hits the max, need to tell the user what happened and keep page in edit mode
@@ -1199,7 +1236,7 @@
                     }
                 });
                 $A.enqueueAction(action);
-            }), (1000 + (maxPollingRetryCount*50)) /* query every 1 second with a small multiplier */
+            }), pollingInterval
         );
     },
 
@@ -1267,6 +1304,9 @@
         }
         if (renderMap["timeBoundOperationType"]) {
             requiredSelectFields.push("timeBoundOperationType");
+        }
+        if (renderMap["amountField"]){
+            requiredSelectFields.push("amountField");
         }
         var activeRollup = cmp.get("v.activeRollup");
 
