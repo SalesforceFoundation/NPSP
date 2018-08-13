@@ -1320,7 +1320,7 @@
     </fields>
     <fields>
         <fullName>Donation_Possible_Matches__c</fullName>
-        <description>A comma separated list of ID&apos;s to the first 10 possible Opportunity matches to a donation.</description>
+        <description>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>A comma-separated list of Ids for the first 10 possible Opportunity matches for a donation.</inlineHelpText>
         <label>Donation Possible Matches</label>
@@ -1484,7 +1484,7 @@
     </fields>
     <fields>
         <fullName>ImportedDate__c</fullName>
-        <description>When the Data Import record was successfully imported.</description>
+        <description>The date and time that the Data Import record was successfully imported.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date and time that the Data Import record was successfully imported.</inlineHelpText>
         <label>Imported Date</label>
@@ -1494,6 +1494,7 @@
     </fields>
     <fields>
         <fullName>NPSP_Data_Import_Batch__c</fullName>
+        <description>Lookup to the NPSP Data Import Batch this record belongs to.</description>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the NPSP Data Import Batch this record belongs to.</inlineHelpText>
@@ -1551,7 +1552,7 @@
     </fields>
     <fields>
         <fullName>Payment_Possible_Matches__c</fullName>
-        <description>A comma separated list of ID&apos;s to the first 10 possible Payment matches to a donation.</description>
+        <description>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>A comma-separated list of Ids for the first 10 possible Payment matches for a Donation.</inlineHelpText>
         <label>Payment Possible Matches</label>
@@ -1563,7 +1564,7 @@
     </fields>
     <fields>
         <fullName>Status__c</fullName>
-        <description>The status of importing the Data Import record.</description>
+        <description>The status of the import for this record, for example, Imported or Failed.</description>
         <externalId>false</externalId>
         <inlineHelpText>The status of the import for this record, for example, Imported or Failed.</inlineHelpText>
         <label>Status</label>

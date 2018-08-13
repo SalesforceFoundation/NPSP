@@ -65,7 +65,7 @@
     </fields>
     <fields>
         <fullName>Contact_Name__c</fullName>
-        <description>The contact&apos;s full name.</description>
+        <description>The full name of the Contact who gets this soft credit (read only).</description>
         <externalId>false</externalId>
         <formula>HYPERLINK(&apos;/&apos; + Contact__c,Contact__r.FirstName + &apos; &apos; + Contact__r.LastName, &apos;_self&apos;)</formula>
         <inlineHelpText>The full name of the Contact who gets this soft credit (read only).</inlineHelpText>
@@ -90,7 +90,7 @@
     </fields>
     <fields>
         <fullName>Contact__c</fullName>
-        <description>The contact who gets this soft credit.</description>
+        <description>Lookup to the Contact who gets this soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Contact who gets this soft credit.</inlineHelpText>
         <label>Contact</label>
