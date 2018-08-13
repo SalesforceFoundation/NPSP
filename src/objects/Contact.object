@@ -1513,7 +1513,7 @@
     </fieldSets>
     <fields>
         <fullName>Address_Verification_Status__c</fullName>
-        <description>Verification status of the current address.</description>
+        <description>The verification status of the current Address. If this Address requires verification, navigate to the current Address record and select Verify Address.  Consult the Power of Us Hub documentation for more information on Address Verification..</description>
         <externalId>false</externalId>
         <formula>Current_Address__r.Verification_Status__c</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
@@ -1525,6 +1525,7 @@
     </fields>
     <fields>
         <fullName>Batch__c</fullName>
+        <description>Lookup to the Batch that this Contact was created in.</description>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Batch that this Contact was created in.</inlineHelpText>
@@ -1539,7 +1540,7 @@
     <fields>
         <fullName>Current_Address__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The current Address that the Contact&apos;s mailing fields are filled with.</description>
+        <description>Lookup to the current Address record for this Contact. NPSP populates the Contact's Mailing Address field with the street, city, state, and postal code from the current Address record.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the current Address record for this Contact. NPSP populates the Contact's Mailing Address field with the street, city, state, and postal code from the current Address record.</inlineHelpText>
         <label>Current Address</label>
@@ -1563,7 +1564,7 @@
     <fields>
         <fullName>Deceased__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When selected, this option marks the contact as deceased, and excludes them from household naming, emails, and phone calls.</description>
+        <description>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates the Contact is deceased. When selected, NPSP excludes this Contact from Household Naming (unless this Contact is the only one in the Household) and from standard email and phone lists.</inlineHelpText>
         <label>Deceased</label>
@@ -1573,7 +1574,7 @@
     <fields>
         <fullName>Do_Not_Contact__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>When selected, this option excludes the contact from emails and phone calls.</description>
+        <description>Indicates the Contact does not want your organization to call or email. Use this field to filter out Contacts in email and phone lists. When selected, NPSP excludes this Contact from Opportunity Acknowledgements.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates the Contact does not want your organization to call or email. Use this field to filter out Contacts in email and phone lists. When selected, NPSP excludes this Contact from Opportunity Acknowledgements.</inlineHelpText>
         <label>Do Not Contact</label>
@@ -1583,7 +1584,7 @@
     <fields>
         <fullName>Exclude_from_Household_Formal_Greeting__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Checking this box will exclude this contact from the Household Formal Greeting.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Formal Greeting (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, NPSP excludes this Contact from the Household Formal Greeting (set in NPSP Settings | People | Households).</inlineHelpText>
         <label>Exclude from Household Formal Greeting</label>
@@ -1593,7 +1594,7 @@
     <fields>
         <fullName>Exclude_from_Household_Informal_Greeting__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Checking this box will exclude this contact from the Household Informal Greeting.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Informal Greeting (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, NPSP excludes this Contact from the Household Informal Greeting (set in NPSP Settings | People | Households).</inlineHelpText>
         <label>Exclude from Household Informal Greeting</label>
@@ -1603,7 +1604,7 @@
     <fields>
         <fullName>Exclude_from_Household_Name__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Checking this box will exclude this contact from the Household Name.</description>
+        <description>When selected, NPSP excludes this Contact from the Household Name (set in NPSP Settings | People | Households).</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, NPSP excludes this Contact from the Household Name (set in NPSP Settings | People | Households).</inlineHelpText>
         <label>Exclude from Household Name</label>
@@ -1612,7 +1613,7 @@
     </fields>
     <fields>
         <fullName>First_Soft_Credit_Amount__c</fullName>
-        <description>The amount of the earliest soft credit.</description>
+        <description>The amount of this Contact's earliest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of this Contact's earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Amount</label>
@@ -1624,7 +1625,7 @@
     </fields>
     <fields>
         <fullName>First_Soft_Credit_Date__c</fullName>
-        <description>The date of the earliest soft credit.</description>
+        <description>The date of this Contact's earliest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of this Contact's earliest soft credit.</inlineHelpText>
         <label>First Soft Credit Date</label>
@@ -1634,6 +1635,7 @@
     </fields>
     <fields>
         <fullName>HHId__c</fullName>
+        <description>Holds the Id of the Household record (either Household Account, or Household object) this Contact is currently associated with (read only).</description>
         <externalId>false</externalId>
         <formula>if(Account.npe01__SYSTEM_AccountType__c==&apos;Household Account&apos;,CASESAFEID(AccountId),CASESAFEID(npo02__Household__c))</formula>
         <inlineHelpText>Holds the Id of the Household record (either Household Account, or Household object) this Contact is currently associated with (read only).</inlineHelpText>
@@ -1644,7 +1646,7 @@
     </fields>
     <fields>
         <fullName>Largest_Soft_Credit_Amount__c</fullName>
-        <description>The amount of the largest soft credit.</description>
+        <description>The amount of this Contact's largest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of this Contact's largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Amount</label>
@@ -1656,7 +1658,7 @@
     </fields>
     <fields>
         <fullName>Largest_Soft_Credit_Date__c</fullName>
-        <description>The date of the largest soft credit.</description>
+        <description>The date of this Contact's largest soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of this Contact's largest soft credit.</inlineHelpText>
         <label>Largest Soft Credit Date</label>
@@ -1666,9 +1668,9 @@
     </fields>
     <fields>
         <fullName>Last_Soft_Credit_Amount__c</fullName>
-        <description>The amount of the most recent soft credit.</description>
+        <description>The amount of this Contact's most recent soft credit.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The amount of this Contact's most recent soft credit</inlineHelpText>
+        <inlineHelpText>The amount of this Contact's most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -1678,7 +1680,7 @@
     </fields>
     <fields>
         <fullName>Last_Soft_Credit_Date__c</fullName>
-        <description>The date of the most recent soft credit.</description>
+        <description>The date of this Contact's most recent soft credit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of this Contact's most recent soft credit.</inlineHelpText>
         <label>Last Soft Credit Date</label>
@@ -1688,7 +1690,7 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Last_N_Days__c</fullName>
-        <description>Total amount for all soft credits that closed in the last N days. The value of N is defined in the NPSP Settings tab.</description>
+        <description>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits attributed to this Contact that closed in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</inlineHelpText>
         <label>Number of Soft Credits Last N Days</label>
@@ -1701,7 +1703,7 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Last_Year__c</fullName>
-        <description>The number of soft credits last year.</description>
+        <description>The number of soft credits attributed to this Contact in the previous calendar year.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits attributed to this Contact in the previous calendar year.</inlineHelpText>
         <label>Number of Soft Credits Last Year</label>
@@ -1714,7 +1716,7 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_This_Year__c</fullName>
-        <description>The number of soft credits this year.</description>
+        <description>The number of soft credits attributed to this Contact this calendar year.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits attributed to this Contact this calendar year.</inlineHelpText>
         <label>Number of Soft Credits This Year</label>
@@ -1727,7 +1729,7 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits_Two_Years_Ago__c</fullName>
-        <description>The number of soft credits 2 years ago.</description>
+        <description>The number of soft credits attributed to this Contact two calendar years ago.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of soft credits attributed to this Contact two calendar years ago.</inlineHelpText>
         <label>Number of Soft Credits Two Years Ago</label>
@@ -1740,7 +1742,7 @@
     </fields>
     <fields>
         <fullName>Number_of_Soft_Credits__c</fullName>
-        <description>The number of soft credits.</description>
+        <description>The total number of soft credits attributed to this Contact.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total number of soft credits attributed to this Contact.</inlineHelpText>
         <label>Number of Soft Credits</label>
@@ -1753,6 +1755,7 @@
     </fields>
     <fields>
         <fullName>Primary_Affiliation__c</fullName>
+        <description>The Account marked as Primary in this Contact's list of Organization Affiliations.</description>
         <deleteConstraint>SetNull</deleteConstraint>
         <externalId>false</externalId>
         <inlineHelpText>The Account marked as Primary in this Contact's list of Organization Affiliations.</inlineHelpText>
@@ -1766,7 +1769,7 @@
     </fields>
     <fields>
         <fullName>Primary_Contact__c</fullName>
-        <description>Automatically checked if the Contact is the Primary Contact on their Account.</description>
+        <description>Indicates if this Contact is designated as the Primary Contact on their Account (read only).</description>
         <externalId>false</externalId>
         <formula>Account.npe01__One2OneContact__c = Id</formula>
         <inlineHelpText>Indicates if this Contact is designated as the Primary Contact on their Account (read only).</inlineHelpText>
@@ -1776,7 +1779,7 @@
     <fields>
         <fullName>Soft_Credit_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The total amount of Soft Credit, closed in the last number of days defined in NPSP Settings.</description>
+        <description>The total amount of soft credit attributed to this Contact in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount of soft credit attributed to this Contact in the last N days. The value of N is set in NPSP Settings | Donations | Donor Statistics.</inlineHelpText>
         <label>Soft Credit Last N Days</label>
@@ -1789,7 +1792,7 @@
     <fields>
         <fullName>is_Address_Override__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>If checked, the Contact&apos;s Current Address lookup overrides the Household&apos;s default Address or seasonal Address.</description>
+        <description>When selected, NPSP will not sync this Contact's address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</description>
         <externalId>false</externalId>
         <inlineHelpText>When selected, NPSP will not sync this Contact's address with the Household Default or Seasonal Address. Use this to maintain a separate Mailing Address for this particular Contact.</inlineHelpText>
         <label>Address Override</label>
