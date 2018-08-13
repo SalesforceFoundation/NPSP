@@ -55,7 +55,7 @@
     <fields>
         <fullName>Assigned_To__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>This field maps to the Task&apos;s Assigned To field. If left blank, the task will be assigned based on the template&apos;s Blank Assignment Rule.</description>
+        <description>Lookup to the User you'd like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template's Default Assignee.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the User you'd like to assign the task to. If you leave this field blank, NPSP assigns the task based on the Engagement Plan Template's Default Assignee.</inlineHelpText>
         <label>Assigned To</label>
@@ -67,7 +67,7 @@
     </fields>
     <fields>
         <fullName>Comments__c</fullName>
-        <description>Comments on the Task.</description>
+        <description>Use this to enter additional information about the Task.</description>
         <externalId>false</externalId>
         <inlineHelpText>Use this to enter additional information about the Task.</inlineHelpText>
         <label>Comments</label>
@@ -78,7 +78,7 @@
     </fields>
     <fields>
         <fullName>Days_After__c</fullName>
-        <description>The number of days after the Engagement Plan creation date, or the parent Task&apos;s Due Date, that this Task is due.</description>
+        <description>The number of days after the Engagement Plan creation date that this Task is due. For dependent Tasks, the number of days after the parent Task's due date that this Task is due.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of days after the Engagement Plan creation date that this Task is due. For dependent Tasks, the number of days after the parent Task's due date that this Task is due.</inlineHelpText>
         <label>Days After</label>
