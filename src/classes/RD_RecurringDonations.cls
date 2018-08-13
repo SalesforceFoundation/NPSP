@@ -278,7 +278,7 @@ public class RD_RecurringDonations {
                 'npe03__installments__c', 'npe03__amount__c', 'npe03__total__c', 'npe03__installment_period__c',
                 'npe03__date_established__c', 'npe03__donor_name__c', 'npe03__schedule_type__c',
                 'npe03__recurring_donation_campaign__c', 'npe03__total_paid_installments__c', 'ownerid',
-                'always_use_last_day_of_month__c'};
+                'always_use_last_day_of_month__c', 'Day_of_Month__c'};
 
         String queryRCD = 'select id';
         for (string s : existingFields){
@@ -425,12 +425,12 @@ public class RD_RecurringDonations {
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly)
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c).addMonths(3*j);
-                       opp.CloseDate = dtEndOfMonthFixup(opp.CloseDate);
+                       opp.CloseDate = adjustDayOfMonth(opp.CloseDate);
                     } else
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodMonthly)
                     {
                        opp.CloseDate = (r.npe03__Date_Established__c).addMonths(j);
-                       opp.CloseDate = dtEndOfMonthFixup(opp.CloseDate);
+                       opp.CloseDate = adjustDayOfMonth(opp.CloseDate);
                     } else
                     if (r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodWeekly)
                     {
@@ -1140,33 +1140,70 @@ public class RD_RecurringDonations {
                 || r.npe03__Installment_Period__c == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly) {
             // For monthly or quarterly installments only, the initial date needs to be tweaked to be the appropriate
             // start date in the current month
-            startDt = dtEndOfMonthFixup(startDt, r); // fix the date to account for end of month
+            startDt = adjustDayOfMonth(startDt, r); // fix the date to account for end of month
         }
         return startDt;
     }
 
     /*******************************************************************************************************
-    * @description Returns the last day of month for the provided date if the Day of Month is either the
-    * the 31st or the Always_Use_Last_Day_Of_Month__c box has been checked. Otherwise, use the specific
-    * date they have set.
-    * @param dt The date to analyze
-    * @return date Either the passed in date, or the last day of the month
+    * @description Returns the day of the month depending on the preferences set on the record.
+    * - Always_Use_Last_Day_Of_Month__c is checked -> last day of month
+    * - Day_Of_Month__c is set -> uses the specified day
+    * - Gets the preferred day based on the recurring donation dates
+    * @param installmentDate The date to analyze
+    * @param recurringDonation The recurring donation record to evaluate
+    * @return Date The date with the preferred day
     */
-    private static date dtEndOfMonthFixup(date dt, npe03__Recurring_Donation__c rd) {
-        if (dt.day() == 31 || rd.Always_Use_Last_Day_Of_Month__c == true) {
-            dt = date.newInstance(dt.year(), dt.month(), date.daysInMonth(dt.year(), dt.Month()));
-        } else if (dt.day() >= 28 && (rd.npe03__Next_Payment_Date__c != null || rd.npe03__Date_Established__c != null)) {
-            // To handle a scenario where the NextPayment or DateEstablished is the >= 29 for a Monthly
-            // Donation, when the system gets around to February, it'll change the next donation to 28/29
-            // which then causes all subsequent months to be set to the 28th (or 29th).
-            // This logic ensures that the calculated End Of Month date takes this into account
-            // rather than just use the DayOfMonth from the previous installment.
-            Date estDate = (rd.npe03__Next_Payment_Date__c != null ? rd.npe03__Next_Payment_Date__c : rd.npe03__Date_Established__c);
-            Integer dayOfMonth = (date.daysInMonth(dt.year(), dt.Month()) < estDate.day() ?
-                    date.daysInMonth(dt.year(), dt.Month()) : estDate.day());
-            dt = date.newInstance(dt.year(), dt.month(), dayOfMonth);
+    @TestVisible
+    private static Date adjustDayOfMonth(Date installmentDate, npe03__Recurring_Donation__c recurringDonation) {
+        Integer daysInMonth = Date.daysInMonth(installmentDate.year(), installmentDate.Month());
+        Integer dayOfMonth;
+
+        if (recurringDonation.Always_Use_Last_Day_Of_Month__c) {
+            dayOfMonth = daysInMonth;
+
+        } else if (!String.isEmpty(recurringDonation.Day_Of_Month__c)) {
+            dayOfMonth = Integer.valueOf(recurringDonation.Day_Of_Month__c);
+
+        } else {
+            dayOfMonth = getPreferredDay(installmentDate.day(), recurringDonation);
         }
-        return dt;
+
+        dayOfMonth = dayOfMonth > daysInMonth ? daysInMonth : dayOfMonth;
+
+        return Date.newInstance(installmentDate.year(), installmentDate.month(), dayOfMonth);
+    }
+
+    /*******************************************************************************************************
+    * @description If the day is an end of month day, uses the day from the next donation when available,
+    * otherwise uses the day from the date established when the stored day is greater than the day provided.
+    * @param day The day to analyze
+    * @param recurringDonation The recurring donation record to evaluate
+    * @return Integer The preferred day
+    */
+    private static Integer getPreferredDay(Integer day, npe03__Recurring_Donation__c recurringDonation) {
+        final Integer shortestMonthDay = 28;
+        final Integer longestMonthDay = 31;
+
+        if (day < shortestMonthDay || day == longestMonthDay
+            || (recurringDonation.npe03__Next_Payment_Date__c == null
+                && recurringDonation.npe03__Date_Established__c == null)) {
+            return day;
+        }
+
+        if (recurringDonation.npe03__Next_Payment_Date__c != null) {
+            return recurringDonation.npe03__Next_Payment_Date__c.day() > day
+                ? recurringDonation.npe03__Next_Payment_Date__c.day()
+                : day;
+        }
+
+        if (recurringDonation.npe03__Date_Established__c != null) {
+            return recurringDonation.npe03__Date_Established__c.day() > day
+                ? recurringDonation.npe03__Date_Established__c.day()
+                : day;
+        }
+
+        return day;
     }
 
     /*******************************************************************************************************
@@ -1184,11 +1221,11 @@ public class RD_RecurringDonations {
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodQuarterly){
             calcDate = calcDate.addMonths(3);
-            calcDate = dtEndOfMonthFixup(calcDate, rd);
+            calcDate = adjustDayOfMonth(calcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodMonthly){
             calcDate = calcDate.addMonths(1);
-            calcDate = dtEndOfMonthFixup(calcDate, rd);
+            calcDate = adjustDayOfMonth(calcDate, rd);
         } 
         else if (InstallmentType == system.label.npe03.RecurringDonationInstallmentPeriodWeekly){
             calcDate = calcDate.addDays(7);
@@ -1216,7 +1253,7 @@ public class RD_RecurringDonations {
                 }
                 else if (c.npe03__Increment__c == 'Months'){
                     calcDate = calcDate.addMonths(integer.valueOf(c.npe03__Value__c));
-                    calcDate = dtEndOfMonthFixup(calcDate, rd);
+                    calcDate = adjustDayOfMonth(calcDate, rd);
                 }
                 else if (c.npe03__Increment__c == 'Years'){
                     calcDate = calcDate.addYears(integer.valueOf(c.npe03__Value__c));
@@ -1226,7 +1263,7 @@ public class RD_RecurringDonations {
             //the open ended value so we only create one opp max
             else{   
                 calcDate = calcDate.addMonths((integer)rds.npe03__Opportunity_Forecast_Months__c);
-                calcDate = dtEndOfMonthFixup(calcDate, rd);
+                calcDate = adjustDayOfMonth(calcDate, rd);
             }
         }
         return calcDate;
