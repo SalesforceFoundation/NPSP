@@ -16,10 +16,8 @@
         component.set('v.templateInfo', templateInfoView);
         var templateMetadataView = helper.TemplateMetadataView(component, model);
         component.set('v.templateMetadata', templateMetadataView);
-        var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model);
-        component.set('v.availableTemplateFields', availableTemplateFieldsView);
-        var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model);
-        component.set('v.activeTemplateFields', activeTemplateFieldsView);
+        var templateFieldsView = helper.TemplateFieldsView(component, model);
+        component.set('v.templateFields', templateFieldsView);
 
         model.init(component);
     },
@@ -67,7 +65,7 @@
     *****************************************************************/
     next: function(component, event, helper) {
         console.log('in next');
-        console.log(component.get("v.availableTemplateFields.Contact1.values"));
+        console.log(JSON.stringify(component.get("v.templateFields")));
         var model = component.get('v.model');
         var step = component.get("v.templateMetadata.progressIndicatorStep");
 
@@ -80,7 +78,8 @@
                 model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
             }
         } else if (step === '2') {
-            model.getTemplateFields().updateActives();
+            var templateFields = component.get("v.templateFields");
+            model.getTemplateFields().updateToActive(templateFields);
             model.getTemplateMetadata().stepUp(step);
         }
     },
@@ -96,48 +95,4 @@
 
     /******************************** Template Fields Controller Functions *****************************/
 
-
-    /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
-     *****************************************************************/
-    moveFieldsDown: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().moveSelectedDown();
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
-     *****************************************************************/
-    moveFieldsUp: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().moveSelectedUp();
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected (checked) available fields in the
-     * Template Fields Model.
-     *****************************************************************/
-    selectAvailableTemplateFields: function (component, event, helper) {
-        var selectedFields = {};
-        event.getParam('selectedRows').forEach(function(selectedRow) {
-            selectedFields[selectedRow.id] = selectedRow;
-        });
-        var model = component.get('v.model');
-        model.getTemplateFields().selectAvailables(selectedFields);
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected (checked) active fields in the
-     * Template Fields Model.
-     *****************************************************************/
-    selectActiveTemplateFields: function (component, event, helper) {
-        var selectedFields = {};
-        event.getParam('selectedRows').forEach(function(selectedRow) {
-            selectedFields[selectedRow.id] = selectedRow;
-        });
-        var model = component.get('v.model');
-        model.getTemplateFields().selectActives(selectedFields);
-    }
 });

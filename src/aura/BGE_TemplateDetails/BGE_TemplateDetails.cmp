@@ -40,8 +40,7 @@
     <aura:attribute name="model" type="Object" access="PRIVATE" />
     <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
-    <aura:attribute name="availableTemplateFields" type="Object" access="PRIVATE" />
-    <aura:attribute name="activeTemplateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="templateFields" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
     <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
@@ -168,8 +167,8 @@
                                                    sourceLabel="Available"
                                                    selectedLabel="Selected"
                                                    fieldLevelHelp="help goes here"
-                                                   options="{!v.availableTemplateFields.availableSObjects}"
-                                                   values="{!v.availableTemplateFields.activeSObjects}"
+                                                   options="{!v.templateFields.availableSObjects}"
+                                                   values="{!v.templateFields.activeSObjects}"
                                                    onchange=""/>&ndash;&gt;
                         </div>-->
 
@@ -188,111 +187,148 @@
                                 in which they will appear as columns in the grid.
                             </div>
 
-                            <!-- Contact 1 -->
-                            <c:sldsExpandableSection title="Contact 1" expanded="true">
-                                <div class="slds-grid">
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                    <div class="slds-col slds-size_4-of-6">
-                                        <lightning:dualListbox name="multipleOptions"
-                                                               label="Fields"
-                                                               sourceLabel="Available"
-                                                               selectedLabel="Selected"
-                                                               options="{!v.availableTemplateFields.Contact1.options}"
-                                                               value="{!v.availableTemplateFields.Contact1.values}"
-                                        />
-                                    </div>
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                </div>
-                            </c:sldsExpandableSection>
+                            <lightning:accordion>
 
-                            <!-- Household -->
-                            <c:sldsExpandableSection title="Household" expanded="false">
-                                <div class="slds-grid">
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                    <div class="slds-col slds-size_4-of-6">
-                                        <lightning:dualListbox name="multipleOptions"
-                                                               label="Fields"
-                                                               sourceLabel="Available"
-                                                               selectedLabel="Selected"
-                                                               options="{!v.availableTemplateFields.Household.options}"
-                                                               value="{!v.availableTemplateFields.Household.values}"
-                                        />
+                                <!-- Contact 1 -->
+                                <lightning:accordionSection name="Contact1" label="Contact 1">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Contact1.options}"
+                                                                   value="{!v.templateFields.Contact1.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                </div>
-                            </c:sldsExpandableSection>
+                                </lightning:accordionSection>
 
-                            <!-- Opportunity -->
-                            <c:sldsExpandableSection title="Opportunity" expanded="false">
-                                <div class="slds-grid">
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                    <div class="slds-col slds-size_4-of-6">
-                                        <lightning:dualListbox name="multipleOptions"
-                                                               label="Fields"
-                                                               sourceLabel="Available"
-                                                               selectedLabel="Selected"
-                                                               options="{!v.availableTemplateFields.Opportunity.options}"
-                                                               value="{!v.availableTemplateFields.Opportunity.values}"
-                                        />
+                                <!-- Contact 2 -->
+                                <lightning:accordionSection name="Contact2" label="Contact 2">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Contact2.options}"
+                                                                   value="{!v.templateFields.Contact2.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
                                     </div>
-                                    <div class="slds-col slds-size_1-of-6"></div>
-                                </div>
-                            </c:sldsExpandableSection>
+                                </lightning:accordionSection>
 
+                                <!-- Account 1 -->
+                                <lightning:accordionSection name="Account1" label="Account 1">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Account1.options}"
+                                                                   value="{!v.templateFields.Account1.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                                <!-- Account 2 -->
+                                <lightning:accordionSection name="Account2" label="Account 2">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Account2.options}"
+                                                                   value="{!v.templateFields.Account2.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                                <!-- Household -->
+                                <!--todo: is household deprecated?-->
+                                <lightning:accordionSection name="Household" label="Household">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Household.options}"
+                                                                   value="{!v.templateFields.Household.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                                <!-- Address -->
+                                <lightning:accordionSection name="Address" label="Address">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Address.options}"
+                                                                   value="{!v.templateFields.Address.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                                <!-- Opportunity -->
+                                <lightning:accordionSection name="Opportunity" label="Opportunity">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Opportunity.options}"
+                                                                   value="{!v.templateFields.Opportunity.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                                <!-- Payment -->
+                                <lightning:accordionSection name="Payment" label="Payment">
+                                    <div class="slds-grid">
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                        <div class="slds-col slds-size_4-of-6">
+                                            <lightning:dualListbox name="multipleOptions"
+                                                                   label="Fields"
+                                                                   sourceLabel="Available"
+                                                                   selectedLabel="Selected"
+                                                                   options="{!v.templateFields.Payment.options}"
+                                                                   value="{!v.templateFields.Payment.values}"
+                                            />
+                                        </div>
+                                        <div class="slds-col slds-size_1-of-6"></div>
+                                    </div>
+                                </lightning:accordionSection>
+
+                            </lightning:accordion>
                         </div>
                     </div>
-
-                    <!--<div class="row slds-grid slds-wrap slds-p-around_large">
-                        <aura:if isTrue="{! !v.isReadOnly}">
-                            <div class="slds-col slds-size_3-of-12">
-                                <lightning:treeGrid
-                                        aura:id="availableTemplateFields"
-                                        columns="{!v.availableTemplateFields.columns}"
-                                        data="{!v.availableTemplateFields.data}"
-                                        selectedRows="{!v.availableTemplateFields.selectedRows}"
-                                        keyField="id"
-                                        onrowselection="{!c.selectAvailableTemplateFields}"
-                                />
-                            </div>
-
-                            <div class="slds-col slds-size_1-of-12">
-                                <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
-                                    <div class="slds-m-bottom__xx-small">
-                                        <lightning:buttonIcon iconName="utility:chevronright" alternativeText="{!$Label.c.bgeBatchTemplateAddFields}" onclick="{!c.updateToActive}"/>
-                                    </div>
-                                    <div class="slds-m-top_xx-small">
-                                        <lightning:buttonIcon iconName="utility:chevronleft" alternativeText="{!$Label.c.bgeBatchTemplateRemoveFields}" onclick="{!c.updateToAvailable}"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </aura:if>
-
-                        <div class="slds-col slds-size_5-of-12">
-                            <lightning:treeGrid
-                                    aura:id="activeTreeGrid"
-                                    columns="{!v.activeTemplateFields.columns}"
-                                    data="{!v.activeTemplateFields.data}"
-                                    keyField="id"
-                                    selectedRows="{!v.activeTemplateFields.selectedRows}"
-                                    onrowselection="{!c.selectActiveTemplateFields}"
-                                    hideCheckboxColumn="{!v.isReadOnly}"
-                            />
-                        </div>
-
-                        <aura:if isTrue="{! !v.isReadOnly}">
-                            <div class="slds-col slds-size_1-of-12">
-                                <div class="slds-align_absolute-center slds-grid_vertical slds-m-top_xx-large">
-                                    <div class="slds-m-bottom__xx-small">
-                                        <lightning:buttonIcon iconName="utility:chevronup" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldUp}" onclick="{!c.moveFieldsUp}"/>
-                                    </div>
-                                    <div class="slds-m-top_xx-small">
-                                        <lightning:buttonIcon iconName="utility:chevrondown" alternativeText="{!$Label.c.bgeBatchTemplateMoveFieldDown}" onclick="{!c.moveFieldsDown}"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </aura:if>
-
-                    </div>-->
                 </aura:if>
                 <!--End Step 2-->
 

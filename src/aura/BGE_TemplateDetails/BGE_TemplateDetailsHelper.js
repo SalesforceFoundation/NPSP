@@ -116,56 +116,50 @@
      * @param model. The Template Fields Model.
      * @return View of the Available Template Fields module.
      *****************************************************************/
-    AvailableTemplateFieldsView : function(component, model) {
+    TemplateFieldsView : function(component, model) {
 		return (function (component, model) {
-            var _columns = [
-                {
-                	type: 'text',
-                	fieldName: 'label',
-                	label: $A.get("$Label.c.bgeBatchTemplateAvailableFields")
-            	}
-            ];
 
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var availableTemplateFields = component.get('v.availableTemplateFields');
-                //availableTemplateFields.data = _convertToGridData(model.getTemplateFields().getAvailablesBySObject());
-                availableTemplateFields.selectedRows = [];
+                var templateFields = component.get('v.templateFields');
+                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
 
-                var availableFieldsBySObject = model.getTemplateFields().getAvailablesBySObject();
-
-                Object.keys(availableFieldsBySObject).forEach(function(sObjectName) {
-                    availableTemplateFields[sObjectName] = {};
-                    availableTemplateFields[sObjectName].options = [];
-                    availableFieldsBySObject[sObjectName].forEach(function(fld) {
-                        availableTemplateFields[sObjectName].options.push(
+                Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
+                    templateFields[sObjectName] = {};
+                    templateFields[sObjectName].options = [];
+                    templateFields[sObjectName].values = [];
+                    var fieldList = allFieldsBySObject[sObjectName];
+                    // TODO: sort by the required order of the left hand side of the dual picklist
+                    // fieldList.sort();
+                    fieldList.forEach(function(fld) {
+                        templateFields[sObjectName].options.push(
                             {
                                 label: fld.label,
-                                value: sObjectName + ' ' + fld.name
+                                value: fld.name
+                                //, sortOrder: fld.availableSortOrder
                             }
                         )
+                    //});
+                    // TODO: sort by the user-defined order of the RIGHT hand side of the dual picklist
+                    // fieldList.sort(activeSortOrder);
+                    // fieldList.forEach(function(fld) {
+                        if (fld.isActive) {
+                            templateFields[sObjectName].values.push(fld.name);
+                        }
                     });
+
+                    //todo: sort by activeSortOrder here and/or alphabetical here
                 });
 
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
+                console.log(JSON.stringify(templateFields.Contact1.values));
 
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    availableTemplateFields[sObjectName] = {};
-                    availableTemplateFields[sObjectName].options = [];
-                    availableFieldsBySObject[sObjectName].forEach(function(fld) {
-                        availableTemplateFields[sObjectName].values.push(fld.name);
-                    });
-                });
-
-                console.log(JSON.stringify(availableTemplateFields.Contact1.options));
-
-                component.set('v.availableTemplateFields', availableTemplateFields);
+                component.set('v.templateFields', templateFields);
             });
             
             /* *******************************************************************
-             * @Description Converts the Available Fields list to the availableTemplateFields
+             * @Description Converts the Available Fields list to the templateFields
              * Lightning:treeGrid data format.
-             * @return availableTemplateFields Lightning:treeGrid data format.
+             * @return templateFields Lightning:treeGrid data format.
              *********************************************************************/
             function _convertToGridData(fieldsBySObject) {
                 var result = [];
@@ -195,111 +189,13 @@
                 return result;
             }
             
-            // AvailableTemplateFieldsView module public functions and properties
+            // TemplateFieldsView module public functions and properties
 			return {
-                columns: _columns,
-                data: [],
-                selectedRows: []
+
             };
         })(component, model);
 	},
-    
-    /* ***************************************************************
-     * @Description Returns the Active Template Fields View module.
-     * @param component. Lightning Component reference.
-     * @param model(). The Template Fields Model.
-     * @return View of the Active Template Fields module.
-     *****************************************************************/
-    ActiveTemplateFieldsView : function(component, model) {
 
-		return (function (component, model) {
-    		var _columns = [
-                {
-                    type: 'text',
-                    fieldName: 'label',
-                    label: $A.get("$Label.c.bgeBatchTemplateActiveFields")
-                },
-                {
-                    type: 'text',
-                    fieldName: 'defaultValue',
-                    label: $A.get("$Label.c.stgDefaultValue")
-                },
-                {
-                    type: 'boolean',
-                    fieldName: 'required',
-                    label: $A.get("$Label.c.lblRequired")
-                },
-                {
-                    type: 'boolean',
-                    fieldName: 'hide',
-                    label: $A.get("$Label.c.stgLabelHide")
-                }
-            ];
-            
-            // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var activeTemplateFields = component.get('v.activeTemplateFields');
-                activeTemplateFields.data = _convertToGridData(model.getTemplateFields().getActivesBySObject());
-                activeTemplateFields.selectedRows = [];
-
-                activeTemplateFields.data.forEach(function(fieldGroup) {
-                    if (fieldGroup.selected) {
-                        activeTemplateFields.selectedRows.push(fieldGroup.id);
-                    }
-                    if (fieldGroup._children) {
-                        fieldGroup._children.forEach(function(currentField) {
-                            if (currentField.selected) {
-                                activeTemplateFields.selectedRows.push(currentField.id);
-                            }
-                        });
-                    }  
-                });
-                 component.set('v.activeTemplateFields', activeTemplateFields);
-            });
-            
-            /* *******************************************************************
-             * @Description Converts the Active Fields list to the activeTemplateFields
-             * Lightning:treeGrid data format.
-             * @return activeTemplateFields Lightning:treeGrid data format.
-             *********************************************************************/
-            function _convertToGridData(fieldsBySObject) {
-                var result = [];
-                
-                Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
-                    var gridDataRow = {
-                        id: sObjectName,
-                        label: sObjectName,
-                        selected: false,
-                        _children: []
-                    };
-                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
-                        gridDataRow._children.push(
-                            {
-                                id: sObjectField.id,
-                            	label: sObjectField.label,
-                                selected: sObjectField.selected,
-                                defaultValue: sObjectField.defaultValue,
-                                required: sObjectField.required,
-                                hide: sObjectField.hide,
-                                activeSortOrder: sObjectField.activeSortOrder
-                            }
-                        );
-                    });
-                    result.push(gridDataRow);
-                });
-                
-                return result;
-            }
-            
-            // ActiveTemplateFieldsView module public functions and properties
-			return {
-                columns: _columns,
-                data: [],
-                selectedFields: []
-            };
-     
-        })(component, model);
-	},
     
     /*********************************************** Model Modules *********************************************/
 
@@ -565,6 +461,14 @@
             }*/
 
             /* **********************************************************
+            * @Description Gets all fields grouped by SObject.
+            * @return Map of SObject group to List of all fields.
+            ************************************************************/
+            function getAllFieldsBySObject() {
+                return _groupFieldsBySObject(_allFields);
+            }
+
+            /* **********************************************************
              * @Description Gets the available fields grouped by SObject.
              * @return Map of SObject group to List of inactive fields.
              ************************************************************/
@@ -607,85 +511,18 @@
                 return _groupFieldsBySObject(_activeFields);
             }
 
-            /* **********************************************************
-             * @Description moves the selected fields up in the Active Fields view
-             * @return void
-             ************************************************************/
-            function moveSelectedUp() {
-                var activeFieldsBySObject = getActivesBySObject();
-
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    var currentGroupFields = activeFieldsBySObject[sObjectName];
-                    if (_getSelectedFields(currentGroupFields).length > 1 || 
-                        (currentGroupFields.length > 0 && currentGroupFields[0].selected)
-                    ) {
-                        return;
-                    }
-                    for (var i = 0; i < currentGroupFields.length; i ++) {
-                        if (currentGroupFields[i].selected) {
-                            currentGroupFields[i].activeSortOrder --;
-                            currentGroupFields[i - 1].activeSortOrder ++;
-                            break;
-                        }
-                    }
-                });
-                this.onFieldsUpdated.notify();
-            }
-
-            /* **********************************************************
-             * @Description moves the selected fields down in the Active Fields view
-             * @return void
-             ************************************************************/
-            function moveSelectedDown() {
-                var activeFieldsBySObject = getActivesBySObject();
-
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    var currentGroupFields = activeFieldsBySObject[sObjectName];
-                    if (_getSelectedFields(currentGroupFields).length > 1 || 
-                        (currentGroupFields.length > 0 && currentGroupFields[currentGroupFields.length - 1].selected)
-                    ) {
-                        return;
-                    }
-                    for (var i = 0; i < currentGroupFields.length; i ++) {
-                        if (currentGroupFields[i].selected) {
-                            currentGroupFields[i].activeSortOrder ++;
-                            currentGroupFields[i + 1].activeSortOrder --;
-                            break;
-                        }
-                    }
-                });
-                this.onFieldsUpdated.notify();
-            }
-
-            /* **********************************************************
-             * @Description Selects the available fields and
-             *      notify onFieldsUpdated listeners.
-             * @param fieldsToSelect. Map of IDs to available fields.
-             * @return void.
-             ************************************************************/
-            function selectAvailables(fieldsToSelect) {
-                var availableTemplateFields = getAvailables();
-                _selectFields(availableTemplateFields, fieldsToSelect);
-                this.onFieldsUpdated.notify();
-            }
-
-            /* **********************************************************
-             * @Description Selects the active fields and notifies onFieldsUpdated listeners.
-             * @param fieldsToSelect. Map of IDs to active fields.
-             * @return void.
-             ************************************************************/
-            function selectActives(fieldsToSelect) {
-                var activeTemplateFields = getActives();
-                _selectFields(activeTemplateFields, fieldsToSelect);
-                this.onFieldsUpdated.notify();
-            }
 
             /* **********************************************************
              * @Description Updates the selected fields to Active, unselects
              *      fields, and notifies onFieldsUpdated listeners.
              * @return void.
              ************************************************************/
-            function updateSelectedToActive() {
+            function updateToActive(templateFields) {
+
+                //todo: START HERE
+                templateFields.forEach(function(SObjectName) {
+
+                });
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
@@ -782,17 +619,14 @@
             // TemplateFieldsModel module public functions and properties
             return {
                 load: load,
+                getAllFieldsBySObject: getAllFieldsBySObject,
                 getAvailables: getAvailables,
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
-                selectAvailables: selectAvailables,
-                selectActives: selectActives,
-                updateSelectedToActive: updateSelectedToActive,
+                updateToActive: updateToActive,
                 updateSelectedToAvailable: updateSelectedToAvailable,
-                onFieldsUpdated: _onFieldsUpdated,
-                moveSelectedUp: moveSelectedUp,
-                moveSelectedDown: moveSelectedDown
+                onFieldsUpdated: _onFieldsUpdated
 
             }
         })(Event);
