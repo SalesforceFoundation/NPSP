@@ -22,14 +22,15 @@ global class BGE_HandsOnGridController {
 
         DataImportBatch__c batch = selector.getBatchById(batchId);
 
-        Map<Id, Batch_Template_Field__c> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
+        List<Object> templateFields = selector.getTemplateFieldsByTemplateId(batch.Batch_Template__c);
 
         BGE_HandsOnGridColumnWrapper[] columns = new BGE_HandsOnGridColumnWrapper[] {};
         String[] fieldNames = new String[] {};
-
-        for (Batch_Template_Field__c templateField :templateFields.values()) {
-            columns.add(new BGE_HandsOnGridColumnWrapper(templateField));
-            fieldNames.add(templateField.Name);
+            
+        for(Object fld : templateFields){    
+            Map<String,Object> data = (Map<String,Object>)fld;
+			columns.add(new BGE_HandsOnGridColumnWrapper((Map<String,Object>)data));
+           	fieldNames.add((String)data.get('name'));
         }
 
         if (!columns.isEmpty()) {

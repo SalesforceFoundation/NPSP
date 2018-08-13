@@ -25,15 +25,14 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
     public Map<String, String> picklistValues {get; set;}
     public Boolean isRecordType {get; set;}
 
-	public BGE_HandsOnGridColumnWrapper(Batch_Template_Field__c templateField) {
-
+    public BGE_HandsOnGridColumnWrapper(Map<String,Object> templateField) {
+        
         picklistValues =  null;
         isRecordType = false;
         String objectName = DATA_IMPORT_NAME;
 
-        Schema.SObjectField dataImportField = getObjectFields(DATA_IMPORT_NAME).get(templateField.Name);
+        Schema.SObjectField dataImportField = getObjectFields(DATA_IMPORT_NAME).get((String)templateField.get('name'));
         Schema.DescribeFieldResult dataImportFieldDescribe = dataImportField.getDescribe();
-
         Schema.SObjectField recordField = dataImportField;
         Schema.DescribeFieldResult recordFieldDescribe = dataImportFieldDescribe;
 
@@ -85,8 +84,8 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
 
         label = recordFieldDescribe.getLabel();
         type = String.valueOf(recordFieldDescribe.getType()).toUpperCase();
-        apiName = templateField.Name;
-        required = templateField.Required__c;
+        apiName = (String)templateField.get('name');
+        required = (Boolean)templateField.get('required');
 
         if (type.equalsIgnoreCase('PICKLIST')) {
             picklistValues = getObjectFieldPicklistValues(recordFieldDescribe);
