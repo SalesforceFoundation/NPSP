@@ -1018,6 +1018,7 @@
         <members>npe01__OppPayment__c.Payment_Acknowledged_Date__c</members>
         <members>npe01__OppPayment__c.Payment_Acknowledgment_Status__c</members>
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
+        <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
         <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
@@ -1155,6 +1156,7 @@
         <members>CRLP_NoFilterGroupSelected</members>
         <members>CRLP_PleaseWait</members>
         <members>CRLP_RecalculatingRollups</members>
+        <members>CRLP_ResetRollupsWarning</members>
         <members>CRLP_Return</members>
         <members>CRLP_RollupNew</members>
         <members>CRLP_RollupSummary</members>
@@ -1675,6 +1677,7 @@
         <members>stgCRLPInfoOnUDRBody</members>
         <members>stgCRLPInfoOnUDRHeading</members>
         <members>stgCRLPNonAdminError</members>
+        <members>stgCRLPReset</members>
         <members>stgCheckboxFalse</members>
         <members>stgCheckboxTrue</members>
         <members>stgCountOf</members>
@@ -1944,6 +1947,7 @@
         <members>stgNotApplicable</members>
         <members>stgOppNamingDescription</members>
         <members>stgPowerOfUsHub</members>
+        <members>stgReset</members>
         <members>stgSelectOne</members>
         <members>stgTools</members>
         <members>stgUnknownError</members>
