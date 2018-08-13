@@ -520,10 +520,18 @@
             function updateToActive(templateFields) {
 
                 //todo: START HERE
-                templateFields.forEach(function(SObjectName) {
 
-                });
-                _allFields.forEach(function(currentField) {
+                Object.keys(getAllFieldsBySObject()).forEach(function(SObjectName) {
+                    getAllFieldsBySObject[SObjectName].forEach(function(field) {
+                        if (templateFields[SObjectName].values.contains(field.id)) {
+                            field.isActive = true;
+                        } else {
+                            field.isActive = false;
+                        }
+                    });
+                 });
+
+                /*_allFields.forEach(function(currentField) {
                     if (!currentField.isActive && currentField.selected) {
                         currentField.isActive = true;
                         currentField.selected = false;
@@ -532,7 +540,7 @@
                         var activeFieldsBySObject = getActivesBySObject();
                         currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
                     }
-                });
+                });*/
                 this.onFieldsUpdated.notify();
             }
 

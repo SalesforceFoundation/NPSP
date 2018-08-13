@@ -43,7 +43,7 @@
     <aura:attribute name="templateFields" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
-    <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and tree grid is active."/>
+    <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
     <aura:attribute name="recordId" type="Id" />
 
     <!-- events we handle -->
@@ -86,36 +86,37 @@
         <div class="slds-size_1-of-1 slds-large-size_3-of-5 slds-m-around_medium">
 
             <!-- Title -->
-            <div class="slds-text-align--center slds-m-vertical_medium">
+            <div class="slds-text-align_center slds-m-vertical_medium">
                 <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
-                    <h2 class="slds-text-heading_medium">Template Overview</h2>
+                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateOverview}</h2>
                 </aura:if>
                 <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '2' }">
-                    <h2 class="slds-text-heading_medium">Select Fields</h2>
+                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSelectFields}</h2>
                 </aura:if>
                 <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
-                    <h2 class="slds-text-heading_medium">Set Field Options</h2>
+                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
                 </aura:if>
+                <p class="slds-text-body_regular slds-p-top_medium">{!$Label.c.bgeBatchTemplateHelpText}</p>
             </div>
 
             <!--Progress Indicator-->
             <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base" hasError="false" variant="base">
-                <lightning:progressStep label="Template Overview" value="1"/>
-                <lightning:progressStep label="Select Fields" value="2"/>
-                <lightning:progressStep label="Set Field Options" value="3"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverview}" value="1"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="2"/>
+                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="3"/>
             </lightning:progressIndicator>
 
             <!--Template Container-->
-            <div class="row slds-form slds-form_compound">
+            <div class="slds-form slds-form_compound">
 
                 <!-- Step 1: Template Overview -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
                     <div class="row slds-p-around_large">
-                        <div class="slds-col slds-size_4-of-12">
+                        <div class="slds-col slds-size_6-of-12">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
                                              value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}" required="true"/>
                         </div>
-                        <div class="slds-col slds-size_4-of-12 slds-p-top_small">
+                        <div class="slds-col slds-size_6-of-12 slds-p-top_small">
                             <lightning:textarea name="description" label="{!v.templateMetadata.labels.description}"
                                                 value="{!v.templateInfo.description}" readonly="{!v.isReadOnly}"
                                                 required="true"/>
@@ -179,13 +180,8 @@
                 <!-- Step 2: Select Fields -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '2'}">
 
-                    <div class="slds-grid slds-grid--align-center">
-                        <div class="slds-size_1-of-1 slds-m-around--medium">
-                            <h1 class="slds-text-heading--small slds-m-bottom--small">Select Fields</h1>
-                            <div class="slds-text-body--regular slds-m-vertical--medium">Choose the fields to include in this Batch Gift Entry
-                                Template. Once you've moved fields to the selected list, you can use the up/down arrows to change the order
-                                in which they will appear as columns in the grid.
-                            </div>
+                    <div class="slds-grid slds-grid_align-center">
+                        <div class="slds-size_1-of-1 slds-m-around_medium">
 
                             <lightning:accordion>
 
@@ -193,15 +189,28 @@
                                 <lightning:accordionSection name="Contact1" label="Contact 1">
                                     <div class="slds-grid">
                                         <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
-                                                                   options="{!v.templateFields.Contact1.options}"
-                                                                   value="{!v.templateFields.Contact1.values}"
-                                            />
-                                        </div>
+                                        <!--<aura:if isTrue="{!v.isReadOnly}">
+                                            <p class="slds-text-body_regular">{!$Label.c.bgeBatchTemplateActiveFields}:</p>
+                                            <ul>
+                                                <aura:iteration items="{!v.templateFields.Contact1.values}" var="item">
+                                                    <li>{!item}</li>
+                                                </aura:iteration>
+                                            </ul>
+                                            <aura:set attribute="else">-->
+                                                <div class="slds-col slds-size_4-of-6">
+                                                    <lightning:dualListbox name="multipleOptions"
+                                                                           label="Fields"
+                                                                           sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                           selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
+                                                                           options="{!v.templateFields.Contact1.options}"
+                                                                           value="{!v.templateFields.Contact1.values}"
+                                                                           variant="label-hidden"
+                                                    />
+                                                </div>
+                                            <!--</aura:set>
+                                        </aura:if>-->
+
+
                                         <div class="slds-col slds-size_1-of-6"></div>
                                     </div>
                                 </lightning:accordionSection>
@@ -213,10 +222,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Contact2.options}"
                                                                    value="{!v.templateFields.Contact2.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -230,10 +240,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Account1.options}"
                                                                    value="{!v.templateFields.Account1.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -247,10 +258,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Account2.options}"
                                                                    value="{!v.templateFields.Account2.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -265,10 +277,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Household.options}"
                                                                    value="{!v.templateFields.Household.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -282,10 +295,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Address.options}"
                                                                    value="{!v.templateFields.Address.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -299,10 +313,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Opportunity.options}"
                                                                    value="{!v.templateFields.Opportunity.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -316,10 +331,11 @@
                                         <div class="slds-col slds-size_4-of-6">
                                             <lightning:dualListbox name="multipleOptions"
                                                                    label="Fields"
-                                                                   sourceLabel="Available"
-                                                                   selectedLabel="Selected"
+                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
                                                                    options="{!v.templateFields.Payment.options}"
                                                                    value="{!v.templateFields.Payment.values}"
+                                                                   variant="label-hidden"
                                             />
                                         </div>
                                         <div class="slds-col slds-size_1-of-6"></div>
@@ -334,7 +350,11 @@
 
                 <!-- Step 3: Set Field Options -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
-
+                    <div class="slds-grid slds-grid_align-center">
+                        <div class="slds-size_1-of-1 slds-m-around_medium">
+                            GRID GOES HERE
+                        </div>
+                    </div>
                 </aura:if>
                 <!--End Step 3-->
 
@@ -343,11 +363,10 @@
                     <div class="slds-grid slds-grid_align-end">
                         <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
                         <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
-                            <!-- TODO: label! -->
-                            <lightning:button variant="neutral" label="Back" onclick="{!c.back}" />
+                            <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
                         </aura:if>
                         <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
-                            <lightning:button variant="neutral" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                            <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
                         </aura:if>
                         <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
                             <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
