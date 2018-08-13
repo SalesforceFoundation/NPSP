@@ -151,8 +151,6 @@
                     //todo: sort by activeSortOrder here and/or alphabetical here
                 });
 
-                console.log(JSON.stringify(templateFields.Contact1.values));
-
                 component.set('v.templateFields', templateFields);
             });
             

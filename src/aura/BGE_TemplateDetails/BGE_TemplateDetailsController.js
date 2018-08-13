@@ -64,8 +64,6 @@
     * @Description. Moves to next wizard step
     *****************************************************************/
     next: function(component, event, helper) {
-        console.log('in next');
-        console.log(JSON.stringify(component.get("v.templateFields")));
         var model = component.get('v.model');
         var step = component.get("v.templateMetadata.progressIndicatorStep");
 

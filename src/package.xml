@@ -628,7 +628,6 @@
         <members>dataProviderInterface</members>
         <members>defaultTokens</members>
         <members>svg</members>
-        <members>sldsExpandableSection</members>
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
