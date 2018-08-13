@@ -54,7 +54,7 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Grant_Deadline_Due_Date__c</fullName>
-        <description>The date on which this particular Deliverable is due.</description>
+        <description>The date this Deliverable is due.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date this Deliverable is due.</inlineHelpText>
         <label>Due Date</label>
@@ -65,7 +65,7 @@
     </fields>
     <fields>
         <fullName>Grant_Deliverable_Close_Date__c</fullName>
-        <description>The date on which the deliverable was actually submitted.</description>
+        <description>The date this Deliverable was actually submitted.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date this Deliverable was actually submitted.</inlineHelpText>
         <label>Close Date</label>
@@ -76,7 +76,7 @@
     </fields>
     <fields>
         <fullName>Grant_Deliverable_Requirements__c</fullName>
-        <description>Description of what is required for this deliverable.</description>
+        <description>Description of what is required for this Deliverable.</description>
         <externalId>false</externalId>
         <inlineHelpText>Description of what is required for this Deliverable.</inlineHelpText>
         <label>Requirements</label>

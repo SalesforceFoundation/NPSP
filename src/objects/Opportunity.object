@@ -758,7 +758,7 @@
     </fieldSets>
     <fields>
         <fullName>Acknowledgment_Date__c</fullName>
-        <description>Used to track date opportunity was acknowledged</description>
+        <description>The date that you acknowledged this Opportunity.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date that you acknowledged this Opportunity.</inlineHelpText>
         <label>Acknowledgment Date</label>
@@ -769,7 +769,7 @@
     </fields>
     <fields>
         <fullName>Acknowledgment_Status__c</fullName>
-        <description>Status of Acknowledgment of this gift.</description>
+        <description>The acknowledgement status of this Opportunity. </description>
         <externalId>false</externalId>
         <inlineHelpText>The acknowledgement status of this Opportunity.</inlineHelpText>
         <label>Acknowledgment Status</label>
@@ -810,7 +810,7 @@
     </fields>
     <fields>
         <fullName>Ask_Date__c</fullName>
-        <description>The date when the donor was specifically asked for the donation, as opposed to the Opportunity Close Date that the organization may set to either when the Opportunity was first created, or when the Opportunity was won.</description>
+        <description>The date the donor was asked for this Donation. This may be different from the date you received it.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date the donor was asked for this Donation. This may be different from the date you received it.</inlineHelpText>
         <label>Ask Date</label>
@@ -859,7 +859,7 @@
     </fields>
     <fields>
         <fullName>Gift_Strategy__c</fullName>
-        <description>Categorizes the type of ask for this opportunity.</description>
+        <description>Categorizes the type of ask for this Opportunity, for example, New Donor.</description>
         <externalId>false</externalId>
         <inlineHelpText>Categorizes the type of ask for this Opportunity, for example, New Donor.</inlineHelpText>
         <label>Gift Strategy</label>
@@ -891,7 +891,7 @@
     </fields>
     <fields>
         <fullName>Grant_Contract_Date__c</fullName>
-        <description>The date of the grant&apos;s inception, according to the document or contract sent by the grant-making organization.</description>
+        <description>The date of the Grant's inception, according to the document or contract sent by the grantmaking organization.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date of the Grant's inception, according to the document or contract sent by the grantmaking organization.</inlineHelpText>
         <label>Grant Contract Date</label>
@@ -902,7 +902,7 @@
     </fields>
     <fields>
         <fullName>Grant_Contract_Number__c</fullName>
-        <description>Tracks unique numbers sometimes assigned by grant-making organizations.</description>
+        <description>Use this to track unique numbers sometimes assigned by grantmaking organizations.</description>
         <externalId>false</externalId>
         <inlineHelpText>Use this to track unique numbers sometimes assigned by grantmaking organizations.</inlineHelpText>
         <label>Grant Contract Number</label>
@@ -935,7 +935,7 @@
     </fields>
     <fields>
         <fullName>Grant_Program_Area_s__c</fullName>
-        <description>Describes the funding areas for the grant/gift. You can enter anything you want here. For example, you could enter the name of the program the grant/gift applies to.</description>
+        <description>Use this to describe the funding areas for the Grant or Donation. For example, the names of the programs the Grant or Donation is designated for.</description>
         <externalId>false</externalId>
         <inlineHelpText>Use this to describe the funding areas for the Grant or Donation. For example, the names of the programs the Grant or Donation is designated for.</inlineHelpText>
         <label>Program Areas</label>
@@ -946,7 +946,7 @@
     </fields>
     <fields>
         <fullName>Grant_Requirements_Website__c</fullName>
-        <description>A URL that points to the grant requirements on the grant-maker&apos;s website.</description>
+        <description>A URL that points to the grant requirements on the grantmaker's website.</description>
         <externalId>false</externalId>
         <inlineHelpText>A URL that points to the grant requirements on the grantmaker's website.</inlineHelpText>
         <label>Grant Requirements Website</label>
@@ -958,7 +958,7 @@
     <fields>
         <fullName>Honoree_Contact__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The existing Contact record of the honoree for this donation.</description>
+        <description>Lookup to the Contact record of the honoree for this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Contact record of the honoree for this Donation.</inlineHelpText>
         <label>Honoree Contact</label>
@@ -972,7 +972,7 @@
     </fields>
     <fields>
         <fullName>Honoree_Name__c</fullName>
-        <description>The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, Salesforce automatically populates this field with that value.</description>
+        <description>The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, NPSP automatically populates this field with that value.</description>
         <externalId>false</externalId>
         <inlineHelpText>The honoree name as provided by the donor. If this field is left blank, and the Honoree Contact field contains a value, NPSP automatically populates this field with that value.</inlineHelpText>
         <label>Honoree Name</label>
@@ -998,7 +998,7 @@
     <fields>
         <fullName>In_Kind_Donor_Declared_Value__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>Checked if the donor provided the Fair Market Value for this In-Kind gift.</description>
+        <description>Indicates whether the donor provided the Fair Market Value for this In-Kind Gift.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the donor provided the Fair Market Value for this In-Kind Gift.</inlineHelpText>
         <label>In-Kind Donor Declared Value</label>
@@ -1008,7 +1008,7 @@
     </fields>
     <fields>
         <fullName>In_Kind_Type__c</fullName>
-        <description>The type of In-Kind gift.</description>
+        <description>The type of In-Kind Gift, for example, Goods or Services.</description>
         <externalId>false</externalId>
         <inlineHelpText>The type of In-Kind Gift, for example, Goods or Services.</inlineHelpText>
         <label>In-Kind Type</label>
@@ -1035,7 +1035,7 @@
     <fields>
         <fullName>Is_Grant_Renewal__c</fullName>
         <defaultValue>false</defaultValue>
-        <description>If selected, indicates that the grant is a renewal of a previous grant.</description>
+        <description>Indicates whether the Grant is a renewal of a previous Grant.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the Grant is a renewal of a previous Grant.</inlineHelpText>
         <label>Is Grant Renewal</label>
@@ -1046,7 +1046,7 @@
     <fields>
         <fullName>Matching_Gift_Account__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The account of the company who will match this gift.</description>
+        <description>Lookup to the Account record of the company that will match this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Account record of the company that will match this Donation.</inlineHelpText>
         <label>Matching Gift Account</label>
@@ -1060,7 +1060,7 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Employer__c</fullName>
-        <description>The name of the company who will match this gift.</description>
+        <description>The name of the company that will match this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The name of the company that will match this Donation.</inlineHelpText>
         <label>Matching Gift Employer</label>
@@ -1073,9 +1073,9 @@
     </fields>
     <fields>
         <fullName>Matching_Gift_Status__c</fullName>
-        <description>The status of this gift being matched.</description>
+        <description>The status of the Matching Gift for this Donation, for example, Submitted or Received.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The status of the Matching Gift for this Donation.</inlineHelpText>
+        <inlineHelpText>The status of the Matching Gift for this Donation, for example, Submitted or Received.</inlineHelpText>
         <label>Matching Gift Status</label>
         <required>false</required>
         <trackFeedHistory>false</trackFeedHistory>
@@ -1105,7 +1105,7 @@
     <fields>
         <fullName>Matching_Gift__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The employer&apos;s matching gift for this employee&apos;s gift.</description>
+        <description>Lookup to the Opportunity record for the Matching Gift for this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Opportunity record for the Matching Gift for this Donation.</inlineHelpText>
         <label>Matching Gift</label>
@@ -1119,7 +1119,7 @@
     </fields>
     <fields>
         <fullName>Next_Grant_Deadline_Due_Date__c</fullName>
-        <description>The NPSP updates this field automatically based on the next Deliverable record.</description>
+        <description>The due date for this Opportunity's next Deliverable (read only).</description>
         <externalId>false</externalId>
         <inlineHelpText>The due date for this Opportunity's next Deliverable (read only).</inlineHelpText>
         <label>Next Deliverable Date</label>
@@ -1153,7 +1153,7 @@
     </fields>
     <fields>
         <fullName>Notification_Preference__c</fullName>
-        <description>How the notification recipient should be notified.</description>
+        <description>Indicates how the notification recipient should be notified, for example, by email or phone.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates how the notification recipient should be notified, for example, by email or phone.</inlineHelpText>
         <label>Notification Preference</label>
@@ -1190,7 +1190,7 @@
     <fields>
         <fullName>Notification_Recipient_Contact__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The existing Contact record of the person to be notified for this donation.</description>
+        <description>Lookup to the Contact record of the person who should be notified about this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>Lookup to the Contact record of the person who should be notified about this Donation.</inlineHelpText>
         <label>Notification Recipient Contact</label>
@@ -1204,7 +1204,7 @@
     </fields>
     <fields>
         <fullName>Notification_Recipient_Information__c</fullName>
-        <description>The contact information (as provided by the donor) for the notification recipient.</description>
+        <description>Enter any contact information such as address, phone, or email that the donor provided for the notification recipient.</description>
         <externalId>false</externalId>
         <inlineHelpText>Enter any contact information such as address, phone, or email that the donor provided for the notification recipient.</inlineHelpText>
         <label>Notification Recipient Information</label>
@@ -1215,7 +1215,7 @@
     </fields>
     <fields>
         <fullName>Notification_Recipient_Name__c</fullName>
-        <description>The name (as provided by the donor) of the person who should be notified about this gift. If this field is left blank and the Notification Recipient Contact field contains a value, Salesforce automatically populates this field with that value.</description>
+        <description>The name that the donor provided of the person you should notify about this Donation. If this field is left blank and the Notification Recipient Contact field contains a value, NPSP automatically populates this field with that value.</description>
         <externalId>false</externalId>
         <inlineHelpText>The name that the donor provided of the person you should notify about this Donation. If this field is left blank and the Notification Recipient Contact field contains a value, NPSP automatically populates this field with that value.</inlineHelpText>
         <label>Notification Recipient Name</label>
@@ -1229,9 +1229,9 @@
     <fields>
         <fullName>Previous_Grant_Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>If this grant/gift is a renewal of a previous grant/gift, use this field to relate this record to the previous one.</description>
+        <description>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</description>
         <externalId>false</externalId>
-        <inlineHelpText>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous one.</inlineHelpText>
+        <inlineHelpText>If this Grant is a renewal of a previous Grant, use this field to relate this record to the previous Grant.</inlineHelpText>
         <label>Previous Grant/Gift Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Related Grants/Gifts</relationshipLabel>
@@ -1243,7 +1243,7 @@
     </fields>
     <fields>
         <fullName>Primary_Contact_Campaign_Member_Status__c</fullName>
-        <description>The status to use when creating a campaign member for this opportunity&apos;s primary contact and primary campaign source. Leave blank to default to an responded status for closed/won opportunities, and a non-responded status for other opportunities.</description>
+        <description>The status NPSP uses when it creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</description>
         <externalId>false</externalId>
         <inlineHelpText>The status NPSP uses when it creates a Campaign Member for this Opportunity's Primary Contact and Primary Campaign Source. Leave blank to default to a responded status for Closed/Won Opportunities, and a non-responded status for other Opportunities.</inlineHelpText>
         <label>Primary Contact Campaign Member Status</label>
@@ -1257,7 +1257,7 @@
     <fields>
         <fullName>Primary_Contact__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>The primary contact for this opportunity. The primary contact role is kept in sync with this field. For individual donations, this denotes attribution for this opportunity.</description>
+        <description>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organizational Donation, NPSP attributes a soft credit to the Primary Contact.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Primary Contact for this Opportunity. If this is an individual Donation, NPSP attributes the Donation to the Primary Contact. If this is an organizational Donation, NPSP attributes a soft credit to the Primary Contact.</inlineHelpText>
         <label>Primary Contact</label>
@@ -1271,7 +1271,7 @@
     </fields>
     <fields>
         <fullName>Qualified_Date__c</fullName>
-        <description>The date this donor was identified as qualifying for this donation.</description>
+        <description>The date your organization identified this donor as qualifying for this Donation.</description>
         <externalId>false</externalId>
         <inlineHelpText>The date your organization identified this donor as qualifying for this Donation.</inlineHelpText>
         <label>Qualified Date</label>
@@ -1282,7 +1282,7 @@
     </fields>
     <fields>
         <fullName>Recurring_Donation_Installment_Name__c</fullName>
-        <description>Installment name for inclusion in Opportunity Naming. Shows the installment number in parenthesis for open ended recurring donations, or the installment number out of the total for recurring donations with a set number of installments.</description>
+        <description>The installment name for inclusion in Opportunity naming. Shows the installment number in parentheses for open ended Recurring Donations, or the installment number out of the total for Recurring Donations with a set number of installments.</description>
         <externalId>false</externalId>
         <formula>IF(
 ISBLANK(npe03__Recurring_Donation__c),
@@ -1303,9 +1303,9 @@ ISBLANK(npe03__Recurring_Donation__c),
     </fields>
     <fields>
         <fullName>Recurring_Donation_Installment_Number__c</fullName>
-        <description>The installment number of this opportunity&apos;s recurring donation schedule.</description>
+        <description>The installment number of this Opportunity's Recurring Donation schedule.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The installment number of this opportunity&apos;s recurring donation schedule.</inlineHelpText>
+        <inlineHelpText>The installment number of this Opportunity's Recurring Donation schedule.</inlineHelpText>
         <label>Recurring Donation Installment Number</label>
         <precision>18</precision>
         <required>false</required>
@@ -1330,7 +1330,7 @@ ISBLANK(npe03__Recurring_Donation__c),
     </fields>
     <fields>
         <fullName>Tribute_Type__c</fullName>
-        <description>Indicates whether the gift is in honor or memory of an individual.</description>
+        <description>Indicates whether the Donation is in honor or in memory of an individual.</description>
         <externalId>false</externalId>
         <inlineHelpText>Indicates whether the Donation is in honor or in memory of an individual.</inlineHelpText>
         <label>Tribute Type</label>
