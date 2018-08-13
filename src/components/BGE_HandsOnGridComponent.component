@@ -356,7 +356,7 @@
 
         function beforeChangeHandler(changes, source) {
 
-            if (source === "paste" || source === "autofill") {
+            if (source === "CopyPaste.paste" || source === "Autofill.fill") {
 
                 for (var i = 0; i < changes.length; i++) {
 
@@ -378,7 +378,7 @@
 
         function afterChangeHandler(changes, source) {
 
-            var sourceOptions = ['edit', 'autofill', 'paste'];
+            var sourceOptions = ['edit', 'Autofill.fill', 'CopyPaste.paste'];
 
             if (sourceOptions.includes(source) && !isIndexLoading) {
 
@@ -648,12 +648,10 @@
         function beforeKeyDownHandler(event) {
 
             var totalSelection = hot.getSelected();
-            var command = event.keyCode === 91;
-            var control = event.keyCode === 17;
 
             // Check if one only cell was selected, else cells will be deselected after a key is pressed
             // (except Command(Mac) or Control(Mac/Win) keys, used for select multiple cells)
-            if (totalSelection.length == 1 &&
+            if (totalSelection && totalSelection.length == 1 &&
                 totalSelection[0][0] == totalSelection[0][2] &&
                 totalSelection[0][1] == totalSelection[0][3]) {
 
@@ -872,10 +870,6 @@
                         }
                     }
                 }
-            }
-            else if (!command || !control) {
-
-                hot.deselectCell();
             }
         }
 
