@@ -687,7 +687,7 @@ public class ALLO_Allocations_TDTM extends TDTM_Runnable {
     * @param listPmts A list of payments whose amount or currency has changed.
     * @return void This method modifies class variables and doesn't return anything.
     ********************************************************************************************************/
-    private void paymentAmountCurrencyChange(list<npe01__OppPayment__c> listPmts){
+    private void paymentAmountCurrencyChange(List<npe01__OppPayment__c> listPmts){
         
         for (npe01__OppPayment__c pmt : listPmts) {
         

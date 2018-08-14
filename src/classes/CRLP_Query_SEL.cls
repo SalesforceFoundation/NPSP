@@ -56,6 +56,11 @@
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.Partial_Soft_Credit__c.fields.Role_Name__c.getSobjectField().getDescribe());
+        } else if (resultObject == Account_Soft_Credit__c.SObjectType) {
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Opportunity__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Account__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Amount__c.getSobjectField().getDescribe());
+            allFieldsToQuery.add(SObjectType.Account_Soft_Credit__c.fields.Role__c.getSobjectField().getDescribe());
         } else if (resultObject == OpportunityContactRole.SObjectType) {
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.ContactId.getSobjectField().getDescribe());
             allFieldsToQuery.add(SObjectType.OpportunityContactRole.fields.OpportunityId.getSobjectField().getDescribe());
@@ -111,11 +116,13 @@
         // Get the main SOQL statement for the detail object and parse out the FROM portion
         String mainSoql = buildObjectQueryForRollup(detailObject).split(' FROM ')[0];
 
-        if (detailObject == OpportunityContactRole.SObjectType || detailObject == Partial_Soft_Credit__c.SObjectType
-                    || detailObject == Allocation__c.SObjectType) {
+        if (detailObject == OpportunityContactRole.SObjectType
+                || detailObject == Partial_Soft_Credit__c.SObjectType
+                || detailObject == Allocation__c.SObjectType
+                || detailObject == Account_Soft_Credit__c.SObjectType) {
 
             // ====================================================================================================
-            // If the detailObject is OCR, PSC or Allocation, then rather than include a sub-query for the child objects
+            // If the detailObject is OCR, PSC, ASC or Allocation, then rather than include a sub-query for the child objects
             // we'll include foreignkey references to the Opportunity object
             // ====================================================================================================
 
@@ -160,7 +167,8 @@
      * @param includeChildPayments True if npe01__OppPayment__c child records should be included in the query
      * @return SOQL
      */
-    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments) {
+    public static String buildFullDetailsQueryForSummaryRecords(Set<Id> summaryRecordIds, Boolean includeChildPayments,
+            CRLP_RollupProcessingOptions.ProcessingOptions options) {
         SObjectType objType = (new List<Id>(summaryRecordIds))[0].getSobjectType();
         SObjectType mainObject;
         String detailKeyField;
@@ -168,12 +176,21 @@
 
         // The specific set of 'detail' records is fixed based on the target summary object.
         if (objType == Account.SObjectType) {
-            // Opportunity and Payment to Account
-            mainObject = Opportunity.SObjectType;
-            if (includeChildPayments == true) {
-                childObjects.add(npe01__OppPayment__c.SObjectType);
+
+            if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
+                    options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+
+                // Opportunity and Payment to Account
+                mainObject = Opportunity.SObjectType;
+                if (includeChildPayments == true) {
+                    childObjects.add(npe01__OppPayment__c.SObjectType);
+                }
+                detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
+            } else if (options.rollupJobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                // Account Soft Credit to Account
+                mainObject = Account_Soft_Credit__c.SObjectType;
+                detailKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
             }
-            detailKeyField = SObjectType.Opportunity.fields.AccountId.getName();
 
         } else if (objType == Contact.SObjectType) {
             // Opportunity and Payment to Contact
@@ -313,6 +330,8 @@
             parentRelationshipPrefix = SObjectType.Allocation__c.fields.Opportunity__c.getName().replace('__c', '__r');
         } else if (detailObjectType == Partial_Soft_Credit__c.SObjectType) {
             parentRelationshipPrefix = 'Opportunity';
+        } else if (detailObjectType == Account_Soft_Credit__c.SObjectType) {
+            parentRelationshipPrefix = SObjectType.Account_Soft_Credit__c.fields.Opportunity__c.getName().replace('__c', '__r');
         }
 
         // The following loop will confirm that all Filter Groups use the same Rule for the same field
