@@ -38,21 +38,9 @@
 public virtual class CRLP_VRollupHandler implements CRLP_Rollup_SVC.IRollupHandler {
 
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String conObjectName = UTIL_Describe.getObjectDescribe('Contact').getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
     /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
     protected final String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String ocrObjectName = UTIL_Describe.getObjectDescribe('OpportunityContactRole').getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String gauObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('General_Accounting_Unit__c')).getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String allocObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Allocation__c')).getName();
-    /* @description 'Name' of the object referenced in the rollup. Visible to classes that extend this virtual class. */
-    protected final String rdObjectName = UTIL_Describe.getObjectDescribe('npe03__Recurring_Donation__c').getName();
 
     /* @description The SObject record being rolled up to. Not visible to classes that extend this virtual class */
     private SObject record;
