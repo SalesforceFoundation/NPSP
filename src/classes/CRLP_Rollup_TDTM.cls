@@ -1,10 +1,8 @@
 /*
     Copyright (c) 2018, Salesforce.org
     All rights reserved.
-
     Redistribution and use in source and binary forms, with or without
     modification, are permitted provided that the following conditions are met:
-
     * Redistributions of source code must retain the above copyright
       notice, this list of conditions and the following disclaimer.
     * Redistributions in binary form must reproduce the above copyright
@@ -13,7 +11,6 @@
     * Neither the name of Salesforce.org nor the names of
       its contributors may be used to endorse or promote products derived
       from this software without specific prior written permission.
-
     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
     "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
     LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
@@ -150,7 +147,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
 
         } else if (detailObjType == npe01__OppPayment__c.SObjectType) {
 
-            // If the payment records were modified, get the parent Opportunity records so that 
+            // If the payment records were modified, get the parent Opportunity records so that
             // the linked AccountId and PrimaryContactId values can be retrieved for the rollups
             Set<Id> oppIds = new Set<Id>();
             for (SObject s  : detailRecordsToRollup) {
@@ -214,7 +211,7 @@ public class CRLP_Rollup_TDTM extends TDTM_Runnable {
                 // The queueable job will pop the list of Id's off the stack and process them in serial.
                 if (!queueOfSummaryIds.isEmpty() && Limits.getQueueableJobs() < Limits.getLimitQueueableJobs()) {
                     Integer numExecutingJobs = [SELECT count() FROM AsyncApexJob
-                        WHERE JobType='Queueable' AND (Status = 'Processing' OR Status = 'Preparing' OR Status = 'Holding' OR Status = 'Queued')];
+                    WHERE JobType='Queueable' AND (Status = 'Processing' OR Status = 'Preparing' OR Status = 'Holding' OR Status = 'Queued')];
 
                     // Don't execute the batch if there are already 5 CRLP queueable jobs jobs executing
                     if (numExecutingJobs < MAX_ALLOWED_QUEUED_JOBS) {

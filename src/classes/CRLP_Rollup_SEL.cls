@@ -278,11 +278,13 @@ public class CRLP_Rollup_SEL {
         String oppObjectName = UTIL_Describe.getObjectDescribe('Opportunity').getName();
         String pmtObjectName = UTIL_Describe.getObjectDescribe('npe01__OppPayment__c').getName();
         String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
+        String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')).getName();
 
         // Determine the correct base summary object based on the Rollup Type
         SObjectType summaryObjectType;
         if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             summaryObjectType = Account.SObjectType;
         } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -305,7 +307,10 @@ public class CRLP_Rollup_SEL {
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
                         rollupType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                     includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == pmtObjectName)
-                            && r.Amount_Object__r.QualifiedApiName != pscObjectName);
+                            && r.Amount_Object__r.QualifiedApiName != pscObjectName && r.Amount_Object__r.QualifiedApiName != accSCObjectName);
+                } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    includeRollupDefinition = ((r.Detail_Object__r.QualifiedApiName == oppObjectName || r.Detail_Object__r.QualifiedApiName == accSCObjectName)
+                            && r.Amount_Object__r.QualifiedApiName == accSCObjectName);
                 } else if (rollupType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                         rollupType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     includeRollupDefinition = (r.Amount_Object__r.QualifiedApiName == pscObjectName);
