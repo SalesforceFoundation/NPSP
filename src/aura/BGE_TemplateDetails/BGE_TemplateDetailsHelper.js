@@ -27,14 +27,14 @@
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateInfoView = component.get('v.templateInfo');
 
-                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(objName) {
+                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(sObjectName) {
 
-                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1) + ' ' + objName.slice(-1) : objName;
+                    var objLabel = sObjectName.slice(-1) == '1' || sObjectName.slice(-1) == '2' ?  sObjectName.slice(0,-1) + ' ' + sObjectName.slice(-1) : sObjectName;
 
                     templateInfoView.availableSObjects.push(
                         {
                             label: objLabel,
-                            value: objName
+                            value: sObjectName
                         }
                     );
                 });
@@ -148,39 +148,6 @@
 
                 component.set('v.templateFields', templateFields);
             });
-            
-            /* *******************************************************************
-             * @Description Converts the Available Fields list to the templateFields
-             * Lightning:treeGrid data format.
-             * @return templateFields Lightning:treeGrid data format.
-             *********************************************************************/
-            function _convertToGridData(fieldsBySObject) {
-                var result = [];
-                
-                Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
-                    var gridDataRow = {
-                        id: sObjectName,
-                        label: sObjectName,
-                        selected: false,
-                        _children: []
-                    };
-
-                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
-                        gridDataRow._children.push(
-                            {
-                                id: sObjectField.id,
-                            	label: sObjectField.label,
-                                selected: sObjectField.selected,
-                                availableSortOrder: sObjectField.availableSortOrder
-                            }
-                        );
-                    });
-
-                    result.push(gridDataRow);
-                });
-                
-                return result;
-            }
             
             // TemplateFieldsView module public functions and properties
 			return {
@@ -422,37 +389,6 @@
             }
 
             /* **********************************************************
-             * @Description Gets the available fields.
-             * @return List of inactive fields.
-             ************************************************************/
-            function getAvailables() {
-                var _availableFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (!currentField.isActive) {
-                        _availableFields.push(currentField);
-                    }
-                });
-                return _availableFields;
-            }
-/*            /!* **********************************************************
-             * @Description Gets the available fields.
-             * @return List of inactive fields.
-             ************************************************************!/
-            function getAvailableSObjects() {
-                Object.keys(getAvailablesBySObject()).forEach(function(objName) {
-                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
-
-                    _allSObjects.push(
-                        {
-                            label: objLabel,
-                            value: objName,
-                            selected: true
-                        }
-                    );
-                });
-            }*/
-
-            /* **********************************************************
             * @Description Gets all fields grouped by SObject.
             * @return Map of SObject group to List of all fields.
             ************************************************************/
@@ -516,38 +452,7 @@
                 });
             }
 
-            /* **********************************************************
-             * @Description Updates the selected fields to Available, unselects
-             *      fields, and notifies onFieldsUpdated listeners.
-             * @return void.
-             ************************************************************/
-            function updateSelectedToAvailable() {
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive && currentField.selected) {
-                        currentField.isActive = false;
-                        currentField.selected = false;
-                        currentField.activeSortOrder = null;
-                    }
-                });
-                this.onFieldsUpdated.notify();
-            }
-
             /* ******************PRIVATE FUNCTIONS************************/
-
-            /* **********************************************************
-             * @Description Gets selected fields
-             * @param fields: list of fields.
-             * @return Selected fields.
-             ************************************************************/
-            function _getSelectedFields(fields) {
-                var result = [];
-                fields.forEach(function(currentField) {
-                    if (currentField.selected) {
-                        result.push(currentField);
-                    }
-                });
-                return result;
-            }
 
             /* **********************************************************
              * @Description Groups the fields by SObject name.
@@ -563,18 +468,6 @@
                     result[currentField.sObjectName].push(currentField);
                 });
                 return result;
-            }
-
-            /* **********************************************************
-             * @Description Selects the fields by updating fields reference.
-             * @param fields. List of fields.
-             * @param fieldsToSelect. Id of fields to select.
-             * @return void.
-             ************************************************************/
-            function _selectFields(fields, fieldsToSelect) {
-                fields.forEach(function(currentField) {
-                    currentField.selected = (currentField.id in fieldsToSelect);
-                });
             }
 
             /***********************************************************
@@ -600,12 +493,10 @@
             return {
                 load: load,
                 getAllFieldsBySObject: getAllFieldsBySObject,
-                getAvailables: getAvailables,
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
                 updateToActive: updateToActive,
-                updateSelectedToAvailable: updateSelectedToAvailable,
                 onFieldsUpdated: _onFieldsUpdated
 
             }
