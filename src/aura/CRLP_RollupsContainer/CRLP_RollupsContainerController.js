@@ -38,8 +38,9 @@
                     cmp.set("v.summaryObjects", summaryObjects);
 
                     var unsortedDetailObjects = [{label: labels.labelOpportunity, name: labels.objectOpportunity}
-                        , {label: labels.softCredit, name: labels.objectPartialSoftCredit}
+                        , {label: labels.labelContactSoftCredit, name: labels.objectPartialSoftCredit}
                         , {label: labels.labelPayment, name: labels.objectPayment}
+                        , {label: labels.labelAccountSoftCredit, name: labels.objectAccountSoftCredit}
                         , {label: labels.labelAllocation, name: labels.objectAllocation}];
                     var detailObjects = helper.sortData(cmp, 'label', 'asc', unsortedDetailObjects);
                     cmp.set("v.detailObjects", detailObjects);
