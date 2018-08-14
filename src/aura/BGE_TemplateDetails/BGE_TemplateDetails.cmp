@@ -164,152 +164,24 @@
                     <div class="slds-grid slds-grid_align-center">
                         <div class="slds-size_1-of-1 slds-m-around_medium">
                             <lightning:accordion>
-                                
-                                <!-- Contact 1 -->
-                                <lightning:accordionSection name="Contact1" label="Contact 1">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                                <div class="slds-col slds-size_4-of-6">
-                                                    <lightning:dualListbox name="multipleOptions"
-                                                                           label="Fields"
-                                                                           sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                           selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                           options="{!v.templateFields.Contact1.options}"
-                                                                           value="{!v.templateFields.Contact1.values}"
-                                                                           variant="label-hidden"
-                                                    />
-                                                </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Contact 2 -->
-                                <lightning:accordionSection name="Contact2" label="Contact 2">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Contact2.options}"
-                                                                   value="{!v.templateFields.Contact2.values}"
-                                                                   variant="label-hidden"
-                                            />
+                                <aura:iteration items="{!v.templateFields.fieldGroups}" var="currentFieldGroup">
+                                    <lightning:accordionSection name="{!currentFieldGroup.sObjectName}" label="{!currentFieldGroup.sObjectName}">
+                                        <div class="slds-grid">
+                                            <div class="slds-col slds-size_1-of-6"></div>
+                                                    <div class="slds-col slds-size_4-of-6">
+                                                        <lightning:dualListbox name="multipleOptions"
+                                                                               label="Fields"
+                                                                               sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
+                                                                               selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
+                                                                               options="{!currentFieldGroup.options}"
+                                                                               value="{!currentFieldGroup.values}"
+                                                                               variant="label-hidden"
+                                                        />
+                                                    </div>
+                                            <div class="slds-col slds-size_1-of-6"></div>
                                         </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Account 1 -->
-                                <lightning:accordionSection name="Account1" label="Account 1">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Account1.options}"
-                                                                   value="{!v.templateFields.Account1.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Account 2 -->
-                                <lightning:accordionSection name="Account2" label="Account 2">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Account2.options}"
-                                                                   value="{!v.templateFields.Account2.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Household -->
-                                <!--todo: is household deprecated?-->
-                                <lightning:accordionSection name="Household" label="Household">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Household.options}"
-                                                                   value="{!v.templateFields.Household.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Address -->
-                                <lightning:accordionSection name="Address" label="Address">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Address.options}"
-                                                                   value="{!v.templateFields.Address.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Opportunity -->
-                                <lightning:accordionSection name="Opportunity" label="Opportunity">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Opportunity.options}"
-                                                                   value="{!v.templateFields.Opportunity.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
-                                <!-- Payment -->
-                                <lightning:accordionSection name="Payment" label="Payment">
-                                    <div class="slds-grid">
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                        <div class="slds-col slds-size_4-of-6">
-                                            <lightning:dualListbox name="multipleOptions"
-                                                                   label="Fields"
-                                                                   sourceLabel="{!$Label.c.bgeBatchTemplateAvailableFields}"
-                                                                   selectedLabel="{!$Label.c.bgeBatchTemplateSelectedFields}"
-                                                                   options="{!v.templateFields.Payment.options}"
-                                                                   value="{!v.templateFields.Payment.values}"
-                                                                   variant="label-hidden"
-                                            />
-                                        </div>
-                                        <div class="slds-col slds-size_1-of-6"></div>
-                                    </div>
-                                </lightning:accordionSection>
-
+                                    </lightning:accordionSection>
+                                </aura:iteration>
                             </lightning:accordion>
                         </div>
                     </div>

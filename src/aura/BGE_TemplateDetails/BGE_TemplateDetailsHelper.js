@@ -122,28 +122,32 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
+                templateFields.fieldGroups = [];
 
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
+
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
-                    templateFields[sObjectName] = {};
-                    templateFields[sObjectName].options = [];
-                    templateFields[sObjectName].values = [];
+                    var currentFieldGroup = {
+                        sObjectName : sObjectName,
+                        options: [],
+                        values: []
+                    };
 
                     allFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        templateFields[sObjectName].options.push(
+                        currentFieldGroup.options.push(
                             {
                                 label: currentField.label,
                                 value: currentField.id
                             }
                         );
                     });
-                });
-
-                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
-                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
-                    activeFieldsBySObject[sObjectName].forEach(function(currentField) {
-                        templateFields[sObjectName].values.push(currentField.id);
-                    });
+                    if (activeFieldsBySObject[sObjectName]) {
+                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                            currentFieldGroup.values.push(currentField.id);
+                        });
+                    }
+                    templateFields.fieldGroups.push(currentFieldGroup);
                 });
 
                 component.set('v.templateFields', templateFields);
@@ -151,7 +155,7 @@
             
             // TemplateFieldsView module public functions and properties
 			return {
-
+                fieldGroups: []
             };
         })(component, model);
 	},
@@ -441,14 +445,18 @@
 
 
             /* *******************************************************************
-             * @Description Updates the selected fields to Active, unselects ields
+             * @Description Updates the selected fields to Active, unselects fields
              * @return void.
              **********************************************************************/
-            function updateToActive(templateFields) {
+            function updateToActive(templateFieldGroups) {
                 _allFields.forEach(function(currentField) {
-                    console.log(templateFields[currentField.sObjectName]);
-                    currentField.isActive = templateFields[currentField.sObjectName].values.includes(currentField.id);
-                    currentField.activeSortOrder = currentField.isActive ? templateFields[currentField.sObjectName].values.indexOf(currentField.id) : 0;
+                    templateFieldGroups.forEach(function(currentFieldGroup) {
+                        if (currentFieldGroup.sObjectName === currentField.sObjectName) {
+                            currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                            currentField.activeSortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) : 0;
+                        }
+                    });
+                            
                 });
             }
 
