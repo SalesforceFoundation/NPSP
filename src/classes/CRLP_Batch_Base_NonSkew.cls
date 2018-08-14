@@ -48,7 +48,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
     protected List<String> fieldsToCheckForNonZero {
         get {
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
-                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
+                    this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit
+                    ) {
                 return new List<String>{
                         'npo02__NumberOfClosedOpps__c', 'npo02__NumberOfMembershipOpps__c'
                 };
@@ -61,7 +62,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         SObjectType.General_Accounting_Unit__c.fields.Total_Number_of_Allocations__c.getName()
                 };
             }
-            return new List<String >();
+            return new List<String>();
         } private set;
     }
 
@@ -125,7 +126,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                         whereClauses.add('Id IN (SELECT ' + contactField + ' FROM Opportunity ALLROWS)');
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
                         whereClauses.add('Id IN (SELECT ContactId FROM OpportunityContactRole ALLROWS)');
-                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                            this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit ) {
                         // It's not possible to do an inner query on this due to the following Salesforce error:
                         // "The inner select field 'Contact.AccountId' cannot have more than one level of relationships"
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
@@ -176,7 +178,8 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 detailRecords = CRLP_RollupProcessor_SVC.getDetailOppRecordsForParentRecords(summaryRecords, hasActivePaymentRollupsForThisJob(), options);
 
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
-                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                    jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
 
                 npo02__Households_Settings__c householdSettings = UTIL_CustomSettingsFacade.getHouseholdsSettings();
 
@@ -185,34 +188,53 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
                 List<String> whereClauses = new List<String>();
                 whereClauses.add(this.keyField + ' IN : summaryRecords');
 
-                String addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
+                String addlFilter;
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, Partial_Soft_Credit__c.SObjectType);
+                } else {
+                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
+                }
                 if (!String.isEmpty(addlFilter)) {
                     whereClauses.add(addlFilter);
                 }
 
-                if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
-                    whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
-                } else {
-                    whereClauses.add('IsPrimary = False');
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    if (householdSettings.npo02__Always_Rollup_to_Primary_Contact__c == false) {
+                        whereClauses.add('(IsPrimary = False OR Opportunity.Account.npe01__SYSTEMIsIndividual__c = False)');
+                    } else {
+                        whereClauses.add('IsPrimary = False');
+                    }
                 }
 
                 if (!whereClauses.isEmpty()) {
                     query += ' WHERE ' + String.join(whereClauses, ' AND ');
                 }
 
-                // Note that the ORDER BY here doesn't gaurantee that the records will actually be in this order
-                query += ' ORDER BY ' + this.keyField + ', Opportunity.CreatedDate ASC ';
+                // Note that the ORDER BY here doesn't guarantee that the records will actually be in this order
+                query += ' ORDER BY ' + this.keyField;
+
+                String createdDateClause;
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    createdDateClause = ', Opportunity.CreatedDate ASC ';
+                } else {
+                    createdDateClause = ', Opportunity__r.CreatedDate ASC ';
+                }
+                query += createdDateClause;
 
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> OCR Query =' + query);
-
                 // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
                 // records complete with the parent Opportunity details (CloseDate, Amount, ec.)
-                detailRecords = buildPartialSoftCreditRecordsFromOCRs(Database.query(query));
+                if (jobType != CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    detailRecords = buildPartialSoftCreditRecordsFromOCRs(Database.query(query));
+                } else {
+                    detailRecords = Database.query(query);
+                }
                 UTIL_Debug.debug(LoggingLevel.WARN, '>> PSC Detail Record Size =' + detailRecords.size());
 
             }
 
-            String parentObjectField, parentKeyField = options.parentKeyField;
+            String parentObjectField;
+            String parentKeyField = options.parentKeyField;
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.AccountId)
             // If this is the case, need to parse out the two components to use
@@ -256,7 +278,7 @@ public abstract class CRLP_Batch_Base_NonSkew extends CRLP_Batch_Base {
             if (summaryRecords.size() > 0) {
 
                 Map<Id, List<SObject>> paymentsByOpp = new Map<Id, List<SObject>>();
-                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType)) {
+                if (hasActivePaymentRollupsForThisJob() && (this.summaryObjectType == Account.SObjectType || this.summaryObjectType == Contact.SObjectType) && this.detailObjectType != Account_Soft_Credit__c.SObjectType) {
                     paymentsByOpp = CRLP_RollupProcessor_SVC.splitChildRecordsInMapByParentId(detailRecords, 'npe01__OppPayment__r');
                 }
 

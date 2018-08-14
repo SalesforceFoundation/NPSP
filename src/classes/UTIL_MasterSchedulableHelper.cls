@@ -85,11 +85,13 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // keep the naming similar and stagger the job start times slightly.
                     defaultScheduledJobs.put('NPSP 01A - Customizable Rollups - Account Hard Credit', new List<String>{'0 0 23 ? * *', 'CRLP_Account_BATCH'});
                     defaultScheduledJobs.put('NPSP 02A - Customizable Rollups - Contact Hard Credit', new List<String>{'0 05 23 ? * *', 'CRLP_Contact_BATCH'});
-                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03A - Customizable Rollups - Account-level Contact Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit', new List<String>{'0 10 23 ? * *', 'CRLP_Account_AccSoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 04A - Customizable Rollups - Contact Soft Credit', new List<String>{'0 15 23 ? * *', 'CRLP_Contact_SoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 01B - Customizable Rollups - Account Hard Credit Skew', new List<String>{'0 0 23 ? * *', 'CRLP_AccountSkew_BATCH'});
                     defaultScheduledJobs.put('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew', new List<String>{'0 05 23 ? * *', 'CRLP_ContactSkew_BATCH'});
-                    defaultScheduledJobs.put('NPSP 03B - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03C - Customizable Rollups - Account-level Contact Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_SoftCredit_BATCH'});
+                    defaultScheduledJobs.put('NPSP 03D - Customizable Rollups - Account Soft Credit Skew', new List<String>{'0 10 23 ? * *', 'CRLP_AccountSkew_AccSoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew', new List<String>{'0 15 23 ? * *', 'CRLP_ContactSkew_SoftCredit_BATCH'});
                     defaultScheduledJobs.put('NPSP 05 - Customizable Rollups - General Accounting Units', new List<String>{'0 20 23 ? * *', 'CRLP_GAU_BATCH'});
                     defaultScheduledJobs.put('NPSP 06A - Customizable Rollups - Recurring Donations', new List<String>{'0 25 23 ? * *', 'CRLP_RD_BATCH'});
@@ -114,11 +116,13 @@ public without sharing class UTIL_MasterSchedulableHelper {
                     // The following jobs should be aborted if the Customizable Rollups jobs are NOT enabled
                     jobsToAbort.add('NPSP 01A - Customizable Rollups - Account Hard Credit');
                     jobsToAbort.add('NPSP 02A - Customizable Rollups - Contact Hard Credit');
-                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account Soft Credit');
+                    jobsToAbort.add('NPSP 03A - Customizable Rollups - Account-level Contact Soft Credit');
+                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Account Soft Credit');
                     jobsToAbort.add('NPSP 04A - Customizable Rollups - Contact Soft Credit');
                     jobsToAbort.add('NPSP 01B - Customizable Rollups - Account Hard Credit Skew');
                     jobsToAbort.add('NPSP 02B - Customizable Rollups - Contact Hard Credit Skew');
-                    jobsToAbort.add('NPSP 03B - Customizable Rollups - Account Soft Credit Skew');
+                    jobsToAbort.add('NPSP 03C - Customizable Rollups - Account-level Contact Soft Credit Skew');
+                    jobsToAbort.add('NPSP 03D - Customizable Rollups - Account Soft Credit Skew');
                     jobsToAbort.add('NPSP 04B - Customizable Rollups - Contact Soft Credit Skew');
                     jobsToAbort.add('NPSP 05 - Customizable Rollups - General Accounting Units');
                     jobsToAbort.add('NPSP 06A - Customizable Rollups - Recurring Donations');
@@ -197,7 +201,7 @@ public without sharing class UTIL_MasterSchedulableHelper {
     * @return Boolean
     */
     public static Boolean hasRunningJob(String className) {
-        className = (className.contains('__') ? className.split('__')[1] : className);
+        className = (className.contains('.') ? className.substringAfter('.') : className);
         // If any quick single-record rollup jobs have recently been launched, don't let these block the full re-run
         Datetime tenMinutesAgo = DateTime.Now().addMinutes(-10);
         Integer jobCount = [SELECT COUNT()

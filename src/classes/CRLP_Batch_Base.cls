@@ -125,14 +125,20 @@ public abstract class CRLP_Batch_Base {
         if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             options.parentKeyField = SObjectType.Opportunity.fields.AccountId.getName();
 
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            options.parentKeyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+            options.detailObjType = Account_Soft_Credit__c.SObjectType;
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             options.parentKeyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName();
+            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
             options.parentKeyField = SObjectType.Partial_Soft_Credit__c.fields.Contact__c.getName().replace('__c','__r') + '.AccountId';
+            options.detailObjType = Partial_Soft_Credit__c.SObjectType;
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
             options.parentKeyField = SObjectType.Allocation__c.fields.General_Accounting_Unit__c.getName();
@@ -204,6 +210,10 @@ public abstract class CRLP_Batch_Base {
             this.detailObjectType = Opportunity.SObjectType;
             this.keyField = SObjectType.Opportunity.fields.AccountId.getName();
 
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            this.detailObjectType = Account_Soft_Credit__c.SObjectType;
+            this.keyField = SObjectType.Account_Soft_Credit__c.fields.Account__c.getName();
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             this.detailObjectType = Opportunity.SObjectType;
             this.keyField = SObjectType.Opportunity.fields.Primary_Contact__c.getName();
@@ -234,14 +244,17 @@ public abstract class CRLP_Batch_Base {
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(Account.SObjectType);
 
+        } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+            hasActiveRollups = CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType);
+
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(Contact.SObjectType);
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType);
+            hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Contact.SObjectType);
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
-            hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType);
+            hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType);
 
         } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.RecurringDonations) {
             hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(npe03__Recurring_Donation__c.SObjectType);
