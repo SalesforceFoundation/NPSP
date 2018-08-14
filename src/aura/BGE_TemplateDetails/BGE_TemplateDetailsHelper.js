@@ -29,7 +29,7 @@
 
                 Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(objName) {
 
-                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
+                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1) + ' ' + objName.slice(-1) : objName;
 
                     templateInfoView.availableSObjects.push(
                         {
@@ -42,7 +42,7 @@
                 component.set('v.templateInfo', templateInfoView);
             });
 
-            //  module public functions and properties
+            // TemplateInfoView module public functions and properties
             return {
                 name: '',
                 id: '',
@@ -99,7 +99,7 @@
                 component.set('v.templateMetadata', templateMetadataView);
             });
 
-            //  module public functions and properties
+            // TemplateMetadataView module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -111,10 +111,10 @@
     },
 
     /* ***************************************************************
-     * @Description Returns the Available Template Fields View module.
+     * @Description Returns the Template Fields View module.
      * @param component. Lightning Component reference.
      * @param model. The Template Fields Model.
-     * @return View of the Available Template Fields module.
+     * @return View of the Template Fields module.
      *****************************************************************/
     TemplateFieldsView : function(component, model) {
 		return (function (component, model) {
@@ -122,8 +122,8 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
-                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
 
+                var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
                     templateFields[sObjectName] = {};
                     templateFields[sObjectName].options = [];
@@ -216,7 +216,6 @@
              * @return void.
              ************************************************************/
             function init(component) {
-
                 _bgeTemplateController.getTemplateDetails({
                     success: function(response) {
                         _templateInfo.load(
@@ -505,11 +504,10 @@
             }
 
 
-            /* **********************************************************
-             * @Description Updates the selected fields to Active, unselects
-             *      fields, and notifies onFieldsUpdated listeners.
+            /* *******************************************************************
+             * @Description Updates the selected fields to Active, unselects ields
              * @return void.
-             ************************************************************/
+             **********************************************************************/
             function updateToActive(templateFields) {
                 _allFields.forEach(function(currentField) {
                     console.log(templateFields[currentField.sObjectName]);
@@ -537,7 +535,7 @@
             /* ******************PRIVATE FUNCTIONS************************/
 
             /* **********************************************************
-             * @Description Get selected fields
+             * @Description Gets selected fields
              * @param fields: list of fields.
              * @return Selected fields.
              ************************************************************/
@@ -615,7 +613,8 @@
 	},
 
     /* **********************************************************
-     * @Description Gets the Model module of the Template Metadata, such as page mode and labels.
+     * @Description Gets the Model module of the Template Metadata, 
+     * such as page mode and labels.
      * @return Model module of the Template Metadata.
      ************************************************************/
     TemplateMetadata : function() {
