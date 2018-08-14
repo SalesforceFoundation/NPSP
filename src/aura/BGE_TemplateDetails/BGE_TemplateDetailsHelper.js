@@ -128,27 +128,22 @@
                     templateFields[sObjectName] = {};
                     templateFields[sObjectName].options = [];
                     templateFields[sObjectName].values = [];
-                    var fieldList = allFieldsBySObject[sObjectName];
-                    // TODO: sort by the required order of the left hand side of the dual picklist
-                    // fieldList.sort();
-                    fieldList.forEach(function(fld) {
+
+                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
                         templateFields[sObjectName].options.push(
                             {
-                                label: fld.label,
-                                value: fld.name
-                                //, sortOrder: fld.availableSortOrder
+                                label: currentField.label,
+                                value: currentField.id
                             }
-                        )
-                    //});
-                    // TODO: sort by the user-defined order of the RIGHT hand side of the dual picklist
-                    // fieldList.sort(activeSortOrder);
-                    // fieldList.forEach(function(fld) {
-                        if (fld.isActive) {
-                            templateFields[sObjectName].values.push(fld.name);
-                        }
+                        );
                     });
+                });
 
-                    //todo: sort by activeSortOrder here and/or alphabetical here
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
+                Object.keys(activeFieldsBySObject).forEach(function(sObjectName) {
+                    activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                        templateFields[sObjectName].values.push(currentField.id);
+                    });
                 });
 
                 component.set('v.templateFields', templateFields);
@@ -516,30 +511,11 @@
              * @return void.
              ************************************************************/
             function updateToActive(templateFields) {
-
-                //todo: START HERE
-
-                Object.keys(getAllFieldsBySObject()).forEach(function(SObjectName) {
-                    getAllFieldsBySObject[SObjectName].forEach(function(field) {
-                        if (templateFields[SObjectName].values.contains(field.id)) {
-                            field.isActive = true;
-                        } else {
-                            field.isActive = false;
-                        }
-                    });
-                 });
-
-                /*_allFields.forEach(function(currentField) {
-                    if (!currentField.isActive && currentField.selected) {
-                        currentField.isActive = true;
-                        currentField.selected = false;
-
-                        // TODO: this seems expensive. is there a better way?
-                        var activeFieldsBySObject = getActivesBySObject();
-                        currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
-                    }
-                });*/
-                this.onFieldsUpdated.notify();
+                _allFields.forEach(function(currentField) {
+                    console.log(templateFields[currentField.sObjectName]);
+                    currentField.isActive = templateFields[currentField.sObjectName].values.includes(currentField.id);
+                    currentField.activeSortOrder = currentField.isActive ? templateFields[currentField.sObjectName].values.indexOf(currentField.id) : 0;
+                });
             }
 
             /* **********************************************************
