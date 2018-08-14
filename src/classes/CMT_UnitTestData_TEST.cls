@@ -241,7 +241,7 @@ public class CMT_UnitTestData_TEST {
      * Detail object names since they're automatically set based on the RollupRecordType enum.
      */
     public Enum RollupRecordType {
-        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, ContactSoftCreditToAccount, OppToRD
+        OppToAcct, OppToContact, PmtToAcct, PmtToContact, GAU, SoftCreditToContact, ContactSoftCreditToAccount, OppToRD, AccountSoftCreditToAccount
     }
     /**
      * @description Convert the Enum to a Summary Object name
@@ -254,7 +254,8 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.GAU => 'General_Accounting_Unit__c',
             RollupRecordType.SoftCreditToContact => 'Contact',
             RollupRecordType.ContactSoftCreditToAccount => 'Account',
-            RollupRecordType.OppToRD => 'npe03__Recurring_Donation__c'
+            RollupRecordType.OppToRD => 'npe03__Recurring_Donation__c',
+            RollupRecordType.AccountSoftCreditToAccount => 'Account'
     };
     /**
      * @description Convert the Enum to a Detail Object name
@@ -267,7 +268,8 @@ public class CMT_UnitTestData_TEST {
             RollupRecordType.GAU => 'Allocation__c',
             RollupRecordType.SoftCreditToContact => 'Partial_Soft_Credit__c',
             RollupRecordType.ContactSoftCreditToAccount => 'Partial_Soft_Credit__c',
-            RollupRecordType.OppToRD => 'Opportunity'
+            RollupRecordType.OppToRD => 'Opportunity',
+            RollupRecordType.AccountSoftCreditToAccount => 'Account_Soft_Credit__c'
 
     };
 
@@ -398,7 +400,9 @@ public class CMT_UnitTestData_TEST {
             parms.put('Amount', getDetailObject.get(rollupType) + '.' + detailField);
             parms.put('Detail', getDetailObject.get(rollupType) + '.' + detailField);
 
-        } else if (rollupType == RollupRecordType.ContactSoftCreditToAccount || rollupType == RollupRecordType.SoftCreditToContact) {
+        } else if (rollupType == RollupRecordType.ContactSoftCreditToAccount ||
+                rollupType == RollupRecordType.SoftCreditToContact ||
+                rollupType == RollupRecordType.AccountSoftCreditToAccount) {
 
             String detailField;
             if (((String)parms.get('Detail')).contains('.')) {

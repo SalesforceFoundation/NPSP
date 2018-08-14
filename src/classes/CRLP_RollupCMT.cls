@@ -165,7 +165,7 @@ public class CRLP_RollupCMT {
 
             try {
                 // obfuscating "Partial Soft Credit" object; relabeling to simply "Soft Credit"
-                this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
+                this.objectLabel = filterRule.Object__r.QualifiedApiName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c') ? Schema.SObjectType.Contact.getLabel()+' '+System.Label.CRLP_SoftCredit : filterRule.Object__r.MasterLabel;
                 this.fieldLabel = UTIL_Describe.getFieldLabel(filterRule.Object__r.QualifiedApiName, filterRule.Field__r.QualifiedApiName);
                 this.operationLabel = this.operationName; // will need to be updated in the RollupUI logic
                 this.valueLabel = getValueLabel(this.value, this.objectName, this.fieldName);

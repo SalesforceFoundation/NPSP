@@ -115,8 +115,10 @@
         <members>CON_DeleteContactOverride_TEST</members>
         <members>CON_DoNotContact_TDTM</members>
         <members>CON_DoNotContact_TEST</members>
+        <members>CRLP_AccountSkew_AccSoftCredit_BATCH</members>
         <members>CRLP_AccountSkew_BATCH</members>
         <members>CRLP_AccountSkew_SoftCredit_BATCH</members>
+        <members>CRLP_Account_AccSoftCredit_BATCH</members>
         <members>CRLP_Account_BATCH</members>
         <members>CRLP_Account_SoftCredit_BATCH</members>
         <members>CRLP_Batch_Base</members>
@@ -145,6 +147,7 @@
         <members>CRLP_RecalculateBTN_CTRL</members>
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
+        <members>CRLP_RollupAccSoftCredit_SVC</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -232,12 +235,14 @@
         <members>MTCH_FindGifts_TEST</members>
         <members>MTCH_Opportunity_TDTM</members>
         <members>MTCH_Opportunity_TEST</members>
+        <members>OPP_AccountSoftCredit_TDTM</members>
         <members>OPP_AutomatedSoftCreditsService</members>
         <members>OPP_AutomatedSoftCreditsService_TEST</members>
         <members>OPP_CampaignMember_TDTM</members>
         <members>OPP_CampaignMember_TEST</members>
         <members>OPP_CascadeDeleteLookups_TDTM</members>
         <members>OPP_CascadeDeleteLookups_TEST</members>
+        <members>OPP_CurrencySync_TEST</members>
         <members>OPP_INaming</members>
         <members>OPP_MatchingDonationsBTN_CTRL</members>
         <members>OPP_MatchingDonationsBTN_TEST</members>
@@ -422,6 +427,7 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -520,6 +526,7 @@
     </types>
     <types>
         <members>TDTM_Account</members>
+        <members>TDTM_AccountSoftCredit</members>
         <members>TDTM_Address</members>
         <members>TDTM_Affiliation</members>
         <members>TDTM_Allocation</members>
@@ -607,6 +614,10 @@
         <members>Account.Membership_Span__c</members>
         <members>Account.Membership_Status__c</members>
         <members>Account.Number_of_Household_Members__c</members>
+        <members>Account_Soft_Credit__c.Account__c</members>
+        <members>Account_Soft_Credit__c.Amount__c</members>
+        <members>Account_Soft_Credit__c.Opportunity__c</members>
+        <members>Account_Soft_Credit__c.Role__c</members>
         <members>Activity.Engagement_Plan_Task__c</members>
         <members>Activity.Engagement_Plan__c</members>
         <members>Addr_Verification_Settings__c.Address_Verification_Endpoint__c</members>
@@ -1018,8 +1029,8 @@
         <members>npe03__Recurring_Donation__c.Always_Use_Last_Day_Of_Month__c</members>
         <members>npe03__Recurring_Donation__c.Day_of_Month__c</members>
         <members>npe03__Recurring_Donations_Settings__c.Recurring_Donation_Batch_Size__c</members>
-        <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe4__Relationship_Settings__c.Enable_Custom_Field_Sync__c</members>
+        <members>npe4__Relationship__c.Related_Opportunity_Contact_Role__c</members>
         <members>npe5__Affiliation__c.Related_Opportunity_Contact_Role__c</members>
         <members>npo02__Household__c.Number_of_Household_Members__c</members>
         <members>npo02__Households_Settings__c.Matched_Donor_Role__c</members>
@@ -1957,6 +1968,7 @@
         <name>CustomLabels</name>
     </types>
     <types>
+        <members>Account_Soft_Credit__c</members>
         <members>Addr_Verification_Settings__c</members>
         <members>Address_Verification_Settings__c</members>
         <members>Address__c</members>
@@ -1995,6 +2007,13 @@
         <members>Account-iw</members>
         <members>Account-ja</members>
         <members>Account-nl_NL</members>
+        <members>Account_Soft_Credit__c-de</members>
+        <members>Account_Soft_Credit__c-en_US</members>
+        <members>Account_Soft_Credit__c-es</members>
+        <members>Account_Soft_Credit__c-fr</members>
+        <members>Account_Soft_Credit__c-iw</members>
+        <members>Account_Soft_Credit__c-ja</members>
+        <members>Account_Soft_Credit__c-nl_NL</members>
         <members>Activity-de</members>
         <members>Activity-es</members>
         <members>Activity-fr</members>
@@ -2329,6 +2348,7 @@
     <types>
         <members>Account-Household Layout</members>
         <members>Account-Organization Layout</members>
+        <members>Account_Soft_Credit__c-Account Soft Credit Layout</members>
         <members>Address__c-Address Layout</members>
         <members>Allocation__c-Allocation Layout</members>
         <members>Batch__c-Batch Layout</members>

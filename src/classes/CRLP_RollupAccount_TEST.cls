@@ -31,7 +31,7 @@
 * @author Salesforce.org
 * @date 2018
 * @group Customizable Rollups Operations Services
-* @description Unit Test for the Opportunity/Payment to Account Rollups
+* @description Unit Test for the Opportunity/Payment to Account Rollups (Hard Credit Only)
 */
 @isTest
 private class CRLP_RollupAccount_TEST {
@@ -48,6 +48,8 @@ private class CRLP_RollupAccount_TEST {
     private static void setupBaseTestData() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
         insert c;
+        Account acc = UTIL_UnitTestData_TEST.createMultipleTestAccounts(1, CAO_Constants.HH_ACCOUNT_TYPE)[0];
+        insert acc;
     }
 
     /**
@@ -134,8 +136,12 @@ private class CRLP_RollupAccount_TEST {
 
                 CMT_UnitTestData_TEST.createRollupRecord('Total Writeoffs', filterGroupId2,
                         CMT_UnitTestData_TEST.RollupRecordType.PmtToAcct,
-                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') +
+                        'npo02__LastMembershipAmount__c', CRLP_Operation.RollupType.SUM, 'npe01__Payment_Amount__c') + ',' +
 
+                // Using a nonsense field for an Account Soft Credit test since we don't package anything for Account Soft Credits
+                CMT_UnitTestData_TEST.createRollupRecord('Total Account Soft Credits', filterGroupId1,
+                        CMT_UnitTestData_TEST.RollupRecordType.AccountSoftCreditToAccount, 'npo02__Best_Gift_Year_Total__c',
+                        CRLP_Operation.RollupType.SUM, 'Amount__c') +
                 ']';
 
         // Deserialize the rollups to use for testing
@@ -201,7 +207,7 @@ private class CRLP_RollupAccount_TEST {
 
         // Retrieve the dummy Contact and then insert 100 Opportunity records
         Contact c = [SELECT Id, FirstName, LastName, AccountId FROM Contact LIMIT 1];
-        Id acctId = c.AccountId;
+        Id hardCreditAccId = c.AccountId;
 
         String closedStage = UTIL_UnitTestData_TEST.getClosedWonStage();
         Id rtId = UTIL_RecordTypes.getRecordTypeIdForGiftsTests(Opportunity.SObjectType);
@@ -250,7 +256,7 @@ private class CRLP_RollupAccount_TEST {
         insert opps;
 
         npe01__OppPayment__c pmt1 = [SELECT npe01__Written_Off__c, npe01__Paid__c FROM npe01__OppPayment__c
-            WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
+        WHERE npe01__Opportunity__r.IsWon = false LIMIT 1];
         pmt1.npe01__Written_Off__c = true;
         pmt1.npe01__Paid__c = false;    // technically this does not cause a DML change!?
 
@@ -275,19 +281,21 @@ private class CRLP_RollupAccount_TEST {
                                 WHERE npe01__Paid__c = true AND npe01__Opportunity__r.IsWon = true])[0].get('Amt'),
                 'The total Amount of all Paid Payments should be $10800');
 
-        String acctQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Id = :acctId LIMIT 1';
-        Account a = database.query(acctQuery);
+        String baseAccountQuery = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
+
+        String hardCreditAccQuery = baseAccountQuery + ' WHERE Id = :hardCreditAccId LIMIT 1';
+        Account hardCreditAcc = database.query(hardCreditAccQuery);
 
         // Make sure everything is null first!
         if (tt != TestType.TestTrigger) {
-            System.assertEquals(0, a.npo02__TotalOppAmount__c);
-            System.assertEquals(0, a.npo02__AverageAmount__c);
-            System.assertEquals(0, a.npo02__OppAmount2YearsAgo__c);
-            System.assertEquals(0, a.npo02__LargestAmount__c);
-            System.assertEquals(0, a.npo02__SmallestAmount__c);
-            System.assertEquals(null, a.npo02__LastCloseDate__c);
-            System.assertEquals(null, a.npo02__FirstCloseDate__c);
-            System.assertEquals(null, a.npo02__Best_Gift_Year__c);
+            System.assertEquals(0, hardCreditAcc.npo02__TotalOppAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__AverageAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
+            System.assertEquals(0, hardCreditAcc.npo02__LargestAmount__c);
+            System.assertEquals(0, hardCreditAcc.npo02__SmallestAmount__c);
+            System.assertEquals(null, hardCreditAcc.npo02__LastCloseDate__c);
+            System.assertEquals(null, hardCreditAcc.npo02__FirstCloseDate__c);
+            System.assertEquals(null, hardCreditAcc.npo02__Best_Gift_Year__c);
         }
 
         // Now test the rollups to the Account from the Opportunity
@@ -296,33 +304,41 @@ private class CRLP_RollupAccount_TEST {
             // the data will be rolled up automatically upon the stopTest().
         } else if (tt == TestType.TestBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, null, null);
+
         } else if (tt == TestType.testSkewBatch) {
             CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
-                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{acctId}, null);
+                    CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, new List<Id>{
+                            hardCreditAccId
+                    }, null);
+
         } else if (tt == TestType.TestQueueuable) {
-            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{acctId}));
+            System.enqueueJob(new CRLP_RollupQueueable(new List<Id>{
+                    hardCreditAccId
+            }));
+
         }
         Test.stopTest();
 
-        // Query the Account with all the target fields specified in the rollups
-        a = database.query(acctQuery);
+        // Query the Accounts with all the target fields specified in the rollups
+        hardCreditAcc = database.query(hardCreditAccQuery);
 
         // Basic rollup asserts using existing NPSP rollup fields.
-        System.assertEquals(totalDonations, a.npo02__TotalOppAmount__c);
-        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), a.npo02__AverageAmount__c);
-        System.assertEquals(total2YearsAgo, a.npo02__OppAmount2YearsAgo__c);
-        System.assertEquals(lastCloseDate, a.npo02__LastCloseDate__c);
-        System.assertEquals(closeDate, a.npo02__FirstCloseDate__c);
-        System.assertEquals(maxAmt, a.npo02__LargestAmount__c);
-        System.assertEquals(baseAmt, a.npo02__SmallestAmount__c);
-        System.assertEquals(bestGiftYear, a.npo02__Best_Gift_Year__c);
+        System.assertEquals(totalDonations, hardCreditAcc.npo02__TotalOppAmount__c);
+        System.assertEquals(totalDonations.divide(cnt, 2, System.RoundingMode.HALF_UP), hardCreditAcc.npo02__AverageAmount__c);
+        System.assertEquals(total2YearsAgo, hardCreditAcc.npo02__OppAmount2YearsAgo__c);
+        System.assertEquals(lastCloseDate, hardCreditAcc.npo02__LastCloseDate__c);
+        System.assertEquals(closeDate, hardCreditAcc.npo02__FirstCloseDate__c);
+        System.assertEquals(maxAmt, hardCreditAcc.npo02__LargestAmount__c);
+        System.assertEquals(baseAmt, hardCreditAcc.npo02__SmallestAmount__c);
+        System.assertEquals(bestGiftYear, hardCreditAcc.npo02__Best_Gift_Year__c);
 
         // These 4 use other fields on the Account object since there are no NPSP related fields to store the values in
-        System.assertEquals(totalDonations - baseAmt, a.AnnualRevenue,
+        System.assertEquals(totalDonations - baseAmt, hardCreditAcc.AnnualRevenue,
                 'Total Payments should match total donations less $100 because one payment has been marked as written off');
-        System.assertEquals(baseAmt, a.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
-        System.assertEquals(donationYears.size(), a.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
-        System.assertEquals(donationYears.size(), a.Description.split(';').size(), 'The list of donated years should match');
+        System.assertEquals(baseAmt, hardCreditAcc.npo02__LastMembershipAmount__c, 'The Amount written off does not match');
+        System.assertEquals(donationYears.size(), hardCreditAcc.npo02__NumberOfMembershipOpps__c, 'The current streak should be all the years');
+        System.assertEquals(donationYears.size(), hardCreditAcc.Description.split(';').size(), 'The list of donated years should match');
+
     }
 }

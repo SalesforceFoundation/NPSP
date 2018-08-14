@@ -3,7 +3,15 @@
  *
  * - CREATE TEST DATA AND AND TEST BOTH LEGACY AND CUSTOMIZABLE ROLLUP ENGINE BY VALIDATING THE
  *   RESULTING FIELD VALUES AGAINST EXPECTED RESULTS.
- * - REQUIRES 3 CUSTOM FIELDS ON THE ACCOUNT WITH CORRESPONDING ROLLUP CMT RECORDS
+ * - REQUIRES 5 CUSTOM FIELDS ON THE ACCOUNT WITH CORRESPONDING ROLLUP CMT RECORDS
+ *      1. TEST_Total_Payments__c
+ *      2. TEST_Total_Writeoffs__c
+ *      3. TEST_Soft_Credit_Total__c
+ *      4. TEST_Acc_Soft_Credit_Total__c
+ *      5. TEST_Acc_Soft_Credit_Largest_Amt__c
+ * - REQUIRES CRLPs TO BE ENABLED IN TEST ORG
+ * - CAN USE createCustomRollups METHOD BELOW FROM ANON APEX TO CREATE THE EXTRA CMT RECORDS
+ * - REQUIRES MEMBERSHIP RECORD TYPE TO BE CONFIGURED AS EXCLUDED IN LEGACY AND CRLPs
  * - ALL TESTS ARE CONDUCTED USING EXECUTE ANONYMOUS; EXECUTING ONE METHOD AT A TIME IN THE FOLLOWING ORDER:
  *   CRLP_TEST_VALIDATE_ROLLUPS.deleteTestData();
  *   CRLP_TEST_VALIDATE_ROLLUPS.createTestDataASync();
@@ -17,20 +25,25 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
 
     // TODO -- Add support for verifying that dupe OCR's for Soft Credit Contact Roles are not duped in results
 
-    // Use this rate when testing in a multicurrency org
-    private static final Double CURR_EXCHANGE_RATE = 123.11;
+    // When testing in a multicurrency org, set up CAD with this rate: 1.2311
+    private static final Double CURR_EXCHANGE_RATE = 1.2311;
 
     private static final String ACCOUNT_NAME_RD = 'CRLP TEST RD ACCOUNT 3';
     private static final String ACCOUNT_NAME_ORG = 'CRLP TEST ORG ACCOUNT 4';
+    private static final String ACCOUNT_NAME_ASC = 'CRLP TEST ASC ACCOUNT';
     private static final String TEST_SITE_NAME = 'TEST_DATA';
     private static final String ORG_CONTACT_NAME = 'CRLPTEST-ORG-DONATION';
     private static final String GAU_NAME = 'CRLP Default GAU';
     private static final String RD_NAME = 'CRLP TEST RD';
+    private static final String ACCOUNT_SOFT_CREDIT_ROLE_A = 'Influencer';
+    private static final String ACCOUNT_SOFT_CREDIT_ROLE_B = 'Donation Source';
 
     private static final Decimal ORG_DONATION_AMT = 5000;
     private static final Decimal BASE_AMOUNT_USD = 100;
     private static final Decimal RD_AMOUNT_USD = 150;
-    private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
+    private static final Decimal OPPORTUNITY_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? BASE_AMOUNT_USD*CURR_EXCHANGE_RATE : BASE_AMOUNT_USD);
+    private static final Decimal ACCOUNT_SOFT_CREDIT_BASE_AMOUNT = BASE_AMOUNT_USD/2;
+    private static final Decimal ACCOUNT_SOFT_CREDIT_AMOUNT = (UserInfo.isMultiCurrencyOrganization() ? ACCOUNT_SOFT_CREDIT_BASE_AMOUNT*CURR_EXCHANGE_RATE : ACCOUNT_SOFT_CREDIT_BASE_AMOUNT);
     private static final Integer OPP_COUNT_PER_ACCT = 500;
     private static final Integer CLOSED_OPP_COUNT_PER_ACCT = 450;
 
@@ -51,7 +64,7 @@ public class CRLP_TEST_VALIDATE_ROLLUPS {
     private static final Date ROLLUP_LASTTDATE = Date.newInstance(2017, 10, 28);
     private static final String ROLLUP_BEST_YEAR = '2015';  // All 3 years have 150 donations, so 2015 is the first
 
-private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
+    private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
 
     private static final Decimal ALLOC_TOTAL_AMOUNT = (ROLLUP_TOTAL_WON_AMOUNT + (ALLOC_INCLUDES_MEMBERSHIP ? MEMBERSHIP_TOTAL : 0)) * 2;
     private static final Decimal ALLOC_TOTAL_COUNT = (ROLLUP_TOTAL_WON_COUNT + (ALLOC_INCLUDES_MEMBERSHIP ? MEMBERSHIP_COUNT : 0)) * 2;
@@ -155,6 +168,8 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
                 CRLP_RollupProcessingOptions.BatchJobMode.NonSkewMode, contactIds, null);
         CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                 CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
+        CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
+                CRLP_RollupProcessingOptions.BatchJobMode.SkewMode, acctIds, null);
 
     }
 
@@ -173,19 +188,34 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
     public static void validateRollups() {
         Customizable_Rollup_Settings__c cs = Customizable_Rollup_Settings__c.getOrgDefaults();
 
-        String acctSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType) + ' WHERE Site = :TEST_SITE_NAME';
+        String acctSOQL = CRLP_Query_SEL.buildObjectQueryForRollup(Account.SObjectType);
+        acctSOQL += ' WHERE Site = :TEST_SITE_NAME';
         acctSOQL = acctSOQL.replace('Id,', 'Id,Name,');
         accounts = database.query(acctSOQL);
 
         Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false
-            AND Site = :TEST_SITE_NAME LIMIT 1];
+        AND Site = :TEST_SITE_NAME AND Name != :ACCOUNT_NAME_ASC LIMIT 1];
+        Id orgAcctId = orgAcct.Id;
         Contact orgContactSC = [SELECT Id, AccountId FROM Contact WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
+        Integer countAccts = [SELECT Count()
+        FROM Account
+        WHERE Site = :TEST_SITE_NAME
+        AND Id != :orgAcctId
+        AND Name != :ACCOUNT_NAME_ASC
+        AND Name != :ACCOUNT_NAME_RD];
 
         for (Account a : accounts) {
             // The organization account will only have a single donation
             if (a.Name == ACCOUNT_NAME_RD) {
                 // No need to validate rollups on the Recurring Donations Account
                 continue;
+
+            } else if (a.Name == ACCOUNT_NAME_ASC) {
+                // Validate Account Soft Credits rollup to one Account, only when CRLPs is enabled
+                if (cs.Customizable_Rollups_Enabled__c == true) {
+                    assertValue((ACCOUNT_SOFT_CREDIT_BASE_AMOUNT * CLOSED_OPP_COUNT_PER_ACCT * countAccts) , (Double) a.get('TEST_Acc_Soft_Credit_Total__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Total__c should be');
+                    assertValue(ACCOUNT_SOFT_CREDIT_BASE_AMOUNT * 2, (Double) a.get('TEST_Acc_Soft_Credit_Largest_Amt__c'), a.Id + ' Acccount.TEST_Acc_Soft_Credit_Largest_Amt__c should be');
+                }
 
             } else if (a.Id != orgAcct.Id) {
                 // If the Account is not an Organization Account
@@ -215,6 +245,7 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
                     // Total Payments and Total Write-Offs
                     assertValue(ROLLUP_TOTAL_PAYMENT_AMOUNT, (Double) a.get('TEST_Total_Payments__c'), a.Id + ' Acccount.TEST_Total_Payments__c should be');
                     assertValue(ROLLUP_TOTAL_WRITEOFF_AMOUNT, (Double) a.get('TEST_Total_Writeoffs__c'), a.Id + ' Acccount.TEST_Total_Writeoffs__c should be');
+
                 }
             } else if (a.Id == orgAcct.Id) {
                 // Organization Account Rollup
@@ -304,17 +335,17 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
      */
     private static void assertValue(Decimal expected, Decimal actual, String message) {
         if (expected != (actual == null ? 0 : actual)) {
-            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but acual is ' + actual);
+            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but actual is ' + actual);
         }
     }
     private static void assertValue(String expected, String actual, String message) {
         if (expected != actual) {
-            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but acual is ' + actual);
+            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but actual is ' + actual);
         }
     }
     private static void assertValue(Date expected, Date actual, String message) {
         if (expected != actual) {
-            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but acual is ' + actual);
+            errorsList.add('VALIDATION: ' + message + ' ' + expected + ', but actual is ' + actual);
         }
     }
     public class ValidationException extends Exception {}
@@ -347,7 +378,13 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
                 RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
         );
 
-        insert new List<Account>{a1, a2, a3, a4};
+        Account a5 =  new Account(
+                Name = ACCOUNT_NAME_ASC,
+                Site = TEST_SITE_NAME,
+                RecordTypeId = UTIL_RecordTypes.getRecordTypeId(Account.SObjectType, 'Organization')
+        );
+
+        insert new List<Account>{a1, a2, a3, a4, a5};
         accounts = [SELECT Id, Name FROM Account WHERE Site = :TEST_SITE_NAME AND npe01__SYSTEMIsIndividual__c = true];
 
         // Two Contacts on Household 1
@@ -412,6 +449,7 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
     private static void createOpportunitiesASync() {
         List<Opportunity> opps = new List<Opportunity>();
         List<Allocation__c> allocs = new List<Allocation__c>();
+        List<Account_Soft_Credit__c> accSCs = new List<Account_Soft_Credit__c>();
 
         accounts = [SELECT Id, Name FROM Account WHERE Site = :TEST_SITE_NAME AND npe01__SYSTEMIsIndividual__c = true];
         contacts = [SELECT Id, FirstName, LastName FROM Contact WHERE Account.Site = :TEST_SITE_NAME];
@@ -420,6 +458,11 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
         for (Integer na=0; na<accounts.size(); na++) {
             // Don't create opps on the Recurring Donations test account
             if (accounts[na].Name == ACCOUNT_NAME_RD) {
+                continue;
+            }
+
+            // Don't create opps on the ASC test account
+            if (accounts[na].Name == ACCOUNT_NAME_ASC ) {
                 continue;
             }
 
@@ -471,7 +514,7 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
         }
 
         Account orgAcct = [SELECT Id, Name FROM Account WHERE npe01__SYSTEMIsIndividual__c = false
-                AND Site = :TEST_SITE_NAME LIMIT 1];
+        AND Site = :TEST_SITE_NAME LIMIT 1];
         Contact orgContactSC = [SELECT Id FROM Contact WHERE FirstName = :ORG_CONTACT_NAME LIMIT 1];
 
         // create one closed won Organization opportunity to ensure it's not included in the Contact Hard Credit rollups
@@ -499,7 +542,7 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
 
         // Change the OCR Role on the org donation so that it will roll up as a soft credit.
         OpportunityContactRole orgOCR = [SELECT Id, Role FROM OpportunityContactRole
-            WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
+        WHERE Opportunity.AccountId = :orgAcct.Id AND IsPrimary = True LIMIT 1];
         orgOCR.Role = 'Soft Credit';    // force to this because it's a good common value that should be in the filters
         update orgOCR;
 
@@ -519,6 +562,35 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
         }
         insert allocs;
 
+        // Create Account Soft credits for all Opps except the Organization one and the Membership ones
+        Account accForSoftCredits = [SELECT Id FROM Account WHERE Name = :ACCOUNT_NAME_ASC LIMIT 1];
+        Id membershipRTId = UTIL_RecordTypes.getRecordTypeId(Opportunity.SObjectType, 'Membership');
+        for (Integer i=0; i<opps.size(); i++) {
+            Opportunity opp = opps[i];
+            if (opp.AccountId != orgAcct.Id
+                    && opp.RecordTypeId != membershipRTId
+                    && opp.StageName == closedWonStage) {
+                Account_Soft_Credit__c accSC = new Account_Soft_Credit__c(
+                        Account__c = accForSoftCredits.Id,
+                        Opportunity__c = opp.Id,
+                        Amount__c = ACCOUNT_SOFT_CREDIT_AMOUNT,
+                        Role__c = ACCOUNT_SOFT_CREDIT_ROLE_A
+                );
+                if (UserInfo.isMultiCurrencyOrganization()) {
+                    accSC.put('CurrencyIsoCode', opp.get('CurrencyIsoCode'));
+                }
+                accSCs.add(accSC);
+            }
+        }
+        insert accSCs;
+
+        accSCs = [SELECT Id, Amount__c FROM Account_Soft_Credit__c WHERE Account__r.Name = :ACCOUNT_NAME_ASC];
+        //give one AccSC a larger amount in order to validate a LARGEST rollup
+        accSCs[0].Amount__c = accSCs[0].Amount__c*2;
+        //give one AccSC a different role in order to validate filter group exclusion
+        accSCs[1].Role__c = ACCOUNT_SOFT_CREDIT_ROLE_B;
+        update accSCs;
+
         Contact rdContact = [SELECT Id, AccountId FROM Contact WHERE Account.Name = :ACCOUNT_NAME_RD LIMIT 1];
         npe03__Recurring_Donation__c rd = new npe03__Recurring_Donation__c(
                 Name = RD_NAME,
@@ -535,7 +607,7 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
 
         // Close all the Recurring Donation Opportunities
         List<Opportunity> rdOpps = [SELECT Id FROM Opportunity WHERE npe03__Recurring_Donation__c = :rd.id
-                AND CloseDate < TODAY];
+        AND CloseDate < TODAY];
         for (Opportunity o : rdOpps) {
             o.StageName = closedWonStage;
         }
@@ -649,24 +721,75 @@ private static Boolean ALLOC_INCLUDES_MEMBERSHIP = true;
         rollupTotalWrittenOff.operation = CRLP_Operation.RollupType.SUM.name();
         rollupTotalWrittenOff.isActive = true;
 
-        CRLP_RollupCMT.Rollup rollupSoftCreditToAccount = new CRLP_RollupCMT.Rollup('UDR: Soft Credit Total to Account');
-        rollupSoftCreditToAccount.recordName = 'NPSP_TEMP_Total_SoftCredits_Account';
-        rollupSoftCreditToAccount.filterGroupRecordName = 'NPSP_ClosedWon_Donations';
-        rollupSoftCreditToAccount.summaryObject = 'Account';
-        rollupSoftCreditToAccount.summaryField = 'TEST_Soft_Credit_Total__c';
-        rollupSoftCreditToAccount.detailObject = Partial_Soft_Credit__c.SObjectType.getDescribe().getName();
-        rollupSoftCreditToAccount.detailField = 'Amount__c';
-        rollupSoftCreditToAccount.amountObject = Partial_Soft_Credit__c.SObjectType.getDescribe().getName();
-        rollupSoftCreditToAccount.amountField = 'Amount__c';
-        rollupSoftCreditToAccount.dateObject = Opportunity.SObjectType.getDescribe().getName();
-        rollupSoftCreditToAccount.dateField = 'CloseDate';
-        rollupSoftCreditToAccount.operation = CRLP_Operation.RollupType.SUM.name();
-        rollupSoftCreditToAccount.isActive = true;
+        // Account-Level Contact Soft Credits
+        CRLP_RollupCMT.Rollup rollupContactSoftCreditsToAccount = new CRLP_RollupCMT.Rollup('UDR: Contact Soft Credit Total to Account');
+        rollupContactSoftCreditsToAccount.recordName = 'NPSP_TEMP_Total_ConSoftCredits_Account';
+        rollupContactSoftCreditsToAccount.filterGroupRecordName = 'NPSP_ClosedWon_Opps_SC';
+        rollupContactSoftCreditsToAccount.summaryObject = 'Account';
+        rollupContactSoftCreditsToAccount.summaryField = 'TEST_Soft_Credit_Total__c';
+        rollupContactSoftCreditsToAccount.detailObject = Partial_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupContactSoftCreditsToAccount.detailField = 'Amount__c';
+        rollupContactSoftCreditsToAccount.amountObject = Partial_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupContactSoftCreditsToAccount.amountField = 'Amount__c';
+        rollupContactSoftCreditsToAccount.dateObject = Opportunity.SObjectType.getDescribe().getName();
+        rollupContactSoftCreditsToAccount.dateField = 'CloseDate';
+        rollupContactSoftCreditsToAccount.operation = CRLP_Operation.RollupType.SUM.name();
+        rollupContactSoftCreditsToAccount.isActive = true;
 
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup> { filterGroupPayments, filterGroupWrittenOff });
-//        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterRule>{ filterRulePaid, filterRuleWrittenOff });
-        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{ rollupTotalPaid, rollupTotalWrittenOff, rollupSoftCreditToAccount });
-        system.debug(CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes());
+        //Filter Group/Rule for Account Soft Credits
+        CRLP_RollupCMT.FilterGroup filterGroupInfluencerAccSC = new CRLP_RollupCMT.FilterGroup('TEMP: Account Soft Credits Group');
+        filterGroupInfluencerAccSC.description = 'All Paid Payments regardless of Record Type';
+        filterGroupInfluencerAccSC.recordName = 'NPSP_TEMP_AccSC_Group_Influencer';
+
+        CRLP_RollupCMT.FilterRule filterRuleInfluencer = new CRLP_RollupCMT.FilterRule(filterGroupPayments.recordName, 'TEMP: Influencer');
+        filterRuleInfluencer.recordName = 'NPSP_TEMP_AccSC_Influencer';
+        filterRuleInfluencer.objectName = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        filterRuleInfluencer.operationName = CMT_FilterRule.FilterOperation.EQUALS.name();
+        filterRuleInfluencer.fieldName = 'Role__c';
+        filterRuleInfluencer.value = ACCOUNT_SOFT_CREDIT_ROLE_A;
+        filterGroupInfluencerAccSC.rules.add(filterRuleInfluencer);
+
+        // Account Soft Credits
+        CRLP_RollupCMT.Rollup rollupAccountSoftCreditSum = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Sum');
+        rollupAccountSoftCreditSum.recordName = 'NPSP_TEMP_Total_AccSoftCredits_Account';
+        rollupAccountSoftCreditSum.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
+        rollupAccountSoftCreditSum.summaryObject = 'Account';
+        rollupAccountSoftCreditSum.summaryField = 'TEST_Acc_Soft_Credit_Total__c';
+        rollupAccountSoftCreditSum.detailObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditSum.detailField = 'Amount__c';
+        rollupAccountSoftCreditSum.amountObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditSum.amountField = 'Amount__c';
+        rollupAccountSoftCreditSum.dateObject = Opportunity.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditSum.dateField = 'CloseDate';
+        rollupAccountSoftCreditSum.operation = CRLP_Operation.RollupType.SUM.name();
+        rollupAccountSoftCreditSum.isActive = true;
+
+        // Account Soft Credits
+        CRLP_RollupCMT.Rollup rollupAccountSoftCreditLargest = new CRLP_RollupCMT.Rollup('UDR: Account Soft Credit Largest Amount');
+        rollupAccountSoftCreditLargest.recordName = 'NPSP_TEMP_Last_AccSoftCredits_Account';
+        rollupAccountSoftCreditLargest.filterGroupRecordName = filterGroupInfluencerAccSC.recordName;
+        rollupAccountSoftCreditLargest.summaryObject = 'Account';
+        rollupAccountSoftCreditLargest.summaryField = 'TEST_Acc_Soft_Credit_Largest_Amt__c';
+        rollupAccountSoftCreditLargest.detailObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditLargest.detailField = 'Amount__c';
+        rollupAccountSoftCreditLargest.amountObject = Account_Soft_Credit__c.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditLargest.amountField = 'Amount__c';
+        rollupAccountSoftCreditLargest.dateObject = Opportunity.SObjectType.getDescribe().getName();
+        rollupAccountSoftCreditLargest.dateField = 'CloseDate';
+        rollupAccountSoftCreditLargest.operation = CRLP_Operation.RollupType.LARGEST.name();
+        rollupAccountSoftCreditLargest.isActive = true;
+
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.FilterGroup> {
+                filterGroupPayments,
+                filterGroupWrittenOff,
+                filterGroupInfluencerAccSC });
+        CRLP_ConfigBuilder_SVC.queueRollupConfigForDeploy(new List<CRLP_RollupCMT.Rollup>{
+                rollupTotalPaid,
+                rollupTotalWrittenOff,
+                rollupContactSoftCreditsToAccount,
+                rollupAccountSoftCreditSum,
+                rollupAccountSoftCreditLargest });
+        System.debug(CRLP_ConfigBuilder_SVC.deployedQueuedMetadataTypes());
     }
 
     /** Utility Methods copied from the Unit Test Data Builder class **/
