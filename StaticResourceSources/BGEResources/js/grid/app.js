@@ -820,6 +820,13 @@
                     }
                 }
             }
+
+            if (shift && left) {
+                var selectedRange = hot.getSelectedRange();
+                if (selectedRange.to.col <= 3) {
+                    event.stopImmediatePropagation();      
+                }
+            }
         }
 
         function beforeRendererHandler(td, row, col, prop, value, cellProperties) {
