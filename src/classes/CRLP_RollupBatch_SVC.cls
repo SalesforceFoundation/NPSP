@@ -45,7 +45,8 @@ public class CRLP_RollupBatch_SVC {
      */
     public static SObjectType getSummaryObjectType(CRLP_RollupProcessingOptions.RollupType jobType) {
         if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit ||
-                jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+                jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             return Account.SObjectType;
         } if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit ||
                 jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -110,7 +111,8 @@ public class CRLP_RollupBatch_SVC {
                 queryFilter = '(' + softCreditField + ' >= ' + maxRelatedOppsForNonLDVMode + ')';
             }
 
-        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
+        } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit ||
+                jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
             // TODO -- How to get Accounts that require using this method for Soft Credits??
             // For now just use the NumberOfClosedOpportunities field as a proxy for the number of SoftCredits
             String softCreditField = parentRelationshipField + 'npo02__NumberOfClosedOpps__c';
@@ -181,8 +183,10 @@ public class CRLP_RollupBatch_SVC {
         if (jobMode == CRLP_RollupProcessingOptions.BatchJobMode.SkewMode) {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                database.executeBatch(new CRLP_AccountSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                database.executeBatch(new CRLP_AccountSkew_AccSoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
-               database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
+                database.executeBatch(new CRLP_ContactSkew_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                database.executeBatch(new CRLP_AccountSkew_SoftCredit_BATCH(recordIds, lastIdProcessed), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
@@ -195,6 +199,8 @@ public class CRLP_RollupBatch_SVC {
         } else {
             if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountHardCredit) {
                 database.executeBatch(new CRLP_Account_BATCH(recordIds), batchSize);
+            } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                database.executeBatch(new CRLP_Account_AccSoftCredit_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.ContactHardCredit) {
                 database.executeBatch(new CRLP_Contact_BATCH(recordIds), batchSize);
             } else if (jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
