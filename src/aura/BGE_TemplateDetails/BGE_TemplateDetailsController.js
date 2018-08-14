@@ -77,7 +77,7 @@
             }
         } else if (step === '2') {
             var templateFields = component.get("v.templateFields");
-            //model.getTemplateFields().updateToActive(templateFields);
+            model.getTemplateFields().updateToActive(templateFields.fieldGroups);
             model.getTemplateMetadata().stepUp(step);
         }
     },

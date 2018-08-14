@@ -27,14 +27,14 @@
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateInfoView = component.get('v.templateInfo');
 
-                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(objName) {
+                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(sObjectName) {
 
-                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
+                    var objLabel = sObjectName.slice(-1) == '1' || sObjectName.slice(-1) == '2' ?  sObjectName.slice(0,-1) + ' ' + sObjectName.slice(-1) : sObjectName;
 
                     templateInfoView.availableSObjects.push(
                         {
                             label: objLabel,
-                            value: objName
+                            value: sObjectName
                         }
                     );
                 });
@@ -42,7 +42,7 @@
                 component.set('v.templateInfo', templateInfoView);
             });
 
-            //  module public functions and properties
+            // TemplateInfoView module public functions and properties
             return {
                 name: '',
                 id: '',
@@ -99,7 +99,7 @@
                 component.set('v.templateMetadata', templateMetadataView);
             });
 
-            //  module public functions and properties
+            // TemplateMetadataView module public functions and properties
             return {
                 labels: {},
                 mode: '',
@@ -111,10 +111,10 @@
     },
 
     /* ***************************************************************
-     * @Description Returns the Available Template Fields View module.
+     * @Description Returns the Template Fields View module.
      * @param component. Lightning Component reference.
      * @param model. The Template Fields Model.
-     * @return View of the Available Template Fields module.
+     * @return View of the Template Fields module.
      *****************************************************************/
     TemplateFieldsView : function(component, model) {
 		return (function (component, model) {
@@ -122,74 +122,40 @@
             // Subscribe to the model onFieldsUpdated event. 
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
+                templateFields.fieldGroups = [];
+
+                var activeFieldsBySObject = model.getTemplateFields().getActivesBySObject();
                 var allFieldsBySObject = model.getTemplateFields().getAllFieldsBySObject();
 
                 Object.keys(allFieldsBySObject).forEach(function(sObjectName) {
-                    templateFields[sObjectName] = {};
-                    templateFields[sObjectName].options = [];
-                    templateFields[sObjectName].values = [];
-                    var fieldList = allFieldsBySObject[sObjectName];
-                    // TODO: sort by the required order of the left hand side of the dual picklist
-                    // fieldList.sort();
-                    fieldList.forEach(function(fld) {
-                        templateFields[sObjectName].options.push(
-                            {
-                                label: fld.label,
-                                value: fld.name
-                                //, sortOrder: fld.availableSortOrder
-                            }
-                        )
-                    //});
-                    // TODO: sort by the user-defined order of the RIGHT hand side of the dual picklist
-                    // fieldList.sort(activeSortOrder);
-                    // fieldList.forEach(function(fld) {
-                        if (fld.isActive) {
-                            templateFields[sObjectName].values.push(fld.name);
-                        }
-                    });
+                    var currentFieldGroup = {
+                        sObjectName : sObjectName,
+                        options: [],
+                        values: []
+                    };
 
-                    //todo: sort by activeSortOrder here and/or alphabetical here
+                    allFieldsBySObject[sObjectName].forEach(function(currentField) {
+                        currentFieldGroup.options.push(
+                            {
+                                label: currentField.label,
+                                value: currentField.id
+                            }
+                        );
+                    });
+                    if (activeFieldsBySObject[sObjectName]) {
+                        activeFieldsBySObject[sObjectName].forEach(function(currentField) {
+                            currentFieldGroup.values.push(currentField.id);
+                        });
+                    }
+                    templateFields.fieldGroups.push(currentFieldGroup);
                 });
 
                 component.set('v.templateFields', templateFields);
             });
             
-            /* *******************************************************************
-             * @Description Converts the Available Fields list to the templateFields
-             * Lightning:treeGrid data format.
-             * @return templateFields Lightning:treeGrid data format.
-             *********************************************************************/
-            function _convertToGridData(fieldsBySObject) {
-                var result = [];
-                
-                Object.keys(fieldsBySObject).sort().forEach(function(sObjectName) {
-                    var gridDataRow = {
-                        id: sObjectName,
-                        label: sObjectName,
-                        selected: false,
-                        _children: []
-                    };
-
-                    fieldsBySObject[sObjectName].forEach(function(sObjectField) {
-                        gridDataRow._children.push(
-                            {
-                                id: sObjectField.id,
-                            	label: sObjectField.label,
-                                selected: sObjectField.selected,
-                                availableSortOrder: sObjectField.availableSortOrder
-                            }
-                        );
-                    });
-
-                    result.push(gridDataRow);
-                });
-                
-                return result;
-            }
-            
             // TemplateFieldsView module public functions and properties
 			return {
-
+                fieldGroups: []
             };
         })(component, model);
 	},
@@ -221,7 +187,6 @@
              * @return void.
              ************************************************************/
             function init(component) {
-
                 _bgeTemplateController.getTemplateDetails({
                     success: function(response) {
                         _templateInfo.load(
@@ -405,14 +370,14 @@
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + "." + activeField.label;
+                        var fieldId = activeField.sObjectName + "." + activeField.name;
                         activeFieldMap.set(fieldId, activeField.activeSortOrder);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + "." + currentField.label;
+                    currentField.id = currentField.sObjectName + "." + currentField.name;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
@@ -426,37 +391,6 @@
                 });
                 this.onFieldsUpdated.notify();
             }
-
-            /* **********************************************************
-             * @Description Gets the available fields.
-             * @return List of inactive fields.
-             ************************************************************/
-            function getAvailables() {
-                var _availableFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (!currentField.isActive) {
-                        _availableFields.push(currentField);
-                    }
-                });
-                return _availableFields;
-            }
-/*            /!* **********************************************************
-             * @Description Gets the available fields.
-             * @return List of inactive fields.
-             ************************************************************!/
-            function getAvailableSObjects() {
-                Object.keys(getAvailablesBySObject()).forEach(function(objName) {
-                    var objLabel = objName.slice(-1) == '1' || objName.slice(-1) == '2' ?  objName.slice(0,-1)+' '+objName.slice(-1) : objName;
-
-                    _allSObjects.push(
-                        {
-                            label: objLabel,
-                            value: objName,
-                            selected: true
-                        }
-                    );
-                });
-            }*/
 
             /* **********************************************************
             * @Description Gets all fields grouped by SObject.
@@ -510,70 +444,23 @@
             }
 
 
-            /* **********************************************************
-             * @Description Updates the selected fields to Active, unselects
-             *      fields, and notifies onFieldsUpdated listeners.
+            /* *******************************************************************
+             * @Description Updates the selected fields to Active, unselects fields
              * @return void.
-             ************************************************************/
-            function updateToActive(templateFields) {
-
-                //todo: START HERE
-
-                Object.keys(getAllFieldsBySObject()).forEach(function(SObjectName) {
-                    getAllFieldsBySObject[SObjectName].forEach(function(field) {
-                        if (templateFields[SObjectName].values.contains(field.id)) {
-                            field.isActive = true;
-                        } else {
-                            field.isActive = false;
+             **********************************************************************/
+            function updateToActive(templateFieldGroups) {
+                _allFields.forEach(function(currentField) {
+                    templateFieldGroups.forEach(function(currentFieldGroup) {
+                        if (currentFieldGroup.sObjectName === currentField.sObjectName) {
+                            currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                            currentField.activeSortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) : 0;
                         }
                     });
-                 });
-
-                /*_allFields.forEach(function(currentField) {
-                    if (!currentField.isActive && currentField.selected) {
-                        currentField.isActive = true;
-                        currentField.selected = false;
-
-                        // TODO: this seems expensive. is there a better way?
-                        var activeFieldsBySObject = getActivesBySObject();
-                        currentField.activeSortOrder = activeFieldsBySObject[currentField.sObjectName] ? activeFieldsBySObject[currentField.sObjectName].length-1 : 0;
-                    }
-                });*/
-                this.onFieldsUpdated.notify();
-            }
-
-            /* **********************************************************
-             * @Description Updates the selected fields to Available, unselects
-             *      fields, and notifies onFieldsUpdated listeners.
-             * @return void.
-             ************************************************************/
-            function updateSelectedToAvailable() {
-                _allFields.forEach(function(currentField) {
-                    if (currentField.isActive && currentField.selected) {
-                        currentField.isActive = false;
-                        currentField.selected = false;
-                        currentField.activeSortOrder = null;
-                    }
+                            
                 });
-                this.onFieldsUpdated.notify();
             }
 
             /* ******************PRIVATE FUNCTIONS************************/
-
-            /* **********************************************************
-             * @Description Get selected fields
-             * @param fields: list of fields.
-             * @return Selected fields.
-             ************************************************************/
-            function _getSelectedFields(fields) {
-                var result = [];
-                fields.forEach(function(currentField) {
-                    if (currentField.selected) {
-                        result.push(currentField);
-                    }
-                });
-                return result;
-            }
 
             /* **********************************************************
              * @Description Groups the fields by SObject name.
@@ -589,18 +476,6 @@
                     result[currentField.sObjectName].push(currentField);
                 });
                 return result;
-            }
-
-            /* **********************************************************
-             * @Description Selects the fields by updating fields reference.
-             * @param fields. List of fields.
-             * @param fieldsToSelect. Id of fields to select.
-             * @return void.
-             ************************************************************/
-            function _selectFields(fields, fieldsToSelect) {
-                fields.forEach(function(currentField) {
-                    currentField.selected = (currentField.id in fieldsToSelect);
-                });
             }
 
             /***********************************************************
@@ -626,12 +501,10 @@
             return {
                 load: load,
                 getAllFieldsBySObject: getAllFieldsBySObject,
-                getAvailables: getAvailables,
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
                 updateToActive: updateToActive,
-                updateSelectedToAvailable: updateSelectedToAvailable,
                 onFieldsUpdated: _onFieldsUpdated
 
             }
@@ -639,7 +512,8 @@
 	},
 
     /* **********************************************************
-     * @Description Gets the Model module of the Template Metadata, such as page mode and labels.
+     * @Description Gets the Model module of the Template Metadata, 
+     * such as page mode and labels.
      * @return Model module of the Template Metadata.
      ************************************************************/
     TemplateMetadata : function() {
