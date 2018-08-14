@@ -131,6 +131,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                         parentRelationshipPrefix = 'Contact.';
                     } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                         parentRelationshipPrefix = 'Contact.Account.';
+                    } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                        parentRelationshipPrefix = Account_Soft_Credit__c.fields.Account__c.getDescribe().getName().replace('__c', '__r') + '.';
                     }
 
                     String skewClause = CRLP_RollupBatch_SVC.getSkewWhereClause(this.jobType,
@@ -166,6 +168,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Contact.SObjectType, Partial_Soft_Credit__c.SObjectType);
                 } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                     addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(Account.SObjectType, Partial_Soft_Credit__c.SObjectType);
+                } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                    addlFilter = CRLP_Query_SEL.buildCommonQueryFilterOnOpportunity(this.summaryObjectType, this.detailObjectType);
                 }
                 if (!String.isEmpty(addlFilter)) {
                     whereClauses.add(addlFilter);
@@ -217,6 +221,8 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
                 parentKeyField = 'ContactId';
             } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 parentKeyField = 'Contact.AccountId';
+            } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit) {
+                parentKeyField = 'Account__c';
             }
 
             // The parentKeyField field may be have dot-notation (ex: Contact__r.Account__c)
@@ -275,7 +281,7 @@ public abstract class CRLP_Batch_Base_Skew extends CRLP_Batch_Base {
             // using the defined parent Id
             List<SObject> summaryRecords = queryAndSequenceSummaryRecords(parentIds, soql);
 
-            // Soft Credit rollups require changing the detail object type to PartialSoftCredit
+            // Contact-level Account Soft Credit rollups require changing the detail object type to PartialSoftCredit
             if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit ||
                     this.jobType == CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit) {
                 // Convert the list of OpportunityContactRole detail records into a list of PartialSoftCredit
