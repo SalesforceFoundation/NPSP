@@ -53,7 +53,7 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Amount__c</fullName>
-        <description>Amount of the opportunity to allocate to this general accounting unit. Leave blank for percent based allocations.</description>
+        <description>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the Opportunity allocated to this General Accounting Unit. Leave blank for percent-based Allocations.</inlineHelpText>
         <label>Amount</label>
@@ -66,7 +66,7 @@
     <fields>
         <fullName>Campaign__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>Optionally attributes allocations to a campaign. All new opportunities created with this campaign as primary campaign source will automatically be allocated in the same way.</description>
+        <description>The Campaign associated with this Allocation. Use this field if you want new Opportunities associated with this Campaign to be allocated in the same way.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Campaign associated with this Allocation. Use this field if you want new Opportunities associated with this Campaign to be allocated in the same way.</inlineHelpText>
         <label>Campaign</label>
@@ -80,7 +80,7 @@
     <fields>
         <fullName>General_Accounting_Unit__c</fullName>
         <deleteConstraint>Restrict</deleteConstraint>
-        <description>The general accounting unit to attribute this allocation. Only general accounting units marked as active are available for new allocations.</description>
+        <description>The General Accounting Unit this Allocation is attributed to. Only General Accounting Units marked as active are available for new Allocations.</description>
         <externalId>false</externalId>
         <inlineHelpText>The General Accounting Unit this Allocation is attributed to. Only General Accounting Units marked as active are available for new Allocations.</inlineHelpText>
         <label>General Accounting Unit</label>
@@ -105,7 +105,7 @@
     <fields>
         <fullName>Opportunity__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>Attributes allocations to an opportunity. All opportunities in a closed and won stage will be rolled up to this allocation&apos;s general accounting unit.</description>
+        <description>The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation's General Accounting Unit.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Opportunity you want this Allocation attributed to. NPSP rolls up all Opportunities in a Closed/Won stage to this Allocation's General Accounting Unit.</inlineHelpText>
         <label>Opportunity</label>
@@ -118,7 +118,7 @@
     </fields>
     <fields>
         <fullName>Percent__c</fullName>
-        <description>Percent of opportunity amount to allocate to this general accounting unit. Modifying an opportunity amount of a percent based allocation will modify the allocation amount.</description>
+        <description>Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</description>
         <externalId>false</externalId>
         <inlineHelpText>Percent of Opportunity amount allocated to this Allocation's General Accounting Unit. If you later modify the Opportunity amount, NPSP will update the allocation amount on the General Accounting Unit.</inlineHelpText>
         <label>Percent</label>
@@ -131,7 +131,7 @@
     <fields>
         <fullName>Recurring_Donation__c</fullName>
         <deleteConstraint>SetNull</deleteConstraint>
-        <description>Optionally attributes allocations to a recurring donation. All new opportunities created with this recurring donation schedule will automatically be allocated in the same way.</description>
+        <description>The Recurring Donation this Allocation is attributed to. NPSP automatically allocates all new Opportunities associated with the Recurring Donation in the same way.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Recurring Donation this Allocation is attributed to. NPSP automatically allocates all new Opportunities associated with the Recurring Donation in the same way.</inlineHelpText>
         <label>Recurring Donation</label>
