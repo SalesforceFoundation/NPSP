@@ -43,6 +43,7 @@ public class CRLP_RollupProcessingOptions {
      */
     public Enum RollupType {
         AccountHardCredit,
+        AccountSoftCredit,
         ContactHardCredit,
         AccountContactSoftCredit,
         ContactSoftCredit,

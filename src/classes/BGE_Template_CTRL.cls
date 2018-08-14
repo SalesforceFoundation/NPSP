@@ -47,6 +47,7 @@ public with sharing class BGE_Template_CTRL {
         if (templateId != null) {
             Batch_Template__c batchTemplate = [SELECT
                     Name,
+                    Id,
                     Description__c,
                     Enable_Total_Entry__c,
                     Require_Total_Match__c,
@@ -56,7 +57,8 @@ public with sharing class BGE_Template_CTRL {
 
             templateDetails.name = batchTemplate.Name;
             templateDetails.description = batchTemplate.Description__c;
-            templateDetails.displayTotalPrompt = batchTemplate.Enable_Total_Entry__c;
+            templateDetails.enableTotalEntry = batchTemplate.Enable_Total_Entry__c;
+            templateDetails.id = batchTemplate.Id;
             templateDetails.requireTotalMatch = batchTemplate.Require_Total_Match__c;
             templateDetails.activeFields = batchTemplate.Active_Fields__c;
         }
@@ -111,7 +113,8 @@ public with sharing class BGE_Template_CTRL {
                 } else {
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
                 }
-                fld.name = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                fld.name = dfr.getName();
                 fields.add(fld);
             }
         }
@@ -126,9 +129,11 @@ public with sharing class BGE_Template_CTRL {
 
         Map<String, String> labels = new Map<String, String> {
             'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
+            'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
+            'batchTemplateObject' => Schema.SObjectType.Batch_Template__c.getName(),
             'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
-            'totalPromptHelp' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getInlineHelpText(),
-            'totalPromptLabel' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getLabel(),
+            'totalEntryHelp' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getInlineHelpText(),
+            'totalEntryLabel' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getLabel(),
             'totalMatchHelp' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getInlineHelpText(),
             'totalMatchLabel' => Schema.Batch_Template__c.Require_Total_Match__c.getDescribe().getLabel()
         };
@@ -141,18 +146,27 @@ public with sharing class BGE_Template_CTRL {
     * @return void.
     */
     @AuraEnabled
-    public static void saveTemplate(String templateInfo, String activeFields) {
+    public static string saveTemplate(String templateInfo, String activeFields) {
         try {
             TemplateDetailsModel templateDetails = (TemplateDetailsModel) JSON.deserialize(templateInfo, TemplateDetailsModel.class);
+            system.debug(templateDetails);
 
             Batch_Template__c batchTemplate = new Batch_Template__c();
+
+            if (templateDetails.id != null) {
+                batchTemplate.Id = templateDetails.id;
+            }
             batchTemplate.Name = templateDetails.name;
             batchTemplate.Description__c = templateDetails.description;
-            batchTemplate.Enable_Total_Entry__c = templateDetails.displayTotalPrompt;
+            batchTemplate.Enable_Total_Entry__c = templateDetails.enableTotalEntry;
             batchTemplate.Require_Total_Match__c = templateDetails.requireTotalMatch;
             batchTemplate.Active_Fields__c = activeFields;
 
-            insert batchTemplate;
+            upsert batchTemplate;
+            templateDetails.id = batchTemplate.Id;
+
+            return JSON.serialize(templateDetails);
+
         } catch (Exception ex) {
             //TODO: is BDI right to use here?
             ERR_Handler.processError(ex, ERR_Handler_API.Context.BDI);
@@ -166,14 +180,15 @@ public with sharing class BGE_Template_CTRL {
     public class TemplateDetailsModel {
         @AuraEnabled public String name;
         @AuraEnabled public String description;
-        @AuraEnabled public Boolean displayTotalPrompt;
+        @AuraEnabled public Boolean enableTotalEntry;
+        @AuraEnabled public Id id;
         @AuraEnabled public Boolean requireTotalMatch;
         @AuraEnabled public List<Field> templateFields;
         @AuraEnabled public String activeFields;
         @AuraEnabled public Map<String, String> labels;
 
         public TemplateDetailsModel() {
-            displayTotalPrompt = false;
+            enableTotalEntry = false;
             requireTotalMatch = false;
             templateFields = new List<Field>();
         }
@@ -183,6 +198,7 @@ public with sharing class BGE_Template_CTRL {
     * @description a class to retrieve and save information related to Active and Available fields.
     */
     public class Field {
+        @AuraEnabled public String label;
         @AuraEnabled public String name;
         @AuraEnabled public String sObjectName;
         @AuraEnabled public Boolean isActive;

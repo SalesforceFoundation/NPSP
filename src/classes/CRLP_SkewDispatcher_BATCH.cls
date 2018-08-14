@@ -104,7 +104,7 @@ public class CRLP_SkewDispatcher_BATCH implements Database.Batchable<SObject>, D
                 hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType);
 
             } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit) {
-                hasActiveRollups = CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.summaryObjectType);
+                hasActiveRollups = CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(this.summaryObjectType);
 
             } else if (this.jobType == CRLP_RollupProcessingOptions.RollupType.GAU) {
                 hasActiveRollups = CRLP_Rollup_SVC.hasActiveRollupsForSObject(this.summaryObjectType);

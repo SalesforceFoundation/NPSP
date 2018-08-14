@@ -221,13 +221,11 @@ public class CRLP_RollupUI_TEST {
 
         String recordName = CRLP_Rollup_SEL.cachedRollups[0].DeveloperName;
         String resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Rollup', 'edit');
-        System.debug(resultString);
         CRLP_RollupUI_SVC.DeploymentResult response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
         System.assertNotEquals(null, response);
 
         resultString = CRLP_RollupUI_SVC.getDeploymentStatus('jobId', recordName, 'Filter', 'edit');
-        System.debug(resultString);
         response = (CRLP_RollupUI_SVC.DeploymentResult)JSON.deserialize(resultString, CRLP_RollupUI_SVC.DeploymentResult.class);
 
         System.assertNotEquals(null, response);

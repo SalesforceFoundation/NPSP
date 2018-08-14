@@ -185,15 +185,32 @@ public class CRLP_Rollup_SVC {
     }
 
     /**
-     * @description Are there active Soft Credit Rollup Definition records for the provided SObject?
+     * @description Are there active Partial Soft Credit Rollup Definition records for the provided SObject?
      * @param SObjectType
      * @return True or False
      */
-    public static Boolean hasActiveSoftCreditRollupsForSObject(SObjectType sObj) {
+    public static Boolean hasActivePartialSoftCreditRollupsForSObject(SObjectType sObj) {
         String pscObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')).getName();
         try {
             for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
                 if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == pscObjectName) {
+                    return true;
+                }
+            }
+        } catch (Exception ex){ }
+        return false;
+    }
+
+    /**
+     * @description Are there active Account Soft Credit Rollup Definition records for the provided SObject?
+     * @param SObjectType
+     * @return True or False
+     */
+    public static Boolean hasActiveAccountSoftCreditRollupsForSObject(SObjectType sObj) {
+        String accSCObjectName = UTIL_Describe.getObjectDescribe(UTIL_Namespace.StrTokenNSPrefix('Account_Soft_Credit__c')).getName();
+        try {
+            for (Rollup__mdt r : CRLP_Rollup_SEL.getRollupsBySummaryType().get(sObj)) {
+                if (r.Active__c == true && r.Amount_Object__r.QualifiedApiName == accSCObjectName) {
                     return true;
                 }
             }

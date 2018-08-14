@@ -25,10 +25,31 @@
     },
 
     /* ***************************************************************
-     * @Description. Cancels edit or creation of the template.
+     * @Description. Cancels creation or view of the template by
+     * navigating to object home. Cancels edit by querying model data.
      *****************************************************************/
     cancel: function(component, event, helper) {
+        var model = component.get('v.model');
+        var mode = component.get("v.templateMetadata.mode");
+        if (mode === 'create' || mode === 'view') {
+            //navigate to record home
+            var homeEvent = $A.get("e.force:navigateToObjectHome");
+            homeEvent.setParams({
+                "scope": component.get("v.templateMetadata.labels.batchTemplateObject")
+            });
+            homeEvent.fire();
+        } else if (mode === 'edit') {
+            model.getTemplateMetadata().setMode('view');
+            model.init(component);
+        }
+    },
 
+    /* ***************************************************************
+     * @Description. Navigates from View to Edit mode.
+     *****************************************************************/
+    changeModeToEdit: function(component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateMetadata().setMode('edit');
     },
 
     /* ***************************************************************
@@ -42,6 +63,25 @@
     },
 
     /******************************** Template Fields Controller Functions *****************************/
+
+
+    /* ***************************************************************
+     * @Description. Increases selected field activeSortOrder by 1 in the
+     * Template Fields Model, and moves neighbor fields up.
+     *****************************************************************/
+    moveFieldsDown: function (component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateFields().moveSelectedDown();
+    },
+
+    /* ***************************************************************
+     * @Description. Decreases selected field activeSortOrder by 1 in the
+     * Template Fields Model, and moves neighbor fields down.
+     *****************************************************************/
+    moveFieldsUp: function (component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateFields().moveSelectedUp();
+    },
 
     /* ***************************************************************
      * @Description. Updates the selected (checked) available fields in the
@@ -75,7 +115,7 @@
      *****************************************************************/
     updateToActive: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToActive();
+        model.getTemplateFields().updateSelectedToActive();
     },
 
     /* ***************************************************************
@@ -84,6 +124,6 @@
      *****************************************************************/
     updateToAvailable: function (component, event, helper) {
         var model = component.get('v.model');
-        model.getTemplateFields().updateToAvailable();
+        model.getTemplateFields().updateSelectedToAvailable();
     }
 });
