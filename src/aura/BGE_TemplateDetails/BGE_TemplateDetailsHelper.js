@@ -366,14 +366,14 @@
 
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
-                        var fieldId = activeField.sObjectName + "." + activeField.label;
+                        var fieldId = activeField.sObjectName + "." + activeField.name;
                         activeFieldMap.set(fieldId, activeField.activeSortOrder);
                     });
                 }
 
                 var availableSortOrder = 1;
                 allFields.forEach(function(currentField) {
-                    currentField.id = currentField.sObjectName + "." + currentField.label;
+                    currentField.id = currentField.sObjectName + "." + currentField.name;
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
