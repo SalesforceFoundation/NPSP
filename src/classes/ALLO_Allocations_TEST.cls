@@ -135,7 +135,14 @@ private with sharing class ALLO_Allocations_TEST {
     ********************************************************************************************************/
     static testMethod void pmtAmountChange() {
         if (strTestOnly != '*' && strTestOnly != 'pmtAmountChange') return;
-        setupSettings(new Allocations_Settings__c(Payment_Allocations_Enabled__c = true));
+        
+        General_Accounting_Unit__c defaultGau = new General_Accounting_Unit__c(Name='default GAU');
+        insert defaultGau;
+
+        setupSettings(new Allocations_Settings__c(
+            Payment_Allocations_Enabled__c = true,
+            Default_Allocations_Enabled__c = true,
+            Default__c = defaultGau.Id));
 
         Account acc = new Account(Name='foo');
         insert acc;
@@ -156,9 +163,9 @@ private with sharing class ALLO_Allocations_TEST {
         insert alloForInsert;
 
         List<Allocation__c> queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(50, queryAllo[1].Percent__c, 'The percentage allocation should be 50%.');
-        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
-        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be 4.');
+        System.assertEquals(50, queryAllo[3].Percent__c, 'The percentage allocation should be 50%.');
+        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should be calculated based on the Payment amount.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be 4.');
         
         pmt.npe01__Payment_Amount__c = 10;
         Test.startTest();
@@ -166,15 +173,15 @@ private with sharing class ALLO_Allocations_TEST {
         Test.stopTest();
         
         queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(5, queryAllo[1].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
-        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        System.assertEquals(5, queryAllo[4].Amount__c, 'The amount of the percentage allocation should increase proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[2].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
         
         pmt.npe01__Payment_Amount__c = 8;
         update pmt;
 
         queryAllo = getAllocationsOrderByPercent();
-        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
-        System.assertEquals(4, queryAllo[0].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
+        System.assertEquals(4, queryAllo[3].Amount__c, 'The amount of the percentage allocation should decrease proportionately with the Payment amount.');
+        System.assertEquals(4, queryAllo[1].Amount__c, 'The amount of the standard number allocation should be unchanged at 4.');
 
         pmt.npe01__Payment_Amount__c = 1;
         
@@ -185,8 +192,8 @@ private with sharing class ALLO_Allocations_TEST {
             System.assert(ex.getMessage().contains(Label.alloExceedsPmtAmount), 'Error message should indicate that allocs are greater than payment amount');
         }
 
-        List<npe01__OppPayment__c> queryOpps = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
-        System.assertEquals(8, queryOpps[0].npe01__Payment_Amount__c, 'The opportunity amount should remain unchanged after the exception is caught.');
+        List<npe01__OppPayment__c> queryPmts = [SELECT Id, npe01__Payment_Amount__c FROM npe01__OppPayment__c WHERE Id = :pmt.id];
+        System.assertEquals(8, queryPmts[0].npe01__Payment_Amount__c, 'The payment amount should remain unchanged after the exception is caught.');
     }
 
     /*******************************************************************************************************
