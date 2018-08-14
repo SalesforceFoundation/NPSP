@@ -4634,7 +4634,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>pscManageSoftCreditsCantChangeCurrency</shortDescription>
-        <value>You can't modify Partial Soft Credit currencies directly. Update the parent Opportunity's currency, and NPSP will automatically update the curency of all related Partial Soft Credit records.</value>
+        <value>You can&apos;t modify soft credit currencies directly. Update the parent Opportunity&apos;s currency, and NPSP will automatically update the currency of all related soft credits.</value>
     </labels>
     <labels>
         <fullName>pscManageSoftCreditsFull</fullName>
@@ -5185,13 +5185,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgDontAutoScheduleHelpText</shortDescription>
-        <value>NPSP has a number of Scheduled Jobs that calculate rollups, update Recurring Donations and Seasonal Addresses, and perform error handling. 
+        <value>NPSP has a number of Scheduled Jobs that calculate rollups, update Recurring Donations and Seasonal Addresses, and perform error handling.
 &lt;br/&gt; 
 &lt;br/&gt; 
 When Don't Auto Schedule Default NPSP Jobs is not selected, whenever you load the NPSP Settings page, NPSP checks that all the default NPSP Jobs are scheduled. If they're not scheduled, NPSP reschedules them. NPSP will reschedule only missing NPSP Jobs; it will not overwrite Jobs that have been updated.
 &lt;br/&gt; 
 &lt;br/&gt; 
-To view these Jobs, search for Scheduled Jobs in Salesforce Setup. 
+To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 &lt;br/&gt; 
 &lt;br/&gt;
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
@@ -5405,7 +5405,7 @@ Once the process is 100% complete, you can safely leave or refresh this page.</v
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>stgHelpCreateMissingPayments</shortDescription>
-        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Payment creation. NPSP will create a Payment for each Opportunity without Payments that: 
+        <value>&lt;b&gt;WARNING:&lt;/b&gt; Clicking this button will activate batch Payment creation. NPSP will create a Payment for each Opportunity without Payments that:
 &lt;br/&gt;
 &lt;br/&gt; 
 ● has an amount greater than zero&lt;br/&gt; 
