@@ -174,8 +174,7 @@
                                     </div>
                                     <div class="slds-media__body">
                                         <p class="slds-text-heading_label ">{!v.labels.filterGroupLabel}</p>
-                                        <aura:if
-                                                isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
+                                        <aura:if isTrue="{!or(equals(v.detailMode,'edit'),equals(v.detailMode,'view'))}">
                                             <h1 class="slds-page-header__title"
                                                 title="{!v.activeRecord.label}">{!v.activeRecord.label}</h1>
                                             <!--Else show mode header-->

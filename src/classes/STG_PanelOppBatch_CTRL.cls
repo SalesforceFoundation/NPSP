@@ -69,13 +69,14 @@ public with sharing class STG_PanelOppBatch_CTRL extends STG_Panel {
             this.numJobSubmitted = 4; // hardcoded to match what this runs
         } else {
 
-            // Customizable Rollup Jobs are more complicated. There are 4 base jobs, but there may be 4 more
+            // Customizable Rollup Jobs are more complicated. There are 5 base jobs, but there may be 5 more
             // Skew jobs to execute if necessary.
             List<CRLP_RollupProcessingOptions.RollupType> jobTypeList = new List<CRLP_RollupProcessingOptions.RollupType>{
                     CRLP_RollupProcessingOptions.RollupType.AccountHardCredit,
                     CRLP_RollupProcessingOptions.RollupType.ContactHardCredit,
                     CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit,
+                    CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit,
                     CRLP_RollupProcessingOptions.RollupType.RecurringDonations
             };
 
