@@ -73,7 +73,7 @@
             if (model.getTemplateInfo().isValid()) {
                 model.getTemplateMetadata().stepUp(step);
             } else {
-                model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
+                model.getTemplateMetadata().setError(true, component.get("v.templateMetadata.labels.missingNameDescriptionError"));
             }
         } else if (step === '2') {
             var templateFields = component.get("v.templateFields");

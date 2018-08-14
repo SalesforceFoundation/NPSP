@@ -2450,7 +2450,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Header for Batch Template Info</shortDescription>
-        <value>Template Overview</value>
+        <value>Enter Template Info</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateRemoveFields</fullName>
