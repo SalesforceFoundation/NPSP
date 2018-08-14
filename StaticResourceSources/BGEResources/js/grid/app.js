@@ -1,3 +1,4 @@
+
 var templateId = '';
 var selectPopper = undefined;
 var isIndexLoading = false;
@@ -1280,6 +1281,7 @@ var tableHeight = 0;
             }
 
             displaySummaryData(result);
+            document.getElementById("totalPagesNumber").innerHTML = Math.ceil(result.rowsCount / 50) + 1;
         }
     }
 

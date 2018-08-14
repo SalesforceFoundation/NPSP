@@ -1284,6 +1284,7 @@ var tableHeight = 0;
             }
 
             displaySummaryData(result);
+            document.getElementById("totalPagesNumber").innerHTML = Math.ceil(result.rowsCount / 50) + 1;
         }
     }
 
