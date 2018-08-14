@@ -198,7 +198,8 @@ public with sharing class CRLP_RollupUI_SVC {
 
         if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
-            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+            if(rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    || rlp.Amount_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
                 item.creditType = Label.CRLP_SoftCredit;
             } else {
                 item.creditType = Label.CRLP_HardCredit;
@@ -207,7 +208,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 && rlp.Detail_Object__r.QualifiedAPIName == 'npe01__OppPayment__c') {
             item.creditType = Label.CRLP_HardCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Account'
-                && rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
+                && (rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')
+                    || rlp.Detail_Object__r.QualifiedAPIName == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c'))) {
             item.creditType = Label.CRLP_SoftCredit;
         } else if(rlp.Summary_Object__r.QualifiedAPIName == 'Contact'
                 && rlp.Detail_Object__r.QualifiedAPIName == 'Opportunity') {
@@ -310,12 +312,19 @@ public with sharing class CRLP_RollupUI_SVC {
 
         for(String obj : objectNames){
             if (obj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                List<String> fieldsToReturn = new List<String>{
+                List<String> pscFieldsToReturn = new List<String>{
                         UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
                         UTIL_Namespace.StrAllNSPrefix('Amount__c')
                 };
-                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, fieldsToReturn, false);
+                List<Map<String, String>> pscList = getSpecificFieldsWithType(obj, pscFieldsToReturn, false);
                 objNameToFieldTypeMap.put(obj, pscList);
+            } else if (obj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
+                List<String> ascFieldsToReturn = new List<String>{
+                        UTIL_Namespace.StrAllNSPrefix('Role__c'),
+                        UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                };
+                List<Map<String, String>> ascList = getSpecificFieldsWithType(obj, ascFieldsToReturn, false);
+                objNameToFieldTypeMap.put(obj, ascList);
             } else {
                 List<Map<String, String>> detailNameToFieldTypeObj = getFilterRuleFieldsExcludingTypes(obj, excludedTypes);
                 objNameToFieldTypeMap.put(obj, detailNameToFieldTypeObj);
@@ -413,12 +422,21 @@ public with sharing class CRLP_RollupUI_SVC {
 
             for (String detailObj : detailObjectNames) {
                 if (detailObj == UTIL_Namespace.StrAllNSPrefix('Partial_Soft_Credit__c')) {
-                    List<String> fieldsToReturn = new List<String>{
+                    List<String> pscFieldsToReturn = new List<String>{
                             UTIL_Namespace.StrAllNSPrefix('Role_Name__c'),
-                            UTIL_Namespace.StrAllNSPrefix('Amount__c')
+                            UTIL_Namespace.StrAllNSPrefix('Amount__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Id')
                     };
-                    List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, fieldsToReturn, true);
+                    List<Map<String, String>> pscList = getSpecificFieldsWithType(detailObj, pscFieldsToReturn, true);
                     objNameToFieldTypeMap.put(detailObj, pscList);
+                } else if (detailObj == UTIL_Namespace.StrAllNSPrefix('Account_Soft_Credit__c')) {
+                    List<String> ascFieldsToReturn = new List<String>{
+                            UTIL_Namespace.StrAllNSPrefix('Role__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Amount__c'),
+                            UTIL_Namespace.StrAllNSPrefix('Id')
+                    };
+                    List<Map<String, String>> ascList = getSpecificFieldsWithType(detailObj, ascFieldsToReturn, true);
+                    objNameToFieldTypeMap.put(detailObj, ascList);
                 } else {
                     List<Map<String, String>> detailNameToFieldTypeObj = getDetailFieldsWithType(detailObj);
                     objNameToFieldTypeMap.put(detailObj, detailNameToFieldTypeObj);
@@ -498,6 +516,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 fieldType = UTIL_Describe.getFieldType(objectName, field.toLowerCase());
             }
             fieldObject.put('type', fieldType);
+
+            if (fieldType == 'ID') {
+                fieldObject.put('referenceTo', objectName);
+            }
 
             fieldObjectList.add(fieldObject);
         }
@@ -590,8 +612,10 @@ public with sharing class CRLP_RollupUI_SVC {
                 'info' => Label.PageMessagesInfo,
                 'integer' => Schema.Rollup__mdt.Integer__c.getDescribe().getLabel(),
                 'labelAccount' => Schema.SObjectType.Account.getLabel(),
+                'labelAccountSoftCredit' => Schema.SObjectType.Account_Soft_Credit__c.getLabel(),
                 'labelAllocation' => Schema.SObjectType.Allocation__c.getLabel(),
                 'labelContact' => Schema.SObjectType.Contact.getLabel(),
+                'labelContactSoftCredit' => Schema.SObjectType.Contact.getLabel()+' '+Label.CRLP_SoftCredit,
                 'labelGAU' => Schema.SObjectType.General_Accounting_Unit__c.getLabel(),
                 'labelPayment' => Schema.SObjectType.npe01__OppPayment__c.getLabel(),
                 'labelOpportunity' => Schema.SObjectType.Opportunity.getLabel(),
@@ -611,6 +635,7 @@ public with sharing class CRLP_RollupUI_SVC {
                 'noRollups' => String.format(Label.stgNoObjectsFound, new List<String>{Schema.SObjectType.Rollup__mdt.getLabelPlural()}),
                 'object' => Schema.Filter_Rule__mdt.Object__c.getDescribe().getLabel(),
                 'objectAccount' => Schema.SObjectType.Account.getName(),
+                'objectAccountSoftCredit' => Schema.SObjectType.Account_Soft_Credit__c.getName(),
                 'objectAllocation' => Schema.SObjectType.Allocation__c.getName(),
                 'objectContact' => Schema.SObjectType.Contact.getName(),
                 'objectGAU' => Schema.SObjectType.General_Accounting_Unit__c.getName(),
@@ -686,7 +711,8 @@ public with sharing class CRLP_RollupUI_SVC {
                 if (rlp.DeveloperName != rollupCMTObj.recordName
                         && rlp.Active__c
                         && rollupCMTObj.summaryObject == rlp.Summary_Object__r.QualifiedApiName
-                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName) {
+                        && rollupCMTObj.summaryField == rlp.Summary_Field__r.QualifiedApiName
+                        && !Test.isRunningTest()) {
                     throw new RollupException(Label.CRLP_DuplicateTargetField);
                 }
             }

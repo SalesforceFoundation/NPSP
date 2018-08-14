@@ -55,7 +55,7 @@
     <fields>
         <fullName>Active__c</fullName>
         <defaultValue>true</defaultValue>
-        <description>Active general accounting units are available for selection on allocations. Inactive general accounting units can&apos;t have new allocations to them.</description>
+        <description>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</description>
         <externalId>false</externalId>
         <inlineHelpText>Determines whether this General Accounting Unit is available for selection on Allocations. Only active General Accounting Units are available for selection.</inlineHelpText>
         <label>Active</label>
@@ -66,7 +66,7 @@
     <fields>
         <fullName>Average_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The average of all allocations of all time to this general accounting unit.</description>
+        <description>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The average amount of all Allocations to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Average Allocation</label>
@@ -79,7 +79,7 @@
     </fields>
     <fields>
         <fullName>Description__c</fullName>
-        <description>Extra information about this general accounting unit.</description>
+        <description>Additional information about this General Accounting Unit.</description>
         <externalId>false</externalId>
         <inlineHelpText>Additional information about this General Accounting Unit.</inlineHelpText>
         <label>Description</label>
@@ -91,7 +91,7 @@
     </fields>
     <fields>
         <fullName>First_Allocation_Date__c</fullName>
-        <description>The first Opportunity Close Date of an allocation associated with this general accounting unit.</description>
+        <description>The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The Close Date of the first Opportunity allocated to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>First Allocation Date</label>
@@ -103,7 +103,7 @@
     <fields>
         <fullName>Largest_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The largest allocation of all time to this general accounting unit.</description>
+        <description>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the largest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Largest Allocation</label>
@@ -143,7 +143,7 @@
     <fields>
         <fullName>Number_of_Allocations_Last_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of allocations of opportunities in a closed and won stage last year.</description>
+        <description>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total number of Allocations last year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations Last Year</label>
@@ -158,7 +158,7 @@
     <fields>
         <fullName>Number_of_Allocations_This_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of allocations of opportunities in a closed and won stage this year.</description>
+        <description>The total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>TThe total number of Allocations this year from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations This Year</label>
@@ -173,7 +173,7 @@
     <fields>
         <fullName>Number_of_Allocations_Two_Years_Ago__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of allocations of opportunities in a closed and won stage two years ago.</description>
+        <description>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total number of Allocations two years ago from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Number of Allocations Two Years Ago</label>
@@ -188,7 +188,7 @@
     <fields>
         <fullName>Smallest_Allocation__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>The smallest allocation of all time to this general accounting unit.</description>
+        <description>The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The amount of the smallest Allocation to this General Accounting Unit. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Smallest Allocation</label>
@@ -202,7 +202,7 @@
     <fields>
         <fullName>Total_Allocations_Last_N_Days__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all allocations of opportunities in a closed and won stage in the last N days. The value of N can be modified in settings.</description>
+        <description>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The number of Allocations from Closed/Won Opportunities in the last N days. (The value of N is set in NPSP Settings, under Donations, GAU Allocations.) NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations Last N Days</label>
@@ -230,7 +230,7 @@
     <fields>
         <fullName>Total_Allocations_This_Year__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all allocations of opportunities in a closed and won stage this year.</description>
+        <description>The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities this year. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations This Year</label>
@@ -244,7 +244,7 @@
     <fields>
         <fullName>Total_Allocations_Two_Years_Ago__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all allocations of opportunities in a closed and won stage two years ago.</description>
+        <description>The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount from Allocations from Closed/Won Opportunities two years ago. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations Two Years Ago</label>
@@ -258,7 +258,7 @@
     <fields>
         <fullName>Total_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Sum total of all allocations of opportunities in a closed and won stage.</description>
+        <description>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total amount from all Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Allocations</label>
@@ -272,7 +272,7 @@
     <fields>
         <fullName>Total_Number_of_Allocations__c</fullName>
         <defaultValue>0</defaultValue>
-        <description>Total number of allocations of opportunities in a closed and won stage.</description>
+        <description>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</description>
         <externalId>false</externalId>
         <inlineHelpText>The total number of Allocations from Closed/Won Opportunities. NPSP updates this field in a nightly Scheduled Job.</inlineHelpText>
         <label>Total Number of Allocations</label>

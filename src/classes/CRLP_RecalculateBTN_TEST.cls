@@ -186,7 +186,7 @@ private class CRLP_RecalculateBTN_TEST {
         ctlr.buttonClick();
 
         expectedJobCount++;
-        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Contact.SObjectType)) {
+        if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Contact.SObjectType)) {
             expectedJobCount++;
         }
         System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
@@ -197,7 +197,10 @@ private class CRLP_RecalculateBTN_TEST {
         ctlr.buttonClick();
 
         expectedJobCount++;
-        if (CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(Account.SObjectType)) {
+        if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(Account.SObjectType)) {
+            expectedJobCount++;
+        }
+        if (CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(Account.SObjectType)) {
             expectedJobCount++;
         }
         System.assertEquals(expectedJobCount, [SELECT Count() FROM AsyncApexJob WHERE ApexClass.Name LIKE 'CRLP%'],
