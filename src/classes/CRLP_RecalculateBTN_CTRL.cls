@@ -110,18 +110,27 @@ public with sharing class CRLP_RecalculateBTN_CTRL {
             // ------------------------------------------------
             // Soft Credit Rollups for Contact or Account
             // ------------------------------------------------
-            jobType = null;
-            if (this.objType == Account.SObjectType) {
-                jobType = CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit;
-            } else if (this.objType == Contact.SObjectType) {
-                jobType = CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit;
-            }
-            if (jobType != null && CRLP_Rollup_SVC.hasActiveSoftCreditRollupsForSObject(this.objType)) {
+
+            if (this.objType == Contact.SObjectType && CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(this.objType)) {
                 // Is skew mode needed?
                 if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
                     jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
                 }
-                CRLP_RollupBatch_SVC.executeBatchRollupJob(jobType, jobMode, new List<Id>{ recordId }, null);
+                CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.ContactSoftCredit, jobMode, new List<Id>{ recordId }, null);
+            } else if (this.objType == Account.SObjectType) {
+                // Is skew mode needed?
+                if (CRLP_RollupBatch_SVC.doesRecordNeedSkewRollupMethod(recordId, jobType)) {
+                    jobMode = CRLP_RollupProcessingOptions.BatchJobMode.SkewMode;
+                }
+                // Do we have active PSC rollups to Account?
+                if (CRLP_Rollup_SVC.hasActivePartialSoftCreditRollupsForSObject(this.objType)) {
+                    CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountContactSoftCredit, jobMode, new List<Id>{ recordId }, null);
+                }
+                // Do we have active ASC rollups to Account?
+                if (CRLP_Rollup_SVC.hasActiveAccountSoftCreditRollupsForSObject(this.objType)) {
+                    CRLP_RollupBatch_SVC.executeBatchRollupJob(CRLP_RollupProcessingOptions.RollupType.AccountSoftCredit, jobMode, new List<Id>{ recordId }, null);
+                }
+
             }
 
         } else {
