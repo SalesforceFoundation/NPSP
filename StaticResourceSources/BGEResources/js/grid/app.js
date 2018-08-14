@@ -133,8 +133,6 @@
                 afterOnCellMouseDown: afterOnCellMouseDownHandler,
                 afterCreateRow: afterCreateRowHandler,
                 beforeKeyDown: beforeKeyDownHandler,
-                afterScrollHorizontally: afterScrollHandler,
-                afterScrollVertically: afterScrollHandler,
                 modifyColWidth: modifyColWidthHandler,
                 afterOnCellMouseOver: afterOnCellMouseOverHandler
             });
@@ -269,11 +267,6 @@
             $scope.isIndexLoading = false;
 
             renderBindings();
-        }
-
-        function afterScrollHandler() {
-
-            setCellsHeight();
         }
 
         function afterOnCellMouseOverHandler(event, coords, td) {
@@ -641,14 +634,13 @@
                         //prevent spacebar default behavior to auto scroll down
                         event.preventDefault();
                     }
-
                     disableEdit(editor);
                 }
             }
 
             if (tab || left || up || right || down) {
 
-                if (tab || enter) {
+                if (tab) {
                     event.preventDefault();
                 }
 
@@ -656,7 +648,12 @@
                 if (colIndex === actionCol) {
 
                     if (down || up) {
-                        event.preventDefault();
+                        if (isFirstRow && up) {
+                            event.stopImmediatePropagation();
+                        }
+                        else {
+                            event.preventDefault();
+                        }
                     }
                     else if (left || shift && tab) {
 
@@ -1199,8 +1196,6 @@
 
         function tooltipCellRenderer(instance, td, row, col, prop, value, cellProperties) {
 
-            setCellsHeight();
-
             Handsontable.renderers.HtmlRenderer.apply(this, arguments);
 
             var iconContainer = document.createElement('div');
@@ -1371,12 +1366,5 @@
 
             return (rowErrors && rowErrors.length > 0) ? true : false;
         }
-
-        function setCellsHeight() {
-
-            $('th').css('height', '40px');
-            $('td').css('height', '30px')
-        }
-
     });
 })();
