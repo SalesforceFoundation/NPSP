@@ -23,24 +23,6 @@
                 component.set('v.templateInfo', templateInfoView);
             });
 
-            // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.templateInfo');
-
-                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(sObjectName) {
-
-                    var objLabel = sObjectName.slice(-1) == '1' || sObjectName.slice(-1) == '2' ?  sObjectName.slice(0,-1) + ' ' + sObjectName.slice(-1) : sObjectName;
-
-                    templateInfoView.availableSObjects.push(
-                        {
-                            label: objLabel,
-                            value: sObjectName
-                        }
-                    );
-                });
-
-                component.set('v.templateInfo', templateInfoView);
-            });
 
             // TemplateInfoView module public functions and properties
             return {
@@ -48,8 +30,7 @@
                 id: '',
                 description: '',
                 enableTotalEntry: false,
-                requireTotalMatch: false,
-                availableSObjects: []
+                requireTotalMatch: false
             };
         })(component, model);
     },
@@ -117,9 +98,9 @@
      * @return View of the Template Fields module.
      *****************************************************************/
     TemplateFieldsView : function(component, model) {
-		return (function (component, model) {
+        return (function (component, model) {
 
-            // Subscribe to the model onFieldsUpdated event. 
+            // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
                 templateFields.fieldGroups = [];
@@ -152,15 +133,103 @@
 
                 component.set('v.templateFields', templateFields);
             });
-            
+
             // TemplateFieldsView module public functions and properties
-			return {
+            return {
                 fieldGroups: []
             };
         })(component, model);
-	},
+    },
 
-    
+    /* ***************************************************************
+     * @Description Returns the Template Field Options View module.
+     * @param component. Lightning Component reference.
+     * @param model. The Template Fields Model.
+     * @return View of the Template Field Options module.
+     *****************************************************************/
+    TemplateFieldOptionsView : function(component, model) {
+        return (function (component, model) {
+
+            var isReadOnly = component.get("v.isReadOnly");
+            var _columns = _setColumns(!isReadOnly);
+
+            // Subscribe to the model onMetadataChange event.
+            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
+                var templateFieldOptions = component.get("v.templateFieldOptions");
+                var isReadOnly = component.get("v.isReadOnly");
+                templateFieldOptions.columns = _setColumns(!isReadOnly);
+                component.set('v.templateFieldOptions', templateFieldOptions);
+            });
+
+            // Subscribe to the model onFieldsUpdated event.
+            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
+debugger;
+                var templateFieldOptions = component.get("v.templateFieldOptions");
+                templateFieldOptions.data = [];
+                var activeFields = model.getTemplateFields().getActives();
+
+                activeFields.forEach(function (currentField) {
+
+                    templateFieldOptions.data.push({
+                        name: currentField.name,
+                        sObjectName: currentField.sObjectName,
+                        label: currentField.label,
+                        defaultValue: currentField.defaultValue,
+                        required: currentField.required,
+                        hide: currentField.hide
+                    });
+
+                });
+
+                component.set("v.templateFieldOptions", templateFieldOptions);
+
+            });
+
+            function _setColumns(isEditable) {
+                return [
+                    {
+                        type: 'text',
+                        fieldName: 'sObjectName',
+                        label: $A.get("$Label.c.stgLabelUDRTargetObject"),
+                        editable: false
+                    },
+                    {
+                        type: 'text',
+                        fieldName: 'label',
+                        label: $A.get("$Label.c.bgeBatchTemplateActiveFields"),
+                        editable: false
+                    },
+                    {
+                        type: 'text',
+                        fieldName: 'defaultValue',
+                        label: $A.get("$Label.c.stgDefaultValue"),
+                        editable: isEditable
+                    },
+                    {
+                        type: 'boolean',
+                        fieldName: 'required',
+                        label: $A.get("$Label.c.lblRequired"),
+                        editable: isEditable
+                    },
+                    {
+                        type: 'boolean',
+                        fieldName: 'hide',
+                        label: $A.get("$Label.c.stgLabelHide"),
+                        editable: isEditable
+                    }
+                ];
+            }
+
+            // TemplateFieldOptionsView module public functions and properties
+            return {
+                columns: _columns,
+                data: []
+            };
+
+        })(component, model);
+    },
+
+
     /*********************************************** Model Modules *********************************************/
 
     /* **********************************************************
@@ -230,7 +299,7 @@
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
-                        activeSortOrder: currentField.activeSortOrder
+                        sortOrder: currentField.sortOrder
                     });
                 });
 
@@ -371,7 +440,7 @@
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
                         var fieldId = activeField.sObjectName + "." + activeField.name;
-                        activeFieldMap.set(fieldId, activeField.activeSortOrder);
+                        activeFieldMap.set(fieldId, activeField);
                     });
                 }
 
@@ -381,7 +450,10 @@
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
-                        currentField.activeSortOrder = activeFieldMap.get(currentField.id);
+                        currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
+                        currentField.hide = activeFieldMap.get(currentField.id).hide;
+                        currentField.required = activeFieldMap.get(currentField.id).required;
+                        currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                     } else {
                         currentField.isActive = false;
                     }
@@ -416,7 +488,7 @@
 
             /* **********************************************************
              * @Description Gets the active fields.
-             * @return List of related active fields.
+             * @return Sorted List of related active fields.
              ************************************************************/
             function getActives() {
                 var _activeFields = [];
@@ -449,15 +521,46 @@
              * @return void.
              **********************************************************************/
             function updateToActive(templateFieldGroups) {
-                _allFields.forEach(function(currentField) {
+                var fieldCountPreviousObjects = 0;
+                var allFieldsBySObject = getAllFieldsBySObject();
+                Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
+                    var fieldGroupLength = 0;
                     templateFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectName === currentField.sObjectName) {
-                            currentField.isActive = currentFieldGroup.values.includes(currentField.id);
-                            currentField.activeSortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) : 0;
+                        if (currentFieldGroup.sObjectName === currentSObject) {
+                            fieldGroupLength = currentFieldGroup.values.length;
+                            allFieldsBySObject[currentSObject].forEach(function (currentField) {
+                                currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                                currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
+                            });
+                            fieldCountPreviousObjects += fieldGroupLength;
+                            fieldGroupLength = 0;
                         }
                     });
-                            
                 });
+
+                this.onFieldsUpdated.notify();
+            }
+
+            /* *******************************************************************
+             * @Description Updates the selected fields to Active, unselects fields
+             * @return void.
+             **********************************************************************/
+            function updateTemplateFieldOptions(templateFieldOptions) {
+                // TODO: validation!
+                _allFields.forEach(function(currentField) {
+                    debugger;
+                    templateFieldOptions.forEach(function(currentActiveField) {
+                        debugger;
+                        if (currentField.name === currentActiveField.name) {
+                            debugger;
+                            currentField.required = currentActiveField.hasOwnProperty('required') ? currentActiveField.required : currentField.required;
+                            currentField.hide = currentActiveField.hasOwnProperty('hide') ? currentActiveField.hide : currentField.hide;
+                            currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
+                        }
+                    });
+                });
+
+                this.onFieldsUpdated.notify();
             }
 
             /* ******************PRIVATE FUNCTIONS************************/
@@ -475,7 +578,25 @@
                     }
                     result[currentField.sObjectName].push(currentField);
                 });
+
                 return result;
+/*
+
+                // sort objects
+
+                var objectOrderList = ['Account1',
+                                        'Account2'
+                ];
+
+                result.forEach(function(currentSObject) {
+
+                    sortedResult[objectOrderList.indexOf(currentSObject)].push(currentSObject);
+
+                });
+
+                return sortedResult;
+*/
+
             }
 
             /***********************************************************
@@ -485,10 +606,10 @@
              ************************************************************/
             function _sortFieldsByOrder(fields) {
                 fields.sort(function(currentField, nextField) {
-                    if (currentField.activeSortOrder < nextField.activeSortOrder) {
+                    if (currentField.sortOrder < nextField.sortOrder) {
                         return -1;
                     }
-                    if (currentField.activeSortOrder > nextField.activeSortOrder) {
+                    if (currentField.sortOrder > nextField.sortOrder) {
                         return 1;
                     }
                     // numbers must be equal
@@ -505,6 +626,7 @@
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
                 updateToActive: updateToActive,
+                updateTemplateFieldOptions: updateTemplateFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated
 
             }
@@ -539,7 +661,7 @@
                         this.mode = 'create';
                     }
                 }
-                this.progressIndicatorStep = '1';
+                this.progressIndicatorStep = this.progressIndicatorStep ? this.progressIndicatorStep : '1' ;
                 this.onMetadataUpdated.notify();
             }
 

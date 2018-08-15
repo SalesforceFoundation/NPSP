@@ -41,6 +41,7 @@
     <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
     <aura:attribute name="templateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="templateFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
     <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
@@ -192,7 +193,13 @@
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
                     <div class="slds-grid slds-grid_align-center">
                         <div class="slds-size_1-of-1 slds-m-around_medium">
-                            GRID GOES HERE
+                            <lightning:datatable
+                                    keyField="name"
+                                    data="{! v.templateFieldOptions.data }"
+                                    columns="{! v.templateFieldOptions.columns }"
+                                    hideCheckboxColumn="true"
+                                    onsave="{! c.saveFieldOptions }"
+                            />
                         </div>
                     </div>
                 </aura:if>

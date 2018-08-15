@@ -111,9 +111,13 @@ public with sharing class BGE_Template_CTRL {
                 if (namespacedObject == 'Donation_Donor__c') {
                     fld.sObjectName = 'Opportunity';
                 } else {
+                    // TODO: make these localized with schema describes
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
                 }
-                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                // TODO: pull these labels from target fields' schema based on help text mapping
+                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ?
+                        dfr.getLabel().split(' ',2)[1] :
+                        dfr.getLabel() ;
                 fld.name = dfr.getName();
                 fields.add(fld);
             }

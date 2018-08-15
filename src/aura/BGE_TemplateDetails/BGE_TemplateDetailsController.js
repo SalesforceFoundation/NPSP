@@ -18,6 +18,8 @@
         component.set('v.templateMetadata', templateMetadataView);
         var templateFieldsView = helper.TemplateFieldsView(component, model);
         component.set('v.templateFields', templateFieldsView);
+        var templateFieldOptionsView = helper.TemplateFieldOptionsView(component, model);
+        component.set('v.templateFieldOptions', templateFieldOptionsView);
 
         model.init(component);
     },
@@ -58,6 +60,16 @@
         var model = component.get('v.model');
         model.getTemplateInfo().load(templateInfoData);
         model.save();
+    },
+
+
+    /* ***************************************************************
+    * @Description. Saves field options from step 3 to the model
+    *****************************************************************/
+    saveFieldOptions: function(component, event, helper) {
+        debugger;
+        var model = component.get('v.model');
+        model.getTemplateFields().updateTemplateFieldOptions(event.getParam('draftValues'));
     },
 
     /* ***************************************************************
