@@ -25,5 +25,4 @@ Create Secondary Affiliation for Contact
     Sleep    5
     Click link    link=&{contact}[FirstName] &{contact}[LastName]
     Select Tab    Details
-    ${verify}    Verify Field Value    Primary Affiliation    &{account}[Name]
-    Should Be Equal As Strings    ${verify}    &{account}[Name]
+    Verify Field Value    Primary Affiliation    &{account}[Name]    Y

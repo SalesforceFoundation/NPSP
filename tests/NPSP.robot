@@ -123,7 +123,7 @@ Create Primary Affiliation
     ${contact_id} =  Create Contact with Email
     &{contact} =  Salesforce Get  Contact  ${contact_id}   
     Select Tab    Details
-    Scroll Page To Location    100    300
+    Scroll Page To Location    0    300
     Click Edit Button    Edit Primary Affiliation
     Populate Lookup Field    Primary Affiliation    &{account}[Name]
     Click Record Button    Save 
@@ -177,6 +177,24 @@ Create Engagement Plan
     Click Task Button    Save
     Sleep    2
     [Return]    ${plan_name}    ${task1}    ${sub_task}     ${task2}
+    
+Create Level
+    ${level_name}=    Generate Random String
+    Go To Object Home         npsp__Level__c
+    Click Special Object Button       New
+    Sleep    2
+    Select Frame With Title    Levels
+    Enter Level Values
+    ...            Level Name=${level_name}
+    ...            Minimum Amount=0.1
+    ...            Maximum Amount=0.9
+    Enter Level Dd Values    Target    Contact
+    Enter Level Dd Values    Source Field    Total Gifts
+    Enter Level Dd Values    Level Field    Level
+    Enter Level Dd Values    Previous Level Field    PreviousLevel
+    Click Level Button    Save
+    Sleep    2
+    [Return]    ${level_name}
      
 Verify Engagement Plan
     [Arguments]       ${plan_name}     @{others}
@@ -185,7 +203,20 @@ Verify Engagement Plan
     Check Field Value    Engagement Plan Template Name    ${plan_name}
     Select Tab    Related
     Check Related List Values    Engagement Plan Tasks      @{others}
-       
+
+Create GAU
+    ${gau_name} =         Generate Random String
+    Sleep    5
+    Open App Launcher
+    Populate Address    Find an app or item    General Accounting Units
+    Select App Launcher Link    General Accounting Units
+    Click Object Button       New
+    Populate Form
+    ...                    General Accounting Unit Name=${gau_name}
+    ...                    Largest Allocation=5
+    Click Modal Button        Save
+    Sleep    2
+    [Return]           ${gau_name}    
     
 Choose Frame
     [Arguments]    ${frame}

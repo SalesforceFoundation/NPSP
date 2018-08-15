@@ -47,7 +47,5 @@ Remove Primary Affiliation for Contact2
     Sleep    5
     Scroll Page To Location    0    300
     Get Id
-    #Sleep    5  
-    ${verify_status}    Confirm Status    Status    Former
-    Should Be Equal As Strings    ${verify_status}    Former
+    Confirm Value    Status    Former    Y
       
