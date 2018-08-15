@@ -15,7 +15,7 @@
     <apex:form >
       <div class="slds-scope">
     
-        <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11_120" iconCategory="custom"
+        <c:UTIL_PageHeader headerLabel="{!$ObjectType.Level__c.Label}" header="{!Level__c.Name}" icon="custom11" iconCategory="custom"
                 cancelAction="{!cancel}" saveAction="{!save}" saveAndNewAction="{!saveAndNew}" showSaveAndNewBtn="true"/>
         
         <c:UTIL_PageMessages />
@@ -53,8 +53,12 @@
                                     <apex:actionStatus id="statusRefill"
                                         onstart="document.getElementById('divLoading').style.display = 'inline';"
                                         onstop="document.getElementById('divLoading').style.display = 'none';" />
-                                    <div class="slds-spinner_small mySpinner" id="divLoading" >
-                                        <img src="{!URLFOR($Asset.SLDS, '/assets/images/spinners/slds_spinner_brand.gif')}" alt="{!$Label.labelMessageLoading}" />
+                                    <div id="divLoading" class="slds-spinner_container slds-is-relative mySpinner" >
+                                        <div role="status" class="slds-spinner slds-spinner_small slds-spinner_brand">
+                                            <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                                            <div class="slds-spinner__dot-a"></div>
+                                            <div class="slds-spinner__dot-b"></div>
+                                        </div>
                                     </div>
                                 </apex:inputField>
                             </div>

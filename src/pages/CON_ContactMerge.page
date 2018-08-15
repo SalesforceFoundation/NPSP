@@ -20,7 +20,7 @@
         <apex:form id="pgHeader">
             <c:UTIL_PageHeader headerLabel="{!$Label.conMergePageTitle}"
                                header="{!$Label.conMergePageTitleDetail}"
-                               icon="contact_120" iconCategory="standard"
+                               icon="contact" iconCategory="standard"
                                showSaveBtn="false" showCancelBtn="false"/>
         </apex:form>
 
