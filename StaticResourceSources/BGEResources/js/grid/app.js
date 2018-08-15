@@ -1363,6 +1363,7 @@ var tableHeight = 0;
         else {
 
             iconContainer.style.display = 'none';
+            removeMessage();
         }
 
         Handsontable.dom.addEvent(iconContainer, 'click', function (e) {
