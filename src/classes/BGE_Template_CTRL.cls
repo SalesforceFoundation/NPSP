@@ -131,6 +131,7 @@ public with sharing class BGE_Template_CTRL {
             'batchTemplateLabel' => Schema.SObjectType.Batch_Template__c.getLabel(),
             'backToTemplates' => String.format(Label.CRLP_Return, new List<String>{Schema.SObjectType.Batch_Template__c.getLabelPlural()}),
             'batchTemplateObject' => Schema.SObjectType.Batch_Template__c.getName(),
+            'missingNameDescriptionError' => Label.exceptionRequiredField + ' ' + Schema.Batch_Template__c.Name.getDescribe().getLabel() + ', ' + Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
             'description' => Schema.Batch_Template__c.Description__c.getDescribe().getLabel(),
             'totalEntryHelp' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getInlineHelpText(),
             'totalEntryLabel' => Schema.Batch_Template__c.Enable_Total_Entry__c.getDescribe().getLabel(),
@@ -149,7 +150,6 @@ public with sharing class BGE_Template_CTRL {
     public static string saveTemplate(String templateInfo, String activeFields) {
         try {
             TemplateDetailsModel templateDetails = (TemplateDetailsModel) JSON.deserialize(templateInfo, TemplateDetailsModel.class);
-            system.debug(templateDetails);
 
             Batch_Template__c batchTemplate = new Batch_Template__c();
 
