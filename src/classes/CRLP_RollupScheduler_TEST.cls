@@ -101,7 +101,10 @@ private class CRLP_RollupScheduler_TEST {
     static testMethod void test_scheduled_jobs() {
         // Start by enabling Customizable Rollups (which disables all legacy rollup operations)
         UTIL_CustomSettingsFacade.getRollupSettingsForTests(new Customizable_Rollup_Settings__c (
-                Customizable_Rollups_Enabled__c = true
+                Customizable_Rollups_Enabled__c = true,
+                Rollups_Account_Batch_Size__c = 20,
+            	Rollups_Contact_Batch_Size__c = 20,
+            	Rollups_Contact_Soft_Credit_Batch_Size__c = 20
         ));
 
         Test.startTest();
