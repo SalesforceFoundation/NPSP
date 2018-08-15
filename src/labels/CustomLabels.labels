@@ -2404,11 +2404,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateActiveFields</fullName>
+        <fullName>bgeBatchTemplateSelectedFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bgeBatchTemplateActiveFields</shortDescription>
-        <value>Active Fields</value>
+        <value>Selected Fields</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateAddFields</fullName>
@@ -2432,18 +2432,11 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Edit Batch Template</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateMoveFieldDown</fullName>
+        <fullName>bgeBatchTemplateHelpText</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>bgeBatchTemplateMoveFieldDown</shortDescription>
-        <value>Move Field Down</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateMoveFieldUp</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>bgeBatchTemplateMoveFieldUp</shortDescription>
-        <value>Move Field Up</value>
+        <shortDescription>Generic help text for Batch Template creation.</shortDescription>
+        <value>Batch Templates determine which fields display in Batch Gift Entry and how those fields behave.</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateNew</fullName>
@@ -2453,11 +2446,32 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>New Batch Template</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateOverview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Info</shortDescription>
+        <value>Enter Template Info</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateRemoveFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Alt text for arrow utility icon when adding fields</shortDescription>
         <value>Remove Fields from Template</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateSelectFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header and text for Field Selection</shortDescription>
+        <value>Select Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Field Options</shortDescription>
+        <value>Set Field Options</value>
     </labels>
     <labels>
         <fullName>bgeErrorBatchTemplateMissing</fullName>
