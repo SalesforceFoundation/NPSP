@@ -199,6 +199,8 @@
                                     columns="{! v.templateFieldOptions.columns }"
                                     hideCheckboxColumn="true"
                                     onsave="{! c.saveFieldOptions }"
+                                    oncellchange="{! c.logDataTableChange }"
+                                    oncancel="{! c.cancelDataTableChanges }"
                             />
                         </div>
                     </div>
@@ -216,7 +218,7 @@
                             <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
                         </aura:if>
                         <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
-                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.templateMetadata.dataTableChanged}" />
                         </aura:if>
                     </div>
                 </div>

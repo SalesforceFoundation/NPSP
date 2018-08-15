@@ -48,16 +48,16 @@
      * @Description. Navigates from View to Edit mode.
      *****************************************************************/
     changeModeToEdit: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateMetadata().setMode('edit');
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setMode("edit");
     },
 
     /* ***************************************************************
-     * @Description. Saves the template information. 
+     * @Description. Saves the full Batch Template record after step 3
      *****************************************************************/
     save: function(component, event, helper) {
         var templateInfoData = component.get("v.templateInfo");
-        var model = component.get('v.model');
+        var model = component.get("v.model");
         model.getTemplateInfo().load(templateInfoData);
         model.save();
     },
@@ -67,16 +67,39 @@
     * @Description. Saves field options from step 3 to the model
     *****************************************************************/
     saveFieldOptions: function(component, event, helper) {
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setDataTableChanged(false);
+        model.getTemplateFields().updateTemplateFieldOptions(event.getParam("draftValues"));
+    },
+
+    /* ***************************************************************
+    * @Description. Logs any changes to data table to disable primary save button
+    *****************************************************************/
+    logDataTableChange: function(component, event, helper) {
+        var model = component.get("v.model");
         debugger;
-        var model = component.get('v.model');
-        model.getTemplateFields().updateTemplateFieldOptions(event.getParam('draftValues'));
+        var dataTableChanged = component.get("v.templateMetadata.dataTableChanged");
+        if (!dataTableChanged) {
+            // oncellchange seems to be broken, so we have to set the view directly
+            component.set("v.templateMetadata.dataTableChanged",true);
+            // this updates the model, but does not call the notifier
+            model.getTemplateMetadata().setDataTableChanged(true);
+        }
+    },
+
+    /* ***************************************************************
+    * @Description. Cancels any changes to data table to re-enable primary save button
+    *****************************************************************/
+    cancelDataTableChanges: function(component, event, helper) {
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setDataTableChanged(false);
     },
 
     /* ***************************************************************
     * @Description. Moves to next wizard step
     *****************************************************************/
     next: function(component, event, helper) {
-        var model = component.get('v.model');
+        var model = component.get("v.model");
         var step = component.get("v.templateMetadata.progressIndicatorStep");
 
         if (step === '1') {

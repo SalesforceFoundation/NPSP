@@ -52,6 +52,7 @@
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
+                templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
@@ -86,7 +87,8 @@
                 mode: '',
                 progressIndicatorStep: '',
                 hasError: false,
-                errorMessage: ''
+                errorMessage: '',
+                dataTableChanged: false
             };
         })(component, model);
     },
@@ -163,7 +165,6 @@
 
             // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-debugger;
                 var templateFieldOptions = component.get("v.templateFieldOptions");
                 templateFieldOptions.data = [];
                 var activeFields = model.getTemplateFields().getActives();
@@ -546,13 +547,10 @@ debugger;
              * @return void.
              **********************************************************************/
             function updateTemplateFieldOptions(templateFieldOptions) {
-                // TODO: validation!
+                // TODO: validation! and show randi
                 _allFields.forEach(function(currentField) {
-                    debugger;
                     templateFieldOptions.forEach(function(currentActiveField) {
-                        debugger;
                         if (currentField.name === currentActiveField.name) {
-                            debugger;
                             currentField.required = currentActiveField.hasOwnProperty('required') ? currentActiveField.required : currentField.required;
                             currentField.hide = currentActiveField.hasOwnProperty('hide') ? currentActiveField.hide : currentField.hide;
                             currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
@@ -677,6 +675,21 @@ debugger;
             }
 
             /* **********************************************************
+             * @Description sets attribute logging whether data table info has changed
+             * @param status - boolean
+             * @return void.
+             ************************************************************/
+            function setDataTableChanged(status) {
+                this.dataTableChanged = status;
+                // oncellchange seems to be broken, so we set the view directly in the controller
+                // this is just updating the model
+                // we only notify when changing to false
+                if (status === false) {
+                    this.onMetadataUpdated.notify();
+                }
+            }
+
+            /* **********************************************************
              * @Description sets error state and message
              * @param hasError - Boolean indicating error state.
              * @param message - String for the error message
@@ -720,12 +733,14 @@ debugger;
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
+                dataTableChanged: false,
                 load: load,
                 setMode: setMode,
                 setError: setError,
                 stepUp: stepUp,
                 stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated
+                onMetadataUpdated: _onMetadataUpdated,
+                setDataTableChanged: setDataTableChanged
             }
         })(Event);
     },
