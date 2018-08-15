@@ -200,17 +200,21 @@
 
                 <!-- Buttons! -->
                 <div class="row slds-p-around_large">
-                    <div class="slds-grid slds-grid_align-end">
-                        <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
-                            <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
-                        </aura:if>
-                        <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
-                            <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
-                        </aura:if>
-                        <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
-                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
-                        </aura:if>
+                    <div class="slds-grid">
+                        <div class="slds-col">
+                            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                        </div>
+                        <div class="slds-col slds-col_bump-left">
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
+                                <lightning:button variant="neutral" label="{!$Label.c.labelListViewPrevious}" onclick="{!c.back}" />
+                            </aura:if>
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
+                                <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                            </aura:if>
+                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
+                                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
+                            </aura:if>
+                        </div>
                     </div>
                 </div>
                 <!--End Buttons-->
