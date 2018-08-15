@@ -113,7 +113,14 @@
         } else if (step === '2') {
             var templateFields = component.get("v.templateFields");
             model.getTemplateFields().updateToActive(templateFields.fieldGroups);
-            model.getTemplateMetadata().stepUp(step);
+            var errors = model.getTemplateFields().getRequiredFieldErrors();
+            debugger;
+            if (!errors) {
+                model.getTemplateMetadata().stepUp(step);
+                model.getTemplateMetadata().setError(false);
+            } else {
+                model.getTemplateMetadata().setError(true, errors);
+            }
         }
     },
 

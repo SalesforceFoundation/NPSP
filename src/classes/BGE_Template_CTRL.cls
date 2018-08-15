@@ -119,6 +119,14 @@ public with sharing class BGE_Template_CTRL {
                         dfr.getLabel().split(' ',2)[1] :
                         dfr.getLabel() ;
                 fld.name = dfr.getName();
+
+                // these fields are required only if at least 1 field from its object group is selected
+                if (fld.name == 'Account1_Name__c' ||
+                        fld.name == 'Account2_Name__c' ||
+                        fld.name == 'Donation_Amount__c') {
+                    fld.requiredIfObjectIncluded = true;
+                }
+
                 fields.add(fld);
             }
         }
@@ -208,12 +216,14 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
         @AuraEnabled public Boolean required;
+        @AuraEnabled public Boolean requiredIfObjectIncluded;
         @AuraEnabled public Boolean hide;
 
         public Field() {
             isActive = false;
             required = false;
             hide = false;
+            requiredIfObjectIncluded = false;
         }
     }
 }

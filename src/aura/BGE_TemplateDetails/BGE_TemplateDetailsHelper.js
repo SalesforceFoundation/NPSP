@@ -508,6 +508,41 @@
                 return _groupFieldsBySObject(_activeFields);
             }
 
+            /* **********************************************************
+             * @Description Validates the required templateInfo.
+             * @return Boolean validity.
+             ************************************************************/
+            function getRequiredFieldErrors() {
+                debugger;
+                var errors = [];
+                //'Required fields are missing. If any fields from Opportunity are selected, Amount must be selected. If any fields from a Contact are selected, Last Name must be selected. If any fields from an Account are selected, Account Name must be selected.');
+
+                var requiredFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (currentField.requiredIfObjectIncluded) {
+                        requiredFields.push(currentField);
+                    }
+                });
+
+                var activeFieldsBySObject = getActivesBySObject();
+                Object.keys(activeFieldsBySObject).forEach(function(currentSObject) {
+                    debugger;
+                    var objList = activeFieldsBySObject[currentSObject];
+                    for (var i = 0; i<requiredFields.length; i++) {
+                        var currentField = requiredFields[i];
+                        if (currentField.sObjectName === currentSObject) {
+                            if (! objList.contains(currentField.name)) {
+                               errors.push('If any fields from'+currentSObject+' are selected, '+currentField+'must be selected.')
+                            }
+                        }
+
+
+                    }
+                });
+
+                return errors.join(', ');
+            }
+
             /* *******************************************************************
              * @Description Updates isActive flag and sort Order of all fields
              * @return void.
@@ -620,6 +655,7 @@
             return {
                 errors: {},
                 load: load,
+                getRequiredFieldErrors: getRequiredFieldErrors,
                 getAllFieldsBySObject: getAllFieldsBySObject,
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
