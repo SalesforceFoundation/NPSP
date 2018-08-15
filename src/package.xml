@@ -713,9 +713,13 @@
         <members>Contact.Primary_Contact__c</members>
         <members>Contact.Soft_Credit_Last_N_Days__c</members>
         <members>Contact.is_Address_Override__c</members>
+        <members>Customizable_Rollup_Settings__c.Account_Hard_Credit_Last_Batch__c</members>
         <members>Customizable_Rollup_Settings__c.CMT_API_Status__c</members>
+        <members>Customizable_Rollup_Settings__c.Contact_Hard_Credit_Last_Batch__c</members>
+        <members>Customizable_Rollup_Settings__c.Contact_Soft_Credit_Last_Batch__c</members>
         <members>Customizable_Rollup_Settings__c.Customizable_Rollups_Enabled__c</members>
         <members>Customizable_Rollup_Settings__c.Enable_Incremental_Rollups_Mode__c</members>
+        <members>Customizable_Rollup_Settings__c.Recurring_Donations_Last_Batch__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_SkewMode_Batch_Size__c</members>
         <members>Customizable_Rollup_Settings__c.Rollups_Account_Soft_Credit_Batch_Size__c</members>
