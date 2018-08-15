@@ -162,6 +162,7 @@
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccSoftCredit_SVC</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -441,7 +442,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1955,6 +1955,7 @@
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
         <members>stgLabelExamplesIGFormat</members>
+        <members>stgLabelField</members>
         <members>stgLabelHHGeneral</members>
         <members>stgLabelHHNaming</members>
         <members>stgLabelHHNamingProgress</members>
@@ -1977,6 +1978,7 @@
         <members>stgLabelNone</members>
         <members>stgLabelOK</members>
         <members>stgLabelONS</members>
+        <members>stgLabelObject</members>
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppCampMembers</members>
         <members>stgLabelOppNamingRefreshTitle</members>

@@ -6657,6 +6657,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Examples for Informal Greeting Format</value>
     </labels>
     <labels>
+        <fullName>stgLabelField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelField</shortDescription>
+        <value>Field</value>
+    </labels>
+    <labels>
         <fullName>stgLabelHHGeneral</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6815,6 +6823,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
         <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelObject</shortDescription>
+        <value>Object</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>

@@ -77,7 +77,6 @@
     *****************************************************************/
     logDataTableChange: function(component, event, helper) {
         var model = component.get("v.model");
-        debugger;
         var dataTableChanged = component.get("v.templateMetadata.dataTableChanged");
         if (!dataTableChanged) {
             // oncellchange seems to be broken, so we have to set the view directly
@@ -107,6 +106,7 @@
             model.getTemplateInfo().load(templateInfoData);
             if (model.getTemplateInfo().isValid()) {
                 model.getTemplateMetadata().stepUp(step);
+                model.getTemplateMetadata().setError(false);
             } else {
                 model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
             }

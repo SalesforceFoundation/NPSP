@@ -199,8 +199,9 @@
                                     columns="{! v.templateFieldOptions.columns }"
                                     hideCheckboxColumn="true"
                                     onsave="{! c.saveFieldOptions }"
-                                    oncellchange="{! c.logDataTableChange }"
                                     oncancel="{! c.cancelDataTableChanges }"
+                                    oncellchange="{! c.logDataTableChange }"
+                                    errors="{! v.templateFieldOptions.errors }"
                             />
                         </div>
                     </div>
@@ -210,7 +211,7 @@
                 <!-- Buttons! -->
                 <div class="row slds-p-around_large">
                     <div class="slds-grid slds-grid_align-end">
-                        <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                        <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" disabled="{!v.templateMetadata.dataTableChanged}" />
                         <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
                             <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
                         </aura:if>
@@ -218,7 +219,7 @@
                             <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
                         </aura:if>
                         <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
-                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!v.templateMetadata.dataTableChanged}" />
+                            <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
                         </aura:if>
                     </div>
                 </div>

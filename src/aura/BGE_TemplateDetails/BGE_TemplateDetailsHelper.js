@@ -168,6 +168,8 @@
                 var templateFieldOptions = component.get("v.templateFieldOptions");
                 templateFieldOptions.data = [];
                 var activeFields = model.getTemplateFields().getActives();
+                var templateFields = model.getTemplateFields();
+                templateFieldOptions.errors = templateFields.errors;
 
                 activeFields.forEach(function (currentField) {
 
@@ -181,7 +183,6 @@
                     });
 
                 });
-
                 component.set("v.templateFieldOptions", templateFieldOptions);
 
             });
@@ -191,13 +192,13 @@
                     {
                         type: 'text',
                         fieldName: 'sObjectName',
-                        label: $A.get("$Label.c.stgLabelUDRTargetObject"),
+                        label: $A.get("$Label.c.stgLabelObject"),
                         editable: false
                     },
                     {
                         type: 'text',
                         fieldName: 'label',
-                        label: $A.get("$Label.c.bgeBatchTemplateActiveFields"),
+                        label: $A.get("$Label.c.stgLabelField"),
                         editable: false
                     },
                     {
@@ -241,10 +242,6 @@
      * @return Model module of Template Details.
      ************************************************************/
     TemplateDetailsModel : function() {
-        var templateFields = this.TemplateFields();
-        var templateInfo = this.TemplateInfo();
-        var templateMetadata = this.TemplateMetadata();
-
         return (function (templateFields, templateInfo, templateMetadata) {
             var _templateFields = templateFields;
             var _templateInfo = templateInfo;
@@ -364,7 +361,7 @@
                 getTemplateInfo: getTemplateInfo,
                 getTemplateMetadata: getTemplateMetadata
             }
-        })(templateFields, templateInfo, templateMetadata);
+        })(this.TemplateFields(), this.TemplateInfo(), this.TemplateMetadata());
     },
 
     /* **********************************************************
@@ -372,8 +369,6 @@
      * @return Model module of the Template Info.
      ************************************************************/
     TemplateInfo : function() {
-        var Event = this.Event();
-
         return (function (Event) {
             var _onInfoUpdated = new Event(this);
             
@@ -410,7 +405,7 @@
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
             }
-        })(Event);
+        })(this.Event());
     },
 
     /* **********************************************************
@@ -418,11 +413,8 @@
      * @return Model module of the Template Fields.
      ************************************************************/
     TemplateFields : function() {
-  		var Event = this.Event();
-        
-		return (function (Event) {
+        return (function (Event) {
             var _allFields = [];
-            var _allSObjects = []
             var _onFieldsUpdated = new Event(this);
 
             /* ******************PUBLIC FUNCTIONS*************************/
@@ -516,25 +508,23 @@
                 return _groupFieldsBySObject(_activeFields);
             }
 
-
             /* *******************************************************************
-             * @Description Updates the selected fields to Active, unselects fields
+             * @Description Updates isActive flag and sort Order of all fields
              * @return void.
              **********************************************************************/
             function updateToActive(templateFieldGroups) {
                 var fieldCountPreviousObjects = 0;
                 var allFieldsBySObject = getAllFieldsBySObject();
                 Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
-                    var fieldGroupLength = 0;
                     templateFieldGroups.forEach(function(currentFieldGroup) {
                         if (currentFieldGroup.sObjectName === currentSObject) {
-                            fieldGroupLength = currentFieldGroup.values.length;
                             allFieldsBySObject[currentSObject].forEach(function (currentField) {
                                 currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                                // the field's sort order is its index PLUS the total of all active fields from all previous object groups
                                 currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
                             });
-                            fieldCountPreviousObjects += fieldGroupLength;
-                            fieldGroupLength = 0;
+                            // increase the buffer by the number of active fields from this object
+                            fieldCountPreviousObjects += currentFieldGroup.values.length;
                         }
                     });
                 });
@@ -547,7 +537,10 @@
              * @return void.
              **********************************************************************/
             function updateTemplateFieldOptions(templateFieldOptions) {
-                // TODO: validation! and show randi
+
+                var allValid = true;
+                var errors = { rows: {}, table: {}, size: 0 };
+
                 _allFields.forEach(function(currentField) {
                     templateFieldOptions.forEach(function(currentActiveField) {
                         if (currentField.name === currentActiveField.name) {
@@ -556,8 +549,31 @@
                             currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
                         }
                     });
+
+                    if (currentField.hide && !currentField.defaultValue) {
+
+                        allValid = false;
+                        var fieldName = currentField.name;
+                        var fieldNameGroup = {
+                            title: 'ERROR ROW',
+                            messages: ['Hidden field must have a default value.'],
+                            fieldNames: ['defaultValue']
+                        };
+                        errors.rows[fieldName] = fieldNameGroup;
+                        errors.size += 1;
+                    }
                 });
 
+                if (!allValid) {
+                    errors.table = {
+                        title: 'ERRORTABLE',
+                        messages: ['Hidden fields must have a default value.']
+                        };
+                } else {
+                    errors = { rows: [], table: [], size: 0 };
+                }
+
+                this.errors = errors;
                 this.onFieldsUpdated.notify();
             }
 
@@ -578,22 +594,6 @@
                 });
 
                 return result;
-/*
-
-                // sort objects
-
-                var objectOrderList = ['Account1',
-                                        'Account2'
-                ];
-
-                result.forEach(function(currentSObject) {
-
-                    sortedResult[objectOrderList.indexOf(currentSObject)].push(currentSObject);
-
-                });
-
-                return sortedResult;
-*/
 
             }
 
@@ -618,6 +618,7 @@
 
             // TemplateFieldsModel module public functions and properties
             return {
+                errors: {},
                 load: load,
                 getAllFieldsBySObject: getAllFieldsBySObject,
                 getAvailablesBySObject: getAvailablesBySObject,
@@ -628,7 +629,7 @@
                 onFieldsUpdated: _onFieldsUpdated
 
             }
-        })(Event);
+        })(this.Event());
 	},
 
     /* **********************************************************
@@ -637,8 +638,6 @@
      * @return Model module of the Template Metadata.
      ************************************************************/
     TemplateMetadata : function() {
-        var Event = this.Event();
-
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
@@ -742,7 +741,7 @@
                 onMetadataUpdated: _onMetadataUpdated,
                 setDataTableChanged: setDataTableChanged
             }
-        })(Event);
+        })(this.Event());
     },
 
     /* **********************************************************
