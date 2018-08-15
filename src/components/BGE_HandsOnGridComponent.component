@@ -592,15 +592,6 @@ var tableHeight = 0;
 
         setActionButtonActive(row, col);
 
-        // console.log('INIT ' + col);
-        // if (col < 3) {
-        //     console.log('hide');
-        //     hideElements(".wtBorder.current");
-        // }
-        // else {
-        //     showElements(".wtBorder.current");
-        // }
-
         document.getElementById('action-menu-container').style.display = 'none';
 
         if (lastSelectedRow === null) {
@@ -612,17 +603,11 @@ var tableHeight = 0;
     }
 
     function afterSelectionEndHandler(row, col, rowEnd, colEnd) {
-        // console.log(row + '__' + col + '__' + rowEnd + '__' + colEnd);
-        // console.log('INIT END' + col);
-        // hot.deselectCell();
 
+        // fix for remove selection box when actions cells and tooltip cells are being selected in the grid
         if (col < 3) {
             console.log('hide');
             hideElements(".wtBorder.current");
-        }
-        else {
-            // hot.selectCell(row, col);
-            // showElements(".wtBorder.current");
         }
 
         if ((row != lastSelectedRow)) {
