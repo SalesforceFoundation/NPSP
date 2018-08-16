@@ -475,13 +475,13 @@
              * @return Map of SObject group to List of inactive fields.
              ************************************************************/
             function getAvailablesBySObject() {
-                var _availableFields = [];
+                var availableFields = [];
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive) {
-                        _availableFields.push(currentField);
+                        availableFields.push(currentField);
                     }
                 });
-                return _groupFieldsBySObject(_availableFields);
+                return _groupFieldsBySObject(availableFields);
             }
 
             /* **********************************************************
@@ -489,13 +489,13 @@
              * @return Sorted List of related active fields.
              ************************************************************/
             function getActives() {
-                var _activeFields = [];
+                var activeFields = [];
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive) {
-                        _activeFields.push(currentField);
+                        activeFields.push(currentField);
                     }
                 });
-                return _sortFieldsByOrder(_activeFields);
+                return _sortFieldsByOrder(activeFields);
             }
 
             /* **********************************************************
@@ -503,14 +503,14 @@
              * @return Map of SObject group to List of related active fields.
              ************************************************************/
             function getActivesBySObject() {
-                var _activeFields = [];
+                var activeFields = [];
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive) {
-                        _activeFields.push(currentField);
+                        activeFields.push(currentField);
                     }
                 });
-                _activeFields = _sortFieldsByOrder(_activeFields);
-                return _groupFieldsBySObject(_activeFields);
+                activeFields = _sortFieldsByOrder(activeFields);
+                return _groupFieldsBySObject(activeFields);
             }
 
             /* **********************************************************
@@ -717,7 +717,7 @@
             }
 
             /* **********************************************************
-             * @Description sets the mode, and notify all the
+             * @Description Sets the mode, and notify all the
              *      _onMetadataUpdated listeners.
              * @param mode - string that is the selected mode
              * @return void.
@@ -728,7 +728,7 @@
             }
 
             /* **********************************************************
-             * @Description sets attribute logging whether data table info has changed
+             * @Description Sets attribute logging whether data table info has changed
              * @param status - boolean
              * @return void.
              ************************************************************/
@@ -817,7 +817,7 @@
             var _listeners = [];
             
             /* **********************************************************
-             * @Description subscribes the listener to the current Event.
+             * @Description Subscribes the listener to the current Event.
              * @param listener. The event listener.
              * @return void.
              ************************************************************/
