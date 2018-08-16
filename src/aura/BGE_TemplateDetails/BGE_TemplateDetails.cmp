@@ -97,7 +97,6 @@
                 <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
                     <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
                 </aura:if>
-                <p class="slds-text-body_regular slds-p-top_medium">{!$Label.c.bgeBatchTemplateHelpText}</p>
             </div>
 
             <!--Progress Indicator-->
@@ -212,11 +211,13 @@
                 <div class="row slds-p-around_large">
                     <div class="slds-grid">
                         <div class="slds-col">
-                            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" disabled="{!v.templateMetadata.dataTableChanged}" />
+                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
+                                <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
+                            </aura:if>
                         </div>
                         <div class="slds-col slds-col_bump-left">
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
-                                <lightning:button variant="neutral" label="{!$Label.c.labelListViewPrevious}" onclick="{!c.back}" />
+                            <aura:if isTrue="{! v.templateMetadata.mode != 'view' }">
+                                <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" disabled="{!v.templateMetadata.dataTableChanged}" />
                             </aura:if>
                             <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
                                 <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
