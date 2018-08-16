@@ -53,8 +53,10 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Account__c</fullName>
+        <description>The Account that gets this soft credit.</description>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
+        <inlineHelpText>The Account that gets this soft credit.</inlineHelpText>
         <label>Account</label>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Account Soft Credits</relationshipLabel>
@@ -65,8 +67,10 @@
     </fields>
     <fields>
         <fullName>Amount__c</fullName>
+        <description>The amount to be soft credited.</description>
         <defaultValue>0</defaultValue>
         <externalId>false</externalId>
+        <inlineHelpText>The amount to be soft credited.</inlineHelpText>
         <label>Amount</label>
         <precision>18</precision>
         <required>false</required>
@@ -76,7 +80,9 @@
     </fields>
     <fields>
         <fullName>Opportunity__c</fullName>
+        <description>The Opportunity that this soft credit applies to.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The Opportunity that this soft credit applies to.</inlineHelpText>
         <label>Opportunity</label>
         <referenceTo>Opportunity</referenceTo>
         <relationshipLabel>Account Soft Credits</relationshipLabel>
@@ -89,7 +95,9 @@
     </fields>
     <fields>
         <fullName>Role__c</fullName>
+        <description>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</description>
         <externalId>false</externalId>
+        <inlineHelpText>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</inlineHelpText>
         <label>Role</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
