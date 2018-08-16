@@ -1436,6 +1436,7 @@
         <members>bgeBatchTemplateAddFields</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
+        <members>bgeBatchTemplateErrorDefaultValue</members>
         <members>bgeBatchTemplateHelpText</members>
         <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateOverview</members>

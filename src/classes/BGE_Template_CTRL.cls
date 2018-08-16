@@ -105,10 +105,10 @@ public with sharing class BGE_Template_CTRL {
         };
 
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            String namespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
-            if (!bannedFields.contains(namespacedObject) && dfr.inlineHelpText != null) {
+            String unnamespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
+            if (!bannedFields.contains(unnamespacedObject) && dfr.inlineHelpText != null) {
                 Field fld = new Field();
-                if (namespacedObject == 'Donation_Donor__c') {
+                if (unnamespacedObject == 'Donation_Donor__c') {
                     fld.sObjectName = 'Opportunity';
                 } else {
                     // TODO: make these localized with schema describes
@@ -121,9 +121,10 @@ public with sharing class BGE_Template_CTRL {
                 fld.name = dfr.getName();
 
                 // these fields are required only if at least 1 field from its object group is selected
-                if (fld.name == 'Account1_Name__c' ||
-                        fld.name == 'Account2_Name__c' ||
-                        fld.name == 'Donation_Amount__c') {
+                String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(fld.name);
+                if (unnamespacedField == 'Account1_Name__c' ||
+                        unnamespacedField == 'Account2_Name__c' ||
+                        unnamespacedField == 'Donation_Amount__c') {
                     fld.systemRequired = true;
                 }
 

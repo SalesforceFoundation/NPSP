@@ -521,26 +521,26 @@
                 var errors = [];
                 var activeFieldsBySObject = getActivesBySObject();
                 var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
-                
+
                 Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
                     var activeFieldNames = [];
                     var systemRequiredFieldNames = [];
 
-                    if (!activeFieldsBySObject[currentSObject] || !systemRequiredFieldsBySObject[currentSObject]) {
-                        return;
-                    }
-                    activeFieldsBySObject[currentSObject].forEach(function(currentField) {
-                        activeFieldNames.push(currentField.name);
-                    });
-                    systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                        systemRequiredFieldNames.push(currentField.name);
-                    });
+                    //only check validity if sObject is included in activeFields, or field is required
+                    if (activeFieldsBySObject[currentSObject] && systemRequiredFieldsBySObject[currentSObject]) {
+                        activeFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            activeFieldNames.push(currentField.name);
+                        });
+                        systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            systemRequiredFieldNames.push(currentField.name);
+                        });
 
-                    var containsSystemRequiredField = systemRequiredFieldNames.every(function(currentFieldName) {
-                        return activeFieldNames.indexOf(currentFieldName) > -1;
-                    });
-                    if (containsSystemRequiredField == false) {
-                        errors.push(currentSObject + ' fields (' + systemRequiredFieldNames.join(', ') + ')');
+                        var containsSystemRequiredField = systemRequiredFieldNames.every(function(currentFieldName) {
+                            return activeFieldNames.indexOf(currentFieldName) > -1;
+                        });
+                        if (!containsSystemRequiredField) {
+                            errors.push(currentSObject + ' fields (' + systemRequiredFieldNames.join(', ') + ')');
+                        }
                     }
                 });
 
@@ -594,8 +594,8 @@
                         allValid = false;
                         var fieldName = currentField.name;
                         var fieldNameGroup = {
-                            title: 'ERROR ROW',
-                            messages: ['Hidden field must have a default value.'],
+                            title: $A.get("$Label.c.PageMessagesError"),
+                            messages: [$A.get("$Label.c.bgeBatchTemplateErrorDefaultValue")],
                             fieldNames: ['defaultValue']
                         };
                         errors.rows[fieldName] = fieldNameGroup;
@@ -605,8 +605,8 @@
 
                 if (!allValid) {
                     errors.table = {
-                        title: 'ERRORTABLE',
-                        messages: ['Hidden fields must have a default value.']
+                        title: $A.get("$Label.c.PageMessagesError"),
+                        messages: [$A.get("$Label.c.bgeBatchTemplateErrorDefaultValue")]
                         };
                 } else {
                     errors = { rows: [], table: [], size: 0 };
@@ -619,8 +619,8 @@
             /* ******************PRIVATE FUNCTIONS************************/
 
             /* **********************************************************
-             * @Description Gets the active fields grouped by SObject.
-             * @return Map of SObject group to List of related active fields.
+             * @Description Gets the system required fields grouped by SObject.
+             * @return Map of SObject group to List of system required fields.
              ************************************************************/
             function _getSystemRequiredFieldsBySObject() {
                 var systemRequiredFields = [];
@@ -768,7 +768,6 @@
              * @return void.
              ************************************************************/
             function stepUp() {
-                this.clearError();
                 var stepNum = parseInt(this.progressIndicatorStep);
                 stepNum = stepNum + 1;
                 this.progressIndicatorStep = stepNum.toString();

@@ -195,13 +195,13 @@
                         <div class="slds-size_1-of-1 slds-m-around_medium">
                             <lightning:datatable
                                     keyField="name"
-                                    data="{! v.templateFieldOptions.data }"
-                                    columns="{! v.templateFieldOptions.columns }"
+                                    data="{!v.templateFieldOptions.data}"
+                                    columns="{!v.templateFieldOptions.columns}"
                                     hideCheckboxColumn="true"
-                                    onsave="{! c.saveFieldOptions }"
-                                    oncancel="{! c.cancelDataTableChanges }"
-                                    oncellchange="{! c.logDataTableChange }"
-                                    errors="{! v.templateFieldOptions.errors }"
+                                    onsave="{!c.saveFieldOptions}"
+                                    oncancel="{!c.cancelDataTableChanges}"
+                                    oncellchange="{!c.logDataTableChange}"
+                                    errors="{!v.templateFieldOptions.errors}"
                             />
                         </div>
                     </div>

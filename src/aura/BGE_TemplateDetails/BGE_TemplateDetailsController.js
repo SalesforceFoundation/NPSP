@@ -105,8 +105,8 @@
             var templateInfoData = component.get("v.templateInfo");
             model.getTemplateInfo().load(templateInfoData);
             if (model.getTemplateInfo().isValid()) {
-                model.getTemplateMetadata().stepUp();
                 model.getTemplateMetadata().clearError();
+                model.getTemplateMetadata().stepUp();
             } else {
                 model.getTemplateMetadata().showError('Name or Description are invalid.');
             }
@@ -115,8 +115,8 @@
             model.getTemplateFields().updateToActive(templateFields.fieldGroups);
             var errors = model.getTemplateFields().getRequiredFieldErrors();
             if (!errors) {
-                model.getTemplateMetadata().stepUp();
                 model.getTemplateMetadata().clearError();
+                model.getTemplateMetadata().stepUp();
             } else {
                 model.getTemplateMetadata().showError(errors);
             }

@@ -2432,6 +2432,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Edit Batch Template</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateErrorDefaultValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when template field is hidden and missing the default value.</shortDescription>
+        <value>Hidden fields must have a default value.</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateHelpText</fullName>
         <language>en_US</language>
         <protected>true</protected>
