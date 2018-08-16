@@ -124,7 +124,9 @@ public with sharing class BGE_Template_CTRL {
                 String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(fld.name);
                 if (unnamespacedField == 'Account1_Name__c' ||
                         unnamespacedField == 'Account2_Name__c' ||
-                        unnamespacedField == 'Donation_Amount__c') {
+                        unnamespacedField == 'Donation_Amount__c' ||
+                        unnamespacedField == 'Contact1_LastName__c' ||
+                        unnamespacedField == 'Contact2_LastName__c') {
                     fld.systemRequired = true;
                 }
 

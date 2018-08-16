@@ -524,27 +524,27 @@
 
                 Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
                     var activeFieldNames = [];
-                    var systemRequiredFieldNames = [];
+                    var systemRequiredFieldNames = new Map();
 
-                    //only check validity if sObject is included in activeFields, or field is required
-                    if (activeFieldsBySObject[currentSObject] && systemRequiredFieldsBySObject[currentSObject]) {
+                    //only check validity if sObject is included in activeFieldsBySObject
+                    if (activeFieldsBySObject[currentSObject]) {
                         activeFieldsBySObject[currentSObject].forEach(function(currentField) {
                             activeFieldNames.push(currentField.name);
                         });
                         systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
-                            systemRequiredFieldNames.push(currentField.name);
+                            systemRequiredFieldNames.set(currentField.name, currentField.label);
                         });
 
-                        var containsSystemRequiredField = systemRequiredFieldNames.every(function(currentFieldName) {
+                        var containsSystemRequiredField = Array.from(systemRequiredFieldNames.keys()).every(function(currentFieldName) {
                             return activeFieldNames.indexOf(currentFieldName) > -1;
                         });
                         if (!containsSystemRequiredField) {
-                            errors.push(currentSObject + ' fields (' + systemRequiredFieldNames.join(', ') + ')');
+                            errors.push(currentSObject + ' (' + Array.from(systemRequiredFieldNames.values()).join(', ') + ')');
                         }
                     }
                 });
 
-                return errors.length > 0 ? 'The ' + errors.join(', ') + ' must be selected.' : '';
+                return errors.length > 0 ? 'The following fields are required because other fields from their object are selected: ' + errors.join(', ') + '. Select them before proceeding.' : '';
             }
 
             /* *******************************************************************
