@@ -262,7 +262,6 @@
                 var recordId = _templateInfo.id ? _templateInfo.id : component.get("v.recordId");
                 _bgeTemplateController.getTemplateDetails(recordId, {
                     success: function(response) {
-                        debugger;
                         _templateInfo.load(
                             {
                                 name: response.name,
@@ -310,7 +309,6 @@
 
                 _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
                     success: function(response) {
-                        debugger;
                         _templateMetadata.setMode('view');
                         _templateInfo.load(
                             {
@@ -431,7 +429,7 @@
              * @Description Load the fields and notify onFieldsUpdated listeners.
              * @param allFields: list of allFields with sObjectName/Name.
              * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
-             * todo: and Default Value, Hide and Required flags.
+             * and Default Value, Hide and Required flags.
              * @return void.
              ************************************************************/
             function load(allFields, activeFields) {
@@ -859,6 +857,8 @@
 
             /* **********************************************************
              * @Description Calls the getTemplateDetails method.
+             * @param recordId. The Id of the Template.
+             * @param callback. The callback function to execute.
              * @return void.
              ************************************************************/
             function getTemplateDetails(recordId, callback) {
@@ -872,6 +872,9 @@
 
             /* **********************************************************
              * @Description Calls the saveTemplateDetails method.
+             * @param templateDetails. The Template fields.
+             * @param activeFields. The active fields (JSON format)
+             * @param callback. The callback function to execute.
              * @return void.
              ************************************************************/
             function saveTemplateDetails(templateDetails, activeFields, callback) {
@@ -886,6 +889,7 @@
 
             /* **********************************************************
              * @Description Processes the response from any Apex method.
+             * @param response. The response from the backend.
              * @return void.
              ************************************************************/
             function _processResponse(response) {

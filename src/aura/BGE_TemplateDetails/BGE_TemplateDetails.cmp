@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
-                    <aura:if isTrue="{!v.templateMetadata.mode == 'view'}">
+                    <aura:if isTrue="{!v.isReadOnly}">
                         <lightning:buttonGroup>
                             <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
                             <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
@@ -246,7 +246,7 @@
                                 </aura:if>
                             </div>
                             <div class="slds-col slds-col_bump-left">
-                                <aura:if isTrue="{! v.templateMetadata.mode != 'view' }">
+                                <aura:if isTrue="{! !v.isReadOnly }">
                                     <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
                                 </aura:if>
                                 <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
