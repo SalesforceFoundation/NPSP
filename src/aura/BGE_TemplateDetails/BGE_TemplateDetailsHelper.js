@@ -259,8 +259,10 @@
              * @return void.
              ************************************************************/
             function init(component) {
-                _bgeTemplateController.getTemplateDetails({
+                var recordId = _templateInfo.id ? _templateInfo.id : component.get("v.recordId");
+                _bgeTemplateController.getTemplateDetails(recordId, {
                     success: function(response) {
+                        debugger;
                         _templateInfo.load(
                             {
                                 name: response.name,
@@ -308,6 +310,7 @@
 
                 _bgeTemplateController.saveTemplateDetails(templateDetailsData, activeFields, {
                     success: function(response) {
+                        debugger;
                         _templateMetadata.setMode('view');
                         _templateInfo.load(
                             {
@@ -704,26 +707,26 @@
                 this.labels = labels;
                 //isReadOnly (View) is passed from record home with lightning app builder
                 if (component.get("v.isReadOnly")) {
-                    this.mode = 'view';
+                    this.setMode('view');
                 } else {
                     if (component.get("v.recordId") !== null) {
-                        this.mode = 'edit';
+                        this.setMode('edit');
                     } else {
-                        this.mode = 'create';
+                        this.setMode('create');
                     }
                 }
-                this.progressIndicatorStep = this.progressIndicatorStep ? this.progressIndicatorStep : '1' ;
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
              * @Description Sets the mode, and notify all the
-             *      _onMetadataUpdated listeners.
+             *      _onMetadataUpdated listeners. Resets progressIndicator.
              * @param mode - string that is the selected mode
              * @return void.
              ************************************************************/
             function setMode(mode) {
                 this.mode = mode;
+                this.progressIndicatorStep = '1';
                 this.onMetadataUpdated.notify();
             }
 
@@ -858,10 +861,10 @@
              * @Description Calls the getTemplateDetails method.
              * @return void.
              ************************************************************/
-            function getTemplateDetails(callback) {
+            function getTemplateDetails(recordId, callback) {
                 var action = _component.get("c.getTemplateDetails");
                 action.setParams({
-                    templateId: component.get("v.recordId")
+                    templateId: recordId
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);

@@ -58,7 +58,6 @@
     save: function(component, event, helper) {
         var templateInfoData = component.get("v.templateInfo");
         var model = component.get("v.model");
-        model.getTemplateInfo().load(templateInfoData);
         model.save();
     },
 
@@ -80,7 +79,7 @@
         var dataTableChanged = component.get("v.templateMetadata.dataTableChanged");
         if (!dataTableChanged) {
             // oncellchange seems to be broken, so we have to set the view directly
-            component.set("v.templateMetadata.dataTableChanged",true);
+            component.set("v.templateMetadata.dataTableChanged", true);
             // this updates the model, but does not call the notifier
             model.getTemplateMetadata().setDataTableChanged(true);
         }
@@ -129,6 +128,8 @@
     back: function(component, event, helper) {
         var step = component.get("v.templateMetadata.progressIndicatorStep");
         var model = component.get('v.model');
+        model.getTemplateMetadata().clearError();
+        model.getTemplateMetadata().setDataTableChanged(false);
         model.getTemplateMetadata().stepDown();
     },
 

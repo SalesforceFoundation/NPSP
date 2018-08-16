@@ -1439,6 +1439,7 @@
         <members>bgeBatchTemplateErrorRequiredFields</members>
         <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateOverview</members>
+        <members>bgeBatchTemplateOverviewWizard</members>
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>

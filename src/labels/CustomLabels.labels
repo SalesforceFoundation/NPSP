@@ -2446,11 +2446,18 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>New Batch Template</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateOverviewWizard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
+        <value>Enter Template Info</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateOverview</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Header for Batch Template Info</shortDescription>
-        <value>Enter Template Info</value>
+        <shortDescription>Header for Batch Template Info in View</shortDescription>
+        <value>Template Info</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateSelectFields</fullName>
