@@ -53,10 +53,10 @@
     <enableStreamingApi>true</enableStreamingApi>
     <fields>
         <fullName>Account__c</fullName>
-        <description>The Account who gets this soft credit.</description>
+        <description>The Account that gets this soft credit.</description>
         <deleteConstraint>Restrict</deleteConstraint>
         <externalId>false</externalId>
-        <inlineHelpText>The Account who gets this soft credit.</inlineHelpText>
+        <inlineHelpText>The Account that gets this soft credit.</inlineHelpText>
         <label>Account</label>
         <referenceTo>Account</referenceTo>
         <relationshipLabel>Account Soft Credits</relationshipLabel>
