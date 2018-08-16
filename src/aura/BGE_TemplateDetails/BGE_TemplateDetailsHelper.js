@@ -544,7 +544,7 @@
                     }
                 });
 
-                return errors.length > 0 ? 'The following fields are required because other fields from their object are selected: ' + errors.join(', ') + '. Select them before proceeding.' : '';
+                return errors.length > 0 ? $A.get("$Label.c.bgeBatchTemplateErrorRequiredFields") + ' ' + errors.join(', ') + '.' : '';
             }
 
             /* *******************************************************************

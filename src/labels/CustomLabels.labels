@@ -2411,13 +2411,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Selected Fields</value>
     </labels>
     <labels>
-        <fullName>bgeBatchTemplateAddFields</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Alt text for arrow utility icon when adding fields</shortDescription>
-        <value>Add Fields to Template</value>
-    </labels>
-    <labels>
         <fullName>bgeBatchTemplateAvailableFields</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2439,6 +2432,13 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Hidden fields must have a default value.</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateErrorRequiredFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
+        <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
+    </labels>
+    <labels>
         <fullName>bgeBatchTemplateNew</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -2451,13 +2451,6 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>Header for Batch Template Info</shortDescription>
         <value>Enter Template Info</value>
-    </labels>
-    <labels>
-        <fullName>bgeBatchTemplateRemoveFields</fullName>
-        <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>Alt text for arrow utility icon when adding fields</shortDescription>
-        <value>Remove Fields from Template</value>
     </labels>
     <labels>
         <fullName>bgeBatchTemplateSelectFields</fullName>
@@ -2478,7 +2471,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
-        <value>There is no Batch Template associated to this Batch</value>
+        <value>There is no Batch Template associated with this Batch.</value>
     </labels>
     <labels>
         <fullName>bgeErrorBatchTemplateNameRequired</fullName>

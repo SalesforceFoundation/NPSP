@@ -1433,13 +1433,12 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
-        <members>bgeBatchTemplateAddFields</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
         <members>bgeBatchTemplateErrorDefaultValue</members>
+        <members>bgeBatchTemplateErrorRequiredFields</members>
         <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateOverview</members>
-        <members>bgeBatchTemplateRemoveFields</members>
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
