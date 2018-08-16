@@ -105,21 +105,20 @@
             var templateInfoData = component.get("v.templateInfo");
             model.getTemplateInfo().load(templateInfoData);
             if (model.getTemplateInfo().isValid()) {
-                model.getTemplateMetadata().stepUp(step);
-                model.getTemplateMetadata().setError(false);
+                model.getTemplateMetadata().stepUp();
+                model.getTemplateMetadata().clearError();
             } else {
-                model.getTemplateMetadata().setError(true, 'Name or Description are invalid.');
+                model.getTemplateMetadata().showError('Name or Description are invalid.');
             }
         } else if (step === '2') {
             var templateFields = component.get("v.templateFields");
             model.getTemplateFields().updateToActive(templateFields.fieldGroups);
             var errors = model.getTemplateFields().getRequiredFieldErrors();
-            debugger;
             if (!errors) {
-                model.getTemplateMetadata().stepUp(step);
-                model.getTemplateMetadata().setError(false);
+                model.getTemplateMetadata().stepUp();
+                model.getTemplateMetadata().clearError();
             } else {
-                model.getTemplateMetadata().setError(true, errors);
+                model.getTemplateMetadata().showError(errors);
             }
         }
     },
@@ -130,7 +129,7 @@
     back: function(component, event, helper) {
         var step = component.get("v.templateMetadata.progressIndicatorStep");
         var model = component.get('v.model');
-        model.getTemplateMetadata().stepDown(step);
+        model.getTemplateMetadata().stepDown();
     },
 
     /******************************** Template Fields Controller Functions *****************************/

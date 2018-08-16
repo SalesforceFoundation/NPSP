@@ -738,37 +738,44 @@
             }
 
             /* **********************************************************
-             * @Description sets error state and message
-             * @param hasError - Boolean indicating error state.
+             * @Description Shows error message.
              * @param message - String for the error message
              * @return void.
              ************************************************************/
-            function setError(hasError, message) {
-                this.hasError = hasError;
+            function showError(message) {
+                this.hasError = true;
                 this.errorMessage = message;
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description increments the step for the progressIndicator
-             * @param step - number of the current step
+             * @Description Clears error message
              * @return void.
              ************************************************************/
-            function stepUp(step) {
-                this.setError(false, '');
-                var stepNum = parseInt(step);
+            function clearError() {
+                this.hasError = false;
+                this.errorMessage = '';
+                this.onMetadataUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description Increments the step for the progressIndicator
+             * @return void.
+             ************************************************************/
+            function stepUp() {
+                this.clearError();
+                var stepNum = parseInt(this.progressIndicatorStep);
                 stepNum = stepNum + 1;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description decrements the step for the progressIndicator
-             * @param step - number of the current step
+             * @Description Decrements the step for the progressIndicator
              * @return void.
              ************************************************************/
-            function stepDown(step) {
-                var stepNum = parseInt(step);
+            function stepDown() {
+                var stepNum = parseInt(this.progressIndicatorStep);
                 stepNum = stepNum - 1;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
@@ -784,7 +791,8 @@
                 dataTableChanged: false,
                 load: load,
                 setMode: setMode,
-                setError: setError,
+                showError: showError,
+                clearError: clearError,
                 stepUp: stepUp,
                 stepDown: stepDown,
                 onMetadataUpdated: _onMetadataUpdated,
