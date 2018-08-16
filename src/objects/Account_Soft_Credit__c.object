@@ -95,9 +95,9 @@
     </fields>
     <fields>
         <fullName>Role__c</fullName>
-        <description>The role associated with this Account soft credit. The role describes how the Account was involved with the Opportunity.</description>
+        <description>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</description>
         <externalId>false</externalId>
-        <inlineHelpText>The role associated with this Account soft credit. The role describes how the Account was involved with the Opportunity.</inlineHelpText>
+        <inlineHelpText>The role associated with this soft credit. The role describes how the Account was involved with the Opportunity.</inlineHelpText>
         <label>Role</label>
         <required>false</required>
         <trackTrending>false</trackTrending>
