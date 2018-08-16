@@ -59,7 +59,7 @@
                 } else {
                     component.find('notifLib').showNotice({
                         "variant": "error",
-                        "header": "Something has gone wrong!",
+                        "header": $A.get("$Label.c.PageMessagesError"),
                         "message": templateMetadataView.errorMessage,
                         closeCallback: function() {
                             //callback action here

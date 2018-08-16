@@ -108,7 +108,7 @@
                 model.getTemplateMetadata().clearError();
                 model.getTemplateMetadata().stepUp();
             } else {
-                model.getTemplateMetadata().showError('Name or Description are invalid.');
+                model.getTemplateMetadata().showError(component.get("v.templateMetadata.labels.missingNameDescriptionError"));
             }
         } else if (step === '2') {
             var templateFields = component.get("v.templateFields");
