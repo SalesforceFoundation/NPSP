@@ -513,34 +513,33 @@
              * @return Boolean validity.
              ************************************************************/
             function getRequiredFieldErrors() {
-                debugger;
                 var errors = [];
-                //'Required fields are missing. If any fields from Opportunity are selected, Amount must be selected. If any fields from a Contact are selected, Last Name must be selected. If any fields from an Account are selected, Account Name must be selected.');
-
-                var requiredFields = [];
-                _allFields.forEach(function(currentField) {
-                    if (currentField.requiredIfObjectIncluded) {
-                        requiredFields.push(currentField);
-                    }
-                });
-
                 var activeFieldsBySObject = getActivesBySObject();
-                Object.keys(activeFieldsBySObject).forEach(function(currentSObject) {
-                    debugger;
-                    var objList = activeFieldsBySObject[currentSObject];
-                    for (var i = 0; i<requiredFields.length; i++) {
-                        var currentField = requiredFields[i];
-                        if (currentField.sObjectName === currentSObject) {
-                            if (! objList.contains(currentField.name)) {
-                               errors.push('If any fields from'+currentSObject+' are selected, '+currentField+'must be selected.')
-                            }
-                        }
+                var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
+                
+                Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
+                    var activeFieldNames = [];
+                    var systemRequiredFieldNames = [];
 
+                    if (!activeFieldsBySObject[currentSObject] || !systemRequiredFieldsBySObject[currentSObject]) {
+                        return;
+                    }
+                    activeFieldsBySObject[currentSObject].forEach(function(currentField) {
+                        activeFieldNames.push(currentField.name);
+                    });
+                    systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
+                        systemRequiredFieldNames.push(currentField.name);
+                    });
 
+                    var containsSystemRequiredField = systemRequiredFieldNames.every(function(currentFieldName) {
+                        return activeFieldNames.indexOf(currentFieldName) > -1;
+                    });
+                    if (containsSystemRequiredField == false) {
+                        errors.push(currentSObject + ' fields (' + systemRequiredFieldNames.join(', ') + ')');
                     }
                 });
 
-                return errors.join(', ');
+                return errors.length > 0 ? 'The ' + errors.join(', ') + ' must be selected.' : '';
             }
 
             /* *******************************************************************
@@ -613,6 +612,20 @@
             }
 
             /* ******************PRIVATE FUNCTIONS************************/
+
+            /* **********************************************************
+             * @Description Gets the active fields grouped by SObject.
+             * @return Map of SObject group to List of related active fields.
+             ************************************************************/
+            function _getSystemRequiredFieldsBySObject() {
+                var systemRequiredFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (currentField.systemRequired) {
+                        systemRequiredFields.push(currentField);
+                    }
+                });
+                return _groupFieldsBySObject(systemRequiredFields);
+            }
 
             /* **********************************************************
              * @Description Groups the fields by SObject name.
