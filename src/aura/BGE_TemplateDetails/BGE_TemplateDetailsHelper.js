@@ -153,13 +153,13 @@
         return (function (component, model) {
 
             var isReadOnly = component.get("v.isReadOnly");
-            var _columns = _setColumns(!isReadOnly);
+            var _columns = _getColumns(!isReadOnly);
 
             // Subscribe to the model onMetadataChange event.
             model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
                 var templateFieldOptions = component.get("v.templateFieldOptions");
                 var isReadOnly = component.get("v.isReadOnly");
-                templateFieldOptions.columns = _setColumns(!isReadOnly);
+                templateFieldOptions.columns = _getColumns(!isReadOnly);
                 component.set('v.templateFieldOptions', templateFieldOptions);
             });
 
@@ -187,7 +187,12 @@
 
             });
 
-            function _setColumns(isEditable) {
+            /* **********************************************************
+             * @Description Gets the columns definition.
+             * @param isEditable. The TemplateMetadata mode.
+             * @return List of columns.
+             ************************************************************/
+            function _getColumns(isEditable) {
                 return [
                     {
                         type: 'text',
