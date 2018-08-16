@@ -124,7 +124,7 @@ public with sharing class BGE_Template_CTRL {
                 if (fld.name == 'Account1_Name__c' ||
                         fld.name == 'Account2_Name__c' ||
                         fld.name == 'Donation_Amount__c') {
-                    fld.requiredIfObjectIncluded = true;
+                    fld.systemRequired = true;
                 }
 
                 fields.add(fld);
@@ -216,14 +216,14 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
         @AuraEnabled public Boolean required;
-        @AuraEnabled public Boolean requiredIfObjectIncluded;
+        @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
 
         public Field() {
             isActive = false;
             required = false;
             hide = false;
-            requiredIfObjectIncluded = false;
+            systemRequired = false;
         }
     }
 }
