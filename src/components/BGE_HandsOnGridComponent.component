@@ -1,3 +1,7 @@
+<apex:component controller="BGE_HandsOnGridController" >
+
+<script type="text/javascript">
+
 var templateId = '';
 var selectPopper = undefined;
 var isIndexLoading = false;
@@ -1536,3 +1540,7 @@ var tableHeight = 0;
             dataElements[i].style.height = "30px";
         }
     }
+
+</script>
+
+</apex:component>
