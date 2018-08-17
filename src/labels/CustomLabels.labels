@@ -5197,6 +5197,14 @@ To view these Jobs, search for Scheduled Jobs in Salesforce Setup.
 Selecting Don't Auto Schedule Default NPSP Jobs tells NPSP not to check for or reschedule the default Jobs.</value>
     </labels>
     <labels>
+        <fullName>stgEnableIncrementalRollupsHelpText</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Enable Incremental Rollups Help Text</shortDescription>
+        <value>ENABLE_INCREMENTAL_ROLLUPS_HELP_TEXT</value>
+    </labels>
+    <labels>
         <fullName>stgErrorINaming</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
