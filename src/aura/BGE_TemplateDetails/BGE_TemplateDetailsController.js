@@ -31,15 +31,15 @@
     cancel: function(component, event, helper) {
         var model = component.get('v.model');
         var mode = component.get("v.templateMetadata.mode");
-        if (mode === 'create') {
+        //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
+        if (mode === 'create' || mode === 'view') {
             //navigate to record home
             var homeEvent = $A.get("e.force:navigateToObjectHome");
             homeEvent.setParams({
                 "scope": component.get("v.templateMetadata.labels.batchTemplateObject")
             });
             homeEvent.fire();
-        } 
-        if (mode === 'edit') {
+        } else if (mode === 'edit') {
             model.getTemplateMetadata().clearError();
             model.getTemplateMetadata().setDataTableChanged(false);
             model.getTemplateMetadata().setMode('view');
