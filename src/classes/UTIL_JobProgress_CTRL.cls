@@ -31,139 +31,171 @@
 * @author Salesforce.org
 * @date 2012 (2.0)
 * @group Utilities
-* @description The controller for the VF progress indicator component  
+* @description The controller for the job progress indicator vf component
 */
 public with sharing class UTIL_JobProgress_CTRL {
- 
+
+    /**
+     * @description Allows the page component to only display jobs started since the component was loaded. Needs to
+     * be a string to work properly in JavaScript when passing back into this controller through JS remoting
+     */
+    public String batchJobStartTimeString {
+        get {
+            if (batchJobStartTimeString == null) {
+                batchJobStartTimeString = Datetime.now().addMinutes(-1).format();
+            }
+            return batchJobStartTimeString;
+        } private set;
+    }
+
     public List<BatchJob> batchJobs;
-    public UTIL_JobProgress_CTRL.BatchJob bj {get{
-        //just kickoff the getter for batchJobs since it will properly populate the bj var for 
-        // us w/o needing new logic
-        List<BatchJob> tempList = getBatchJobs();
-        return bj;
-    } set;}
+    public UTIL_JobProgress_CTRL.BatchJob bj {
+        get{
+            //just kickoff the getter for batchJobs since it will properly populate the bj var for
+            // us w/o needing new logic
+            getBatchJobs();
+            return bj;
+        }
+        set;
+    }
+
     public Integer numberOfJobs {get; set;}
     public String batchComponentLabel {get; set;}
     public Boolean rerenderoncomplete {get; set;}
     
     public Boolean hasExtendedStatus {
-    	get {
-    		//ensure bj loaded!
-    		if (bj != null)
-    		  return hasExtendedStatus;
-    		else 
-    		  return false;
-    	}
-    	set;
+        get {
+            //ensure bj loaded!
+            if (bj != null) {
+                return hasExtendedStatus;
+            } else {
+                return false;
+            }
+        }
+        set;
     }
-    	
+
     public Boolean allCompleted { 
-    	get {
-    	   // ensure bj loaded!
-    	   if (bj != null)
-    	       return allCompleted;
-    	   else
-    	       return true;
-    	}
-    	set;
+        get {
+           // ensure bj loaded!
+           if (bj != null) {
+               return allCompleted;
+           } else {
+               return true;
+           }
+        }
+        set;
     }
 
+    /**
+     * @description Initialize the set of batch jobs to be displayed in the component
+     * @return List<BatchJob> collection
+     */
     public List<BatchJob> getBatchJobs() {
-        //Create new list of BatchJobs, a wrapper class that includes the job and percent complete.
-        batchJobs = new List<BatchJob>();
-        hasExtendedStatus = false;
-        allCompleted = false;
+        // Create new list of BatchJobs, a wrapper class that includes the job and percent complete.
+        this.batchJobs = new List<BatchJob>();
+        this.hasExtendedStatus = false;
+        this.allCompleted = false;
 
-        //If number of jobs was not defined, default to 20
-        if(numberOfJobs== null || numberofJobs <= 0) {
-            numberofJobs = 20;
+        // If number of jobs was not defined, default to 20
+        if(this.numberOfJobs== null || this.numberofJobs <= 0) {
+            this.numberofJobs = 20;
         }
 
-        if(rerenderoncomplete == null)
-            rerenderoncomplete = false;
+        if(this.rerenderoncomplete == null)
+            this.rerenderoncomplete = false;
 
-        if(batchComponentLabel== null) {
-            batchComponentLabel = 'Batch Apex Jobs';
+        if(this.batchComponentLabel== null) {
+            this.batchComponentLabel = 'Batch Apex Jobs';
         }
+
+        Datetime batchJobStartDT = Datetime.parse(batchJobStartTimeString);
+        Id currUserId = UserInfo.getUserId();
 
         Integer completedCount = 0;
-        //Query the Batch apex jobs
-        for(AsyncApexJob a : [SELECT TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id,
+        //Query the Batch apex jobs, excluding skew dispatcher jobs (unless the skew mode job is in holding status)
+        String skewDispatcherClassName =  CRLP_SkewDispatcher_BATCH.class.getName();
+        skewDispatcherClassName = (skewDispatcherClassName.contains('__') ? skewDispatcherClassName.split('__')[1] : skewDispatcherClassName);
+        for (AsyncApexJob a : [SELECT TotalJobItems, Status, ExtendedStatus, NumberOfErrors, MethodName, JobType, JobItemsProcessed, Id,
                                     CreatedDate, CreatedById, CompletedDate, ApexClassId, ApexClass.Name, CreatedBy.Name
-                                    FROM AsyncApexJob WHERE JobType='BatchApex' ORDER BY CreatedDate DESC, Id LIMIT :numberOfJobs]) {
-            Double itemsProcessed = a.JobItemsProcessed;
-            Double totalItems = a.TotalJobItems;
+                                    FROM AsyncApexJob
+                                    WHERE JobType='BatchApex'
+                                    AND (ApexClass.Name != :skewDispatcherClassName
+                                        OR (ApexClass.Name = :skewDispatcherClassName AND Status = 'Holding'))
+                                    AND CreatedDate >= :batchJobStartDT
+                                    AND CreatedById = :currUserId
+                                    ORDER BY CreatedDate DESC, Id LIMIT :numberOfJobs]) {
 
-            BatchJob j = new BatchJob();
-            j.job = a;
+            BatchJob j = new BatchJob(a);
 
-            j.percentComplete = 5;
-            //Determine the pecent complete based on the number of batches complete
-            if(a.status == 'Completed') {
-                j.percentComplete = 100;
-            //Determine the pecent complete based on the number of batches complete
-            } else if (a.status == 'Queued') {
-                j.percentComplete = 5;
-            } else if (a.status == 'Preparing') {
-                j.percentComplete = 10;
-            } else if (totalItems == 0) {
-                //A little check here as we don't want to divide by 0.
-                j.percentComplete = 5;
-            }
-            else {
-                j.percentComplete = ((itemsProcessed  / totalItems) * 100.0).intValue();
+            if (!String.isEmpty(a.ExtendedStatus)) {
+                this.hasExtendedStatus = true;
             }
 
-            //don't let it go backwards from preparing/queued
-            if (j.percentComplete == 0)
-                j.percentComplete = 5;
-
-            if (a.ExtendedStatus != null && a.ExtendedStatus != '')
-                hasExtendedStatus = true;
-
-            if (a.Status == 'Completed'){
+            if (a.Status == 'Completed') {
                 completedCount++; 
             }
 
             batchJobs.add(j);
         }
-        if (completedCount == numberOfJobs)
-            allCompleted = true;
-        if (!batchJobs.isEmpty())
-            bj = batchJobs[0];
+        if (completedCount == this.numberOfJobs) {
+            this.allCompleted = true;
+        }
+        if (!batchJobs.isEmpty()) {
+            this.bj = batchJobs[0];
+        }
+
         return batchJobs;
     }
 
     //This is the wrapper class the includes the job itself and a value for the percent complete
-    public Class BatchJob{
+    public class BatchJob {
         public AsyncApexJob job {get; set;}
-        public Integer percentComplete {get; set;}
+        public Long percentComplete {get; set;}
+		
+        /**
+         * @description Construct from an AsyncApexJob object.  This will
+         * extract information from the AsyncApexJob and store it in this class
+         * to be serialized, including calculating the percentage of the batch
+         * job completed.
+         *
+         * @param job The AsyncApexJob to gather data from
+         */
+        public BatchJob(AsyncApexJob job) {
+            Integer itemsProcessed = job.JobItemsProcessed;
+            Integer totalItems = job.TotalJobItems;
+            this.job = job;
+            // Determine the percent complete based on the number of batches complete
+            this.percentComplete = calculatePercentCompleted(itemsProcessed, totalItems, job.Status);
+        }
     }
 
     /**
      * @description A RemoteAction method for querying the AsyncApexJob table.
      *
      * @param numberOfJobs The limit of number of jobs that should be returned in the query
+     * @param batchJobStartString Only retrieve jobs started after this timestamp and started by the current user
      * @return List<BatchJobStatus>
      */
     @RemoteAction
-    public static List<BatchJobStatus> getBatchJobsStatus(Integer numberOfJobs) {
+    public static List<BatchJobStatus> getBatchJobsStatus(Integer numberOfJobs, String batchJobStartString) {
         List<AsyncApexJob> jobs = new List<AsyncApexJob>();
         List<BatchJobStatus> jobsStatus = new List<BatchJobStatus>();
 
+        Datetime batchJobStartDT = Datetime.parse(batchJobStartString);
+        Id currUserId = UserInfo.getUserId();
+
+        String skewDispatcherClassName =  CRLP_SkewDispatcher_BATCH.class.getName();
+        skewDispatcherClassName = (skewDispatcherClassName.contains('__') ? skewDispatcherClassName.split('__')[1] : skewDispatcherClassName);
         jobs = [
-            SELECT
-            ApexClass.Name,
-            CreatedBy.Name,
-            CreatedDate,
-            Status,
-            ExtendedStatus,
-            CompletedDate,
-            JobItemsProcessed,
-            TotalJobItems,
-            NumberOfErrors
+            SELECT ApexClass.Name, CreatedBy.Name, CreatedDate, Status, ExtendedStatus, CompletedDate, JobItemsProcessed,
+                TotalJobItems, NumberOfErrors
             FROM AsyncApexJob
             WHERE JobType = 'BatchApex'
+                AND (ApexClass.Name != :skewDispatcherClassName
+                    OR (ApexClass.Name = :skewDispatcherClassName AND Status = 'Holding'))
+                AND CreatedDate >= :batchJobStartDT
+                AND CreatedById = :currUserId
             ORDER BY CreatedDate DESC
             LIMIT :numberOfJobs
         ];
@@ -176,18 +208,15 @@ public with sharing class UTIL_JobProgress_CTRL {
     }
 
     /**
-     * @author Salesforce.org
-     * @group Utilities
-     * @description This class is for serializing information queried from the
-     * AsyncApexJob table.
+     * @description inner class used to serialize information queried from the AsyncApexJob table.
      */
     public class BatchJobStatus {
         public String className;
         public String createdByName;
-        public DateTime createdDate;
+        public Datetime createdDate;
         public String status;
         public String extendedStatus;
-        public DateTime completedDate;
+        public Datetime completedDate;
         public Integer jobItemsProcessed;
         public Integer totalJobItems;
         public Integer numberOfErrors;
@@ -206,7 +235,7 @@ public with sharing class UTIL_JobProgress_CTRL {
             createdByName = job.CreatedBy.Name;
             createdDate = job.CreatedDate;
             status = job.Status;
-            extendedStatus = job.extendedStatus;
+            extendedStatus = job.ExtendedStatus;
             completedDate = job.CompletedDate;
             jobItemsProcessed = job.JobItemsProcessed;
             totalJobItems = job.TotalJobItems;
@@ -214,38 +243,47 @@ public with sharing class UTIL_JobProgress_CTRL {
 
             percentCompleted = calculatePercentCompleted(jobItemsProcessed, totalJobItems, status);
         }
+    }
 
-        /**
-         * @description Calculate the percentage of the batch job completed.
-         * This method maps certain job "Status" values to specified
-         * percentages to, for example, show some progress when the job is
-         * Queued, and more progress when Preparing, etc.
-         *
-         * @param jobItemsProcessed The number of job items processed, so far
-         * @param totalJobItems The total number of job items in the batch job
-         * @param status The status of the job.  Relevant values are "Completed", "Queued", and "Preparing".
-         * @return Long (The percentage as a value between 5 and 100).
-         */
-        @TestVisible
-        private Long calculatePercentCompleted(Integer jobItemsProcessed, Integer totalJobItems, String status) {
-            Long percentCompleted = 5;
+    /**
+     * @description Calculate the percentage of the batch job completed.
+     * This method maps certain job "Status" values to specified
+     * percentages to, for example, show some progress when the job is
+     * Queued, and more progress when Preparing, etc.
+     *
+     * @param jobItemsProcessed The number of job items processed, so far
+     * @param totalJobItems The total number of job items in the batch job
+     * @param status The status of the job.  Relevant values are "Completed", "Queued", and "Preparing".
+     * @return Long (The percentage as a value between 5 and 100).
+     */
+    private static Long calculatePercentCompleted(Integer jobItemsProcessed, Integer totalJobItems, String status) {
+        Long percentCompleted = 5;
 
-            if ('Completed' == status) {
+        switch on (status) {
+            when 'Completed' {
                 percentCompleted = 100;
-            } else if ('Queued' == status) {
-                percentCompleted = 5;
-            } else if ('Preparing' == status) {
-                percentCompleted = 10;
-            } else if (0 == totalJobItems) {
-                percentCompleted = 5;
-            } else {
-                percentCompleted = Math.max(
-                    Math.roundToLong(100 * jobItemsProcessed / totalJobItems),
-                    5
-                );
             }
+            when 'Preparing' {
+                percentCompleted = 10;
+            }
+            when 'Queued', 'Holding' {
+                percentCompleted = 5;
+            }
+            when else {
+                if (totalJobItems != 0) {
 
-            return percentCompleted;
+                    percentCompleted = Math.max(
+                            Math.roundToLong(100 * jobItemsProcessed / totalJobItems),
+                            5
+                    );
+                    // Don't let it go backwards from preparing/queued
+                    if (percentCompleted == 0) {
+                        percentCompleted = 5;
+                    }
+                }
+            }
         }
+
+        return percentCompleted;
     }
 }
