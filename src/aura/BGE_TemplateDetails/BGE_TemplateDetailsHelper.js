@@ -221,7 +221,7 @@
                     {
                         type: 'boolean',
                         fieldName: 'hide',
-                        label: $A.get("$Label.c.stgLabelHide"),
+                        label: $A.get("$Label.c.stgLabelHidden"),
                         editable: isEditable
                     }
                 ];

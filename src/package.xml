@@ -1963,7 +1963,7 @@
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
-        <members>stgLabelHide</members>
+        <members>stgLabelHidden</members>
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>

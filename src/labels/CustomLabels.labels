@@ -6713,12 +6713,12 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Household Settings</value>
     </labels>
     <labels>
-        <fullName>stgLabelHide</fullName>
+        <fullName>stgLabelHidden</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>stgLabelHide</shortDescription>
-        <value>Hide</value>
+        <shortDescription>stgLabelHidden</shortDescription>
+        <value>Hidden</value>
     </labels>
     <labels>
         <fullName>stgLabelHonoreeNotificationHelpText</fullName>
