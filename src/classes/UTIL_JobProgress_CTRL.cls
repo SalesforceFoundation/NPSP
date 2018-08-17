@@ -152,7 +152,15 @@ public with sharing class UTIL_JobProgress_CTRL {
     public class BatchJob {
         public AsyncApexJob job {get; set;}
         public Long percentComplete {get; set;}
-
+		
+        /**
+         * @description Construct from an AsyncApexJob object.  This will
+         * extract information from the AsyncApexJob and store it in this class
+         * to be serialized, including calculating the percentage of the batch
+         * job completed.
+         *
+         * @param job The AsyncApexJob to gather data from
+         */
         public BatchJob(AsyncApexJob job) {
             Integer itemsProcessed = job.JobItemsProcessed;
             Integer totalItems = job.TotalJobItems;
