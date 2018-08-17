@@ -73,7 +73,6 @@ public with sharing class BGE_Template_CTRL {
     * @description Retrieves the related list of fields.
     * @return list of Template Fields with sObjectName and Name.
     */
-    @AuraEnabled
     public static List<Field> getAvailableFields() {
 
         List<Field> fields = new List<Field>();
@@ -139,7 +138,6 @@ public with sharing class BGE_Template_CTRL {
     * @description Retrieves the object and field labels for the component.
     * @return Map of Batch Template object and field name keys to their labels.
     */
-    @AuraEnabled
     public static Map<String, String> getBatchTemplateLabels() {
 
         Map<String, String> labels = new Map<String, String> {

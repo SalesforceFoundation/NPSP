@@ -84,7 +84,7 @@
 
     <!--Body-->
     <div aura:id="body" class="slds-tabs_card slds-grid slds-grid_align-center">
-        <div class="slds-size_1-of-1 slds-large-size_3-of-5 slds-m-around_medium">
+        <div class="slds-size_1-of-1 slds-large-size_3-of-5">
 
             <!-- Title -->
             <aura:if isTrue="{! !v.isReadOnly}">
