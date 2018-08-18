@@ -59,7 +59,9 @@
         <c:UTIL_PageMessages />
     
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" oncomplete="hideUnusedElements()"/>
+            <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}"
+                                rendered="{!isReadOnlyMode}" immediate="true" rerender="form" oncomplete="hideUnusedElements()"
+                                styleClass="slds-button slds-button--small slds-button--neutral" />
         </div>
 
         <apex:outputPanel id="fields">
@@ -248,7 +250,7 @@
                                 <apex:outputText value="{!batchVerifyMessage}" />
                             </p>
                             <apex:outputPanel rendered="{!isRunningBatch}">
-                               <c:UTIL_JobProgress strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
+                                <c:UTIL_JobProgressLightning strBatchComponentLabel="{!batchVerifyMessage}" cNumberOfJobs="1" bRerenderOnComplete="true" />
                             </apex:outputPanel>
                         </apex:outputPanel>
                     </apex:outputPanel>
