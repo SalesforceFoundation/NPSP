@@ -114,11 +114,12 @@
 
 
     <script>
-    (function () {
 
+    (function () {
         var jobProgressContainer = document.getElementById('{!$Component.jobProgressContainer}');
         var pollingDelay = {!pollingDelay};
         var refreshInterval;
+
         var eventTarget;
 
         var jobsListTemplate = jobProgressContainer.querySelector('[data-job-progress="template"]').cloneNode(true);
@@ -190,10 +191,14 @@
             return themeClass;
         }
 
+        /**
+         * Retrieve the job status from the Apex Controller, passing in the specific number of jobs to retrieve as
+         * well as the StartTime of the jobs (ensure that jobs started earlier are not included. It's much more difficult
+         * to exclude jobs started later from this list though.
+         */
         function refreshJobsList() {
             Visualforce.remoting.Manager.invokeAction(
-                '{!$RemoteAction.UTIL_JobProgress_CTRL.getBatchJobsStatus}',
-                {!numberOfJobs},
+                "{!$RemoteAction.UTIL_JobProgress_CTRL.getBatchJobsStatus}", {!numberOfJobs}, "{!batchJobStartTimeString}",
                 function (result, event) {
                     sendProgressEvents(result);
                     var jobsListContainer = jobProgressContainer.querySelector('[data-job-progress="list-container"]');
@@ -219,7 +224,7 @@
                 "completedCount": 0,
                 "failedCount": 0,
                 "errorCount": 0
-            }
+            };
 
             for (i = 0; i < results.length; i++) {
                 if (results[i].numberOfErrors) {
