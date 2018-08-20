@@ -150,3 +150,7 @@ td.tooltip-cell {
 .action-button-active {
     box-shadow: 0px 0px 0px 2px #5292f8;
 }
+
+.handsontable thead th.ht__highlight {
+    background-color: transparent;
+}
