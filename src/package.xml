@@ -95,6 +95,7 @@
         <members>BGE_TemplateNameHelper</members>
         <members>BGE_TemplateTriggerHandler</members>
         <members>BGE_Template_CTRL</members>
+        <members>BGE_Template_CTRL_TEST</members>
         <members>CAM_CascadeDeleteLookups_TDTM</members>
         <members>CAM_CascadeDeleteLookups_TEST</members>
         <members>CAO_Constants</members>
@@ -162,6 +163,7 @@
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccSoftCredit_SVC</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -441,7 +443,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -1432,13 +1433,13 @@
         <members>bdiStatusProcessed</members>
         <members>bdiStatusProcessing</members>
         <members>bdiTime</members>
-        <members>bgeBatchTemplateAddFields</members>
         <members>bgeBatchTemplateAvailableFields</members>
         <members>bgeBatchTemplateEdit</members>
-        <members>bgeBatchTemplateHelpText</members>
+        <members>bgeBatchTemplateErrorDefaultValue</members>
+        <members>bgeBatchTemplateErrorRequiredFields</members>
         <members>bgeBatchTemplateNew</members>
         <members>bgeBatchTemplateOverview</members>
-        <members>bgeBatchTemplateRemoveFields</members>
+        <members>bgeBatchTemplateOverviewWizard</members>
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
@@ -1756,6 +1757,7 @@
         <members>stgAdd</members>
         <members>stgAddrGeneralSettingsIntro</members>
         <members>stgAddrMustChooseClass</members>
+        <members>stgBtnBack</members>
         <members>stgBtnCancel</members>
         <members>stgBtnClearErrorLog</members>
         <members>stgBtnClone</members>
@@ -1953,13 +1955,14 @@
         <members>stgLabelExamplesFGFormat</members>
         <members>stgLabelExamplesHHNameFOrmat</members>
         <members>stgLabelExamplesIGFormat</members>
+        <members>stgLabelField</members>
         <members>stgLabelHHGeneral</members>
         <members>stgLabelHHNaming</members>
         <members>stgLabelHHNamingProgress</members>
         <members>stgLabelHHOCR</members>
         <members>stgLabelHHObject</members>
         <members>stgLabelHHSettings</members>
-        <members>stgLabelHide</members>
+        <members>stgLabelHidden</members>
         <members>stgLabelHonoreeNotificationHelpText</members>
         <members>stgLabelHonoreeNotificationOCR</members>
         <members>stgLabelLeadSettings</members>
@@ -1975,6 +1978,7 @@
         <members>stgLabelNone</members>
         <members>stgLabelOK</members>
         <members>stgLabelONS</members>
+        <members>stgLabelObject</members>
         <members>stgLabelOppBatchProgress</members>
         <members>stgLabelOppCampMembers</members>
         <members>stgLabelOppNamingRefreshTitle</members>
