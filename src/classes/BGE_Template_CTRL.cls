@@ -73,7 +73,6 @@ public with sharing class BGE_Template_CTRL {
     * @description Retrieves the related list of fields.
     * @return list of Template Fields with sObjectName and Name.
     */
-    @AuraEnabled
     public static List<Field> getAvailableFields() {
 
         List<Field> fields = new List<Field>();
@@ -105,16 +104,31 @@ public with sharing class BGE_Template_CTRL {
         };
 
         for (Schema.DescribeFieldResult dfr : fieldMap.values()) {
-            String namespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
-            if (!bannedFields.contains(namespacedObject) && dfr.inlineHelpText != null) {
+            String unnamespacedObject = UTIL_Namespace.StrTokenRemoveNSPrefix(dfr.name);
+            if (!bannedFields.contains(unnamespacedObject) && dfr.inlineHelpText != null) {
                 Field fld = new Field();
-                if (namespacedObject == 'Donation_Donor__c') {
+                if (unnamespacedObject == 'Donation_Donor__c') {
                     fld.sObjectName = 'Opportunity';
                 } else {
+                    // TODO: make these localized with schema describes
                     fld.sObjectName = dfr.inlineHelpText.split('\\.')[0];
                 }
-                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ? dfr.getLabel().split(' ',2)[1] : dfr.getLabel() ;
+                // TODO: pull these labels from target fields' schema based on help text mapping
+                fld.label = (dfr.getLabel().contains(' ') && dfr.getLabel().split(' ',2)[0] == fld.sObjectName) ?
+                        dfr.getLabel().split(' ',2)[1] :
+                        dfr.getLabel() ;
                 fld.name = dfr.getName();
+
+                // these fields are required only if at least 1 field from its object group is selected
+                String unnamespacedField = UTIL_Namespace.StrTokenRemoveNSPrefix(fld.name);
+                if (unnamespacedField == 'Account1_Name__c' ||
+                        unnamespacedField == 'Account2_Name__c' ||
+                        unnamespacedField == 'Donation_Amount__c' ||
+                        unnamespacedField == 'Contact1_LastName__c' ||
+                        unnamespacedField == 'Contact2_LastName__c') {
+                    fld.systemRequired = true;
+                }
+
                 fields.add(fld);
             }
         }
@@ -124,7 +138,6 @@ public with sharing class BGE_Template_CTRL {
     * @description Retrieves the object and field labels for the component.
     * @return Map of Batch Template object and field name keys to their labels.
     */
-    @AuraEnabled
     public static Map<String, String> getBatchTemplateLabels() {
 
         Map<String, String> labels = new Map<String, String> {
@@ -204,12 +217,14 @@ public with sharing class BGE_Template_CTRL {
         @AuraEnabled public Boolean isActive;
         @AuraEnabled public String defaultValue;
         @AuraEnabled public Boolean required;
+        @AuraEnabled public Boolean systemRequired;
         @AuraEnabled public Boolean hide;
 
         public Field() {
             isActive = false;
             required = false;
             hide = false;
+            systemRequired = false;
         }
     }
 }
