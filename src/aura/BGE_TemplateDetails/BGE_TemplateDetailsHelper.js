@@ -23,24 +23,6 @@
                 component.set('v.templateInfo', templateInfoView);
             });
 
-            // Subscribe to the model onFieldsUpdated event.
-            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
-                var templateInfoView = component.get('v.templateInfo');
-
-                Object.keys(model.getTemplateFields().getAvailablesBySObject()).forEach(function(sObjectName) {
-
-                    var objLabel = sObjectName.slice(-1) == '1' || sObjectName.slice(-1) == '2' ?  sObjectName.slice(0,-1) + ' ' + sObjectName.slice(-1) : sObjectName;
-
-                    templateInfoView.availableSObjects.push(
-                        {
-                            label: objLabel,
-                            value: sObjectName
-                        }
-                    );
-                });
-
-                component.set('v.templateInfo', templateInfoView);
-            });
 
             // TemplateInfoView module public functions and properties
             return {
@@ -48,8 +30,7 @@
                 id: '',
                 description: '',
                 enableTotalEntry: false,
-                requireTotalMatch: false,
-                availableSObjects: []
+                requireTotalMatch: false
             };
         })(component, model);
     },
@@ -71,6 +52,7 @@
                 templateMetadataView.mode = templateMetadata.mode;
                 templateMetadataView.hasError = templateMetadata.hasError;
                 templateMetadataView.errorMessage = templateMetadata.errorMessage;
+                templateMetadataView.dataTableChanged = templateMetadata.dataTableChanged;
 
                 if (!templateMetadataView.hasError) {
                     templateMetadataView.progressIndicatorStep = templateMetadata.progressIndicatorStep;
@@ -105,7 +87,8 @@
                 mode: '',
                 progressIndicatorStep: '',
                 hasError: false,
-                errorMessage: ''
+                errorMessage: '',
+                dataTableChanged: false
             };
         })(component, model);
     },
@@ -117,9 +100,9 @@
      * @return View of the Template Fields module.
      *****************************************************************/
     TemplateFieldsView : function(component, model) {
-		return (function (component, model) {
+        return (function (component, model) {
 
-            // Subscribe to the model onFieldsUpdated event. 
+            // Subscribe to the model onFieldsUpdated event.
             model.getTemplateFields().onFieldsUpdated.subscribe(function() {
                 var templateFields = component.get('v.templateFields');
                 templateFields.fieldGroups = [];
@@ -152,15 +135,108 @@
 
                 component.set('v.templateFields', templateFields);
             });
-            
+
             // TemplateFieldsView module public functions and properties
-			return {
+            return {
                 fieldGroups: []
             };
         })(component, model);
-	},
+    },
 
-    
+    /* ***************************************************************
+     * @Description Returns the Template Field Options View module.
+     * @param component. Lightning Component reference.
+     * @param model. The Template Fields Model.
+     * @return View of the Template Field Options module.
+     *****************************************************************/
+    TemplateFieldOptionsView : function(component, model) {
+        return (function (component, model) {
+
+            var isReadOnly = component.get("v.isReadOnly");
+            var _columns = _getColumns(!isReadOnly);
+
+            // Subscribe to the model onMetadataChange event.
+            model.getTemplateMetadata().onMetadataUpdated.subscribe(function() {
+                var templateFieldOptions = component.get("v.templateFieldOptions");
+                var isReadOnly = component.get("v.isReadOnly");
+                templateFieldOptions.columns = _getColumns(!isReadOnly);
+                component.set('v.templateFieldOptions', templateFieldOptions);
+            });
+
+            // Subscribe to the model onFieldsUpdated event.
+            model.getTemplateFields().onFieldsUpdated.subscribe(function() {
+                var templateFieldOptions = component.get("v.templateFieldOptions");
+                templateFieldOptions.data = [];
+                var activeFields = model.getTemplateFields().getActives();
+                var templateFields = model.getTemplateFields();
+                templateFieldOptions.errors = templateFields.errors;
+
+                activeFields.forEach(function (currentField) {
+
+                    templateFieldOptions.data.push({
+                        name: currentField.name,
+                        sObjectName: currentField.sObjectName,
+                        label: currentField.label,
+                        defaultValue: currentField.defaultValue,
+                        required: currentField.required,
+                        hide: currentField.hide
+                    });
+
+                });
+                component.set("v.templateFieldOptions", templateFieldOptions);
+
+            });
+
+            /* **********************************************************
+             * @Description Gets the columns definition.
+             * @param isEditable. The TemplateMetadata mode.
+             * @return List of columns.
+             ************************************************************/
+            function _getColumns(isEditable) {
+                return [
+                    {
+                        type: 'text',
+                        fieldName: 'sObjectName',
+                        label: $A.get("$Label.c.stgLabelObject"),
+                        editable: false
+                    },
+                    {
+                        type: 'text',
+                        fieldName: 'label',
+                        label: $A.get("$Label.c.stgLabelField"),
+                        editable: false
+                    },
+                    {
+                        type: 'text',
+                        fieldName: 'defaultValue',
+                        label: $A.get("$Label.c.stgDefaultValue"),
+                        editable: isEditable
+                    },
+                    {
+                        type: 'boolean',
+                        fieldName: 'required',
+                        label: $A.get("$Label.c.lblRequired"),
+                        editable: isEditable
+                    },
+                    {
+                        type: 'boolean',
+                        fieldName: 'hide',
+                        label: $A.get("$Label.c.stgLabelHidden"),
+                        editable: isEditable
+                    }
+                ];
+            }
+
+            // TemplateFieldOptionsView module public functions and properties
+            return {
+                columns: _columns,
+                data: []
+            };
+
+        })(component, model);
+    },
+
+
     /*********************************************** Model Modules *********************************************/
 
     /* **********************************************************
@@ -171,10 +247,6 @@
      * @return Model module of Template Details.
      ************************************************************/
     TemplateDetailsModel : function() {
-        var templateFields = this.TemplateFields();
-        var templateInfo = this.TemplateInfo();
-        var templateMetadata = this.TemplateMetadata();
-
         return (function (templateFields, templateInfo, templateMetadata) {
             var _templateFields = templateFields;
             var _templateInfo = templateInfo;
@@ -187,7 +259,8 @@
              * @return void.
              ************************************************************/
             function init(component) {
-                _bgeTemplateController.getTemplateDetails({
+                var recordId = _templateInfo.id ? _templateInfo.id : component.get("v.recordId");
+                _bgeTemplateController.getTemplateDetails(recordId, {
                     success: function(response) {
                         _templateInfo.load(
                             {
@@ -230,7 +303,7 @@
                         defaultValue: currentField.defaultValue,
                         required: currentField.required,
                         hide: currentField.hide,
-                        activeSortOrder: currentField.activeSortOrder
+                        sortOrder: currentField.sortOrder
                     });
                 });
 
@@ -294,7 +367,7 @@
                 getTemplateInfo: getTemplateInfo,
                 getTemplateMetadata: getTemplateMetadata
             }
-        })(templateFields, templateInfo, templateMetadata);
+        })(this.TemplateFields(), this.TemplateInfo(), this.TemplateMetadata());
     },
 
     /* **********************************************************
@@ -302,8 +375,6 @@
      * @return Model module of the Template Info.
      ************************************************************/
     TemplateInfo : function() {
-        var Event = this.Event();
-
         return (function (Event) {
             var _onInfoUpdated = new Event(this);
             
@@ -340,7 +411,7 @@
                 isValid: isValid,
                 onInfoUpdated: _onInfoUpdated
             }
-        })(Event);
+        })(this.Event());
     },
 
     /* **********************************************************
@@ -348,11 +419,8 @@
      * @return Model module of the Template Fields.
      ************************************************************/
     TemplateFields : function() {
-  		var Event = this.Event();
-        
-		return (function (Event) {
+        return (function (Event) {
             var _allFields = [];
-            var _allSObjects = []
             var _onFieldsUpdated = new Event(this);
 
             /* ******************PUBLIC FUNCTIONS*************************/
@@ -361,7 +429,7 @@
              * @Description Load the fields and notify onFieldsUpdated listeners.
              * @param allFields: list of allFields with sObjectName/Name.
              * param activeFields: Map of activeFieldsBySObject with sObjectName, Name,
-             * todo: and Default Value, Hide and Required flags.
+             * and Default Value, Hide and Required flags.
              * @return void.
              ************************************************************/
             function load(allFields, activeFields) {
@@ -371,7 +439,7 @@
                 if (activeFields) {
                     activeFields.forEach(function(activeField) {
                         var fieldId = activeField.sObjectName + "." + activeField.name;
-                        activeFieldMap.set(fieldId, activeField.activeSortOrder);
+                        activeFieldMap.set(fieldId, activeField);
                     });
                 }
 
@@ -381,7 +449,10 @@
                     //set Active fields with saved sort order
                     if (activeFieldMap.has(currentField.id)) {
                         currentField.isActive = true;
-                        currentField.activeSortOrder = activeFieldMap.get(currentField.id);
+                        currentField.defaultValue = activeFieldMap.get(currentField.id).defaultValue;
+                        currentField.hide = activeFieldMap.get(currentField.id).hide;
+                        currentField.required = activeFieldMap.get(currentField.id).required;
+                        currentField.sortOrder = activeFieldMap.get(currentField.id).sortOrder;
                     } else {
                         currentField.isActive = false;
                     }
@@ -405,27 +476,27 @@
              * @return Map of SObject group to List of inactive fields.
              ************************************************************/
             function getAvailablesBySObject() {
-                var _availableFields = [];
+                var availableFields = [];
                 _allFields.forEach(function(currentField) {
                     if (!currentField.isActive) {
-                        _availableFields.push(currentField);
+                        availableFields.push(currentField);
                     }
                 });
-                return _groupFieldsBySObject(_availableFields);
+                return _groupFieldsBySObject(availableFields);
             }
 
             /* **********************************************************
              * @Description Gets the active fields.
-             * @return List of related active fields.
+             * @return Sorted List of related active fields.
              ************************************************************/
             function getActives() {
-                var _activeFields = [];
+                var activeFields = [];
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive) {
-                        _activeFields.push(currentField);
+                        activeFields.push(currentField);
                     }
                 });
-                return _sortFieldsByOrder(_activeFields);
+                return _sortFieldsByOrder(activeFields);
             }
 
             /* **********************************************************
@@ -433,34 +504,134 @@
              * @return Map of SObject group to List of related active fields.
              ************************************************************/
             function getActivesBySObject() {
-                var _activeFields = [];
+                var activeFields = [];
                 _allFields.forEach(function(currentField) {
                     if (currentField.isActive) {
-                        _activeFields.push(currentField);
+                        activeFields.push(currentField);
                     }
                 });
-                _activeFields = _sortFieldsByOrder(_activeFields);
-                return _groupFieldsBySObject(_activeFields);
+                activeFields = _sortFieldsByOrder(activeFields);
+                return _groupFieldsBySObject(activeFields);
             }
 
+            /* **********************************************************
+             * @Description Validates the required templateInfo.
+             * @return Boolean validity.
+             ************************************************************/
+            function getRequiredFieldErrors() {
+                var errors = [];
+                var activeFieldsBySObject = getActivesBySObject();
+                var systemRequiredFieldsBySObject = _getSystemRequiredFieldsBySObject();
+
+                Object.keys(systemRequiredFieldsBySObject).forEach(function(currentSObject) {
+                    var activeFieldNames = [];
+                    var systemRequiredFieldNames = new Map();
+
+                    //only check validity if sObject is included in activeFieldsBySObject
+                    if (activeFieldsBySObject[currentSObject]) {
+                        activeFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            activeFieldNames.push(currentField.name);
+                        });
+                        systemRequiredFieldsBySObject[currentSObject].forEach(function(currentField) {
+                            systemRequiredFieldNames.set(currentField.name, currentField.label);
+                        });
+
+                        var containsSystemRequiredField = Array.from(systemRequiredFieldNames.keys()).every(function(currentFieldName) {
+                            return activeFieldNames.indexOf(currentFieldName) > -1;
+                        });
+                        if (!containsSystemRequiredField) {
+                            errors.push(currentSObject + ' (' + Array.from(systemRequiredFieldNames.values()).join(', ') + ')');
+                        }
+                    }
+                });
+
+                return errors.length > 0 ? $A.get("$Label.c.bgeBatchTemplateErrorRequiredFields") + ' ' + errors.join(', ') + '.' : '';
+            }
+
+            /* *******************************************************************
+             * @Description Updates isActive flag and sort Order of all fields
+             * @return void.
+             **********************************************************************/
+            function updateToActive(templateFieldGroups) {
+                var fieldCountPreviousObjects = 0;
+                var allFieldsBySObject = getAllFieldsBySObject();
+                Object.keys(allFieldsBySObject).forEach(function(currentSObject) {
+                    templateFieldGroups.forEach(function(currentFieldGroup) {
+                        if (currentFieldGroup.sObjectName === currentSObject) {
+                            allFieldsBySObject[currentSObject].forEach(function (currentField) {
+                                currentField.isActive = currentFieldGroup.values.includes(currentField.id);
+                                // the field's sort order is its index PLUS the total of all active fields from all previous object groups
+                                currentField.sortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) + fieldCountPreviousObjects : null;
+                            });
+                            // increase the buffer by the number of active fields from this object
+                            fieldCountPreviousObjects += currentFieldGroup.values.length;
+                        }
+                    });
+                });
+
+                this.onFieldsUpdated.notify();
+            }
 
             /* *******************************************************************
              * @Description Updates the selected fields to Active, unselects fields
              * @return void.
              **********************************************************************/
-            function updateToActive(templateFieldGroups) {
+            function updateTemplateFieldOptions(templateFieldOptions) {
+
+                var allValid = true;
+                var errors = { rows: {}, table: {}, size: 0 };
+
                 _allFields.forEach(function(currentField) {
-                    templateFieldGroups.forEach(function(currentFieldGroup) {
-                        if (currentFieldGroup.sObjectName === currentField.sObjectName) {
-                            currentField.isActive = currentFieldGroup.values.includes(currentField.id);
-                            currentField.activeSortOrder = currentField.isActive ? currentFieldGroup.values.indexOf(currentField.id) : 0;
+                    templateFieldOptions.forEach(function(currentActiveField) {
+                        if (currentField.name === currentActiveField.name) {
+                            currentField.required = currentActiveField.hasOwnProperty('required') ? currentActiveField.required : currentField.required;
+                            currentField.hide = currentActiveField.hasOwnProperty('hide') ? currentActiveField.hide : currentField.hide;
+                            currentField.defaultValue = currentActiveField.hasOwnProperty('defaultValue') ? currentActiveField.defaultValue : currentField.defaultValue;
                         }
                     });
-                            
+
+                    if (currentField.hide && !currentField.defaultValue) {
+
+                        allValid = false;
+                        var fieldName = currentField.name;
+                        var fieldNameGroup = {
+                            title: $A.get("$Label.c.PageMessagesError"),
+                            messages: [$A.get("$Label.c.bgeBatchTemplateErrorDefaultValue")],
+                            fieldNames: ['defaultValue']
+                        };
+                        errors.rows[fieldName] = fieldNameGroup;
+                        errors.size += 1;
+                    }
                 });
+
+                if (!allValid) {
+                    errors.table = {
+                        title: $A.get("$Label.c.PageMessagesError"),
+                        messages: [$A.get("$Label.c.bgeBatchTemplateErrorDefaultValue")]
+                        };
+                } else {
+                    errors = { rows: [], table: [], size: 0 };
+                }
+
+                this.errors = errors;
+                this.onFieldsUpdated.notify();
             }
 
             /* ******************PRIVATE FUNCTIONS************************/
+
+            /* **********************************************************
+             * @Description Gets the system required fields grouped by SObject.
+             * @return Map of SObject group to List of system required fields.
+             ************************************************************/
+            function _getSystemRequiredFieldsBySObject() {
+                var systemRequiredFields = [];
+                _allFields.forEach(function(currentField) {
+                    if (currentField.systemRequired) {
+                        systemRequiredFields.push(currentField);
+                    }
+                });
+                return _groupFieldsBySObject(systemRequiredFields);
+            }
 
             /* **********************************************************
              * @Description Groups the fields by SObject name.
@@ -475,7 +646,9 @@
                     }
                     result[currentField.sObjectName].push(currentField);
                 });
+
                 return result;
+
             }
 
             /***********************************************************
@@ -485,10 +658,10 @@
              ************************************************************/
             function _sortFieldsByOrder(fields) {
                 fields.sort(function(currentField, nextField) {
-                    if (currentField.activeSortOrder < nextField.activeSortOrder) {
+                    if (currentField.sortOrder < nextField.sortOrder) {
                         return -1;
                     }
-                    if (currentField.activeSortOrder > nextField.activeSortOrder) {
+                    if (currentField.sortOrder > nextField.sortOrder) {
                         return 1;
                     }
                     // numbers must be equal
@@ -499,16 +672,19 @@
 
             // TemplateFieldsModel module public functions and properties
             return {
+                errors: {},
                 load: load,
+                getRequiredFieldErrors: getRequiredFieldErrors,
                 getAllFieldsBySObject: getAllFieldsBySObject,
                 getAvailablesBySObject: getAvailablesBySObject,
                 getActives: getActives,
                 getActivesBySObject: getActivesBySObject,
                 updateToActive: updateToActive,
+                updateTemplateFieldOptions: updateTemplateFieldOptions,
                 onFieldsUpdated: _onFieldsUpdated
 
             }
-        })(Event);
+        })(this.Event());
 	},
 
     /* **********************************************************
@@ -517,8 +693,6 @@
      * @return Model module of the Template Metadata.
      ************************************************************/
     TemplateMetadata : function() {
-        var Event = this.Event();
-
         return (function (Event) {
             var _onMetadataUpdated = new Event(this);
 
@@ -531,61 +705,82 @@
                 this.labels = labels;
                 //isReadOnly (View) is passed from record home with lightning app builder
                 if (component.get("v.isReadOnly")) {
-                    this.mode = 'view';
+                    this.setMode('view');
                 } else {
                     if (component.get("v.recordId") !== null) {
-                        this.mode = 'edit';
+                        this.setMode('edit');
                     } else {
-                        this.mode = 'create';
+                        this.setMode('create');
                     }
                 }
-                this.progressIndicatorStep = '1';
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description sets the mode, and notify all the
-             *      _onMetadataUpdated listeners.
+             * @Description Sets the mode, and notify all the
+             *      _onMetadataUpdated listeners. Resets progressIndicator.
              * @param mode - string that is the selected mode
              * @return void.
              ************************************************************/
             function setMode(mode) {
                 this.mode = mode;
+                this.progressIndicatorStep = '1';
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description sets error state and message
-             * @param hasError - Boolean indicating error state.
+             * @Description Sets attribute logging whether data table info has changed
+             * @param status - boolean
+             * @return void.
+             ************************************************************/
+            function setDataTableChanged(status) {
+                this.dataTableChanged = status;
+                // oncellchange seems to be broken, so we set the view directly in the controller
+                // this is just updating the model
+                // we only notify when changing to false
+                if (status === false) {
+                    this.onMetadataUpdated.notify();
+                }
+            }
+
+            /* **********************************************************
+             * @Description Shows error message.
              * @param message - String for the error message
              * @return void.
              ************************************************************/
-            function setError(hasError, message) {
-                this.hasError = hasError;
+            function showError(message) {
+                this.hasError = true;
                 this.errorMessage = message;
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description increments the step for the progressIndicator
-             * @param step - number of the current step
+             * @Description Clears error message
              * @return void.
              ************************************************************/
-            function stepUp(step) {
-                this.setError(false, '');
-                var stepNum = parseInt(step);
+            function clearError() {
+                this.hasError = false;
+                this.errorMessage = '';
+                this.onMetadataUpdated.notify();
+            }
+
+            /* **********************************************************
+             * @Description Increments the step for the progressIndicator
+             * @return void.
+             ************************************************************/
+            function stepUp() {
+                var stepNum = parseInt(this.progressIndicatorStep);
                 stepNum = stepNum + 1;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
             }
 
             /* **********************************************************
-             * @Description decrements the step for the progressIndicator
-             * @param step - number of the current step
+             * @Description Decrements the step for the progressIndicator
              * @return void.
              ************************************************************/
-            function stepDown(step) {
-                var stepNum = parseInt(step);
+            function stepDown() {
+                var stepNum = parseInt(this.progressIndicatorStep);
                 stepNum = stepNum - 1;
                 this.progressIndicatorStep = stepNum.toString();
                 this.onMetadataUpdated.notify();
@@ -598,14 +793,17 @@
                 progressIndicatorStep: '',
                 hasError: false,
                 errorMessage: '',
+                dataTableChanged: false,
                 load: load,
                 setMode: setMode,
-                setError: setError,
+                showError: showError,
+                clearError: clearError,
                 stepUp: stepUp,
                 stepDown: stepDown,
-                onMetadataUpdated: _onMetadataUpdated
+                onMetadataUpdated: _onMetadataUpdated,
+                setDataTableChanged: setDataTableChanged
             }
-        })(Event);
+        })(this.Event());
     },
 
     /* **********************************************************
@@ -619,7 +817,7 @@
             var _listeners = [];
             
             /* **********************************************************
-             * @Description subscribes the listener to the current Event.
+             * @Description Subscribes the listener to the current Event.
              * @param listener. The event listener.
              * @return void.
              ************************************************************/
@@ -659,12 +857,14 @@
 
             /* **********************************************************
              * @Description Calls the getTemplateDetails method.
+             * @param recordId. The Id of the Template.
+             * @param callback. The callback function to execute.
              * @return void.
              ************************************************************/
-            function getTemplateDetails(callback) {
+            function getTemplateDetails(recordId, callback) {
                 var action = _component.get("c.getTemplateDetails");
                 action.setParams({
-                    templateId: component.get("v.recordId")
+                    templateId: recordId
                 });
                 action.setCallback(callback, _processResponse);
                 $A.enqueueAction(action);
@@ -672,6 +872,9 @@
 
             /* **********************************************************
              * @Description Calls the saveTemplateDetails method.
+             * @param templateDetails. The Template fields.
+             * @param activeFields. The active fields (JSON format)
+             * @param callback. The callback function to execute.
              * @return void.
              ************************************************************/
             function saveTemplateDetails(templateDetails, activeFields, callback) {
@@ -686,6 +889,7 @@
 
             /* **********************************************************
              * @Description Processes the response from any Apex method.
+             * @param response. The response from the backend.
              * @return void.
              ************************************************************/
             function _processResponse(response) {
