@@ -1,37 +1,27 @@
 <apex:page controller="BGE_HandsOnGridController" showHeader="false" sidebar="false" docType="html-5.0">
 
-    <html ng-app="myApp" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
+    <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
 
-        <!-- AngularJs 1.6.4 -->
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/angular.min.js')}"/>
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/angular-sanitize.min.js')}"/>
-
-        <!-- Hands on table 0.24.3 -->
+        <!-- Hands on table 5.0.0 -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/handsontable.full.min.js')}"/>
         <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/handsontable.full.min.css')}"/>
 
-        <!-- Hands on table for Angular 0.13 -->
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/ngHandsontable.min.js')}"/>
-
-        <!-- jQuery 3.2.1 -->
+        <!-- jQuery 3.2.1 --> <!-- This library is not deleted because is used as a dependency of Dropdown -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/jquery.min.js')}"/>
-
-        <!-- Grid Application -->
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/grid/app.js')}"/>
 
         <!-- Custom CSS -->
         <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/style.css')}"/>
 
         <script src="https://unpkg.com/popper.js@1.14.3/dist/umd/popper.min.js"></script>
 
-        <!-- jQuery dropdown -->
-        <!-- <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/jquery.dropdown.min.css')}"/>
-        <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/jquery.dropdown.min.js')}"/> -->
-
         <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-dropdown/2.0.3/jquery.dropdown.min.css" />
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-dropdown/2.0.3/jquery.dropdown.min.js"></script>
 
-        <apex:slds />
+        <!-- <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/handsontable/5.0.0/handsontable.full.min.css" />
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handsontable/5.0.0/handsontable.full.min.js"></script> -->
+
+        <!-- Grid Application -->
+        <!-- <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/grid/app.js')}"/> -->
 
         <script>
 
@@ -44,11 +34,15 @@
 
         </script>
 
-        <div class="slds-scope" ng-controller="MainCtrl">
+        <c:BGE_HandsOnGridComponent />
+
+        <apex:slds />
+
+        <div class="slds-scope">
 
             <div id="wrapper" class="slds-form">
 
-                <div style="height: 6rem;" ng-hide="isTableLoaded">
+                <div id="loadSpinner" style="height: 6rem;">
                     <div class="slds-spinner_container main-loader">
                         <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_delayed">
                             <span class="slds-assistive-text">Loading</span>
@@ -60,7 +54,7 @@
 
                 <!-- ALERT MESSAGE -->
 
-                <div style="height: 640px;" ng-show="!templateId">
+                <div id="noTemplatesMessage" style="height: 640px;">
                     <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
                         <div class="slds-modal__container">
                             <header class="slds-modal__header">
@@ -72,7 +66,7 @@
                                 </p>
                             </div>
                             <footer class="slds-modal__footer">
-                                <button class="slds-button slds-button_brand" ng-click="backAction()">Close</button>
+                                <button class="slds-button slds-button_brand" onclick="backAction();">Close</button>
                             </footer>
                         </div>
                     </section>
@@ -82,24 +76,23 @@
                 <!-- ALERT MESSAGE -->
 
                 <!-- HEADER -->
-                <div id="headerContainer" class="slds-grid slds-size_12-of-12" ng-show="templateId">
+                <div id="headerContainer" class="slds-grid slds-size_12-of-12">
 
                     <!-- PAGINATION BUTTONS -->
                     <div class="slds-size_4-of-12">
 
                         <div class="slds-m-around_x-large slds-grid pagination-section slds-float_left">
-
-                            <button ng-model="button" ng-click="prevPageAction()" ng-disabled="prevButonDisabled" class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Previous">
+                            <button id="previousPageButton" onclick="prevPageAction()" class="previousButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Previous">
                                 <p class="slds-text-heading_medium slds-align_absolute-center">&lt;</p>
                             </button>
 
                             <p class="slds-align_absolute-center slds-size_4-of-6">
                                 Page &nbsp;
-                                <output type="number" min="1" ng-bind-html="offset + 1" placeholder="1" /> &nbsp; of &nbsp;
-                                <output type="number" min="1" ng-bind-html="totalPages" placeholder="1" />
+                                <output id="actualPageNumber" type="number" min="1" placeholder="1" /> &nbsp; of &nbsp;
+                                <output id="totalPagesNumber" type="number" min="1" placeholder="1" />
                             </p>
 
-                            <button ng-click="nextPageAction()" ng-disabled="nextButonDisabled" class="nextButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Next">
+                            <button id="nextPageButton" onclick="nextPageAction()" class="nextButton slds-button slds-button_neutral slds-col slds-size_1-of-6" title="Next">
                                 <p class="slds-text-heading_medium slds-align_absolute-center">&gt;</p>
                             </button>
                         </div>
@@ -110,11 +103,11 @@
                         <div class="slds-m-around_x-large" style="text-align: center;">
                             <div>
                                 <b>TOTAL OF RECORDS: </b>&nbsp;
-                                <output id="totalOfRecords" ng-bind-html="rowsCount" style="width: 150px;" />
+                                <output id="totalOfRecords" style="width: 150px;" />
                             </div>
                             <div>
                                 <b>TOTAL AMOUNT: </b>&nbsp;
-                                <output id="totalAmount" ng-bind-html="rowsAmount | currency" style="width: 150px;" />
+                                <output id="totalAmount" style="width: 150px;" />
                             </div>
                         </div>
                     </div>
@@ -130,7 +123,7 @@
 
                 <!-- TABLE -->
                 <div id="my-hot-table" class="slds-size_12-of-12 handsontable" style="">
-                    <div class="slds-spinner_container table-loader" ng-show="pageChangeLoader">
+                    <div id="loadSpinnerEmbedded" class="slds-spinner_container table-loader">
                         <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_delayed">
                             <span class="slds-assistive-text">Loading</span>
                             <div class="slds-spinner__dot-a"></div>
@@ -143,7 +136,7 @@
 
             <div id="action-menu-container" class="jq-dropdown jq-dropdown-tip">
                 <ul class="jq-dropdown-menu">
-                    <li><a href="javascript:void(0)" ng-click="removeRowOnColumnAction()" style="color: #006dcc">Remove Row</a></li>
+                    <li><a href="javascript:void(0)" onclick="removeRowOnColumnAction()" style="color: #006dcc">Remove Row</a></li>
                 </ul>
             </div>
 
