@@ -87,6 +87,10 @@ public with sharing class BGE_HandsOnGridColumnWrapper {
         apiName = (String)templateField.get('name');
         required = (Boolean)templateField.get('required');
 
+        if (type == 'DOUBLE' && recordFieldDescribe.getScale() == 0) {
+            type = 'INTEGER';
+        }
+
         if (type.equalsIgnoreCase('PICKLIST')) {
             picklistValues = getObjectFieldPicklistValues(recordFieldDescribe);
         }
