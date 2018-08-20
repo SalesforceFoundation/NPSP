@@ -41,6 +41,7 @@
     <aura:attribute name="templateInfo" type="Object" access="PRIVATE" />
     <aura:attribute name="templateMetadata" type="Object" access="PRIVATE"/>
     <aura:attribute name="templateFields" type="Object" access="PRIVATE" />
+    <aura:attribute name="templateFieldOptions" type="Object" access="PRIVATE" />
 
     <!-- public attributes -->
     <aura:attribute name="isReadOnly" type="Boolean" description="Determines if fields are read-only, buttons are visible, and dual picklists are active."/>
@@ -70,7 +71,7 @@
                     </div>
                 </div>
                 <div class="slds-col slds-no-flex slds-grid slds-align-top slds-p-bottom_xx-small headerButtonActions">
-                    <aura:if isTrue="{!v.templateMetadata.mode == 'view'}">
+                    <aura:if isTrue="{!v.isReadOnly}">
                         <lightning:buttonGroup>
                             <lightning:button label="{!$Label.c.stgBtnEdit}" onclick="{!c.changeModeToEdit}"/>
                             <lightning:button label="{!v.templateMetadata.labels.backToTemplates}" onclick="{!c.cancel}"/>
@@ -83,35 +84,51 @@
 
     <!--Body-->
     <div aura:id="body" class="slds-tabs_card slds-grid slds-grid_align-center">
-        <div class="slds-size_1-of-1 slds-large-size_3-of-5 slds-m-around_medium">
+        <div class="slds-size_1-of-1 slds-large-size_3-of-5">
 
             <!-- Title -->
-            <div class="slds-text-align_center slds-m-vertical_medium">
-                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
-                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateOverview}</h2>
-                </aura:if>
-                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '2' }">
-                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSelectFields}</h2>
-                </aura:if>
-                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
-                    <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
-                </aura:if>
-                <p class="slds-text-body_regular slds-p-top_medium">{!$Label.c.bgeBatchTemplateHelpText}</p>
-            </div>
+            <aura:if isTrue="{! !v.isReadOnly}">
+                <div class="slds-text-align_center slds-m-vertical_medium">
+                    <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '1' }">
+                        <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateOverviewWizard}</h2>
+                    </aura:if>
+                    <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '2' }">
+                        <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSelectFields}</h2>
+                    </aura:if>
+                    <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep == '3' }">
+                        <h2 class="slds-text-heading_medium">{!$Label.c.bgeBatchTemplateSetFieldOptions}</h2>
+                    </aura:if>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-section slds-is-open slds-p-bottom_small">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small"
+                                  title="{!$Label.c.bgeBatchTemplateOverview}">
+                                {!$Label.c.bgeBatchTemplateOverview}
+                            </span>
+                        </h3>
+                    </div>
+                </aura:set>
+            </aura:if>
 
             <!--Progress Indicator-->
-            <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base" hasError="false" variant="base">
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverview}" value="1"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="2"/>
-                <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="3"/>
-            </lightning:progressIndicator>
+            <aura:if isTrue="{! !v.isReadOnly}">
+                <div class="slds-p-bottom_large">
+                    <lightning:progressIndicator currentStep="{!v.templateMetadata.progressIndicatorStep}" type="base"
+                                                 hasError="false" variant="base">
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateOverviewWizard}" value="1"/>
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSelectFields}" value="2"/>
+                        <lightning:progressStep label="{!$Label.c.bgeBatchTemplateSetFieldOptions}" value="3"/>
+                    </lightning:progressIndicator>
+                </div>
+            </aura:if>
 
             <!--Template Container-->
             <div class="slds-form slds-form_compound">
 
                 <!-- Step 1: Template Overview -->
                 <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '1' }">
-                    <div class="row slds-p-around_large">
+                    <div class="row">
                         <div class="slds-col slds-size_6-of-12">
                             <lightning:input type="text" name="name" label="{!$Label.c.stgLabelName}"
                                              value="{!v.templateInfo.name}" readonly="{!v.isReadOnly}" required="true"/>
@@ -188,35 +205,60 @@
                 </aura:if>
                 <!--End Step 2-->
 
+                <!--Selected Fields Section-->
+                <aura:if isTrue="{!v.isReadOnly}">
+                    <div class="slds-section slds-is-open slds-p-top_medium">
+                        <h3 class="slds-section__title slds-theme_shade">
+                            <span class="slds-truncate slds-p-horizontal_small" title="{!$Label.c.bgeBatchTemplateSelectedFields}">
+                                {!$Label.c.bgeBatchTemplateSelectedFields}
+                            </span>
+                        </h3>
+                    </div>
+                </aura:if>
+                <!--End Selected Fields Section-->
+
                 <!-- Step 3: Set Field Options -->
-                <aura:if isTrue="{!v.templateMetadata.progressIndicatorStep == '3'}">
+                <aura:if isTrue="{!or(v.templateMetadata.progressIndicatorStep == '3', v.isReadOnly)}">
                     <div class="slds-grid slds-grid_align-center">
                         <div class="slds-size_1-of-1 slds-m-around_medium">
-                            GRID GOES HERE
+                            <lightning:datatable
+                                    keyField="name"
+                                    data="{!v.templateFieldOptions.data}"
+                                    columns="{!v.templateFieldOptions.columns}"
+                                    hideCheckboxColumn="true"
+                                    onsave="{!c.saveFieldOptions}"
+                                    oncancel="{!c.cancelDataTableChanges}"
+                                    oncellchange="{!c.logDataTableChange}"
+                                    errors="{!v.templateFieldOptions.errors}"
+                            />
                         </div>
                     </div>
                 </aura:if>
                 <!--End Step 3-->
 
                 <!-- Buttons! -->
-                <div class="row slds-p-around_large">
-                    <div class="slds-grid">
-                        <div class="slds-col">
-                            <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
-                        </div>
-                        <div class="slds-col slds-col_bump-left">
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
-                                <lightning:button variant="neutral" label="{!$Label.c.labelListViewPrevious}" onclick="{!c.back}" />
-                            </aura:if>
-                            <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
-                                <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
-                            </aura:if>
-                            <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
-                                <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" />
-                            </aura:if>
+                <aura:if isTrue="{! !v.isReadOnly}">
+                    <div class="row slds-p-around_large">
+                        <div class="slds-grid">
+                            <div class="slds-col">
+                                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '1' }">
+                                    <lightning:button variant="neutral" label="{!$Label.c.stgBtnBack}" onclick="{!c.back}" />
+                                </aura:if>
+                            </div>
+                            <div class="slds-col slds-col_bump-left">
+                                <aura:if isTrue="{! !v.isReadOnly }">
+                                    <lightning:button variant="neutral" label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancel}" />
+                                </aura:if>
+                                <aura:if isTrue="{! v.templateMetadata.progressIndicatorStep != '3' }">
+                                    <lightning:button variant="brand" label="{!$Label.c.labelListViewNext}" onclick="{!c.next}" />
+                                </aura:if>
+                                <aura:if isTrue="{! and(!v.isReadOnly, v.templateMetadata.progressIndicatorStep == '3') }">
+                                    <lightning:button variant="brand" label="{!$Label.c.stgBtnSave}" onclick="{!c.save}" disabled="{!or (v.templateMetadata.dataTableChanged, v.templateFieldOptions.errors.size > 0)}" />
+                                </aura:if>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </aura:if>
                 <!--End Buttons-->
             </div>
             <!--End Template Container-->
