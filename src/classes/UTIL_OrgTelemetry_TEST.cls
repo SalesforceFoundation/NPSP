@@ -57,6 +57,9 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     static testMethod void test_telemetry() {
-        UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO_ASync();
+        Test.startTest();
+        UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
+        Test.stopTest();
     }
+
 }

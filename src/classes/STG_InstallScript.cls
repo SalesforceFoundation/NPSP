@@ -106,8 +106,8 @@ global without sharing class STG_InstallScript implements InstallHandler {
             } else if (action == InstallAction.UPDATE_CAMPAIGN_LIST_REPORT) {
                 updateCampaignListReport();
 
-            } else if (action == InstallAction.UPDATE_ORG_TELEMETRY) {
-                UTIL_OrgTelemetry_SVC.submitFeatureTelemetryToLMO();
+            } else if (action == InstallAction.UPDATE_ORG_TELEMETRY && !Test.isRunningTest()) {
+                UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
 
             } else if (action == InstallAction.CREATE_DEFAULT_SETTINGS) {
                 createNewDefaultCustomSettingRecords();
