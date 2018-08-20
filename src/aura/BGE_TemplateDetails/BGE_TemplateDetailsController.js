@@ -16,10 +16,10 @@
         component.set('v.templateInfo', templateInfoView);
         var templateMetadataView = helper.TemplateMetadataView(component, model);
         component.set('v.templateMetadata', templateMetadataView);
-        var availableTemplateFieldsView = helper.AvailableTemplateFieldsView(component, model);
-        component.set('v.availableTemplateFields', availableTemplateFieldsView);
-        var activeTemplateFieldsView = helper.ActiveTemplateFieldsView(component, model);
-        component.set('v.activeTemplateFields', activeTemplateFieldsView);
+        var templateFieldsView = helper.TemplateFieldsView(component, model);
+        component.set('v.templateFields', templateFieldsView);
+        var templateFieldOptionsView = helper.TemplateFieldOptionsView(component, model);
+        component.set('v.templateFieldOptions', templateFieldOptionsView);
 
         model.init(component);
     },
@@ -31,6 +31,7 @@
     cancel: function(component, event, helper) {
         var model = component.get('v.model');
         var mode = component.get("v.templateMetadata.mode");
+        //Create/Edit modes invoke cancel from the button; view does so from 'Back to Templates' button
         if (mode === 'create' || mode === 'view') {
             //navigate to record home
             var homeEvent = $A.get("e.force:navigateToObjectHome");
@@ -39,6 +40,8 @@
             });
             homeEvent.fire();
         } else if (mode === 'edit') {
+            model.getTemplateMetadata().clearError();
+            model.getTemplateMetadata().setDataTableChanged(false);
             model.getTemplateMetadata().setMode('view');
             model.init(component);
         }
@@ -48,82 +51,89 @@
      * @Description. Navigates from View to Edit mode.
      *****************************************************************/
     changeModeToEdit: function(component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateMetadata().setMode('edit');
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setMode("edit");
     },
 
     /* ***************************************************************
-     * @Description. Saves the template information. 
+     * @Description. Saves the full Batch Template record after step 3
      *****************************************************************/
     save: function(component, event, helper) {
-        var templateInfoData = component.get("v.templateInfo");
-        var model = component.get('v.model');
-        model.getTemplateInfo().load(templateInfoData);
+        var model = component.get("v.model");
         model.save();
+    },
+
+
+    /* ***************************************************************
+    * @Description. Saves field options from step 3 to the model
+    *****************************************************************/
+    saveFieldOptions: function(component, event, helper) {
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setDataTableChanged(false);
+        model.getTemplateFields().updateTemplateFieldOptions(event.getParam("draftValues"));
+    },
+
+    /* ***************************************************************
+    * @Description. Logs any changes to data table to disable primary save button
+    *****************************************************************/
+    logDataTableChange: function(component, event, helper) {
+        var model = component.get("v.model");
+        var dataTableChanged = component.get("v.templateMetadata.dataTableChanged");
+        if (!dataTableChanged) {
+            // oncellchange seems to be broken, so we have to set the view directly
+            component.set("v.templateMetadata.dataTableChanged", true);
+            // this updates the model, but does not call the notifier
+            model.getTemplateMetadata().setDataTableChanged(true);
+        }
+    },
+
+    /* ***************************************************************
+    * @Description. Cancels any changes to data table to re-enable primary save button
+    *****************************************************************/
+    cancelDataTableChanges: function(component, event, helper) {
+        var model = component.get("v.model");
+        model.getTemplateMetadata().setDataTableChanged(false);
+    },
+
+    /* ***************************************************************
+    * @Description. Moves to next wizard step
+    *****************************************************************/
+    next: function(component, event, helper) {
+        var model = component.get("v.model");
+        var step = component.get("v.templateMetadata.progressIndicatorStep");
+
+        if (step === '1') {
+            var templateInfoData = component.get("v.templateInfo");
+            model.getTemplateInfo().load(templateInfoData);
+            if (model.getTemplateInfo().isValid()) {
+                model.getTemplateMetadata().clearError();
+                model.getTemplateMetadata().stepUp();
+            } else {
+                model.getTemplateMetadata().showError(component.get("v.templateMetadata.labels.missingNameDescriptionError"));
+            }
+        } else if (step === '2') {
+            var templateFields = component.get("v.templateFields");
+            model.getTemplateFields().updateToActive(templateFields.fieldGroups);
+            var errors = model.getTemplateFields().getRequiredFieldErrors();
+            if (!errors) {
+                model.getTemplateMetadata().clearError();
+                model.getTemplateMetadata().stepUp();
+            } else {
+                model.getTemplateMetadata().showError(errors);
+            }
+        }
+    },
+
+    /* ***************************************************************
+    * @Description. Moves to previous wizard step
+    *****************************************************************/
+    back: function(component, event, helper) {
+        var model = component.get('v.model');
+        model.getTemplateMetadata().clearError();
+        model.getTemplateMetadata().setDataTableChanged(false);
+        model.getTemplateMetadata().stepDown();
     },
 
     /******************************** Template Fields Controller Functions *****************************/
 
-
-    /* ***************************************************************
-     * @Description. Increases selected field activeSortOrder by 1 in the
-     * Template Fields Model, and moves neighbor fields up.
-     *****************************************************************/
-    moveFieldsDown: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().moveSelectedDown();
-    },
-
-    /* ***************************************************************
-     * @Description. Decreases selected field activeSortOrder by 1 in the
-     * Template Fields Model, and moves neighbor fields down.
-     *****************************************************************/
-    moveFieldsUp: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().moveSelectedUp();
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected (checked) available fields in the
-     * Template Fields Model.
-     *****************************************************************/
-    selectAvailableTemplateFields: function (component, event, helper) {
-        var selectedFields = {};
-        event.getParam('selectedRows').forEach(function(selectedRow) {
-            selectedFields[selectedRow.id] = selectedRow;
-        });
-        var model = component.get('v.model');
-        model.getTemplateFields().selectAvailables(selectedFields);
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected (checked) active fields in the
-     * Template Fields Model.
-     *****************************************************************/
-    selectActiveTemplateFields: function (component, event, helper) {
-        var selectedFields = {};
-        event.getParam('selectedRows').forEach(function(selectedRow) {
-            selectedFields[selectedRow.id] = selectedRow;
-        });
-        var model = component.get('v.model');
-        model.getTemplateFields().selectActives(selectedFields);
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected available fields in the 
-     * Template Fields Model to active.
-     *****************************************************************/
-    updateToActive: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().updateSelectedToActive();
-    },
-
-    /* ***************************************************************
-     * @Description. Updates the selected active fields in the
-     * Template Fields Model to available.
-     *****************************************************************/
-    updateToAvailable: function (component, event, helper) {
-        var model = component.get('v.model');
-        model.getTemplateFields().updateSelectedToAvailable();
-    }
 });
