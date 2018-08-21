@@ -244,13 +244,6 @@ var tableHeight = 0;
             td.lastClick = now;
             return;
         }
-
-        var editor =  hot.getActiveEditor();
-        var colType = hot.getDataType(coords.row, coords.col);
-
-        if (colType == "dropdown") {
-            editor.TEXTAREA.setAttribute("disabled", "true");
-        }
     }
 
     function afterInitHandler() {
@@ -661,20 +654,6 @@ var tableHeight = 0;
             var tooltipCol = 1;
             var actionCol = 2;
 
-            if (selectedColType == "dropdown") {
-
-                var editor = hot.getActiveEditor();
-
-                if (!tab && !left && !up && !right && !down) {
-
-                    if (spacebar) {
-                        //prevent spacebar default behavior to auto scroll down
-                        event.preventDefault();
-                    }
-
-                    disableEdit(editor);
-                }
-            }
 
             if (tab || left || up || right || down) {
 
@@ -814,7 +793,7 @@ var tableHeight = 0;
                     }
                 }
             }
-            else if ((enter || spacebar) && selectedColType != "dropdown") {
+            else if (enter || spacebar) {
 
                 if (colIndex === tooltipCol) {
                     event.preventDefault();
@@ -848,6 +827,13 @@ var tableHeight = 0;
                         rowIndex++;
 
                         hot.selectCell(rowIndex, colIndex);
+                    }
+
+                    if (spacebar) {
+                        //prevent spacebar default behavior to auto scroll down
+                        if (selectedColType == "dropdown") {
+                            event.preventDefault();
+                        }
                     }
                 }
             }
@@ -1046,6 +1032,7 @@ var tableHeight = 0;
                 }
 
                 col.renderer = dropdownAndDateCellRenderer;
+                col.editor = DropdownEditorCustom;
             }
 
             if (templateField.apiName !== "Id") {
@@ -1289,6 +1276,7 @@ var tableHeight = 0;
     var NumberEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
     var TextEditorCustom = Handsontable.editors.TextEditor.prototype.extend();
     var DateEditorCustom = Handsontable.editors.DateEditor.prototype.extend();
+    var DropdownEditorCustom = Handsontable.editors.DropdownEditor.prototype.extend();
 
     NumberEditorCustom.prototype.createElements = function () {
         // Call the original createElements method
@@ -1323,6 +1311,19 @@ var tableHeight = 0;
         this.TEXTAREA_PARENT.appendChild(this.TEXTAREA);
     };
 
+    // When dropdown editor is opened, the textarea is disabled for avoid manual editing
+    DropdownEditorCustom.prototype.open = function() {
+        Handsontable.editors.DropdownEditor.prototype.open.apply(this, arguments);
+
+        this.TEXTAREA.disabled = true;
+    };
+
+    // When dropdown editor is closed, the textarea is enabled for allow autofill or copy/paste editing
+    DropdownEditorCustom.prototype.close = function() {
+        Handsontable.editors.DropdownEditor.prototype.close.apply(this, arguments);
+
+        this.TEXTAREA.disabled = false;
+    };
 
     // Renderers
 
