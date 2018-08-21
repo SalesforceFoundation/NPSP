@@ -116,7 +116,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Org_Environment {
                 System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', getIsAdvancedMulticurrencyEnabled());
                 System.FeatureManagement.setPackageBooleanValue('Org_HasNonEnglishUsers', getHasNonEnglishUsers());
-                System.FeatureManagement.setPackageBooleanValue('Org_IsAdminUserInLightning', USER_UserService.isUserRunningLightning());
+                if (!System.isBatch()) {
+                    System.FeatureManagement.setPackageBooleanValue('Org_IsAdminUserInLightning', USER_UserService.isUserRunningLightning());
+                }
             }
 
             when InUse_AccountSoftCredits {
