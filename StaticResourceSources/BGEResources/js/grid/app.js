@@ -212,6 +212,8 @@ var tableHeight = 0;
 
             // Clean errors when changing pages
             rowErrors = {};
+            
+            hot.render();
         }
     }
 
