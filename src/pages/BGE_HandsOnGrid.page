@@ -2,11 +2,11 @@
 
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" lang="en">
 
-        <!-- Hands on table 0.24.3 -->
+        <!-- Hands on table 5.0.0 -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/handsontable.full.min.js')}"/>
         <apex:stylesheet value="{!URLFOR($Resource.BGEResources, '/css/handsontable.full.min.css')}"/>
 
-        <!-- jQuery 3.2.1 -->
+        <!-- jQuery 3.2.1 --> <!-- This library is not deleted because is used as a dependency of Dropdown -->
         <apex:includeScript value="{!URLFOR($Resource.BGEResources, '/js/utils/jquery.min.js')}"/>
 
         <!-- Custom CSS -->
