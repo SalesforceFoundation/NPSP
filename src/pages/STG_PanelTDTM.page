@@ -1,17 +1,17 @@
 <apex:page controller="STG_PanelTDTM_CTRL" action="{!addPageMessages}" docType="html-5.0" standardStylesheets="false">
 <style type="text/css">
-    .slds .slds-table.slds-table--bordered th, .slds .slds-table.slds-table--bordered td {
+    .slds .slds-table.slds-table_bordered th, .slds .slds-table.slds-table_bordered td {
         padding:3px;
     }
 </style>
     <apex:form id="form">
-        <div class="slds-m-around--x-large">
+        <div class="slds-m-around_x-large">
             <c:STG_PageHeader sectionLabel="{!$Label.stgNavSystem}" pageLabel="{!$Label.stgNavTriggerConfig}" />
-            <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpTDTM}" /></div>
+            <div class="slds-text-body_small slds-m-around_medium"><apex:outputText value="{!$Label.stgHelpTDTM}" /></div>
             <c:UTIL_PageMessages allowClose="false"/>
 
             <div class="slds" id="page_messages">
-                <div role="alert" class="slds-notify slds-notify_toast slds-notify--toast slds-theme_warning slds-theme--warning">
+                <div role="alert" class="slds-notify slds-notify_toast slds-notify_toast slds-theme_warning slds-theme_warning">
                     <div class="notify__content">
                         <div class="slds-media">
                             <div class="slds-media__figure">
@@ -22,7 +22,7 @@
                                 </apex:outputText>
                             </div>
                             <div class="slds-media__body">
-                                <h2 class="slds-text-heading_small slds-text-heading--small">
+                                <h2 class="slds-text-heading_small slds-text-heading_small">
                                     <apex:outputText value="{!$Label.PageMessagesWarning}: " />
                                     <apex:outputText value="{!$Label.stgHelpTriggerHandlers}"/>
                                 </h2>
@@ -32,12 +32,12 @@
                 </div>
             </div>
 
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="newTriggerHandler" value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="newTriggerHandler" value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
             <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
-                <div class="slds-section-title--divider" >{!$Label.stgLabelNewTH}</div>
-                <div class="slds-form--horizontal">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelNewTH}</div>
+                <div class="slds-form_horizontal">
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="slds-form-element__label" />
                         <div class="slds-form-element__control">
@@ -103,15 +103,15 @@
                     </div>
 
                 </div>
-                <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                    <apex:commandButton id="createTriggerHandler" value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                    <apex:commandButton id="cancelTriggerHandler" value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+                <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                    <apex:commandButton id="createTriggerHandler" value="{!$Label.stgBtnCreateTH}" action="{!createTh}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                    <apex:commandButton id="cancelTriggerHandler" value="{!$Label.stgBtnCancel}" action="{!cancelTh}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
                 </div>
             </apex:outputPanel>
         </div>
-        <table class="slds-table slds-table--bordered" style="width:100%; table-layout:fixed;">
+        <table class="slds-table slds-table_bordered" style="width:100%; table-layout:fixed;">
             <thead>
-                <tr class="slds-text-heading--label">
+                <tr class="slds-text-heading_label">
                     <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}</th>
                     <th scope="col" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Class__c.Label}</th>
                     <th scope="col" style="width:60px;" class="slds-cell-wrap">{!$ObjectType.Trigger_Handler__c.Fields.Load_Order__c.Label}</th>
@@ -125,14 +125,14 @@
             <tbody>
                 <apex:repeat var="th" value="{!listTH}" >
                     <tr>
-                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body--small">{!th.Object__c}</div></td>
-                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body--small">{!th.Class__c}</div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Load_Order__c}</div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small">{!th.Trigger_Action__c}</div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.Active__c}" disabled="true"/></div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.Asynchronous__c}" disabled="true"/></div></td>
-                        <td class="slds-cell-wrap"><div class="slds-text-body--small"><apex:inputCheckbox value="{!th.User_Managed__c}" disabled="true"/></div></td>
-                        <td class="slds-cell-wrap" style="overflow-wrap: break-word;"><div class="slds-text-body--small">{!th.Usernames_to_Exclude__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body_small">{!th.Object__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-truncate slds-text-body_small">{!th.Class__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body_small">{!th.Load_Order__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body_small">{!th.Trigger_Action__c}</div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body_small"><apex:inputCheckbox value="{!th.Active__c}" disabled="true"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body_small"><apex:inputCheckbox value="{!th.Asynchronous__c}" disabled="true"/></div></td>
+                        <td class="slds-cell-wrap"><div class="slds-text-body_small"><apex:inputCheckbox value="{!th.User_Managed__c}" disabled="true"/></div></td>
+                        <td class="slds-cell-wrap" style="overflow-wrap: break-word;"><div class="slds-text-body_small">{!th.Usernames_to_Exclude__c}</div></td>
                     </tr>
                 </apex:repeat>
            </tbody>

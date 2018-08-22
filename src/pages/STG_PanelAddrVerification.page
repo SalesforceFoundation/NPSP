@@ -54,24 +54,24 @@
             });
         });
     </script>
-    <apex:form id="form" styleClass="slds-m-around--x-large">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgLabelAddressVerification}" />
         <c:UTIL_PageMessages />
     
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
             <apex:commandButton id="editAddr" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}"
                                 rendered="{!isReadOnlyMode}" immediate="true" rerender="form" oncomplete="hideUnusedElements()"
-                                styleClass="slds-button slds-button--small slds-button--neutral" />
+                                styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
 
         <apex:outputPanel id="fields">
-            <div class="slds-section-title--divider">
+            <div class="slds-section-title_divider">
                 {!$Label.addrGeneralSettings}
             </div>
-            <div class="slds-text-body--small slds-m-around--large">
+            <div class="slds-text-body_small slds-m-around_large">
                 <p>{!$Label.stgAddrGeneralSettingsIntro}</p>
             </div>
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.Household_Account_Addresses_Disabled__c.Label}" for="cbxDHAA" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -112,14 +112,14 @@
                 </apex:repeat>
             </apex:outputPanel>
 
-            <div class="slds-section-title--divider">
+            <div class="slds-section-title_divider">
                 {!$Label.Addr_Settings_API_Title}
             </div>
-            <div class="slds-text-body--small slds-m-around--large">
+            <div class="slds-text-body_small slds-m-around_large">
                 <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>
                 <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body2}" escape="false" /></p>
             </div>
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Addr_Verification_Settings__c.fields.Enable_Automatic_Verification__c.Label}" for="iEnable_Automatic_Verification__c"
                                         styleClass="slds-form-element__label" />
@@ -204,12 +204,12 @@
             </apex:outputPanel>
         </apex:outputPanel>
         -->
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
             <apex:commandButton id="saveAddr" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}"
-                        immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand"
+                        immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand"
                         oncomplete="hideUnusedElements()"/>
             <apex:commandButton id="cancelAddr" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}"
-                        immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral"
+                        immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral"
                         oncomplete="hideUnusedElements()"/>
         </div>
 
@@ -222,14 +222,14 @@
             </apex:outputPanel>
         </div>
 
-        <div class="slds-m-around--large" id="iBatchVerifyDiv">
+        <div class="slds-m-around_large" id="iBatchVerifyDiv">
             <div class="slds-card">
                 <div class="slds-card__header">
-                    <h3 class="slds-text-heading--small">{!$Label.Addr_Verification_Batch_Title}</h3>
+                    <h3 class="slds-text-heading_small">{!$Label.Addr_Verification_Batch_Title}</h3>
                 </div>
-                <div class="slds-card__body slds-text-body--small slds-p-around--medium">
+                <div class="slds-card__body slds-text-body_small slds-p-around_medium">
                     <apex:outputText escape="false" value="{!$Label.Addr_Verification_Batch_Body}" />
-                    <div class="slds-form--horizontal slds-m-around--large">
+                    <div class="slds-form_horizontal slds-m-around_large">
                         <div class="slds-form-element">
                             <apex:outputLabel value="{!$Label.Addr_Skip_Verified}" for="iAddr_Skip_Verified" styleClass="slds-form-element__label"/>
                             <div class="slds-form-element__control">
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                     <div style="text-align:center; margin-top: 15px;">
-                        <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" disabled="{!NOT(batchVerifEnabled && isReadOnlyMode)}" styleClass="slds-button slds-button--small slds-button--neutral"/>
+                        <apex:commandButton id="batchVerify" action="{!batchVerify}" rerender="batchVerifyResult" value="Verify All Addresses" disabled="{!NOT(batchVerifEnabled && isReadOnlyMode)}" styleClass="slds-button slds-button_small slds-button_neutral"/>
                     </div>
                     <apex:outputPanel id="batchVerifyResult">
                         <apex:outputPanel rendered="{!NOT(ISNULL(batchVerifyMessage))}">

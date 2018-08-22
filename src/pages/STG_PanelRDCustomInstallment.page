@@ -1,14 +1,14 @@
-    <apex:form id="form" styleClass="slds-m-around--x-large">
 <apex:page controller="STG_PanelRDCustomInstallment_CTRL" docType="html-5.0" standardStylesheets="false">
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRDInstallmentPeriods}" />
-        <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpRecDon}" /></div>
+        <div class="slds-text-body_small slds-m-around_medium"><apex:outputText value="{!$Label.stgHelpRecDon}" /></div>
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="newRDInstallmentPeriod" value="{!$Label.stgBtnNewRDPeriod}" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="newRDInstallmentPeriod" value="{!$Label.stgBtnNewRDPeriod}" action="{!newCustomInstallment}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}">
-            <div class="slds-section-title--divider" >{!$Label.stgLabelRDNewPeriod}</div>
-            <div class="slds-form--horizontal slds-m-around--large">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelRDNewPeriod}</div>
+            <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}" for="tbxN" styleClass="slds-form-element__label" />
                     <div class="slds-form-element__control">
@@ -39,15 +39,15 @@
                     </div>
                 </div>
             </div>
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="createRDInstallmentPeriod" value="{!$Label.stgBtnCreateRDPeriod}" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--small slds-button--brand" />
-                <apex:commandButton id="cancelRDInstallmentPeriod" value="{!$Label.stgBtnCancel}" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--small slds-button--neutral" />
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="createRDInstallmentPeriod" value="{!$Label.stgBtnCreateRDPeriod}" action="{!createCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_small slds-button_brand" />
+                <apex:commandButton id="cancelRDInstallmentPeriod" value="{!$Label.stgBtnCancel}" action="{!cancelCustomInstallment}" status="statusLoad" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!AND(NOT(ISNULL(stgService.listRDCustomInstallment)), stgService.listRDCustomInstallment.size > 0)}">
-            <table class="slds-table slds-table--bordered" >
+            <table class="slds-table slds-table_bordered" >
                 <thead>
-                    <tr class="slds-text-heading--label">
+                    <tr class="slds-text-heading_label">
                         <th scope="col"><label class="slds-truncate">{!$Label.stgLabelActionColumn}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.Name.Label}</label></th>
                         <th scope="col"><label class="slds-truncate">{!$ObjectType.npe03__Custom_Installment_Settings__c.Fields.npe03__Value__c.Label}</label></th>

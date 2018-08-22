@@ -1,17 +1,17 @@
-    <apex:form id="form" styleClass="slds-m-around--x-large">
 <apex:page controller="STG_PanelContacts_CTRL" docType="html-5.0" standardStylesheets="false" >
+    <apex:form id="form" styleClass="slds-m-around_x-large">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavPeople}" pageLabel="{!$Label.stgNavAccountModel}" />
         <div class="slds-grid">
-            <div class="slds-col slds-size--1-of-1 slds-m-around--medium">
-                <p class="slds-text-body--small slds-m-top--x-small"><apex:outputText escape="false" value="{!$Label.npe01__contacts_settings_account_model_help_text}"/></p>
+            <div class="slds-col slds-size_1-of-1 slds-m-around_medium">
+                <p class="slds-text-body_small slds-m-top_x-small"><apex:outputText escape="false" value="{!$Label.npe01__contacts_settings_account_model_help_text}"/></p>
             </div>        
         </div>
         <c:UTIL_PageMessages />
-        <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-            <apex:commandButton id="editCon" value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+        <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+            <apex:commandButton id="editCon" value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button_neutral" />
         </div>
-        <div class="slds-section-title--divider">{!$Label.CONV_Configuration_Options}</div>
-        <div class="slds-form--horizontal slds-m-around--large">
+        <div class="slds-section-title_divider">{!$Label.CONV_Configuration_Options}</div>
+        <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Account_Processor__c.Label}" for="slAP" styleClass="slds-form-element__label" />
                 <div class="slds-form-element__control">
@@ -48,9 +48,9 @@
                     </apex:outputPanel>
                 </div>
             </div>
-            <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-m-around--large">
-                <apex:commandButton id="saveCon" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button--brand" />
-                <apex:commandButton id="cancelCon" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button--neutral" />
+            <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
+                <apex:commandButton id="saveCon" value="{!$Label.stgBtnSave}" status="statusLoad" action="{!saveSettings}" rendered="{!isEditMode}" immediate="false" rerender="form" styleClass="slds-button slds-button_brand" />
+                <apex:commandButton id="cancelCon" value="{!$Label.stgBtnCancel}" status="statusLoad" action="{!cancelEdit}" rendered="{!isEditMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_neutral" />
             </div>
         </div>
     </apex:form>
