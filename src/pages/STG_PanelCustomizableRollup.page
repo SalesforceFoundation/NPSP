@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelCustomizableRollup_CTRL" >
+<apex:page controller="STG_PanelCustomizableRollup_CTRL" docType="html-5.0" standardStylesheets="false" >
 
     <apex:slds/>
     <apex:includeScript value="{!URLFOR($Resource.CumulusStaticResources, '/npsp-slds/modal.js')}"/>

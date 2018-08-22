@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelPaymentMapping_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelPaymentMapping_CTRL" docType="html-5.0" standardStylesheets="false" >
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavPaymentMappings}" />
         <p class="slds-text-body--small slds-m-top--x-small">{!$Label.stgHelpPaymentMappings}</p>
         <c:UTIL_PageMessages />

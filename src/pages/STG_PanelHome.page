@@ -1,6 +1,6 @@
-<apex:page controller="STG_SettingsManager_CTRL" >
     <div class="slds-m-around--x-large slds-p-bottom--large slds-col-rule--bottom">
         <div class="slds-media slds-media--center slds-media--responsive">
+<apex:page controller="STG_SettingsManager_CTRL" docType="html-5.0" standardStylesheets="false" >
             <div class="slds-media__body">
                 <h3 class="slds-text-heading--large slds-m-bottom--large">{!$Label.stgNPSPSettings}</h3>
                 <p>{!$Label.stgHelpNPSPSettings}</p>

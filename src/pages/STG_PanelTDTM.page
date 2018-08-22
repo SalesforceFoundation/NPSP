@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelTDTM_CTRL" docType="html-5.0" action="{!addPageMessages}">
+<apex:page controller="STG_PanelTDTM_CTRL" action="{!addPageMessages}" docType="html-5.0" standardStylesheets="false">
 <style type="text/css">
     .slds .slds-table.slds-table--bordered th, .slds .slds-table.slds-table--bordered td {
         padding:3px;

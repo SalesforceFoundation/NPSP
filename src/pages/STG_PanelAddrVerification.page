@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelADDRVerification_CTRL" action="{!initDynamicFields}">
+<apex:page controller="STG_PanelADDRVerification_CTRL" action="{!initDynamicFields}" docType="html-5.0" standardStylesheets="false">
 
     <script>
         var j$ = jQuery.noConflict();

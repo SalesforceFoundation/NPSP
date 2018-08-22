@@ -1,4 +1,4 @@
-<apex:page controller="STG_PanelAllocations_CTRL" docType="html-5.0">
+<apex:page controller="STG_PanelAllocations_CTRL"  docType="html-5.0" standardStylesheets="false">
     <style>
         input.lookupInput {
             background-color: white;

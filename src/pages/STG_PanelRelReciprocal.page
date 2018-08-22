@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelRelReciprocal_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelRelReciprocal_CTRL" docType="html-5.0" standardStylesheets="false" >
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelReciprocal}" />
         <div class="slds-grid">
             <div class="slds-col slds-size--1-of-1 slds-m-around--medium">

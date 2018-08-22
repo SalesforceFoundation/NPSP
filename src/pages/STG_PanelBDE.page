@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelBDE_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelBDE_CTRL" docType="html-5.0" standardStylesheets="false">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavDonations}" pageLabel="{!$Label.stgNavBDE}" />
         <c:UTIL_PageMessages />
         <div class="slds-grid slds-grid--align-center slds-grid--vertical-align-center slds-p-around--large">

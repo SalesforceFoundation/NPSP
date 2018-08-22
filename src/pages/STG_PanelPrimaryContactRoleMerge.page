@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelPrimaryContactRoleMerge_CTRL" >
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelPrimaryContactRoleMerge_CTRL" docType="html-5.0" standardStylesheets="false" >
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavBulkProcesses}" pageLabel="{!$Label.stgLabelPrimaryContactRoleMergeBatch}" />
         <div class="slds-text-body--small slds-m-around--medium"><apex:outputText value="{!$Label.stgHelpPrimaryContactRoleMergeBatch}" escape="false" /></div>
         <c:UTIL_PageMessages />

@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelRD_CTRL" docType="html-5.0" action="{!init}">
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelRD_CTRL" action="{!init}" docType="html-5.0" standardStylesheets="false">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRecurringDonations}" pageLabel="{!$Label.stgNavRecurringDonations}" />
         <p class="slds-text-body--small slds-m-top--x-small">
             <apex:outputText value="{!$Label.npe03__recurringdonationsettingsdescription}" escape="false" />

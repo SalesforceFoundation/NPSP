@@ -1,5 +1,5 @@
-<apex:page controller="STG_PanelRel_CTRL" docType="html-5.0">
     <apex:form id="form" styleClass="slds-m-around--x-large">
+<apex:page controller="STG_PanelRel_CTRL" docType="html-5.0" standardStylesheets="false">
         <c:STG_PageHeader sectionLabel="{!$Label.stgNavRelationships}" pageLabel="{!$Label.stgNavRelationships}" />
         <p class="slds-text-body--small slds-m-top--x-small">{!$Label.npe4__relationshipssettingsdescription}</p>
         <c:UTIL_PageMessages />
