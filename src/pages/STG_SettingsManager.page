@@ -29,9 +29,12 @@
         vertical-align: center;
         horiz-align: center;
         width: 100%;
-        height: 100%;
+        height: 200%;
     }
 
+    #divLoading div.slds-spinner.slds-spinner_large {
+        margin-top: -25%;
+    }
 </style>
 
 <script>
