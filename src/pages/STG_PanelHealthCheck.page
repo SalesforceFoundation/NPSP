@@ -36,14 +36,14 @@
             <apex:commandButton id="runHealthCheck" value="{!$Label.healthButtonRun}" status="statusLoad" action="{!runDetector}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral"/>
         </div>
         <apex:outputPanel rendered="{!isAllTestsPassed}" >
-            <h4 style="text-align:center;padding-top:10px;">
-                <span class="badge" style="background-color: green;">
-                    <span class="slds-icon_container slds-icon-utility-check">
-                        <img class="slds-icon" src="{!URLFOR($Resource.SLDS, '/0_12_2/assets/icons/utility/check.svg')}" height="32" width="32" alt="{!$Label.healthLabelPassed}"/>
-                    </span>
-                </span>
-                {!$Label.healthLabelAllTestsPassed}
-            </h4>
+            <div class="slds-media">
+                <div class="slds-media__figure">
+                    <svg class="slds-icon slds-icon_small" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52" width="52" height="52" >
+                        <path fill="#008000" d="m19 43.6l-16.5-16.6c-0.6-0.6-0.6-1.6 0-2.2l2.2-2.2c0.6-0.6 1.6-0.6 2.2 0l12.4 12.5c0.4 0.4 1.1 0.4 1.5 0l24.3-24.5c0.6-0.6 1.6-0.6 2.2 0l2.2 2.2c0.6 0.6 0.6 1.6 0 2.2l-28.3 28.6c-0.6 0.7-1.6 0.7-2.2 0z"></path>
+                    </svg>
+                    {!$Label.healthLabelAllTestsPassed}
+                </div>
+            </div>
         </apex:outputPanel>
         <apex:outputPanel rendered="{!hasResults}">
             <div class="slds-m-around_small">
