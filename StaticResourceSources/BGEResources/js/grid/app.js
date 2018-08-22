@@ -911,7 +911,10 @@ var tableHeight = 0;
 
             case 'CURRENCY':
             case 'NUMBER':
+            case 'INTEGER':
             case 'DECIMAL':
+            case 'DOUBLE':
+            case 'PERCENT':
                 result = 'numeric';
                 break;
         }
@@ -980,24 +983,24 @@ var tableHeight = 0;
                 col.renderer = dropdownAndDateCellRenderer;
             }
             else if (templateField.type === "CURRENCY") {
-                col.format = '$0,0.00'
+                col.numericFormat = { pattern: '$0,0.00', culture: 'en-US' };
                 col.className = "htRight htMiddle slds-truncate";
                 col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 col.colWidths = 100;
                 col.editor = NumberEditorCustom;
             }
-            else if (templateField.type === "DECIMAL") {
-                col.format = '0.00';
+            else if (templateField.type === "DECIMAL" || templateField.type === "DOUBLE") {
+                col.numericFormat = { pattern: '0.00', culture: 'en-US' };
                 col.className = "htRight htMiddle slds-truncate";
                 col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
                 col.colWidths = 100;
                 col.editor = NumberEditorCustom;
             }
-            else if (templateField.type === "NUMBER") {
-                col.format = '0';
+            else if (templateField.type === "NUMBER" || templateField.type === "INTEGER") {
+                col.numericFormat = { pattern: '0', culture: 'en-US' };
                 col.className = "htRight htMiddle slds-truncate";
                 col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
-                col.colWidths = 80;
+                col.colWidths = 100;
                 col.editor = NumberEditorCustom;
             }
             else if (templateField.type === "EMAIL" || templateField.type === "STRING" ||
@@ -1017,8 +1020,10 @@ var tableHeight = 0;
             }
             else if (templateField.type === 'PERCENT') {
                 col.type = "numeric";
-                col.format = '0.000%';
-                col.colWidths = 60;
+                col.numericFormat = { pattern: '0.000%', culture: 'en-US' };
+                col.className = "htRight htMiddle slds-truncate";
+                col.title = '<div class="amount-style">' + templateField.label.toUpperCase() + '</div>';
+                col.colWidths = 80;
                 col.editor = NumberEditorCustom;
             }
             else if (templateField.type === 'GEOLOCATION') {
@@ -1217,7 +1222,9 @@ var tableHeight = 0;
     function displaySummaryData(data) {
 
         document.getElementById("totalOfRecords").innerHTML = data.rowsCount;
-        document.getElementById("totalAmount").innerHTML = data.rowsAmount;
+        document.getElementById("totalAmount").innerHTML = numbro(data.rowsAmount).formatCurrency( { thousandSeparated: true,
+                                                                                                     mantissa: 2
+                                                                                                   } );
     }
 
     function displayPaginationData() {
