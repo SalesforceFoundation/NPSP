@@ -174,9 +174,9 @@ var tableHeight = 0;
 
     function removeRowOnColumnAction() {
 
-        var row = hot.getSelected()[0];
+        var rowIndex = hot.getSelected()[0][0];
 
-        hot.alter('remove_row', row);
+        hot.alter('remove_row', rowIndex, 1);
 
         setTimeout(function() {
 
