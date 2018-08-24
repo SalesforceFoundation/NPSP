@@ -182,6 +182,12 @@ tasks:
         description: Execute the specified apex anonymous script
         class_path: tasks.anon_apex.AnonymousApexFromFileTask
 
+    enable_customizable_rollups:
+        description: Enable the NPSP Customizable Rollups feature
+        class_path: cumulusci.tasks.apex.anon.AnonymousApexTask
+        options:
+            apex: new STG_PanelCustomizableRollup_CTRL().enableCRLPs();
+
 flows:
     config_dev:
         steps:
@@ -208,6 +214,18 @@ flows:
                 task: update_admin_profile
             7:
                 task: test_data_relationships
+
+    config_acctsc_rollups:
+        description: 'Deploys custom fields and rollups for testing account soft credits.'
+        steps:
+            1:
+                task: enable_customizable_rollups
+            2:
+                task: deploy
+                options:
+                    path: dev_config/src_acctsc_rollups
+            3:
+                task: update_admin_profile
 
     release_beta:
         steps:
