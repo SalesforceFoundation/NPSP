@@ -1,7 +1,9 @@
 {
   "orgName": "NPSP - Beta Org - Analytics",
   "edition": "Developer",
-  "features": "SalesWave",
+  "features": [
+    "SalesWave"
+  ],
   "instance": "CS46",
   "hasSampleData": "true",
   "orgPreferences" : {
