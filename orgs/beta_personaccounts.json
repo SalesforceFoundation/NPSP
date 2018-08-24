@@ -1,8 +1,8 @@
 {
-  "orgName": "NPSP - Beta Org - Multicurrency",
+  "orgName": "NPSP - Beta Org - Person Accounts",
   "edition": "Developer",
   "features": [
-    "MultiCurrency"
+    "PersonAccounts"
   ],
   "hasSampleData": "true",
   "orgPreferences" : {
