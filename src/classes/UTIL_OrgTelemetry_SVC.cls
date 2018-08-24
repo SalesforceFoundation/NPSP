@@ -41,18 +41,21 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
     /**
      * @description A complete list of the Telemetry Types (at a high level) that are handled by this service class.
+     * These are used by the batch job to process feature parameters in asynchronous groups to avoid governor
+     * limit issues.
      */
     public Enum TelemetryTypeEnum {
         NPSP_Settings,
         Org_Environment,
-        Data_OldestOppCloseDate,
         Data_MaxNumRelatedOpps,
-        Data_MaxAffilationsToAccount,
+        Data_Count_of_RD_Opps_All,
+        Data_Count_of_RD_Opps_OpenEnded,
+        Data_CountOfErrorLog
+        /*Data_MaxAffilationsToAccount,
         Data_MaxRelationshipsToContact,
-        Data_CountOfErrorLog,
         InUse_EngagementPlans,
         InUse_AutomatedSoftCredits,
-        InUse_AccountSoftCredits
+        InUse_AccountSoftCredits*/
     }
 
     /**
@@ -97,8 +100,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups',
                         (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
-                System.FeatureManagement.setPackageBooleanValue('IsEnabled_ScheduledJobs',
-                        (stgSvc.stgErr.Don_t_Auto_Schedule_Default_NPSP_Jobs__c != true));
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel',
                         stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments',
@@ -111,65 +112,83 @@ public without sharing class UTIL_OrgTelemetry_SVC {
 
             }
 
-            // Simple Boolean FeatureParameters based on the current organization configuration that can be processed
+            // Simple FeatureParameters based on the current organization configuration that can be processed
             // in a single operation.
             when Org_Environment {
                 System.FeatureManagement.setPackageBooleanValue('Org_IsEnabled_AdvancedMultiCurrency', getIsAdvancedMulticurrencyEnabled());
-                System.FeatureManagement.setPackageBooleanValue('Org_HasNonEnglishUsers', getHasNonEnglishUsers());
-                if (!System.isBatch()) {
-                    System.FeatureManagement.setPackageBooleanValue('Org_IsAdminUserInLightning', USER_UserService.isUserRunningLightning());
-                }
+                System.FeatureManagement.setPackageIntegerValue('Org_Count_of_NonEnglishLanguages', getNonEnglishLanguageCount());
             }
 
-            when InUse_AccountSoftCredits {
-                Integer ascCount = [SELECT Count() FROM Account_Soft_Credit__c WHERE CreatedDate = LAST_N_DAYS:60 LIMIT 1];
-                System.FeatureManagement.setPackageBooleanValue('InUse_AccountSoftCredits', (ascCount == 1));
-            }
-
-            when InUse_AutomatedSoftCredits {
-                Integer relCount = [SELECT Count() FROM npe4__Relationship__c WHERE Related_Opportunity_Contact_Role__c != null
-                        AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
-                Integer alfCount = [SELECT Count() FROM npe5__Affiliation__c WHERE Related_Opportunity_Contact_Role__c != null
-                        AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
-                System.FeatureManagement.setPackageBooleanValue('InUse_AutomatedSoftCredits', (relCount == 1 || alfCount == 1));
-            }
-
-            when InUse_EngagementPlans {
-                // Query???
-                System.FeatureManagement.setPackageBooleanValue('InUse_EnagagementPlans', false);
-            }
-
-            when Data_CountOfErrorLog {
-                System.FeatureManagement.setPackageIntegerValue('Data_CountOfErrorLog', getErrorLogCount());
-            }
-
-            when Data_OldestOppCloseDate {
-                Date oldestDate = getOldestCloseDate();
-                if (oldestDate != null) {
-                    System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', oldestDate);
-                }
-            }
             when Data_MaxNumRelatedOpps {
                 Integer relatedOpps = getMaxNumRelatedOpps();
                 if (relatedOpps != null) {
                     System.FeatureManagement.setPackageIntegerValue('Data_MaxNumRelatedOpps', relatedOpps);
                 }
             }
-            when Data_MaxAffilationsToAccount {
-                Integer maxAffiliations = getMaxAffiliationToAccount();
-                if (maxAffiliations != null) {
-                    System.FeatureManagement.setPackageIntegerValue('Data_MaxAffilationsToAccount', maxAffiliations);
+
+            when Data_Count_of_RD_Opps_All {
+                Integer rdOppCount = getCountOfRecurringDonationOpps();
+                if (rdOppCount != null) {
+                    System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_All', rdOppCount);
                 }
             }
-            when Data_MaxRelationshipsToContact {
-                Integer maxRelationships = getMaxRelationships();
-                if (maxRelationships != null) {
-                    System.FeatureManagement.setPackageIntegerValue('Data_MaxRelationshipsToContact', maxRelationships);
+
+            when Data_Count_of_RD_Opps_OpenEnded {
+                Integer rdOppCount = getCountOfRecurringDonationOpps_OpenEnded();
+                if (rdOppCount != null) {
+                    System.FeatureManagement.setPackageIntegerValue('Data_Count_of_RD_Opps_OpenEnded', rdOppCount);
                 }
             }
+
+            when Data_CountOfErrorLog {
+                System.FeatureManagement.setPackageIntegerValue('Data_Count_of_ErrorLog', getErrorLogCount());
+            }
+
+        /*
+        when InUse_AccountSoftCredits {
+            Integer ascCount = [SELECT Count() FROM Account_Soft_Credit__c WHERE CreatedDate = LAST_N_DAYS:60 LIMIT 1];
+            System.FeatureManagement.setPackageBooleanValue('InUse_AccountSoftCredits', (ascCount == 1));
+        }
+
+        when InUse_AutomatedSoftCredits {
+            Integer relCount = [SELECT Count() FROM npe4__Relationship__c WHERE Related_Opportunity_Contact_Role__c != null
+                    AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
+            Integer alfCount = [SELECT Count() FROM npe5__Affiliation__c WHERE Related_Opportunity_Contact_Role__c != null
+                    AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
+            System.FeatureManagement.setPackageBooleanValue('InUse_AutomatedSoftCredits', (relCount == 1 || alfCount == 1));
+        }
+
+        when InUse_EngagementPlans {
+            // Query???
+            System.FeatureManagement.setPackageBooleanValue('InUse_EnagagementPlans', false);
+        }
+
+        when Data_OldestOppCloseDate {
+            Date oldestDate = getOldestCloseDate();
+            if (oldestDate != null) {
+                System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', oldestDate);
+            }
+        }
+        when Data_MaxAffilationsToAccount {
+            Integer maxAffiliations = getMaxAffiliationToAccount();
+            if (maxAffiliations != null) {
+                System.FeatureManagement.setPackageIntegerValue('Data_MaxAffilationsToAccount', maxAffiliations);
+            }
+        }
+        when Data_MaxRelationshipsToContact {
+            Integer maxRelationships = getMaxRelationships();
+            if (maxRelationships != null) {
+                System.FeatureManagement.setPackageIntegerValue('Data_MaxRelationshipsToContact', maxRelationships);
+            }
+        }*/
         }
     }
 
+    /**
+     * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
+     * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization.
+     * @return true or false
+     */
     private static Boolean getIsAdvancedMulticurrencyEnabled() {
         if (UserInfo.isMultiCurrencyOrganization() == true) {
             try {
@@ -183,14 +202,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
-     * @description Returns true if there are any active User records with a local language that does not start with "EN"
-     */
-    private static Boolean getHasNonEnglishUsers() {
-        return getNonEnglishLanguageCount() > 0;
-    }
-
-    /**
-     * @description Returns the number of non-english languages associated with active standard users.
+     * @description Count the number of non-english languages associated with active standard users.
      */
     public static Integer getNonEnglishLanguageCount() {
         Set<String> languages = new Set<String>();
@@ -205,7 +217,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
-     * @description Returns true if there are any TDTM Handler records with User_Managed__c=true or Active=false
+     * @description Returns true if there are any TDTM Trigger Handler records with User_Managed__c=true or Active=false
      */
     private static Boolean getHasUserManagedTriggers() {
         Boolean hasUserManagedTrigger = false;
@@ -230,21 +242,29 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
-     * @description Returns the oldest CloseDate from the Opportunity object
+     * @description Return the total number of Opportunities associated with a Recurring Donation
      */
-    private static Date getOldestCloseDate() {
+    private static Integer getCountOfRecurringDonationOpps() {
         try {
-            Opportunity opp = [SELECT CloseDate FROM Opportunity ORDER BY CloseDate ASC LIMIT 1];
-            if (opp != null) {
-                return opp.CloseDate;
-            }
+            return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c != null];
         } catch (Exception ex) {}
         return null;
     }
 
     /**
-     * @description Returns the max number of attached opportunities (going by 'Total Number of Donations') for
-     * all Accounts.
+     * @description Return the total number of Opportunities associated with an Open Ended Recurring Donation
+     */
+    private static Integer getCountOfRecurringDonationOpps_OpenEnded() {
+        try {
+            return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = 'Open'];
+        } catch (Exception ex) {}
+        return null;
+    }
+
+    /**
+     * @description Returns the max number of attached opportunities (using by 'Total Number of Donations') for
+     * all Accounts. Note that this will not return useful information if the organization is not using
+     * NPSP rollups (either type)
      */
     private static Integer getMaxNumRelatedOpps() {
         try {
@@ -252,36 +272,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                                 ORDER BY npo02__NumberOfClosedOpps__c DESC LIMIT 1];
             if (acct != null && acct.npo02__NumberOfClosedOpps__c != null) {
                 return acct.npo02__NumberOfClosedOpps__c.intValue();
-            }
-        } catch (Exception ex) {}
-        return null;
-    }
-
-    /**
-     * @description Returns the max number of affiliations attached to any one specific Account
-     */
-    private static Integer getMaxAffiliationToAccount() {
-        try {
-            List<AggregateResult> ag = [SELECT Count(Id) MaxPerOrg FROM npe5__Affiliation__c
-                GROUP BY npe5__Organization__c
-                ORDER BY Count(Id) LIMIT 1];
-            if (ag != null && ag.size() == 1) {
-                return (Integer) ag[0].get('MaxPerOrg');
-            }
-        } catch (Exception ex) {}
-        return null;
-    }
-
-    /**
-     * @description Returns the max number of relationships attached to any one specific Contact
-     */
-    private static Integer getMaxRelationships() {
-        try {
-            List<AggregateResult> ag = [SELECT Count(Id) MaxRel FROM npe4__Relationship__c
-                GROUP BY npe4__Contact__c
-                ORDER BY Count(Id) LIMIT 1];
-            if (ag != null && ag.size() == 1) {
-                return (Integer) ag[0].get('MaxRel');
             }
         } catch (Exception ex) {}
         return null;

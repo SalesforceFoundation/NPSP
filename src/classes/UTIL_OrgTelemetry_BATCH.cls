@@ -48,14 +48,10 @@ public class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelem
         new List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum>{
             UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.NPSP_Settings,
             UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Org_Environment,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_OldestOppCloseDate,
             UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_MaxNumRelatedOpps,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_MaxAffilationsToAccount,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_MaxRelationshipsToContact,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.InUse_EngagementPlans,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.InUse_AutomatedSoftCredits,
-            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.InUse_AccountSoftCredits
+            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_All,
+            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_OpenEnded,
+            UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog
         };
 
     /**
