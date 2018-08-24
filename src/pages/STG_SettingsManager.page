@@ -28,11 +28,7 @@
         vertical-align: center;
         horiz-align: center;
         width: 100%;
-        height: 200%;
-    }
-
-    #divLoading div.slds-spinner.slds-spinner_large {
-        margin-top: -25%;
+        height: 100%;
     }
 </style>
 
@@ -218,20 +214,21 @@
                     </nav>
                 </div>
             </div>
+
+            <div id="divLoading" style="display: none;">
+                <div class="slds-spinner_container clsLoading">
+                    <div role="status" class="slds-spinner slds-spinner_large">
+                        <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
+                        <div class="slds-spinner__dot-a"></div>
+                        <div class="slds-spinner__dot-b"></div>
+                    </div>
+                </div>
+            </div>
+
             <div class="content slds-col slds-small-size_1-of-1 slds-medium-size_9-of-12 slds-large-size_9-of-12" >
                 <apex:actionStatus id="statusLoad"
                     onstart="document.getElementById('divLoading').style.display = 'block';"
                     onstop="document.getElementById('divLoading').style.display = 'none';" />
-
-                <div id="divLoading" style="display: none;">
-                    <div class="slds-spinner_container clsLoading">
-                        <div role="status" class="slds-spinner slds-spinner_large">
-                            <span class="slds-assistive-text">{!$Label.labelMessageLoading}</span>
-                            <div class="slds-spinner__dot-a"></div>
-                            <div class="slds-spinner__dot-b"></div>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="panel noborder" id="idPanelHome" style="display:none" >
                     <apex:include pageName="STG_PanelHome" />
