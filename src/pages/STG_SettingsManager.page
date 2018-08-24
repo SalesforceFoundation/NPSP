@@ -94,9 +94,6 @@
     </apex:actionFunction>
 </apex:form>
 
-<apex:variable var="pathChevronRight" value="M8.3 2l9.5 9.5c.3.3.3.7 0 1L8.3 22c-.3.2-.8.2-1.1 0l-1-1c-.2-.3-.2-.8 0-1.1l7.6-7.4c.2-.3.2-.7 0-1L6.3 4.1C6 3.8 6 3.3 6.3 3l1-1c.3-.2.7-.2 1 0z"/>
-<apex:variable var="pathChevronDown" value="M22 8.2l-9.5 9.6c-.3.2-.7.2-1 0L2 8.2c-.2-.3-.2-.7 0-1l1-1c.3-.3.8-.3 1.1 0l7.4 7.5c.3.3.7.3 1 0l7.4-7.5c.3-.2.8-.2 1.1 0l1 1c.2.3.2.7 0 1z"/>
-
 <c:UTIL_PageMessages />
 
 <div style="max-width: 100%;" class="slds-scope">
@@ -109,10 +106,10 @@
                             <!-- People -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConHomeNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree0-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavPeople}</a>
                             </div>
@@ -125,10 +122,10 @@
                             <!-- Relationships -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelConnectionsNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree1-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRelationships}</a>
                             </div>
@@ -141,10 +138,10 @@
                             <!-- Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelDonationsNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree2-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavDonations}</a>
                             </div>
@@ -166,10 +163,10 @@
                             <!-- Recurring Donations -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelRecDonationsNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree3-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavRecurringDonations}</a>
                             </div>
@@ -181,10 +178,10 @@
                             <!-- Bulk Data Processes -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelBulkProcesses">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree4-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavBulkProcesses}</a>
                             </div>
@@ -204,10 +201,10 @@
                             <!-- System Tools -->
                             <div class="slds-tree__branch slds-tree__item" id="idPanelSystemNav">
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevronright">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronRight}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevronright" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <button class="slds-button slds-button_icon-bare slds-m-right_x-small chevrondown">
-                                    <svg aria-hidden="true" class="slds-button__icon slds-button__icon_small" viewBox="0 0 24 24"><path d="{!pathChevronDown}"/></svg>
+                                    <c:UTIL_SLDS_Icon icon="chevrondown" iconCategory="utility" size="xx-small" fillColor="inherit" />
                                 </button>
                                 <a id="tree5-node0-link" tabindex="-1" role="presentation">{!$Label.stgNavSystem}</a>
                             </div>
