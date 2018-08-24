@@ -225,6 +225,14 @@ flows:
             5:
                 task: test_data_relationships
 
+    config_offsetfiscal:
+        description: 'Configure an offset fiscal year'
+        steps:
+            1:
+                task: deploy
+                options:
+                    path: dev_config/src_offsetfiscal
+
     test_data_dev_org:
         description: 'WARNING: This flow deletes all data first, then loads the complete test data set based on 100 Contacts into the target org.'
         steps:
@@ -272,6 +280,10 @@ orgs:
             config_file: orgs/beta_middlesuffix.json
         beta_multicurrency:
             config_file: orgs/beta_multicurrency.json
+        beta_personaccounts:
+            config_file: orgs/beta_personaccounts.json
+        beta_statecountry:
+            config_file: orgs/beta_statecountry.json
         beta_wave:
             config_file: orgs/beta_wave.json
         prerelease:
