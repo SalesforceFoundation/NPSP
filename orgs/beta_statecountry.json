@@ -1,8 +1,8 @@
 {
-  "orgName": "NPSP - Beta Org - Multicurrency",
+  "orgName": "NPSP - Beta Org - State / Country Picklist",
   "edition": "Developer",
   "features": [
-    "MultiCurrency"
+    "StateAndCountryPicklist"
   ],
   "hasSampleData": "true",
   "orgPreferences" : {
