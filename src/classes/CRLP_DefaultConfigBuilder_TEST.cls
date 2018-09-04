@@ -132,6 +132,7 @@ private class CRLP_DefaultConfigBuilder_TEST {
         Integer fgCount = 0;
         Integer rlpCount = 0;
         Integer payAlloCount = 0;
+        Integer payAlloFilterCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
                 fgCount++;
@@ -145,11 +146,17 @@ private class CRLP_DefaultConfigBuilder_TEST {
                             payAlloCount++;
                         }
                     }
+                    if (valField.contains('Filter_Group__c')){
+                        if(val.value == CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid){
+                            payAlloFilterCount++;
+                        }
+                    }
                 }
             }
         }
 
         System.assertEquals(36, payAlloCount, 'Allocation Rollups should have been created for the Payment object instead of Opportunity');
+        System.assertEquals(36, payAlloFilterCount, 'Payment Rollups should have the "payment paid" filter group');
         System.assertEquals(8, fgCount, 'There should be 8 filter groups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
@@ -177,6 +184,8 @@ private class CRLP_DefaultConfigBuilder_TEST {
 
         Integer fgCount = 0;
         Integer rlpCount = 0;
+        Integer hcContactRollupCount = 0;
+        Integer hcAccountRollupCount = 0;
         for (Metadata.CustomMetadata md : CRLP_ConfigBuilder_SVC.queuedMetadataTypes) {
             if (md.fullName.contains('Filter_Group__mdt')) {
                 if (!isDeleteFlagTrue(md)) {
@@ -187,11 +196,20 @@ private class CRLP_DefaultConfigBuilder_TEST {
                     rlpCount++;
                     String lbl = md.label;
                     for (Metadata.CustomMetadataValue val : md.values) {
-                        if ((String)val.field == 'Active__c') {
+                        String valField = (String)val.field;
+                        if (valField == 'Active__c') {
                             if (lbl.containsIgnoreCase('soft') && (Boolean) val.value == true) {
                                 System.assert(false, 'Soft Credit Rollups should not be active: ' + md.fullName);
                             } else if (!lbl.containsIgnoreCase('soft') && (Boolean) val.value == false) {
                                 System.assert(false, 'All Other Rollups should be active: ' + md.fullName);
+                            }
+                        }
+                        if (valField.contains('Filter_Group__c')){
+                            if(val.value == CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC){
+                                hcContactRollupCount++;
+                            }
+                            if(val.value == CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC){
+                                hcAccountRollupCount++;
                             }
                         }
                     }
@@ -201,6 +219,8 @@ private class CRLP_DefaultConfigBuilder_TEST {
 
 
         System.assertEquals(12, fgCount, 'There should be 12 filter groups');
+        System.assertEquals(18, hcContactRollupCount, 'There should be 18 Hard Credit contact rollups');
+        System.assertEquals(18, hcAccountRollupCount, 'There should be 18 Hard Credit account rollups');
         System.assertEquals(CRLP_DefaultConfigBuilder.rollupDetailsBySummaryField.size(), rlpCount, 'There should be 87 rollups');
     }
 

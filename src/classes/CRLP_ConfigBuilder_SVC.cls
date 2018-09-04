@@ -42,7 +42,8 @@
 */
 public class CRLP_ConfigBuilder_SVC {
 
-    public static final String oppAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    public static final String oppAlloAccountFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Accounts_HC;
+    public static final String oppAlloContactFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_Opps_Contacts_HC;
     public static final String paymentAlloFilterGroup = CRLP_DefaultConfigBuilder.FilterGroup_PaymentsPaid;
     public static final String paymentApiName = CRLP_DefaultConfigBuilder.paymentObject;
     public static final String opportunityApiName = STG_Panel.oppLabel;
@@ -136,12 +137,18 @@ public class CRLP_ConfigBuilder_SVC {
     */
     @future
     public static void updateCustomRollupsAlloLevel(Boolean usePayments){
-        String oldFilter = usePayments ? oppAlloFilterGroup : paymentAlloFilterGroup;
-        String newFilter = usePayments ? paymentAlloFilterGroup : oppAlloFilterGroup;
-        Id oldFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldFilter);
-        Id newFilterId = 
-            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newFilter);
+        String oldAcctFilter = usePayments ? oppAlloAccountFilterGroup : paymentAlloFilterGroup;
+        String oldContactFilter = usePayments ? oppAlloContactFilterGroup : paymentAlloFilterGroup;
+        String newAcctFilter = usePayments ? paymentAlloFilterGroup : oppAlloAccountFilterGroup;
+        String newContactFilter = usePayments ? paymentAlloFilterGroup : oppAlloContactFilterGroup;
+        Id oldAccountFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldAcctFilter);
+        Id oldContactFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(oldContactFilter);
+        Id newAccountFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newAcctFilter);
+        Id newContactFilterId = 
+            CMT_FilterRule_SEL.getFilterGroupIdByDeveloperName(newContactFilter);
         String oldObjectLevel = usePayments ? opportunityApiName : paymentApiName;
         String newObjectLevel = usePayments ? paymentApiName : opportunityApiName;
         String oldAmountField = usePayments ? oppAlloAmountApiName : paymentAlloAmountApiName;
@@ -151,7 +158,10 @@ public class CRLP_ConfigBuilder_SVC {
 
         List<Rollup__mdt> rollupsToUpdate = new List<Rollup__mdt>();
         for (Rollup__mdt rlp : CRLP_Rollup_SEL.getRollupDefinitions()){
-            if((rlp.Filter_Group__c == oldFilterId || rlp.Filter_Group__c == newFilterId)
+            if ((rlp.Filter_Group__c == newAccountFilterId 
+                    || rlp.Filter_Group__c == newContactFilterId 
+                    || rlp.Filter_Group__c == oldAccountFilterId 
+                    || rlp.Filter_Group__c == oldContactFilterId)
                 && rlp.Detail_Object__r.QualifiedApiName == oldObjectLevel
                 && rlp.Amount_Object__r.QualifiedApiName == oldObjectLevel
                 && rlp.Date_Object__r.QualifiedApiName == oldObjectLevel){
@@ -166,7 +176,12 @@ public class CRLP_ConfigBuilder_SVC {
         List<CRLP_RollupCMT.Rollup> rollups = new List<CRLP_RollupCMT.Rollup>();
         for (Rollup__mdt rlp: rollupsToUpdate){
             CRLP_RollupCMT.Rollup crlp = new CRLP_RollupCMT.Rollup(rlp);
-            crlp.filterGroupRecordName = newFilter;
+            // In case legacy Rollup Settings are different for Contacts versus Accounts
+            if(crlp.summaryObject == 'Contact'){
+                crlp.filterGroupRecordName = newContactFilter;
+            } else {
+                crlp.filterGroupRecordName = newAcctFilter;
+            }
             crlp.detailObject = newObjectLevel;
             crlp.dateObject = newObjectLevel;
             crlp.amountObject = newObjectLevel;

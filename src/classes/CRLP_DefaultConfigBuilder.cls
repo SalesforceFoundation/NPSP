@@ -119,6 +119,8 @@ public class CRLP_DefaultConfigBuilder {
     private static final String allocationObject = paymentAllocationsEnabled ? paymentObject : opportunityObject;
     private static final String allocationLevelAmtFld = paymentAllocationsEnabled ? paymentAmountFld : oppAmountFld;
     private static final String allocationDateFld = paymentAllocationsEnabled ? paymentPaidDateFld : oppCloseDateFld;
+    private static final String allocationAcctFilterGroupHC = paymentAllocationsEnabled ? FilterGroup_PaymentsPaid : FilterGroup_Opps_Accounts_HC;
+    private static final String allocationContactFilterGroupHC = paymentAllocationsEnabled ? FilterGroup_PaymentsPaid : FilterGroup_Opps_Contacts_HC;
 
     /** @description Map of Rollup Details, where the MapKey is the SummaryObject.Field and List<String> is the
      * following set of rollup properties
@@ -129,41 +131,41 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Account Hard Credit ======== */
             'Account.npo02__AverageAmount__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Average', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Best_Year', 'All_Time', '' },
             'Account.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Account.npo02__FirstCloseDate__c' =>
-                    new List<String>{ allocationDateFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ allocationDateFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'First', 'All_Time', '' },
             'Account.npo02__LargestAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Largest', 'All_Time', '' },
             'Account.npo02__LastCloseDate__c' =>
-                    new List<String>{ allocationDateFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ allocationDateFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__LastOppAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
             'Account.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', '', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', '', '' },
             'Account.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '2' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '2' },
             'Account.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Days_Back', LastNDaysString },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Days_Back', LastNDaysString },
             'Account.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '1' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '1' },
             'Account.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '0' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '0' },
             'Account.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '2' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '2' },
             'Account.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Days_Back', LastNDaysString },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Days_Back', LastNDaysString },
             'Account.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '1' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '1' },
             'Account.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '0' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '0' },
             'Account.npo02__SmallestAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Smallest', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Smallest', 'All_Time', '' },
             'Account.npo02__TotalOppAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Accounts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', '', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationAcctFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', '', '' },
 
             /* ======== Account Membership ======== */
             'Account.npo02__TotalMembershipOppAmount__c' =>
@@ -185,41 +187,41 @@ public class CRLP_DefaultConfigBuilder {
 
             /* ======== Contact Hard Credit ======== */
             'Contact.npo02__AverageAmount__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Average', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Average', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Best_Year', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Best_Year', 'All_Time', '' },
             'Contact.npo02__Best_Gift_Year_Total__c' =>
-                    new List<String>{ allocationObject, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Best_Year_Total', 'All_Time', '' },
+                    new List<String>{ allocationObject, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Best_Year_Total', 'All_Time', '' },
             'Contact.npo02__FirstCloseDate__c' =>
-                    new List<String>{ allocationDateFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'First', 'All_Time', '' },
+                    new List<String>{ allocationDateFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'First', 'All_Time', '' },
             'Contact.npo02__LargestAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Largest', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Largest', 'All_Time', '' },
             'Contact.npo02__LastCloseDate__c' =>
-                    new List<String>{ allocationDateFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ allocationDateFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__LastOppAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Last', 'All_Time', '' },
             'Contact.npo02__NumberOfClosedOpps__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', '', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', '', '' },
             'Contact.npo02__OppAmount2YearsAgo__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '2' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '2' },
             'Contact.npo02__OppAmountLastNDays__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Days_Back', LastNDaysString },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Days_Back', LastNDaysString },
             'Contact.npo02__OppAmountLastYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '1' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '1' },
             'Contact.npo02__OppAmountThisYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '0' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', 'Years_Ago', '0' },
             'Contact.npo02__OppsClosed2YearsAgo__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '2' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '2' },
             'Contact.npo02__OppsClosedLastNDays__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Days_Back', LastNDaysString },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Days_Back', LastNDaysString },
             'Contact.npo02__OppsClosedLastYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '1' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '1' },
             'Contact.npo02__OppsClosedThisYear__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '0' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Count', 'Years_Ago', '0' },
             'Contact.npo02__SmallestAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Smallest', 'All_Time', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Smallest', 'All_Time', '' },
             'Contact.npo02__TotalOppAmount__c' =>
-                    new List<String>{ allocationLevelAmtFld, FilterGroup_Opps_Contacts_HC, allocationLevelAmtFld, allocationDateFld, 'Sum', '', '' },
+                    new List<String>{ allocationLevelAmtFld, allocationContactFilterGroupHC, allocationLevelAmtFld, allocationDateFld, 'Sum', '', '' },
 
             /* ======== Contact Soft Credit ======== */
             'Contact.First_Soft_Credit_Date__c' =>

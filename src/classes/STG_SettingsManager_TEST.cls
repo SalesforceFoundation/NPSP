@@ -85,7 +85,7 @@ public with sharing class STG_SettingsManager_TEST {
                         'npo02__FirstCloseDate__c', CRLP_Operation.RollupType.AVERAGE, 'Amount') + ',' +
 
                 CMT_UnitTestData_TEST.createRollupRecord('Id Field', filterGroupId1,
-                        CMT_UnitTestData_TEST.RollupRecordType.OppToAcct,
+                        CMT_UnitTestData_TEST.RollupRecordType.OppToContact,
                         'ParentId', CRLP_Operation.RollupType.AVERAGE, 'Amount') +
                 ']';
 
