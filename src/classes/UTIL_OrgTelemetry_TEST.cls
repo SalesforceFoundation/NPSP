@@ -33,9 +33,12 @@
 * @group Utilities
 * @description Unit Tests related to the org telemetry class
 */
-@isTest
+@isTest(IsParallel=false)
 private class UTIL_OrgTelemetry_TEST {
 
+    /**
+     * @description Create a single Account, Contact and Opportunity to use for the telemetry test data
+     **/
     @TestSetup
     static void testDataSetup() {
         Contact c = UTIL_UnitTestData_TEST.getContact();
@@ -56,10 +59,92 @@ private class UTIL_OrgTelemetry_TEST {
         insert opp;
     }
 
-    static testMethod void test_telemetry() {
+    /**
+     * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
+     * and not the entire set of data. It's not possible to determine if the job actually completed.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetryBatchJob() {
         Test.startTest();
         UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
         Test.stopTest();
     }
 
+    /**
+     * @description Test that the NPSP_Settings telemetry data is retrieved.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_NPSP_Settings() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.NPSP_Settings);
+        System.Assert(Limits.getQueries() > currQueryCount, 'There should be at least one new query executed');
+        Test.stopTest();
+    }
+
+    /**
+     * @description Test that the org settings telemetry data is retrieved.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_Org_Environment() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Org_Environment);
+        System.Assert(Limits.getQueries() > currQueryCount, 'There should be at least one new query executed');
+        Test.stopTest();
+    }
+
+    /**
+     * @description Test that the MaxNumRelatedOpps settings telemetry data is retrieved.
+     * that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_Data_MaxNumRelatedOpps() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_MaxNumRelatedOpps);
+        System.AssertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+    }
+
+    /**
+     * @description Test that the Data_Count_of_RD_Opps_All settings telemetry data is retrieved.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_Data_Count_of_RD_Opps_All() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_All);
+        System.AssertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+    }
+
+    /**
+     * @description Test that the Data_Count_of_RD_Opps_OpenEnded settings telemetry data is retrieved.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_Data_Count_of_RD_Opps_OpenEnded() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_Count_of_RD_Opps_OpenEnded);
+        System.AssertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+    }
+
+    /**
+     * @description Test that the Data_CountOfErrorLog settings telemetry data is retrieved.
+     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
+     */
+    static testMethod void test_telemetry_Data_CountOfErrorLog() {
+        Test.startTest();
+        Integer currQueryCount = Limits.getQueries();
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog);
+        System.AssertEquals(currQueryCount+1, Limits.getQueries(), 'There should be one new query executed');
+        Test.stopTest();
+    }
 }

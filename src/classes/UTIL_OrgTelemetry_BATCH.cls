@@ -74,7 +74,8 @@ public class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelem
      * @param types List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> -- Batch Size of ONE is required
      */
     public void execute(Database.BatchableContext info, List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> types) {
-        UTIL_OrgTelemetry_SVC.processTelemetryType(types[0]);
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(types[0]);
     }
 
     public void finish(Database.BatchableContext info) {}

@@ -33,6 +33,10 @@
 * @group Utilities
 * @description Return some basic org and NPSP telemetry data to the License Management Application to assist with
 * better understanding of how our customers use our application.
+* This logic is called in two places:
+*   1) When Customizable Rollups is enabled or disabled
+*   2) During the Post-Install Script as part of a Package Update
+* Note: FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
 * Uses "without sharing" so that it has full rights to query all records in all objects. This is needed to ensure a
 * consistent return of telemetry data even if the process is called by different users with different permissions.
 * Specific PII info is never queried or returned by this class.
@@ -42,7 +46,9 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description A complete list of the Telemetry Types (at a high level) that are handled by this service class.
      * These are used by the batch job to process feature parameters in asynchronous groups to avoid governor
-     * limit issues.
+     * limit issues. The concept is that by separating each of these into smaller groupings that are processed
+     * as separate child batch iterations, the entire process can complete even if for some reason one of the queries
+     * against a table (such as a really huge Opportunity object) were to fail.
      */
     public Enum TelemetryTypeEnum {
         NPSP_Settings,
@@ -51,11 +57,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
         Data_Count_of_RD_Opps_All,
         Data_Count_of_RD_Opps_OpenEnded,
         Data_CountOfErrorLog
-        /*Data_MaxAffilationsToAccount,
-        Data_MaxRelationshipsToContact,
-        InUse_EngagementPlans,
-        InUse_AutomatedSoftCredits,
-        InUse_AccountSoftCredits*/
     }
 
     /**
@@ -68,27 +69,24 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     }
 
     /**
-     * @description Called by an individual synchronous page (i.e., NPSP Settings) to process an individual telemetry type.
+     * @description Called by the NPSP Settings Page to subject the current state of NPSP Settings related telmetry data
+     * if it has been changed in the NPSP Settings page.
      * @param telemetryType
      */
     @future
     public static void processNPSPSettingTelemetry_ASync() {
-        processTelemetryType(TelemetryTypeEnum.NPSP_Settings);
+        UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
+        telemetrySvc.processTelemetryType(TelemetryTypeEnum.NPSP_Settings);
     }
 
     /**
-     * @description Submit specific feature enablement statistics back to the License Management Org to assist
-     * with understanding how our customers are using our functionality. There's no way to unit test this though.
-     * Each feature below must be matched to a SubscriberToLmo feature of the same name.
-     * This should called in two places: 1) When the Settings page is loaded; 2) When a tracked area is saved.
-     * FeatureManagement operations are subject to MIXED_DML errors and must be conducted asynchronously
-     */
-    /**
      * @description Called by the batch job to process an individual telemetry type
+     * SubmitS specific feature teletry statistics back to the License Management Org to assist
+     * with understanding how our customers are using NPSP functionality.
+     * Each feature below must be matched to a SubscriberToLmo feature of the same name.
      * @param telemetryType
      */
-    public static void processTelemetryType(TelemetryTypeEnum telemetryType) {
-
+    public void processTelemetryType(TelemetryTypeEnum telemetryType) {
 
         switch on (telemetryType) {
 
@@ -143,53 +141,18 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             when Data_CountOfErrorLog {
                 System.FeatureManagement.setPackageIntegerValue('Data_Count_of_ErrorLog', getErrorLogCount());
             }
-
-        /*
-        when InUse_AccountSoftCredits {
-            Integer ascCount = [SELECT Count() FROM Account_Soft_Credit__c WHERE CreatedDate = LAST_N_DAYS:60 LIMIT 1];
-            System.FeatureManagement.setPackageBooleanValue('InUse_AccountSoftCredits', (ascCount == 1));
-        }
-
-        when InUse_AutomatedSoftCredits {
-            Integer relCount = [SELECT Count() FROM npe4__Relationship__c WHERE Related_Opportunity_Contact_Role__c != null
-                    AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
-            Integer alfCount = [SELECT Count() FROM npe5__Affiliation__c WHERE Related_Opportunity_Contact_Role__c != null
-                    AND LastModifiedDate = LAST_N_DAYS:60 LIMIT 1];
-            System.FeatureManagement.setPackageBooleanValue('InUse_AutomatedSoftCredits', (relCount == 1 || alfCount == 1));
-        }
-
-        when InUse_EngagementPlans {
-            // Query???
-            System.FeatureManagement.setPackageBooleanValue('InUse_EnagagementPlans', false);
-        }
-
-        when Data_OldestOppCloseDate {
-            Date oldestDate = getOldestCloseDate();
-            if (oldestDate != null) {
-                System.FeatureManagement.setPackageDateValue('Data_OldestOppCloseDate', oldestDate);
-            }
-        }
-        when Data_MaxAffilationsToAccount {
-            Integer maxAffiliations = getMaxAffiliationToAccount();
-            if (maxAffiliations != null) {
-                System.FeatureManagement.setPackageIntegerValue('Data_MaxAffilationsToAccount', maxAffiliations);
-            }
-        }
-        when Data_MaxRelationshipsToContact {
-            Integer maxRelationships = getMaxRelationships();
-            if (maxRelationships != null) {
-                System.FeatureManagement.setPackageIntegerValue('Data_MaxRelationshipsToContact', maxRelationships);
-            }
-        }*/
         }
     }
 
+
     /**
      * @description Count the number of DatedConversionRate records with an effective date in the last 180 days.
-     * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization.
+     * If greater than 0, then consider AdvancedMultiCurrency to be enabled within an organization. This accounts for
+     * the fact that this object is always visible, but may not actually have any valid/recent data in it; and because
+     * there is no
      * @return true or false
      */
-    private static Boolean getIsAdvancedMulticurrencyEnabled() {
+    private Boolean getIsAdvancedMulticurrencyEnabled() {
         if (UserInfo.isMultiCurrencyOrganization() == true) {
             try {
                 Integer DCRCount = Database.query('SELECT Id FROM DatedConversionRate WHERE StartDate = LAST_N_DAYS:180 LIMIT 1').size();
@@ -204,7 +167,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Count the number of non-english languages associated with active standard users.
      */
-    public static Integer getNonEnglishLanguageCount() {
+    public Integer getNonEnglishLanguageCount() {
         Set<String> languages = new Set<String>();
         for (User u : [SELECT LanguageLocaleKey FROM User
                 WHERE IsActive = TRUE AND UserType = 'Standard' AND LanguageLocaleKey != 'en_US'
@@ -219,15 +182,12 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Returns true if there are any TDTM Trigger Handler records with User_Managed__c=true or Active=false
      */
-    private static Boolean getHasUserManagedTriggers() {
+    private Boolean getHasUserManagedTriggers() {
         Boolean hasUserManagedTrigger = false;
-        if (!Test.isRunningTest()) {
-            // getCachedRecords will attempt to create default records which creates a MixedDML error in a unit test
-            for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
-                if (th.User_Managed__c == true || th.Active__c == false) {
-                    hasUserManagedTrigger = true;
-                    break;
-                }
+        for (Trigger_Handler__c th : TDTM_Config_API.getCachedRecords()) {
+            if (th.User_Managed__c == true || th.Active__c == false) {
+                hasUserManagedTrigger = true;
+                break;
             }
         }
         return hasUserManagedTrigger;
@@ -236,7 +196,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Returns the total number of records in the Error__c custom object
      */
-    private static Integer getErrorLogCount() {
+    private Integer getErrorLogCount() {
         Integer cnt = [SELECT Count() FROM Error__c];
         return cnt;
     }
@@ -244,7 +204,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Return the total number of Opportunities associated with a Recurring Donation
      */
-    private static Integer getCountOfRecurringDonationOpps() {
+    private Integer getCountOfRecurringDonationOpps() {
         try {
             return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c != null];
         } catch (Exception ex) {}
@@ -254,7 +214,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     /**
      * @description Return the total number of Opportunities associated with an Open Ended Recurring Donation
      */
-    private static Integer getCountOfRecurringDonationOpps_OpenEnded() {
+    private Integer getCountOfRecurringDonationOpps_OpenEnded() {
         try {
             return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = 'Open'];
         } catch (Exception ex) {}
@@ -266,7 +226,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * all Accounts. Note that this will not return useful information if the organization is not using
      * NPSP rollups (either type)
      */
-    private static Integer getMaxNumRelatedOpps() {
+    private Integer getMaxNumRelatedOpps() {
         try {
             Account acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account
                                 ORDER BY npo02__NumberOfClosedOpps__c DESC LIMIT 1];
