@@ -1,0 +1,148 @@
+<!--
+    Copyright (c) 2018, Salesforce.org
+    All rights reserved.
+
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of Salesforce.org nor the names of
+      its contributors may be used to endorse or promote products derived
+      from this software without specific prior written permission.
+
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+    "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+    LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+    FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+    COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+    INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+    BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+    LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+    POSSIBILITY OF SUCH DAMAGE.
+-->
+<!--
+  @author Salesforce.org
+  @date 2018
+  @group BGE
+  @group-content //todo
+  @description Component used to view, edit, and delete DataImport__c records on the related NPSP_Data_Import_Batch__c record home.
+-->
+
+<aura:component implements="force:hasRecordId,flexipage:availableForAllPageTypes"
+                controller="BGE_DataImportBatchEntry_CTRL"
+                access="global">
+
+    <!--Public Attributes-->
+    <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
+    <aura:attribute name="data" type="List" default="[]" description="Data Import records that appear in the table" access="public"/>
+    <aura:attribute name="columns" type="List" description="Columns for the table" access="public"/>
+    <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
+    <aura:attribute name="dataImportFields" type="Object[]" default="[]" description="" access="public"/>
+    <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
+    <aura:attribute name="record" type="Object" access="public"/>
+    <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0.00}" access="public"/>
+
+    <!--Events-->
+    <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
+    <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
+
+    <!--Lightning Data Service for Batch Record-->
+    <force:recordData aura:id="forceRecordCmp"
+                      recordId="{!v.recordId}"
+                      fields="Expected_Count_of_Gifts__c,Expected_Total_Batch_Amount__c"
+                      targetFields="{!v.record}"
+    />
+
+    <!--Start Markup-->
+
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+
+    <lightning:layout multipleRows="true">
+
+        <!--Start New Row-->
+        <lightning:layoutItem size="12" class="slds-p-bottom_x-small">
+            <lightning:card title="New Gift" aura:id="entryFormCard" class="bgeCard">
+                <lightning:spinner aura:id="formSpinner" alternativeText="Form Loading"/>
+                <!--BGE_EntryForm dynamically rendered here-->
+                {!v.body}
+            </lightning:card>
+        </lightning:layoutItem>
+        <!--End New Row-->
+
+        <!--Start BGE Table-->
+        <lightning:layoutItem size="12" class="slds-p-vertical_x-small">
+            <lightning:card title="All Gifts" class="bgeCard">
+
+                <lightning:spinner aura:id="dataTableSpinner" alternativeText="Table Loading"/>
+
+                <!--Expected totals-->
+                <lightning:layout multipleRows="true">
+
+                    <lightning:layoutItem size="12" padding="horizontal-small">
+                        <!--<aura:if isTrue="{!greaterthan(mult(100,div(v.totals.countGifts,v.record.Expected_Count_of_Gifts__c)),100)}">
+                            Warning: Total gift count exceeds expected gift count. <br/>
+                            <aura:set attribute="else">-->
+                                <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" id="progress-bar-label-id-3">
+                                    <span>Gifts Entered</span>
+                                    <span aria-hidden="true">
+                                        <strong>
+                                            <lightning:formattedNumber value="{!v.totals.countGifts}" aura:id="actualCount"/>
+                                            of
+                                            <lightning:formattedNumber value="{!v.record.Expected_Count_of_Gifts__c}" aura:id="expectedCount"/>
+                                        </strong>
+                                    </span>
+                                </div>
+                                <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
+                                <lightning:progressBar value="{!mult(100,div(v.totals.countGifts,v.record.Expected_Count_of_Gifts__c))}" size="large" />
+                            <!--</aura:set>
+                        </aura:if>-->
+                    </lightning:layoutItem>
+
+                    <lightning:layoutItem size="6" padding="around-small">
+                        <label for="expectedTotalAmount">Total Amount: </label>
+                        <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency" aura:id="actualTotalAmount"/>
+                        of
+                        <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency" aura:id="expectedTotalAmount"/><br/>
+                    </lightning:layoutItem>
+
+                </lightning:layout>
+                <!--End expected totals-->
+
+                <aura:if isTrue="{!notequals(v.data.length, 0)}">
+                    <div class="{!if(lessthan(v.data.length, 4), 'datatableContainer', '')+' slds-p-top_small'}">
+                        <lightning:datatable
+                                aura:id="dataImportRowsDataTable"
+                                columns="{! v.columns }"
+                                data="{! v.data }"
+                                keyField="Id"
+                                onsave="{!c.onTableSave}"
+                                minColumnWidth="150"
+                                hideCheckboxColumn="true"
+                                onrowaction="{!c.handleRowAction}"
+                                showRowNumberColumn="true"
+                        />
+                    </div>
+                </aura:if>
+
+                <div aura:id="openRoadIllustration" class="slds-illustration slds-illustration_small slds-p-top_small slds-hide" aria-hidden="true">
+                    <img src="/img/chatter/OpenRoad.svg" class="slds-illustration__svg" alt="No records"/>
+                    <div class="slds-text-color_weak">
+                        <h3 class="slds-text-heading_medium">Looks like you haven't entered any gifts yet!</h3>
+                        <p class="slds-text-body_regular">Enter a new gift and it will appear here</p>
+                    </div>
+                </div>
+
+            </lightning:card>
+        </lightning:layoutItem>
+        <!--End BGE Table-->
+
+    </lightning:layout>
+    <!--End Markup-->
+</aura:component>

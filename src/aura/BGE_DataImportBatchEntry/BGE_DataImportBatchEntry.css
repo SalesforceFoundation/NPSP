@@ -1,0 +1,16 @@
+.THIS label.slds-form-element__label {
+    display: none;
+}
+.THIS lightning-helptext.slds-form-element {
+    display: none;
+}
+/*used for datatable when it has less than 3 rows to fix dropdown overlay*/
+.THIS .datatableContainer {
+    height: 175px;
+}
+.THIS .datatableContainer .slds-scrollable_y {
+    height: 100%;
+}
+.THIS .bgeCard {
+    min-height: 173px;
+}

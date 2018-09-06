@@ -2404,6 +2404,76 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Time:</value>
     </labels>
     <labels>
+        <fullName>bgeBatchTemplateSelectedFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateActiveFields</shortDescription>
+        <value>Selected Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateAvailableFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeBatchTemplateAvailableFields</shortDescription>
+        <value>Available Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateEdit</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template in Edit mode</shortDescription>
+        <value>Edit Batch Template</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateErrorDefaultValue</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Error shown when template field is hidden and missing the default value.</shortDescription>
+        <value>Hidden fields must have a default value.</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateErrorRequiredFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>bgeErrorBatchTemplateMissing</shortDescription>
+        <value>The following fields are required because other fields from their object are selected. Select them before proceeding:</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateNew</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template in Create mode</shortDescription>
+        <value>New Batch Template</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateOverviewWizard</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Info in Wizard</shortDescription>
+        <value>Enter Template Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateOverview</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Info in View</shortDescription>
+        <value>Template Info</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateSelectFields</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header and text for Field Selection</shortDescription>
+        <value>Select Fields</value>
+    </labels>
+    <labels>
+        <fullName>bgeBatchTemplateSetFieldOptions</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header for Batch Template Field Options</shortDescription>
+        <value>Set Field Options</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
@@ -4885,6 +4955,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>You must choose a verification service in order to enable automatic verification.</value>
     </labels>
     <labels>
+        <fullName>stgBtnBack</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Button to go back to a previous page</shortDescription>
+        <value>Back</value>
+    </labels>
+    <labels>
         <fullName>stgBtnCancel</fullName>
         <categories>Settings, UTIL_PageHeader</categories>
         <language>en_US</language>
@@ -5154,6 +5232,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <protected>true</protected>
         <shortDescription>stgCRLPReset</shortDescription>
         <value>Reset Customizable Rollups</value>
+    </labels>
+    <labels>
+        <fullName>stgDefaultValue</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgDefaultValue</shortDescription>
+        <value>Default Value</value>
     </labels>
     <labels>
         <fullName>stgDocumentation</fullName>
@@ -6557,6 +6643,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Examples for Informal Greeting Format</value>
     </labels>
     <labels>
+        <fullName>stgLabelField</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelField</shortDescription>
+        <value>Field</value>
+    </labels>
+    <labels>
         <fullName>stgLabelHHGeneral</fullName>
         <categories>Settings</categories>
         <language>en_US</language>
@@ -6603,6 +6697,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>false</protected>
         <shortDescription>stgLabelHHSettings</shortDescription>
         <value>Household Settings</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelHidden</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelHidden</shortDescription>
+        <value>Hidden</value>
     </labels>
     <labels>
         <fullName>stgLabelHonoreeNotificationHelpText</fullName>
@@ -6707,6 +6809,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <protected>true</protected>
         <shortDescription>stgLabelNone</shortDescription>
         <value>--None--</value>
+    </labels>
+    <labels>
+        <fullName>stgLabelObject</fullName>
+        <categories>Settings</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>stgLabelObject</shortDescription>
+        <value>Object</value>
     </labels>
     <labels>
         <fullName>stgLabelONS</fullName>
