@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Cumulus</fullName>
     <types>
@@ -148,6 +148,7 @@
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccSoftCredit_SVC</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -406,6 +407,7 @@
         <members>UTIL_OrderBy</members>
         <members>UTIL_OrderBy_TEST</members>
         <members>UTIL_OrgTelemetry_BATCH</members>
+        <members>UTIL_OrgTelemetry_Batch_TEST</members>
         <members>UTIL_OrgTelemetry_SVC</members>
         <members>UTIL_OrgTelemetry_TEST</members>
         <members>UTIL_PageMessages_CTRL</members>
@@ -429,7 +431,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -2336,9 +2337,9 @@
         <name>FeatureParameterBoolean</name>
     </types>
     <types>
+        <members>Data_Count_of_ErrorLog</members>
         <members>Data_Count_of_RD_Opps_All</members>
         <members>Data_Count_of_RD_Opps_OpenEnded</members>
-        <members>Data_Count_of_ErrorLog</members>
         <members>Data_MaxNumRelatedOpps</members>
         <members>Org_Count_of_NonEnglishLanguages</members>
         <name>FeatureParameterInteger</name>

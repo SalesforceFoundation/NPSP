@@ -96,8 +96,6 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                 STG_SettingsService stgSvc = new STG_SettingsService();
                 Addr_Verification_Settings__c addrVerifSettings = UTIL_CustomSettingsFacade.getAddressVerificationSettings();
 
-                System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups',
-                        (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_HouseholdAcctModel',
                         stgSvc.stgCon.npe01__Account_Processor__c == CAO_Constants.HH_ACCOUNT_PROCESSOR);
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_AutomaticPayments',
@@ -106,7 +104,11 @@ public without sharing class UTIL_OrgTelemetry_SVC {
                         stgSvc.stgAllo.Default__c != null);
                 System.FeatureManagement.setPackageBooleanValue('IsEnabled_AddressVerification',
                         (addrVerifSettings.Enable_Automatic_Verification__c == true));
-                System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', getHasUserManagedTriggers());
+                System.FeatureManagement.setPackageBooleanValue('IsEnabled_CustomizableRollups',
+                        (stgSvc.stgCRLP.Customizable_Rollups_Enabled__c == true));
+                if (!Test.isRunningTest()) {
+                    System.FeatureManagement.setPackageBooleanValue('HasUserManagedTDTM', getHasUserManagedTriggers());
+                }
 
             }
 

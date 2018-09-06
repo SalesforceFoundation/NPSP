@@ -60,26 +60,16 @@ private class UTIL_OrgTelemetry_TEST {
     }
 
     /**
-     * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
-     * and not the entire set of data. It's not possible to determine if the job actually completed.
-     * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
-     */
-    static testMethod void test_telemetryBatchJob() {
-        Test.startTest();
-        UTIL_OrgTelemetry_SVC.dispatchTelemetryBatchJob();
-        Test.stopTest();
-    }
-
-    /**
      * @description Test that the NPSP_Settings telemetry data is retrieved.
      * It's not possible to validate that the call to System.FeatureManagement() call succeeded.
      */
     static testMethod void test_telemetry_NPSP_Settings() {
         Test.startTest();
+        UTIL_OrgTelemetry_SVC.processNPSPSettingTelemetry_ASync();
         Integer currQueryCount = Limits.getQueries();
         UTIL_OrgTelemetry_SVC telemetrySvc = new UTIL_OrgTelemetry_SVC();
         telemetrySvc.processTelemetryType(UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.NPSP_Settings);
-        System.Assert(Limits.getQueries() > currQueryCount, 'There should be at least one new query executed');
+        System.Assert(Limits.getQueries() == currQueryCount, 'There should no new queries executed because these only reference static custom setting');
         Test.stopTest();
     }
 

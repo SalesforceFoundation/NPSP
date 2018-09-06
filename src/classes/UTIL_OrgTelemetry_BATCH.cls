@@ -63,7 +63,7 @@ public class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelem
         if (!Test.isRunningTest()) {
             return UTIL_OrgTelemetry_BATCH.telemetryTypesList;
         } else {
-            return new List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum>{UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.NPSP_Settings};
+            return new List<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum>{UTIL_OrgTelemetry_SVC.TelemetryTypeEnum.Data_CountOfErrorLog};
         }
     }
 
