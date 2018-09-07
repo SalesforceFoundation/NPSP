@@ -2541,14 +2541,14 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Total amount matching expected amount.</shortDescription>
-        <value>Total Amount: ${0} of ${1}</value>
+        <value>Total Amount: </value>
     </labels>
     <labels>
         <fullName>bgeGridTotalCount</fullName>
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Total count versus expected count.</shortDescription>
-        <value>Total Count: {0} of {1}</value>
+        <value>Total Count: </value>
     </labels>
     <labels>
         <fullName>btnRemove</fullName>

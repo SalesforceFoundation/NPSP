@@ -88,24 +88,48 @@
 
                     <lightning:layoutItem size="12" padding="horizontal-small">
                         <!--<aura:if isTrue="{!greaterthan(mult(100,div(v.totals.countGifts,v.record.Expected_Count_of_Gifts__c)),100)}">
-                            Warning: Total gift count exceeds expected gift count. <br/>
-                            <aura:set attribute="else">-->
-                                <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small" id="progress">
-                                    <span>{!$Label.c.bgeGridGiftCountHeader}</span>
-                                    <span aria-hidden="true">
-                                        <strong>
-                                            {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.recordData.npsp__Expected_Count_of_Gifts__c)}
-                                        </strong>
-                                    </span>
-                                </div>
-                                <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
-                                <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}" size="large" />
-                            <!--</aura:set>
-                        </aura:if>-->
+                            Warning: Total gift count exceeds expected gift count. <br/> </aura:if>-->
+
+                        <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small">
+                            <span>{!$Label.c.bgeGridGiftCountHeader}</span>
+                            <span>
+                                <strong>
+                                    <label for="expectedTotalAmount"
+                                           class="totalCountLabel slds-p-right_xx-small">{!$Label.c.bgeGridTotalCount}</label>
+                                    <lightning:formattedNumber value="{!v.totals.countGifts}"/> /
+                                    <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
+                                        <lightning:formattedNumber
+                                                value="{!v.record.Expected_Count_of_Gifts__c}"/>
+                                    </aura:if>
+                                    <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
+                                        <lightning:formattedNumber
+                                                value="{!v.record.npsp__Expected_Count_of_Gifts__c}"/>
+                                    </aura:if>
+                                </strong>
+                            </span>
+                        </div>
+                        <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
+                        <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
+                            <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
+                                    size="large"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
+                            <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}"
+                                    size="large"/>
+                        </aura:if>
+
                     </lightning:layoutItem>
 
                     <lightning:layoutItem size="6" padding="around-small">
-                        <p class="slds-text-body_regular slds-p-bottom_medium">{!format($Label.c.bgeGridTotalAmount, v.totals.totalGiftAmount, v.record.npsp__Expected_Total_Batch_Amount__c)}</p>
+                        <label for="expectedTotalAmount" class="slds-p-right_xx-small">{!$Label.c.bgeGridTotalAmount}</label>
+                        <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency" />
+                        /
+                        <aura:if isTrue="{!v.record.Expected_Total_Batch_Amount__c}">
+                            <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency"/>
+                        </aura:if>
+                        <aura:if isTrue="{!v.record.npsp__Expected_Total_Batch_Amount__c}">
+                            <lightning:formattedNumber value="{!v.record.npsp__Expected_Total_Batch_Amount__c}" style="currency"/>
+                        </aura:if>
                     </lightning:layoutItem>
 
                 </lightning:layout>

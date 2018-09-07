@@ -19,3 +19,6 @@
     display: none;
     visibility: hidden;
 }
+.THIS .totalCountLabel {
+    display: inline;
+}
