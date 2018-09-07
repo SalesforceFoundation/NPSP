@@ -6485,6 +6485,14 @@ Note: The NPSP Settings tab is visible in the Nonprofit Success Pack application
         <value>Rollup Allocations Batch Progress</value>
     </labels>
     <labels>
+        <fullName>stgLabelAllocationBehaviorSettings</fullName>
+        <categories>Allocation, Settings</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>stgLabelAllocationsRollupSettings</shortDescription>
+        <value>Allocation Behavior Settings</value>
+    </labels>
+    <labels>
         <fullName>stgLabelAllocationsRollupSettings</fullName>
         <categories>Allocation, Settings</categories>
         <language>en_US</language>
