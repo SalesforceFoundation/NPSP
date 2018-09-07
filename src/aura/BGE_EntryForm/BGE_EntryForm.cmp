@@ -52,10 +52,11 @@
             <div class="slds-grid">
                 <!-- Donor fields -->
                 <div class="slds-col slds-p-horizontal_small">
-                    <label for="donorType">Donor Type</label>
-                    <lightning:select aura:id="donorType" label="Donor Type" value="{!v.donorType}" onchange="{!c.setDonorType}">
-                        <option value="Contact1">Contact</option>
-                        <option value="Account1">Account</option>
+                    <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
+                    <lightning:select aura:id="donorType" class="hideLabel" label="Donor Type"
+                                      value="{!v.donorType}" onchange="{!c.setDonorType}">
+                        <option value="Contact1">{!v.labels.contactObject}</option>
+                        <option value="Account1">{!v.labels.accountObject}</option>
                     </lightning:select>
                 </div>
 
@@ -71,28 +72,24 @@
 
                 <div class="slds-col slds-p-horizontal_small" id="contactLookup">
                     <aura:if isTrue="{!v.donorType == 'Contact1'}">
-                        <label for="contactLookup">Contact</label>
+                        <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
                         <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
-                                              variant="label-hidden"
-                                              class="editField"
+                                              class="hideLabel"
                         />
                     </aura:if>
                     <aura:if isTrue="{!v.donorType == 'Account1'}">
-                        <label for="accountLookup">Account</label>
+                        <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
                         <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
-                                              variant="label-hidden"
-                                              class="editField"
+                                              class="hideLabel"
                         />
                     </aura:if>
                 </div>
                 <!--Field iteration -->
                 <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
                     <div class="slds-col slds-p-horizontal_small">
-                        <label for="{!field.name}">{!field.label}</label>
                         <lightning:inputField aura:id="{!field.name}"
                                               fieldName="{!field.name}"
-                                              variant="label-hidden"
-                                              class="editField"
+                                              class="hideTooltip"
                         />
                     </div>
                 </aura:iteration>
@@ -101,8 +98,8 @@
             <!--Form buttons-->
             <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
                 <div class="slds-col slds-p-horizontal_small">
-                    <lightning:button label="Cancel" onclick="{!c.cancelForm}" variant="neutral"/>
-                    <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                    <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
+                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
                 </div>
             </div>
 

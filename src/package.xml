@@ -1382,6 +1382,17 @@
         <members>bgeBatchTemplateSelectFields</members>
         <members>bgeBatchTemplateSelectedFields</members>
         <members>bgeBatchTemplateSetFieldOptions</members>
+        <members>bgeGridDonorType</members>
+        <members>bgeGridAllGifts</members>
+        <members>bgeGridGiftCountHeader</members>
+        <members>bgeGridGiftDeleted</members>
+        <members>bgeGridGiftSaved</members>
+        <members>bgeGridGiftUpdated</members>
+        <members>bgeGridNewGift</members>
+        <members>bgeGridNoGiftsHeader</members>
+        <members>bgeGridNoGiftsBody</members>
+        <members>bgeGridTotalAmount</members>
+        <members>bgeGridTotalCount</members>
         <members>btnRemove</members>
         <members>campaignMemberStatusDefault</members>
         <members>campaignMemberStatusNonResponded</members>

@@ -51,7 +51,7 @@
                     $A.util.addClass(openRoad, "slds-hide");
                 }
             } else {
-                this.showToast(component, 'Error', response.getReturnValue());
+                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -71,7 +71,7 @@
                 this.setModel(component, response);
                 this.createEntryForm(component, response);
             } else {
-                this.showToast(component, 'Error', response.getReturnValue());
+                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -88,10 +88,10 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                this.getDIs(component);
-                this.showToast(component, 'Success', 'Gifts successfully updated.');
+                this.getDIs(component); PageMessagesConfirm
+                this.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftUpdated"), 'success');
             } else {
-                this.showToast(component, 'Error', response.getReturnValue());
+                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
         });
@@ -158,10 +158,22 @@
      */
     setModel: function (component, model) {
         component.set("v.labels", model.labels);
+        this.setDataServiceFields(component, model.labels);
         this.setDataTableRows(component, model.dataImportRows);
         this.setTotals(component, model.dataImportRows);
         this.setColumns(component, model.columns);
         this.setDataImportFields(component, model.columns);
+    },
+
+    /**
+     * @description: sets the data service to use the correct namespace
+     * @param labels: all labels for the app
+     */
+    setDataServiceFields: function(component, labels) {
+        var fields = [];
+        fields.push(labels.expectedCountField);
+        fields.push(labels.expectedTotalField);
+        component.set("v.batchFields", fields);
     },
 
     /**
@@ -174,7 +186,10 @@
         rows.forEach(function (currentRow) {
             var row = currentRow.record;
             countGifts += 1;
-            totalGiftAmount += row[component.get("v.labels.donationAmountField")];
+            var amount = row[component.get("v.labels.donationAmountField")];
+            if (amount) {
+                totalGiftAmount += amount;
+            }
         });
         var totals = component.get("v.totals");
         totals.countGifts = countGifts;
@@ -187,7 +202,7 @@
      * @param type: used for Title and Type on toast, depending on case
      * @param message: body of message to display
      */
-    showToast: function(component, type, message) {
+    showToast: function(component, title, message, type) {
         var mode;
         if (type === 'Error') {
             mode = 'sticky';
@@ -196,9 +211,9 @@
         }
 
         component.find('notifLib').showToast({
-            "variant": type.toLowerCase(),
+            "variant": type,
             "mode": mode,
-            "title": type,
+            "title": title,
             "message": message
         });
     },

@@ -23,9 +23,9 @@
                         var response = JSON.parse(response.getReturnValue());
                         helper.setDataTableRows(component, response);
                         helper.setTotals(component, response);
-                        helper.showToast(component, 'Success', 'Gift successfully deleted.');
+                        helper.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftDeleted"), 'success');
                     } else {
-                        helper.showToast(component, 'Error', response.getReturnValue());
+                        helper.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
                     }
                     helper.hideSpinner(component);
                 });
@@ -40,7 +40,7 @@
 
         if (channel === 'onSuccess') {
             helper.getDIs(component);
-            helper.showToast(component, 'Success', "New gift has been added to the batch.");
+            helper.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftSaved"), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {
             helper.createEntryForm(component);

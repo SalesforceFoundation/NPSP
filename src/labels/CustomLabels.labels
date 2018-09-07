@@ -2474,6 +2474,83 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <value>Set Field Options</value>
     </labels>
     <labels>
+        <fullName>bgeGridDonorType</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Donor Type picklist</shortDescription>
+        <value>Donor Type</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridAllGifts</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Grid</shortDescription>
+        <value>All Gifts</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftCountHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label to give context to the progress bar.</shortDescription>
+        <value>Gifts Entered</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftDeleted</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is deleted.</shortDescription>
+        <value>Gift successfully deleted.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftSaved</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is saved.</shortDescription>
+        <value>New gift has been added to the batch.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridGiftUpdated</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Success message when gift is updated.</shortDescription>
+        <value>Gifts successfully updated.</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridNewGift</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Label for Gift Entry Form</shortDescription>
+        <value>New Gift</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridNoGiftsHeader</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Header message when no gifts are associated with batch.</shortDescription>
+        <value>Looks like you haven't entered any gifts yet!</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridNoGiftsBody</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Body message when no gifts are associated with batch.</shortDescription>
+        <value>Enter a new gift and it will appear here</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridTotalAmount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total amount matching expected amount.</shortDescription>
+        <value>Total Amount: ${0} of ${1}</value>
+    </labels>
+    <labels>
+        <fullName>bgeGridTotalCount</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Total count versus expected count.</shortDescription>
+        <value>Total Count: {0} of {1}</value>
+    </labels>
+    <labels>
         <fullName>btnRemove</fullName>
         <categories>Manage Household UI</categories>
         <language>en_US</language>
