@@ -94,7 +94,7 @@ global with sharing class BDI_DataImportService {
     * @return Data_Import_Settings__c
     */
     public static Data_Import_Settings__c loadSettings(Id batchId) {
-
+        
         // load up the default or specific settings
         if (batchId == null) {
             return UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -285,7 +285,7 @@ global with sharing class BDI_DataImportService {
     * @description holds the data import settings to use for this batch.  these may be either from
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
-    global Data_Import_Settings__c diSettings { get; private set; }
+    global Data_Import_Settings__c diSettings { get; set; }
 
     /*******************************************************************************************************
     * @description whether the processing should be done in Dry Run mode (vs. normal mode).
@@ -622,7 +622,6 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
-        //system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
         di.Status__c = BDI_DataImport_API.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
@@ -748,15 +747,28 @@ global with sharing class BDI_DataImportService {
     * otherwise!)
     * @return void
     */
-    private void disableAllOppRollups() {
-        if (!diSettings.Run_Opportunity_Rollups_while_Processing__c) {
-            List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
-            for (Trigger_Handler__c th : handlers) {
-                if (th.Object__c == 'Opportunity' && (th.Class__c == 'RLLP_OppRollup_TDTM' || th.Class__c == 'CRLP_Rollup_TDTM')) {
-                    th.Active__c = false;
-                }
+    @TestVisible private void disableAllOppRollups() {
+        if (diSettings.Run_Opportunity_Rollups_while_Processing__c) {
+            return;
+        }
+
+        List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
+        for (Trigger_Handler__c th : handlers) {
+            if (isRollupTriggerHandler(th)) {
+                th.Active__c = false;
             }
         }
+    }
+
+    /*******************************************************************************************************
+    * @description Returns true if the trigger handler is used to calculate rollups
+    * @param handler The trigger handler
+    * @return Boolean
+    */
+    private Boolean isRollupTriggerHandler(Trigger_Handler__c handler) {
+        return (handler.Object__c == 'Opportunity' && handler.Class__c == 'RLLP_OppRollup_TDTM') ||
+            (handler.Object__c == 'Opportunity' && handler.Class__c == 'CRLP_Rollup_TDTM') ||
+            (handler.Object__c == 'npe01__OppPayment__c' && handler.Class__c == 'CRLP_Rollup_TDTM'); 
     }
 
     /*******************************************************************************************************
