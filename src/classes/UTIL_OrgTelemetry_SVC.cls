@@ -213,7 +213,8 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      */
     private Integer getCountOfRecurringDonationOpps() {
         try {
-            return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__c != null];
+            return [SELECT Count() FROM Opportunity
+                WHERE npe03__Recurring_Donation__c IN (SELECT Id FROM npe03__Recurring_Donation__c)];
         } catch (Exception ex) {}
         return null;
     }
