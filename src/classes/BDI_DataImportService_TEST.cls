@@ -75,7 +75,7 @@ private with sharing class BDI_DataImportService_TEST {
 
         Boolean isDryRun = false;
         BDI_DataImportService service = new BDI_DataImportService(isDryRun);
-        service.diSettings = diSettings;
+        service.injectDataImportSettings(diSettings);
 
         List<Trigger_Handler__c> expectedHandlers = TDTM_Config_API.getCachedRecords();
 
@@ -95,7 +95,7 @@ private with sharing class BDI_DataImportService_TEST {
 
         Boolean isDryRun = false;
         BDI_DataImportService service = new BDI_DataImportService(isDryRun);
-        service.diSettings = diSettings;
+        service.injectDataImportSettings(diSettings);
 
         Map<String, Trigger_Handler__c> handlerByKey = new Map<String, Trigger_Handler__c>();
         for (Trigger_Handler__c handler : TDTM_Config_API.getCachedRecords()) {

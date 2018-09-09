@@ -285,7 +285,7 @@ global with sharing class BDI_DataImportService {
     * @description holds the data import settings to use for this batch.  these may be either from
     * custom settings, or if a specific BatchId was specified, the settings specified for that batch.
     */
-    global Data_Import_Settings__c diSettings { get; set; }
+    global Data_Import_Settings__c diSettings { get; private set; }
 
     /*******************************************************************************************************
     * @description whether the processing should be done in Dry Run mode (vs. normal mode).
@@ -335,6 +335,17 @@ global with sharing class BDI_DataImportService {
             return isCustomIdInAccountDatatypeString;
         }
         set;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets diSettings based on the input settings. The method is called from tests only 
+    * since the variable is global with private set().
+    * @param diSettings Data Import Settings
+    * @return void
+    */
+    @TestVisible
+    private void injectDataImportSettings(Data_Import_Settings__c settings) {
+        this.diSettings = settings;
     }
 
     /*******************************************************************************************************
