@@ -39,7 +39,7 @@
 * executing or other factors at play, the rest of this job will continue. That ensures that our LMO collects as much
 * data as possible. In addition, it can help us identify which specific telemetry data processes are failing.
 */
-public class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> {
+public without sharing class UTIL_OrgTelemetry_BATCH implements Database.Batchable<UTIL_OrgTelemetry_SVC.TelemetryTypeEnum> {
 
     /**
      * @description List of High Level Telemetry Data Types to be processed asynchronously by this batch job.

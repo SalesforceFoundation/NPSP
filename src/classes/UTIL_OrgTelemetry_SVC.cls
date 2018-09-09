@@ -141,7 +141,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
             }
 
             when Data_CountOfErrorLog {
-                System.FeatureManagement.setPackageIntegerValue('Data_Count_of_ErrorLog', getErrorLogCount());
+                Integer errCount = getErrorLogCount();
+                if (errCount != null) {
+                    System.FeatureManagement.setPackageIntegerValue('Data_Count_of_ErrorLog', errCount);
+                }
             }
         }
     }
@@ -199,8 +202,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * @description Returns the total number of records in the Error__c custom object
      */
     private Integer getErrorLogCount() {
-        Integer cnt = [SELECT Count() FROM Error__c];
-        return cnt;
+        try {
+            return [SELECT Count() FROM Error__c];
+        } catch (Exception ex) {}
+        return null;
     }
 
     /**
@@ -217,8 +222,10 @@ public without sharing class UTIL_OrgTelemetry_SVC {
      * @description Return the total number of Opportunities associated with an Open Ended Recurring Donation
      */
     private Integer getCountOfRecurringDonationOpps_OpenEnded() {
+        String openStatusValue = System.Label.npe03.RecurringDonationOpenStatus;
         try {
-            return [SELECT Count() FROM Opportunity WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = 'Open'];
+            return [SELECT Count() FROM Opportunity
+                    WHERE npe03__Recurring_Donation__r.npe03__Open_Ended_Status__c = :openStatusValue];
         } catch (Exception ex) {}
         return null;
     }

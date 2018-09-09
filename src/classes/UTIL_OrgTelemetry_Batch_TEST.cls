@@ -34,7 +34,7 @@
 * @description Unit Tests related to the org telemetry class
 */
 @isTest(IsParallel=false)
-public class UTIL_OrgTelemetry_Batch_TEST {
+private class UTIL_OrgTelemetry_Batch_TEST {
 
     /**
      * @description Submits the telemetry batch job to execute. This will only execute a single child iteration
