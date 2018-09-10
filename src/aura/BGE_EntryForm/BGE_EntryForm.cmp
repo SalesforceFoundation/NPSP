@@ -49,62 +49,63 @@
                               onsuccess="{!c.onSuccess}"
                               onload="{!c.onFormLoad}">
 
-            <div class="slds-grid slds-wrap">
-                <!-- BEGIN DONOR FIELDS -->
-                <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
-                    <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
-                    <lightning:select aura:id="donorType" class="hideLabel" label="Donor Type"
-                                      value="{!v.donorType}" onchange="{!c.setDonorType}">
-                        <option value="Contact1">{!v.labels.contactObject}</option>
-                        <option value="Account1">{!v.labels.accountObject}</option>
-                    </lightning:select>
-                </div>
+        <lightning:layout multipleRows="true">
+            <!-- BEGIN DONOR FIELDS -->
+            <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
+                <lightning:select aura:id="donorType" class="hideLabel" label="Donor Type"
+                                  value="{!v.donorType}" onchange="{!c.setDonorType}">
+                    <option value="Contact1">{!v.labels.contactObject}</option>
+                    <option value="Account1">{!v.labels.accountObject}</option>
+                </lightning:select>
+            </lightning:layoutItem>
 
-                <!-- using a hidden field to bind the pretty lightning:select above with the actual Data Import field -->
-                <div class="slds-hide">
-                    <lightning:inputField fieldName="{!v.labels.donationDonor}" value="{!v.donorType}"/>
-                </div>
-
-                <!-- using a hidden field to provide the reference to the Batch -->
-                <div class="slds-hide">
-                    <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
-                </div>
-
-                <div class="slds-col slds-p-horizontal_small slds-size_1-of-6" id="donorLookup">
-                    <aura:if isTrue="{!v.donorType == 'Contact1'}">
-                        <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
-                        <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
-                                              class="hideLabel"
-                        />
-                    </aura:if>
-                    <aura:if isTrue="{!v.donorType == 'Account1'}">
-                        <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
-                        <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
-                                              class="hideLabel"
-                        />
-                    </aura:if>
-                </div>
-                <!--END DONOR FIELDS-->
-
-                <!--Field iteration -->
-                <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
-                    <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
-                        <lightning:inputField aura:id="{!field.name}"
-                                              fieldName="{!field.name}"
-                                              class="hideTooltip"
-                        />
-                    </div>
-                </aura:iteration>
+            <!-- using a hidden field to bind the pretty lightning:select above with the actual Data Import field -->
+            <div class="slds-hide">
+                <lightning:inputField fieldName="{!v.labels.donationDonor}" value="{!v.donorType}"/>
             </div>
 
-            <!--Form buttons-->
-            <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
-                <div class="slds-col slds-p-horizontal_small">
-                    <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
-                    <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
-                </div>
+            <!-- using a hidden field to provide the reference to the Batch -->
+            <div class="slds-hide">
+                <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
             </div>
 
-        </lightning:recordEditForm>
+            <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                <aura:if isTrue="{!v.donorType == 'Contact1'}">
+                    <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
+                    <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
+                                          class="hideLabel"
+                    />
+                </aura:if>
+                <aura:if isTrue="{!v.donorType == 'Account1'}">
+                    <label for="accountLookup" class="slds-form-element__label">{!v.labels.accountObject}</label>
+                    <lightning:inputField aura:id="accountLookup" fieldName="{!v.labels.accountLookup}"
+                                          class="hideLabel"
+                    />
+                </aura:if>
+            </lightning:layoutItem>
+            <!--END DONOR FIELDS-->
+
+            <!--Field iteration -->
+            <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
+                <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
+                    <lightning:inputField aura:id="{!field.name}"
+                                          fieldName="{!field.name}"
+                                          class="hideTooltip"
+                    />
+                </lightning:layoutItem>
+            </aura:iteration>
+        </lightning:layout>
+
+
+        <!--Form buttons-->
+        <div class="slds-grid slds-p-around_medium slds-grid_align-center slds-size_1-of-1">
+            <div class="slds-col slds-p-horizontal_small">
+                <lightning:button label="{!$Label.c.stgBtnCancel}" onclick="{!c.cancelForm}" variant="neutral"/>
+                <lightning:button variant="brand" type="submit" name="save" label="{!$Label.c.stgBtnSave}" />
+            </div>
+        </div>
+
+    </lightning:recordEditForm>
 
 </aura:component>
