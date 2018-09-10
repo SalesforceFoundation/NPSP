@@ -183,15 +183,11 @@ public class CRLP_ConfigBuilder_SVC {
                 crlp.filterGroupRecordName = newAcctFilter;
             }
 
-            // The detail object depends on the operation
-            if(crlp.operation == 'First' 
-                || crlp.operation == 'Last'){
-                    crlp.detailField = newDateField;
-            } else if(crlp.operation == 'Average'
-                || crlp.operation == 'Best_Year' 
-                || crlp.operation == 'Best_Year_Total'){
-                    crlp.detailField = null;
-            } else {
+            // Make sure we use the correct detail field
+            if(crlp.detailField == oldDateField){
+                crlp.detailField = newDateField;
+            }
+            else if (crlp.detailField != null){
                 crlp.detailField = newAmountField;
             }
 
