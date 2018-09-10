@@ -57,7 +57,7 @@
     <!--Lightning Data Service for Batch Record-->
     <force:recordData aura:id="forceRecordCmp"
                       recordId="{!v.recordId}"
-                      fields="{!v.batchFields}"
+                      layoutType="FULL"
                       targetFields="{!v.record}"
     />
 
