@@ -126,7 +126,7 @@
         var dataImportFields = [];
 
         dataColumns.forEach(function(field){
-            dataImportFields.push({label: field.label, name: field.fieldName});
+            dataImportFields.push({label: field.label, name: field.fieldName, options: field.options});
         });
 
         component.set('v.dataImportFields', dataImportFields);

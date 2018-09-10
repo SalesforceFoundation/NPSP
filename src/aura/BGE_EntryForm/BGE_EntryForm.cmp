@@ -88,13 +88,25 @@
 
                 <!--Field iteration -->
                 <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
-                    <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
-                        <lightning:inputField aura:id="{!field.name}"
-                                              fieldName="{!field.name}"
-                                              class="hideTooltip"
-                        />
-                    </div>
+                    <aura:if isTrue="{!greaterthan(field.options.length, 0)}">
+                        <lightning:select label="{!field.label}" class="slds-col slds-p-horizontal_small slds-size_1-of-6">
+                            <option value=""></option>
+                            <aura:iteration items="{!field.options}" var="opt">
+                                <option value="{!opt.value}">{!opt.label}</option>
+                            </aura:iteration>
+                        </lightning:select>
+                        <aura:set attribute="else">
+                            <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
+                                <lightning:inputField aura:id="{!field.name}"
+                                                      fieldName="{!field.name}"
+                                                      class="hideTooltip"
+                                />
+                            </div>
+                        </aura:set>
+                    </aura:if>
+
                 </aura:iteration>
+
             </div>
 
             <!--Form buttons-->
