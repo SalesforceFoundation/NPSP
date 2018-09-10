@@ -1,9 +1,3 @@
-.THIS label.slds-form-element__label {
-    display: none;
-}
-.THIS lightning-helptext.slds-form-element {
-    display: none;
-}
 /*used for datatable when it has less than 3 rows to fix dropdown overlay*/
 .THIS .datatableContainer {
     height: 175px;
@@ -11,9 +5,24 @@
 .THIS .datatableContainer .slds-scrollable_y {
     height: 100%;
 }
+/*173px is the current size of a single-row form*/
 .THIS .bgeCard {
     min-height: 173px;
 }
+/*prevents donor field from jumping on switch*/
 .THIS .donor-entry-field {
     min-width: 200px;
+}
+/*removes the extra label and automatic tooltip for inputFields*/
+.THIS .hideLabel .slds-form-element__label {
+    display: none;
+    visibility: hidden;
+}
+/*removes the automatic tooltip for inputFields*/
+.THIS .hideTooltip lightning-helptext {
+    display: none;
+    visibility: hidden;
+}
+.THIS .totalCountLabel {
+    display: inline;
 }

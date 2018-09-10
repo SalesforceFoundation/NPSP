@@ -1,10 +1,13 @@
 ({
+    /**
+     * @description: called during render to place the focus at the start of the form
+     */
     callFocus: function(component){
         component.find("donorType").focus();
     },
 
     /**
-     * @description: alerts parent component that form needs to be cleared
+     * @description: alerts parent component that form needs to be reset
      */
     cancelForm: function (component, event, helper) {
         helper.sendMessage('onCancel', '');
@@ -19,7 +22,7 @@
     },
 
     /**
-     * @description: alerts parent component that record is saved
+     * @description: alerts parent component that record is saved and needs to be reset
      */
     onSuccess: function (component, event, helper) {
         helper.sendMessage('onSuccess', '');
