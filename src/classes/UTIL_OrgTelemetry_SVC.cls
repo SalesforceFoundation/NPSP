@@ -239,6 +239,7 @@ public without sharing class UTIL_OrgTelemetry_SVC {
     private Integer getMaxNumRelatedOpps() {
         try {
             Account acct = [SELECT npo02__NumberOfClosedOpps__c FROM Account
+                                WHERE npo02__NumberOfClosedOpps__c > 0
                                 ORDER BY npo02__NumberOfClosedOpps__c DESC LIMIT 1];
             if (acct != null && acct.npo02__NumberOfClosedOpps__c != null) {
                 return acct.npo02__NumberOfClosedOpps__c.intValue();
