@@ -50,8 +50,8 @@
                               onload="{!c.onFormLoad}">
 
             <div class="slds-grid">
-                <!-- Donor fields -->
-                <div class="slds-col slds-p-horizontal_small">
+                <!-- BEGIN DONOR FIELDS -->
+                <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
                     <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
                     <lightning:select aura:id="donorType" class="hideLabel" label="Donor Type"
                                       value="{!v.donorType}" onchange="{!c.setDonorType}">
@@ -70,7 +70,7 @@
                     <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
                 </div>
 
-                <div class="slds-col slds-p-horizontal_small donor-entry-field" id="donorLookup">
+                <div class="slds-col slds-p-horizontal_small slds-size_1-of-6" id="donorLookup">
                     <aura:if isTrue="{!v.donorType == 'Contact1'}">
                         <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
                         <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
@@ -84,9 +84,11 @@
                         />
                     </aura:if>
                 </div>
+                <!--END DONOR FIELDS-->
+
                 <!--Field iteration -->
                 <aura:iteration items="{!v.dataImportFields}" var="field" indexVar="index">
-                    <div class="slds-col slds-p-horizontal_small">
+                    <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
                         <lightning:inputField aura:id="{!field.name}"
                                               fieldName="{!field.name}"
                                               class="hideTooltip"

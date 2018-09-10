@@ -22,7 +22,3 @@
 .THIS .totalCountLabel {
     display: inline;
 }
-/*prevents donor field from jumping on switch*/
-.THIS .donor-entry-field {
-    min-width: 200px;
-}
