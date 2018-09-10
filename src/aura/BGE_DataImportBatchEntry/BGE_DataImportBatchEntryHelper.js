@@ -104,7 +104,7 @@
      */
     setColumns: function(component, dataColumns) {
         var columns = [];
-        columns.push({label: 'Donor', fieldName: 'donor', type: 'text', editable: false});
+        columns.push({label: 'Donor', fieldName: 'donorLink', type: 'url', editable: false, typeAttributes: {label: {fieldName: 'donorName'}}});
 
         dataColumns.forEach(function(col){
             columns.push({label: col.label, fieldName: col.fieldName, type: col.type, editable: col.editable});
@@ -138,7 +138,8 @@
         var rows = [];
         responseRows.forEach(function (currentRow) {
             var row = currentRow.record;
-            row.donor = currentRow.donor;
+            row.donorName = currentRow.donorName;
+            row.donorLink = currentRow.donorLink;
             rows.push(row);
         });
 
