@@ -70,7 +70,7 @@
                     <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
                 </div>
 
-                <div class="slds-col slds-p-horizontal_small donor-entry-field" id="contactLookup">
+                <div class="slds-col slds-p-horizontal_small donor-entry-field" id="donorLookup">
                     <aura:if isTrue="{!v.donorType == 'Contact1'}">
                         <label for="contactLookup" class="slds-form-element__label">{!v.labels.contactObject}</label>
                         <lightning:inputField aura:id="contactLookup" fieldName="{!v.labels.contactLookup}"
