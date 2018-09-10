@@ -148,6 +148,7 @@
         <members>CRLP_RecalculateBTN_TEST</members>
         <members>CRLP_Rollup</members>
         <members>CRLP_RollupAccSoftCredit_SVC</members>
+        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <members>CRLP_RollupAccount_SVC</members>
         <members>CRLP_RollupAccount_TEST</members>
         <members>CRLP_RollupBatch_SVC</members>
@@ -427,7 +428,6 @@
         <members>UTIL_Where</members>
         <members>UTIL_Where_TEST</members>
         <members>UTIL_iSoqlListViewConsumer</members>
-        <members>CRLP_RollupAccSoftCredit_TEST</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -444,6 +444,7 @@
         <members>UTIL_PageHeader</members>
         <members>UTIL_PageMessages</members>
         <members>UTIL_SoqlListView</members>
+        <members>UTIL_SLDS_Icon</members>
         <members>UTIL_Tooltip</members>
         <members>UTIL_Typeahead</members>
         <name>ApexComponent</name>
@@ -2455,7 +2456,6 @@
     </types>
     <types>
         <members>CumulusStaticResources</members>
-        <members>SLDS</members>
         <name>StaticResource</name>
     </types>
     <types>

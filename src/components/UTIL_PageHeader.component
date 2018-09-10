@@ -65,13 +65,12 @@
 
     <html xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-    <div class="slds-page-header" role="banner" id="npspHeader">
+    <header class="slds-page-header" role="banner" id="npspHeader">
         <div class="slds-grid">
             <div class="slds-col slds-col_padded">
                 <apex:outputPanel layout="none" rendered="{!showBreadcrumb}">
-                    <nav role="navigation" class="slds-p-bottom_x-small">
-                        <p id="bread-crumb-label" class="slds-assistive-text">{!$Label.lblYouAreHere}</p>
-                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" aria-labelledby="bread-crumb-label" id="npspBreadcrumb">
+                    <nav role="navigation" class="slds-p-bottom_x-small" aria-label="{!$Label.lblYouAreHere}">
+                        <ol class="slds-breadcrumb slds-list_horizontal slds-wrap" id="npspBreadcrumb">
                             <li class="slds-breadcrumb__item slds-text-title_caps" id="npspParentEntity">
                                 <a href="{!parentAction}">{!parentEntityLabel}</a>
                             </li>
@@ -86,25 +85,20 @@
 
                 <div class="slds-media slds-media_center slds-has-flexi-truncate" id="npspMedia">
                     <apex:outputPanel layout="block" rendered="{!icon != '' && useNPSPicon == false}" styleClass="slds-media__figure" id="pngIcon">
-                        <span class="slds-icon_container slds-icon-{!iconCategory}-{!icon}">
-                            <svg aria-hidden="true" class="slds-icon">
-                                <use xlink:href="{!URLFOR($Asset.SLDS, 'assets/icons/' + iconCategory + '-sprite/svg/symbols.svg#' + icon)}"></use>
-                            </svg>
-                        </span>
+                        <c:UTIL_SLDS_Icon icon="{!icon}" iconCategory="{!iconCategory}" size="medium" />
                     </apex:outputPanel>
                     <apex:outputPanel layout="block" rendered="{!useNPSPicon == true}" styleClass="slds-media__figure" id="npspIcon">
                         <div class="slds-media__figure slds-media__figure_reverse">
-                            <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt="NPSP Logo"/>
+                            <img src="{!URLFOR($Resource.CumulusStaticResources, '/Images/RGB_npsp-stacked-color.png')}" class="img-rounded img-responsive" style="height: 75px" alt=""/>
                         </div>
                     </apex:outputPanel>
-
 
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == false}" styleClass="slds-media__body" id="npspTitle">
                         <p class="slds-text-heading_label">{!headerLabel}</p>
                         <h1 class="slds-page-header__title slds-m-right_small slds-truncate slds-align-middle">{!header}</h1>
                     </apex:outputPanel>
                     <apex:outputPanel layout="block" rendered="{!smallSubtitleFont == true}" styleClass="slds-media__body" id="npspTitleSmall">
-                        <h3 class="slds-text-heading_medium slds-m-bottom_large">{!headerLabel}</h3>
+                        <h2 class="slds-text-heading_medium slds-m-bottom_large">{!headerLabel}</h2>
                         <p>{!header}</p>
                     </apex:outputPanel>
                 </div>
@@ -124,6 +118,6 @@
                 </div>
             </div>
         </div>
-    </div>
+    </header>
     </html>
 </apex:component>
