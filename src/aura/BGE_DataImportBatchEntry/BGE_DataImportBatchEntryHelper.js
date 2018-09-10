@@ -74,8 +74,6 @@
                 this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
-            component.set("v.reloadDataService",false);
-            component.set("v.reloadDataService",true);
         });
         $A.enqueueAction(action);
     },
@@ -165,6 +163,7 @@
         this.setTotals(component, model.dataImportRows);
         this.setColumns(component, model.columns);
         this.setDataImportFields(component, model.columns);
+        component.set("v.isLoaded", true);
     },
 
     /**

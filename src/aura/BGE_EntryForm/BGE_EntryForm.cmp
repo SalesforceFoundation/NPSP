@@ -49,7 +49,7 @@
                               onsuccess="{!c.onSuccess}"
                               onload="{!c.onFormLoad}">
 
-            <div class="slds-grid">
+            <div class="slds-grid slds-wrap">
                 <!-- BEGIN DONOR FIELDS -->
                 <div class="slds-col slds-p-horizontal_small slds-size_1-of-6">
                     <label for="donorType" class="slds-form-element__label">{!$Label.c.bgeGridDonorType}</label>
