@@ -144,7 +144,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     public Boolean hasPaymentAccess {
         get {
             if (hasPaymentAccess == null) {
-                hasPaymentAccess = getPaymentAccess();
+                hasPaymentAccess = hasPaymentAccess();
             }
 
             return hasPaymentAccess;
@@ -431,7 +431,7 @@ public with sharing class PMT_PaymentWizard_CTRL {
     * @description Returns true if the user has permissions to access, create and delete npe01__oppPayment__c
     * @return Boolean
     */ 
-    private Boolean getPaymentAccess() {
+    private Boolean hasPaymentAccess() {
         Schema.DescribeSObjectResult paymentDescribe = npe01__oppPayment__c.sObjectType.getDescribe();
 
         return paymentDescribe.isCreateable() && paymentDescribe.isDeletable() && paymentDescribe.isAccessible();
