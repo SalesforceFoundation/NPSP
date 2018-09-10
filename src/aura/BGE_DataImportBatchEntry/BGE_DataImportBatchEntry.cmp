@@ -40,14 +40,14 @@
                 access="global">
 
     <!--Public Attributes-->
-    <aura:attribute name="recordId" type="Id" description="Populated by force:hasRecordId" access="public"/>
+    <aura:attribute name="recordId" type="Id" description="ID of the Batch record" access="public"/>
     <aura:attribute name="data" type="List" default="[]" description="Data Import records that appear in the table" access="public"/>
     <aura:attribute name="columns" type="List" description="Columns for the table" access="public"/>
     <aura:attribute name="labels" type="Map" description="Labels retrieved in Apex related to Schema information." access="public"/>
-    <aura:attribute name="dataImportFields" type="Object[]" default="[]" description="" access="public"/>
+    <aura:attribute name="dataImportFields" type="Object[]" default="[]" description="List of Data Import fields to use in the new row component." access="public"/>
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
-    <aura:attribute name="record" type="Object" access="public"/>
-    <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0}" access="public"/>
+    <aura:attribute name="record" type="Object" description="Batch record information used in the Data Service." access="public" />
+    <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0}" description="Map to track data count and amount totals" access="public"/>
     <aura:attribute name="batchFields" type="List" default="['npsp__Expected_Count_of_Gifts__c','npsp__Expected_Total_Batch_Amount__c']"/>
 
     <!--Events-->
@@ -94,16 +94,11 @@
                             <span>{!$Label.c.bgeGridGiftCountHeader}</span>
                             <span>
                                 <strong>
-                                    <label for="expectedTotalAmount"
-                                           class="totalCountLabel slds-p-right_xx-small">{!$Label.c.bgeGridTotalCount}</label>
-                                    <lightning:formattedNumber value="{!v.totals.countGifts}"/> /
                                     <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
-                                        <lightning:formattedNumber
-                                                value="{!v.record.Expected_Count_of_Gifts__c}"/>
+                                        {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.Expected_Count_of_Gifts__c)}
                                     </aura:if>
                                     <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
-                                        <lightning:formattedNumber
-                                                value="{!v.record.npsp__Expected_Count_of_Gifts__c}"/>
+                                        {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c)}
                                     </aura:if>
                                 </strong>
                             </span>
@@ -111,13 +106,12 @@
                         <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
                         <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
                             <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
-                                    size="large"/>
+                                                   size="large"/>
                         </aura:if>
                         <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
                             <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}"
-                                    size="large"/>
+                                                   size="large"/>
                         </aura:if>
-
                     </lightning:layoutItem>
 
                     <lightning:layoutItem size="6" padding="around-small">

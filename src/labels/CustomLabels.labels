@@ -2548,7 +2548,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Total count versus expected count.</shortDescription>
-        <value>Total Count: </value>
+        <value>Total Count: {0} of {1}</value>
     </labels>
     <labels>
         <fullName>btnRemove</fullName>

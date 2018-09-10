@@ -89,6 +89,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                     , Contact1Imported__c
                     , Contact1Imported__r.FirstName
                     , Contact1Imported__r.LastName
+                    , Contact1Imported__r.Name
                     , Account1Imported__c
                     , Account1Imported__r.Name
                     , Donation_Date__c
@@ -206,7 +207,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
             } 
             if (record.Donation_Donor__c == 'Contact1' && record.Contact1Imported__c != null) {
-                donorName = record.Contact1Imported__r.FirstName + ' ' + record.Contact1Imported__r.LastName;
+                donorName = record.Contact1Imported__r.Name;
+
             }
             return donorName;
         }
