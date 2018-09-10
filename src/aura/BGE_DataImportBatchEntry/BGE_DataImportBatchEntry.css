@@ -14,3 +14,6 @@
 .THIS .bgeCard {
     min-height: 173px;
 }
+.THIS .donor-entry-field {
+    min-width: 200px;
+}
