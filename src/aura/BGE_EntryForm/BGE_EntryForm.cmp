@@ -61,14 +61,14 @@
             </lightning:layoutItem>
 
             <!-- using a hidden field to bind the pretty lightning:select above with the actual Data Import field -->
-            <div class="slds-hide">
+            <lightning:layoutItem class="slds-hide">
                 <lightning:inputField fieldName="{!v.labels.donationDonor}" value="{!v.donorType}"/>
-            </div>
+            </lightning:layoutItem>
 
             <!-- using a hidden field to provide the reference to the Batch -->
-            <div class="slds-hide">
+            <lightning:layoutItem class="slds-hide">
                 <lightning:inputField fieldName="{!v.labels.batchIdField}" value="{!v.recordId}"/>
-            </div>
+            </lightning:layoutItem>
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
                 <aura:if isTrue="{!v.donorType == 'Contact1'}">
