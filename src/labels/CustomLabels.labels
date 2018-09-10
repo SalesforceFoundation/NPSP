@@ -2534,7 +2534,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Body message when no gifts are associated with batch.</shortDescription>
-        <value>Enter a new gift and it will appear here</value>
+        <value>Enter a new gift and it will appear here.</value>
     </labels>
     <labels>
         <fullName>bgeGridTotalAmount</fullName>

@@ -9,10 +9,6 @@
 .THIS .bgeCard {
     min-height: 173px;
 }
-/*prevents donor field from jumping on switch*/
-.THIS .donor-entry-field {
-    min-width: 200px;
-}
 /*removes the extra label and automatic tooltip for inputFields*/
 .THIS .hideLabel .slds-form-element__label {
     display: none;
@@ -25,4 +21,8 @@
 }
 .THIS .totalCountLabel {
     display: inline;
+}
+/*prevents donor field from jumping on switch*/
+.THIS .donor-entry-field {
+    min-width: 200px;
 }
