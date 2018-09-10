@@ -74,6 +74,8 @@
                 this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
+            component.set("v.reloadDataService",false);
+            component.set("v.reloadDataService",true);
         });
         $A.enqueueAction(action);
     },
