@@ -763,23 +763,7 @@ global with sharing class BDI_DataImportService {
             return;
         }
 
-        List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
-        for (Trigger_Handler__c th : handlers) {
-            if (isRollupTriggerHandler(th)) {
-                th.Active__c = false;
-            }
-        }
-    }
-
-    /*******************************************************************************************************
-    * @description Returns true if the trigger handler is used to calculate rollups
-    * @param handler The trigger handler
-    * @return Boolean
-    */
-    private Boolean isRollupTriggerHandler(Trigger_Handler__c handler) {
-        return (handler.Object__c == 'Opportunity' && handler.Class__c == 'RLLP_OppRollup_TDTM') ||
-            (handler.Object__c == 'Opportunity' && handler.Class__c == 'CRLP_Rollup_TDTM') ||
-            (handler.Object__c == 'npe01__OppPayment__c' && handler.Class__c == 'CRLP_Rollup_TDTM'); 
+        TDTM_Config_API.disableAllRollupTriggers();
     }
 
     /*******************************************************************************************************
