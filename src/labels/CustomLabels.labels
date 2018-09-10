@@ -4514,7 +4514,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed when the user has no permission to create payments</shortDescription>
-        <value>You do not have rights to create Payments.</value>
+        <value>You do not have permissions to create Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardSectionTitle</fullName>
@@ -4594,7 +4594,7 @@ To check your GAU Allocation settings, go to Donations | GAU Allocations.</value
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Message displayed when the user has no permission to apply the Write Off</shortDescription>
-        <value>You do not have rights to Write Off Payments.</value>
+        <value>You do not have permissions to Write Off Payments.</value>
     </labels>
     <labels>
         <fullName>pmtWizardYear</fullName>
