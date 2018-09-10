@@ -48,7 +48,6 @@
     <aura:attribute name="donorType" type="String" default="Contact1" description="Used to circumvent unhelpful labeling of Account1/Contact1" access="public"/>
     <aura:attribute name="record" type="Object" description="Batch record information used in the Data Service." access="public" />
     <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0}" description="Map to track data count and amount totals" access="public"/>
-    <aura:attribute name="batchFields" type="List" default="['npsp__Expected_Count_of_Gifts__c','npsp__Expected_Total_Batch_Amount__c']"/>
 
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
