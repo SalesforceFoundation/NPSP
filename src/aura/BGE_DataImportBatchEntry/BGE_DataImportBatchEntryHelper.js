@@ -88,7 +88,7 @@
         action.setCallback(this, function (response) {
             var state = response.getState();
             if (state === "SUCCESS") {
-                this.getDIs(component); PageMessagesConfirm
+                this.getDIs(component);
                 this.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftUpdated"), 'success');
             } else {
                 this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
