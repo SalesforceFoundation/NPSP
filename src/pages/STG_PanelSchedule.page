@@ -7,7 +7,9 @@
             <apex:commandButton id="editSchedule" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
 
-        <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobSizes}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobSizes}</div>
+        </div>
 
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
@@ -58,7 +60,9 @@
 
         <div style="{!IF(stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
 
-            <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobRollupSkewSizes}</div>
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelBatchJobRollupSkewSizes}</div>
+            </div>
 
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
@@ -99,8 +103,9 @@
 
         </div>
 
-
-        <div class="slds-section-title_divider" >{!$Label.stgLabelBatchProcessingOptions}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider" >{!$Label.stgLabelBatchProcessingOptions}</div>
+        </div>
 
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element" style="{!IF(isACMEnabled, 'display:block', 'display:none')}">

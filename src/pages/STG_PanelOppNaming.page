@@ -97,7 +97,9 @@
         </apex:outputPanel>
         <!-- Edit View -->
         <apex:outputPanel rendered="{!isEditMode}">
-            <div class="slds-section-title_divider" >{!$Label.stgLabelONS}</div>
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelONS}</div>
+            </div>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.Opportunity_Naming_Settings__c.Fields.Attribution__c.Label}" for="slOppAttr" styleClass="slds-form-element__label" />

@@ -32,7 +32,9 @@
                 <apex:commandButton id="newTriggerHandler" value="{!$Label.stgBtnNewTH}" action="{!newTh}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
             </div>
             <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
-                <div class="slds-section-title_divider" >{!$Label.stgLabelNewTH}</div>
+                <div class="slds-section">
+                    <div class="slds-section-title_divider" >{!$Label.stgLabelNewTH}</div>
+                </div>
                 <div class="slds-form_horizontal">
                     <div class="slds-form-element">
                         <apex:outputLabel value="{!$ObjectType.Trigger_Handler__c.Fields.Object__c.Label}" for="tbxO" styleClass="slds-form-element__label" />

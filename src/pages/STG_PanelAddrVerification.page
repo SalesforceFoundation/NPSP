@@ -65,8 +65,10 @@
         </div>
 
         <apex:outputPanel id="fields">
-            <div class="slds-section-title_divider">
-                {!$Label.addrGeneralSettings}
+            <div class="slds-section">
+                <div class="slds-section-title_divider">
+                    {!$Label.addrGeneralSettings}
+                </div>
             </div>
             <div class="slds-text-body_small slds-m-around_large">
                 <p>{!$Label.stgAddrGeneralSettingsIntro}</p>
@@ -112,8 +114,10 @@
                 </apex:repeat>
             </apex:outputPanel>
 
-            <div class="slds-section-title_divider">
-                {!$Label.Addr_Settings_API_Title}
+            <div class="slds-section">
+                <div class="slds-section-title_divider">
+                    {!$Label.Addr_Settings_API_Title}
+                </div>
             </div>
             <div class="slds-text-body_small slds-m-around_large">
                 <p><apex:outputText value="{!$Label.Addr_Settings_Intro_Body1}" escape="false" /></p>

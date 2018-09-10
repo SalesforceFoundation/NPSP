@@ -30,6 +30,12 @@
         width: 100%;
         height: 100%;
     }
+
+    /* Force the box around section titles to be 16px wider on the left and right to match earlier versions of SLDS */
+    .slds-section {
+        margin-left: -16px;
+        margin-right: -16px;
+    }
 </style>
 
 <script>

@@ -10,7 +10,9 @@
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
             <apex:commandButton id="editOCR" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" immediate="true" rendered="{!isReadOnlyMode}" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
-        <div class="slds-section-title_divider">{!$Label.stgLabelAutoContactRoles}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelAutoContactRoles}</div>
+        </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <!-- Individual Default OCR -->
@@ -65,7 +67,9 @@
                 </div>
             </div>
         </div>
-        <div class="slds-section-title_divider" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">{!$Label.stgLabelSoftCredit}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">{!$Label.stgLabelSoftCredit}</div>
+        </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element" style="{!IF(!stgService.stgCRLP.Customizable_Rollups_Enabled__c, 'display:block', 'display:none')}">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Enable_Soft_Credit_Rollups__c.Label}" for="cbxESCR" styleClass="slds-form-element__label" />
@@ -88,7 +92,9 @@
             </div>
         </div>
         <!-- Household Opportunity Contact Roles -->
-        <div class="slds-section-title_divider">{!$Label.stgLabelHHOCR}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHHOCR}</div>
+        </div>
         <p class="slds-text-body_small">{!$Label.npo02__Household_Contact_Roles_Help_Text}</p>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
@@ -124,7 +130,9 @@
             </div>
         </div>
         <!-- Honoree and Notification Recipient Contact Roles -->
-        <div class="slds-section-title_divider">{!$Label.stgLabelHonoreeNotificationOCR}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHonoreeNotificationOCR}</div>
+        </div>
         <p class="slds-text-body_small">{!$Label.stgLabelHonoreeNotificationHelpText}</p>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">

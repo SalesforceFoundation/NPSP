@@ -10,7 +10,9 @@
         <div class="slds-grid slds-grid_align-center slds-grid_vertical-align-center slds-m-around_large">
             <apex:commandButton id="editCon" value="{!$Label.stgBtnEdit}" rendered="{!isReadOnlyMode}" status="statusLoad" action="{!editSettings}" immediate="true" rerender="form" styleClass="slds-button slds-button_neutral" />
         </div>
-        <div class="slds-section-title_divider">{!$Label.CONV_Configuration_Options}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.CONV_Configuration_Options}</div>
+        </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npe01__Contacts_And_Orgs_Settings__c.Fields.npe01__Account_Processor__c.Label}" for="slAP" styleClass="slds-form-element__label" />

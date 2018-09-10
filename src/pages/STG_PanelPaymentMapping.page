@@ -7,7 +7,9 @@
             <apex:commandButton id="newPaymentMapping" value="{!$Label.stgBtnNewPaymentMap}" status="statusLoad" action="{!newPfm}" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" >
-            <div class="slds-section-title_divider" >{!$Label.stgLabelNewPaymentMapping}</div>
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelNewPaymentMapping}</div>
+            </div>
             <p class="slds-text-body_small slds-m-bottom_small">{!$Label.stgHelpPaymentMapping}</p>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">

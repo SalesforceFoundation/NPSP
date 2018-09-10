@@ -11,7 +11,9 @@
             <apex:commandButton id="newAutoRel" value="{!$Label.stgBtnNewAutoRel}" action="{!newRelAutoCreate}" status="statusLoad" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_small slds-button_neutral" />
         </div>
         <apex:outputPanel rendered="{!isEditMode}" id="panelNewAc">
-            <div class="slds-section-title_divider" >{!$Label.stgLabelNewAutoRel}</div>
+            <div class="slds-section">
+                <div class="slds-section-title_divider" >{!$Label.stgLabelNewAutoRel}</div>
+            </div>
             <div class="slds-form_horizontal slds-m-around_large">
                 <div class="slds-form-element">
                     <apex:outputLabel value="{!$ObjectType.npe4__Relationship_Auto_Create__c.Fields.npe4__Object__c.Label}" for="objectinputselect" styleClass="slds-form-element__label" />

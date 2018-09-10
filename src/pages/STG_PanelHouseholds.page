@@ -119,7 +119,9 @@
             <apex:commandButton id="editHouseholds" value="{!$Label.stgBtnEdit}" status="statusLoad" action="{!editSettings}" oncomplete="initOtherFields();" rendered="{!isReadOnlyMode}" immediate="true" rerender="form" styleClass="slds-button slds-button_neutral" />
         </div>
 
-        <div class="slds-section-title_divider">{!$Label.stgLabelHHNaming}</div>
+        <div class="slds-section">
+            <div class="slds-section-title_divider">{!$Label.stgLabelHHNaming}</div>
+        </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">
                 <apex:outputLabel value="{!$ObjectType.npo02__Households_Settings__c.Fields.npo02__Advanced_Household_Naming__c.Label}" for="cbxAHN" styleClass="slds-form-element__label" />
@@ -262,8 +264,10 @@
             </div>
         </div>
 
-        <div class="slds-section-title_divider slds-m-around_none">
-            {!$Label.stgLabelHHObject}
+        <div class="slds-section">
+            <div class="slds-section-title_divider slds-m-around_none">
+                {!$Label.stgLabelHHObject}
+            </div>
         </div>
         <p class="slds-text-body_small slds-m-around_large"><apex:outputText value="{!$Label.stgHelpHHObjectOverview}" escape="false" /></p>
         <div class="slds-form_horizontal slds-p-bottom_large">
@@ -290,8 +294,10 @@
             </div>
         </div>
 
-        <div class="slds-section-title_divider slds-m-around_none">
-            {!$Label.stgLabelHHGeneral}
+        <div class="slds-section">
+            <div class="slds-section-title_divider slds-m-around_none">
+                {!$Label.stgLabelHHGeneral}
+            </div>
         </div>
         <div class="slds-form_horizontal slds-m-around_large">
             <div class="slds-form-element">

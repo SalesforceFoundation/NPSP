@@ -95,7 +95,9 @@
 
                 <apex:commandButton id="navigateCRLPs" value="{!$Label.stgCRLPGoToSetup}" styleClass="slds-m-vertical_large slds-button slds-button_brand" action="{!navigate}" /><br/>
 
-                <div class="slds-section-title_divider" >Reset Customizable Rollups</div>
+                <div class="slds-section">
+                    <div class="slds-section-title_divider" >Reset Customizable Rollups</div>
+                </div>
 
                 <div class="slds-m-vertical_medium">
                     <apex:outputText escape="false" styleClass="slds-text-body_small" value="{!$Label.stgHelpCustomizableRollupsEnable3}" />
