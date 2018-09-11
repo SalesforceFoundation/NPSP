@@ -63,6 +63,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         dataImportModel.dataImportRows = getDataImports(batchId);
         dataImportModel.columns = getColumns();
         dataImportModel.labels = getBatchDataImportLabels();
+        dataImportModel.isNamespaced = String.isNotBlank(UTIL_Namespace.getNamespace());
+
 
         return JSON.serialize(dataImportModel);
     }
@@ -185,6 +187,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
         @AuraEnabled public Id id;
         @AuraEnabled public List<DataImportRow> dataImportRows;
         @AuraEnabled public List<Column> columns;
+        @AuraEnabled public Boolean isNamespaced;
         @AuraEnabled public Map<String, String> labels;
     }
 

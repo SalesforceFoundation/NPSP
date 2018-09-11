@@ -50,6 +50,7 @@
     <aura:attribute name="totals" type="Map" default="{countGifts: 0, totalGiftAmount: 0}" description="Map to track data count and amount totals" access="public"/>
     <aura:attribute name="batchFields" type="List" description="Fields that drive force:recordData"/>
     <aura:attribute name="isLoaded" type="Boolean" default="false" description="Updated in setModel when data is loaded"/>
+    <aura:attribute name="isNamespaced" type="Boolean" default="true" description="Indicates if org has namespacing"/>
     <!--Events-->
     <aura:handler name="init" action="{!c.doInit}" value="{!this}"/>
     <aura:handler event="ltng:sendMessage" action="{!c.handleMessage}"/>
@@ -96,21 +97,21 @@
                             <span>{!$Label.c.bgeGridGiftCountHeader}</span>
                             <span>
                                 <strong>
-                                    <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
+                                    <aura:if isTrue="{! !v.isNamespaced}">
                                         {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.Expected_Count_of_Gifts__c)}
                                     </aura:if>
-                                    <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
+                                    <aura:if isTrue="{!v.isNamespaced}">
                                         {!format($Label.c.bgeGridTotalCount, v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c)}
                                     </aura:if>
                                 </strong>
                             </span>
                         </div>
                         <!--Progress bar is on a 100 point scale, so just using division doesn't work here-->
-                        <aura:if isTrue="{!v.record.Expected_Count_of_Gifts__c}">
+                        <aura:if isTrue="{! !v.isNamespaced}">
                             <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.Expected_Count_of_Gifts__c))}"
                                                    size="large"/>
                         </aura:if>
-                        <aura:if isTrue="{!v.record.npsp__Expected_Count_of_Gifts__c}">
+                        <aura:if isTrue="{!v.isNamespaced}">
                             <lightning:progressBar value="{!mult(100,div(v.totals.countGifts, v.record.npsp__Expected_Count_of_Gifts__c))}"
                                                    size="large"/>
                         </aura:if>
@@ -120,10 +121,10 @@
                         <label for="expectedTotalAmount" class="slds-p-right_xx-small">{!$Label.c.bgeGridTotalAmount}</label>
                         <lightning:formattedNumber value="{!v.totals.totalGiftAmount}" style="currency" />
                         /
-                        <aura:if isTrue="{!v.record.Expected_Total_Batch_Amount__c}">
+                        <aura:if isTrue="{! !v.isNamespaced}">
                             <lightning:formattedNumber value="{!v.record.Expected_Total_Batch_Amount__c}" style="currency"/>
                         </aura:if>
-                        <aura:if isTrue="{!v.record.npsp__Expected_Total_Batch_Amount__c}">
+                        <aura:if isTrue="{!v.isNamespaced}">
                             <lightning:formattedNumber value="{!v.record.npsp__Expected_Total_Batch_Amount__c}" style="currency"/>
                         </aura:if>
                     </lightning:layoutItem>

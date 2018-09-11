@@ -163,6 +163,7 @@
         this.setTotals(component, model.dataImportRows);
         this.setColumns(component, model.columns);
         this.setDataImportFields(component, model.columns);
+        component.set("v.isNamespaced", Boolean(model.isNamespaced));
         component.set("v.isLoaded", true);
     },
 
