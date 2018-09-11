@@ -57,9 +57,7 @@
                                   value="{!v.donorType}" onchange="{!c.setDonorType}">
                     <option value="Contact1">{!v.labels.contactObject}</option>
                     <option value="Account1">{!v.labels.accountObject}</option>
-                </lightning:select><br/>
-                {!v.recordId}<br/>
-                {!v.donorType}
+                </lightning:select>
             </lightning:layoutItem>
 
             <lightning:layoutItem size="12" smallDeviceSize="6" mediumDeviceSize="4" largeDeviceSize="2" class="slds-p-horizontal_small">
