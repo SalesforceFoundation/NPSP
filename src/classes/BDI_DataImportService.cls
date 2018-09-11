@@ -94,7 +94,7 @@ global with sharing class BDI_DataImportService {
     * @return Data_Import_Settings__c
     */
     public static Data_Import_Settings__c loadSettings(Id batchId) {
-
+        
         // load up the default or specific settings
         if (batchId == null) {
             return UTIL_CustomSettingsFacade.getDataImportSettings();
@@ -335,6 +335,17 @@ global with sharing class BDI_DataImportService {
             return isCustomIdInAccountDatatypeString;
         }
         set;
+    }
+
+    /*******************************************************************************************************
+    * @description Sets diSettings based on the input settings. The method is called from tests only 
+    * since the variable is global with private set().
+    * @param diSettings Data Import Settings
+    * @return void
+    */
+    @TestVisible
+    private void injectDataImportSettings(Data_Import_Settings__c settings) {
+        this.diSettings = settings;
     }
 
     /*******************************************************************************************************
@@ -622,7 +633,6 @@ global with sharing class BDI_DataImportService {
     * @return void
     */
     public void LogBDIError(DataImport__c di, String strError, String strStatusField) {
-        //system.debug('****DJH: LogBDIError di: ' + di + ' strError: ' + strError + ' field: ' + strStatusField);
         di.Status__c = BDI_DataImport_API.bdiFailed;
         di.FailureInformation__c = strError;
         if (strStatusField != null)
@@ -748,15 +758,12 @@ global with sharing class BDI_DataImportService {
     * otherwise!)
     * @return void
     */
-    private void disableAllOppRollups() {
-        if (!diSettings.Run_Opportunity_Rollups_while_Processing__c) {
-            List<Trigger_Handler__c> handlers = TDTM_Config_API.getCachedRecords();
-            for (Trigger_Handler__c th : handlers) {
-                if (th.Object__c == 'Opportunity' && (th.Class__c == 'RLLP_OppRollup_TDTM' || th.Class__c == 'CRLP_Rollup_TDTM')) {
-                    th.Active__c = false;
-                }
-            }
+    @TestVisible private void disableAllOppRollups() {
+        if (diSettings.Run_Opportunity_Rollups_while_Processing__c) {
+            return;
         }
+
+        TDTM_Config_API.disableAllRollupTriggers();
     }
 
     /*******************************************************************************************************
