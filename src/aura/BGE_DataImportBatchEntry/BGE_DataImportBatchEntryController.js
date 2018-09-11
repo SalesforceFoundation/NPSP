@@ -39,7 +39,10 @@
         var channel = event.getParam("channel");
 
         if (channel === 'onSuccess') {
-            helper.getDIs(component);
+            helper.runDryRun(component, message.recordId);
+            // todo: determine if this can be called separately and rundryrun return void, or if we need rundryrun to return the rows
+            // currently rundryrun is returning things itself, but it is repetitive.
+            //helper.getDIs(component);
             helper.showToast(component, $A.get("$Label.c.PageMessagesConfirm"), $A.get("$Label.c.bgeGridGiftSaved"), 'success');
             helper.createEntryForm(component);
         } else if (channel === 'onCancel') {

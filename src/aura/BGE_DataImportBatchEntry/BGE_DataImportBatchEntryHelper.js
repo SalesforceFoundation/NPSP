@@ -82,6 +82,7 @@
      * @description: saves inline edits from dataTable.
      */
     handleTableSave: function(component, values) {
+        // TODO: determine how/when to run dryrun in here. maybe just from the apex side?
         this.showSpinner(component);
         var action = component.get("c.updateDataImports");
         action.setParams({diList: values});
@@ -94,6 +95,31 @@
                 this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
             }
             this.hideSpinner(component);
+        });
+        $A.enqueueAction(action);
+    },
+
+    runDryRun: function(component, recordId) {
+        var action = component.get("c.runDryRun");
+        var records = [];
+        records.push(recordId);
+        console.log(records);
+        action.setParams({dataImportIds: records, batchId: component.get("v.recordId")});
+        action.setCallback(this, function (response) {
+            var state = response.getState();
+            if (state === "SUCCESS") {
+                var responseRows = response.getReturnValue();
+                this.setDataTableRows(component, responseRows);
+                this.setTotals(component, responseRows);
+                var openRoad = component.find("openRoadIllustration");
+                if (responseRows.length === 0) {
+                    $A.util.removeClass(openRoad, "slds-hide");
+                } else {
+                    $A.util.addClass(openRoad, "slds-hide");
+                }
+            } else {
+                this.showToast(component, $A.get("$Label.c.PageMessagesError"), response.getReturnValue(), 'error');
+            }
         });
         $A.enqueueAction(action);
     },
@@ -124,7 +150,9 @@
         var dataImportFields = [];
 
         dataColumns.forEach(function(field){
-            dataImportFields.push({label: field.label, name: field.fieldName});
+            if (!field.gridOnly) {
+                dataImportFields.push({label: field.label, name: field.fieldName});
+            }
         });
 
         component.set('v.dataImportFields', dataImportFields);

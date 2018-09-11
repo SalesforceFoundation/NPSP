@@ -82,24 +82,7 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
 
         try {
             List<DataImportRow> result = new List<DataImportRow>();
-            for (DataImport__c dataImportRecord :[SELECT Id
-                    , Name
-                    , Contact1_Firstname__c
-                    , Contact1_Lastname__c
-                    , Contact1Imported__c
-                    , Contact1Imported__r.FirstName
-                    , Contact1Imported__r.LastName
-                    , Contact1Imported__r.Name
-                    , Account1Imported__c
-                    , Account1Imported__r.Name
-                    , Donation_Date__c
-                    , Donation_Amount__c
-                    , Donation_Donor__c
-                    , Payment_Method__c
-                    , Payment_Check_Reference_Number__c
-            FROM DataImport__c
-            WHERE NPSP_Data_Import_Batch__c = :batchId
-            ORDER BY Id ASC]) {
+            for (DataImport__c dataImportRecord : getDIsByIds(null, batchId)) {
                 result.add(new DataImportRow(dataImportRecord));
             }
 
@@ -140,10 +123,13 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     private static List<Column> getColumns() {
         List<Column> columns = new List<Column>();
         List<String> fields = new List<String>{
-            'Donation_Amount__c',
-            'Donation_Date__c',
-            'Payment_Method__c',
-            'Payment_Check_Reference_Number__c'
+                'Donation_Amount__c',
+                'Donation_Date__c',
+                'Payment_Method__c',
+                'Payment_Check_Reference_Number__c',
+                'Status__c',
+                'DonationImported__c',
+                'DonationImportStatus__c'
         };
 
         Map<String, Schema.DescribeFieldResult> fieldMap = UTIL_Describe.getAllFieldsDescribe(UTIL_Namespace.StrTokenNSPrefix('DataImport__c'));
@@ -154,7 +140,8 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
                 Column col = new Column();
                 col.label = dfr.label;
                 col.fieldName = dfr.name;
-                col.editable = true;
+                col.editable = (dfr.name.contains('Status') || dfr.name.contains('Imported')) ? false : true;
+                col.gridOnly = (dfr.name.contains('Status') || dfr.name.contains('Imported')) ? true : false;
                 col.type = dfr.type.name().toLowerCase();
                 if (col.type == 'date') {
                     col.type = 'date-local';
@@ -169,12 +156,75 @@ public with sharing class BGE_DataImportBatchEntry_CTRL {
     }
 
     /*******************************************************************************************************
+    * @description runs BDI Dry Run against a list of DataImport__c Ids
+    * based on the processing settings of a given batch
+    */
+    @AuraEnabled
+    public static List<DataImportRow> runDryRun(List<Id> dataImportIds, String batchId) {
+        Data_Import_Settings__c diSettings = BDI_DataImportService.loadSettings(batchId);
+        Set<Id> recIds = new Set<Id>(dataImportIds);
+        List<DataImport__c> diRecords = getDIsByIds(recIds, null);
+
+        BDI_DataImport_API.processDataImportRecords(diSettings, diRecords, true);
+        return getDataImports(batchId);
+
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c records from a set of Ids OR a batch Id
+    * @param dataImportIds set of DataImport__c Ids
+    * @param batchId a Data Import Batch Id
+    */
+    public static List<DataImport__c> getDIsByIds(Set<Id> dataImportIds, Id batchId) {
+        List<String> diFields = getDIFields();
+
+        String query = 'SELECT ' + String.join(diFields,', ') + ' FROM DataImport__c';
+        if (dataImportIds != null) {
+            query += ' WHERE Id IN :dataImportIds';
+        } else if (batchId != null) {
+            query += ' WHERE NPSP_Data_Import_Batch__c = :batchId';
+        }
+        query += ' ORDER BY Id ASC';
+        System.debug(query);
+
+        return Database.query(query);
+    }
+
+    /*******************************************************************************************************
+    * @description returns a list of DataImport__c fields the UI needs
+    */
+    public static List<String> getDIFields() {
+        List<String> fields = new List<String> {
+                'Id',
+                'Contact1_Firstname__c',
+                'Contact1_Lastname__c',
+                'Contact1Imported__c',
+                'Contact1Imported__r.FirstName',
+                'Contact1Imported__r.LastName',
+                'Contact1Imported__r.Name',
+                'Account1Imported__c',
+                'Account1Imported__r.Name',
+                'NPSP_Data_Import_Batch__c',
+                'Donation_Donor__c',
+                'Donation_Amount__c',
+                'Donation_Date__c',
+                'Payment_Method__c',
+                'Payment_Check_Reference_Number__c',
+                'DonationImported__c',
+                'Status__c',
+                'DonationImportStatus__c'
+        };
+        return fields;
+    }
+
+    /*******************************************************************************************************
     * @description a class to retrieve information related to Active and Available fields.
     */
     public class Column {
         @AuraEnabled public String label;
         @AuraEnabled public String fieldName;
         @AuraEnabled public Boolean editable;
+        @AuraEnabled public Boolean gridOnly;
         @AuraEnabled public String type;
     }
 
