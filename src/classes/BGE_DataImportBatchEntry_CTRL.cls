@@ -38,7 +38,7 @@
 public with sharing class BGE_DataImportBatchEntry_CTRL {
 
     /*******************************************************************************************************
-    * @description deletes data DataImport__c record
+    * @description deletes DataImport__c record
     * @param batchId: ID of the NPSP_Data_Import_Batch__c
     * @param dataImportId: ID of the DataImport__c
     * @return serialized string of DataImportRow for use in the lightning:datatable

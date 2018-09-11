@@ -59,7 +59,7 @@
     },
 
     /**
-     * @description: retrieves the model information. If successful, sets the model; otherwise alerts user.
+     * @description: retrieves the model information. If successful, sets the model and creates child component; otherwise alerts user.
      */
     getModel: function(component) {
         var action = component.get("c.getDataImportModel");
@@ -80,6 +80,7 @@
 
     /**
      * @description: saves inline edits from dataTable.
+     * @param values: changed values in the table
      */
     handleTableSave: function(component, values) {
         this.showSpinner(component);
@@ -99,7 +100,7 @@
     },
 
     /**
-     * @description: sets column with a derived Donor field, any columns passed from Apex, and available actions.
+     * @description: sets column with a derived Donor field, any columns passed from Apex, and Delete action.
      * @param dataColumns: custom Column class data passed from the Apex controller.
      */
     setColumns: function(component, dataColumns) {
@@ -117,7 +118,7 @@
     },
 
     /**
-     * @description: sets data import fields to use dynamically in the recordEditForm.
+     * @description: sets data import fields for dynamic use in the recordEditForm.
      * @param dataColumns: custom Column class data passed from the Apex controller.
      */
     setDataImportFields: function (component, dataColumns) {
@@ -154,7 +155,7 @@
 
     /**
      * @description: sets data import fields to use dynamically in the recordEditForm.
-     * @param dataColumns: custom Column class data passed from the Apex controller.
+     * @param model: full DataImportModel from the Apex controller
      */
     setModel: function (component, model) {
         component.set("v.labels", model.labels);
@@ -168,7 +169,7 @@
     },
 
     /**
-     * @description: sets the data service to use the correct namespace
+     * @description: sets the data service fields to use the correct field labels depending on namespacing
      * @param labels: all labels for the app
      */
     setDataServiceFields: function(component, labels) {
@@ -179,8 +180,8 @@
     },
 
     /**
-     * @description: Calculates actual totals from queried Data Import records
-     * @param rows: rows returned from the apex controller
+     * @description: Calculates actual totals from queried Data Import rows
+     * @param rows: rows returned from the Apex controller
      */
     setTotals: function (component, rows) {
         var countGifts = 0;
@@ -201,8 +202,9 @@
 
     /**
      * @description: displays standard toast to user based on success or failure of their action
-     * @param type: used for Title and Type on toast, depending on case
+     * @param title: Title displayed in toast
      * @param message: body of message to display
+     * @param type: configures type of toast
      */
     showToast: function(component, title, message, type) {
         var mode;

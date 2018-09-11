@@ -15,7 +15,7 @@
     },
 
     /**
-     * @description: hides spinner over form when form finishes loading
+     * @description: alerts parent component that form is loaded
      */
     onFormLoad: function (component, event, helper) {
         helper.sendMessage('hideFormSpinner', '');
@@ -30,7 +30,7 @@
     },
 
     /**
-     * @description: sets the donor type. Used to circumvent the unhelpful labeling of Account1/Contact1.
+     * @description: sets the donor type and alerts the parent. Used to circumvent the unhelpful labeling of Account1/Contact1.
      */
     setDonorType: function (component, event, helper) {
         var donorType = event.getSource().get("v.value");

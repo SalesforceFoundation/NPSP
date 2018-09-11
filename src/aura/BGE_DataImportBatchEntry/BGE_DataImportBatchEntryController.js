@@ -34,6 +34,9 @@
         }
     },
 
+    /**
+     * @description: handles ltng:sendMessage from child component
+     */
     handleMessage: function(component, event, helper) {
         var message = event.getParam("message");
         var channel = event.getParam("channel");
