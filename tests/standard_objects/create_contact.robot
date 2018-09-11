@@ -1,19 +1,14 @@
 *** Settings ***
 
-Resource        cumulusci/robotframework/Salesforce.robot
+Resource        tests/NPSP.robot
 Suite Setup     Open Test Browser
 Suite Teardown  Delete Records and Close Browser
 
 *** Test Cases ***
 
 Via API
-    ${first_name} =       Generate Random String
-    ${last_name} =        Generate Random String
-    ${contact_id} =       Salesforce Insert  Contact
-    ...                     FirstName=${first_name}
-    ...                     LastName=${last_name}
-    &{contact} =          Salesforce Get  Contact  ${contact_id}
-    Validate Contact      ${contact_id}  ${first_name}  ${last_name}
+    &{contact} =      API Create Contact  fields
+    Validate Contact  &{contact}[Id]  ${first_name}  ${last_name}
 
 Via UI
     ${first_name} =       Generate Random String
